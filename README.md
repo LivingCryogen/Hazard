@@ -8,7 +8,9 @@ Artwork © Kiah Baxter-Ferguson and Joshua McKnight, 2024. All rights reserved.
 *Risk: The Game of Global Domination* is © 2020 Hasbro, Inc. All Rights Reserved.
 
 ## Purpose
-As a software development project, Hazard has two primary purposes: to force me, its sole developer, to learn, and to demonstrate my learned skills.
+As a software development project, Hazard has two primary purposes:
+  1. To force me, its sole developer, to learn.
+  2. To demonstrate my learned skills.
 
 As a corrollary, it also aims at high industry standards in the writing, testing, documenting, and organizing of code.
 Consequently, it is "over-engineered": I took on the project *as if* it were to be extended and worked on by teams in a modern
