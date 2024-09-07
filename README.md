@@ -1,5 +1,5 @@
 # Hazard!
-*Hazard!* is a working "hot-seat" (local only) board game playable by two to six players. It is based on the popular board game Risk (owned by Hasbro, Inc).
+*Hazard!* is a working "hot-seat" (local only) board game playable by two to six players. It is based on the popular board game *Risk* (owned by Hasbro, Inc).
 
 All source code © Joshua McKnight, 2024. All rights reserved.  
 Artwork © Kiah Baxter-Ferguson and Joshua McKnight, 2024. All rights reserved.
