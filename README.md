@@ -24,7 +24,7 @@ See the "Architecture" and "Feature Highlights" sections for more details.
 Along the way, if anybody has a little fun or is charmed by my wife's artwork, all the better. :)
 
 ## Background
-This is my first programming project after deciding to return to IT. When deciding what my first portfolio project should be, I remembered
+  This is my first programming project after deciding to return to IT. When deciding what my first portfolio project should be, I remembered
 a high school Visual Basic project I never got working that was to emulate Hasbro's *Risk*. I decided to achieve that early goal, but
 updated, to use modern languages, frameworks, and other technologies.
 
