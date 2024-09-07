@@ -19,7 +19,7 @@ As a corrollary, it also aims at contemporary, professional industry standards i
 4. Organization/Architecture of code.
 
 This means it is intentionally "over-engineered": I took on the project ***as if* it were to be extended and worked on by teams** in a modern development environment. 
-See the "Architecture" and "Feature Highlights" sections for more details.
+See the [Architecture](#architecture) and [Feature Highlights](#feature-highlights) sections for more details.
 
 If anyone has some fun or is charmed by my wife's art, then the project has achieved beyond its goals! :)
 
