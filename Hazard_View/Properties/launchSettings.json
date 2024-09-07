@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Hazard_View": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hazard_Model", "Hazard_Model\Hazard_Model.csproj", "{A361B209-4B43-4CF7-83AD-C486B1459F15}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Hazard_Share", "Hazard_Share\Hazard_Share.shproj", "{5466ED96-BB7E-48FC-8FEB-8C5F4DFB473F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hazard_ViewModel", "Hazard_ViewModel\Hazard_ViewModel.csproj", "{9B128752-3318-4672-B41B-B2CCB7EF7B36}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hazard_Model.Tests", "Hazard_Model.UnitTests\Hazard_Model.Tests.csproj", "{1660A525-C4AC-4842-AC1B-C741F8398D41}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hazard_View", "Hazard_View\Hazard_View.csproj", "{72F8FD65-A924-4D33-B524-2BA98992E507}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A361B209-4B43-4CF7-83AD-C486B1459F15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A361B209-4B43-4CF7-83AD-C486B1459F15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A361B209-4B43-4CF7-83AD-C486B1459F15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A361B209-4B43-4CF7-83AD-C486B1459F15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B128752-3318-4672-B41B-B2CCB7EF7B36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B128752-3318-4672-B41B-B2CCB7EF7B36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B128752-3318-4672-B41B-B2CCB7EF7B36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B128752-3318-4672-B41B-B2CCB7EF7B36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1660A525-C4AC-4842-AC1B-C741F8398D41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1660A525-C4AC-4842-AC1B-C741F8398D41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1660A525-C4AC-4842-AC1B-C741F8398D41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1660A525-C4AC-4842-AC1B-C741F8398D41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72F8FD65-A924-4D33-B524-2BA98992E507}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72F8FD65-A924-4D33-B524-2BA98992E507}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72F8FD65-A924-4D33-B524-2BA98992E507}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72F8FD65-A924-4D33-B524-2BA98992E507}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B68E4C7A-C22B-4FAC-A68E-96A570F5462F}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Hazard_Share\Hazard_Share.projitems*{5466ed96-bb7e-48fc-8feb-8c5f4dfb473f}*SharedItemsImports = 13
+		Hazard_Share\Hazard_Share.projitems*{a361b209-4b43-4cf7-83ad-c486b1459f15}*SharedItemsImports = 5
+	EndGlobalSection
+EndGlobal
