@@ -30,6 +30,13 @@ Discovering which languages and tools would be used today on the project left un
 ecosystem has developed a great deal since the Visual Basic days. In retrospect, this decision did narrow the initial focus to desktop development, but I also discovered that MVVM was widely used
 in web contexts as well (and much more so, it's close cousin MVC), so it appears that the focus might progress naturally to a wider and/or web context in the medium to long term.
 ## Architecture
+*Hazard!* is structured in the Model-View-Viewmodel(MVVM) pattern. 
+
+Basically, this means that the game simulation (state and rules logic) is handled on the lowest, "Model" layer, the player interacts with a UI at the highest, "View" layer, and a "ViewModel" layer mediates between them. Often, as in this case, this means relying heavily on the Observer pattern, with bindings and events being central to the working structure of the application.
+
+Each layer -- Model, View, and ViewModel -- is encapsulated in its own Project (.csproj). Each 
+There is a Shared Project including interfaces and globals (currently, enums and a registry service) referenced at the Model layer.
+
 
 ## Feature Highlights
 
