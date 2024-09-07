@@ -16,7 +16,7 @@ As a corrollary, it also aims at high industry standards in the writing, testing
 I took on the project ***as if* it were to be extended and worked on by teams** in a modern development environment. 
 See the "Architecture" and "Feature Highlights" sections for more details.
 
-Along the way, if anybody has a little fun or is charmed by my wife's artwork, all the better :)
+Along the way, if anybody has a little fun or is charmed by my wife's artwork, all the better. :)
 
 ## Background
 This is my first programming project after deciding to return to IT. When deciding what my first portfolio project should be, I remembered
