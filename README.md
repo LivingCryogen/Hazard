@@ -2,18 +2,17 @@
 
 Hazard! is an original WPF, MVVM application based on the popular board game Risk (owned by Hasbro, Inc).
 
-Purpose
+## Purpose
 
-Background
+## Background
 
-Architecture
+## Architecture
 
-Notable Features
+## Notable Features
 
-Future Plans
-Short Term
-Medium Term
-Long Term
+## Short Term Plans
+## Medium Term Possibilities
+## Long Term Ideas
 
 All source code © Joshua McKnight, 2024. All rights reserved.  
 Artwork © Kiah Baxter-Ferguson and Joshua McKnight, 2024. All rights reserved.
