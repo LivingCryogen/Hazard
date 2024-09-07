@@ -27,7 +27,7 @@ If anyone has some fun or is charmed by my wife's art, then the project has achi
 This is my first programming project after deciding to return to IT. When choosing my first portfolio project, I remembered a high school Visual Basic project I never got working that was to emulate Hasbro's *Risk*. I decided to achieve that early goal, but updated to use modern languages, frameworks, and other technologies.
 
 Discovering which languages and tools would be used today on the project left unfinished twenty years ago, I landed on Windows Presentation Foundation (WPF). Fortunately, Microsoft's C# and the .NET
-ecosystem has developed a great deal since the Visual Basic days. In retrospect, this decision did narrow the initial focus to desktop development, but I also discovered that MVVM was widely used
+ecosystem has developed a great deal since those early days. In retrospect, this decision did narrow the initial focus to desktop development, but I also discovered that MVVM was widely used
 in web contexts as well (and much more so, it's close cousin MVC), so it appears that the focus might progress naturally to a wider and/or web context in the medium to long term.
 ## Architecture
 *Hazard!* is structured in the Model-View-Viewmodel(MVVM) pattern. 
