@@ -1,5 +1,5 @@
 # Hazard!
-*Hazard!* is a working "hot-seat" (local only) board game playable by two to six players. It is based on the popular board game *Risk* (owned by Hasbro, Inc).
+*Hazard!* is a working "hot-seat" (local only) board game playable by two to six players based on the popular board game *Risk* (owned by Hasbro, Inc).
 
 All source code © Joshua McKnight, 2024. All rights reserved.  
 Artwork © Kiah Baxter-Ferguson and Joshua McKnight, 2024. All rights reserved.
@@ -9,12 +9,12 @@ Artwork © Kiah Baxter-Ferguson and Joshua McKnight, 2024. All rights reserved.
 
 ## Purpose
 As a software development project, Hazard has two primary purposes:
-  1. To force me, its sole developer, to learn.
-  2. To demonstrate my learned skills.
+  1. To force learning on me, its sole developern.
+  2. To demonstrate those learned skills.
 
-As a corrollary, it also aims at high industry standards in the writing, testing, documenting, and organizing of code.
-Consequently, it is "over-engineered": I took on the project ***as if* it were to be extended and worked on by teams** in a modern
-development environment. See the "Architecture" and "Feature Highlights" sections for more details.
+As a corrollary, it also aims at high industry standards in the writing, testing, documenting, and organizing of code. This means it is intentionally "over-engineered": 
+I took on the project ***as if* it were to be extended and worked on by teams** in a modern development environment. 
+See the "Architecture" and "Feature Highlights" sections for more details.
 
 ## Background
 This is my first programming project after deciding to return to IT. When deciding what my first portfolio project should be, I remembered
