@@ -17,6 +17,7 @@ As a corrollary, it also aims at contemporary, professional industry standards i
 2. Testing
 3. Documentation, and
 4. Organization/Architecture of code.
+
 This means it is intentionally "over-engineered": I took on the project ***as if* it were to be extended and worked on by teams** in a modern development environment. 
 See the "Architecture" and "Feature Highlights" sections for more details.
 
