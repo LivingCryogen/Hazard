@@ -9,12 +9,14 @@ Artwork © Kiah Baxter-Ferguson and Joshua McKnight, 2024. All rights reserved.
 
 ## Purpose
 As a software development project, Hazard has two primary purposes:
-  1. To force learning on me, its sole developern.
+  1. To force learning on me, its sole developer.
   2. To demonstrate those learned skills.
 
 As a corrollary, it also aims at high industry standards in the writing, testing, documenting, and organizing of code. This means it is intentionally "over-engineered": 
 I took on the project ***as if* it were to be extended and worked on by teams** in a modern development environment. 
 See the "Architecture" and "Feature Highlights" sections for more details.
+
+Along the way, if anybody has a little fun or is charmed by my wife's artwork, all the better :)
 
 ## Background
 This is my first programming project after deciding to return to IT. When deciding what my first portfolio project should be, I remembered
