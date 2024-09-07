@@ -21,6 +21,8 @@ As a corrollary, it also aims at contemporary, professional industry standards i
 This means it is intentionally "over-engineered": I took on the project ***as if* it were to be extended and worked on by teams** in a modern development environment. 
 See the "Architecture" and "Feature Highlights" sections for more details.
 
+If anyone has some fun or is charmed by my wife's art, then the project has achieved beyond its goals! :)
+
 ## Background
 This is my first programming project after deciding to return to IT. When choosing my first portfolio project, I remembered a high school Visual Basic project I never got working that was to emulate Hasbro's *Risk*. I decided to achieve that early goal, but updated to use modern languages, frameworks, and other technologies.
 
