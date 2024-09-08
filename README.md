@@ -24,17 +24,19 @@ See the [Architecture](#architecture) and [Feature Highlights](#feature-highligh
 If anyone has some fun or is charmed by my wife's art, then the project has achieved beyond its goals! :)
 
 ## Background
-This is my first large programming project after deciding to return to IT. When choosing a first portfolio project, I remembered a high school Visual Basic program I never got fully working which was to emulate Hasbro's *Risk*. I decided to achieve that early goal, but updated to use modern languages, frameworks, and other technologies.
+When choosing a first portfolio project, I remembered a high school Visual Basic program I never got fully working which was to emulate Hasbro's *Risk*. I decided to achieve that early goal, but updated to use modern languages, frameworks, and other technologies.
 
 Discovering which languages and tools would be used today, I landed on Windows Presentation Foundation (WPF). Fortunately, Microsoft's C# and the .NET ecosystem has developed a great deal. In retrospect, this decision did narrow the initial focus to desktop development, but I also discovered that MVVM was widely used in web contexts as well (and much more so, it's close cousin MVC), so it appears that the focus might progress naturally to a web context in the medium to long term.
 ## Architecture
-*Hazard!* is structured in the Model-View-Viewmodel(MVVM) pattern. 
+*Hazard!*'s design follows the Model-View-Viewmodel(MVVM) pattern. 
 
 Basically, this means that the game simulation (state and rules logic) is handled on the lowest, "Model" layer, the player interacts with a UI at the highest, "View" layer, and a "ViewModel" layer mediates between them. Often, as in this case, this means relying heavily on the Observer pattern, with bindings and events being central to the working structure of the application.
 
-Each layer -- Model, View, and ViewModel -- is encapsulated in its own Project (.csproj). Each 
-There is a Shared Project including interfaces and globals (currently, enums and a registry service) referenced at the Model layer.
+Each layer -- Model, View, and ViewModel -- is encapsulated in its own Project (.csproj). There is a Shared Project including interfaces and globals (currently, enums and a registry service) referenced at the Model layer.
 
+Project/Layer references are asymmetrical, with "higher" layers referring to ("knowing about") lower layers, but not vice versa. That is, the Model has no references (beyond the Shared Project), the ViewModel referecences the Model, and the View references the ViewModel. The relations can be depicted like so: Model <- ViewModel <- View , with each arrow representing a reference.
+
+In this case, there is one caveat: The start-up project for a WPF application could be separated from the three layers, but as is sometimes done for convenience, it is incorporated into the "View" Project for this solution. 
 
 ## Feature Highlights
 
