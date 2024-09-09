@@ -43,9 +43,10 @@ In this case, there is one caveat: The start-up project for a WPF application co
 
 ## Notable Features
 **Model**
-A BinarySerializer for reading and writing binary savefiles. (Game.BinarySerializer)
-Automatic Board setup for 2-player games leverages a byte and bitwise manipulators (in lieu of bool[]). (Game.TwoPlayerAutoSetup())
-An implementation of 
+1. A Data Access Layer which ties into the Application Registry and automatically loads '.json' game assets (for now, limited to card data). (DataAccess.AssetFetcher/.Fetcher/.DataProvider)
+2. A BinarySerializer for reading and writing binary savefiles. (Core.Game.BinarySerializer)
+3. Automatic Board setup for 2-player games leverages a byte and bitwise manipulators (in lieu of bool[]). (Core.Game.TwoPlayerAutoSetup())
+4. An implementation of Fischer-Yates shuffle algorithm. (Entities.Deck.Shuffle())
 
 **ViewModel**
 **View**
