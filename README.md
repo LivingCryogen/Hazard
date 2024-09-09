@@ -1,12 +1,6 @@
 # Hazard!
 *Hazard!* is a working "hot-seat" (local only) board game playable by two to six players based on the popular board game *Risk* (owned by Hasbro, Inc). Its source code is written entirely in C#, with the exception of the WPF UI which relies largely on XAML.
 
-All source code © Joshua McKnight, 2024. All rights reserved.  
-Artwork © Kiah Baxter-Ferguson and Joshua McKnight, 2024. All rights reserved.
-
-*Hazard!* emulates basic game mechanics and rules from *Risk: The Game of Global Domination* by Hasbro, Inc.
-*Risk: The Game of Global Domination* is © 2020 Hasbro, Inc. All Rights Reserved.
-
 ## Purpose
 As a software development portfolio project, Hazard has two primary purposes:
   1. To force learning on me, its sole developer.
@@ -73,5 +67,12 @@ In this case, there is one caveat: The start-up project for a WPF application co
 ## Short Term Plans
 ## Medium Term Possibilities
 ## Long Term Ideas
+
+## Copyright Information
+All source code © Joshua McKnight, 2024. All rights reserved.  
+Artwork © Kiah Baxter-Ferguson and Joshua McKnight, 2024. All rights reserved.
+
+*Hazard!* emulates basic game mechanics and rules from *Risk: The Game of Global Domination* by Hasbro, Inc.
+*Risk: The Game of Global Domination* is © 2020 Hasbro, Inc. All Rights Reserved.
 
 
