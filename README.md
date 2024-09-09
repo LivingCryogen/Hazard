@@ -30,7 +30,7 @@ Discovering which languages and tools would be used today, I landed on Windows P
 ## Architecture
 *Hazard!*'s design follows the Model-View-Viewmodel(MVVM) pattern. 
 
-Basically, this means that the game simulation (state and rules logic) is handled on the lowest, "Model" layer, the player interacts with a UI at the highest, "View" layer, and a "ViewModel" layer mediates between them. Often, as in this case, this means relying heavily on the Observer pattern, with bindings and events being central to the working structure of the application.
+Basically, this means that the game simulation (state and rules logic) is handled on the lowest, "Model" layer, the player interacts with a UI at the highest, "View" layer, and a "ViewModel" layer mediates between them. Often, as here, this means relying heavily on the Observer pattern, with bindings and events being central to the working structure of the application.
 
 Each layer -- Model, View, and ViewModel -- is encapsulated in its own Project (.csproj). There is a Shared Project including interfaces and globals (currently, enums and a registry service) referenced at the Model layer.
 
