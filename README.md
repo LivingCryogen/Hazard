@@ -1,5 +1,5 @@
 # Hazard!
-*Hazard!* is a working "hot-seat" (local only) board game playable by two to six players based on the popular board game *Risk* (owned by Hasbro, Inc). Its source code is written entirely in C#, with the exception of the WPF UI which relies largely on XAML.
+*Hazard!* is a working "hot-seat" (local only) board game playable by two to six players based on the popular board game *Risk* (owned by Hasbro, Inc). Its source code is written entirely in C#, with the exception of the WPF UI which also relies on XAML.
 
 ## Purpose
 As a software development portfolio project, Hazard has two primary purposes:
