@@ -33,7 +33,8 @@ Project/Layer references are asymmetrical, with "higher" layers referring to ("k
 In this case, there is one caveat: The start-up project for a WPF application could be separated from the three layers, but as is sometimes done for convenience, it is incorporated into the "View" Project for this solution because the DI system is housed in App.xaml.cs.
 
 ## Feature Highlights
-
+1. An Application Registry which registers classes and associated objects, like string names, data converters, etc. Combined with reflection, enables runtime operations for, e.g., loading assets. (Hazard_Shared.Services.Registry)
+2. 
 
 ## Notable Features
 **Model**
@@ -42,8 +43,8 @@ In this case, there is one caveat: The start-up project for a WPF application co
 3. Automatic Board setup for 2-player games leverages a byte and bitwise manipulators (in lieu of bool[]). (Core.Game.TwoPlayerAutoSetup())
 4. An implementation of the Fischer-Yates shuffle algorithm. (Entities.Deck.Shuffle())
 
-**ViewModel**
 **View**
+1. 
 
 ## External Dependencies
 *Hazard!* relies on the following packages:
