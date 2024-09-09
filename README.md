@@ -45,8 +45,8 @@ In this case, there is one caveat: The start-up project for a WPF application co
 **Model**
 A BinarySerializer for reading and writing binary savefiles. (Game.BinarySerializer)
 Automatic Board setup for 2-player games leverages a byte and bitwise manipulators (in lieu of bool[]). (Game.TwoPlayerAutoSetup())
-
 An implementation of 
+
 **ViewModel**
 **View**
 
