@@ -45,24 +45,21 @@ In this case, there is one caveat: The start-up project for a WPF application co
 ## External Dependencies
 *Hazard!* relies on the following packages:
 
-Third-Party
-***
-System.IO.Abstractions v 21.0.29, by Tatham Oddie & friends 
-NHotkey.Wpf v 3.0.0, by Thomas Levesque
+**Third-Party**
+1. System.IO.Abstractions v 21.0.29, by Tatham Oddie & friends
+2. NHotkey.Wpf v 3.0.0, by Thomas Levesque
 
-Microsoft.Extensions v 8.0
-***
-.Hosting
-.Logging
-.Configuration 
-.DependencyInjection
+**Microsoft**
+1. CommunityToolkit.Mvvm v 8.2.2
+2. .NET.Test.Sdk v 17.11
+3. MSTest.TestFramework v 3.5.2
+4. MSTest.TestAdapter v 3.5.2
 
-Microsoft
-***
-CommunityToolkit.Mvvm v 8.2.2
-.NET.Test.Sdk v 17.11
-MSTest.TestFramework v 3.5.2
-MSTest.TestAdapter v 3.5.2
+**Microsoft.Extensions v 8.0**
+1. .Hosting
+2. .Logging
+3. .Configuration
+4. .DependencyInjection
 
 ## Short Term Plans
 ## Medium Term Possibilities
