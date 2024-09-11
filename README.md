@@ -12,8 +12,8 @@ As a corrollary, it also aims at contemporary, professional industry standards i
 3. Documentation, and
 4. Organization/Architecture of code.
 
-This means it is intentionally "over-engineered": I took on the project ***as if* it were to be extended and worked on by teams** in a modern development environment. 
-See the [Architecture](#architecture) and [Feature Highlights](#feature-highlights) sections for more details.
+This means it is intentionally "over-engineered": I took on the project ***as if* it were to be extended and worked on by teams** in a modern development environment. Smart, incremental development is the approach.
+See the [Architecture](#architecture) and [Feature Highlights](#feature-highlights) sections for more details. 
 
 If anyone has some fun or is charmed by my wife's art, then the project has achieved beyond its goals! :)
 
@@ -34,7 +34,7 @@ In this case, there is one caveat: The start-up project for a WPF application co
 
 ## Feature Highlights
 1. A class Registry which registers classes and associated objects, like string names, data converters, etc. Combined with reflection, enables runtime operations for, e.g., loading assets. (Hazard_Shared.Services.Registry)
-2. 
+2. Default methods on the card interface (ICard) which allows easy use of future ICard implementations with the DAL if properly Registered, and asset files properly structured. (Hazard_Share.Interfaces.Model.ICard)
 
 ## Notable Features
 **Model**
@@ -44,8 +44,8 @@ In this case, there is one caveat: The start-up project for a WPF application co
 4. An implementation of the Fischer-Yates shuffle algorithm. (Entities.Deck.Shuffle())
 
 **View**
-1. Territories are custom FrameworkElements whose shape are determined at runtime.
-2. Some visual aspects of TerritoryElements are 
+1. Territories are custom FrameworkElements whose visuals are determined at runtime, enabling easy extension. (TerritoryElement and MainWindow.BuildTerritoryButtons())
+2. 
 
 ## External Dependencies
 *Hazard!* relies on the following packages:
