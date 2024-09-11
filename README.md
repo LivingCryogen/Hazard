@@ -79,7 +79,7 @@ At specific layers, less intensive but still crucial or highly instructive syste
 ## Staging Unit Tests
 Around 50 MSTest unit tests help check up on the functioning of crucial systems like the Data Access Layer (AssetFetcher, AssetFactory, DataProvider, and converters) and the Registry (TypeRegister and its initializer). 
 
-Tests should be enabled if you have load the source code into an IDE installed with the Microsoft.Net.Test.Sdk v 17.11, the MSTest.TestFramework v 3.5.2, and the MSTest.TestAdapter v3.5.2 (available via nuget).
+Tests should be enabled once you have the source code in an IDE and you install the Microsoft.Net.Test.Sdk v 17.11, the MSTest.TestFramework v 3.5.2, and the MSTest.TestAdapter v3.5.2 (available via nuget).
 
 ## Short Term Improvements
 If it is a good use of time for *learning*, these would be the next steps:
