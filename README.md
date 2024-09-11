@@ -73,9 +73,20 @@ At specific layers, less intensive but still crucial or highly instructive syste
 3. .Configuration
 4. .DependencyInjection
 
-## Short Term Plans
+## Short Term Improvements
+If it is a good use of time for *learning*, these would be the next steps:
+1. Update all game assets to load via '.json' or configuration files to match current ICard/ICardSet functionality and fulfill the promise of the current system. (Board geography, rule values, etc)
+2. Implement the 'Secret Mission' game option, complete with new Card type and win conditions.
+
 ## Medium Term Possibilities
+If short-term improvements are mostly redundant from a learning or demonstrating disposition, some bigger, medium-term extensions could lead to future features like:
+1. Multi-player support via TCP-IP, etc.
+2. A local queried archive (MySql) containing error/event logs, game data records, save files(?), or other information gathered across multiple games.
 ## Long Term Ideas
+Similarly, if continuing to develop this project further remains a good idea, here are some possible long-term paths:
+1. Cross-Platform via Avalonia or .NET Maui port
+2. Online Game Server enabling multiplayer via "lobby" or direct invite.
+3. After (2), back the Server with a database storing player account info, game records, and the like, enabling leaderboards, achievements, etc.
 
 ## Copyright Information
 All source code © Joshua McKnight, 2024. All rights reserved.  
