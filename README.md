@@ -37,7 +37,7 @@ A few systems involved more effort or met emerging needs in interesting or satis
 
 1. A class Registry which registers classes and associated objects, like string names, data converters, etc. Combined with reflection, enables runtime operations for, e.g., loading assets. (Hazard_Shared.Services.Registry)
 2. Default methods on the card interface (ICard) which allows easy use of future ICard implementations with the DAL if properly Registered, and asset files properly structured. (Hazard_Share.Interfaces.Model.ICard)
-3. UI card system is sensitive to "hot-seat" requirements -- e.g., cards fronts only visibile to current player (backs otherwise), etc.
+3. UI card system is sensitive to "hot-seat" requirements -- e.g., card fronts only visibile to current player.
 
 ## Notable Features
 At specific layers, less intensive but still crucial or highly instructive systems include (namespace again parenthesized):
