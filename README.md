@@ -33,10 +33,14 @@ Project/Layer references are asymmetrical, with "higher" layers referring to ("k
 In this case, there is one caveat: The start-up project for a WPF application could be separated from the three layers, but as is sometimes done for convenience, it is incorporated into the "View" Project for this solution because the DI system is housed in App.xaml.cs.
 
 ## Feature Highlights
+A few systems involved more effort or met emerging needs in interesting or satisfying ways (associated namespace parenthesized):
+
 1. A class Registry which registers classes and associated objects, like string names, data converters, etc. Combined with reflection, enables runtime operations for, e.g., loading assets. (Hazard_Shared.Services.Registry)
 2. Default methods on the card interface (ICard) which allows easy use of future ICard implementations with the DAL if properly Registered, and asset files properly structured. (Hazard_Share.Interfaces.Model.ICard)
+3. UI card system is sensitive to "hot-seat" requirements -- e.g., cards fronts only visibile to current player (backs otherwise), etc.
 
 ## Notable Features
+At specific layers, less intensive but still crucial or highly instructive systems include (namespace again parenthesized):
 **Model**
 1. Data Access Layer ties into the Application Registry and automatically loads '.json' game assets (for now, limited to card data). (.DataAccess)
 2. A BinarySerializer for reading and writing binary savefiles. (Core.Game.BinarySerializer)
@@ -44,9 +48,12 @@ In this case, there is one caveat: The start-up project for a WPF application co
 4. An implementation of the Fischer-Yates shuffle algorithm. (Entities.Deck.Shuffle())
 
 **View**
-1. Territories are custom FrameworkElements whose visuals are determined at runtime, enabling easy extension. (TerritoryElement and MainWindow.BuildTerritoryButtons())
-2. 
-
+1. Territories are custom FrameworkElements whose visuals are determined at runtime, enabling easy extension. (TerritoryElement, MainWindow.BuildTerritoryButtons())
+2. Attacking and other player actions are accompanied by truly random dice-rolling, feedback animations, and hot-keys which allow for responsive and legible play. (AttackWindow, MainWindow.xaml)
+3. Responsive and illustrative application commands and windows, complete with keyboard short-cuts. (NewGameWindow, MainWindow.xaml InputBindings>
+4. Game State changes reflected in game rule notices/hints, and the information highlighted in Player data boxes. (MainWindow.xaml Resources, .BuildPlayerDataBoxes())
+5. An example of overengineering as learning, but still cool: Player data boxes are generated programatically (MainWindow.BuildPlayerDataBoxes())
+   
 ## External Dependencies
 *Hazard!* relies on the following packages:
 
