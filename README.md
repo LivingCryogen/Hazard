@@ -87,7 +87,7 @@ If it is a good use of time for *learning*, these would be the next steps:
 2. Implement the 'Secret Mission' game option, complete with new Card type and win conditions.
 
 ## Medium Term Possibilities
-If short-term improvements are mostly redundant from a learning or demonstrating disposition, some bigger, medium-term extensions could lead to future features like:
+If short-term improvements prove redundant from a learning or demonstrating stand point, some bigger, medium-term extensions could lead to future features like:
 1. Multi-player support via TCP-IP, etc.
 2. A local queried archive (MySql) containing error/event logs, game data records, save files(?), or other information gathered across multiple games.
 ## Long Term Ideas
