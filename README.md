@@ -41,6 +41,7 @@ A few systems involved more effort or met emerging needs in interesting or satis
 
 ## Notable Features
 At specific layers, less intensive but still crucial or highly instructive systems include (namespace again parenthesized):
+
 **Model**
 1. Data Access Layer ties into the Application Registry and automatically loads '.json' game assets (for now, limited to card data). (.DataAccess)
 2. A BinarySerializer for reading and writing binary savefiles. (Core.Game.BinarySerializer)
