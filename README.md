@@ -38,6 +38,8 @@ A few systems involved more effort or met emerging needs in interesting or satis
 1. A class Registry which registers classes and associated objects, like string names, data converters, etc. Combined with reflection, enables runtime operations for, e.g., loading assets. (Hazard_Shared.Services.Registry)
 2. Default methods on the card interface (ICard) which allows easy use of future ICard implementations with the DAL if properly Registered, and asset files properly structured. (Hazard_Share.Interfaces.Model.ICard)
 3. UI card system is sensitive to "hot-seat" requirements -- e.g., card fronts only visibile to current player.
+4. Unit Tests for the Data Access Layer, Registry, and Binary Serializer, as well a fun one for the Deck.Shuffle() method which assures that it is shuffling properly! These are not part of the Release, but are available in the source code under **Hazard_Model.UnitTests**. See [the staging tests section to get them running.](#staging-unit-tests)
+
 
 ## Notable Features
 At specific layers, less intensive but still crucial or highly instructive systems include (namespace again parenthesized):
@@ -73,6 +75,11 @@ At specific layers, less intensive but still crucial or highly instructive syste
 2. .Logging
 3. .Configuration
 4. .DependencyInjection
+
+## Staging Unit Tests
+Around 50 MSTest unit tests help check up on the functioning of crucial systems like the Data Access Layer (AssetFetcher, AssetFactory, DataProvider, and converters) and the Registry (TypeRegister and its initializer). 
+
+Tests should be enabled if you have load the source code into an IDE installed with the Microsoft.Net.Test.Sdk v 17.11, the MSTest.TestFramework v 3.5.2, and the MSTest.TestAdapter v3.5.2 (available via nuget).
 
 ## Short Term Improvements
 If it is a good use of time for *learning*, these would be the next steps:
