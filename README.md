@@ -103,4 +103,6 @@ Artwork © Kiah Baxter-Ferguson and Joshua McKnight, 2024. All rights reserved.
 *Hazard!* emulates basic game mechanics and rules from *Risk: The Game of Global Domination* by Hasbro, Inc.
 *Risk: The Game of Global Domination* is © 2020 Hasbro, Inc. All Rights Reserved.
 
+This project is for educational and demonstration purposes only and is not intended for wide distribution or commercial use.
+
 
