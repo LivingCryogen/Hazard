@@ -71,7 +71,7 @@ public class Player : IPlayer
 
     #region Methods
 
-    public IEnumerable<IConvertible> GetSaveData()
+    public IConvertible?[] GetSaveData()
     {
         List<object> data = [Name, _armyPool, ContinentBonus, ControlledTerritories.Count];
         foreach (TerrID territory in ControlledTerritories)

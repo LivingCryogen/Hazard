@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Hazard_Share.Interfaces.Model;
 
 public interface IBinarySerializable
 {
-    IEnumerable<IConvertible> GetSaveData();
+    IConvertible?[] GetSaveData();
     bool LoadSaveData(BinaryReader reader);
 }

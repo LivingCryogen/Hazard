@@ -12,8 +12,9 @@ namespace Hazard_Share.Interfaces.Model;
 /// The default serialization methods <see cref="GetSaveData"/>, <see cref="TryConvertToSerial"/>, and <see cref="TryGetPropertySerials"/> <br/>
 /// use reflection and should be overridden if there are performance concerns.
 /// </remarks>
-public interface ICard
+public interface ICard : IBinarySerializable
 {
+    ILogger Logger { get; }
     /// <summary>
     /// Gets a binary conversion <see cref="Type"/> for each property, by name, of the <see cref="ICard"/>. 
     /// </summary>
@@ -57,22 +58,7 @@ public interface ICard
     /// </value>
     bool IsTradeable { get; set; }
 
-    /// <summary>
-    /// Reflects on the implementing object and encapsulates serialization information about its <see cref="Type"/>, properties, and property values.
-    /// </summary>
-    /// <remarks> <para>
-    /// This default method provides an out-of-the-box way to add <see cref="ICard"/>s to the game and have them serialized/deserialized easily.
-    /// <br/>Since it uses reflection, it should be overridden if performance suffers.</para> 
-    /// <para> <br/>Properties with primitive types or primitive <see cref="IEnumerable"/>s are automatically handled.<br/>
-    /// To add reference type properties:
-    /// <br/>(1) Include the property's name and the target conversion <see cref="Type"/> to <see cref="PropertySerializableTypeMap"/>. 
-    /// <br/>(2) Ensure <see cref="TryConvertToSerial"/> performs the conversion; extend if needed.
-    /// <br/>(3) Implement <see cref="InitializePropertyFromBinary(BinaryReader, string, int)"/>. </para> </remarks>
-    /// <param name="logger">The <see cref="ILogger"/> provided by DI.</param>
-    /// <returns>The name of the implementer instance's <see cref="Type"/> together with arrays of property names, serialization types, and its property values converted to serialized objects by <see cref="TryGetPropertySerials"/>.</returns>
-    /// <exception cref="ArgumentNullException">Thrown if <see cref="TryGetPropertySerials"/> returns <c>null</c> for <see langword="out"/> 'serialType.' </exception>
-    /// <exception cref="ArgumentException">Thrown if <see cref="TryGetPropertySerials"/> evaluates to false.</exception>
-    (string TypeName, string[] PropertyNames, Type[] SerialTypes, object?[]?[]? PropertySerials) GetSaveData(ILogger logger)
+    IConvertible?[] GetSaveData()
     {
         Type instanceType = this.GetType();
         PropertyInfo[] instanceProperties = instanceType.GetProperties();
@@ -85,7 +71,7 @@ public interface ICard
             var propName = propInfo.Name;
             if (propName != nameof(PropertySerializableTypeMap) && propName != nameof(CardSet)) {
                 propertyNames.Add(propName);
-                if (TryGetPropertySerials(propInfo, out Type? serialType, out object?[]? propValues, logger)) {
+                if (TryGetPropertySerials(propInfo) {
                     if (serialType == null)
                         throw new NullReferenceException(nameof(serialType));
                     serialTypes.Add(serialType);
@@ -99,6 +85,11 @@ public interface ICard
 
         return (TypeName: instanceType.Name, PropertyNames: propertyNames.ToArray(), SerialTypes: serialTypes.ToArray(), PropertySerials: propertyValues.ToArray());
     }
+    bool TryGetPropertySerials(PropertyInfo propInfo)
+    {
+
+    }
+
     /// <summary>
     /// A helper method that attempts to convert property values to serialized objects.
     /// </summary>
@@ -108,227 +99,227 @@ public interface ICard
     /// <param name="logger">The <see cref="ILogger"/> provided by DI.</param>
     /// <returns><see langword="true"/> if the conversion to serializable <see cref="Type"/>s was succesful; otherwise, <see langword="false"/>.</returns>
     /// <exception cref="ArgumentException">Thrown if an <see cref="IEnumerable"/> property contains an object which fails <see cref="TryConvertToSerial"/>.</exception>
-    bool TryGetPropertySerials(PropertyInfo propInfo, out Type? serialType, out object?[]? serials, ILogger logger)
-    {
-        if (propInfo == null) {
-            serials = [];
-            serialType = null;
-            return false;
-        }
-        var propName = propInfo.Name;
-        var propType = propInfo.PropertyType;
+    //bool TryGetPropertySerials(PropertyInfo propInfo, out Type? serialType, out object?[]? serials, ILogger logger)
+    //{
+    //    if (propInfo == null) {
+    //        serials = [];
+    //        serialType = null;
+    //        return false;
+    //    }
+    //    var propName = propInfo.Name;
+    //    var propType = propInfo.PropertyType;
 
-        if (propType.IsPrimitive) {
-            serials = [propInfo.GetValue(this, null)!];
-            serialType = propType;
-            return true;
-        }
+    //    if (propType.IsPrimitive) {
+    //        serials = [propInfo.GetValue(this, null)!];
+    //        serialType = propType;
+    //        return true;
+    //    }
 
-        if (PropertySerializableTypeMap == null) {
-            serials = [];
-            serialType = null;
-            logger.LogWarning("ICard {Card} attempted to serialize its properties with a null PropertySerializableTypeMap.", this);
-            return false;
-        }
-        Type? targetType = PropertySerializableTypeMap[propName];
+    //    if (PropertySerializableTypeMap == null) {
+    //        serials = [];
+    //        serialType = null;
+    //        logger.LogWarning("ICard {Card} attempted to serialize its properties with a null PropertySerializableTypeMap.", this);
+    //        return false;
+    //    }
+    //    Type? targetType = PropertySerializableTypeMap[propName];
 
-        bool propEnumerable = typeof(IEnumerable).IsAssignableFrom(propType) && propType != typeof(string); // checks whether the property type implements IEnumerable (is a collection), and is not a string.
-        if (!propEnumerable) {
-            serialType = targetType;
-            if (TryConvertToSerial(propInfo.GetValue(this, null), targetType, out object? serial, logger)) {
-                serials = [serial];
-                return true;
-            }
+    //    bool propEnumerable = typeof(IEnumerable).IsAssignableFrom(propType) && propType != typeof(string); // checks whether the property type implements IEnumerable (is a collection), and is not a string.
+    //    if (!propEnumerable) {
+    //        serialType = targetType;
+    //        if (TryConvertToSerial(propInfo.GetValue(this, null), targetType, out object? serial, logger)) {
+    //            serials = [serial];
+    //            return true;
+    //        }
 
-            serials = null;
-            return false;
-        }
+    //        serials = null;
+    //        return false;
+    //    }
 
-        var collection = propInfo.GetValue(this, null);
-        if (collection == null) {
-            if (Nullable.GetUnderlyingType(targetType) == null) {
-                serials = null;
-                serialType = null;
-                return false;
-            }
+    //    var collection = propInfo.GetValue(this, null);
+    //    if (collection == null) {
+    //        if (Nullable.GetUnderlyingType(targetType) == null) {
+    //            serials = null;
+    //            serialType = null;
+    //            return false;
+    //        }
 
-            serials = null;
-            serialType = targetType;
-            return true;
-        }
+    //        serials = null;
+    //        serialType = targetType;
+    //        return true;
+    //    }
 
-        var enumerator = ((IEnumerable)collection).GetEnumerator();
-        List<object?> convertedValues = [];
-        while (enumerator.MoveNext()) { // returns false if it passes the end of the collection, and begins *before* the first element
-            if (TryConvertToSerial(enumerator.Current, targetType, out object? convertedValue, logger))
-                convertedValues.Add(convertedValue);
-            else {
-                logger.LogWarning("ICard {card} failed to convert {Property} to {Type}. A null value was returned instead.", this, enumerator.Current, targetType);
-                convertedValues.Add(null);
-            }
-        }
+    //    var enumerator = ((IEnumerable)collection).GetEnumerator();
+    //    List<object?> convertedValues = [];
+    //    while (enumerator.MoveNext()) { // returns false if it passes the end of the collection, and begins *before* the first element
+    //        if (TryConvertToSerial(enumerator.Current, targetType, out object? convertedValue, logger))
+    //            convertedValues.Add(convertedValue);
+    //        else {
+    //            logger.LogWarning("ICard {card} failed to convert {Property} to {Type}. A null value was returned instead.", this, enumerator.Current, targetType);
+    //            convertedValues.Add(null);
+    //        }
+    //    }
 
-        serials = [.. convertedValues];
-        serialType = targetType;
-        return true;
-    }
-    /// <summary>
-    /// Converts an <see cref="ICard"/> property to a serializable (primitive) <see cref="Type"/>.
-    /// </summary>
-    /// <remarks>
-    /// Non-primitive property types require registry in <see cref="PropertySerializableTypeMap"/> and may require extension here.
-    /// </remarks>
-    /// <param name="toConvert">The property value to convert.</param>
-    /// <param name="serialType">The target conversion <see cref="Type"/> for serialization.</param>
-    /// <param name="converted">The converted value.</param>
-    /// <param name="logger">The <see cref="ILogger"/> provided by DI.</param>
-    /// <returns><see langword="true"/> if conversion is successful; otherwise, <see langword="false"/>.</returns>
-    bool TryConvertToSerial(object? toConvert, Type serialType, out object? converted, ILogger logger)
-    {
-        if (toConvert == null) {
-            if (Nullable.GetUnderlyingType(serialType) == null) {
-                converted = null;
-                return false;
-            }
-            converted = null;
-            return true;
-        }
+    //    serials = [.. convertedValues];
+    //    serialType = targetType;
+    //    return true;
+    //}
+    ///// <summary>
+    ///// Converts an <see cref="ICard"/> property to a serializable (primitive) <see cref="Type"/>.
+    ///// </summary>
+    ///// <remarks>
+    ///// Non-primitive property types require registry in <see cref="PropertySerializableTypeMap"/> and may require extension here.
+    ///// </remarks>
+    ///// <param name="toConvert">The property value to convert.</param>
+    ///// <param name="serialType">The target conversion <see cref="Type"/> for serialization.</param>
+    ///// <param name="converted">The converted value.</param>
+    ///// <param name="logger">The <see cref="ILogger"/> provided by DI.</param>
+    ///// <returns><see langword="true"/> if conversion is successful; otherwise, <see langword="false"/>.</returns>
+    //bool TryConvertToSerial(object? toConvert, Type serialType, out object? converted, ILogger logger)
+    //{
+    //    if (toConvert == null) {
+    //        if (Nullable.GetUnderlyingType(serialType) == null) {
+    //            converted = null;
+    //            return false;
+    //        }
+    //        converted = null;
+    //        return true;
+    //    }
 
-        if (toConvert is IConvertible) {
-            try {
-                converted = Convert.ChangeType(toConvert, serialType);
-                return true;
-            } catch (InvalidCastException e) {
-                logger?.LogError("ICard {Card} threw a casting exception when trying Convert.ChangeType({PropertyType}, {SerialType}): {Message}, {Source}.", this, toConvert, serialType, e.Message, e.Source);
-                converted = null;
-                return false;
-            }
-        }
+    //    if (toConvert is IConvertible) {
+    //        try {
+    //            converted = Convert.ChangeType(toConvert, serialType);
+    //            return true;
+    //        } catch (InvalidCastException e) {
+    //            logger?.LogError("ICard {Card} threw a casting exception when trying Convert.ChangeType({PropertyType}, {SerialType}): {Message}, {Source}.", this, toConvert, serialType, e.Message, e.Source);
+    //            converted = null;
+    //            return false;
+    //        }
+    //    }
 
-        Type currentType = toConvert.GetType();
+    //    Type currentType = toConvert.GetType();
 
-        if (serialType == typeof(int)) {
-            if (toConvert == null) {
-                converted = null;
-                return false;
-            }
-            else {
-                if (toConvert is int intConvert) {
-                    converted = intConvert;
-                    return true;
-                }
-                else {
-                    if (toConvert is Enum) {
-                        if (Enum.IsDefined(currentType, toConvert)) {
-                            converted = Enum.Parse(currentType, toConvert.ToString()!);
-                            return true;
-                        }
-                        else {
-                            converted = null;
-                            return false;
-                        }
-                    }
+    //    if (serialType == typeof(int)) {
+    //        if (toConvert == null) {
+    //            converted = null;
+    //            return false;
+    //        }
+    //        else {
+    //            if (toConvert is int intConvert) {
+    //                converted = intConvert;
+    //                return true;
+    //            }
+    //            else {
+    //                if (toConvert is Enum) {
+    //                    if (Enum.IsDefined(currentType, toConvert)) {
+    //                        converted = Enum.Parse(currentType, toConvert.ToString()!);
+    //                        return true;
+    //                    }
+    //                    else {
+    //                        converted = null;
+    //                        return false;
+    //                    }
+    //                }
 
-                    if (int.TryParse(toConvert.ToString(), out int result)) {
-                        converted = result;
-                        return true;
-                    }
-                    else {
-                        converted = null;
-                        return false;
-                    }
+    //                if (int.TryParse(toConvert.ToString(), out int result)) {
+    //                    converted = result;
+    //                    return true;
+    //                }
+    //                else {
+    //                    converted = null;
+    //                    return false;
+    //                }
 
-                    // Additional conversions to Int can be added here by Implementers
-                }
-            }
-        }
+    //                // Additional conversions to Int can be added here by Implementers
+    //            }
+    //        }
+    //    }
 
-        if (serialType == typeof(string)) {
-            if (toConvert == null) {
-                converted = null;
-                return true;
-            }
+    //    if (serialType == typeof(string)) {
+    //        if (toConvert == null) {
+    //            converted = null;
+    //            return true;
+    //        }
 
-            // Explicit conversions to string can be added by Implementers here
+    //        // Explicit conversions to string can be added by Implementers here
 
-            try {
-                converted = (string)toConvert;
-            } catch (Exception e) {
-                logger.LogDebug("ICard {Card} attempted to cast {Value} as a string, but an exception was thrown: {Message}; {Source};", this, toConvert, e.Message, e.Source);
-            }
+    //        try {
+    //            converted = (string)toConvert;
+    //        } catch (Exception e) {
+    //            logger.LogDebug("ICard {Card} attempted to cast {Value} as a string, but an exception was thrown: {Message}; {Source};", this, toConvert, e.Message, e.Source);
+    //        }
 
-            try {
-                converted = toConvert.ToString();
-            } catch (Exception e) {
-                logger.LogDebug("ICard {Card} attempted to convert {Value} with a .ToString() call, but an exception was thrown: {Message}; {Source};", this, toConvert, e.Message, e.Source);
-                converted = null;
-            }
+    //        try {
+    //            converted = toConvert.ToString();
+    //        } catch (Exception e) {
+    //            logger.LogDebug("ICard {Card} attempted to convert {Value} with a .ToString() call, but an exception was thrown: {Message}; {Source};", this, toConvert, e.Message, e.Source);
+    //            converted = null;
+    //        }
 
-            if (converted == null)
-                return false;
-            else
-                return true;
-        }
+    //        if (converted == null)
+    //            return false;
+    //        else
+    //            return true;
+    //    }
 
-        if (serialType == typeof(bool)) {
-            if (toConvert == null) {
-                converted = null;
-                return false;
-            }
+    //    if (serialType == typeof(bool)) {
+    //        if (toConvert == null) {
+    //            converted = null;
+    //            return false;
+    //        }
 
-            if (toConvert is bool boolConvert) {
-                converted = boolConvert;
-                return true;
-            }
+    //        if (toConvert is bool boolConvert) {
+    //            converted = boolConvert;
+    //            return true;
+    //        }
 
-            if (toConvert is int intConvert) {
-                if (intConvert == 0) {
-                    converted = false;
-                    return true;
-                }
-                if (intConvert == 1) {
-                    converted = true;
-                    return true;
-                }
+    //        if (toConvert is int intConvert) {
+    //            if (intConvert == 0) {
+    //                converted = false;
+    //                return true;
+    //            }
+    //            if (intConvert == 1) {
+    //                converted = true;
+    //                return true;
+    //            }
 
-                // Additional Int -> Bool conversions can be added by Implementers here
-            }
+    //            // Additional Int -> Bool conversions can be added by Implementers here
+    //        }
 
-            if (toConvert is string strConvert) {
-                var stringToConvert = strConvert;
-                if (string.Equals(stringToConvert, "false", StringComparison.OrdinalIgnoreCase)) {
-                    converted = false;
-                    return true;
-                }
+    //        if (toConvert is string strConvert) {
+    //            var stringToConvert = strConvert;
+    //            if (string.Equals(stringToConvert, "false", StringComparison.OrdinalIgnoreCase)) {
+    //                converted = false;
+    //                return true;
+    //            }
 
-                if (string.Equals(stringToConvert, "true", StringComparison.OrdinalIgnoreCase)) {
-                    converted = true;
-                    return true;
-                }
+    //            if (string.Equals(stringToConvert, "true", StringComparison.OrdinalIgnoreCase)) {
+    //                converted = true;
+    //                return true;
+    //            }
 
-                // Additional String -> Bool conversions can be added by Implementers here
+    //            // Additional String -> Bool conversions can be added by Implementers here
 
-                converted = null;
-                return false;
-            }
+    //            converted = null;
+    //            return false;
+    //        }
 
-            // Additional Boolean conversions can be added by Implementers here
-        }
+    //        // Additional Boolean conversions can be added by Implementers here
+    //    }
 
-        // Conversions for other serializable Types can be added by Implementers here
+    //    // Conversions for other serializable Types can be added by Implementers here
 
-        converted = null;
-        return false;
-    }
-    /// <summary>
-    /// Loads property values of this <see cref="ICard"/> from binary.
-    /// </summary>
-    /// <remarks>
-    /// Implementing this method is necessary for <see cref="Hazard_Model.DataAccess.BinarySerializer.LoadCardList"/> to properly handle the <see cref="ICard"/>.
-    /// </remarks>
-    /// <param name="reader">The <see cref="BinaryReader"/> from <see cref="Hazard_Model.DataAccess.BinarySerializer.LoadCardList"/>.</param>   
-    /// <param name="propName">The name of the property to which the next value(s) from <paramref name="reader"/> belongs.</param>
-    /// <param name="numValues">The number of values the property is receiving.</param>
-    /// <returns><see langword="true"/> if the value is read and the property initialized with that value; otherwise, <see langword="false"/>.</returns>
-    bool InitializePropertyFromBinary(BinaryReader reader, string propName, int numValues);
+    //    converted = null;
+    //    return false;
+    //}
+    ///// <summary>
+    ///// Loads property values of this <see cref="ICard"/> from binary.
+    ///// </summary>
+    ///// <remarks>
+    ///// Implementing this method is necessary for <see cref="Hazard_Model.DataAccess.BinarySerializer.LoadCardList"/> to properly handle the <see cref="ICard"/>.
+    ///// </remarks>
+    ///// <param name="reader">The <see cref="BinaryReader"/> from <see cref="Hazard_Model.DataAccess.BinarySerializer.LoadCardList"/>.</param>   
+    ///// <param name="propName">The name of the property to which the next value(s) from <paramref name="reader"/> belongs.</param>
+    ///// <param name="numValues">The number of values the property is receiving.</param>
+    ///// <returns><see langword="true"/> if the value is read and the property initialized with that value; otherwise, <see langword="false"/>.</returns>
+    //bool InitializePropertyFromBinary(BinaryReader reader, string propName, int numValues);
 }

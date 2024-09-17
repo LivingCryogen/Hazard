@@ -681,7 +681,7 @@ public class EarthBoard : IBoard, IBinarySerializable
         }
         else throw new ArgumentException("Non-null TerrID required.", nameof(changed));
     }
-    public IEnumerable<IConvertible> GetSaveData()
+    public IConvertible?[] GetSaveData()
     {
         List<int> saveData = [];
         saveData.Add(Geography.NumContinents);
@@ -694,7 +694,7 @@ public class EarthBoard : IBoard, IBinarySerializable
             saveData.Add(Armies[(TerrID)i]);
         }
 
-        return saveData.AsEnumerable().Cast<IConvertible>();
+        return saveData.Cast<IConvertible?>().ToArray();
     }
     public bool LoadSaveData(BinaryReader reader)
     {
