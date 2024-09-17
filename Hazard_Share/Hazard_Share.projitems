@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Enums\ContID.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enums\GamePhase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IBinarySerializable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\ICardSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\ICardSetData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Registry\RegistryRelationEnum.cs" />

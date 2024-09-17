@@ -4,7 +4,7 @@ namespace Hazard_Share.Interfaces.Model;
 /// <summary>
 /// A representation of a player in the game.
 /// </summary>
-public interface IPlayer
+public interface IPlayer : IBinarySerializable
 {
     /// <summary>
     /// Gets the current bonus the player receives to their army pool at the start of each turn (during <see cref="GamePhase.Place"/>).
@@ -115,10 +115,4 @@ public interface IPlayer
     /// <param name="handIndex">A <see cref="int"/> representing the <see cref="Hand"/> index of the <see cref="ICard"/> to be removed.</param>
     /// <returns><see langword="true"/> if successfully removed; otherwise, <see langword="false"/>.</returns>
     bool RemoveCard(int handIndex);
-    /// <summary>
-    /// Builds save data necessary for binary serialization/deserialization by <see cref="Hazard_Model.DataAccess.BinarySerializer"/>.
-    /// </summary>
-    /// <returns>A <see cref="List{T}"/> of <see cref="Tuple{T1, T2}"/>, where T1 is an object containing the value to serialized, and T2 is the <see cref="Type"/> it should be serialized with. <br/>
-    /// This prepares for <see cref="Hazard_Model.DataAccess.BinarySerializer.WriteData"/>.</returns>
-    public List<(object? Datum, Type? DataType)> GetSaveData();
 }

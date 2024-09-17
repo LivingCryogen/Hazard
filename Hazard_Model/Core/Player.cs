@@ -70,20 +70,18 @@ public class Player : IPlayer
     #endregion
 
     #region Methods
-    /// <inheritdoc cref="IPlayer.GetSaveData"/>.
-    public List<(object? Datum, Type? DataType)> GetSaveData()
+
+    public IEnumerable<IConvertible> GetSaveData()
     {
-        List<(object? Datum, Type? DataType)> data = [
-        (Name, typeof(string)),
-        (_armyPool, typeof(int)),
-        (ContinentBonus, typeof(int)),
-        (ControlledTerritories.Count, typeof(int)) ];
+        List<object> data = [Name, _armyPool, ContinentBonus, ControlledTerritories.Count];
         foreach (TerrID territory in ControlledTerritories)
-            data.Add((territory, typeof(TerrID)));
+            data.Add((int)territory)
         data.Add((Hand.Count, typeof(int)));
         foreach (ICard card in Hand)
             data.Add((card.GetSaveData(_logger), typeof(ICard)));
         return data;
+
+
     }
     /// <inheritdoc cref="IPlayer.GetsTradeBonus(int)"/>.
     public void GetsTradeBonus(int tradeInBonus)

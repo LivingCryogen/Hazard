@@ -45,8 +45,11 @@ public class BinarySerializer(IGame game, FileStream stream, ITypeRegister<IType
             }
             saveData.Add((_game.ID.ToString(), typeof(string)));
             _logger.LogInformation("Serializing Board state...");
-            if (_game.Board != null)
-                SerializeBoardState(_game.Board, saveData);
+            // CHANGES HERE -- 
+            if (_game.Board != null) {
+                var boardData = _game.Board.GetSaveData();
+                // ....
+            }
             _logger.LogInformation("Serializing Players...");
             SerializePlayerStates(_game.Players, saveData);
             _logger.LogInformation("Serializing Card Base...");

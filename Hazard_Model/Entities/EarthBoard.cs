@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 namespace Hazard_Model.Entities;
 /// <remarks>The default board of the base game is based on Earth from around the Napoleonic Era (1792-1800).</remarks>
 /// <inheritdoc cref="IBoard"/>
-public class EarthBoard : IBoard
+public class EarthBoard : IBoard, IBinarySerializable
 {
     /// <remarks>
     /// <para> Currently the Graph of territories to their neighbors is implemented naively with Dictionaries. This is just fine for small boards <br/>
@@ -680,6 +680,49 @@ public class EarthBoard : IBoard
             }
         }
         else throw new ArgumentException("Non-null TerrID required.", nameof(changed));
+    }
+    public IEnumerable<IConvertible> GetSaveData()
+    {
+        List<int> saveData = [];
+        saveData.Add(Geography.NumContinents);
+        saveData.Add(Geography.NumTerritories);
+        for (int i = 0; i < Geography.NumContinents; i++)
+            saveData.Add(ContinentOwner[(ContID)i]);
+
+        for (int i = 0; i < Geography.NumTerritories; i++) {
+            saveData.Add(TerritoryOwner[(TerrID)i]);
+            saveData.Add(Armies[(TerrID)i]);
+        }
+
+        return saveData.AsEnumerable().Cast<IConvertible>();
+    }
+    public bool LoadSaveData(BinaryReader reader)
+    {
+        ContinentOwner.Clear();
+        TerritoryOwner.Clear();
+        Armies.Clear();
+
+        int numContinents = reader.ReadInt32();
+        if (numContinents < 0)
+            return false;
+        int numTerritories = reader.ReadInt32();
+        if (numTerritories < 0)
+            return false;
+        for (int i = 0; i <= numContinents; i++) 
+            ContinentOwner.TryAdd((ContID)i, reader.ReadInt32());
+        for (int i = 0; i <= numTerritories; i++) {
+            var terr = (TerrID)i;
+            TerritoryOwner.TryAdd(terr, reader.ReadInt32());
+            Armies.TryAdd(terr, reader.ReadInt32());
+        }
+
+        if (ContinentOwner.Count != numContinents)
+            return false;
+        if (TerritoryOwner.Count != numTerritories)
+            return false;
+        if (Armies.Count != numTerritories)
+            return false;
+        return true;
     }
     #endregion
 }
