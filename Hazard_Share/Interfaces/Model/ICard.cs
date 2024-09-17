@@ -58,7 +58,7 @@ public interface ICard : IBinarySerializable
     /// </value>
     bool IsTradeable { get; set; }
 
-    IConvertible?[] GetSaveData()
+    IConvertible?[] IBinarySerializable.GetSaveData()
     {
         Type instanceType = this.GetType();
         PropertyInfo[] instanceProperties = instanceType.GetProperties();
@@ -71,7 +71,7 @@ public interface ICard : IBinarySerializable
             var propName = propInfo.Name;
             if (propName != nameof(PropertySerializableTypeMap) && propName != nameof(CardSet)) {
                 propertyNames.Add(propName);
-                if (TryGetPropertySerials(propInfo) {
+                if (TryGetPropertySerials(propInfo, out IConvertible?[] serialValues)) {
                     if (serialType == null)
                         throw new NullReferenceException(nameof(serialType));
                     serialTypes.Add(serialType);
@@ -85,11 +85,31 @@ public interface ICard : IBinarySerializable
 
         return (TypeName: instanceType.Name, PropertyNames: propertyNames.ToArray(), SerialTypes: serialTypes.ToArray(), PropertySerials: propertyValues.ToArray());
     }
-    bool TryGetPropertySerials(PropertyInfo propInfo)
+    bool TryGetPropertySerials(PropertyInfo propInfo, out IConvertible?[]? serialValues)
     {
+        if (typeof(IEnumerable).IsAssignableFrom(propInfo.PropertyType)) { // 'true' if the property implements IEnumerable (is a collection)
 
+        }
+
+        serialValues = propInfo.PropertyType switch {
+            Type t when typeof(IEnumerable).IsAssignableFrom(t) => GetEnumerableConvertibles(propInfo),
+            Type t when t.IsEnum => [(int?)propInfo.GetValue(this)],
+            Type t when t.IsPrimitive => [(IConvertible?)propInfo.GetValue(this)],
+            _ => null
+        }; 
+
+        return serialValues != null;
     }
 
+    private IConvertible?[]? GetEnumerableConvertibles(PropertyInfo propInfo)
+    {
+        try {
+            return ((IEnumerable?)propInfo.GetValue(this))?.Cast<IConvertible?>().ToArray();
+        } catch (InvalidCastException invalidCast) {
+            Logger.LogError("{ICard} attempted to convert {Property} for binary serialization, but ", this, propInfo.Name, );
+            throw;
+        }
+    }
     /// <summary>
     /// A helper method that attempts to convert property values to serialized objects.
     /// </summary>
