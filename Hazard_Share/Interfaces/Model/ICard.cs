@@ -1,7 +1,9 @@
 ﻿using Hazard_Share.Enums;
+using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
 using System.Collections;
 using System.Reflection;
+using System.Linq;
 
 namespace Hazard_Share.Interfaces.Model;
 
@@ -15,6 +17,17 @@ namespace Hazard_Share.Interfaces.Model;
 public interface ICard : IBinarySerializable
 {
     ILogger Logger { get; }
+    /// <summary>
+    /// Gets a binary conversion <see cref="Type"/> for each property, by name, of the <see cref="ICard"/>. 
+    /// </summary>
+    /// <value>
+    /// A map of property name <see cref="string"/>s to <see cref="Type"/>s.
+    /// </value>
+    /// <remarks>
+    /// The map is used for binary serialization by <see cref="Hazard_Model.DataAccess.BinarySerializer.SerializeCardInfo"/>. If an <see cref="ICard"/> is to be serialized via this method, <br/>
+    /// it must initialize <see cref="PropertySerializableTypeMap"/> before calls to <see cref="Hazard_Model.DataAccess.BinarySerializer.WriteData"/>.
+    /// </remarks>
+    Dictionary<string, Type> PropertySerializableTypeMap { get; }
     /// <summary>
     /// Gets the name of the parent <see cref="Type"/> of this <see cref="ICard"/>. 
     /// </summary>
@@ -47,59 +60,97 @@ public interface ICard : IBinarySerializable
     /// </value>
     bool IsTradeable { get; set; }
 
-    (Type SerialType, IConvertible?[] SerialValues)[] IBinarySerializable.GetSaveData()
+    (Type SerialType, IConvertible?[] SerialValues)[] IBinarySerializable.GetBinarySerials()
     {
         Type instanceType = this.GetType();
         PropertyInfo[] instanceProperties = instanceType.GetProperties();
-        List<(Type, IConvertible?[])> saveData = [(typeof(int), [instanceProperties.Length - 1])]; // CardSet is excluded since it is initialized independently.
+
+        List<(Type SerialType, IConvertible?[] SerialValues)> serialData = [];
+        serialData.Add((typeof(int), [instanceProperties.Length - 2])); // CardSet and SerialPropertyTypeMap are excluded since they are initialized independently.
         foreach (PropertyInfo propInfo in instanceProperties) {
-            if (propInfo.Name == nameof(CardSet))
+            string propName = propInfo.Name;
+            if (propName == nameof(CardSet) || propName == nameof(PropertySerializableTypeMap))
                 continue;
-            if (!TryGetPropertySerials(propInfo, out IConvertible?[]? serialValues) || serialValues == null) {
-                Logger.LogWarning("{Card} binary serialization failed on {Property}.", this, propInfo.Name);
+            if (PropertySerializableTypeMap[propName] is not Type mappedType) {
+                Logger.LogWarning("{Card} binary serialization failed on {Property} because a corresponding Type was not found in {Map}.", this, propName, PropertySerializableTypeMap);
                 continue;
             }
-            /// BRING BACK PROPERTY SERIALIZABLE TYPE MAP!! <----
-            foreach(var serialValue in serialValues)
-            saveData.Add((typeof(int), [serialValues.Length])); // To read back data, a preceding length is required for each property
-            saveData.AddRange(serialValues);
-        }
 
-        return flatPropData.ToArray();
-    }
-    bool TryGetPropertySerials(PropertyInfo propInfo, out IConvertible?[]? serialValues)
-    {
-        serialValues = propInfo.PropertyType switch {
-            Type t when typeof(IEnumerable).IsAssignableFrom(t) => GetEnumerableConvertibles(propInfo),
-            Type t when typeof(IBinarySerializable).IsAssignableFrom(t) => ((IBinarySerializable?)propInfo.GetValue(this))?.GetSaveData(),
-            Type t when t.IsEnum => [(int?)propInfo.GetValue(this)],
-            Type t when t.IsPrimitive => [(IConvertible?)propInfo.GetValue(this)],
-            _ => null
-        }; 
+            serialData.Add((typeof(string), [propName])); // Name is used by SerialPropertyTypeMap
 
-        return serialValues != null;
-    }
-    private IConvertible?[]? GetEnumerableConvertibles(PropertyInfo propInfo)
-    {
-        var propValue = (IEnumerable?)propInfo.GetValue(this);
-
-        List<IConvertible?> convertedMembers = [];
-        IEnumerator? memberEnumerator = propValue?.GetEnumerator();
-        while (memberEnumerator?.MoveNext() ?? false) {
-            var memberType = memberEnumerator.Current.GetType();
-            if (memberType.IsEnum)
-                convertedMembers.Add((int)memberEnumerator.Current);
-            else if (memberType is IConvertible)
-                convertedMembers.Add((IConvertible)memberEnumerator.Current);
-            else {
-                Logger.LogError("{ICard} attempted to convert the collection {Property} for binary serialization, but its member {Current} was not an Enum or an IConvertible (primitive).", this, propInfo.Name, memberEnumerator.Current);
-                return null;
+            if (!TryGetConvertibles(propInfo, out IConvertible?[] propConvertibles) || propConvertibles == null) {
+                Logger.LogWarning("{Card} binary serialization failed on {Property}.", this, propName);
+                continue;
             }
+
+            serialData.Add((typeof(int), [propConvertibles.Length]));
+            foreach (var datum in propConvertibles)
+                serialData.Add((mappedType, [datum]));
         }
 
-        return convertedMembers.ToArray();
+
+        serialData.Insert(0, (typeof(int), [serialData.Count])); // since this default method dynamically builds the serials, total length isn't available until here
+        return serialData.ToArray();
     }
-    bool IBinarySerializable.LoadSaveData(BinaryReader reader)
+    bool TryGetConvertibles(PropertyInfo propInfo, out IConvertible?[] convertibles)
+    {
+        switch (propInfo.PropertyType) {
+            case Type t when typeof(IEnumerable).IsAssignableFrom(t):
+                var propValue = propInfo.GetValue(this) as IEnumerable;
+                if (propValue == null) {
+                    convertibles = [null];
+                    return false;
+                }
+                if (!propValue.Cast<object>().Any()) {
+                    Logger.LogWarning("{Card}'s property {Property} returned an empty enumerable on serialization.", this, propInfo.Name);
+                    convertibles = [];
+                    return true;
+                }
+
+                // check if all generic Types of property are IConvertibles before casting them to IConvertible
+                var typeArguments = t.IsGenericType ? t.GetGenericArguments() : t.GetInterfaces()
+                    .FirstOrDefault(face => face.IsGenericType && face.GetGenericTypeDefinition() == typeof(IEnumerable<>))?
+                    .GetGenericArguments();
+                if (typeArguments == null || typeArguments.Length != 1 || !typeof(IConvertible).IsAssignableFrom(typeArguments[0])) {
+                    Logger.LogWarning("{Card} failed to serialize IEnumerable<> {Property} because its generic arguments were improper (multiple, or not IConvertible).", this, propInfo.Name);
+                    convertibles = [null];
+                    return false;
+                }
+
+                convertibles = [..propValue.Cast<IConvertible>()];
+                return true;
+
+            case Type t when t.IsEnum:
+                if (propInfo.GetValue(this) is not Enum enumValue) {
+                    Logger.LogWarning("{Card} failed to serialize Enum {Property} because it returned a null value.", this, propInfo.Name);
+                    convertibles = [null];
+                    return false;
+                }
+                if (Enum.GetUnderlyingType(enumValue.GetType()) != typeof(int)) {
+                    Logger.LogWarning("{Card} attempted to serialize Enum {Property}, but its underlying type was not int.", this, propInfo.Name);
+                    convertibles = [null];
+                    return false;
+                }
+                convertibles = [Convert.ToInt32(enumValue)];
+                return true;
+
+            case Type t when t.IsPrimitive:
+                if (propInfo.GetValue(this) is not IConvertible convertible) {
+                    Logger.LogWarning("{Card} failed to serialize convertible/primitive {Property} because it returned a null value.", this, propInfo.Name);
+                    convertibles = [null];
+                    return false;
+                }
+                convertibles = [convertible];
+                return true;
+
+            default:
+                Logger.LogWarning("{Card} failed to serialize convertible/primitive {Property} because it does not implement IConvertible (it is not a string, Enum, or primitive type).", this, propInfo.Name);
+                convertibles = [null];
+                return false;
+        }
+    }
+
+    bool IBinarySerializable.LoadFromBinarySerials()
     {
         var cardProps = this.GetType().GetProperties();
         int numLoadProperties = reader.ReadInt32();

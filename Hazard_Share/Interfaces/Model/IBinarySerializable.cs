@@ -9,6 +9,6 @@ namespace Hazard_Share.Interfaces.Model;
 
 public interface IBinarySerializable
 {
-    IConvertible?[] GetSaveData();
-    bool LoadSaveData(BinaryReader reader);
+    bool LoadFromSerials((Type SerialType, IConvertible?[] SerialValues)[] serials);
+    (Type SerialType, IConvertible?[] SerialValues)[] GetBinarySerials();
 }

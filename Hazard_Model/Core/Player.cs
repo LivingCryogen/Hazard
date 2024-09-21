@@ -43,9 +43,11 @@ public class Player : IPlayer
 
     #region Properties
     /// <inheritdoc cref="IPlayer.Name"/>.
-    public string Name { get; init; }
+    /// <remarks>Can be set privately to accomodate loading from serial values.</remarks>
+    public string Name { get; private set; }
     /// <inheritdoc cref="IPlayer.Number"/>.
-    public int Number { get; init; }
+    /// <remarks>Can be set privately to accomodate loading from serial values.</remarks>
+    public int Number { get; private set; }
     /// <inheritdoc cref="IPlayer.HasCardSet"/>.
     public bool HasCardSet { get; set; } = false;
     /// <inheritdoc cref="IPlayer.ArmyBonus"/>.
@@ -71,17 +73,92 @@ public class Player : IPlayer
 
     #region Methods
 
-    public IConvertible?[] GetSaveData()
+    public (Type SerialType, IConvertible?[] SerialValues)[] GetBinarySerials()
     {
-        List<object> data = [Name, _armyPool, ContinentBonus, ControlledTerritories.Count];
-        foreach (TerrID territory in ControlledTerritories)
-            data.Add((int)territory)
-        data.Add((Hand.Count, typeof(int)));
-        foreach (ICard card in Hand)
-            data.Add((card.GetSaveData(_logger), typeof(ICard)));
-        return data;
+        List<(Type SerialType, IConvertible?[] SerialValues)> data = [
+            (typeof(string), [Name]),
+            (typeof(int), [_armyPool]),
+            (typeof(int), [ContinentBonus]),
+            (typeof(int), [ControlledTerritories.Count])
+            ];
+        for (int i = 0; i < ControlledTerritories.Count; i++) 
+            data.Add((typeof(int), [(int)ControlledTerritories[i]]));
+        data.Add((typeof(int), [Hand.Count]));
+        for (int i = 0; i < Hand.Count; i++) {
+            data.AddRange(Hand[i].GetBinarySerials());
+        }
+        return [..data];
+    }
 
+    public bool LoadFromSerials((Type SerialType, IConvertible?[] SerialValues)[] serials)
+    {
+        if (serials.Length < 5) {
+            _logger.LogError("{Player} failed to load from binary serials {serials} because there were too few values.", this, serials);
+            return false;
+        }
 
+        bool loadComplete = true;
+
+        if (serials[0].SerialType != typeof(string)) {
+            _logger.LogWarning("{Player} failed to load {NameProperty} from binary due to property type, serial type mismatch.", this, Name);
+            loadComplete = false;
+        }
+        else
+            Name = (string?)serials[0].SerialValues[0] ?? string.Empty;
+
+        if (serials[1].SerialType != typeof(int)) {
+            _logger.LogWarning("{Player} failed to load {ArmyPoolField} from binary due to property type, serial type mismatch.", this, _armyPool);
+            loadComplete = false;
+        }
+        else
+            _armyPool = (int?)serials[1].SerialValues[0] ?? 0;
+
+        if (serials[2].SerialType != typeof(int)) {
+            _logger.LogWarning("{Player} failed to load {ContinentBonusProperty} from binary due to property type, serial type mismatch.", this, ContinentBonus);
+            loadComplete = false;
+        }
+        else
+            ContinentBonus = (int?)serials[2].SerialValues[0] ?? 0;
+
+        int numControlledTerritories = 0;
+        if (serials[3].SerialType != typeof(int)) {
+            _logger.LogWarning("{Player} failed to load from binary due to a serial type mismatch.", this);
+            loadComplete = false;
+        }
+        else
+            numControlledTerritories = (int?)serials[3].SerialValues[0] ?? 0;
+
+        for (int i = 4; i <= 3 + numControlledTerritories; i++)
+            if (serials[i].SerialValues[0] is int terrNum)
+                ControlledTerritories.Add((TerrID)terrNum);
+            else
+                _logger.LogWarning("{Player} attempted to add to {ControlledTerritoryPropert} from a serial value that was not an integer.", this, ControlledTerritories);
+        int serialIndex = 4 + numControlledTerritories;
+        int numCards = 0;
+        if (serials[serialIndex].SerialType != typeof(int)) {
+            _logger.LogWarning("{Player} failed to load from binary due to a serial type mismatch.", this);
+            loadComplete = false;
+        }
+        else
+            numCards = (int?)serials[serialIndex].SerialValues[0] ?? 0;
+        
+        for (int index = serialIndex + 1; index <= serials.Length; index++) {
+            if (Activator.CreateInstance(typeof(ICard)) is not ICard newCard) {
+                _logger.LogWarning("ICard activation failed during load of {PlayerHand}.", Hand);
+                continue;
+            }
+            int cardSerialsLength = (int?)serials[index].SerialValues[0] ?? 0;
+            index++;
+            if (index + cardSerialsLength > serials.Length) {
+                _logger.LogError("{Player} failed to load cards in {HandProperty} because it exceeded the {length} of provided serials.", this, Hand, serials.Length);
+                loadComplete = false;
+                break;
+            }
+            newCard.LoadFromSerials([.. serials[index.. (index + cardSerialsLength)]]);
+            index += cardSerialsLength - 1;
+        }
+
+        return loadComplete;
     }
     /// <inheritdoc cref="IPlayer.GetsTradeBonus(int)"/>.
     public void GetsTradeBonus(int tradeInBonus)
