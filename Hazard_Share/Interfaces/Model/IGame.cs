@@ -6,7 +6,7 @@ namespace Hazard_Share.Interfaces.Model;
 /// <summary>
 /// Wraps the Model of the current game for injection into and observation by <see cref="Hazard_Share.Interfaces.ViewModel.IMainVM"/>.
 /// </summary>
-public interface IGame
+public interface IGame : IBinarySerializable
 {
     /// <summary>
     /// Fires when a player loses, carrying their <see cref="IPlayer.Number"/>.

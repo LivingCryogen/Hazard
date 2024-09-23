@@ -3,6 +3,7 @@ using Hazard_Model.Entities;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Services.Registry;
+using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
 
 namespace Hazard_Model.Core;
@@ -24,6 +25,7 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
 
     /// <inheritdoc cref="IGame.ID"/>.
     public Guid? ID { get; set; } = null;
+    private string? PrecedingSaveData { get; set; } = null;
     /// <inheritdoc cref="IGame.DefaultCardMode"/>
     public bool DefaultCardMode { get; set; } = true; // future implementation of Mission Cards or other ICard extensions would hinge on this being set to false
     /// <summary>
@@ -87,9 +89,15 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
         else
             fileStream = new(fileName, FileMode.Truncate, FileAccess.Write);
 
+        Hazard_Share.Services.Serializer.BinarySerializer.Save()
         BinarySerializer serializer = new(this, fileStream, _typeRegister, Logger);
         await serializer.SaveGame(precedingData);
     }
+    SerializedData[] GetBinarySerialData()
+    {
+
+    }
+
     /// <summary>
     /// Sets up a two-player game. Rules dictate that two-player setup includes a third, neutral, dummy "player", and that the initial selection of territories is random.
     /// </summary>

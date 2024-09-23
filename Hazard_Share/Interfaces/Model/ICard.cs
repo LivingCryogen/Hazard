@@ -61,13 +61,13 @@ public interface ICard : IBinarySerializable
     /// </value>
     bool IsTradeable { get; set; }
 
-    (Type SerialType, IConvertible[] SerialValues)[] IBinarySerializable.GetBinarySerials()
+    SerializedData[] IBinarySerializable.GetBinarySerialData()
     {
         Type instanceType = this.GetType();
         PropertyInfo[] instanceProperties = instanceType.GetProperties();
 
-        List<(Type SerialType, IConvertible[] SerialValues)> serialData = [];
-        serialData.Add((typeof(int), [instanceProperties.Length - 2])); // CardSet and SerialPropertyTypeMap are excluded since they are initialized independently.
+        List<SerializedData> serialData = [];
+        serialData.Add(new SerializedData(typeof(int), [instanceProperties.Length - 2], false)); // CardSet and SerialPropertyTypeMap are excluded since they are initialized independently.
         foreach (PropertyInfo propInfo in instanceProperties) {
             string propName = propInfo.Name;
             if (propName == nameof(CardSet) || propName == nameof(PropertySerializableTypeMap))
@@ -77,20 +77,20 @@ public interface ICard : IBinarySerializable
                 continue;
             }
 
-            serialData.Add((typeof(string), [propName])); // Name is used by SerialPropertyTypeMap
+            serialData.Add(new SerializedData(typeof(string), [propName], false)); // Name is used by SerialPropertyTypeMap
 
             if (!TryGetConvertibles(propInfo, out IConvertible[] propConvertibles) || propConvertibles == null) {
                 Logger.LogWarning("{Card} binary serialization failed on {Property}.", this, propName);
                 continue;
             }
 
-            serialData.Add((typeof(int), [propConvertibles.Length]));
-            foreach (var datum in propConvertibles)
-                serialData.Add((mappedType, [datum]));
+            serialData.Add(new SerializedData(typeof(int), [propConvertibles.Length], false));
+            foreach (var convertible in propConvertibles)
+                serialData.Add(new SerializedData(mappedType, [convertible], false));
         }
 
 
-        serialData.Insert(0, (typeof(int), [serialData.Count])); // since this default method dynamically builds the serials, total length isn't available until here
+        serialData.Insert(0, new SerializedData(typeof(int), [serialData.Count], false)); // since this default method dynamically builds the serials, total length isn't available until here
 
         return [.. serialData];
     }
@@ -98,8 +98,7 @@ public interface ICard : IBinarySerializable
     {
         switch (propInfo.PropertyType) {
             case Type t when typeof(IEnumerable).IsAssignableFrom(t):
-                var propValue = propInfo.GetValue(this) as IEnumerable;
-                if (propValue == null) {
+                if (propInfo.GetValue(this) is not IEnumerable propValue) {
                     convertibles = [];
                     return false;
                 }
@@ -155,7 +154,7 @@ public interface ICard : IBinarySerializable
     bool IBinarySerializable.LoadFromBinary(BinaryReader reader)
     {
         var cardProps = this.GetType().GetProperties();
-        int loadedNumProperties = reader.ReadInt32();
+        int loadedNumProperties = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
         int numProperties = cardProps.Length;
         if (numProperties - 2 != loadedNumProperties) { // recall that CardSet and PropertySerializableTypeMap are excluded
             Logger.LogError("{Card} attempted to load from binary, but there was a property count mismatch.", this);
@@ -169,28 +168,29 @@ public interface ICard : IBinarySerializable
             if (propName == nameof(CardSet) || propName == nameof(PropertySerializableTypeMap))
                 continue;
 
-            string loadedName = reader.ReadString();
+            string loadedName = (string)BinarySerializer.ReadConvertible(reader, typeof(string)); ;
             if (propName != loadedName) {
                 Logger.LogError("{Card} attempted to load from binary, but there was a property name mismatch.", this);
                 return false;
             }
 
-            int numValsLoaded = reader.ReadInt32();
+            int numValsLoaded = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             Type propType = cardProps[propIndex].PropertyType;
-            if (propType.IsAssignableFrom(typeof(IEnumerable)) == false && numValsLoaded > 1) {
-                Logger.LogError("{Card} attempted to load from binary, but there was a property type mismatch: the property was not an IEnumerable, but it attempted to load multiple values.", this);
-                return false;
-            }
-
             if (PropertySerializableTypeMap[loadedName] is not Type serialType) {
                 Logger.LogError("{Card} attempted to load from binary, but the name of a loaded property was not found in {Map}.", this, PropertySerializableTypeMap);
                 return false;
             }
-
-            BinarySerializer.ReadConvertible(reader,,)
-            for (int i = 0; i < numValsLoaded; i++)
-                
+            if (propType.IsAssignableFrom(typeof(IEnumerable)) == false) {
+                if (numValsLoaded > 1) {
+                    Logger.LogError("{Card} attempted to load from binary, but there was a property type mismatch: the property was not an IEnumerable, but it attempted to load multiple values.", this);
+                    return false;
+                }
+                cardProps[propIndex].SetValue(this, BinarySerializer.ReadConvertible(reader, serialType));
+            }
+            else 
+                cardProps[propIndex].SetValue(this, BinarySerializer.ReadConvertibles(reader, serialType, numValsLoaded));
         }
 
+        return true;
     }
 }

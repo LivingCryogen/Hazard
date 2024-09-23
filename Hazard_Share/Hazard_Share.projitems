@@ -48,6 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\Registry\TypeRegister.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Registry\TypeRelations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Serializer\BinarySerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Serializer\SerializedData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Interfaces\ViewModel\" />
