@@ -61,38 +61,38 @@ public interface ICard : IBinarySerializable
     /// </value>
     bool IsTradeable { get; set; }
 
-    SerializedData[] IBinarySerializable.GetBinarySerialData()
+    async Task<SerializedData[]> IBinarySerializable.GetBinarySerialData()
     {
-        Type instanceType = this.GetType();
-        PropertyInfo[] instanceProperties = instanceType.GetProperties();
+        return await Task.Run(() =>
+        {
+            Type instanceType = this.GetType();
+            PropertyInfo[] instanceProperties = instanceType.GetProperties();
 
-        List<SerializedData> serialData = [];
-        serialData.Add(new SerializedData(typeof(int), [instanceProperties.Length - 2], false)); // CardSet and SerialPropertyTypeMap are excluded since they are initialized independently.
-        foreach (PropertyInfo propInfo in instanceProperties) {
-            string propName = propInfo.Name;
-            if (propName == nameof(CardSet) || propName == nameof(PropertySerializableTypeMap))
-                continue;
-            if (PropertySerializableTypeMap[propName] is not Type mappedType) {
-                Logger.LogWarning("{Card} binary serialization failed on {Property} because a corresponding Type was not found in {Map}.", this, propName, PropertySerializableTypeMap);
-                continue;
+            List<SerializedData> serialData = [];
+            serialData.Add(new SerializedData(typeof(int), [instanceProperties.Length - 2], null)); // CardSet and SerialPropertyTypeMap are excluded since they are initialized independently.
+            foreach (PropertyInfo propInfo in instanceProperties) {
+                string propName = propInfo.Name;
+                if (propName == nameof(CardSet) || propName == nameof(PropertySerializableTypeMap))
+                    continue;
+                if (PropertySerializableTypeMap[propName] is not Type mappedType) {
+                    Logger.LogWarning("{Card} binary serialization failed on {Property} because a corresponding Type was not found in {Map}.", this, propName, PropertySerializableTypeMap);
+                    continue;
+                }
+
+                if (!TryGetConvertibles(propInfo, out IConvertible[] propConvertibles) || propConvertibles == null) {
+                    Logger.LogWarning("{Card} binary serialization failed on {Property}.", this, propName);
+                    continue;
+                }
+
+                serialData.Add(new SerializedData(typeof(int), [propConvertibles.Length], null));
+                foreach (var convertible in propConvertibles)
+                    serialData.Add(new SerializedData(mappedType, [convertible], propName)); // Name is used by SerialPropertyTypeMap
             }
 
-            serialData.Add(new SerializedData(typeof(string), [propName], false)); // Name is used by SerialPropertyTypeMap
 
-            if (!TryGetConvertibles(propInfo, out IConvertible[] propConvertibles) || propConvertibles == null) {
-                Logger.LogWarning("{Card} binary serialization failed on {Property}.", this, propName);
-                continue;
-            }
-
-            serialData.Add(new SerializedData(typeof(int), [propConvertibles.Length], false));
-            foreach (var convertible in propConvertibles)
-                serialData.Add(new SerializedData(mappedType, [convertible], false));
-        }
-
-
-        serialData.Insert(0, new SerializedData(typeof(int), [serialData.Count], false)); // since this default method dynamically builds the serials, total length isn't available until here
-
-        return [.. serialData];
+            serialData.Insert(0, new SerializedData(typeof(int), [serialData.Count], null)); // since this default method dynamically builds the serials, total length isn't available until here
+            return serialData.ToArray();
+        });
     }
     bool TryGetConvertibles(PropertyInfo propInfo, out IConvertible[] convertibles)
     {

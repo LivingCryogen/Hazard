@@ -30,7 +30,6 @@ public static class BinarySerializer
     }
     #endregion
     #region Serialization Methods
-
     private static void WriteConvertible(BinaryWriter writer, Type type, IConvertible value)
     {
         byte[] bytes = ConvertibleToBytes(type, value);
@@ -39,13 +38,8 @@ public static class BinarySerializer
     }
     private static void WriteConvertibles(BinaryWriter writer, Type type, IConvertible[] values)
     {
-        var arrayPool = System.Buffers.ArrayPool<byte>.Shared;
-        foreach (IConvertible value in values) {
-            byte[] bytes = ConvertibleToBytes(type, value);
-            writer.Write(bytes.Length);
-            writer.Write(bytes);
-            arrayPool.Return(bytes, clearArray: true);
-        }
+        foreach (IConvertible value in values)
+            WriteConvertible(writer, type, value);
     }
     public static IConvertible ReadConvertible(BinaryReader reader, Type type)
     {
@@ -56,84 +50,74 @@ public static class BinarySerializer
     public static IConvertible[] ReadConvertibles(BinaryReader reader, Type type, int numValues)
     {
         List<IConvertible> readConvertibles = [];
-        for(int i = 0; i < numValues; i++)
-            readConvertibles.Add(ReadConvertible(reader,type));
+        for (int i = 0; i < numValues; i++)
+            readConvertibles.Add(ReadConvertible(reader, type));
         return [.. readConvertibles];
     }
 
-    //private static void WriteConvertibleWithType(BinaryWriter writer, IConvertible value)
-    //{
-    //    Type valueType = value.GetType();
-    //    if (valueType.AssemblyQualifiedName is not string typeName)
-    //        throw new ArgumentException($"Reflection failed to find a qualified type name for {value}.");
-    //    writer.Write(typeName);  
-    //    WriteConvertible(writer, valueType, value);
-    //}
-    private static void WriteConvertibleWithType(BinaryWriter writer, Type type, IConvertible value)
+    private static void WriteTaggedConvertible(BinaryWriter writer, Type type, IConvertible value, string tag)
     {
-        if (type.AssemblyQualifiedName is not string typeName)
-            throw new ArgumentException($"Failed to find a qualified type name for {type}.");
-        writer.Write(typeName);
+        writer.Write(tag);
         WriteConvertible(writer, type, value);
     }
-    private static void WriteConvertibleWithType(BinaryWriter writer, Type type, string typeName, IConvertible value)
+    private static void WriteTaggedConvertibles(BinaryWriter writer, Type type, IConvertible[] values, string tag)
     {
-        writer.Write(typeName);
-        WriteConvertible(writer, type, value);
-    }
-    //private static void WriteTypedConvertibles(BinaryWriter writer, IConvertible[] values)
-    //{
-    //    foreach (IConvertible value in values)
-    //        WriteTypedConvertible(writer, value);
-    //}
-    private static void WriteConvertiblesWithType(BinaryWriter writer, Type type, IConvertible[] values)
-    {
-        if (type.AssemblyQualifiedName is not string typeName)
-            throw new ArgumentException($"Failed to find a qualified type name for {type}.");
-
+        writer.Write(tag);
+        writer.Write(values.Length);
         foreach (IConvertible value in values)
-            WriteConvertibleWithType(writer, type, typeName, value);
+            WriteTaggedConvertible(writer, type, value, tag);
     }
-    //private static IConvertible ReadTypedConvertible(BinaryReader reader)
-    //{
-    //    string typeName = reader.ReadString();
-    //    if (Type.GetType(typeName) is not Type type)
-    //        throw new ArgumentException($"Failed to find a type with name {typeName}.");
-    //    return ReadTypelessConvertible(reader, type);
-    //}
-    //private static IConvertible[] ReadTypedConvertibles(BinaryReader reader, int numValues)
-    //{
-    //    List<IConvertible> readConvertibles = [];
-    //    for (int i = 0; i < numValues; i++)
-    //        readConvertibles.Add(ReadTypedConvertible(reader));
-    //    return [.. readConvertibles];
-    //}
+    private static IConvertible ReadTaggedConvertible(BinaryReader reader, Type type, int numValues, out string tag)
+    {
+        tag = reader.ReadString();
+        return ReadConvertible(reader, type);
+    }
+    private static IConvertible[] ReadTaggedConvertibles(BinaryReader reader, Type type, out string tag)
+    {
+        tag = reader.ReadString();
+        int numTagged = reader.ReadInt32();
+        return ReadConvertibles(reader, type, numTagged);
+    }
+    private static IConvertible[] ReadTaggedConvertibles(BinaryReader reader, Type type, int numValues, out string tag)
+    {
+        tag = reader.ReadString();
+        int numTagged = reader.ReadInt32();
+        if (numValues != numTagged)
+            throw new ArgumentException($"A number of items {numValues} was expected, which did not match the number of tags read. ", nameof(numValues));
+        return ReadConvertibles(reader, type, numValues);
+    }
     #endregion
 
-    public static bool Save(IBinarySerializable[] serializableObjects, string fileName, bool newFile, ILogger logger)
+    public async static Task Save(IBinarySerializable[] serializableObjects, string fileName, bool newFile, ILogger logger)
     {
-        if (newFile) {
-            using FileStream fileStream = new(fileName, FileMode.Create, FileAccess.Write);
-            using BinaryWriter writer = new(fileStream);
+        await Task.Run(() =>
+        {
+            if (newFile) {
+                using FileStream fileStream = new(fileName, FileMode.Create, FileAccess.Write);
+                using BinaryWriter writer = new(fileStream);
 
-            bool errors = false;
-            foreach (var obj in serializableObjects)
-                if (!WriteSerializableObject(obj, writer, logger))
-                    errors = true;
+                foreach (var obj in serializableObjects)
+                    try {
+                        if (!WriteSerializableObject(obj, writer, logger))
+                            logger.LogWarning("BinarySerializer failed to write {Object}.", obj);
+                    } catch (Exception e) {
+                        logger.LogError("An exception was thrown when attempting to write {obj}: {Message}.", obj, e.Message);
+                    }
+            }
+            else {
+                using FileStream fileStream = new(fileName, FileMode.Truncate, FileAccess.Write);
+                using BinaryWriter writer = new(fileStream);
 
-            return !errors;
-        }
-        else {
-            using FileStream fileStream = new(fileName, FileMode.Truncate, FileAccess.Write);
-            using BinaryWriter writer = new(fileStream);
 
-            bool errors = false;
-            foreach (var obj in serializableObjects)
-                if (!WriteSerializableObject(obj, writer, logger))
-                    errors = true;
-
-            return !errors;
-        }
+                foreach (var obj in serializableObjects)
+                    try {
+                        if (!WriteSerializableObject(obj, writer, logger))
+                            logger.LogWarning("BinarySerializer failed to write {Object}.", obj);
+                    } catch (Exception e) {
+                        logger.LogError("An exception was thrown when attempting to write {obj}: {Message}.", obj, e.Message);
+                    }
+            }
+        });
     }
     public static bool Load(IBinarySerializable[] serializableObjects, string fileName, ILogger logger)
     {
@@ -155,18 +139,18 @@ public static class BinarySerializer
     private static bool WriteSerializableObject(IBinarySerializable serializableObject, BinaryWriter writer, ILogger logger)
     {
         try {
-            SerializedData[] saveData = serializableObject.GetBinarySerialData();
+            SerializedData[] saveData = serializableObject.GetBinarySerialData().Result;
             foreach (SerializedData saveDatum in saveData) {
-                if (saveDatum.WriteTypeName)
+                if (saveDatum.Tag != null) 
                     if (saveDatum.SerialValues.Length > 1)
-                        WriteConvertiblesWithType(writer, saveDatum.SerialType, saveDatum.SerialValues);
+                        WriteTaggedConvertibles(writer, saveDatum.SerialType, saveDatum.SerialValues, saveDatum.Tag);
                     else
-                        WriteConvertibleWithType(writer, saveDatum.SerialType, saveDatum.SerialValues[0]);
-                else
+                        WriteTaggedConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0], saveDatum.Tag);
+                else 
                     if (saveDatum.SerialValues.Length > 1)
-                    WriteConvertibles(writer, saveDatum.SerialType, saveDatum.SerialValues);
-                else
-                    WriteConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0]);
+                        WriteConvertibles(writer, saveDatum.SerialType, saveDatum.SerialValues);
+                    else
+                        WriteConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0]);
             }
         } catch (Exception ex) {
             logger.LogError("{Message}.", ex.Message);

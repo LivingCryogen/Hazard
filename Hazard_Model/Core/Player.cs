@@ -1,6 +1,7 @@
 ﻿using Hazard_Model.EventArgs;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
+using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
 using System.Collections.Specialized;
 
@@ -73,68 +74,33 @@ public class Player : IPlayer
 
     #region Methods
 
-    public (Type SerialType, IConvertible?[] SerialValues)[] GetBinarySerials()
+    public SerializedData[] GetBinarySerialData()
     {
-        List<(Type SerialType, IConvertible?[] SerialValues)> data = [
-            (typeof(string), [Name]),
-            (typeof(int), [_armyPool]),
-            (typeof(int), [ContinentBonus]),
-            (typeof(int), [ControlledTerritories.Count])
+        List<SerializedData> data = [
+            new (typeof(string), [Name], false),
+            new (typeof(int), [_armyPool], false),
+            new (typeof(int), [ContinentBonus], false),
+            new (typeof(int), [ControlledTerritories.Count], false)
             ];
         for (int i = 0; i < ControlledTerritories.Count; i++) 
-            data.Add((typeof(int), [(int)ControlledTerritories[i]]));
-        data.Add((typeof(int), [Hand.Count]));
+            data.Add(new (typeof(int), [(int)ControlledTerritories[i]], false));
+        data.Add(new (typeof(int), [Hand.Count], false));
         for (int i = 0; i < Hand.Count; i++) {
-            data.AddRange(Hand[i].GetBinarySerials());
+            data.AddRange(Hand[i].GetBinarySerialData());
         }
         return [..data];
     }
 
-    public bool LoadFromSerials((Type SerialType, IConvertible?[] SerialValues)[] serials)
+    public bool LoadFromBinary(BinaryReader reader)
     {
-        if (serials.Length < 5) {
-            _logger.LogError("{Player} failed to load from binary serials {serials} because there were too few values.", this, serials);
-            return false;
-        }
-
         bool loadComplete = true;
-
-        if (serials[0].SerialType != typeof(string)) {
-            _logger.LogWarning("{Player} failed to load {NameProperty} from binary due to property type, serial type mismatch.", this, Name);
-            loadComplete = false;
-        }
-        else
-            Name = (string?)serials[0].SerialValues[0] ?? string.Empty;
-
-        if (serials[1].SerialType != typeof(int)) {
-            _logger.LogWarning("{Player} failed to load {ArmyPoolField} from binary due to property type, serial type mismatch.", this, _armyPool);
-            loadComplete = false;
-        }
-        else
-            _armyPool = (int?)serials[1].SerialValues[0] ?? 0;
-
-        if (serials[2].SerialType != typeof(int)) {
-            _logger.LogWarning("{Player} failed to load {ContinentBonusProperty} from binary due to property type, serial type mismatch.", this, ContinentBonus);
-            loadComplete = false;
-        }
-        else
-            ContinentBonus = (int?)serials[2].SerialValues[0] ?? 0;
-
-        int numControlledTerritories = 0;
-        if (serials[3].SerialType != typeof(int)) {
-            _logger.LogWarning("{Player} failed to load from binary due to a serial type mismatch.", this);
-            loadComplete = false;
-        }
-        else
-            numControlledTerritories = (int?)serials[3].SerialValues[0] ?? 0;
-
-        for (int i = 4; i <= 3 + numControlledTerritories; i++)
-            if (serials[i].SerialValues[0] is int terrNum)
-                ControlledTerritories.Add((TerrID)terrNum);
-            else
-                _logger.LogWarning("{Player} attempted to add to {ControlledTerritoryPropert} from a serial value that was not an integer.", this, ControlledTerritories);
-        int serialIndex = 4 + numControlledTerritories;
-        int numCards = 0;
+        Name = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+        _armyPool = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+        ContinentBonus = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+        int numControlledTerritories = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+        for (int i = 0; i < numControlledTerritories; i++)
+            ControlledTerritories.Add((TerrID)BinarySerializer.ReadConvertible(reader, typeof(int)));
+        int numCards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
         if (serials[serialIndex].SerialType != typeof(int)) {
             _logger.LogWarning("{Player} failed to load from binary due to a serial type mismatch.", this);
             loadComplete = false;

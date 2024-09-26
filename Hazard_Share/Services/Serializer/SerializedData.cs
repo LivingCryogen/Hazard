@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Hazard_Share.Services.Serializer;
 
-public readonly struct SerializedData(Type serialType, IConvertible[] serialValues, bool writeTypeName)
+public readonly struct SerializedData(Type serialType, IConvertible[] serialValues, string? tag)
 {
     public Type SerialType { get; init; } = serialType;
     public IConvertible[] SerialValues { get; init; } = serialValues;
-    public bool WriteTypeName { get; init; } = writeTypeName;
+    public string? Tag { get; init; } = tag;
 }
