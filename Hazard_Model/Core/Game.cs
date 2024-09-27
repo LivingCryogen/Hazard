@@ -18,10 +18,11 @@ namespace Hazard_Model.Core;
 /// <param name="logger">An <see cref="ILogger{Game}"/> for logging debug information, warnings, errors.</param>
 /// <param name="assetFetcher">An <see cref="IAssetFetcher"/> connecting the Model and the DAL through bespoke methods. Provides assets to <see cref="Game"/> properties, eg: <example><see cref="IAssetFetcher.FetchCardSets"/> for <see cref="Game.Cards"/></example>.</param>
 /// <param name="typeRegister">An <see cref="ITypeRegister{ITypeRelations}"/> serving as an Application Registry. Simplifies asset loading and configuration extension. Required for operation of <see cref="ICard"/>'s default methods.</param>
-public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogger<Game> logger, IAssetFetcher assetFetcher, ITypeRegister<ITypeRelations> typeRegister) : IGame
+public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILoggerFactory loggerFactory, IAssetFetcher assetFetcher, ITypeRegister<ITypeRelations> typeRegister) : IGame
 {
     private readonly IAssetFetcher _assetFetcher = assetFetcher;
     private readonly ITypeRegister<ITypeRelations> _typeRegister = typeRegister;
+    private readonly ILoggerFactory _loggerFactory = loggerFactory;
 
     /// <inheritdoc cref="IGame.ID"/>.
     public Guid? ID { get; set; } = null;
@@ -32,7 +33,7 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
     /// Gets or sets a logger for  debug information and errors. Should be provided by the DI system.
     /// </summary>
     /// <value>An implementation of <see cref="ILogger{T}"/>.</value>
-    public ILogger Logger { get; set; } = logger;
+    public ILogger Logger { get; private set; } 
     /// <inheritdoc cref="IGame.Values"/>.
     public IRuleValues? Values { get; set; } = values;
     /// <inheritdoc cref="IGame.Board"/>.
@@ -52,13 +53,14 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
     /// <inheritdoc cref="IGame.Initialize(string[])"/>.
     public void Initialize(string[] names)
     {
+        Logger = _loggerFactory.CreateLogger(typeof(Game));
         ID = Guid.NewGuid();
         int numPlayers = names.Length;
         State = new(numPlayers);
 
         if (numPlayers > 1) {
             for (int i = 0; i < numPlayers; i++) {
-                Players!.Add(new Player(names[i], i, numPlayers, Values!, Board!, Logger));
+                Players!.Add(new Player(names[i], i, numPlayers, _typeRegister, Values!, Board!, (ILogger<Player>)_loggerFactory.CreateLogger(typeof(Player))));
                 Players.Last().PlayerLost += OnPlayerLost;
                 Players.Last().PlayerWon += OnPlayerWin;
             }
@@ -70,15 +72,16 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
     /// <inheritdoc cref="IGame.Initialize(FileStream)"/>.
     public void Initialize(FileStream openStream)
     {
-        BinarySerializer serializer = new(this, openStream, _typeRegister, Logger);
+        Logger = _loggerFactory.CreateLogger(typeof(Game));
         Cards = new(Logger);
-        serializer.LoadGame();
+        /// serializer.LoadGame();
         if (Players.Count > 1) {
             foreach (IPlayer player in Players) {
                 player.PlayerLost += OnPlayerLost;
                 player.PlayerWon += OnPlayerWin;
             }
         }
+
     }
     /// <inheritdoc cref="IGame.Save"/>.
     public async Task Save(bool isNewFile, string fileName, string vMSaveData)
@@ -95,12 +98,12 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
                 saveData.Add(new(typeof(string), [VMSaveData], false));
             if (this.ID is Guid gameID)
                 saveData.Add(new(typeof(string), [gameID.ToString()], false));
-            saveData.AddRange(Board?.GetBinarySerialData() ?? Enumerable.Empty<SerializedData>());
+            saveData.AddRange(Board?.GetBinarySerialData().Result ?? Enumerable.Empty<SerializedData>());
             foreach (IPlayer player in Players)
-                saveData.AddRange(player?.GetBinarySerialData() ?? Enumerable.Empty<SerializedData>());
-            saveData.AddRange(Cards?.GetBinarySerialData() ?? Enumerable.Empty<SerializedData>());
-            saveData.AddRange(State?.GetBinarySerialData() ?? Enumerable.Empty<SerializedData>());
-            saveData.AddRange(Regulator?.GetBinarySerialData() ?? Enumerable.Empty<SerializedData>());
+                saveData.AddRange(player?.GetBinarySerialData().Result ?? Enumerable.Empty<SerializedData>());
+            saveData.AddRange(Cards?.GetBinarySerialData().Result ?? Enumerable.Empty<SerializedData>());
+            saveData.AddRange(State?.GetBinarySerialData().Result ?? Enumerable.Empty<SerializedData>());
+            saveData.AddRange(Regulator?.GetBinarySerialData().Result ?? Enumerable.Empty<SerializedData>());
 
             return [.. saveData];
         });

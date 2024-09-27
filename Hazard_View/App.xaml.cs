@@ -8,6 +8,7 @@ using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Interfaces.View;
 using Hazard_Share.Interfaces.ViewModel;
 using Hazard_Share.Services.Registry;
+using Hazard_Share.Services.Serializer;
 using Hazard_View.Services;
 using Hazard_ViewModel;
 using Microsoft.Extensions.Configuration;
@@ -33,6 +34,10 @@ public partial class App : Application
     {
         _devMode = DetermineDevMode();
         AppHost = BuildAppHost(out string[]? dataFileNames);
+
+        /// Static class logger initiatialization
+        var loggerFactory = AppHost.Services.GetRequiredService<ILoggerFactory>();
+        BinarySerializer.InitializeLogger(loggerFactory);
 
         if (dataFileNames == null)
             throw new ArgumentNullException(nameof(dataFileNames));

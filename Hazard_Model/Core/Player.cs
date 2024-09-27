@@ -1,6 +1,9 @@
-﻿using Hazard_Model.EventArgs;
+﻿using Hazard_Model.Entities;
+using Hazard_Model.Entities.Cards;
+using Hazard_Model.EventArgs;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
+using Hazard_Share.Services.Registry;
 using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
 using System.Collections.Specialized;
@@ -12,6 +15,7 @@ public class Player : IPlayer
     private readonly ILogger _logger;
     private readonly IRuleValues _values;
     private readonly IBoard _board;
+    private readonly CardFactory _cardFactory;
     private int _armyPool;
     /// <summary>
     /// Builds a <see cref="IPlayer"/> given certain rules values and an initial board state.
@@ -23,7 +27,7 @@ public class Player : IPlayer
     /// <param name="board">The <see cref="IBoard"/> implementation describing initial board state.</param>
     /// <param name="logger">An <see cref="ILogger"/>. Note that, since the <see cref="DataAccess.BinarySerializer"/> is responsible for initializing this on <see cref="DataAccess.BinarySerializer.LoadGame"/>, <br/>
     /// this logger must be provided by another class object, and is *not* injected via DI.</param>
-    public Player(string name, int number, int numPlayers, IRuleValues values, IBoard board, ILogger logger)
+    public Player(string name, int number, int numPlayers, CardFactory cardFactory, IRuleValues values, IBoard board, ILogger<Player> logger)
     {
         _logger = logger;
         Name = name;
@@ -33,6 +37,7 @@ public class Player : IPlayer
         ArmyPool = _values!.SetupStartingPool![numPlayers];
         Hand = [];
         _board = board;
+        _cardFactory = cardFactory;
     }
 
     /// <inheritdoc cref="IPlayer.PlayerChanged"/>.
@@ -74,21 +79,25 @@ public class Player : IPlayer
 
     #region Methods
 
-    public SerializedData[] GetBinarySerialData()
+    public async Task<SerializedData[]> GetBinarySerialData()
     {
-        List<SerializedData> data = [
-            new (typeof(string), [Name], false),
-            new (typeof(int), [_armyPool], false),
-            new (typeof(int), [ContinentBonus], false),
-            new (typeof(int), [ControlledTerritories.Count], false)
+        return await Task.Run(() =>
+        {
+            List<SerializedData> data = [
+                new (typeof(string), [Name]),
+                new (typeof(int), [_armyPool]),
+                new (typeof(int), [ContinentBonus]),
+                new (typeof(int), [ControlledTerritories.Count])
             ];
-        for (int i = 0; i < ControlledTerritories.Count; i++) 
-            data.Add(new (typeof(int), [(int)ControlledTerritories[i]], false));
-        data.Add(new (typeof(int), [Hand.Count], false));
-        for (int i = 0; i < Hand.Count; i++) {
-            data.AddRange(Hand[i].GetBinarySerialData());
-        }
-        return [..data];
+            for (int i = 0; i < ControlledTerritories.Count; i++)
+                data.Add(new(typeof(int), [(int)ControlledTerritories[i]]));
+            data.Add(new(typeof(int), [Hand.Count]));
+            for (int i = 0; i < Hand.Count; i++) {
+                data.Add(new (typeof(string), [Hand[i].TypeName]));
+                data.AddRange(Hand[i].GetBinarySerialData().Result);
+            }
+            return data.ToArray();
+        });
     }
 
     public bool LoadFromBinary(BinaryReader reader)
@@ -101,6 +110,13 @@ public class Player : IPlayer
         for (int i = 0; i < numControlledTerritories; i++)
             ControlledTerritories.Add((TerrID)BinarySerializer.ReadConvertible(reader, typeof(int)));
         int numCards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+        for (int i = 0; i < numCards; i++) {
+            string readTypeName = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+            var newCard = _cardFactory.BuildCard(readTypeName, out Type cardType);
+            newCard.LoadFromBinary(reader);
+        }
+
+        /// USE OF REGISTRY TO FIND TYPE BY STRING NAME
         if (serials[serialIndex].SerialType != typeof(int)) {
             _logger.LogWarning("{Player} failed to load from binary due to a serial type mismatch.", this);
             loadComplete = false;

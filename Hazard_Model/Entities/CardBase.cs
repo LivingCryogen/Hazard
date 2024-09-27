@@ -1,4 +1,6 @@
-﻿using Hazard_Share.Interfaces.Model;
+﻿using Hazard_Model.Entities.Cards;
+using Hazard_Share.Interfaces.Model;
+using Hazard_Share.Services.Registry;
 using Microsoft.Extensions.Logging;
 
 namespace Hazard_Model.Entities;
@@ -9,9 +11,10 @@ namespace Hazard_Model.Entities;
 /// E.g. <see cref="GameDeck"/> and <see cref="Hazard_Model.Entities.Cards.TroopCardSet"/>.
 /// </remarks>
 /// <param name="logger">An <see cref="ILogger"/> for logging debug information and errors.</param>
-public class CardBase(ILogger logger)
+public class CardBase(ILogger logger, ITypeRegister<ITypeRelations> registry)
 {
     private readonly ILogger _logger = logger;
+    public CardFactory CardFactory { get; } = new(registry);
     /// <summary>
     /// Gets or sets the list of <see cref="ICardSet"/>s used in this <see cref="IGame"/>.
     /// </summary>

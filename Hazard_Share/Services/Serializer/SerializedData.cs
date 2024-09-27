@@ -4,9 +4,20 @@ using System.Text;
 
 namespace Hazard_Share.Services.Serializer;
 
-public readonly struct SerializedData(Type serialType, IConvertible[] serialValues, string? tag)
+public readonly struct SerializedData
 {
-    public Type SerialType { get; init; } = serialType;
-    public IConvertible[] SerialValues { get; init; } = serialValues;
-    public string? Tag { get; init; } = tag;
+    public SerializedData(Type serialType, IConvertible[] serialValues, string? tag)
+    {
+        SerialType = serialType;
+        SerialValues = serialValues;
+        Tag = tag;
+    }
+    public SerializedData(Type serialType, IConvertible[] serialValues)
+    {
+        SerialType = serialType;
+        SerialValues = serialValues;
+    }
+    public Type SerialType { get; init; } 
+    public IConvertible[] SerialValues { get; init; } 
+    public string? Tag { get; init; } = null;
 }
