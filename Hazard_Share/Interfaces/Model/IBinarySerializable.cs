@@ -11,5 +11,5 @@ namespace Hazard_Share.Interfaces.Model;
 public interface IBinarySerializable
 {
     bool LoadFromBinary(BinaryReader reader);
-    Task<SerializedData[]> GetBinarySerialData();
+    Task<SerializedData[]> GetBinarySerials();
 }

@@ -1,7 +1,9 @@
 ﻿using Hazard_Model.Entities.Cards;
 using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Services.Registry;
+using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
+using System.Runtime.InteropServices;
 
 namespace Hazard_Model.Entities;
 /// <summary>
@@ -11,7 +13,7 @@ namespace Hazard_Model.Entities;
 /// E.g. <see cref="GameDeck"/> and <see cref="Hazard_Model.Entities.Cards.TroopCardSet"/>.
 /// </remarks>
 /// <param name="logger">An <see cref="ILogger"/> for logging debug information and errors.</param>
-public class CardBase(ILogger logger, ITypeRegister<ITypeRelations> registry)
+public class CardBase(ILogger logger, ITypeRegister<ITypeRelations> registry) : IBinarySerializable
 {
     private readonly ILogger _logger = logger;
     public CardFactory CardFactory { get; } = new(registry);
@@ -21,14 +23,14 @@ public class CardBase(ILogger logger, ITypeRegister<ITypeRelations> registry)
     /// <value>
     /// A <see cref="List{T}"/> if <see cref="CardBase"/>is initialized; otherwise, <see langword="null"/>.
     /// </value>
-    public List<ICardSet>? Sets { get; set; } = null;
+    public List<ICardSet> Sets { get; set; } = [];
     /// <summary>
     /// Gets or sets the deck of cards to be used for this game.
     /// </summary>
     /// <value>
     /// A <see cref="Deck"/> if <see cref="CardBase"/>is initialized; otherwise, <see langword="null"/>.
     /// </value>
-    public Deck? GameDeck { get; set; } = null;
+    public Deck GameDeck { get; set; } = new();
     /// <summary>
     /// Initializes a <see cref="CardBase"/> with assets provided by <see cref="IAssetFetcher"/>.
     /// </summary>
@@ -41,7 +43,7 @@ public class CardBase(ILogger logger, ITypeRegister<ITypeRelations> registry)
     /// <param name="defaultMode">A <see langwod="boolean"/> flag to indicate whether the <see cref="IGame"/> is in default card mode or not.</param>
     public void Initialize(IAssetFetcher assetFetcher, bool defaultMode) // defaultMode needs to be added to Game Serialization/Load
     {
-        Sets = assetFetcher.FetchCardSets();
+        Sets = assetFetcher.FetchCardSets() ?? [];
         if (Sets == null || Sets.Count == 0)
             return;
 
@@ -162,5 +164,68 @@ public class CardBase(ILogger logger, ITypeRegister<ITypeRelations> registry)
                 setList.Add(newCard);
             }
         }
+    }
+    public async Task<SerializedData[]> GetBinarySerials()
+    {
+        if (GameDeck == null)
+            return [];
+        return await Task.Run(async () => {
+            List<SerializedData> serials = [];
+            int numLibrary = GameDeck.Library.Count;
+            serials.Add(new(typeof(int), [numLibrary]));
+            for (int i = 0; i < numLibrary; i++) {
+                ICard currentCard = GameDeck.Library[i];
+                serials.Add(new (typeof(string), [currentCard.TypeName]));
+                IEnumerable<SerializedData> cardSerials = await currentCard.GetBinarySerials();
+                serials.AddRange(cardSerials ?? []);
+            }
+            int numDiscard = GameDeck.DiscardPile.Count;
+            serials.Add(new(typeof(int), [numDiscard]));
+            for (int i = 0; i < numDiscard; i++) {
+                ICard currentCard = GameDeck.DiscardPile[i];
+                serials.Add(new(typeof(string), [currentCard.TypeName]));
+                IEnumerable<SerializedData> cardSerials = await currentCard.GetBinarySerials();
+                serials.AddRange(cardSerials ?? []);
+            }
+
+            return serials.ToArray();
+        });
+    }
+    public bool LoadFromBinary(BinaryReader reader)
+    {
+        GameDeck.Library = [];
+        GameDeck.DiscardPile = [];
+        bool loadComplete = true;
+        
+        try {
+            int numLibrary = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            for (int i = 0; i < numLibrary; i++) {
+                string typeName = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+                if (CardFactory.BuildCard(typeName) is not ICard newCard) {
+                    _logger.LogWarning("{CardFactory} failed to construct a card of type {name} during loading of {base}.", CardFactory, typeName, this);
+                    loadComplete = false;
+                    continue;
+                }
+                newCard.LoadFromBinary(reader);
+                GameDeck.Library.Add(newCard);
+            }
+            int numDiscard = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            GameDeck.DiscardPile = new(numDiscard);
+            for (int i = 0; i < numDiscard; i++) {
+                string typeName = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+                if (CardFactory.BuildCard(typeName) is not ICard newCard) {
+                    _logger.LogWarning("{CardFactory} failed to construct a card of type {name} during loading of {base}.", CardFactory, typeName, this);
+                    loadComplete = false;
+                    continue;
+                }
+                newCard.LoadFromBinary(reader);
+                GameDeck.DiscardPile.Add(newCard);
+            }
+
+        } catch (Exception ex) {
+            _logger.LogError("An exception was thrown while loading {Player}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+            loadComplete = false;
+        }
+        return loadComplete;
     }
 }

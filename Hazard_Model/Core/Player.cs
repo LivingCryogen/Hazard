@@ -79,9 +79,9 @@ public class Player : IPlayer
 
     #region Methods
 
-    public async Task<SerializedData[]> GetBinarySerialData()
+    public async Task<SerializedData[]> GetBinarySerials()
     {
-        return await Task.Run(() =>
+        return await Task.Run(async () =>
         {
             List<SerializedData> data = [
                 new (typeof(string), [Name]),
@@ -94,7 +94,8 @@ public class Player : IPlayer
             data.Add(new(typeof(int), [Hand.Count]));
             for (int i = 0; i < Hand.Count; i++) {
                 data.Add(new (typeof(string), [Hand[i].TypeName]));
-                data.AddRange(Hand[i].GetBinarySerialData().Result);
+                IEnumerable<SerializedData> cardSerials = await Hand[i].GetBinarySerials();
+                data.AddRange(cardSerials ?? []);
             }
             return data.ToArray();
         });
@@ -103,41 +104,23 @@ public class Player : IPlayer
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;
-        Name = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
-        _armyPool = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-        ContinentBonus = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-        int numControlledTerritories = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-        for (int i = 0; i < numControlledTerritories; i++)
-            ControlledTerritories.Add((TerrID)BinarySerializer.ReadConvertible(reader, typeof(int)));
-        int numCards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-        for (int i = 0; i < numCards; i++) {
-            string readTypeName = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
-            ICard newCard = _cardFactory.BuildCard(readTypeName);
-            newCard.LoadFromBinary(reader);
+        try {
+            Name = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+            _armyPool = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            ContinentBonus = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            int numControlledTerritories = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            for (int i = 0; i < numControlledTerritories; i++)
+                ControlledTerritories.Add((TerrID)BinarySerializer.ReadConvertible(reader, typeof(int)));
+            int numCards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            for (int i = 0; i < numCards; i++) {
+                string readTypeName = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+                ICard newCard = _cardFactory.BuildCard(readTypeName);
+                newCard.LoadFromBinary(reader);
+            }
         }
-
-        /// USE OF REGISTRY TO FIND TYPE BY STRING NAME
-        if (serials[serialIndex].SerialType != typeof(int)) {
-            _logger.LogWarning("{Player} failed to load from binary due to a serial type mismatch.", this);
+        catch (Exception ex) {
+            _logger.LogError("An exception was thrown while loading {Player}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
-        }
-        else
-            numCards = (int?)serials[serialIndex].SerialValues[0] ?? 0;
-        
-        for (int index = serialIndex + 1; index <= serials.Length; index++) {
-            if (Activator.CreateInstance(typeof(ICard)) is not ICard newCard) {
-                _logger.LogWarning("ICard activation failed during load of {PlayerHand}.", Hand);
-                continue;
-            }
-            int cardSerialsLength = (int?)serials[index].SerialValues[0] ?? 0;
-            index++;
-            if (index + cardSerialsLength > serials.Length) {
-                _logger.LogError("{Player} failed to load cards in {HandProperty} because it exceeded the {length} of provided serials.", this, Hand, serials.Length);
-                loadComplete = false;
-                break;
-            }
-            newCard.LoadFromSerials([.. serials[index.. (index + cardSerialsLength)]]);
-            index += cardSerialsLength - 1;
         }
 
         return loadComplete;

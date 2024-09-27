@@ -57,15 +57,14 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
         ID = Guid.NewGuid();
         int numPlayers = names.Length;
         State = new(numPlayers);
-
+        Cards = new(Logger, _typeRegister);
         if (numPlayers > 1) {
             for (int i = 0; i < numPlayers; i++) {
-                Players!.Add(new Player(names[i], i, numPlayers, _typeRegister, Values!, Board!, (ILogger<Player>)_loggerFactory.CreateLogger(typeof(Player))));
+                Players!.Add(new Player(names[i], i, numPlayers, Cards.CardFactory, Values!, Board!, (ILogger<Player>)_loggerFactory.CreateLogger(typeof(Player))));
                 Players.Last().PlayerLost += OnPlayerLost;
                 Players.Last().PlayerWon += OnPlayerWin;
             }
         }
-        Cards = new(Logger);
         Cards.Initialize(_assetFetcher, DefaultCardMode);
         Regulator!.Initialize(this);
     }
@@ -73,7 +72,7 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
     public void Initialize(FileStream openStream)
     {
         Logger = _loggerFactory.CreateLogger(typeof(Game));
-        Cards = new(Logger);
+        Cards = new(Logger, _typeRegister);
         /// serializer.LoadGame();
         if (Players.Count > 1) {
             foreach (IPlayer player in Players) {
@@ -89,21 +88,21 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
         VMSaveData = vMSaveData; // Save data from VM/View is passed as a string and should precede all other data in the file.
         await Hazard_Share.Services.Serializer.BinarySerializer.Save([this], fileName, isNewFile, Logger);
     }
-    async Task<SerializedData[]> GetBinarySerialData()
+    async Task<SerializedData[]> GetBinarySerials()
     {
         return await Task<SerializedData[]>.Run(() =>
         {
             List<SerializedData> saveData = [];
             if (VMSaveData != null)
-                saveData.Add(new(typeof(string), [VMSaveData], false));
+                saveData.Add(new(typeof(string), [VMSaveData]));
             if (this.ID is Guid gameID)
-                saveData.Add(new(typeof(string), [gameID.ToString()], false));
-            saveData.AddRange(Board?.GetBinarySerialData().Result ?? Enumerable.Empty<SerializedData>());
+                saveData.Add(new(typeof(string), [gameID.ToString()]));
+            saveData.AddRange(Board?.GetBinarySerials().Result ?? Enumerable.Empty<SerializedData>());
             foreach (IPlayer player in Players)
-                saveData.AddRange(player?.GetBinarySerialData().Result ?? Enumerable.Empty<SerializedData>());
-            saveData.AddRange(Cards?.GetBinarySerialData().Result ?? Enumerable.Empty<SerializedData>());
-            saveData.AddRange(State?.GetBinarySerialData().Result ?? Enumerable.Empty<SerializedData>());
-            saveData.AddRange(Regulator?.GetBinarySerialData().Result ?? Enumerable.Empty<SerializedData>());
+                saveData.AddRange(player?.GetBinarySerials().Result ?? Enumerable.Empty<SerializedData>());
+            saveData.AddRange(Cards?.GetBinarySerials().Result ?? Enumerable.Empty<SerializedData>());
+            saveData.AddRange(State?.GetBinarySerials().Result ?? Enumerable.Empty<SerializedData>());
+            saveData.AddRange(Regulator?.GetBinarySerials().Result ?? Enumerable.Empty<SerializedData>());
 
             return [.. saveData];
         });
