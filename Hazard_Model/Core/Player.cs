@@ -112,7 +112,7 @@ public class Player : IPlayer
         int numCards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
         for (int i = 0; i < numCards; i++) {
             string readTypeName = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
-            var newCard = _cardFactory.BuildCard(readTypeName, out Type cardType);
+            ICard newCard = _cardFactory.BuildCard(readTypeName);
             newCard.LoadFromBinary(reader);
         }
 
