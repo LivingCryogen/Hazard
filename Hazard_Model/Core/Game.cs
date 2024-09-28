@@ -25,7 +25,7 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
     private readonly ILoggerFactory _loggerFactory = loggerFactory;
 
     /// <inheritdoc cref="IGame.ID"/>.
-    public Guid? ID { get; set; } = null;
+    public Guid ID { get; set; } 
     private string? VMSaveData { get; set; } = null;
     /// <inheritdoc cref="IGame.DefaultCardMode"/>
     public bool DefaultCardMode { get; set; } = true; // future implementation of Mission Cards or other ICard extensions would hinge on this being set to false
@@ -35,15 +35,15 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
     /// <value>An implementation of <see cref="ILogger{T}"/>.</value>
     public ILogger Logger { get; private set; } 
     /// <inheritdoc cref="IGame.Values"/>.
-    public IRuleValues? Values { get; set; } = values;
+    public IRuleValues Values { get; set; } = values;
     /// <inheritdoc cref="IGame.Board"/>.
-    public IBoard? Board { get; set; } = board;
+    public IBoard Board { get; set; } = board;
     /// <inheritdoc cref="IGame.Regulator"/>.
-    public IRegulator? Regulator { get; set; } = regulator;
+    public IRegulator Regulator { get; set; } = regulator;
     /// <inheritdoc cref="IGame.State"/>.
-    public StateMachine? State { get; set; }
+    public StateMachine State { get; set; }
     /// <inheritdoc cref="IGame.Cards"/>.
-    public CardBase? Cards { get; set; } = null;
+    public CardBase Cards { get; set; } 
     /// <inheritdoc cref="IGame.Players"/>.
     public List<IPlayer> Players { get; set; } = [];
     /// <inheritdoc cref="IGame.PlayerLost"/>.
@@ -53,20 +53,20 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
     /// <inheritdoc cref="IGame.Initialize(string[])"/>.
     public void Initialize(string[] names)
     {
-        Logger = _loggerFactory.CreateLogger(typeof(Game));
+        Logger = _loggerFactory.CreateLogger<Game>();
         ID = Guid.NewGuid();
         int numPlayers = names.Length;
-        State = new(numPlayers);
+        State = new(numPlayers, _loggerFactory.CreateLogger<StateMachine>());
         Cards = new(Logger, _typeRegister);
         if (numPlayers > 1) {
             for (int i = 0; i < numPlayers; i++) {
-                Players!.Add(new Player(names[i], i, numPlayers, Cards.CardFactory, Values!, Board!, (ILogger<Player>)_loggerFactory.CreateLogger(typeof(Player))));
+                Players!.Add(new Player(names[i], i, numPlayers, Cards.CardFactory, Values!, Board!, _loggerFactory.CreateLogger<Player>()));
                 Players.Last().PlayerLost += OnPlayerLost;
                 Players.Last().PlayerWon += OnPlayerWin;
             }
         }
         Cards.Initialize(_assetFetcher, DefaultCardMode);
-        Regulator!.Initialize(this);
+        Regulator.Initialize(this);
     }
     /// <inheritdoc cref="IGame.Initialize(FileStream)"/>.
     public void Initialize(FileStream openStream)
@@ -86,26 +86,46 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
     public async Task Save(bool isNewFile, string fileName, string vMSaveData)
     {
         VMSaveData = vMSaveData; // Save data from VM/View is passed as a string and should precede all other data in the file.
-        await Hazard_Share.Services.Serializer.BinarySerializer.Save([this], fileName, isNewFile, Logger);
+        await BinarySerializer.Save([this], fileName, isNewFile);
     }
-    async Task<SerializedData[]> GetBinarySerials()
+    public async Task<SerializedData[]> GetBinarySerials()
     {
-        return await Task<SerializedData[]>.Run(() =>
+        return await Task.Run(() =>
         {
             List<SerializedData> saveData = [];
             if (VMSaveData != null)
                 saveData.Add(new(typeof(string), [VMSaveData]));
             if (this.ID is Guid gameID)
                 saveData.Add(new(typeof(string), [gameID.ToString()]));
-            saveData.AddRange(Board?.GetBinarySerials().Result ?? Enumerable.Empty<SerializedData>());
+            saveData.AddRange(Board?.GetBinarySerials().Result ?? []);
+            saveData.Add(new(typeof(int), [Players.Count]));
             foreach (IPlayer player in Players)
-                saveData.AddRange(player?.GetBinarySerials().Result ?? Enumerable.Empty<SerializedData>());
-            saveData.AddRange(Cards?.GetBinarySerials().Result ?? Enumerable.Empty<SerializedData>());
-            saveData.AddRange(State?.GetBinarySerials().Result ?? Enumerable.Empty<SerializedData>());
-            saveData.AddRange(Regulator?.GetBinarySerials().Result ?? Enumerable.Empty<SerializedData>());
+                saveData.AddRange(player?.GetBinarySerials().Result ?? []);
+            saveData.AddRange(Cards?.GetBinarySerials().Result ?? []);
+            saveData.AddRange(State?.GetBinarySerials().Result ?? []);
+            saveData.AddRange(Regulator?.GetBinarySerials().Result ?? []);
 
-            return [.. saveData];
+            return saveData.ToArray();
         });
+    }
+    public bool LoadFromBinary(BinaryReader reader)
+    {
+        bool loadComplete = true;
+        try {
+            this.ID = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
+            Board.LoadFromBinary(reader);
+            int numPlayers = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            Players.Clear();
+            for (int i = 0; i < numPlayers; i++) {
+                Player newPlayer = new()
+            }
+            
+
+        } catch (Exception ex) {
+            Logger.LogError("An exception was thrown while loading {Regulator}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+            loadComplete = false;
+        }
+        return loadComplete;
     }
 
     /// <summary>

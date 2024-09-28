@@ -1,6 +1,7 @@
 ﻿using Hazard_Model.EventArgs;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
+using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
 
 namespace Hazard_Model.Core;
@@ -28,6 +29,52 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
     public event EventHandler<IPromptTradeEventArgs>? PromptTradeIn;
 
     #region Methods
+    public async Task<SerializedData[]> GetBinarySerials()
+    {
+        int numRewards = 0;
+        List<SerializedData> rewardData = [];
+        if (Reward != null) {
+            rewardData.Add(new(typeof(string), [Reward.TypeName]));
+            rewardData.AddRange(await Reward.GetBinarySerials());
+            numRewards = 1;
+        }
+        else rewardData = [];
+
+        SerializedData[] saveData = [
+            new(typeof(int), [_actionsCounter]),
+            new(typeof(int), [_prevActionCount]),
+            new(typeof(int), [CurrentActionsLimit]),
+            new(typeof(int), [numRewards]),
+            ..rewardData
+        ];
+
+        return saveData;
+    }
+    public bool LoadFromBinary(BinaryReader reader)
+    {
+        bool loadComplete = true;
+        try {
+            _actionsCounter = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            _prevActionCount = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            CurrentActionsLimit = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            int numRewards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            if (numRewards == 0)
+                Reward = null;
+            else {
+                string cardTypeName = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+                if (_currentGame?.Cards?.CardFactory.BuildCard(cardTypeName) is not ICard rewardCard) {
+                    throw new InvalidDataException("While loading Regulator, construction of the reward card failed");
+                }
+                rewardCard.LoadFromBinary(reader);
+                Reward = rewardCard;
+            }
+         }
+         catch (Exception ex) {
+            _logger.LogError("An exception was thrown while loading {Regulator}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+            loadComplete = false;
+        }
+        return loadComplete;
+    }
     /// <inheritdoc cref="IRegulator.Initialize(IGame)"/>
     public void Initialize(IGame game)
     {
@@ -279,24 +326,6 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
             }
         }
     }
-    /// <inheritdoc cref="IRegulator.GetSaveData"/>
-    public List<(object? Datum, Type? dataType)> GetSaveData()
-    {
-        List<(object? Datum, Type? dataType)> savedata = [];
-        savedata.Add((_actionsCounter, typeof(int)));
-        savedata.Add((_prevActionCount, typeof(int)));
-        savedata.Add((CurrentActionsLimit, typeof(int)));
-        if (Reward != null) {
-            savedata.Add((1, typeof(int)));
-            savedata.Add((Reward.GetSaveData(_logger), null));
-        }
-        else {
-            savedata.Add((0, typeof(int)));
-            savedata.Add((null, null));
-        }
-
-        return savedata;
-    }
     private ICard[]? GetCardsFromHand(int playerNum, int[] handIndices)
     {
         if (_currentGame == null || _currentGame.Cards == null)
@@ -328,7 +357,6 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
             player.RemoveCard(discardIndex);
         }
     }
-
     #endregion
 }
 

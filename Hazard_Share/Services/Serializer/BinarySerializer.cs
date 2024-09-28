@@ -8,7 +8,7 @@ namespace Hazard_Share.Services.Serializer;
 
 public static class BinarySerializer
 {
-    private static ILogger _logger;
+    private static ILogger? _logger;
     public static void InitializeLogger(ILoggerFactory loggerFactory)
     {
         _logger = loggerFactory.CreateLogger(typeof(BinarySerializer));
@@ -17,7 +17,9 @@ public static class BinarySerializer
     #region Encoding Methods
     private static byte[] ConvertibleToBytes(Type type, IConvertible value)
     {
-        if (type == typeof(string))
+        if (type == typeof(byte))
+            return [(byte)value];
+        else if (type == typeof(string))
             return Encoding.UTF8.GetBytes((string)value);
         else if (type.IsEnum)
             return BitConverter.GetBytes(Convert.ToInt64(value));
@@ -26,6 +28,8 @@ public static class BinarySerializer
     }
     private static IConvertible BytesToConvertible(Type type, byte[] bytes)
     {
+        if (type == typeof(byte) && bytes.Length == 1)
+            return bytes[0];
         if (type == typeof(string))
             return Encoding.UTF8.GetString(bytes);
         if (type.IsEnum)
@@ -74,7 +78,7 @@ public static class BinarySerializer
     
     #endregion
 
-    public async static Task Save(IBinarySerializable[] serializableObjects, string fileName, bool newFile, ILogger logger)
+    public async static Task Save(IBinarySerializable[] serializableObjects, string fileName, bool newFile)
     {
         await Task.Run(() =>
         {
@@ -84,10 +88,10 @@ public static class BinarySerializer
 
                 foreach (var obj in serializableObjects)
                     try {
-                        if (!WriteSerializableObject(obj, writer))
-                            logger.LogWarning("BinarySerializer failed to write {Object}.", obj);
+                        if (!WriteSerializableObject(obj, writer).Result)
+                            _logger?.LogWarning("BinarySerializer failed to write {Object}.", obj);
                     } catch (Exception e) {
-                        logger.LogError("An exception was thrown when attempting to write {obj}: {Message}.", obj, e.Message);
+                        _logger?.LogError("An exception was thrown when attempting to write {obj}: {Message}.", obj, e.Message);
                     }
             }
             else {
@@ -97,10 +101,10 @@ public static class BinarySerializer
 
                 foreach (var obj in serializableObjects)
                     try {
-                        if (!WriteSerializableObject(obj, writer))
-                            logger.LogWarning("BinarySerializer failed to write {Object}.", obj);
+                        if (!WriteSerializableObject(obj, writer).Result)
+                            _logger?.LogWarning("BinarySerializer failed to write {Object}.", obj);
                     } catch (Exception e) {
-                        logger.LogError("An exception was thrown when attempting to write {obj}: {Message}.", obj, e.Message);
+                        _logger?.LogError("An exception was thrown when attempting to write {obj}: {Message}.", obj, e.Message);
                     }
             }
         });
@@ -115,17 +119,20 @@ public static class BinarySerializer
             try {
                 obj.LoadFromBinary(reader);
             } catch (Exception ex) {
-                _logger.LogError("{Message}.", ex.Message);
+                _logger?.LogError("{Message}.", ex.Message);
                 errors = true;
             }
         }
         return !errors;
     }
 
-    private static bool WriteSerializableObject(IBinarySerializable serializableObject, BinaryWriter writer)
+    private async static Task<bool> WriteSerializableObject(IBinarySerializable serializableObject, BinaryWriter writer)
     {
         try {
-            SerializedData[] saveData = serializableObject.GetBinarySerialData().Result;
+            if (await serializableObject.GetBinarySerials() is not SerializedData[] saveData) {
+                _logger?.LogError("BinarySerializer failed to write {object} because it did not return a valid SerializedData[].", serializableObject);
+                return false;
+            }
             foreach (SerializedData saveDatum in saveData) {
                 if (saveDatum.Tag != null) 
                     if (saveDatum.SerialValues.Length > 1)
@@ -139,7 +146,7 @@ public static class BinarySerializer
                         WriteConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0]);
             }
         } catch (Exception ex) {
-            _logger.LogError("{Message}.", ex.Message);
+            _logger?.LogError("{Message}.", ex.Message);
             return false;
         }
         return true;

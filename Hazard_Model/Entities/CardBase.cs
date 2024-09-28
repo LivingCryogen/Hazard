@@ -223,7 +223,7 @@ public class CardBase(ILogger logger, ITypeRegister<ITypeRelations> registry) : 
             }
 
         } catch (Exception ex) {
-            _logger.LogError("An exception was thrown while loading {Player}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+            _logger.LogError("An exception was thrown while loading {CardBase}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
         }
         return loadComplete;
