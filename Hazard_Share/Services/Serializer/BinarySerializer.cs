@@ -13,6 +13,10 @@ public static class BinarySerializer
     {
         _logger = loggerFactory.CreateLogger(typeof(BinarySerializer));
     }
+    public static void InitializeLogger(ILogger logger)
+    {
+        _logger = logger;
+    }
 
     #region Encoding Methods
     private static byte[] ConvertibleToBytes(Type type, IConvertible value)
@@ -97,7 +101,6 @@ public static class BinarySerializer
             else {
                 using FileStream fileStream = new(fileName, FileMode.Truncate, FileAccess.Write);
                 using BinaryWriter writer = new(fileStream);
-
 
                 foreach (var obj in serializableObjects)
                     try {

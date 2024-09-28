@@ -13,7 +13,7 @@ namespace Hazard_Model.Tests.DataAccess;
 public class AssetFactoryTests
 {
     private readonly MockDataFiles _mockFiles = new();
-    private readonly LoggerStub<AssetFactory> _logger = new();
+    private readonly LoggerStubT<AssetFactory> _logger = new();
     private readonly IDataProvider? _dataProvider;
 
     public AssetFactory TestFactory { get; private set; }

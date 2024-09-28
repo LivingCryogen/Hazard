@@ -33,7 +33,7 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
     /// Gets or sets a logger for  debug information and errors. Should be provided by the DI system.
     /// </summary>
     /// <value>An implementation of <see cref="ILogger{T}"/>.</value>
-    public ILogger Logger { get; private set; } 
+    public ILogger Logger { get; private set; } = loggerFactory.CreateLogger<Game>();
     /// <inheritdoc cref="IGame.Values"/>.
     public IRuleValues Values { get; set; } = values;
     /// <inheritdoc cref="IGame.Board"/>.
@@ -41,9 +41,9 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
     /// <inheritdoc cref="IGame.Regulator"/>.
     public IRegulator Regulator { get; set; } = regulator;
     /// <inheritdoc cref="IGame.State"/>.
-    public StateMachine State { get; set; }
+    public StateMachine State { get; set; } = new(0, loggerFactory.CreateLogger<StateMachine>());
     /// <inheritdoc cref="IGame.Cards"/>.
-    public CardBase Cards { get; set; } 
+    public CardBase Cards { get; set; } = new(loggerFactory.CreateLogger<CardBase>(), typeRegister);
     /// <inheritdoc cref="IGame.Players"/>.
     public List<IPlayer> Players { get; set; } = [];
     /// <inheritdoc cref="IGame.PlayerLost"/>.
@@ -51,36 +51,24 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
     /// <inheritdoc cref="IGame.PlayerWon"/>.
     public event EventHandler<int>? PlayerWon;
     /// <inheritdoc cref="IGame.Initialize(string[])"/>.
-    public void Initialize(string[] names)
+    public void Initialize(string[] names, string? fileName)
     {
-        Logger = _loggerFactory.CreateLogger<Game>();
         ID = Guid.NewGuid();
         int numPlayers = names.Length;
         State = new(numPlayers, _loggerFactory.CreateLogger<StateMachine>());
         Cards = new(Logger, _typeRegister);
         if (numPlayers > 1) {
             for (int i = 0; i < numPlayers; i++) {
-                Players!.Add(new Player(names[i], i, numPlayers, Cards.CardFactory, Values!, Board!, _loggerFactory.CreateLogger<Player>()));
+                Players!.Add(new Player(names[i], i, numPlayers, Cards.CardFactory, Values, Board, _loggerFactory.CreateLogger<Player>()));
                 Players.Last().PlayerLost += OnPlayerLost;
                 Players.Last().PlayerWon += OnPlayerWin;
             }
         }
         Cards.Initialize(_assetFetcher, DefaultCardMode);
         Regulator.Initialize(this);
-    }
-    /// <inheritdoc cref="IGame.Initialize(FileStream)"/>.
-    public void Initialize(FileStream openStream)
-    {
-        Logger = _loggerFactory.CreateLogger(typeof(Game));
-        Cards = new(Logger, _typeRegister);
-        /// serializer.LoadGame();
-        if (Players.Count > 1) {
-            foreach (IPlayer player in Players) {
-                player.PlayerLost += OnPlayerLost;
-                player.PlayerWon += OnPlayerWin;
-            }
-        }
 
+        if (fileName != null)
+            BinarySerializer.Load([this], fileName);
     }
     /// <inheritdoc cref="IGame.Save"/>.
     public async Task Save(bool isNewFile, string fileName, string vMSaveData)
@@ -98,7 +86,6 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
             if (this.ID is Guid gameID)
                 saveData.Add(new(typeof(string), [gameID.ToString()]));
             saveData.AddRange(Board?.GetBinarySerials().Result ?? []);
-            saveData.Add(new(typeof(int), [Players.Count]));
             foreach (IPlayer player in Players)
                 saveData.AddRange(player?.GetBinarySerials().Result ?? []);
             saveData.AddRange(Cards?.GetBinarySerials().Result ?? []);
@@ -114,13 +101,11 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
         try {
             this.ID = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
             Board.LoadFromBinary(reader);
-            int numPlayers = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-            Players.Clear();
-            for (int i = 0; i < numPlayers; i++) {
-                Player newPlayer = new()
-            }
-            
-
+            foreach (IPlayer player in Players)
+                player.LoadFromBinary(reader);
+            Cards.LoadFromBinary(reader);
+            State.LoadFromBinary(reader);
+            Regulator.LoadFromBinary(reader);
         } catch (Exception ex) {
             Logger.LogError("An exception was thrown while loading {Regulator}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;

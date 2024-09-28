@@ -151,11 +151,12 @@ public interface ICard : IBinarySerializable
 
     bool IBinarySerializable.LoadFromBinary(BinaryReader reader)
     {
+        bool loadComplete = true;
         try {
             var cardProps = this.GetType().GetProperties();
             int loadedNumProperties = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             int numProperties = cardProps.Length;
-            int targetLoadNum = numProperties - 2; // recall that CardSet and PropertySerializableTypeMap are excluded
+            int targetLoadNum = numProperties - 3; // recall that CardSet, PropertySerializableTypeMap, and Logger are excluded
             if (loadedNumProperties != targetLoadNum) {
                 Logger.LogError("{Card} attempted to load from binary, but there was a property count mismatch.", this);
                 return false;
@@ -169,7 +170,7 @@ public interface ICard : IBinarySerializable
             while (propIndex < numProperties) {
                 propIndex++;
                 string propName = cardProps[propIndex].Name;
-                if (propName == nameof(CardSet) || propName == nameof(PropertySerializableTypeMap))
+                if (propName == nameof(CardSet) || propName == nameof(PropertySerializableTypeMap) || propName == nameof(Logger))
                     continue;
 
                 int numValsLoaded = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
@@ -196,9 +197,9 @@ public interface ICard : IBinarySerializable
             }
         }
         catch (Exception ex) {
-
-            return false;
+            Logger.LogError("An exception was thrown while loading {Card}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+            loadComplete = false;
         }
-        return true;
+        return loadComplete;
     }
 }

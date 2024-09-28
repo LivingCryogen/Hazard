@@ -27,8 +27,7 @@ public partial class MainVM(IGame game, IDialogState dialogService, IDispatcherT
         var playerColors = namesAndColors.Select(item => item.ColorName).ToArray();
 
         if (namesAndColors.Length > 1)
-            CurrentGame.Initialize(playerNames);
-
+            CurrentGame.Initialize(playerNames, null);
 
         PlayerDetails = [];
         for (int i = 0; i < NumPlayers; i++) {

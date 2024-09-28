@@ -4,35 +4,32 @@ using Hazard_Model.Tests.Entities.Mocks;
 using Hazard_Model.Tests.Fixtures.Stubs;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
+using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace Hazard_Model.Tests.Core.Mocks;
 
 public class MockGame : IGame
 {
-    private readonly LoggerStub<MockGame> _logger = new();
+    private readonly LoggerStubT<MockGame> _logger = new();
 
     public MockGame()
     {
         ID = new Guid();
         Players = [new MockPlayer(_logger) { Number = 0 }, new MockPlayer(_logger) { Number = 1 }];
-        State = new StateMachine(Players.Count);
-        Board = new MockBoard();
-        Cards = new MockCardBase(_logger);
-        Regulator = new MockRegulator(_logger);
-        Values = new MockRuleValues();
     }
 
     public ILogger<MockGame> Logger { get => _logger; }
-    public IBoard? Board { get; set; }
-    public IRegulator? Regulator { get; set; }
-    public IRuleValues? Values { get; set; }
-    public Guid? ID { get; set; }
+    public IBoard Board { get; set; } = new MockBoard();
+    public IRegulator Regulator { get; set; } = new MockRegulator(new LoggerStubT<MockRegulator>());
+    public IRuleValues Values { get; set; } = new MockRuleValues();
+    public Guid ID { get; set; }
     public bool DefaultCardMode { get; set; } = true;
     public List<IPlayer> Players { get; set; }
-    public StateMachine? State { get; set; }
-    public MockCardBase? Cards { get; set; }
-    CardBase? IGame.Cards { get => (CardBase?)Cards; set { Cards = (MockCardBase?)value; } }
+    public StateMachine State { get; set; } = new(2, new LoggerStubT<StateMachine>());
+    public MockCardBase Cards { get; set; } = new(new LoggerStubT<MockCardBase>());
+    CardBase IGame.Cards { get => Cards; set { Cards = (MockCardBase)value; } }
 
 #pragma warning disable CS0414 // For unit-testing, these are unused. If integration tests are built, they should be, at which time these warnings should be re-enabled.
     public event EventHandler<int>? PlayerLost = null;
@@ -40,14 +37,14 @@ public class MockGame : IGame
 #pragma warning restore CS0414
     public void Wipe()
     {
-        ID = null;
+        ID = Guid.Empty;
         Players.Clear();
-        State = new StateMachine(2); // 2 - 6 is allowed
-        ((MockGeography?)(Board?.Geography))?.Wipe();
-        Board?.Armies?.Clear();
-        Board?.ContinentOwner?.Clear();
-        Cards?.Reset();
-        ((MockRegulator?)Regulator)?.Wipe();
+        State = new StateMachine(2, new LoggerStubT<StateMachine>()); 
+        ((MockGeography)Board.Geography).Wipe();
+        Board.Armies.Clear();
+        Board.ContinentOwner.Clear();
+        Cards.Reset();
+        ((MockRegulator)Regulator).Wipe();
     }
     public void AutoBoard()
     {
@@ -109,12 +106,7 @@ public class MockGame : IGame
         }
     }
 
-    public void Initialize(string[] names)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Initialize(FileStream openStream)
+    public void Initialize(string[] names, string? fileName)
     {
         throw new NotImplementedException();
     }
@@ -122,5 +114,40 @@ public class MockGame : IGame
     public Task Save(bool isNewFile, string fileName, string precedingData)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<SerializedData[]> GetBinarySerials()
+    {
+        return await Task.Run(() =>
+        {
+            List<SerializedData> saveData = [];
+            if (this.ID is Guid gameID)
+                saveData.Add(new(typeof(string), [gameID.ToString()]));
+            saveData.AddRange(Board?.GetBinarySerials().Result ?? []);
+            foreach (IPlayer player in Players)
+                saveData.AddRange(player?.GetBinarySerials().Result ?? []);
+            saveData.AddRange(Cards?.GetBinarySerials().Result ?? []);
+            saveData.AddRange(State?.GetBinarySerials().Result ?? []);
+            saveData.AddRange(Regulator?.GetBinarySerials().Result ?? []);
+
+            return saveData.ToArray();
+        });
+    }
+    public bool LoadFromBinary(BinaryReader reader)
+    {
+        bool loadComplete = true;
+        try {
+            this.ID = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
+            Board.LoadFromBinary(reader);
+            foreach (IPlayer player in Players)
+                player.LoadFromBinary(reader);
+            Cards.LoadFromBinary(reader);
+            State.LoadFromBinary(reader);
+            Regulator.LoadFromBinary(reader);
+        } catch (Exception ex) {
+            Logger.LogError("An exception was thrown while loading {Regulator}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+            loadComplete = false;
+        }
+        return loadComplete;
     }
 }

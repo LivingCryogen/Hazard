@@ -1,5 +1,8 @@
-﻿using Hazard_Share.Enums;
+﻿using Hazard_Model.Entities.Cards;
+using Hazard_Model.Tests.Entities.Mocks;
+using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
+using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
 
 namespace Hazard_Model.Tests.Core.Mocks;
@@ -8,12 +11,11 @@ internal class MockPlayer(ILogger logger) : IPlayer
 {
     private readonly ILogger _logger = logger;
     public int ArmyBonus { get; }
-
-    public int ArmyPool { get => 5; set => throw new NotImplementedException(); }
-    public int ContinentBonus { get => 6; set => throw new NotImplementedException(); }
+    public int ArmyPool { get; set; } = 5;
+    public int ContinentBonus { get; set; } = 6;
     public List<TerrID> ControlledTerritories { get => [TerrID.Null, TerrID.Alaska]; set => throw new NotImplementedException(); }
     public List<ICard> Hand { get => []; set => throw new NotImplementedException(); }
-    public string Name { get => nameof(MockPlayer); init => throw new NotImplementedException(); }
+    public string Name { get; set; } = "YourFatherSmeltOfElderBerries!";
     public int Number { get; init; }
     public bool HasCardSet { get => false; set => throw new NotImplementedException(); }
 
@@ -22,20 +24,52 @@ internal class MockPlayer(ILogger logger) : IPlayer
     public event EventHandler? PlayerLost = null;
     public event EventHandler? PlayerWon = null;
 #pragma warning restore CS0414
-    public List<(object? Datum, Type? DataType)> GetSaveData()
+    public async Task<SerializedData[]> GetBinarySerials()
     {
-        List<(object? Datum, Type? DataType)> data = [
-            (Name, typeof(string)),
-            (ArmyPool, typeof(int)),
-            (ContinentBonus, typeof(int)),
-            (ControlledTerritories.Count, typeof(int)) ];
-        foreach (TerrID territory in ControlledTerritories)
-            data.Add((territory, typeof(TerrID)));
-        data.Add((Hand.Count, typeof(int)));
-        foreach (ICard card in Hand)
-            data.Add((card.GetSaveData(_logger), typeof(ITroopCard)));
-        return data;
+        return await Task.Run(async () =>
+        {
+            List<SerializedData> data = [
+                new (typeof(string), [Name]),
+                new (typeof(int), [ArmyPool]),
+                new (typeof(int), [ContinentBonus]),
+                new (typeof(int), [ControlledTerritories.Count])
+            ];
+            for (int i = 0; i < ControlledTerritories.Count; i++)
+                data.Add(new(typeof(int), [(int)ControlledTerritories[i]]));
+            data.Add(new(typeof(int), [Hand.Count]));
+            for (int i = 0; i < Hand.Count; i++) {
+                data.Add(new(typeof(string), [Hand[i].TypeName]));
+                IEnumerable<SerializedData> cardSerials = await Hand[i].GetBinarySerials();
+                data.AddRange(cardSerials ?? []);
+            }
+            return data.ToArray();
+        });
     }
+
+    public bool LoadFromBinary(BinaryReader reader)
+    {
+        bool loadComplete = true;
+        try {
+            Name = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+            ArmyPool = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            ContinentBonus = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            int numControlledTerritories = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            for (int i = 0; i < numControlledTerritories; i++)
+                ControlledTerritories.Add((TerrID)BinarySerializer.ReadConvertible(reader, typeof(int)));
+            int numCards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            for (int i = 0; i < numCards; i++) {
+                string readTypeName = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+                var newCard = new MockCard();
+                ((ICard)newCard).LoadFromBinary(reader);
+            }
+        } catch (Exception ex) {
+            _logger.LogError("An exception was thrown while loading {Player}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+            loadComplete = false;
+        }
+
+        return loadComplete;
+    }
+
     public bool AddCard(ICard card)
     {
         throw new NotImplementedException();

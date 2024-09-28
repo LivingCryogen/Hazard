@@ -76,16 +76,9 @@ public interface IGame : IBinarySerializable
     /// </value>
     IRuleValues Values { get; set; }
 
-    /// <summary>
-    /// Initialize the game model given a list of Player names.
-    /// </summary>
-    /// <param name="names">The names provided by the player.</param>
-    abstract void Initialize(string[] names);
-    /// <summary>
-    /// Initialize the game model from a saved game file.
-    /// </summary>
-    /// <param name="openStream">A stream opened on a saved game file. Its content and format are dictated by <see cref="Save"/>.</param>
-    abstract void Initialize(FileStream openStream);
+
+    abstract void Initialize(string[] names, string? fileName);
+
     /// <summary>
     /// Save game state to a file.
     /// </summary>

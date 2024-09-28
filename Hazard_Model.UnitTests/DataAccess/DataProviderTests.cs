@@ -15,7 +15,7 @@ namespace Hazard_Model.Tests.DataAccess;
 public class DataProviderTests
 {
     private readonly MockDataFiles _mockFiles = new();
-    ILogger<DataProvider> Logger { get; } = new LoggerStub<DataProvider>();
+    ILogger<DataProvider> Logger { get; } = new LoggerStubT<DataProvider>();
     private readonly DataProvider? _testDataProvider;
     private readonly string[]? _configDataFiles;
 

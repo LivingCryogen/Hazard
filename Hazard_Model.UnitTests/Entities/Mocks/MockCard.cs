@@ -1,6 +1,8 @@
 ﻿using Hazard_Model.Tests.Fixtures.Mocks;
+using Hazard_Model.Tests.Fixtures.Stubs;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
+using Microsoft.Extensions.Logging;
 
 namespace Hazard_Model.Tests.Entities.Mocks;
 
@@ -28,7 +30,7 @@ public class MockCard : ITroopCard
         IsTradeable = true;
         ParentTypeName = cardSet.GetType().Name;
     }
-
+    public string TypeName { get; } = nameof(MockCard);
     public string ParentTypeName { get; private set; }
     public Insignia Insigne { get; set; }
     Enum ITroopCard.Insigne { get => Insigne; set { Insigne = (Insignia)Convert.ToInt32(value); } }
@@ -42,6 +44,7 @@ public class MockCard : ITroopCard
         { nameof(IsTradeable), typeof(bool) }
     };
 
+    public ILogger Logger { get; } = new LoggerStubT<MockCard>();
     public Guid ID { get; set; }
     public ICardSet? CardSet { get; set; }
     public MockTerrID[] Target { get; set; } = [];

@@ -189,17 +189,19 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// <inheritdoc cref="IMainVM.Initialize(string)"/>
     public virtual void Initialize(string fileName)
     {
-        FileStream openStream = new(fileName, FileMode.Open, FileAccess.Read);
+        if (CurrentGame == null)
+            throw new NullReferenceException($"The property {CurrentGame} of {this} was null during initialization.");
 
+        FileStream openStream = new(fileName, FileMode.Open, FileAccess.Read);
         BinaryReader reader = new(openStream);
 
         string colors = reader.ReadString();
-
         // Regular Expressions used here to pattern-match, using a "zero-width assertion", finding where the next character is a Capital letter ("(?=[A-Z])") which is not preceded by the beginning of a string ("(?<!^)");
         string pattern = @"(?<!^)(?=[A-Z])";
         string[] colorMatches = Regex.Split(colors, pattern);
+        string[] placeHolders = new string[colorMatches.Length]; 
 
-        CurrentGame!.Initialize(openStream);
+        CurrentGame.Initialize([..placeHolders.Select(item => "")], fileName);
 
         PlayerDetails = [];
         for (int i = 0; i < NumPlayers; i++) {
