@@ -6,6 +6,8 @@ using Hazard_Model.Tests.Fixtures.Stubs;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Services.Registry;
+using Microsoft.Extensions.Logging;
+using Microsoft.Testing.Platform.Logging;
 
 namespace Hazard_Model.Tests.DataAccess;
 
@@ -14,6 +16,7 @@ public class AssetFactoryTests
 {
     private readonly MockDataFiles _mockFiles = new();
     private readonly LoggerStubT<AssetFactory> _logger = new();
+    private readonly LoggerFactory _loggerFactory = new LoggerFactory();
     private readonly IDataProvider? _dataProvider;
 
     public AssetFactory TestFactory { get; private set; }
@@ -21,7 +24,7 @@ public class AssetFactoryTests
     public AssetFactoryTests()
     {
         _dataProvider = new MockDataProvider(_mockFiles.ConfigDataFileList);
-        TestFactory = new(_logger, _dataProvider);
+        TestFactory = new(_dataProvider, _logger, _loggerFactory);
     }
 
     [TestMethod]

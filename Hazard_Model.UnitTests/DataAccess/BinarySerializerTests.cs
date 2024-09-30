@@ -1,4 +1,5 @@
-﻿using Hazard_Model.DataAccess;
+﻿using Hazard_Model.Core;
+using Hazard_Model.DataAccess;
 using Hazard_Model.Tests.Core.Mocks;
 using Hazard_Model.Tests.Entities.Mocks;
 using Hazard_Model.Tests.Fixtures;
@@ -16,7 +17,7 @@ public class BinarySerializerTests
     private readonly MockGame _deserialGame = new();
     private string _testFileName;
 
-    BinarySerializerTests()
+    public BinarySerializerTests()
     {
         BinarySerializer.InitializeLogger(new LoggerStub());
     }
@@ -37,68 +38,90 @@ public class BinarySerializerTests
             Assert.IsNotNull(_deserialGame.Board);
             Assert.AreEqual(_toSerialGame.Board.Geography.NumTerritories, _deserialGame.Board.Geography.NumTerritories);
             Assert.AreEqual(_toSerialGame.Board.Geography.NumContinents, _deserialGame.Board.Geography.NumContinents);
-            foreach(var contKey in _toSerialGame.Board.ContinentOwner.Keys)
+            foreach (var contKey in _toSerialGame.Board.ContinentOwner.Keys)
                 Assert.AreEqual(_toSerialGame.Board.ContinentOwner[contKey], _deserialGame.Board.ContinentOwner[contKey]);
-            foreach(var terrKey in _toSerialGame.Board.TerritoryOwner.Keys) {
+            foreach (var terrKey in _toSerialGame.Board.TerritoryOwner.Keys) {
                 Assert.AreEqual(_toSerialGame.Board.TerritoryOwner[terrKey], _deserialGame.Board.TerritoryOwner[terrKey]);
                 Assert.AreEqual(_toSerialGame.Board.Armies[terrKey], _deserialGame.Board.Armies[terrKey]);
             }
         }
         else { Assert.Fail(); }
     }
+
+    [TestMethod]
+    public async Task Players_RoundTrip_Match()
+    {
+        _toSerialGame.Players.Clear();
+        _toSerialGame.Players.Add(new MockPlayer(0, 6, _toSerialGame.Cards.CardFactory, _toSerialGame.Values, _toSerialGame.Board, new LoggerStubT<MockPlayer>()) {
+            Name = "TestPlayer1",
+            ArmyPool = 50,
+            ControlledTerritories = [TerrID.Alaska, TerrID.Kamchatka, TerrID.Peru],
+            Hand = [new MockCard()],
+        });
+        _toSerialGame.Players.Add(new MockPlayer(1, 6, _toSerialGame.Cards.CardFactory, _toSerialGame.Values, _toSerialGame.Board, new LoggerStubT<MockPlayer>()) {
+            Name = "TestPlayer2",
+            ArmyPool = 40,
+            ControlledTerritories = [TerrID.EastAfrica, TerrID.Afghanistan, TerrID.Argentina],
+            Hand = [new MockCard(), new MockCard()],
+        });
+        _toSerialGame.Players.Add(new MockPlayer(2, 6, _toSerialGame.Cards.CardFactory, _toSerialGame.Values, _toSerialGame.Board, new LoggerStubT<MockPlayer>()) {
+            Name = "TestPlayer3",
+            ArmyPool = 30,
+            ControlledTerritories = [TerrID.Siberia],
+            Hand = [],
+        });
+        _toSerialGame.Players.Add(new MockPlayer(3, 6, _toSerialGame.Cards.CardFactory, _toSerialGame.Values, _toSerialGame.Board, new LoggerStubT<MockPlayer>()) {
+            Name = "TestPlayer4",
+            ArmyPool = 20,
+            ControlledTerritories = [],
+            Hand = [new MockCard(), new MockCard(), new MockCard()],
+        });
+        _toSerialGame.Players.Add(new MockPlayer(4, 6, _toSerialGame.Cards.CardFactory, _toSerialGame.Values, _toSerialGame.Board, new LoggerStubT<MockPlayer>()) {
+            Name = "TestPlayer5",
+            ArmyPool = 10,
+            ControlledTerritories = [TerrID.Ural, TerrID.Japan, TerrID.Brazil],
+            Hand = [new MockCard(), new MockCard()],
+        });
+        _toSerialGame.Players.Add(new MockPlayer(5, 6, _toSerialGame.Cards.CardFactory, _toSerialGame.Values, _toSerialGame.Board, new LoggerStubT<MockPlayer>()) {
+            Name = "TestPlayer6",
+            ArmyPool = 0,
+            ControlledTerritories = [TerrID.CentralAmerica, TerrID.China, TerrID.Congo, TerrID.Ontario, TerrID.Quebec],
+            Hand = [new MockCard(), new MockCard(), new MockCard(), new MockCard()],
+        });
+        _deserialGame.Players.Clear();
+
+        for (int i = 0; i < _toSerialGame.Players.Count; i++) {
+            await BinarySerializer.Save([_toSerialGame.Players[i]], _testFileName, true);
+            _deserialGame.Players.Add(new MockPlayer(0, 0, _deserialGame.Cards.CardFactory, _deserialGame.Values, _deserialGame.Board, new LoggerStubT<MockPlayer>()));
+            if (BinarySerializer.Load([_deserialGame.Players[i]], _testFileName)) {
+                Assert.AreEqual(_toSerialGame.Players[i].Number, _deserialGame.Players[i].Number);
+                Assert.AreEqual(_toSerialGame.Players[i].Name, _deserialGame.Players[i].Name);
+                Assert.AreEqual(_toSerialGame.Players[i].HasCardSet, _deserialGame.Players[i].HasCardSet);
+                Assert.AreEqual(_toSerialGame.Players[i].ArmyPool, _deserialGame.Players[i].ArmyPool);
+                Assert.AreEqual(_toSerialGame.Players[i].ContinentBonus, _deserialGame.Players[i].ContinentBonus);
+                Assert.AreEqual(_toSerialGame.Players[i].ControlledTerritories.Count, _deserialGame.Players[i].ControlledTerritories.Count);
+                for (int j = 0; j < _toSerialGame.Players[i].ControlledTerritories.Count; j++) {
+                    Assert.AreEqual(_toSerialGame.Players[i].ControlledTerritories[j], _deserialGame.Players[i].ControlledTerritories[j]);
+                }
+                Assert.AreEqual(_toSerialGame.Players[i].Hand.Count, _deserialGame.Players[i].Hand.Count);
+                for (int j = 0; j < _toSerialGame.Players[i].Hand.Count; j++) {
+                    Assert.AreEqual(_toSerialGame.Players[i].Hand[j].ParentTypeName, _deserialGame.Players[i].Hand[j].ParentTypeName);
+                    Assert.AreEqual(_toSerialGame.Players[i].Hand[j].Target.Length, _deserialGame.Players[i].Hand[j].Target.Length);
+                    for (int k = 0; k < _toSerialGame.Players[i].Hand[j].Target.Length; k++) {
+                        Assert.AreEqual(_toSerialGame.Players[i].Hand[j].Target[k], _deserialGame.Players[i].Hand[j].Target[k]);
+                        Assert.AreEqual(((ITroopCard)(_toSerialGame.Players[i].Hand[j])).Insigne, ((ITroopCard)(_deserialGame.Players[i].Hand[j])).Insigne);
+                        Assert.IsNull(_toSerialGame.Players[i].Hand[j].CardSet);
+                        Assert.AreEqual(_toSerialGame.Players[i].Hand[j].CardSet, _deserialGame.Players[i].Hand[j].CardSet); // two-step initialization means cardset isn't initialized until after LoadCardBase
+                        Assert.AreEqual(_toSerialGame.Players[i].Hand[j].IsTradeable, _deserialGame.Players[i].Hand[j].IsTradeable);
+                        Assert.AreEqual(_toSerialGame.Players[i].Hand[j].IsTradeable, _deserialGame.Players[i].Hand[j].IsTradeable);
+                    }
+                }
+            }
+            else { Assert.Fail(); }
+        }
+        Assert.AreEqual(_toSerialGame.Players.Count, _deserialGame.Players.Count);
+    }
 }
-//    [TestMethod]
-//    public void Players_RoundTrip_Match()
-//    {
-//        Assert.IsNotNull(_currentStream);
-//        Assert.IsNotNull(_testFileName);
-//        Assert.IsNotNull(_testSerializer);
-
-//        List<(object? DataObj, Type? SerialType)> saveData = [];
-//        BinaryWriter writer = new(_currentStream);
-
-//        BinarySerializer.SerializePlayerStates(_toSerialGame.Players, saveData);
-//        BinarySerializer.WriteData(writer, saveData, _loggerStub);
-
-//        writer.Dispose();
-//        _currentStream.Dispose();
-//        _currentStream = null;
-
-//        _currentStream = new(_testFileName, FileMode.Open);
-//        using BinaryReader reader = new(_currentStream);
-//        _testDeserializer = new(_deserialGame, _currentStream, SharedRegister.Registry, _loggerStub);
-//        Assert.IsNotNull(_deserialGame);
-//        Assert.IsNotNull(_deserialGame.Board);
-//        Assert.IsNotNull(_deserialGame.Values);
-//        _testDeserializer.LoadPlayerStates(reader, _deserialGame.Players, _deserialGame.Board, _deserialGame.Values);
-
-//        Assert.AreEqual(_toSerialGame.Players.Count, _deserialGame.Players.Count);
-//        for (int i = 0; i < _toSerialGame.Players.Count; i++) {
-//            Assert.AreEqual(_toSerialGame.Players[i].Number, _deserialGame.Players[i].Number);
-//            Assert.AreEqual(_toSerialGame.Players[i].Name, _deserialGame.Players[i].Name);
-//            Assert.AreEqual(_toSerialGame.Players[i].HasCardSet, _deserialGame.Players[i].HasCardSet);
-//            Assert.AreEqual(_toSerialGame.Players[i].ArmyPool, _deserialGame.Players[i].ArmyPool);
-//            Assert.AreEqual(_toSerialGame.Players[i].ContinentBonus, _deserialGame.Players[i].ContinentBonus);
-//            Assert.AreEqual(_toSerialGame.Players[i].ControlledTerritories.Count, _deserialGame.Players[i].ControlledTerritories.Count);
-//            for (int j = 0; j < _toSerialGame.Players[i].ControlledTerritories.Count; j++) {
-//                Assert.AreEqual(_toSerialGame.Players[i].ControlledTerritories[j], _deserialGame.Players[i].ControlledTerritories[j]);
-//            }
-//            Assert.AreEqual(_toSerialGame.Players[i].Hand.Count, _deserialGame.Players[i].Hand.Count);
-//            for (int j = 0; j < _toSerialGame.Players[i].Hand.Count; j++) {
-//                Assert.AreEqual(_toSerialGame.Players[i].Hand[j].ParentTypeName, _deserialGame.Players[i].Hand[j].ParentTypeName);
-//                Assert.AreEqual(_toSerialGame.Players[i].Hand[j].Target.Length, _deserialGame.Players[i].Hand[j].Target.Length);
-//                for (int k = 0; k < _toSerialGame.Players[i].Hand[j].Target.Length; k++) {
-//                    Assert.AreEqual(_toSerialGame.Players[i].Hand[j].Target[k], _deserialGame.Players[i].Hand[j].Target[k]);
-//                }
-//                Assert.AreEqual(((ITroopCard)(_toSerialGame.Players[i].Hand[j])).Insigne, ((ITroopCard)(_deserialGame.Players[i].Hand[j])).Insigne);
-//                Assert.AreNotEqual(_toSerialGame.Players[i].Hand[j].CardSet, _deserialGame.Players[i].Hand[j].CardSet); // two-step initialization means cardset isn't initialized until after LoadCardBase
-//                Assert.AreEqual(_deserialGame.Players[i].Hand[j].CardSet, null); // should be null so long as LoadCardBase has not yet been called
-//                Assert.AreEqual(_toSerialGame.Players[i].Hand[j].IsTradeable, _deserialGame.Players[i].Hand[j].IsTradeable);
-//                Assert.AreEqual(_toSerialGame.Players[i].Hand[j].IsTradeable, _deserialGame.Players[i].Hand[j].IsTradeable);
-//            }
-//            // Assert.AreEqual(_toSerialGame.Players[i].ArmyBonus, _deserialGame.Players[i].ArmyBonus); Omitted because it relies on a method from IBoard
-//        }
-//    }
 //    [TestMethod]
 //    public void CardBase_RoundTrip_Match()
 //    {

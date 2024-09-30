@@ -35,7 +35,7 @@ public class TroopCard : ITroopCard
         { nameof(IsTradeable), typeof(bool) }
     };
     public ILogger Logger { get; init; }
-    public string TypeName { get; } = nameof(TroopCard);
+    public string TypeName { get; set; } = nameof(TroopCard);
     /// <summary>
     /// Gets or sets the name of a <see cref="TroopCard"/>'s 'parent': the <see cref="ICardSet"/> that contains it.
     /// </summary>

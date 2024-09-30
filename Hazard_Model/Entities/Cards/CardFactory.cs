@@ -18,6 +18,8 @@ public class CardFactory(ITypeRegister<ITypeRelations> typeRegister)
             throw new ArgumentException($"The provided name {typeName} was not registered in {_registry}.", nameof(typeName));
         if (Activator.CreateInstance(registeredType) is not ICard activatedCard)
             throw new InvalidOperationException($"ICard construction of type {registeredType} failed.");
+        if (string.IsNullOrEmpty(activatedCard.TypeName))
+            activatedCard.TypeName = registeredType.Name;
         return activatedCard;
     }
 }

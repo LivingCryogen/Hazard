@@ -1,6 +1,7 @@
 ﻿using Hazard_Model.Core;
 using Hazard_Model.Entities;
 using Hazard_Model.Tests.Entities.Mocks;
+using Hazard_Model.Tests.Fixtures;
 using Hazard_Model.Tests.Fixtures.Stubs;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
@@ -17,7 +18,10 @@ public class MockGame : IGame
     public MockGame()
     {
         ID = new Guid();
-        Players = [new MockPlayer(_logger) { Number = 0 }, new MockPlayer(_logger) { Number = 1 }];
+        Players = [
+            new MockPlayer(0, 2, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>()),
+            new MockPlayer(1, 2, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>())
+        ];
     }
 
     public ILogger<MockGame> Logger { get => _logger; }
@@ -28,7 +32,7 @@ public class MockGame : IGame
     public bool DefaultCardMode { get; set; } = true;
     public List<IPlayer> Players { get; set; }
     public StateMachine State { get; set; } = new(2, new LoggerStubT<StateMachine>());
-    public MockCardBase Cards { get; set; } = new(new LoggerStubT<MockCardBase>());
+    public MockCardBase Cards { get; set; } = new(new LoggerStubT<MockCardBase>(), SharedRegister.Registry);
     CardBase IGame.Cards { get => Cards; set { Cards = (MockCardBase)value; } }
 
 #pragma warning disable CS0414 // For unit-testing, these are unused. If integration tests are built, they should be, at which time these warnings should be re-enabled.
@@ -39,6 +43,8 @@ public class MockGame : IGame
     {
         ID = Guid.Empty;
         Players.Clear();
+        Players.Add(new MockPlayer(0, 2, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>()));
+        Players.Add(new MockPlayer(1, 2, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>()));
         State = new StateMachine(2, new LoggerStubT<StateMachine>()); 
         ((MockGeography)Board.Geography).Wipe();
         Board.Armies.Clear();
@@ -124,9 +130,10 @@ public class MockGame : IGame
             if (this.ID is Guid gameID)
                 saveData.Add(new(typeof(string), [gameID.ToString()]));
             saveData.AddRange(Board?.GetBinarySerials().Result ?? []);
+            saveData.AddRange(Cards?.GetBinarySerials().Result ?? []);
+            saveData.Add(new(typeof(int), [Players.Count]));
             foreach (IPlayer player in Players)
                 saveData.AddRange(player?.GetBinarySerials().Result ?? []);
-            saveData.AddRange(Cards?.GetBinarySerials().Result ?? []);
             saveData.AddRange(State?.GetBinarySerials().Result ?? []);
             saveData.AddRange(Regulator?.GetBinarySerials().Result ?? []);
 
@@ -139,9 +146,16 @@ public class MockGame : IGame
         try {
             this.ID = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
             Board.LoadFromBinary(reader);
+            Cards.LoadFromBinary(reader);
+            int numPlayers = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            Players.Clear();
+            for (int i = 0; i < numPlayers; i++) {
+                MockPlayer newPlayer = new(i, numPlayers, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>());
+                newPlayer.LoadFromBinary(reader);
+                Players.Add(newPlayer);
+            }
             foreach (IPlayer player in Players)
                 player.LoadFromBinary(reader);
-            Cards.LoadFromBinary(reader);
             State.LoadFromBinary(reader);
             Regulator.LoadFromBinary(reader);
         } catch (Exception ex) {

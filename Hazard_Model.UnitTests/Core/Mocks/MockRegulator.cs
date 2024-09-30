@@ -2,7 +2,9 @@
 using Hazard_Model.Tests.Fixtures.Mocks;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
+using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace Hazard_Model.Tests.Core.Mocks;
 
@@ -21,6 +23,51 @@ public class MockRegulator(ILogger logger) : IRegulator
     public event EventHandler<TerrID[]>? PromptBonusChoice = null;
     public event EventHandler<IPromptTradeEventArgs>? PromptTradeIn = null;
 #pragma warning restore CS0414
+    public async Task<SerializedData[]> GetBinarySerials()
+    {
+        int numRewards = 0;
+        List<SerializedData> rewardData = [];
+        if (Reward != null) {
+            rewardData.Add(new(typeof(string), [Reward.TypeName]));
+            rewardData.AddRange(await Reward.GetBinarySerials());
+            numRewards = 1;
+        }
+        else rewardData = [];
+
+        SerializedData[] saveData = [
+            new(typeof(int), [_actionsCounter]),
+            new(typeof(int), [_prevActionCount]),
+            new(typeof(int), [CurrentActionsLimit]),
+            new(typeof(int), [numRewards]),
+            ..rewardData
+        ];
+
+        return saveData;
+    }
+    public bool LoadFromBinary(BinaryReader reader)
+    {
+        bool loadComplete = true;
+        try {
+            _actionsCounter = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            _prevActionCount = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            CurrentActionsLimit = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            int numRewards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            if (numRewards == 0)
+                Reward = null;
+            else {
+                string cardTypeName = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+                if (_currentGame?.Cards?.CardFactory.BuildCard(cardTypeName) is not ICard rewardCard) {
+                    throw new InvalidDataException("While loading Regulator, construction of the reward card failed");
+                }
+                rewardCard.LoadFromBinary(reader);
+                Reward = rewardCard;
+            }
+        } catch (Exception ex) {
+            _logger.LogError("An exception was thrown while loading {Regulator}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+            loadComplete = false;
+        }
+        return loadComplete;
+    }
     public void AwardTradeInBonus(TerrID territory)
     {
         throw new NotImplementedException();
@@ -41,30 +88,11 @@ public class MockRegulator(ILogger logger) : IRegulator
         throw new NotImplementedException();
     }
 
-    public List<(object? Datum, Type? dataType)> GetSaveData()
-    {
-        List<(object? Datum, Type? dataType)> savedata = [
-            (_actionsCounter, typeof(int)),
-            (_prevActionCount, typeof(int)),
-            (CurrentActionsLimit, typeof(int))  ];
-        if (Reward != null) {
-            savedata.Add((1, typeof(int)));
-            savedata.Add((Reward.GetSaveData(_logger), null));
-        }
-        else {
-            savedata.Add((0, typeof(int)));
-            savedata.Add((null, null));
-        }
-
-        return savedata;
-    }
-
     public void Initialize(IGame game)
     {
         _currentGame = (MockGame)game;
         _logger = ((MockGame)game).Logger;
         _numPlayers = _currentGame.Players!.Count;
-
 
         CurrentActionsLimit = _currentGame!.Values!.SetupActionsPerPlayers![_numPlayers];
 

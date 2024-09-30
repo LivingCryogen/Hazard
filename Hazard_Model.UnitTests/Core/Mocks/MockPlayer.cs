@@ -1,22 +1,50 @@
-﻿using Hazard_Model.Entities.Cards;
+﻿using Hazard_Model.Core;
+using Hazard_Model.Entities.Cards;
 using Hazard_Model.Tests.Entities.Mocks;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 
 namespace Hazard_Model.Tests.Core.Mocks;
 
-internal class MockPlayer(ILogger logger) : IPlayer
+internal class MockPlayer : IPlayer
 {
-    private readonly ILogger _logger = logger;
+    private readonly ILogger _logger;
+    private readonly MockCardFactory _cardFactory;
+    private readonly IBoard _board;
+
+    public MockPlayer(int number, int numPlayers, MockCardFactory cardFactory, IRuleValues values, IBoard board, ILogger<MockPlayer> logger)
+    {
+        _logger = logger;
+        Number = number;
+        ControlledTerritories = [];
+        Hand = [];
+        _board = board;
+        _cardFactory = cardFactory;
+    }
+
+    public MockPlayer(string name, int number, int numPlayers, MockCardFactory cardFactory, IRuleValues values, IBoard board, ILogger<MockPlayer> logger)
+    {
+        _logger = logger;
+        Name = name;
+        Number = number;
+        ControlledTerritories = [];
+
+
+        Hand = [];
+        _board = board;
+        _cardFactory = cardFactory;
+    }
+
     public int ArmyBonus { get; }
-    public int ArmyPool { get; set; } = 5;
+    public int ArmyPool { get; set; } = 10;
     public int ContinentBonus { get; set; } = 6;
-    public List<TerrID> ControlledTerritories { get => [TerrID.Null, TerrID.Alaska]; set => throw new NotImplementedException(); }
-    public List<ICard> Hand { get => []; set => throw new NotImplementedException(); }
+    public List<TerrID> ControlledTerritories { get; set; }
+    public List<ICard> Hand { get; set; } = [];
     public string Name { get; set; } = "YourFatherSmeltOfElderBerries!";
-    public int Number { get; init; }
+    public int Number { get; set; }
     public bool HasCardSet { get => false; set => throw new NotImplementedException(); }
 
 #pragma warning disable CS0414 // For unit-testing, these are unused. If integration tests are built, they should be, at which time these warnings should be re-enabled.
@@ -30,6 +58,7 @@ internal class MockPlayer(ILogger logger) : IPlayer
         {
             List<SerializedData> data = [
                 new (typeof(string), [Name]),
+                new (typeof(int), [Number]),
                 new (typeof(int), [ArmyPool]),
                 new (typeof(int), [ContinentBonus]),
                 new (typeof(int), [ControlledTerritories.Count])
@@ -38,7 +67,6 @@ internal class MockPlayer(ILogger logger) : IPlayer
                 data.Add(new(typeof(int), [(int)ControlledTerritories[i]]));
             data.Add(new(typeof(int), [Hand.Count]));
             for (int i = 0; i < Hand.Count; i++) {
-                data.Add(new(typeof(string), [Hand[i].TypeName]));
                 IEnumerable<SerializedData> cardSerials = await Hand[i].GetBinarySerials();
                 data.AddRange(cardSerials ?? []);
             }
@@ -51,16 +79,19 @@ internal class MockPlayer(ILogger logger) : IPlayer
         bool loadComplete = true;
         try {
             Name = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+            Number = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             ArmyPool = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             ContinentBonus = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             int numControlledTerritories = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            ControlledTerritories = [];
             for (int i = 0; i < numControlledTerritories; i++)
                 ControlledTerritories.Add((TerrID)BinarySerializer.ReadConvertible(reader, typeof(int)));
             int numCards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            Hand = [];
             for (int i = 0; i < numCards; i++) {
-                string readTypeName = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
-                var newCard = new MockCard();
-                ((ICard)newCard).LoadFromBinary(reader);
+                string cardTypeName = reader.ReadString();
+                ICard newCard = _cardFactory.BuildCard(cardTypeName);
+                Hand.Add(newCard);
             }
         } catch (Exception ex) {
             _logger.LogError("An exception was thrown while loading {Player}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);

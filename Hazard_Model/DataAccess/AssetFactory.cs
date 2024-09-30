@@ -23,6 +23,7 @@ public class AssetFactory : IAssetFactory
     public AssetFactory(ILogger<AssetFactory> logger, ILoggerFactory loggerFactory)
     {
         _logger = logger;
+        _loggerFactory = loggerFactory;
     }
 
     /// <summary>
@@ -30,9 +31,10 @@ public class AssetFactory : IAssetFactory
     /// </summary>
     /// <param name="logger">An <see cref="ILogger"/> for logging debug information and errors.</param>
     /// <param name="dataProvider">An <see cref="IDataProvider"/> which reads off data from external sources (e.g., data files).</param>
-    public AssetFactory(ILogger<AssetFactory> logger, IDataProvider dataProvider, ILoggerFactory loggerFactory)
+    public AssetFactory(IDataProvider dataProvider, ILogger<AssetFactory> logger, ILoggerFactory loggerFactory)
     {
         _logger = logger;
+        _loggerFactory = loggerFactory;
         _dataProvider = dataProvider;
     }
     /** <summary>

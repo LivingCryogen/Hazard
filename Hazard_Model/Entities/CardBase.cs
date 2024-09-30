@@ -137,7 +137,7 @@ public class CardBase(ILogger logger, ITypeRegister<ITypeRelations> registry) : 
     private void MapCardsAndSets(List<ICard> cards, Dictionary<string, ICardSet> cardTypeNamesToSets, Dictionary<ICardSet, List<ICard>?> setsToCardLists)
     {
         foreach (ICard newCard in cards) {
-            string cardTypeName = newCard.GetType().Name;
+            string cardTypeName = newCard.TypeName;
             ICardSet? parentSet = null;
             try {
                 parentSet = cardTypeNamesToSets[cardTypeName];

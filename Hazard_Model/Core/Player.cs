@@ -7,6 +7,7 @@ using Hazard_Share.Services.Registry;
 using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
 using System.Collections.Specialized;
+using System.Xml.Linq;
 
 namespace Hazard_Model.Core;
 /// <inheritdoc cref="IPlayer"/>.
@@ -17,6 +18,16 @@ public class Player : IPlayer
     private readonly IBoard _board;
     private readonly CardFactory _cardFactory;
     private int _armyPool;
+    public Player(int number, int numPlayers, CardFactory cardFactory, IRuleValues values, IBoard board, ILogger<Player> logger) {
+        _logger = logger;
+        Number = number;
+        ControlledTerritories = [];
+        _values = values;
+        ArmyPool = _values!.SetupStartingPool![numPlayers];
+        Hand = [];
+        _board = board;
+        _cardFactory = cardFactory;
+    }
     /// <summary>
     /// Builds a <see cref="IPlayer"/> given certain rules values and an initial board state.
     /// </summary>
@@ -72,20 +83,20 @@ public class Player : IPlayer
         }
     }
     /// <inheritdoc cref="IPlayer.Hand"/>.
-    public List<ICard> Hand { get; set; }
+    public List<ICard> Hand { get; set; } = [];
     /// <inheritdoc cref="IPlayer.ControlledTerritories"/>.
-    public List<TerrID> ControlledTerritories { get; set; }
+    public List<TerrID> ControlledTerritories { get; set; } = [];
     #endregion
 
     #region Methods
-
     public async Task<SerializedData[]> GetBinarySerials()
     {
         return await Task.Run(async () =>
         {
             List<SerializedData> data = [
                 new (typeof(string), [Name]),
-                new (typeof(int), [_armyPool]),
+                new (typeof(int), [Number]),
+                new (typeof(int), [ArmyPool]),
                 new (typeof(int), [ContinentBonus]),
                 new (typeof(int), [ControlledTerritories.Count])
             ];
@@ -93,7 +104,6 @@ public class Player : IPlayer
                 data.Add(new(typeof(int), [(int)ControlledTerritories[i]]));
             data.Add(new(typeof(int), [Hand.Count]));
             for (int i = 0; i < Hand.Count; i++) {
-                data.Add(new (typeof(string), [Hand[i].TypeName]));
                 IEnumerable<SerializedData> cardSerials = await Hand[i].GetBinarySerials();
                 data.AddRange(cardSerials ?? []);
             }
@@ -106,19 +116,22 @@ public class Player : IPlayer
         bool loadComplete = true;
         try {
             Name = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
-            _armyPool = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            Number = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            ArmyPool = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             ContinentBonus = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             int numControlledTerritories = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            ControlledTerritories = [];
             for (int i = 0; i < numControlledTerritories; i++)
                 ControlledTerritories.Add((TerrID)BinarySerializer.ReadConvertible(reader, typeof(int)));
             int numCards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            Hand = [];
             for (int i = 0; i < numCards; i++) {
-                string readTypeName = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
-                ICard newCard = _cardFactory.BuildCard(readTypeName);
-                newCard.LoadFromBinary(reader);
+                string cardTypeName = reader.ReadString();
+                ICard newCard = _cardFactory.BuildCard(cardTypeName);
+                //((ICard)newCard).LoadFromBinary(reader); 
+                Hand.Add(newCard);
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             _logger.LogError("An exception was thrown while loading {Player}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
         }

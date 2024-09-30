@@ -20,8 +20,6 @@ public class MockCard : ITroopCard
     {
         ID = Guid.NewGuid();
         IsTradeable = true;
-        CardSet = new MockCardSet();
-        ParentTypeName = string.Empty;
     }
     public MockCard(ICardSet cardSet)
     {
@@ -30,8 +28,8 @@ public class MockCard : ITroopCard
         IsTradeable = true;
         ParentTypeName = cardSet.GetType().Name;
     }
-    public string TypeName { get; } = nameof(MockCard);
-    public string ParentTypeName { get; private set; }
+    public string TypeName { get; set; } = nameof(MockCard);
+    public string ParentTypeName { get; private set; } = nameof(MockCardSet);
     public Insignia Insigne { get; set; }
     Enum ITroopCard.Insigne { get => Insigne; set { Insigne = (Insignia)Convert.ToInt32(value); } }
 
@@ -47,7 +45,7 @@ public class MockCard : ITroopCard
     public ILogger Logger { get; } = new LoggerStubT<MockCard>();
     public Guid ID { get; set; }
     public ICardSet? CardSet { get; set; }
-    public MockTerrID[] Target { get; set; } = [];
+    public MockTerrID[] Target { get; set; } = [MockTerrID.Delaware];
     TerrID[] ICard.Target { get => Target.Select(item => (TerrID)(int)item).ToArray(); set { Target = value.Select(item => (MockTerrID)(int)item).ToArray(); } }
     public bool IsTradeable { get; set; }
 
