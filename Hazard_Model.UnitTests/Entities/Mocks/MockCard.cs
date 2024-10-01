@@ -37,7 +37,11 @@ public class MockCard : ITroopCard
         { nameof(Target), typeof(MockTerrID) },
         { nameof(Insigne), typeof(Insignia) },
         { nameof(ParentTypeName), typeof(string) },
-        { nameof(IsTradeable), typeof(bool) }
+        { nameof(IsTradeable), typeof(bool) },
+        { nameof(TestInts), typeof(int) },
+        { nameof(TestBools), typeof(bool) },
+        { nameof(TestLongs), typeof(long) },
+        { nameof(TestBytes), typeof(byte) }
     };
     public string ID { get; set; } = Guid.NewGuid().ToString();
     public ILogger Logger { get; } = new LoggerStubT<MockCard>();
@@ -45,4 +49,8 @@ public class MockCard : ITroopCard
     public MockTerrID[] Target { get; set; } = [MockTerrID.Delaware];
     TerrID[] ICard.Target { get => Target.Select(item => (TerrID)(int)item).ToArray(); set { Target = value.Select(item => (MockTerrID)(int)item).ToArray(); } }
     public bool IsTradeable { get; set; }
+    public int[] TestInts { get; set; } = [1, 3, 5];
+    public bool[] TestBools { get; set; } = [true, false];
+    public long[] TestLongs { get; set; } = [1678359, 32482859, 5244245];
+    public byte[] TestBytes { get; set; } = [new byte(), new byte()];
 }

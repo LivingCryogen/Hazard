@@ -73,8 +73,8 @@ public static class BinarySerializer
     }
     public static Array ReadConvertibles(BinaryReader reader, Type type, int numValues)
     {
-        if (!type.IsAssignableFrom(typeof(IConvertible)))
-            throw new ArgumentException("ReadConvertibles accepts only IConvertible types.", nameof(type));
+        if (!typeof(IConvertible).IsAssignableFrom(type))
+            throw new ArgumentException("ReadConvertibles accepts only types which implement IConvertible.", nameof(type));
 
         Array returnArray = Array.CreateInstance(type, numValues);
         for (int i = 0; i < numValues; i++)

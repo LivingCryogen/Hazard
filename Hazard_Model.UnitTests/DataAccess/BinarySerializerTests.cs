@@ -114,6 +114,14 @@ public class BinarySerializerTests
                         Assert.AreEqual(_toSerialGame.Players[i].Hand[j].CardSet, _deserialGame.Players[i].Hand[j].CardSet); // two-step initialization means cardset isn't initialized until after LoadCardBase
                         Assert.AreEqual(_toSerialGame.Players[i].Hand[j].IsTradeable, _deserialGame.Players[i].Hand[j].IsTradeable);
                         Assert.AreEqual(_toSerialGame.Players[i].Hand[j].IsTradeable, _deserialGame.Players[i].Hand[j].IsTradeable);
+                        Assert.IsInstanceOfType(_toSerialGame.Players[i].Hand[j], typeof(MockCard));
+                        Assert.IsInstanceOfType(_deserialGame.Players[i].Hand[j], typeof(MockCard));
+                        MockCard serialCard = (MockCard)_toSerialGame.Players[i].Hand[j];
+                        MockCard deserialCard = (MockCard)_toSerialGame.Players[i].Hand[j];
+                        Assert.AreEqual(serialCard.TestBytes, deserialCard.TestBytes);
+                        Assert.AreEqual(serialCard.TestInts, deserialCard.TestInts);
+                        Assert.AreEqual(serialCard.TestLongs, deserialCard.TestLongs);
+                        Assert.AreEqual(serialCard.TestBools, deserialCard.TestBools);
                     }
                 }
             }
