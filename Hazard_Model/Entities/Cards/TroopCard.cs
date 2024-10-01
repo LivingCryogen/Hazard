@@ -61,34 +61,4 @@ public class TroopCard : ITroopCard
     /// <inheritdoc cref="ITroopCard.Insigne"/>
     public TroopInsignia Insigne { get; set; }
     Enum ITroopCard.Insigne { get => Insigne; set { Insigne = (TroopInsignia)value; } }
-    /// <inheritdoc cref="ICard.InitializePropertyFromBinary(BinaryReader, string, int)"/>
-    public bool InitializePropertyFromBinary(BinaryReader reader, string propName, int numValues)
-    {
-        if (propName == nameof(Insigne)) {
-            Insigne = (TroopInsignia)reader.ReadInt32();
-            return true;
-        }
-        else if (propName == nameof(Target)) {
-            if (numValues == 0) {
-                Target = [];
-                return true;
-            }
-            else {
-                Target = new TerrID[numValues];
-                for (int i = 0; i < numValues; i++)
-                    Target[i] = (TerrID)reader.ReadInt32();
-
-                return true;
-            }
-        }
-        else if (propName == nameof(ParentTypeName)) {
-            ParentTypeName = reader.ReadString();
-            return true;
-        }
-        else if (propName == nameof(IsTradeable)) {
-            IsTradeable = reader.ReadBoolean();
-            return true;
-        }
-        return false;
-    }
 }

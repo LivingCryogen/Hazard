@@ -223,6 +223,8 @@ public interface ICard : IBinarySerializable
                     }
                     if (elementType.IsEnum)
                         cardProps[propIndex].SetValue(this, BinarySerializer.ReadEnums(reader, serialType, numValsLoaded));
+                    else if (elementType == typeof(string)) 
+                        cardProps[propIndex].SetValue(this, BinarySerializer.ReadStrings(reader, serialType, numValsLoaded));
                     else
                         cardProps[propIndex].SetValue(this, BinarySerializer.ReadConvertibles(reader, serialType, numValsLoaded));
                 }

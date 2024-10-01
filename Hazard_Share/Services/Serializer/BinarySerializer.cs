@@ -71,17 +71,30 @@ public static class BinarySerializer
         byte[] bytes = reader.ReadBytes(length);
         return BytesToEnumObject(type, bytes);
     }
-    public static IConvertible[] ReadConvertibles(BinaryReader reader, Type type, int numValues)
+    public static Array ReadConvertibles(BinaryReader reader, Type type, int numValues)
     {
-        List<IConvertible> readConvertibles = [];
+        if (!type.IsAssignableFrom(typeof(IConvertible)))
+            throw new ArgumentException("ReadConvertibles accepts only IConvertible types.", nameof(type));
+
+        Array returnArray = Array.CreateInstance(type, numValues);
         for (int i = 0; i < numValues; i++)
-            readConvertibles.Add(ReadConvertible(reader, type));
-        return [.. readConvertibles];
+            returnArray.SetValue(ReadConvertible(reader, type), i);
+        return returnArray;
+    }
+    public static Array ReadStrings(BinaryReader reader, Type type, int numValues)
+    {
+        if (!type.IsAssignableFrom(typeof(string)))
+            throw new ArgumentException("ReadConvertibles accepts only string types.", nameof(type));
+
+        Array returnArray = Array.CreateInstance(type, numValues);
+        for (int i = 0; i < numValues; i++)
+            returnArray.SetValue((string)ReadConvertible(reader, type), i);
+        return returnArray;
     }
     public static Array ReadEnums(BinaryReader reader, Type type, int numValues)
     {
         if (!type.IsEnum)
-            throw new ArgumentException(nameof(type));
+            throw new ArgumentException("ReadEnums accepts only Enum types.", nameof(type));
 
         Array returnArray = Array.CreateInstance(type, numValues);
         for (int i = 0; i < numValues; i++)
