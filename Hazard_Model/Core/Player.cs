@@ -127,8 +127,9 @@ public class Player : IPlayer
             Hand = [];
             for (int i = 0; i < numCards; i++) {
                 string cardTypeName = reader.ReadString();
-                ICard newCard = _cardFactory.BuildCard(cardTypeName);
-                //((ICard)newCard).LoadFromBinary(reader); 
+                if (_cardFactory.BuildCard(cardTypeName) is not ICard newCard)
+                    throw new KeyNotFoundException($"{_cardFactory} did not return a valid ICard for {cardTypeName}.");
+                newCard.LoadFromBinary(reader);
                 Hand.Add(newCard);
             }
         } catch (Exception ex) {

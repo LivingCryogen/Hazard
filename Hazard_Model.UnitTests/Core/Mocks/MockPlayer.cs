@@ -64,7 +64,7 @@ internal class MockPlayer : IPlayer
                 new (typeof(int), [ControlledTerritories.Count])
             ];
             for (int i = 0; i < ControlledTerritories.Count; i++)
-                data.Add(new(typeof(int), [(int)ControlledTerritories[i]]));
+                data.Add(new(typeof(TerrID), [ControlledTerritories[i]]));
             data.Add(new(typeof(int), [Hand.Count]));
             for (int i = 0; i < Hand.Count; i++) {
                 IEnumerable<SerializedData> cardSerials = await Hand[i].GetBinarySerials();
@@ -85,12 +85,13 @@ internal class MockPlayer : IPlayer
             int numControlledTerritories = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             ControlledTerritories = [];
             for (int i = 0; i < numControlledTerritories; i++)
-                ControlledTerritories.Add((TerrID)BinarySerializer.ReadConvertible(reader, typeof(int)));
+                ControlledTerritories.Add((TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID)));
             int numCards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             Hand = [];
             for (int i = 0; i < numCards; i++) {
                 string cardTypeName = reader.ReadString();
                 ICard newCard = _cardFactory.BuildCard(cardTypeName);
+                newCard.LoadFromBinary(reader);
                 Hand.Add(newCard);
             }
         } catch (Exception ex) {

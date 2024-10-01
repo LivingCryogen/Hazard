@@ -94,18 +94,25 @@ public interface ICard : IBinarySerializable
     {
         switch (propInfo.PropertyType) {
             case Type t when t == typeof(string):
-                if (propInfo.GetValue(this) is not string stringValue) {
-                    convertibles = [];
-                    return false;
+                var propValue = propInfo.GetValue(this);
+                if (propValue is not string stringValue) {
+                    try {
+                        stringValue = propValue?.ToString() ?? string.Empty;
+                    }
+                    catch {
+                        Logger.LogWarning("{Card} tried to serialize property {Property} as a string, but failed.", this, propInfo.Name);
+                        convertibles = [];
+                        return false;
+                    }
                 }
                 convertibles = [stringValue];
                 return true;
             case Type t when typeof(IEnumerable).IsAssignableFrom(t) && t != typeof(string):
-                if (propInfo.GetValue(this) is not IEnumerable propValue) {
+                if (propInfo.GetValue(this) is not IEnumerable enumerableValue) {
                     convertibles = [];
                     return false;
                 }
-                if (!propValue.Cast<object>().Any()) {
+                if (!enumerableValue.Cast<object>().Any()) {
                     Logger.LogWarning("{Card}'s property {Property} returned an empty enumerable on serialization.", this, propInfo.Name);
                     convertibles = [];
                     return true;
@@ -121,7 +128,7 @@ public interface ICard : IBinarySerializable
                     return false;
                 }
 
-                convertibles = [..propValue.Cast<IConvertible>()];
+                convertibles = [.. enumerableValue.Cast<IConvertible>()];
                 return true;
 
             case Type t when t.IsEnum:
@@ -148,7 +155,18 @@ public interface ICard : IBinarySerializable
                 return true;
 
             default:
-                Logger.LogWarning("{Card} failed to serialize convertible/primitive {Property} because it does not implement IConvertible (it is not a string, Enum, or primitive type).", this, propInfo.Name);
+                try {
+                    if (propInfo?.GetValue(this)?.ToString() is string convertedString) {
+                        convertibles = [convertedString];
+                        return true;
+                    }
+                } catch (Exception ex) {
+                    Logger.LogWarning("{Card} failed to serialize convertible/primitive {Property} because it was not an IConvertible and failed to convert to a string.", this, propInfo.Name);
+                    convertibles = [];
+                    return false;
+                }
+
+                Logger.LogWarning("{Card} failed to serialize convertible/primitive {Property} because it does not implement IConvertible (it is not a string, Enum, or primitive type) and could not be converted to a string.", this, propInfo.Name);
                 convertibles = [];
                 return false;
         }
@@ -171,12 +189,13 @@ public interface ICard : IBinarySerializable
                 return false;
             }
 
-            int propIndex = -1;
+            int propIndex = 0;
             while (propIndex < numProperties) {
-                propIndex++;
                 string propName = cardProps[propIndex].Name;
-                if (propName == nameof(CardSet) || propName == nameof(PropertySerializableTypeMap) || propName == nameof(TypeName) || propName == nameof(Logger))
+                if (propName == nameof(CardSet) || propName == nameof(PropertySerializableTypeMap) || propName == nameof(TypeName) || propName == nameof(Logger)) {
+                    propIndex++;
                     continue;
+                }
 
                 int numValsLoaded = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
                 string loadedName = reader.ReadString();
@@ -190,15 +209,25 @@ public interface ICard : IBinarySerializable
                     Logger.LogError("{Card} attempted to load from binary, but the name of a loaded property was not found in {Map}.", this, PropertySerializableTypeMap);
                     return false;
                 }
-                if (propType.IsAssignableFrom(typeof(IEnumerable)) == false) {
+                if (!propType.IsArray) {
                     if (numValsLoaded > 1) {
-                        Logger.LogError("{Card} attempted to load from binary, but there was a property type mismatch: the property was not an IEnumerable, but it attempted to load multiple values.", this);
+                        Logger.LogError("{Card} attempted to load from binary, but there was a property type mismatch: the property was not an array, but it attempted to load multiple values.", this);
                         return false;
                     }
                     cardProps[propIndex].SetValue(this, BinarySerializer.ReadConvertible(reader, serialType));
                 }
-                else
-                    cardProps[propIndex].SetValue(this, BinarySerializer.ReadConvertibles(reader, serialType, numValsLoaded)[0]);
+                else {
+                    if (propType.GetElementType() is not Type elementType) {
+                        Logger.LogError("{Card} attempted to load an array property, {name}, from binary, but failed to get its member type.", this, propName);
+                        return false;
+                    }
+                    if (elementType.IsEnum)
+                        cardProps[propIndex].SetValue(this, BinarySerializer.ReadEnums(reader, serialType, numValsLoaded));
+                    else
+                        cardProps[propIndex].SetValue(this, BinarySerializer.ReadConvertibles(reader, serialType, numValsLoaded));
+                }
+
+                propIndex++;
             }
         }
         catch (Exception ex) {

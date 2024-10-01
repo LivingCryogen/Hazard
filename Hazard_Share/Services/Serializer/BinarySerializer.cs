@@ -42,6 +42,10 @@ public static class BinarySerializer
         double doubleVal = BitConverter.ToDouble(bytes, 0);
         return (IConvertible)Convert.ChangeType(doubleVal, type);
     }
+    private static object BytesToEnumObject(Type type, byte[] bytes)
+    {
+        return Enum.ToObject(type, BitConverter.ToInt64(bytes, 0));
+    }
     #endregion
     #region Serialization Methods
     private static void WriteConvertible(BinaryWriter writer, Type type, IConvertible value)
@@ -61,12 +65,28 @@ public static class BinarySerializer
         byte[] bytes = reader.ReadBytes(length);
         return BytesToConvertible(type, bytes);
     }
+    public static object ReadEnum(BinaryReader reader, Type type)
+    {
+        int length = reader.ReadInt32();
+        byte[] bytes = reader.ReadBytes(length);
+        return BytesToEnumObject(type, bytes);
+    }
     public static IConvertible[] ReadConvertibles(BinaryReader reader, Type type, int numValues)
     {
         List<IConvertible> readConvertibles = [];
         for (int i = 0; i < numValues; i++)
             readConvertibles.Add(ReadConvertible(reader, type));
         return [.. readConvertibles];
+    }
+    public static Array ReadEnums(BinaryReader reader, Type type, int numValues)
+    {
+        if (!type.IsEnum)
+            throw new ArgumentException(nameof(type));
+
+        Array returnArray = Array.CreateInstance(type, numValues);
+        for (int i = 0; i < numValues; i++)
+            returnArray.SetValue(ReadEnum(reader, type), i);
+        return returnArray;
     }
 
     private static void WriteTaggedConvertible(BinaryWriter writer, Type type, IConvertible value, string tag)
@@ -145,7 +165,7 @@ public static class BinarySerializer
                 else 
                     if (saveDatum.SerialValues.Length > 1)
                         WriteConvertibles(writer, saveDatum.SerialType, saveDatum.SerialValues);
-                    else
+                    else if (saveDatum.SerialValues.Length == 1)
                         WriteConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0]);
             }
         } catch (Exception ex) {
