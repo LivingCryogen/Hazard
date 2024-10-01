@@ -122,6 +122,7 @@ public class BinarySerializerTests
                         Assert.AreEqual(serialCard.TestInts, deserialCard.TestInts);
                         Assert.AreEqual(serialCard.TestLongs, deserialCard.TestLongs);
                         Assert.AreEqual(serialCard.TestBools, deserialCard.TestBools);
+                        Assert.AreEqual(serialCard.TestStrings, deserialCard.TestStrings);
                     }
                 }
             }

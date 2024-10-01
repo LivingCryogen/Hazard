@@ -41,7 +41,8 @@ public class MockCard : ITroopCard
         { nameof(TestInts), typeof(int) },
         { nameof(TestBools), typeof(bool) },
         { nameof(TestLongs), typeof(long) },
-        { nameof(TestBytes), typeof(byte) }
+        { nameof(TestBytes), typeof(byte) },
+        { nameof(TestStrings), typeof(string)}
     };
     public string ID { get; set; } = Guid.NewGuid().ToString();
     public ILogger Logger { get; } = new LoggerStubT<MockCard>();
@@ -53,4 +54,5 @@ public class MockCard : ITroopCard
     public bool[] TestBools { get; set; } = [true, false];
     public long[] TestLongs { get; set; } = [1678359, 32482859, 5244245];
     public byte[] TestBytes { get; set; } = [new byte(), new byte()];
+    public string[] TestStrings { get; set; } = ["Muad", "Dib"];
 }
