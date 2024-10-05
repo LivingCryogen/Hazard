@@ -89,6 +89,7 @@ public class BinarySerializerTests
             Hand = [new MockCard(), new MockCard(), new MockCard(), new MockCard()],
         });
         _deserialGame.Players.Clear();
+        ((MockCardBase)_deserialGame.Cards).Wipe();
 
         for (int i = 0; i < _toSerialGame.Players.Count; i++) {
             await BinarySerializer.Save([_toSerialGame.Players[i]], _testFileName, true);
@@ -130,88 +131,83 @@ public class BinarySerializerTests
         }
         Assert.AreEqual(_toSerialGame.Players.Count, _deserialGame.Players.Count);
     }
+
+    [TestMethod]
+    public async Task CardBase_RoundTrip_Match()
+    {
+        _deserialGame.Wipe();
+
+        await BinarySerializer.Save([_toSerialGame.Cards], _testFileName, true);
+
+        if (BinarySerializer.Load([_deserialGame.Cards], _testFileName)) {
+            Assert.IsNotNull(_toSerialGame.Cards.Sets);
+            Assert.IsNotNull(_deserialGame.Cards.Sets);
+            Assert.AreEqual(_toSerialGame.Cards.Sets.Count, _deserialGame.Cards.Sets.Count);
+            for (int i = 0; i < _toSerialGame.Cards.Sets.Count; i++) {
+                Assert.AreEqual(_toSerialGame.Cards.Sets[i].Name, _deserialGame!.Cards.Sets[i].Name);
+                Assert.AreEqual(_toSerialGame.Cards.Sets[i].MemberTypeName, _deserialGame!.Cards.Sets[i].MemberTypeName);
+                Assert.IsNotNull(_toSerialGame.Cards.Sets[i].Cards);
+                Assert.IsNotNull(_deserialGame.Cards.Sets[i].Cards);
+                Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards.Count, _deserialGame.Cards.Sets[i].Cards.Count);
+                for (int j = 0; j < _toSerialGame.Cards.Sets[i].Cards.Count; j++) {
+                    Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].ParentTypeName, _deserialGame!.Cards.Sets[i].Cards![j].ParentTypeName);
+                    Assert.IsNotNull(_toSerialGame.Cards.Sets[i].Cards[j].PropertySerializableTypeMap);
+                    Assert.IsNotNull(_deserialGame.Cards.Sets[i].Cards[j].PropertySerializableTypeMap);
+                    Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].PropertySerializableTypeMap.Keys.Count, _deserialGame.Cards.Sets[i].Cards[j].PropertySerializableTypeMap.Keys.Count);
+                    Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].IsTradeable, _deserialGame.Cards.Sets[i].Cards[j].IsTradeable);
+                    Assert.IsNotNull(_toSerialGame.Cards.Sets[i].Cards[j].CardSet);
+                    Assert.IsNotNull(_deserialGame.Cards.Sets[i].Cards[j].CardSet);
+                    Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].CardSet.Name, _deserialGame.Cards.Sets[i].Cards[j].CardSet.Name);
+                    Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].Target[0], _deserialGame.Cards.Sets[i].Cards[j].Target[0]); // could test the entire array but the default Targets are always length 1
+                }
+                Assert.AreEqual(_toSerialGame.Cards.Sets[i].ForcesTrade, _deserialGame!.Cards.Sets[i].ForcesTrade);
+                Assert.IsNotNull(_toSerialGame.Cards.Sets[i].JData); // "JData" refers to data loaded from .json during new game asset loading
+                Assert.IsNull(_deserialGame.Cards.Sets[i].JData); // "JData" refers to data loaded from .json during new game asset loading; when loading from binary, this is not used.
+            }
+            Assert.IsNotNull(_toSerialGame.Cards.GameDeck);
+            Assert.IsNotNull(_deserialGame.Cards.GameDeck);
+            Assert.IsNotNull(_toSerialGame.Cards.GameDeck.Library);
+            Assert.IsNotNull(_deserialGame.Cards.GameDeck.Library);
+            Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library.Count, _deserialGame!.Cards.GameDeck.Library.Count);
+            for (int j = 0; j < _toSerialGame.Cards.GameDeck.Library.Count; j++) {
+                Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].ParentTypeName, _deserialGame!.Cards.GameDeck.Library[j].ParentTypeName);
+                Assert.IsNotNull(_toSerialGame.Cards.GameDeck.Library[j].PropertySerializableTypeMap);
+                Assert.IsNotNull(_deserialGame.Cards.GameDeck.Library[j].PropertySerializableTypeMap);
+                Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].PropertySerializableTypeMap.Keys.Count, _deserialGame.Cards.GameDeck.Library[j].PropertySerializableTypeMap.Keys.Count);
+                Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].IsTradeable, _deserialGame.Cards.GameDeck.Library[j].IsTradeable);
+                Assert.IsNotNull(_toSerialGame.Cards.GameDeck.Library[j].CardSet);
+                Assert.IsNotNull(_deserialGame.Cards.GameDeck.Library[j].CardSet);
+                Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].CardSet.Name, _deserialGame.Cards.GameDeck.Library[j].CardSet.Name);
+                Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].Target[0], _deserialGame.Cards.GameDeck.Library[j].Target[0]); // could test the entire array but the default Targets are always length 1
+            }
+            Assert.IsNotNull(_toSerialGame.Cards.GameDeck.DiscardPile);
+            Assert.IsNotNull(_deserialGame.Cards.GameDeck.DiscardPile);
+            for (int j = 0; j < _toSerialGame.Cards.GameDeck.DiscardPile.Count; j++) {
+                Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].ParentTypeName, _deserialGame!.Cards.GameDeck.DiscardPile[j].ParentTypeName);
+                Assert.IsNotNull(_toSerialGame.Cards.GameDeck.DiscardPile[j].PropertySerializableTypeMap);
+                Assert.IsNotNull(_deserialGame.Cards.GameDeck.DiscardPile[j].PropertySerializableTypeMap);
+                Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].PropertySerializableTypeMap.Keys.Count, _deserialGame.Cards.GameDeck.DiscardPile[j].PropertySerializableTypeMap.Keys.Count);
+                Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].IsTradeable, _deserialGame.Cards.GameDeck.DiscardPile[j].IsTradeable);
+                Assert.IsNotNull(_toSerialGame.Cards.GameDeck.DiscardPile[j].CardSet);
+                Assert.IsNotNull(_deserialGame.Cards.GameDeck.DiscardPile[j].CardSet);
+                Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].CardSet.Name, _deserialGame.Cards.GameDeck.DiscardPile[j].CardSet.Name);
+                Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].Target[0], _deserialGame.Cards.GameDeck.DiscardPile[j].Target[0]); // could test the entire array but the default Targets are always length 1
+            }
+        }
+        else Assert.Fail();
+    }
 }
-//    [TestMethod]
-//    public void CardBase_RoundTrip_Match()
-//    {
-//        Assert.IsNotNull(_currentStream);
-//        Assert.IsNotNull(_testFileName);
-//        Assert.IsNotNull(_testSerializer);
+    //writer.Dispose();
+    //_currentStream.Dispose();
+    //_currentStream = null;
 
-//        List<(object? DataObj, Type? SerialType)> saveData = [];
-//        BinaryWriter writer = new(_currentStream);
-//        Assert.IsNotNull(_toSerialGame.Cards);
-//        BinarySerializer.SerializeCardBase(_toSerialGame.Cards, saveData, _loggerStub);
-//        BinarySerializer.WriteData(writer, saveData, _loggerStub);
+            //_currentStream = new(_testFileName, FileMode.Open);
+            //using BinaryReader reader = new(_currentStream);
+            //_testDeserializer = new(_deserialGame, _currentStream, SharedRegister.Registry, _loggerStub);
+            //Assert.IsNotNull(_deserialGame.Cards);
+            //_testDeserializer.LoadCardBase(reader, _deserialGame.Cards, _deserialGame.Players);
 
-//        writer.Dispose();
-//        _currentStream.Dispose();
-//        _currentStream = null;
 
-//        _currentStream = new(_testFileName, FileMode.Open);
-//        using BinaryReader reader = new(_currentStream);
-//        _testDeserializer = new(_deserialGame, _currentStream, SharedRegister.Registry, _loggerStub);
-//        Assert.IsNotNull(_deserialGame.Cards);
-//        _testDeserializer.LoadCardBase(reader, _deserialGame.Cards, _deserialGame.Players);
-
-//        Assert.IsNotNull(_toSerialGame);
-//        Assert.IsNotNull(_toSerialGame.Cards);
-//        Assert.IsNotNull(_toSerialGame.Cards.Sets);
-//        Assert.IsNotNull(_deserialGame);
-//        Assert.IsNotNull(_deserialGame.Cards);
-//        Assert.IsNotNull(_deserialGame.Cards.Sets);
-//        Assert.AreEqual(_toSerialGame.Cards.Sets.Count, _deserialGame!.Cards.Sets.Count);
-//        for (int i = 0; i < _toSerialGame.Cards.Sets.Count; i++) {
-//            Assert.AreEqual(_toSerialGame.Cards.Sets[i].Name, _deserialGame!.Cards.Sets[i].Name);
-//            Assert.AreEqual(_toSerialGame.Cards.Sets[i].MemberTypeName, _deserialGame!.Cards.Sets[i].MemberTypeName);
-//            Assert.IsNotNull(_toSerialGame.Cards.Sets[i].Cards);
-//            Assert.IsNotNull(_deserialGame.Cards.Sets[i].Cards);
-//            Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards!.Length, _deserialGame.Cards.Sets[i].Cards!.Length);
-//            for (int j = 0; j < _toSerialGame.Cards.Sets[i].Cards!.Length; j++) {
-//                Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards![j].ParentTypeName, _deserialGame!.Cards.Sets[i].Cards![j].ParentTypeName);
-//                Assert.IsNotNull(_toSerialGame.Cards.Sets[i].Cards![j].PropertySerializableTypeMap);
-//                Assert.IsNotNull(_deserialGame.Cards.Sets[i].Cards![j].PropertySerializableTypeMap);
-//                Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards![j].PropertySerializableTypeMap!.Keys.Count, _deserialGame!.Cards.Sets[i].Cards![j].PropertySerializableTypeMap!.Keys.Count);
-//                Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards![j].IsTradeable, _deserialGame!.Cards.Sets[i].Cards![j].IsTradeable);
-//                Assert.IsNotNull(_toSerialGame.Cards.Sets[i].Cards![j].CardSet);
-//                Assert.IsNotNull(_deserialGame.Cards.Sets[i].Cards![j].CardSet);
-//                Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards![j].CardSet!.Name, _deserialGame!.Cards.Sets[i].Cards![j].CardSet!.Name);
-//                Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards![j].Target[0], _deserialGame!.Cards.Sets[i].Cards![j].Target[0]); // could test the entire array but the default Targets are always length 1
-//            }
-//            Assert.AreEqual(_toSerialGame.Cards.Sets[i].ForcesTrade, _deserialGame!.Cards.Sets[i].ForcesTrade);
-//            Assert.IsNotNull(_toSerialGame.Cards.Sets[i].JData); // "JData" refers to data loaded from .json during new game asset loading
-//            Assert.IsNull(_deserialGame.Cards.Sets[i].JData); // "JData" refers to data loaded from .json during new game asset loading; when loading from binary, this is not used.
-//        }
-//        Assert.IsNotNull(_toSerialGame.Cards.GameDeck);
-//        Assert.IsNotNull(_deserialGame.Cards.GameDeck);
-//        Assert.IsNotNull(_toSerialGame.Cards.GameDeck.Library);
-//        Assert.IsNotNull(_deserialGame.Cards.GameDeck.Library);
-//        Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library.Count, _deserialGame!.Cards.GameDeck.Library.Count);
-//        for (int j = 0; j < _toSerialGame.Cards.GameDeck.Library.Count; j++) {
-//            Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].ParentTypeName, _deserialGame!.Cards.GameDeck.Library[j].ParentTypeName);
-//            Assert.IsNotNull(_toSerialGame.Cards.GameDeck.Library[j].PropertySerializableTypeMap);
-//            Assert.IsNotNull(_deserialGame.Cards.GameDeck.Library[j].PropertySerializableTypeMap);
-//            Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].PropertySerializableTypeMap!.Keys.Count, _deserialGame!.Cards.GameDeck.Library[j].PropertySerializableTypeMap!.Keys.Count);
-//            Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].IsTradeable, _deserialGame!.Cards.GameDeck.Library[j].IsTradeable);
-//            Assert.IsNotNull(_toSerialGame.Cards.GameDeck.Library[j].CardSet);
-//            Assert.IsNotNull(_deserialGame.Cards.GameDeck.Library[j].CardSet);
-//            Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].CardSet!.Name, _deserialGame!.Cards.GameDeck.Library[j].CardSet!.Name);
-//            Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].Target[0], _deserialGame!.Cards.GameDeck.Library[j].Target[0]); // could test the entire array but the default Targets are always length 1
-//        }
-//        Assert.IsNotNull(_toSerialGame.Cards.GameDeck.DiscardPile);
-//        Assert.IsNotNull(_deserialGame.Cards.GameDeck.DiscardPile);
-//        for (int j = 0; j < _toSerialGame.Cards.GameDeck.DiscardPile.Count; j++) {
-//            Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].ParentTypeName, _deserialGame!.Cards.GameDeck.DiscardPile[j].ParentTypeName);
-//            Assert.IsNotNull(_toSerialGame.Cards.GameDeck.DiscardPile[j].PropertySerializableTypeMap);
-//            Assert.IsNotNull(_deserialGame.Cards.GameDeck.DiscardPile[j].PropertySerializableTypeMap);
-//            Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].PropertySerializableTypeMap!.Keys.Count, _deserialGame!.Cards.GameDeck.DiscardPile[j].PropertySerializableTypeMap!.Keys.Count);
-//            Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].IsTradeable, _deserialGame!.Cards.GameDeck.DiscardPile[j].IsTradeable);
-//            Assert.IsNotNull(_toSerialGame.Cards.GameDeck.DiscardPile[j].CardSet);
-//            Assert.IsNotNull(_deserialGame.Cards.GameDeck.DiscardPile[j].CardSet);
-//            Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].CardSet!.Name, _deserialGame!.Cards.GameDeck.DiscardPile[j].CardSet!.Name);
-//            Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].Target[0], _deserialGame!.Cards.GameDeck.DiscardPile[j].Target[0]); // could test the entire array but the default Targets are always length 1
-//        }
-//    }
 //    [TestMethod]
 //    public void StateMachine_RoundTrip_Match()
 //    {

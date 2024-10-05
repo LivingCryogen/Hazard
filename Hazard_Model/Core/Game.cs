@@ -64,7 +64,7 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
                 Players.Last().PlayerWon += OnPlayerWin;
             }
         }
-        Cards.Initialize(_assetFetcher, DefaultCardMode);
+        Cards.InitializeFromAssets(_assetFetcher, DefaultCardMode);
         Regulator.Initialize(this);
 
         if (fileName != null)

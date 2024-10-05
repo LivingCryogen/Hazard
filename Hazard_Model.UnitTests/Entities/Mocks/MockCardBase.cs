@@ -22,16 +22,16 @@ public class MockCardBase : CardBase
             throw new Exception($"{mockData} returned improper data.");
         List<MockCard> mockCards = [];
         for (int i = 0; i < numMockCards; i++) {
-            mockCards.Add(new(mockSet) { Target = mockData.Targets[i], Insigne = mockData.Insignia[i] });
+            MockCard newMock = new(mockSet) { Target = mockData.Targets[i], Insigne = mockData.Insignia[i] };
+            newMock.FillTestValues();
+            mockCards.Add(newMock);
         }
-        List<ICard> cards = [];
-        cards.AddRange(mockCards);
-        Initialize(Sets, cards);
+        InitializeLibrary([.. mockCards]);
     }
 
     new public MockCardFactory CardFactory { get; set; } = new();
 
-    public void Reset()
+    public void Wipe()
     {
         Sets = [];
         GameDeck = new();

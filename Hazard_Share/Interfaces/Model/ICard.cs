@@ -161,7 +161,12 @@ public interface ICard : IBinarySerializable
                         return true;
                     }
                 } catch (Exception ex) {
-                    Logger.LogWarning("{Card} failed to serialize convertible/primitive {Property} because it was not an IConvertible and failed to convert to a string.", this, propInfo.Name);
+                    Logger.LogWarning("{Card} failed to serialize convertible/primitive {Property} because it was not an IConvertible and failed to convert to a string. Inner exception message: {Message}.", this, propInfo.Name, ex.Message);
+                    convertibles = [];
+                    return false;
+                }
+                if (propInfo == null) {
+                    Logger.LogWarning("{Card} failed to serialize because property information could not be found.", this);
                     convertibles = [];
                     return false;
                 }

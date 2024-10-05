@@ -55,7 +55,7 @@ public class AssetFactory : IAssetFactory
         var dataObject = _dataProvider?.GetData(typeName);
 
         if (dataObject is ICardSet cardSet) {
-            cardSet.Cards = BuildTroopCards(cardSet);
+            cardSet.Cards = [.. BuildTroopCards(cardSet)];
             return cardSet;
         }
 

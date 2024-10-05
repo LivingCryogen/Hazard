@@ -171,10 +171,10 @@ public static class BinarySerializer
             }
             foreach (SerializedData saveDatum in saveData) {
                 if (saveDatum.Tag != null) 
-                    if (saveDatum.SerialValues.Length > 1)
-                        WriteTaggedConvertibles(writer, saveDatum.SerialType, saveDatum.SerialValues, saveDatum.Tag);
-                    else
+                    if (saveDatum.SerialValues.Length == 1)
                         WriteTaggedConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0], saveDatum.Tag);
+                    else
+                        WriteTaggedConvertibles(writer, saveDatum.SerialType, saveDatum.SerialValues, saveDatum.Tag);
                 else 
                     if (saveDatum.SerialValues.Length > 1)
                         WriteConvertibles(writer, saveDatum.SerialType, saveDatum.SerialValues);

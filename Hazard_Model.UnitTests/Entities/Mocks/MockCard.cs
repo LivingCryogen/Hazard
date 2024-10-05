@@ -47,12 +47,21 @@ public class MockCard : ITroopCard
     public string ID { get; set; } = Guid.NewGuid().ToString();
     public ILogger Logger { get; } = new LoggerStubT<MockCard>();
     public ICardSet? CardSet { get; set; }
-    public MockTerrID[] Target { get; set; } = [MockTerrID.Delaware];
+    public MockTerrID[] Target { get; set; } = [];
     TerrID[] ICard.Target { get => Target.Select(item => (TerrID)(int)item).ToArray(); set { Target = value.Select(item => (MockTerrID)(int)item).ToArray(); } }
-    public bool IsTradeable { get; set; }
-    public int[] TestInts { get; set; } = [1, 3, 5];
-    public bool[] TestBools { get; set; } = [true, false];
-    public long[] TestLongs { get; set; } = [1678359, 32482859, 5244245];
-    public byte[] TestBytes { get; set; } = [new byte(), new byte()];
-    public string[] TestStrings { get; set; } = ["Muad", "Dib"];
+    public bool IsTradeable { get; set; } = true;
+    public int[] TestInts { get; set; } = [];
+    public bool[] TestBools { get; set; } = [];
+    public long[] TestLongs { get; set; } = [];
+    public byte[] TestBytes { get; set; } = [];
+    public string[] TestStrings { get; set; } = [];
+
+    public void FillTestValues()
+    {
+        TestInts = [1, 3, 5];
+        TestBools = [true, false];
+        TestLongs = [1678359, 32482859, 5244245];
+        TestBytes = [new byte(), new byte()];
+        TestStrings = ["Muad", "Dib"];
+    }
 }

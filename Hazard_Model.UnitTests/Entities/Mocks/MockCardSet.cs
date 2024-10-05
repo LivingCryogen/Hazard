@@ -7,7 +7,7 @@ public class MockCardSet : ICardSet
     public string Name { get; } = nameof(MockCardSet);
     public string MemberTypeName { get; } = nameof(MockCard);
     public ICardSetData? JData { get; set; } = null;
-    public ICard[]? Cards { get; set; }
+    public List<ICard> Cards { get; set; } = [];
     public bool ForcesTrade { get; } = true;
 
     public ICard[][]? FindTradeSets(ICard[] cards)

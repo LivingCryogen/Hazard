@@ -42,9 +42,9 @@ public interface ICardSet
     /// Gets or sets the cards in this card set.
     /// </summary>
     /// <value>
-    /// An array of <see cref="ICard"/> if this <see cref="ICardSet"/> has been initialized; otherwise, <see langword="null"/>.
+    /// A list of <see cref="ICard"/>.
     /// </value>
-    public ICard[]? Cards { get; set; }
+    public List<ICard> Cards { get; set; }
     /// <summary>
     /// Gets a flag indicating if a trade should be forced when a matching set of <see cref="ICard"/>s from this <see cref="ICardSet"/> are obtained.
     /// </summary>

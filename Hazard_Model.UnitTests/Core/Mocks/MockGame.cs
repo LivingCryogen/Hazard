@@ -49,7 +49,7 @@ public class MockGame : IGame
         ((MockGeography)Board.Geography).Wipe();
         Board.Armies.Clear();
         Board.ContinentOwner.Clear();
-        Cards.Reset();
+        Cards.Wipe();
         ((MockRegulator)Regulator).Wipe();
     }
     public void AutoBoard()
