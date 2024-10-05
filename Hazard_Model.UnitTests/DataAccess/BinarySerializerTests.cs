@@ -14,7 +14,7 @@ namespace Hazard_Model.Tests.DataAccess;
 public class BinarySerializerTests
 {
     private readonly MockGame _toSerialGame = new();
-    private MockGame _deserialGame = new();
+    private readonly MockGame _deserialGame = new();
     private string _testFileName;
 
     public BinarySerializerTests()
@@ -194,10 +194,29 @@ public class BinarySerializerTests
         }
         else Assert.Fail();
     }
+
+    [TestMethod]
+    public async Task StateMachine_RoundTrip_Match()
+    {
+        _toSerialGame.State.NumTrades = 4;
+        _toSerialGame.State.CurrentPhase = GamePhase.Attack;
+        _toSerialGame.State.Round = 8;
+        _toSerialGame.State.PlayerTurn = 1;
+        _toSerialGame.State.PhaseStageTwo = true;
+        _toSerialGame.State.Winner = 1;
+
+        await BinarySerializer.Save([_toSerialGame.State], _testFileName, true);
+
+        if (BinarySerializer.Load([_deserialGame.State], _testFileName)) {
+            Assert.AreEqual(_toSerialGame.State.NumTrades, _deserialGame.State.NumTrades);
+            Assert.AreEqual(_toSerialGame.State.CurrentPhase, _deserialGame.State.CurrentPhase);
+            Assert.AreEqual(_toSerialGame.State.Round, _deserialGame.State.Round);
+            Assert.AreEqual(_toSerialGame.State.PlayerTurn, _deserialGame.State.PlayerTurn);
+            Assert.AreEqual(_toSerialGame.State.PhaseStageTwo, _deserialGame.State.PhaseStageTwo);
+            Assert.AreEqual(_toSerialGame.State.Winner, _deserialGame.State.Winner);
+        } else Assert.Fail();
+    }
 }
-//[TestMethod]
-//public void StateMachine_RoundTrip_Match()
-//{ 
 //        var stateSave = _toSerialGame.State.GetSaveData();
 //        using BinaryWriter writer = new(_currentStream);
 //        BinarySerializer.WriteData(writer, stateSave, _loggerStub);

@@ -144,10 +144,11 @@ public class StateMachine : IBinarySerializable
             SerializedData[] saveData = [
                 new(typeof(byte), [BitArrayToByte(_isActivePlayer)]),
                 new(typeof(bool), [_phaseStageTwo]),
-                new(typeof(Enum), [_currentPhase]),
+                new(typeof(GamePhase), [_currentPhase]),
                 new(typeof(int), [_playerTurn]),
                 new(typeof(int), [_round]),
-                new(typeof(int), [_numTrades])
+                new(typeof(int), [_numTrades]),
+                new(typeof(int), [Winner])
             ];
             return saveData;
         });
@@ -158,10 +159,11 @@ public class StateMachine : IBinarySerializable
         try {
             _isActivePlayer = new((byte)BinarySerializer.ReadConvertible(reader, typeof(byte)));
             _phaseStageTwo = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool));
-            _currentPhase = (GamePhase)BinarySerializer.ReadConvertible(reader, typeof(Enum));
+            _currentPhase = (GamePhase)BinarySerializer.ReadConvertible(reader, typeof(GamePhase));
             _playerTurn = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             _round = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             _numTrades = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            Winner = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
         } catch (Exception ex) {
             _logger.LogError("An exception was thrown while loading {Player}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
