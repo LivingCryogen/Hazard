@@ -32,10 +32,6 @@ public class BinarySerializerTests
     [TestMethod]
     public async Task Board_RoundTrip_Match()
     {
-        _testFileName = FileProcessor.GetTempFile();
-        _deserialGame = new();
-        _deserialGame.Wipe();
-
         await BinarySerializer.Save([_toSerialGame.Board], _testFileName, true);
         if (BinarySerializer.Load([_deserialGame.Board], _testFileName)) {
             Assert.IsNotNull(_toSerialGame.Board);
@@ -55,10 +51,6 @@ public class BinarySerializerTests
     [TestMethod]
     public async Task Players_RoundTrip_Match()
     {
-        _testFileName = FileProcessor.GetTempFile();
-        _deserialGame = new();
-        _deserialGame.Wipe();
-
         _toSerialGame.Players.Clear();
         _toSerialGame.Players.Add(new MockPlayer(0, 6, _toSerialGame.Cards.CardFactory, _toSerialGame.Values, _toSerialGame.Board, new LoggerStubT<MockPlayer>()) {
             Name = "TestPlayer1",
@@ -143,8 +135,6 @@ public class BinarySerializerTests
     [TestMethod]
     public async Task CardBase_RoundTrip_Match()
     {
-
-
         await BinarySerializer.Save([_toSerialGame.Cards], _testFileName, true);
 
         if (BinarySerializer.Load([_deserialGame.Cards], _testFileName)) {
@@ -205,10 +195,9 @@ public class BinarySerializerTests
         else Assert.Fail();
     }
 }
-
-//    [TestMethod]
-//    public void StateMachine_RoundTrip_Match()
-//    {
+//[TestMethod]
+//public void StateMachine_RoundTrip_Match()
+//{ 
 //        var stateSave = _toSerialGame.State.GetSaveData();
 //        using BinaryWriter writer = new(_currentStream);
 //        BinarySerializer.WriteData(writer, stateSave, _loggerStub);
