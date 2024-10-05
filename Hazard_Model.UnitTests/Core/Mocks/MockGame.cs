@@ -43,13 +43,13 @@ public class MockGame : IGame
     {
         ID = Guid.Empty;
         Players.Clear();
+        Cards.Wipe();
         Players.Add(new MockPlayer(0, 2, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>()));
         Players.Add(new MockPlayer(1, 2, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>()));
         State = new StateMachine(2, new LoggerStubT<StateMachine>()); 
         ((MockGeography)Board.Geography).Wipe();
         Board.Armies.Clear();
         Board.ContinentOwner.Clear();
-        Cards.Wipe();
         ((MockRegulator)Regulator).Wipe();
     }
     public void AutoBoard()

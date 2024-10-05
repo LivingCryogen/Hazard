@@ -9,14 +9,12 @@ namespace Hazard_Model.Tests.Entities.Mocks;
 
 public class MockCardBase : CardBase
 {
-    private readonly MockCardSet mockSet = new();
     private readonly MockCardSetData mockData = new();
     public MockCardBase(ILogger logger, ITypeRegister<ITypeRelations> registry) : base(logger, registry)
     {
         Sets = [];
         mockData.BuildFromMockData();
-        mockSet.JData = mockData;
-        Sets.Add(mockSet);
+        MockCardSet mockSet = new() { JData = mockData };
         int numMockCards = mockData.Targets.Length;
         if (numMockCards != mockData.Insignia.Length)
             throw new Exception($"{mockData} returned improper data.");
@@ -26,14 +24,17 @@ public class MockCardBase : CardBase
             newMock.FillTestValues();
             mockCards.Add(newMock);
         }
-        InitializeLibrary([.. mockCards]);
+        mockSet.Cards = [.. mockCards];
+        Sets.Add(mockSet);
+        GameDeck.Library.AddRange(mockCards);
     }
 
     new public MockCardFactory CardFactory { get; set; } = new();
 
     public void Wipe()
     {
-        Sets = [];
-        GameDeck = new();
+        Sets.Clear();
+        GameDeck.Library.Clear();
+        GameDeck.DiscardPile.Clear();
     }
 }

@@ -17,7 +17,7 @@ public class MockRegulator(ILogger logger) : IRegulator
     private int _prevActionCount = 4;
     public int CurrentActionsLimit { get; set; } = 5;
     public int PhaseActions { get; set; } = 1;
-    public ICard? Reward { get; set; } = new MockCard(new MockCardSet()) { Target = [MockTerrID.Connecticut], Insigne = MockCard.Insignia.Tank };
+    public ICard? Reward { get; set; }
 
 #pragma warning disable CS0414 // For unit-testing, these are unused. If integration tests are built, they should be, at which time these warnings should be re-enabled.
     public event EventHandler<TerrID[]>? PromptBonusChoice = null;

@@ -14,7 +14,7 @@ namespace Hazard_Model.Tests.DataAccess;
 public class BinarySerializerTests
 {
     private readonly MockGame _toSerialGame = new();
-    private readonly MockGame _deserialGame = new();
+    private MockGame _deserialGame;
     private string _testFileName;
 
     public BinarySerializerTests()
@@ -22,16 +22,20 @@ public class BinarySerializerTests
         BinarySerializer.InitializeLogger(new LoggerStub());
     }
 
-    [TestInitialize]
-    public void Setup()
-    {
-        _testFileName = FileProcessor.GetTempFile();
-        _deserialGame.Wipe();
-    }
+    //[TestInitialize]
+    //public void Setup()
+    //{
+    //    _testFileName = FileProcessor.GetTempFile();
+    //    _deserialGame.Wipe();
+    //}
 
     [TestMethod]
     public async Task Board_RoundTrip_Match()
     {
+        _testFileName = FileProcessor.GetTempFile();
+        _deserialGame = new();
+        _deserialGame.Wipe();
+
         await BinarySerializer.Save([_toSerialGame.Board], _testFileName, true);
         if (BinarySerializer.Load([_deserialGame.Board], _testFileName)) {
             Assert.IsNotNull(_toSerialGame.Board);
@@ -51,6 +55,10 @@ public class BinarySerializerTests
     [TestMethod]
     public async Task Players_RoundTrip_Match()
     {
+        _testFileName = FileProcessor.GetTempFile();
+        _deserialGame = new();
+        _deserialGame.Wipe();
+
         _toSerialGame.Players.Clear();
         _toSerialGame.Players.Add(new MockPlayer(0, 6, _toSerialGame.Cards.CardFactory, _toSerialGame.Values, _toSerialGame.Board, new LoggerStubT<MockPlayer>()) {
             Name = "TestPlayer1",
@@ -135,6 +143,8 @@ public class BinarySerializerTests
     [TestMethod]
     public async Task CardBase_RoundTrip_Match()
     {
+        _testFileName = FileProcessor.GetTempFile();
+        _deserialGame = new();
         _deserialGame.Wipe();
 
         await BinarySerializer.Save([_toSerialGame.Cards], _testFileName, true);

@@ -96,6 +96,7 @@ public class CardBase(ILogger logger, ITypeRegister<ITypeRelations> registry) : 
                 parentSet.Cards ??= [];
                 if (parentSet.Cards.Contains(card))
                     continue;
+                card.CardSet = parentSet;
                 parentSet.Cards.Add(card);
                 continue;
             }
@@ -120,6 +121,10 @@ public class CardBase(ILogger logger, ITypeRegister<ITypeRelations> registry) : 
             parentSetObject.Cards.Add(card);
             cardSetToTypeNameMap.Add(parentType.Name, parentSetObject);
         }
+        if (Sets.Count < cardSetToTypeNameMap.Values.Count)
+            foreach (ICardSet loadedSet in cardSetToTypeNameMap.Values)
+                if (!Sets.Contains(loadedSet))
+                    Sets.Add(loadedSet);
     }
  
     public async Task<SerializedData[]> GetBinarySerials()
