@@ -34,7 +34,6 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
         int numRewards = 0;
         List<SerializedData> rewardData = [];
         if (Reward != null) {
-            rewardData.Add(new(typeof(string), [Reward.TypeName]));
             rewardData.AddRange(await Reward.GetBinarySerials());
             numRewards = 1;
         }
@@ -61,7 +60,7 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
             if (numRewards == 0)
                 Reward = null;
             else {
-                string cardTypeName = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+                string cardTypeName = reader.ReadString();
                 if (_currentGame?.Cards?.CardFactory.BuildCard(cardTypeName) is not ICard rewardCard) {
                     throw new InvalidDataException("While loading Regulator, construction of the reward card failed");
                 }

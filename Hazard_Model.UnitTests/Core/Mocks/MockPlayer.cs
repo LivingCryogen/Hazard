@@ -15,7 +15,7 @@ internal class MockPlayer : IPlayer
     private readonly MockCardFactory _cardFactory;
     private readonly IBoard _board;
 
-    public MockPlayer(int number, int numPlayers, MockCardFactory cardFactory, IRuleValues values, IBoard board, ILogger<MockPlayer> logger)
+    public MockPlayer(int number, MockCardFactory cardFactory, IRuleValues values, IBoard board, ILogger<MockPlayer> logger)
     {
         _logger = logger;
         Number = number;
@@ -25,7 +25,7 @@ internal class MockPlayer : IPlayer
         _cardFactory = cardFactory;
     }
 
-    public MockPlayer(string name, int number, int numPlayers, MockCardFactory cardFactory, IRuleValues values, IBoard board, ILogger<MockPlayer> logger)
+    public MockPlayer(string name, int number, MockCardFactory cardFactory, IRuleValues values, IBoard board, ILogger<MockPlayer> logger)
     {
         _logger = logger;
         Name = name;
@@ -58,7 +58,6 @@ internal class MockPlayer : IPlayer
         {
             List<SerializedData> data = [
                 new (typeof(string), [Name]),
-                new (typeof(int), [Number]),
                 new (typeof(int), [ArmyPool]),
                 new (typeof(int), [ContinentBonus]),
                 new (typeof(int), [ControlledTerritories.Count])
@@ -79,7 +78,6 @@ internal class MockPlayer : IPlayer
         bool loadComplete = true;
         try {
             Name = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
-            Number = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             ArmyPool = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             ContinentBonus = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             int numControlledTerritories = (int)BinarySerializer.ReadConvertible(reader, typeof(int));

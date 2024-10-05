@@ -28,7 +28,6 @@ public class MockRegulator(ILogger logger) : IRegulator
         int numRewards = 0;
         List<SerializedData> rewardData = [];
         if (Reward != null) {
-            rewardData.Add(new(typeof(string), [Reward.TypeName]));
             rewardData.AddRange(await Reward.GetBinarySerials());
             numRewards = 1;
         }
@@ -55,7 +54,7 @@ public class MockRegulator(ILogger logger) : IRegulator
             if (numRewards == 0)
                 Reward = null;
             else {
-                string cardTypeName = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+                string cardTypeName = reader.ReadString();
                 if (_currentGame?.Cards?.CardFactory.BuildCard(cardTypeName) is not ICard rewardCard) {
                     throw new InvalidDataException("While loading Regulator, construction of the reward card failed");
                 }
@@ -92,12 +91,12 @@ public class MockRegulator(ILogger logger) : IRegulator
     {
         _currentGame = (MockGame)game;
         _logger = ((MockGame)game).Logger;
-        _numPlayers = _currentGame.Players!.Count;
+        _numPlayers = _currentGame.Players.Count;
 
-        CurrentActionsLimit = _currentGame!.Values!.SetupActionsPerPlayers![_numPlayers];
+        CurrentActionsLimit = _currentGame.Values.SetupActionsPerPlayers[_numPlayers];
 
-        if (_currentGame!.State!.CurrentPhase == GamePhase.TwoPlayerSetup) {
-            _currentGame!.AutoBoard();
+        if (_currentGame?.State?.CurrentPhase == GamePhase.TwoPlayerSetup) {
+            // _currentGame?.AutoBoard(); For MockGame, we don't need to arrange the Board
             _prevActionCount = _actionsCounter;
         }
     }

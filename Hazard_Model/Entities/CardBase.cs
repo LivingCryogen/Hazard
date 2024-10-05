@@ -79,7 +79,7 @@ public class CardBase(ILogger logger, ITypeRegister<ITypeRelations> registry) : 
         MapCardsToSets(cards);
         GameDeck.DiscardPile.AddRange(cards);
     }
-    private void MapCardsToSets(ICard[] cards)
+    public void MapCardsToSets(ICard[] cards)
     {
         Sets ??= [];
 

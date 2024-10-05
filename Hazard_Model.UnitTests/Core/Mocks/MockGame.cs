@@ -8,6 +8,7 @@ using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace Hazard_Model.Tests.Core.Mocks;
 
@@ -19,9 +20,10 @@ public class MockGame : IGame
     {
         ID = new Guid();
         Players = [
-            new MockPlayer(0, 2, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>()),
-            new MockPlayer(1, 2, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>())
+            new MockPlayer(0, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>()),
+            new MockPlayer(1, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>())
         ];
+        Regulator.Initialize(this);
     }
 
     public ILogger<MockGame> Logger { get => _logger; }
@@ -44,8 +46,6 @@ public class MockGame : IGame
         ID = Guid.Empty;
         Players.Clear();
         Cards.Wipe();
-        Players.Add(new MockPlayer(0, 2, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>()));
-        Players.Add(new MockPlayer(1, 2, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>()));
         State = new StateMachine(2, new LoggerStubT<StateMachine>()); 
         ((MockGeography)Board.Geography).Wipe();
         Board.Armies.Clear();
@@ -150,14 +150,15 @@ public class MockGame : IGame
             int numPlayers = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             Players.Clear();
             for (int i = 0; i < numPlayers; i++) {
-                MockPlayer newPlayer = new(i, numPlayers, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>());
+                MockPlayer newPlayer = new(i, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>());
                 newPlayer.LoadFromBinary(reader);
+                Cards.MapCardsToSets([.. newPlayer.Hand]);
                 Players.Add(newPlayer);
             }
-            foreach (IPlayer player in Players)
-                player.LoadFromBinary(reader);
             State.LoadFromBinary(reader);
             Regulator.LoadFromBinary(reader);
+            if (Regulator.Reward is ICard rewardCard)
+                Cards.MapCardsToSets([rewardCard]);
         } catch (Exception ex) {
             Logger.LogError("An exception was thrown while loading {Regulator}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
