@@ -14,7 +14,7 @@ namespace Hazard_Model.Tests.DataAccess;
 public class BinarySerializerTests
 {
     private readonly MockGame _toSerialGame = new();
-    private MockGame _deserialGame;
+    private MockGame _deserialGame = new();
     private string _testFileName;
 
     public BinarySerializerTests()
@@ -22,12 +22,12 @@ public class BinarySerializerTests
         BinarySerializer.InitializeLogger(new LoggerStub());
     }
 
-    //[TestInitialize]
-    //public void Setup()
-    //{
-    //    _testFileName = FileProcessor.GetTempFile();
-    //    _deserialGame.Wipe();
-    //}
+    [TestInitialize]
+    public void Setup()
+    {
+        _testFileName = FileProcessor.GetTempFile();
+        _deserialGame.Wipe();
+    }
 
     [TestMethod]
     public async Task Board_RoundTrip_Match()
@@ -143,9 +143,7 @@ public class BinarySerializerTests
     [TestMethod]
     public async Task CardBase_RoundTrip_Match()
     {
-        _testFileName = FileProcessor.GetTempFile();
-        _deserialGame = new();
-        _deserialGame.Wipe();
+
 
         await BinarySerializer.Save([_toSerialGame.Cards], _testFileName, true);
 
@@ -207,26 +205,10 @@ public class BinarySerializerTests
         else Assert.Fail();
     }
 }
-    //writer.Dispose();
-    //_currentStream.Dispose();
-    //_currentStream = null;
-
-            //_currentStream = new(_testFileName, FileMode.Open);
-            //using BinaryReader reader = new(_currentStream);
-            //_testDeserializer = new(_deserialGame, _currentStream, SharedRegister.Registry, _loggerStub);
-            //Assert.IsNotNull(_deserialGame.Cards);
-            //_testDeserializer.LoadCardBase(reader, _deserialGame.Cards, _deserialGame.Players);
-
 
 //    [TestMethod]
 //    public void StateMachine_RoundTrip_Match()
 //    {
-//        Assert.IsNotNull(_currentStream);
-//        Assert.IsNotNull(_testFileName);
-//        Assert.IsNotNull(_testSerializer);
-//        Assert.IsNotNull(_toSerialGame);
-//        Assert.IsNotNull(_toSerialGame.State);
-
 //        var stateSave = _toSerialGame.State.GetSaveData();
 //        using BinaryWriter writer = new(_currentStream);
 //        BinarySerializer.WriteData(writer, stateSave, _loggerStub);
