@@ -80,9 +80,8 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
         _numPlayers = _currentGame.Players.Count;
         _machine = _currentGame.State;
 
-        if (_currentGame.Values.SetupActionsPerPlayers.TryGetValue(_numPlayers, out int actions))
+        if (_actionsCounter == 0 && _currentGame.Values.SetupActionsPerPlayers.TryGetValue(_numPlayers, out int actions))
             CurrentActionsLimit = actions;
-        else CurrentActionsLimit = 0;
 
         if (_currentGame.State.CurrentPhase == GamePhase.TwoPlayerSetup) {
             _currentGame.TwoPlayerAutoSetup();
@@ -90,23 +89,6 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
         }
 
         _machine.StateChanged += HandleStateChanged;
-    }
-    /// <inheritdoc cref="IRegulator.Initialize(IGame, object?[])"/>
-    public void Initialize(IGame game, object?[] loadedValues)
-    {
-        _currentGame = (Game)game;
-        _numPlayers = _currentGame.Players!.Count;
-
-        _machine = _currentGame.State;
-        _machine!.StateChanged += HandleStateChanged;
-
-        if (loadedValues != null) {
-            _actionsCounter = (int)(loadedValues?[0] ?? 0);
-            _prevActionCount = (int)(loadedValues?[1] ?? 0);
-            CurrentActionsLimit = (int)(loadedValues?[2] ?? 0);
-            if (((int?)loadedValues?[3] ?? 0) == 1)
-                Reward = (ICard)loadedValues![4]!;
-        }
     }
     private void IncrementAction()
     {

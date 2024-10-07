@@ -84,10 +84,4 @@ public interface IRegulator : IBinarySerializable
     /// </summary>
     /// <param name="game">The newly created <see cref="IGame"/>.</param>
     abstract void Initialize(IGame game);
-    /// <summary>
-    /// Initializes this instance using an <see cref="IGame"/> and values recently loaded via <see cref="Hazard_Model.DataAccess.BinarySerializer"/>.
-    /// </summary>
-    /// <param name="game">The <see cref="IGame"/> which called <see cref="Hazard_Model.DataAccess.BinarySerializer.LoadGame"/>.</param>
-    /// <param name="loadedValues">The values deserialized by <see cref="Hazard_Model.DataAccess.BinarySerializer.LoadRegulatorValues(BinaryReader)"/>.</param>
-    abstract void Initialize(IGame game, object?[] loadedValues);
 }
