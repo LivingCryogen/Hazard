@@ -43,7 +43,7 @@ public class BootStrapper(App mainApp, ILogger<BootStrapper> logger) : IBootStra
             var viewModel = _mainApp.AppHost.Services.GetRequiredService<IMainVM>();
             _logger.LogInformation("Initializing game from source: {FileName}.", fileName);
             viewModel.Initialize(fileName);
-            ((MainWindow)(_mainApp.MainWindow)).Initialize(viewModel);
+            ((MainWindow)_mainApp.MainWindow).Initialize(viewModel);
             _mainApp.MainWindow.Show();
         }
     }

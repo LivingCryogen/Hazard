@@ -12,6 +12,7 @@ public class TroopCard : ITroopCard
     /// <summary>
     /// Constructs an empty <see cref="TroopCard"/>.
     /// </summary>
+    public TroopCard() { } 
     public TroopCard(ILogger<TroopCard> logger)
     { 
         Logger = logger;
@@ -29,12 +30,12 @@ public class TroopCard : ITroopCard
     /// <inheritdoc cref="ICard.PropertySerializableTypeMap"/>
     public Dictionary<string, Type> PropertySerializableTypeMap { get; } = new()
     {
-        { nameof(Target), typeof(int) },
+        { nameof(Target), typeof(TerrID) },
         { nameof(Insigne), typeof(int) },
         { nameof(ParentTypeName), typeof(string) },
         { nameof(IsTradeable), typeof(bool) }
     };
-    public ILogger Logger { get; init; }
+    public ILogger Logger { get; set; }
     public string TypeName { get; set; } = nameof(TroopCard);
     /// <summary>
     /// Gets or sets the name of a <see cref="TroopCard"/>'s 'parent': the <see cref="ICardSet"/> that contains it.

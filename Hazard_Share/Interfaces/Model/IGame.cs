@@ -77,8 +77,7 @@ public interface IGame : IBinarySerializable
     IRuleValues Values { get; set; }
 
 
-    abstract void Initialize(string[] names, string? fileName);
-
+    abstract void Initialize(string[] names, string? fileName, long? streamLoc);
     /// <summary>
     /// Save game state to a file.
     /// </summary>

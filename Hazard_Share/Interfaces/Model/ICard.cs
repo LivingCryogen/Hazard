@@ -17,7 +17,7 @@ namespace Hazard_Share.Interfaces.Model;
 /// </remarks>
 public interface ICard : IBinarySerializable
 {
-    ILogger Logger { get; }
+    ILogger Logger { get; set; }
     /// <summary>
     /// Gets a binary conversion <see cref="Type"/> for each property, by name, of the <see cref="ICard"/>. 
     /// </summary>

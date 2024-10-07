@@ -161,6 +161,23 @@ public static class BinarySerializer
         }
         return !errors;
     }
+    public static bool Load(IBinarySerializable[] serializableObjects, string fileName, long streamLoc)
+    {
+        using FileStream fileStream = new(fileName, FileMode.Open, FileAccess.Read);
+        fileStream.Position = streamLoc;
+        using BinaryReader reader = new(fileStream);
+
+        bool errors = false;
+        foreach (var obj in serializableObjects) {
+            try {
+                obj.LoadFromBinary(reader);
+            } catch (Exception ex) {
+                _logger?.LogError("{Message}.", ex.Message);
+                errors = true;
+            }
+        }
+        return !errors;
+    }
 
     private async static Task<bool> WriteSerializableObject(IBinarySerializable serializableObject, BinaryWriter writer)
     {

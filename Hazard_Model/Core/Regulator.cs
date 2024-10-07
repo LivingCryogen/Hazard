@@ -67,8 +67,7 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
                 rewardCard.LoadFromBinary(reader);
                 Reward = rewardCard;
             }
-         }
-         catch (Exception ex) {
+        } catch (Exception ex) {
             _logger.LogError("An exception was thrown while loading {Regulator}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
         }
@@ -78,18 +77,19 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
     public void Initialize(IGame game)
     {
         _currentGame = (Game)game;
-        _numPlayers = _currentGame.Players!.Count;
+        _numPlayers = _currentGame.Players.Count;
         _machine = _currentGame.State;
 
+        if (_currentGame.Values.SetupActionsPerPlayers.TryGetValue(_numPlayers, out int actions))
+            CurrentActionsLimit = actions;
+        else CurrentActionsLimit = 0;
 
-        CurrentActionsLimit = _currentGame!.Values!.SetupActionsPerPlayers![_numPlayers];
-
-        if (_currentGame!.State!.CurrentPhase == GamePhase.TwoPlayerSetup) {
-            _currentGame!.TwoPlayerAutoSetup();
+        if (_currentGame.State.CurrentPhase == GamePhase.TwoPlayerSetup) {
+            _currentGame.TwoPlayerAutoSetup();
             _prevActionCount = _actionsCounter;
         }
 
-        _machine!.StateChanged += HandleStateChanged;
+        _machine.StateChanged += HandleStateChanged;
     }
     /// <inheritdoc cref="IRegulator.Initialize(IGame, object?[])"/>
     public void Initialize(IGame game, object?[] loadedValues)
@@ -111,11 +111,11 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
     private void IncrementAction()
     {
         _actionsCounter++;
-        if (_currentGame!.State!.CurrentPhase.Equals(GamePhase.DefaultSetup)) {
-            if (_actionsCounter >= _currentGame.Board!.Geography.NumTerritories && !_machine!.PhaseStageTwo)
-                _machine!.PhaseStageTwo = true;
+        if (_currentGame.State.CurrentPhase == GamePhase.DefaultSetup) {
+            if (_actionsCounter >= _currentGame.Board.Geography.NumTerritories && !_machine.PhaseStageTwo)
+                _machine.PhaseStageTwo = true;
         }
-        else if (_currentGame.State.CurrentPhase.Equals(GamePhase.Move)) {
+        else if (_currentGame.State.CurrentPhase == GamePhase.Move) {
             if (!_currentGame.State.PhaseStageTwo)
                 _currentGame.State.PhaseStageTwo = true;
         }
@@ -133,36 +133,36 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
     /// <inheritdoc cref="IRegulator.ClaimOrReinforce(TerrID)"/>
     public void ClaimOrReinforce(TerrID territory)
     {
-        if (_machine!.CurrentPhase == GamePhase.DefaultSetup) {
-            _currentGame!.Players![_machine.PlayerTurn].ArmyPool--;
+        if (_machine?.CurrentPhase == GamePhase.DefaultSetup) {
+            _currentGame.Players[_machine.PlayerTurn].ArmyPool--;
 
             if (!_machine.PhaseStageTwo) {
-                _currentGame.Board!.Claims(_machine.PlayerTurn, territory);
+                _currentGame.Board.Claims(_machine.PlayerTurn, territory);
                 _currentGame.Players[_machine.PlayerTurn].AddTerritory(territory);
             }
             else
-                _currentGame.Board!.Reinforce(territory);
+                _currentGame.Board.Reinforce(territory);
 
             IncrementAction();
 
-            if (_machine!.CurrentPhase == GamePhase.DefaultSetup)
+            if (_machine.CurrentPhase == GamePhase.DefaultSetup)
                 _machine.IncrementPlayerTurn();
         }
-        else if (_machine!.CurrentPhase == GamePhase.TwoPlayerSetup) {
-            _currentGame!.Board!.Reinforce(territory);
+        else if (_machine.CurrentPhase == GamePhase.TwoPlayerSetup) {
+            _currentGame.Board.Reinforce(territory);
             IncrementAction();
 
             int actDiff = _actionsCounter - _prevActionCount;
             switch (actDiff) {
                 case 1:
-                    _currentGame!.Players![_machine.PlayerTurn].ArmyPool--;
+                    _currentGame.Players[_machine.PlayerTurn].ArmyPool--;
                     break;
                 case 2:
-                    _currentGame!.Players![_machine.PlayerTurn].ArmyPool--;
+                    _currentGame.Players[_machine.PlayerTurn].ArmyPool--;
                     _machine.PhaseStageTwo = true;
                     break;
                 case 3:
-                    if (_machine!.CurrentPhase == GamePhase.TwoPlayerSetup) {
+                    if (_machine.CurrentPhase == GamePhase.TwoPlayerSetup) {
                         _machine.PhaseStageTwo = false;
                         _machine.IncrementPlayerTurn();
                         _prevActionCount = _actionsCounter;
@@ -171,8 +171,8 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
             }
         }
         else if (_machine.CurrentPhase == GamePhase.Place) {
-            _currentGame!.Players![_machine.PlayerTurn].ArmyPool--;
-            _currentGame.Board!.Reinforce(territory);
+            _currentGame.Players[_machine.PlayerTurn].ArmyPool--;
+            _currentGame.Board.Reinforce(territory);
             IncrementAction();
         }
     }

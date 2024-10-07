@@ -15,9 +15,10 @@ namespace Hazard_Model.Entities;
 /// E.g. <see cref="GameDeck"/> and <see cref="Hazard_Model.Entities.Cards.TroopCardSet"/>.
 /// </remarks>
 /// <param name="logger">An <see cref="ILogger"/> for logging debug information and errors.</param>
-public class CardBase(ILogger logger, ITypeRegister<ITypeRelations> registry) : IBinarySerializable
+public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations> registry) : IBinarySerializable
 {
-    private readonly ILogger _logger = logger;
+    private readonly ILogger _logger = loggerFactory.CreateLogger<CardBase>();
+    private readonly ILoggerFactory _loggerFactory = loggerFactory;
     public CardFactory CardFactory { get; } = new(registry);
     /// <summary>
     /// Gets or sets the list of <see cref="ICardSet"/>s used in this <see cref="IGame"/>.
@@ -167,6 +168,7 @@ public class CardBase(ILogger logger, ITypeRegister<ITypeRelations> registry) : 
                     loadComplete = false;
                     continue;
                 }
+                newCard.Logger = _loggerFactory.CreateLogger<TroopCard>();
                 newCard.LoadFromBinary(reader);
                 newLibrary.Add(newCard);
             }

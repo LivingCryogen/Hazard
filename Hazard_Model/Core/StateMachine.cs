@@ -44,7 +44,7 @@ public class StateMachine : IBinarySerializable
         else if (_numPlayers > 2 && _numPlayers < 7)
             CurrentPhase = GamePhase.DefaultSetup;
         else
-            throw new ArgumentOutOfRangeException(nameof(numPlayers));
+            CurrentPhase = GamePhase.Null;
 
         _isActivePlayer = new(_numPlayers);
         _isActivePlayer.SetAll(true);
@@ -148,7 +148,6 @@ public class StateMachine : IBinarySerializable
                 new(typeof(int), [_playerTurn]),
                 new(typeof(int), [_round]),
                 new(typeof(int), [_numTrades]),
-                new(typeof(int), [Winner])
             ];
             return saveData;
         });
@@ -157,13 +156,13 @@ public class StateMachine : IBinarySerializable
     {
         bool loadComplete = true;
         try {
-            _isActivePlayer = new((byte)BinarySerializer.ReadConvertible(reader, typeof(byte)));
-            _phaseStageTwo = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool));
+            byte activePlayerByte = (byte)BinarySerializer.ReadConvertible(reader, typeof(byte));
+            _isActivePlayer = new(new byte[] { activePlayerByte }); // Reverse of "BitArrayToByte()" method
+            _phaseStageTwo = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool)); 
             _currentPhase = (GamePhase)BinarySerializer.ReadConvertible(reader, typeof(GamePhase));
             _playerTurn = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             _round = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             _numTrades = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-            Winner = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
         } catch (Exception ex) {
             _logger.LogError("An exception was thrown while loading {Player}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;

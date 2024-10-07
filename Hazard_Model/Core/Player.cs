@@ -95,13 +95,12 @@ public class Player : IPlayer
         {
             List<SerializedData> data = [
                 new (typeof(string), [Name]),
-                new (typeof(int), [Number]),
                 new (typeof(int), [ArmyPool]),
                 new (typeof(int), [ContinentBonus]),
                 new (typeof(int), [ControlledTerritories.Count])
             ];
             for (int i = 0; i < ControlledTerritories.Count; i++)
-                data.Add(new(typeof(int), [(int)ControlledTerritories[i]]));
+                data.Add(new(typeof(TerrID), [ControlledTerritories[i]]));
             data.Add(new(typeof(int), [Hand.Count]));
             for (int i = 0; i < Hand.Count; i++) {
                 IEnumerable<SerializedData> cardSerials = await Hand[i].GetBinarySerials();
@@ -116,19 +115,17 @@ public class Player : IPlayer
         bool loadComplete = true;
         try {
             Name = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
-            Number = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             ArmyPool = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             ContinentBonus = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             int numControlledTerritories = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             ControlledTerritories = [];
             for (int i = 0; i < numControlledTerritories; i++)
-                ControlledTerritories.Add((TerrID)BinarySerializer.ReadConvertible(reader, typeof(int)));
+                ControlledTerritories.Add((TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID)));
             int numCards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             Hand = [];
             for (int i = 0; i < numCards; i++) {
                 string cardTypeName = reader.ReadString();
-                if (_cardFactory.BuildCard(cardTypeName) is not ICard newCard)
-                    throw new KeyNotFoundException($"{_cardFactory} did not return a valid ICard for {cardTypeName}.");
+                ICard newCard = _cardFactory.BuildCard(cardTypeName);
                 newCard.LoadFromBinary(reader);
                 Hand.Add(newCard);
             }
