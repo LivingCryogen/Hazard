@@ -97,6 +97,7 @@ public class Player : IPlayer
                 new (typeof(string), [Name]),
                 new (typeof(int), [ArmyPool]),
                 new (typeof(int), [ContinentBonus]),
+                new (typeof(bool), [HasCardSet]),
                 new (typeof(int), [ControlledTerritories.Count])
             ];
             for (int i = 0; i < ControlledTerritories.Count; i++)
@@ -117,6 +118,7 @@ public class Player : IPlayer
             Name = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
             ArmyPool = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             ContinentBonus = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            HasCardSet = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool));
             int numControlledTerritories = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             ControlledTerritories = [];
             for (int i = 0; i < numControlledTerritories; i++)
