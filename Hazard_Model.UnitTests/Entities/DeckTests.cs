@@ -160,11 +160,15 @@ namespace Hazard_Model.Tests.Entities
             int numDiscards = testDeck.DiscardPile.Count;
             string aDiscardID = ((MockCard)testDeck.DiscardPile[numDiscards - 1]).ID;
 
-            var card = testDeck.DrawCard();
+            var drawnCard = testDeck.DrawCard();
+            MockCard mockCard = (MockCard)drawnCard;
 
             Assert.IsTrue(testDeck.Library.Count == numDiscards - 1);
             Assert.IsTrue(testDeck.DiscardPile.Count == 0);
-            Assert.IsTrue(testDeck.Library.Where(item => ((MockCard)item).ID == aDiscardID).Any());
+            bool testIDinLibrary = testDeck.Library.Where(card => ((MockCard)card).ID == aDiscardID).Any();
+            Assert.IsTrue(testIDinLibrary || mockCard.ID == aDiscardID);
+            if (testIDinLibrary)
+                Assert.IsTrue(mockCard.ID != aDiscardID);
         }
     }
 }
