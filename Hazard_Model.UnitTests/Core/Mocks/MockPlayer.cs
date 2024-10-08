@@ -45,7 +45,7 @@ internal class MockPlayer : IPlayer
     public List<ICard> Hand { get; set; } = [];
     public string Name { get; set; } = "YourFatherSmeltOfElderBerries!";
     public int Number { get; set; }
-    public bool HasCardSet { get => false; set => throw new NotImplementedException(); }
+    public bool HasCardSet { get; set; } = false;
 
 #pragma warning disable CS0414 // For unit-testing, these are unused. If integration tests are built, they should be, at which time these warnings should be re-enabled.
     public event EventHandler<IPlayerChangedEventArgs>? PlayerChanged = null;
@@ -60,6 +60,7 @@ internal class MockPlayer : IPlayer
                 new (typeof(string), [Name]),
                 new (typeof(int), [ArmyPool]),
                 new (typeof(int), [ContinentBonus]),
+                new (typeof(bool), [HasCardSet]),
                 new (typeof(int), [ControlledTerritories.Count])
             ];
             for (int i = 0; i < ControlledTerritories.Count; i++)
@@ -80,6 +81,7 @@ internal class MockPlayer : IPlayer
             Name = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
             ArmyPool = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             ContinentBonus = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            HasCardSet = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool));
             int numControlledTerritories = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             ControlledTerritories = [];
             for (int i = 0; i < numControlledTerritories; i++)

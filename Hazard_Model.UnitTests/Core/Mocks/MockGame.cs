@@ -7,6 +7,7 @@ using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
+using Microsoft.Testing.Platform.Logging;
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -26,7 +27,7 @@ public class MockGame : IGame
         Regulator.Initialize(this);
     }
 
-    public ILogger<MockGame> Logger { get => _logger; }
+    public Microsoft.Extensions.Logging.ILogger<MockGame> Logger { get => _logger; }
     public IBoard Board { get; set; } = new MockBoard();
     public IRegulator Regulator { get; set; } = new MockRegulator(new LoggerStubT<MockRegulator>());
     public IRuleValues Values { get; set; } = new MockRuleValues();
@@ -34,7 +35,7 @@ public class MockGame : IGame
     public bool DefaultCardMode { get; set; } = true;
     public List<IPlayer> Players { get; set; }
     public StateMachine State { get; set; } = new(2, new LoggerStubT<StateMachine>());
-    public MockCardBase Cards { get; set; } = new(new LoggerStubT<MockCardBase>(), SharedRegister.Registry);
+    public MockCardBase Cards { get; set; } = new(SharedRegister.Registry);
     CardBase IGame.Cards { get => Cards; set { Cards = (MockCardBase)value; } }
 
 #pragma warning disable CS0414 // For unit-testing, these are unused. If integration tests are built, they should be, at which time these warnings should be re-enabled.
@@ -112,7 +113,7 @@ public class MockGame : IGame
         }
     }
 
-    public void Initialize(string[] names, string? fileName)
+    public void Initialize(string[] names, string? fileName, long? streamLoc)
     {
         throw new NotImplementedException();
     }
@@ -155,6 +156,7 @@ public class MockGame : IGame
                 Cards.MapCardsToSets([.. newPlayer.Hand]);
                 Players.Add(newPlayer);
             }
+            State = new(numPlayers, new LoggerStubT<StateMachine>());
             State.LoadFromBinary(reader);
             Regulator.LoadFromBinary(reader);
             if (Regulator.Reward is ICard rewardCard)

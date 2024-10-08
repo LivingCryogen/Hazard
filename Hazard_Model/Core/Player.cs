@@ -167,12 +167,6 @@ public class Player : IPlayer
         if (e != null) {
             if (!(e.OldItems == null && e.NewItems == null)) {
                 PlayerChanged?.Invoke(this, new PlayerChangedEventArgs(nameof(ControlledTerritories), e.OldItems?[0], e.NewItems?[0]));
-
-                if (e.NewItems != null) {
-                    if (ControlledTerritories.Count >= _board.Geography.NumTerritories)
-                        PlayerWon?.Invoke(this, new());
-                }
-
                 if (e.OldItems != null) {
                     if (ControlledTerritories.Count <= 0)
                         PlayerLost?.Invoke(this, new());

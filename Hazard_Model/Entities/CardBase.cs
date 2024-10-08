@@ -91,7 +91,7 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
         foreach (ICard card in cards) {
             if (cardSetToTypeNameMap.TryGetValue(card.ParentTypeName, out ICardSet? parentSet)) {
                 if (parentSet?.MemberTypeName != card.TypeName) {
-                    _logger.LogWarning("{Card} was registered as a member of {Set} but member and parent type names were mismatched. ", card, parentSet);
+                    _logger?.LogWarning("{Card} was registered as a member of {Set} but member and parent type names were mismatched. ", card, parentSet);
                     continue;
                 }
                 parentSet.Cards ??= [];
@@ -102,20 +102,20 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
                 continue;
             }
             if (registry[card.ParentTypeName] is not Type parentType) {
-                _logger.LogWarning("The name {Name} registered as parent type for {Card} was not found in the registry.", card.ParentTypeName, card);
+                _logger?.LogWarning("The name {Name} registered as parent type for {Card} was not found in the registry.", card.ParentTypeName, card);
                 continue;
             }
             if (parentType.Name != card.ParentTypeName) {
-                _logger.LogWarning("{Name}, the name of the type registered as parent of {Card}, did not match the expected value ({Expected}).", parentType.Name, card, card.ParentTypeName);
+                _logger?.LogWarning("{Name}, the name of the type registered as parent of {Card}, did not match the expected value ({Expected}).", parentType.Name, card, card.ParentTypeName);
                 continue;
             }
             var setObject = Activator.CreateInstance(parentType);
             if (setObject is not ICardSet parentSetObject) {
-                _logger.LogWarning("Activation of type {Type}, which was registered as parent of {Card}, failed.", parentType, card);
+                _logger?.LogWarning("Activation of type {Type}, which was registered as parent of {Card}, failed.", parentType, card);
                 continue;
             }
             if (parentSetObject.MemberTypeName != card.TypeName) {
-                _logger.LogWarning("{Name}, the name of the type registered as member of {Set}, did not match the expected value({Expected}).", card.TypeName, card, card.ParentTypeName);
+                _logger?.LogWarning("{Name}, the name of the type registered as member of {Set}, did not match the expected value({Expected}).", card.TypeName, card, card.ParentTypeName);
                 continue;
             }
             card.CardSet = parentSetObject;
@@ -164,7 +164,7 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
             for (int i = 0; i < numLibrary; i++) {
                 string typeName = reader.ReadString();
                 if (CardFactory.BuildCard(typeName) is not ICard newCard) {
-                    _logger.LogWarning("{CardFactory} failed to construct a card of type {name} during loading of {base}.", CardFactory, typeName, this);
+                    _logger?.LogWarning("{CardFactory} failed to construct a card of type {name} during loading of {base}.", CardFactory, typeName, this);
                     loadComplete = false;
                     continue;
                 }
@@ -177,7 +177,7 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
             for (int i = 0; i < numDiscard; i++) {
                 string typeName = reader.ReadString();
                 if (CardFactory.BuildCard(typeName) is not ICard newCard) {
-                    _logger.LogWarning("{CardFactory} failed to construct a card of type {name} during loading of {base}.", CardFactory, typeName, this);
+                    _logger?.LogWarning("{CardFactory} failed to construct a card of type {name} during loading of {base}.", CardFactory, typeName, this);
                     loadComplete = false;
                     continue;
                 }
@@ -188,7 +188,7 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
             InitializeLibrary([.. newLibrary]);
             InitializeDiscardPile([.. newDiscard]);
         } catch (Exception ex) {
-            _logger.LogError("An exception was thrown while loading {CardBase}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+            _logger?.LogError("An exception was thrown while loading {CardBase}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
         }
         return loadComplete;

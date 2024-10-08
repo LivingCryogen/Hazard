@@ -76,6 +76,7 @@ public class BinarySerializerTests
             ArmyPool = 20,
             ControlledTerritories = [],
             Hand = [new MockCard(), new MockCard(), new MockCard()],
+            HasCardSet = true
         });
         _toSerialGame.Players.Add(new MockPlayer(4, _toSerialGame.Cards.CardFactory, _toSerialGame.Values, _toSerialGame.Board, new LoggerStubT<MockPlayer>()) {
             Name = "TestPlayer5",
@@ -88,6 +89,7 @@ public class BinarySerializerTests
             ArmyPool = 0,
             ControlledTerritories = [TerrID.CentralAmerica, TerrID.China, TerrID.Congo, TerrID.Ontario, TerrID.Quebec],
             Hand = [new MockCard(), new MockCard(), new MockCard(), new MockCard()],
+            HasCardSet = true
         });
         _deserialGame.Players.Clear();
         _deserialGame.Cards.Wipe();
@@ -101,6 +103,7 @@ public class BinarySerializerTests
                 Assert.AreEqual(_toSerialGame.Players[i].HasCardSet, _deserialGame.Players[i].HasCardSet);
                 Assert.AreEqual(_toSerialGame.Players[i].ArmyPool, _deserialGame.Players[i].ArmyPool);
                 Assert.AreEqual(_toSerialGame.Players[i].ContinentBonus, _deserialGame.Players[i].ContinentBonus);
+                Assert.AreEqual(_toSerialGame.Players[i].HasCardSet, _deserialGame.Players[i].HasCardSet);
                 Assert.AreEqual(_toSerialGame.Players[i].ControlledTerritories.Count, _deserialGame.Players[i].ControlledTerritories.Count);
                 for (int j = 0; j < _toSerialGame.Players[i].ControlledTerritories.Count; j++) {
                     Assert.AreEqual(_toSerialGame.Players[i].ControlledTerritories[j], _deserialGame.Players[i].ControlledTerritories[j]);
@@ -204,7 +207,6 @@ public class BinarySerializerTests
         _toSerialGame.State.Round = 8;
         _toSerialGame.State.PlayerTurn = 1;
         _toSerialGame.State.PhaseStageTwo = true;
-        _toSerialGame.State.Winner = 1;
 
         await BinarySerializer.Save([_toSerialGame.State], _testFileName, true);
 
@@ -214,7 +216,6 @@ public class BinarySerializerTests
             Assert.AreEqual(_toSerialGame.State.Round, _deserialGame.State.Round);
             Assert.AreEqual(_toSerialGame.State.PlayerTurn, _deserialGame.State.PlayerTurn);
             Assert.AreEqual(_toSerialGame.State.PhaseStageTwo, _deserialGame.State.PhaseStageTwo);
-            Assert.AreEqual(_toSerialGame.State.Winner, _deserialGame.State.Winner);
         }
         else Assert.Fail();
     }
@@ -416,7 +417,6 @@ public class BinarySerializerTests
             Assert.AreEqual(_toSerialGame.State.Round, _deserialGame.State.Round);
             Assert.AreEqual(_toSerialGame.State.PlayerTurn, _deserialGame.State.PlayerTurn);
             Assert.AreEqual(_toSerialGame.State.PhaseStageTwo, _deserialGame.State.PhaseStageTwo);
-            Assert.AreEqual(_toSerialGame.State.Winner, _deserialGame.State.Winner);
             #endregion
             #region RegulatorAsserts
             Assert.IsNotNull(_toSerialGame.Regulator.Reward);

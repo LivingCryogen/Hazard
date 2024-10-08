@@ -18,7 +18,6 @@ public class StateMachine : IBinarySerializable
     private int _playerTurn = 0;
     private int _round = 0;
     private readonly int _numPlayers = 0;
-    private BitArray _isActivePlayer;
     private int _numTrades = 0;
 
     /// <summary>
@@ -46,11 +45,12 @@ public class StateMachine : IBinarySerializable
         else
             CurrentPhase = GamePhase.Null;
 
-        _isActivePlayer = new(_numPlayers);
-        _isActivePlayer.SetAll(true);
+        IsActivePlayer = new(_numPlayers);
+        IsActivePlayer.SetAll(true);
     }
 
     #region Properties
+    public BitArray IsActivePlayer { get; private set; }
     /// <summary>
     /// Gets what phase the game is currently in, or sets the phase and invokes <see cref="StateChanged"/>.
     /// </summary>
@@ -142,7 +142,7 @@ public class StateMachine : IBinarySerializable
         return await Task.Run(() =>
         {
             SerializedData[] saveData = [
-                new(typeof(byte), [BitArrayToByte(_isActivePlayer)]),
+                new(typeof(byte), [BitArrayToByte(IsActivePlayer)]),
                 new(typeof(bool), [_phaseStageTwo]),
                 new(typeof(GamePhase), [_currentPhase]),
                 new(typeof(int), [_playerTurn]),
@@ -157,7 +157,7 @@ public class StateMachine : IBinarySerializable
         bool loadComplete = true;
         try {
             byte activePlayerByte = (byte)BinarySerializer.ReadConvertible(reader, typeof(byte));
-            _isActivePlayer = new(new byte[] { activePlayerByte }); // Reverse of "BitArrayToByte()" method
+            IsActivePlayer = new(new byte[] { activePlayerByte }); // Reverse of "BitArrayToByte()" method
             _phaseStageTwo = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool)); 
             _currentPhase = (GamePhase)BinarySerializer.ReadConvertible(reader, typeof(GamePhase));
             _playerTurn = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
@@ -257,7 +257,7 @@ public class StateMachine : IBinarySerializable
     public void DisablePlayer(int player)
     {
         if (player >= 0 && player < _numPlayers)
-            _isActivePlayer[player] = false;
+            IsActivePlayer[player] = false;
     }
     private int NextActivePlayer() // begins checking at PlayerTurn + 1, looping to beginning if at the end of the Player list
     {
@@ -269,7 +269,7 @@ public class StateMachine : IBinarySerializable
 
         int index = start;
         do {
-            if (_isActivePlayer[index])
+            if (IsActivePlayer[index])
                 return index;
             else
                 index++;
@@ -286,7 +286,7 @@ public class StateMachine : IBinarySerializable
         if (start >= 0 && start < _numPlayers) {
             int index = start;
             do {
-                if (_isActivePlayer[index])
+                if (IsActivePlayer[index])
                     return index;
                 else
                     index++;
@@ -306,7 +306,7 @@ public class StateMachine : IBinarySerializable
     public void InitializePlayerStatusArray(byte data)
     {
         byte[] dataArray = [data];
-        _isActivePlayer = new(dataArray);
+        IsActivePlayer = new(dataArray);
     }
     /// <summary>
     /// Converts a <see cref="BitArray"/> of length 8 or less into a <see cref="byte"/> for binary serialization.

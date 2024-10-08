@@ -45,7 +45,7 @@ public class MockCard : ITroopCard
         { nameof(TestStrings), typeof(string)}
     };
     public string ID { get; set; } = Guid.NewGuid().ToString();
-    public ILogger Logger { get; } = new LoggerStubT<MockCard>();
+    public ILogger Logger { get; set; } = new LoggerStubT<MockCard>();
     public ICardSet? CardSet { get; set; }
     public MockTerrID[] Target { get; set; } = [];
     TerrID[] ICard.Target { get => Target.Select(item => (TerrID)(int)item).ToArray(); set { Target = value.Select(item => (MockTerrID)(int)item).ToArray(); } }

@@ -201,6 +201,15 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
                 Cards?.GameDeck?.Discard(card);
             loser.Hand.Clear();
             PlayerLost?.Invoke(this, loser.Number);
+
+            // Checks if there are any other active players, if not, the last active player wins
+            List<int> activePlayerIndex = [];
+            for (int i = 0; i < State?.IsActivePlayer.Count; i++)
+                if (State?.IsActivePlayer[i] ?? false)
+                    activePlayerIndex.Add(i);
+            if (activePlayerIndex.Count == 1)
+                PlayerWon?.Invoke(this, activePlayerIndex[0]);
+
         }
         else throw new ArgumentException($"{PlayerLost} was fired but the sender was not an {nameof(IPlayer)}.", nameof(sender));
     }

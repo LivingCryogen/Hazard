@@ -1,5 +1,6 @@
 ﻿using Hazard_Model.Entities;
 using Hazard_Model.Tests.DataAccess.Mocks;
+using Hazard_Model.Tests.Fixtures.Stubs;
 using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Services.Registry;
 using Microsoft.Extensions.Logging;
@@ -10,7 +11,7 @@ namespace Hazard_Model.Tests.Entities.Mocks;
 public class MockCardBase : CardBase
 {
     private readonly MockCardSetData mockData = new();
-    public MockCardBase(ILogger logger, ITypeRegister<ITypeRelations> registry) : base(logger, registry)
+    public MockCardBase(ITypeRegister<ITypeRelations> registry) : base(new LoggerFactory(), registry)
     {
         Sets = [];
         mockData.BuildFromMockData();
@@ -30,7 +31,6 @@ public class MockCardBase : CardBase
     }
 
     new public MockCardFactory CardFactory { get; set; } = new();
-
     public void Wipe()
     {
         Sets.Clear();
