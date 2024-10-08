@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Hazard_Share.Services.Serializer;
+﻿namespace Hazard_Share.Services.Serializer;
 
 public readonly struct SerializedData
 {
@@ -17,7 +13,7 @@ public readonly struct SerializedData
         SerialType = serialType;
         SerialValues = serialValues;
     }
-    public Type SerialType { get; init; } 
-    public IConvertible[] SerialValues { get; init; } 
+    public Type SerialType { get; init; }
+    public IConvertible[] SerialValues { get; init; }
     public string? Tag { get; init; } = null;
 }

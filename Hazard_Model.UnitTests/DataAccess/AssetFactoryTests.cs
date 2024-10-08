@@ -7,7 +7,6 @@ using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Services.Registry;
 using Microsoft.Extensions.Logging;
-using Microsoft.Testing.Platform.Logging;
 
 namespace Hazard_Model.Tests.DataAccess;
 

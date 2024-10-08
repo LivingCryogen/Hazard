@@ -1,10 +1,8 @@
-﻿using Hazard_Model.Entities.Cards;
-using Hazard_Share.Enums;
+﻿using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
 using System.Collections;
-using System.Xml.Linq;
 
 namespace Hazard_Model.Core;
 /// <summary>
@@ -158,7 +156,7 @@ public class StateMachine : IBinarySerializable
         try {
             byte activePlayerByte = (byte)BinarySerializer.ReadConvertible(reader, typeof(byte));
             IsActivePlayer = new(new byte[] { activePlayerByte }); // Reverse of "BitArrayToByte()" method
-            _phaseStageTwo = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool)); 
+            _phaseStageTwo = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool));
             _currentPhase = (GamePhase)BinarySerializer.ReadConvertible(reader, typeof(GamePhase));
             _playerTurn = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             _round = (int)BinarySerializer.ReadConvertible(reader, typeof(int));

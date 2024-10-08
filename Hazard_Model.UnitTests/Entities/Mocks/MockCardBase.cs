@@ -1,10 +1,7 @@
 ﻿using Hazard_Model.Entities;
 using Hazard_Model.Tests.DataAccess.Mocks;
-using Hazard_Model.Tests.Fixtures.Stubs;
-using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Services.Registry;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 
 namespace Hazard_Model.Tests.Entities.Mocks;
 

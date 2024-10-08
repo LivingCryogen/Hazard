@@ -4,7 +4,7 @@ namespace Hazard_Model.Entities;
 /// <summary>
 /// Represents a Deck of cards. Each card targets at minimum one Territory <see cref="ICard"/>.
 /// </summary>
-public class Deck 
+public class Deck
 {
     /// <summary>
     /// Constructs an empty Deck.

@@ -1,7 +1,5 @@
 ﻿using Hazard_Share.Interfaces.Model;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace Hazard_Share.Services.Serializer;
@@ -112,7 +110,7 @@ public static class BinarySerializer
         writer.Write(tag);
         WriteConvertibles(writer, type, values);
     }
-    
+
     #endregion
 
     public async static Task Save(IBinarySerializable[] serializableObjects, string fileName, bool newFile)
@@ -187,16 +185,16 @@ public static class BinarySerializer
                 return false;
             }
             foreach (SerializedData saveDatum in saveData) {
-                if (saveDatum.Tag != null) 
+                if (saveDatum.Tag != null)
                     if (saveDatum.SerialValues.Length == 1)
                         WriteTaggedConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0], saveDatum.Tag);
                     else
                         WriteTaggedConvertibles(writer, saveDatum.SerialType, saveDatum.SerialValues, saveDatum.Tag);
-                else 
+                else
                     if (saveDatum.SerialValues.Length > 1)
-                        WriteConvertibles(writer, saveDatum.SerialType, saveDatum.SerialValues);
-                    else if (saveDatum.SerialValues.Length == 1)
-                        WriteConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0]);
+                    WriteConvertibles(writer, saveDatum.SerialType, saveDatum.SerialValues);
+                else if (saveDatum.SerialValues.Length == 1)
+                    WriteConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0]);
             }
         } catch (Exception ex) {
             _logger?.LogError("{Message}.", ex.Message);

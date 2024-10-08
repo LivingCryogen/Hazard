@@ -12,9 +12,9 @@ public class TroopCard : ITroopCard
     /// <summary>
     /// Constructs an empty <see cref="TroopCard"/>.
     /// </summary>
-    public TroopCard() { } 
+    public TroopCard() { }
     public TroopCard(ILogger<TroopCard> logger)
-    { 
+    {
         Logger = logger;
     }
     /// <summary>

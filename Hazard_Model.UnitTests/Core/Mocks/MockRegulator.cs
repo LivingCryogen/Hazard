@@ -1,10 +1,7 @@
-﻿using Hazard_Model.Tests.Entities.Mocks;
-using Hazard_Model.Tests.Fixtures.Mocks;
-using Hazard_Share.Enums;
+﻿using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 
 namespace Hazard_Model.Tests.Core.Mocks;
 

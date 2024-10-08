@@ -3,8 +3,6 @@ using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
 using System.Collections;
 using System.Reflection;
-using System.Linq;
-using System.Runtime.Serialization.Formatters;
 
 namespace Hazard_Share.Interfaces.Model;
 
@@ -98,8 +96,7 @@ public interface ICard : IBinarySerializable
                 if (propValue is not string stringValue) {
                     try {
                         stringValue = propValue?.ToString() ?? string.Empty;
-                    }
-                    catch {
+                    } catch {
                         Logger.LogWarning("{Card} tried to serialize property {Property} as a string, but failed.", this, propInfo.Name);
                         convertibles = [];
                         return false;
@@ -228,7 +225,7 @@ public interface ICard : IBinarySerializable
                     }
                     if (elementType.IsEnum)
                         cardProps[propIndex].SetValue(this, BinarySerializer.ReadEnums(reader, serialType, numValsLoaded));
-                    else if (elementType == typeof(string)) 
+                    else if (elementType == typeof(string))
                         cardProps[propIndex].SetValue(this, BinarySerializer.ReadStrings(reader, serialType, numValsLoaded));
                     else
                         cardProps[propIndex].SetValue(this, BinarySerializer.ReadConvertibles(reader, serialType, numValsLoaded));
@@ -236,8 +233,7 @@ public interface ICard : IBinarySerializable
 
                 propIndex++;
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             Logger.LogError("An exception was thrown while loading {Card}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
         }

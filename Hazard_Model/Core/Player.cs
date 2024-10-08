@@ -1,13 +1,10 @@
-﻿using Hazard_Model.Entities;
-using Hazard_Model.Entities.Cards;
+﻿using Hazard_Model.Entities.Cards;
 using Hazard_Model.EventArgs;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
-using Hazard_Share.Services.Registry;
 using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
 using System.Collections.Specialized;
-using System.Xml.Linq;
 
 namespace Hazard_Model.Core;
 /// <inheritdoc cref="IPlayer"/>.
@@ -18,7 +15,8 @@ public class Player : IPlayer
     private readonly IBoard _board;
     private readonly CardFactory _cardFactory;
     private int _armyPool;
-    public Player(int number, int numPlayers, CardFactory cardFactory, IRuleValues values, IBoard board, ILogger<Player> logger) {
+    public Player(int number, int numPlayers, CardFactory cardFactory, IRuleValues values, IBoard board, ILogger<Player> logger)
+    {
         _logger = logger;
         Number = number;
         ControlledTerritories = [];

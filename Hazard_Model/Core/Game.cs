@@ -1,5 +1,4 @@
-﻿using Hazard_Model.DataAccess;
-using Hazard_Model.Entities;
+﻿using Hazard_Model.Entities;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Services.Registry;
@@ -25,7 +24,7 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
     private readonly ILoggerFactory _loggerFactory = loggerFactory;
 
     /// <inheritdoc cref="IGame.ID"/>.
-    public Guid ID { get; set; } 
+    public Guid ID { get; set; }
     private string? VMSaveData { get; set; } = null;
     /// <inheritdoc cref="IGame.DefaultCardMode"/>
     public bool DefaultCardMode { get; set; } = true; // future implementation of Mission Cards or other ICard extensions would hinge on this being set to false

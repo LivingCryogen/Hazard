@@ -1,13 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hazard_Model.Tests.Fixtures.Stubs;
 
-public class LoggerStub : ILogger 
+public class LoggerStub : ILogger
 {
     public LogLevel LastLoggedLevel { get; private set; }
 

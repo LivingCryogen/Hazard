@@ -8,8 +8,6 @@ using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
 using Microsoft.Testing.Platform.Logging;
-using System.Collections.Generic;
-using System.Numerics;
 
 namespace Hazard_Model.Tests.Core.Mocks;
 
@@ -47,7 +45,7 @@ public class MockGame : IGame
         ID = Guid.Empty;
         Players.Clear();
         Cards.Wipe();
-        State = new StateMachine(2, new LoggerStubT<StateMachine>()); 
+        State = new StateMachine(2, new LoggerStubT<StateMachine>());
         ((MockGeography)Board.Geography).Wipe();
         Board.Armies.Clear();
         Board.ContinentOwner.Clear();

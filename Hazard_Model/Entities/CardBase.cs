@@ -3,9 +3,6 @@ using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Services.Registry;
 using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Text.RegularExpressions;
 
 namespace Hazard_Model.Entities;
 /// <summary>
@@ -127,12 +124,13 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
                 if (!Sets.Contains(loadedSet))
                     Sets.Add(loadedSet);
     }
- 
+
     public async Task<SerializedData[]> GetBinarySerials()
     {
         if (GameDeck == null)
             return [];
-        return await Task.Run(async () => {
+        return await Task.Run(async () =>
+        {
             List<SerializedData> serials = [];
             int numLibrary = GameDeck.Library.Count;
             serials.Add(new(typeof(int), [numLibrary]));
@@ -157,7 +155,7 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
         GameDeck.Library = [];
         GameDeck.DiscardPile = [];
         bool loadComplete = true;
-        
+
         try {
             int numLibrary = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             List<ICard> newLibrary = [];

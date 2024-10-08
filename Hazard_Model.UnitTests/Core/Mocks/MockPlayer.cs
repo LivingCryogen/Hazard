@@ -1,11 +1,8 @@
-﻿using Hazard_Model.Core;
-using Hazard_Model.Entities.Cards;
-using Hazard_Model.Tests.Entities.Mocks;
+﻿using Hazard_Model.Tests.Entities.Mocks;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 
 namespace Hazard_Model.Tests.Core.Mocks;
 

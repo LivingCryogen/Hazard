@@ -1,6 +1,4 @@
-﻿using Hazard_Model.Core;
-using Hazard_Model.DataAccess;
-using Hazard_Model.Tests.Core.Mocks;
+﻿using Hazard_Model.Tests.Core.Mocks;
 using Hazard_Model.Tests.Entities.Mocks;
 using Hazard_Model.Tests.Fixtures;
 using Hazard_Model.Tests.Fixtures.Mocks;
@@ -306,7 +304,7 @@ public class BinarySerializerTests
         #endregion
 
         await BinarySerializer.Save([_toSerialGame], _testFileName, true);
-        
+
         if (BinarySerializer.Load([_deserialGame], _testFileName)) {
 
             #region BoardAsserts

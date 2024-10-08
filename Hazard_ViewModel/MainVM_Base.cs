@@ -6,13 +6,11 @@ using Hazard_Share.Interfaces;
 using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Interfaces.View;
 using Hazard_Share.Interfaces.ViewModel;
-using Hazard_Share.Services.Serializer;
 using Hazard_ViewModel.EventArgs;
 using Hazard_ViewModel.Services;
 using Hazard_ViewModel.SubElements.Cards;
 using System.Collections.ObjectModel;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Input;
 
 namespace Hazard_ViewModel;
