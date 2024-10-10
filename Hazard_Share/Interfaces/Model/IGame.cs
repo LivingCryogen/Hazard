@@ -41,12 +41,12 @@ public interface IGame : IBinarySerializable
     /// </value>
     List<IPlayer> Players { get; set; }
     /// <summary>
-    /// Gets or sets the game's state machine, tracking player count and status, turns, etc.
+    /// Gets the game's state machine, tracking player count and status, turns, etc.
     /// </summary>
     /// <value>
     /// An instance of <see cref="StateMachine"/>, or <see langword="null"/> if the game has not been initialized.
     /// </value>
-    StateMachine State { get; set; }
+    StateMachine State { get; }
     /// <summary>
     /// Gets or sets an instance describing the Game board; stores both data and relations between Board objects.
     /// </summary>
@@ -62,12 +62,12 @@ public interface IGame : IBinarySerializable
     /// </value>
     CardBase Cards { get; set; }
     /// <summary>
-    /// Gets or sets a service which "regulates" interaction between the model and the players (interprets player actions according to the game state, then executes logic according to game rules).
+    /// Gets a service which "regulates" interaction between the model and the players (interprets player actions according to the game state, then executes logic according to game rules).
     /// </summary>
     /// <value>
     /// An instance of <see cref="IBoard"/>.
     /// </value>
-    IRegulator Regulator { get; set; }
+    //IRegulator Regulator { get; }
     /// <summary>
     /// Gets or sets a data object containing game-specific rules values, like continent bonuses or equations for bonus armies.
     /// </summary>

@@ -83,5 +83,5 @@ public interface IRegulator : IBinarySerializable
     /// Initializes this instance with a brand new game.
     /// </summary>
     /// <param name="game">The newly created <see cref="IGame"/>.</param>
-    abstract void Initialize(IGame game);
+    abstract void Initialize();
 }

@@ -11,6 +11,7 @@ using Hazard_Share.Services.Registry;
 using Hazard_Share.Services.Serializer;
 using Hazard_View.Services;
 using Hazard_ViewModel;
+using Hazard_ViewModel.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -34,15 +35,10 @@ public partial class App : Application
     {
         _devMode = DetermineDevMode();
         AppHost = BuildAppHost(out string[]? dataFileNames);
-
         /// Static class logger initiatialization
         var loggerFactory = AppHost.Services.GetRequiredService<ILoggerFactory>();
         BinarySerializer.InitializeLogger(loggerFactory);
-
-        if (dataFileNames == null)
-            throw new ArgumentNullException(nameof(dataFileNames));
-        DataFileNames = dataFileNames;
-
+        DataFileNames = dataFileNames ?? [];
         DispatcherUnhandledException += OnDispatcherUnhandledException;
     }
 
@@ -52,7 +48,7 @@ public partial class App : Application
     #region Methods
     private protected bool DetermineDevMode()
     {
-        if (_environmentName != null && _environmentName.Equals(Environments.Development))
+        if (_environmentName is string envName && envName == Environments.Development)
             return true;
         else
             return false;
@@ -94,7 +90,7 @@ public partial class App : Application
 
         host.ConfigureServices(services =>
         {
-            services.AddTransient<IRegistryInitializer, RegistryInitializer>();
+            services.AddSingleton<IRegistryInitializer, RegistryInitializer>();
             services.AddTransient<ITypeRelations, TypeRelations>();
             services.AddSingleton<ITypeRegister<ITypeRelations>, TypeRegister>();
             services.AddSingleton<IDataProvider>(serviceProvider =>
@@ -108,6 +104,7 @@ public partial class App : Application
                 var logger = serviceProvider.GetRequiredService<ILogger<BootStrapper>>();
                 return new BootStrapper(this, logger);
             });
+            services.AddTransient<IGameService, GameService>();
             services.AddTransient<ITerritoryChangedEventArgs, TerritoryChangedEventArgs>();
             services.AddTransient<IContinentOwnerChangedEventArgs, ContinentOwnerChangedEventArgs>();
             services.AddTransient<IRuleValues, RuleValues>();
@@ -117,7 +114,7 @@ public partial class App : Application
             services.AddTransient<IGame, Game>();
             services.AddTransient<IMainVM, MainVM>();
             services.AddTransient<IDialogState, DialogService>();
-            services.AddTransient<IDispatcherTimer, Hazard_View.Services.Timer>();
+            services.AddTransient<IDispatcherTimer, Services.Timer>();
         });
 
         var builtHost = host.Build();

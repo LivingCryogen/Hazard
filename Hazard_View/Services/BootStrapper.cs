@@ -17,7 +17,6 @@ public class BootStrapper(App mainApp, ILogger<BootStrapper> logger) : IBootStra
     {
         var viewModel = _mainApp.AppHost.Services.GetRequiredService<IMainVM>();
         MainWindow mainWindow = new();
-        viewModel.Initialize([(string.Empty, string.Empty)]);
         mainWindow.Initialize(viewModel);
         _mainApp.MainWindow = mainWindow;
         _mainApp.MainWindow.Show();
@@ -42,13 +41,15 @@ public class BootStrapper(App mainApp, ILogger<BootStrapper> logger) : IBootStra
 
             var viewModel = _mainApp.AppHost.Services.GetRequiredService<IMainVM>();
             _logger.LogInformation("Initializing game from source: {FileName}.", fileName);
-            viewModel.Initialize(fileName);
+            viewModel.Initialize([], [], fileName);
             ((MainWindow)_mainApp.MainWindow).Initialize(viewModel);
             _mainApp.MainWindow.Show();
         }
     }
     public void InitializeGame((string Name, string Color)[] namesAndColors)
     {
+        var playerNames = namesAndColors.Select(item => item.Name).ToArray();
+        var playerColors = namesAndColors.Select(item => item.Color).ToArray();
         SaveFileName = string.Empty;
 
         MainWindow mainWindow = new();
@@ -63,7 +64,7 @@ public class BootStrapper(App mainApp, ILogger<BootStrapper> logger) : IBootStra
         }
 
         var viewModel = _mainApp.AppHost.Services.GetRequiredService<IMainVM>();
-        viewModel.Initialize(namesAndColors);
+        viewModel.Initialize(playerNames, playerColors, null);
         ((MainWindow)(_mainApp.MainWindow)).Initialize(viewModel);
         _mainApp.MainWindow.Show();
     }

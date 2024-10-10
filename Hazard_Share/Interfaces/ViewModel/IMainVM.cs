@@ -9,6 +9,7 @@ namespace Hazard_Share.Interfaces.ViewModel;
 /// </summary>
 public interface IMainVM
 {
+    #region Properties
     /// <summary>
     /// Gets or inits the current <see cref="IGame"/>.
     /// </summary>
@@ -16,7 +17,7 @@ public interface IMainVM
     /// The current <see cref="IGame"/> instance if both it and the <see cref="IMainVM"/> have been initialized; otherwise <see langword="null"/>. <br/>
     /// See <see cref="IGame.Initialize(string[])"/>, <see cref="IGame.Initialize(FileStream)"/>, and <see cref="IMainVM.Initialize(string)"/>, <see cref="IMainVM.Initialize(ValueTuple{string, string}[])"/>.
     /// </value>
-    IGame? CurrentGame { get; init; }
+    IGame? CurrentGame { get; set; }
     /// <summary>
     /// Gets or sets the current game phase.
     /// </summary>
@@ -138,7 +139,9 @@ public interface IMainVM
     /// An <see cref="ICommand"/>.
     /// </value>
     ICommand ChooseTerritoryBonus_Command { get; }
+    #endregion
 
+    #region Events
     /// <summary>
     /// Fires if the turn is changing control between players.
     /// </summary>
@@ -186,16 +189,8 @@ public interface IMainVM
     /// Fires when a player wins.
     /// </summary>
     event EventHandler<int>? PlayerWon;
-    /// <summary>
-    /// Initializes an <see cref="IMainVM"/> using names and color names provided by a user.
-    /// </summary>
-    /// <param name="namesAndColors">An array of <see cref="Tuple{T1, T2}"/>, where T1 is a <see cref=" string"/> player name, and T2 is a <see cref="string">name</see> of their color.</param>
-    abstract void Initialize((string Name, string ColorName)[] namesAndColors);
-    /// <summary>
-    /// Initializes an <see cref="IMainVM"/> from a save file.
-    /// </summary>
-    /// <param name="fileName">The <see cref="string">name</see> of the file from which to initialize.</param>
-    abstract void Initialize(string fileName);
+    #endregion
+    abstract void Initialize(string[] players, string[] colors, string? fileName);
     /// <summary>
     /// Executes logic of the <see cref="NewGame_Command"/>.
     /// </summary>

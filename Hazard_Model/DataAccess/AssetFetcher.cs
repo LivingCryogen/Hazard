@@ -1,4 +1,5 @@
-﻿using Hazard_Share.Interfaces.Model;
+﻿using Hazard_Model.Assets;
+using Hazard_Share.Interfaces.Model;
 
 namespace Hazard_Model.DataAccess;
 /// <summary>
@@ -51,5 +52,9 @@ public class AssetFetcher(IAssetFactory factory) : IAssetFetcher
             return cardSets;
         else
             return null;
+    }
+    public IRuleValues FetchRuleValues()
+    {
+        return new RuleValues();
     }
 }

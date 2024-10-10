@@ -15,7 +15,6 @@ public class StateMachine : IBinarySerializable
     private bool _phaseStageTwo = false;
     private int _playerTurn = 0;
     private int _round = 0;
-    private readonly int _numPlayers = 0;
     private int _numTrades = 0;
 
     /// <summary>
@@ -33,21 +32,22 @@ public class StateMachine : IBinarySerializable
     /// <exception cref="StateMachine(int)">Thrown when the number of players given is not 2-6.</exception>
     public StateMachine(int numPlayers, ILogger<StateMachine> logger)
     {
-        _numPlayers = numPlayers;
+        NumPlayers = numPlayers;
         _logger = logger;
 
-        if (_numPlayers == 2)
+        if (NumPlayers == 2)
             CurrentPhase = GamePhase.TwoPlayerSetup;
-        else if (_numPlayers > 2 && _numPlayers < 7)
+        else if (NumPlayers > 2 && NumPlayers < 7)
             CurrentPhase = GamePhase.DefaultSetup;
         else
             CurrentPhase = GamePhase.Null;
 
-        IsActivePlayer = new(_numPlayers);
+        IsActivePlayer = new(NumPlayers);
         IsActivePlayer.SetAll(true);
     }
 
     #region Properties
+    public int NumPlayers { get; }
     public BitArray IsActivePlayer { get; private set; }
     /// <summary>
     /// Gets what phase the game is currently in, or sets the phase and invokes <see cref="StateChanged"/>.
@@ -97,7 +97,7 @@ public class StateMachine : IBinarySerializable
     /// <summary>
     /// Gets the number of rounds the game has entered. Or, sets this value and invokes <see cref="StateChanged"/>.
     /// </summary>
-    /// <remarks>A round is completed once <see cref="PlayerTurn"/> increases beyond <see cref="_numPlayers"/>. The 0th Round is the setup round.</remarks>
+    /// <remarks>A round is completed once <see cref="PlayerTurn"/> increases beyond <see cref="NumPlayers"/>. The 0th Round is the setup round.</remarks>
     /// <value>
     /// An integer representing the number of times the turn has passed to each player.
     /// </value>
@@ -192,7 +192,7 @@ public class StateMachine : IBinarySerializable
     public void IncrementPlayerTurn()
     {
         if (CurrentPhase.Equals(GamePhase.DefaultSetup) || CurrentPhase.Equals(GamePhase.TwoPlayerSetup)) {
-            if (PlayerTurn >= _numPlayers)
+            if (PlayerTurn >= NumPlayers)
                 PlayerTurn = 0;
             else {
                 int firstActive = NextActivePlayer();
@@ -202,7 +202,7 @@ public class StateMachine : IBinarySerializable
                     throw new Exception("No Active Player Remaining!");
             }
         }
-        else if (PlayerTurn >= _numPlayers) {
+        else if (PlayerTurn >= NumPlayers) {
             IncrementRound();
         }
         else {
@@ -254,13 +254,13 @@ public class StateMachine : IBinarySerializable
     /// <param name="player"></param>
     public void DisablePlayer(int player)
     {
-        if (player >= 0 && player < _numPlayers)
+        if (player >= 0 && player < NumPlayers)
             IsActivePlayer[player] = false;
     }
     private int NextActivePlayer() // begins checking at PlayerTurn + 1, looping to beginning if at the end of the Player list
     {
         int start;
-        if (PlayerTurn == _numPlayers - 1)
+        if (PlayerTurn == NumPlayers - 1)
             start = 0;
         else
             start = PlayerTurn + 1;
@@ -272,7 +272,7 @@ public class StateMachine : IBinarySerializable
             else
                 index++;
 
-            if (index > _numPlayers - 1)
+            if (index > NumPlayers - 1)
                 index = 0;
 
         } while (index != start);
@@ -281,7 +281,7 @@ public class StateMachine : IBinarySerializable
     }
     private int NextActivePlayer(int start) // begins checking at a specified player number, *inclusive*
     {
-        if (start >= 0 && start < _numPlayers) {
+        if (start >= 0 && start < NumPlayers) {
             int index = start;
             do {
                 if (IsActivePlayer[index])
@@ -289,7 +289,7 @@ public class StateMachine : IBinarySerializable
                 else
                     index++;
 
-                if (index > _numPlayers - 1)
+                if (index > NumPlayers - 1)
                     index = 0;
 
             } while (index != start);

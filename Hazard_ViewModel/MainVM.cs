@@ -4,7 +4,9 @@ using Hazard_Model.EventArgs;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Interfaces.View;
+using Hazard_Share.Interfaces.ViewModel;
 using Hazard_Share.Services.Serializer;
+using Hazard_ViewModel.Services;
 using System.Text.RegularExpressions;
 
 namespace Hazard_ViewModel;
@@ -16,74 +18,13 @@ namespace Hazard_ViewModel;
 /// Provided by the DI system.</param>
 /// <param name="wpfTimer">An <see cref="IDispatcherTimer"/> service exposing a WPF timer class to this <see cref="MainVM"/>. Provided by the DI system.</param>
 /// <param name="bootStrapper">The <see cref="IBootStrapperService"/> instance persists before and after <see cref="IGame"/>s and boots them up. Provided by the DI system.</param>
-public partial class MainVM(IGame game, IDialogState dialogService, IDispatcherTimer wpfTimer, IBootStrapperService bootStrapper) : MainVM_Base(game, bootStrapper)
+public partial class MainVM(IGameService gameService, IDialogState dialogService, IDispatcherTimer wpfTimer, IBootStrapperService bootStrapper) : MainVM_Base(gameService, bootStrapper)
 {
+    private readonly IGameService _gameService = gameService;
     private readonly IDialogState _dialogService = dialogService;
     private readonly IDispatcherTimer _dispatcherTimer = wpfTimer;
-    private List<TerrID>? _moveTargets = null;
-    /// <inheritdoc cref="Hazard_Share.Interfaces.ViewModel.IMainVM.Initialize(string[], string[])"/>
-    public override void Initialize((string Name, string ColorName)[] namesAndColors)
-    {
-        if (CurrentGame == null) throw new NullReferenceException(nameof(CurrentGame));
-        var playerNames = namesAndColors.Select(item => item.Name).ToArray();
-        var playerColors = namesAndColors.Select(item => item.ColorName).ToArray();
+    private List<TerrID> _moveTargets = [];
 
-        CurrentGame.Initialize(playerNames, null, null);
-
-        PlayerDetails = [];
-        for (int i = 0; i < NumPlayers; i++) {
-            PlayerData newPlayerData = new(CurrentGame.Players![i], playerColors[i], this);
-            PlayerDetails.Add(newPlayerData);
-        }
-
-        ContinentBonuses = [];
-        for (int i = 0; i < CurrentGame?.Values?.ContinentBonus?.Count - 1; i++) // Count needs -1 because of Null entry
-            ContinentBonuses.Add(CurrentGame?.Values?.ContinentBonus?[(ContID)i] ?? 0);
-
-        if (CurrentGame?.State != null)
-            CurrentGame!.State.StateChanged += HandleStateChanged;
-        if (CurrentGame?.Board != null)
-            CurrentGame.Board!.TerritoryChanged += HandleTerritoryChanged;
-        if (NumPlayers == 2)
-            base.Refresh();
-    }
-    public override void Initialize(string fileName)
-    {
-        if (CurrentGame == null)
-            throw new NullReferenceException($"The property {CurrentGame} of {this} was null during initialization.");
-
-        FileStream openStream = new(fileName, FileMode.Open, FileAccess.Read);
-        BinaryReader reader = new(openStream);
-
-        string colors = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
-        long streamLoc = openStream.Position;
-        openStream.Close();
-        reader.Dispose();
-        openStream.Dispose();
-
-        // Regular Expressions used here to pattern-match, using a "zero-width assertion", finding where the next character is a Capital letter ("(?=[A-Z])") which is not preceded by the beginning of a string ("(?<!^)");
-        string pattern = @"(?<!^)(?=[A-Z])";
-        string[] colorMatches = Regex.Split(colors, pattern);
-        CurrentGame.Initialize(colorMatches, fileName, streamLoc);
-
-        PlayerDetails = [];
-        for (int i = 0; i < NumPlayers; i++) {
-            PlayerData newPlayerData = new(CurrentGame.Players![i], colorMatches[i], this);
-            PlayerDetails.Add(newPlayerData);
-        }
-
-        ContinentBonuses = [];
-        for (int i = 0; i < CurrentGame.Values!.ContinentBonus!.Count - 1; i++) // Count needs -1 because of Null entry
-        {
-            ContinentBonuses.Add(CurrentGame.Values.ContinentBonus[(ContID)i]);
-        }
-
-        CurrentGame.State.StateChanged += HandleStateChanged;
-        CurrentGame.Board.TerritoryChanged += HandleTerritoryChanged;
-
-
-        Refresh();
-    }
     /// <remarks>
     /// This concrete implementation overrides <see cref="MainVM_Base.HandleStateChanged(object?, string)"/>.
     /// </remarks>
@@ -143,7 +84,7 @@ public partial class MainVM(IGame game, IDialogState dialogService, IDispatcherT
     /// <inheritdoc cref="MainVM_Base.CanTerritorySelect(int)"/>
     public override bool CanTerritorySelect(int selected)
     {
-        if (CurrentGame?.State == null || CurrentGame?.Board == null || CurrentGame?.Regulator == null)
+        if (CurrentGame?.State == null || CurrentGame?.Board == null || Regulator == null)
             return false;
 
         TerrID territory = (TerrID)selected;
@@ -236,13 +177,13 @@ public partial class MainVM(IGame game, IDialogState dialogService, IDispatcherT
 
         switch (CurrentPhase) {
             case GamePhase.DefaultSetup:
-                CurrentGame!.Regulator!.ClaimOrReinforce(territory);
+                Regulator?.ClaimOrReinforce(territory);
                 break;
             case GamePhase.TwoPlayerSetup:
-                CurrentGame!.Regulator!.ClaimOrReinforce(territory);
+                Regulator?.ClaimOrReinforce(territory);
                 break;
             case GamePhase.Place:
-                CurrentGame!.Regulator!.ClaimOrReinforce(territory);
+                Regulator?.ClaimOrReinforce(territory);
                 break;
 
             case GamePhase.Attack:
@@ -271,7 +212,7 @@ public partial class MainVM(IGame game, IDialogState dialogService, IDispatcherT
                     var moveSource = TerritorySelected;
                     Territories[(int)TerritorySelected].IsSelected = false;
                     TerritorySelected = TerrID.Null;
-                    _moveTargets = null;
+                    _moveTargets = [];
                     PhaseStageTwo = false;
                     int maxMoving = Territories[(int)moveSource].Armies - 1;
 
@@ -356,7 +297,7 @@ public partial class MainVM(IGame game, IDialogState dialogService, IDispatcherT
         _dispatcherTimer.Tick += DisableAttack_Tick;
         _dispatcherTimer.Start();
 
-        CurrentGame!.Regulator!.Battle((TerrID)source, (TerrID)target, attackDice, defenseDice);
+        Regulator?.Battle((TerrID)source, (TerrID)target, attackDice, defenseDice);
 
         RaiseDiceThrown(attackDice, defenseDice);
 
@@ -381,7 +322,7 @@ public partial class MainVM(IGame game, IDialogState dialogService, IDispatcherT
     [RelayCommand(CanExecute = nameof(CanCancelSelect))]
     private void CancelSelect()
     {
-        Territories![(int)TerritorySelected].IsSelected = false;
+        Territories[(int)TerritorySelected].IsSelected = false;
         TerritorySelected = TerrID.Null;
         TerritorySelectCommand.NotifyCanExecuteChanged();
     }
@@ -403,7 +344,7 @@ public partial class MainVM(IGame game, IDialogState dialogService, IDispatcherT
         if (CurrentPhase == GamePhase.Move && CanDeliverAttackReward())
             DeliverAttackReward();
 
-        CurrentGame!.State!.IncrementPhase();
+        CurrentGame?.State.IncrementPhase();
     }
     /// <summary>
     /// CanExecute logic for the <see cref="UndoConfirmInput"/> command.
@@ -411,10 +352,10 @@ public partial class MainVM(IGame game, IDialogState dialogService, IDispatcherT
     /// <returns><see langword="true"/> if an input confirmation may be undone; otherwise, <see langword="false"/>.</returns>
     public override bool CanUndoConfirmInput()
     {
-        if (CurrentGame?.State?.CurrentPhase == GamePhase.Move) {
-            if (CurrentGame.Regulator == null)
+        if (CurrentGame?.State.CurrentPhase == GamePhase.Move) {
+            if (Regulator == null)
                 return false;
-            if (CurrentGame.Regulator.PhaseActions > 1)
+            if (Regulator.PhaseActions > 1)
                 return false;
             else return true;
         }
@@ -451,7 +392,7 @@ public partial class MainVM(IGame game, IDialogState dialogService, IDispatcherT
 
     private List<TerrID> GetMoveTargets(TerrID territory, int playerOwner)
     {
-        var sourceWeb = CurrentGame?.Board?.Geography?.NeighborWeb;
+        var sourceWeb = CurrentGame?.Board.Geography.NeighborWeb;
         if (sourceWeb == null)
             return [];
 
