@@ -27,6 +27,14 @@ public static class BinarySerializer
     {
         _logger = loggerFactory.CreateLogger(typeof(BinarySerializer));
     }
+    /// <summary>
+    /// Initializes this <see cref="BinarySerializer"/>'s <see cref="ILogger"/>.
+    /// </summary>
+    /// <param name="logger">An <see cref="ILogger"/>.</param>
+    public static void InitializeLogger(ILogger logger)
+    {
+        _logger = logger;
+    }
 
     #region Encoding Methods
     private static byte[] ConvertibleToBytes(Type type, IConvertible value)
@@ -113,7 +121,7 @@ public static class BinarySerializer
     /// Reads an array of <see cref="string"/> values previously written using <see cref="BinarySerializer"/>.
     /// </summary>
     /// <param name="reader">A <see cref="BinaryReader"/> whose <see cref="BinaryReader.BaseStream"/> was previously written to.</param>
-    /// <param name="numValues"></param>
+    /// <param name="numValues">The <see cref="int">number</see> of values in the array (ie: length).</param>
     /// <returns>An <see cref="Array"/> of <see cref="string"/>s.</returns>
     public static Array ReadStrings(BinaryReader reader, int numValues)
     {
@@ -122,6 +130,14 @@ public static class BinarySerializer
             returnArray.SetValue((string)ReadConvertible(reader, typeof(string)), i);
         return returnArray;
     }
+    /// <summary>
+    /// Reads an array of <see cref="Enum"/> values which were previously written using <see cref="BinarySerializer"/>.
+    /// </summary>
+    /// <param name="reader">A <see cref="BinaryReader"/> whose <see cref="BinaryReader.BaseStream"/> was previously written to.</param>
+    /// <param name="type">The member <see cref="Type"/> of <see cref="Enum"/> to be read. Should be the same as was previously written.</param>
+    /// <param name="numValues">The <see cref="int">number</see> of values in the array (ie: length).</param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     public static Array ReadEnums(BinaryReader reader, Type type, int numValues)
     {
         if (!type.IsEnum)
@@ -143,9 +159,17 @@ public static class BinarySerializer
         writer.Write(tag);
         WriteConvertibles(writer, type, values);
     }
-
     #endregion
-
+    /// <summary>
+    /// Serializes <see cref="IBinarySerializable"/> objects and writes them to a file. 
+    /// </summary>
+    /// <param name="serializableObjects">An array of <see cref="IBinarySerializable"/> objects.</param>
+    /// <param name="fileName">The <see cref="string">name</see> of the save file to be written.</param>
+    /// <param name="newFile">A <see cref="bool">flag</see> indicating whether the file is a new file.</param>
+    /// <returns>A <see cref="Task"/>.</returns>
+    /// <remarks>
+    /// See <see cref="WriteSerializableObject"/> and <see cref="IBinarySerializable.GetBinarySerials()"/>.
+    /// </remarks>
     public async static Task Save(IBinarySerializable[] serializableObjects, string fileName, bool newFile)
     {
         await Task.Run(() =>
@@ -176,6 +200,12 @@ public static class BinarySerializer
             }
         });
     }
+    /// <summary>
+    /// Loads <see cref="IBinarySerializable"/> objects with deserialized values previously written by <see cref="BinarySerializer"/>.
+    /// </summary>
+    /// <param name="serializableObjects">An array of <see cref="IBinarySerializable"/> objects to load.</param>
+    /// <param name="fileName">The <see cref="string">name</see> of the file to read from.</param>
+    /// <returns><see langword="true"/> if deserialization and loading completed without exceptions; otherwise, <see langword="false"/>.</returns>
     public static bool Load(IBinarySerializable[] serializableObjects, string fileName)
     {
         using FileStream fileStream = new(fileName, FileMode.Open, FileAccess.Read);
@@ -192,6 +222,10 @@ public static class BinarySerializer
         }
         return !errors;
     }
+    /// <inheritdoc cref="Load(IBinarySerializable[], string)"/>
+    /// <param name="serializableObjects">An array of <see cref="IBinarySerializable"/> objects to load.</param>
+    /// <param name="fileName">The <see cref="string">name</see> of the file to read from.</param>
+    /// <param name="streamLoc">The <see cref="long">position</see> of the <see cref="FileStream"/> at which to begin reading the file.</param>
     public static bool Load(IBinarySerializable[] serializableObjects, string fileName, long streamLoc)
     {
         using FileStream fileStream = new(fileName, FileMode.Open, FileAccess.Read);
