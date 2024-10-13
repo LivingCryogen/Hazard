@@ -104,7 +104,7 @@ public static class BinarySerializer
     /// <param name="numValues">The <see cref="int">number</see> of values expected in the read <see cref="Array"/>.</param>
     /// <returns>An <see cref="Array"/> of <see cref="IConvertible"/>s, exlcuding <see cref="string"/> and <see cref="Enum"/>, whose <see cref="Type"/> matches <paramref name="type"/>.</returns>
     /// <remarks>
-    /// <see cref="Array"/>s of type <see cref="string"/> and <see cref="Enum"/> require <see cref="ReadStrings(BinaryReader, Type, int)"/> and <see cref="ReadEnums(BinaryReader, Type, int)"/>, respectively.
+    /// <see cref="Array"/>s of type <see cref="string"/> and <see cref="Enum"/> require <see cref="ReadStrings(BinaryReader, int)"/> and <see cref="ReadEnums(BinaryReader, Type, int)"/>, respectively.
     /// </remarks>
     /// <exception cref="ArgumentException">.</exception>
     public static Array ReadConvertibles(BinaryReader reader, Type type, int numValues)
