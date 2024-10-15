@@ -385,13 +385,13 @@ public partial class MainWindow : Window
         if (result.HasValue && !string.IsNullOrEmpty(saveAsDialog.FileName)) {
             ValueTuple<string, bool> saveParams = new(saveAsDialog.FileName, true);
             Debug.Assert(_vM != null, "ViewModel should never be null here since SaveAs_CanExecute should return false if it is.");
-            if (_vM!.SaveGame_Command.CanExecute(saveParams))
+            if (_vM.SaveGame_Command.CanExecute(saveParams))
                 _vM.SaveGame_Command.Execute(saveParams);
         }
     }
     private void CommandBindingSave_CanExecute(object sender, CanExecuteRoutedEventArgs e)
     {
-        if (_vM?.SaveGame_Command.CanExecute(new ValueTuple<string?, bool>(null, false)) ?? false)
+        if (_vM?.SaveGame_Command.CanExecute(new ValueTuple<string, bool>("", false)) ?? false)
             e.CanExecute = true;
         else e.CanExecute = false;
     }

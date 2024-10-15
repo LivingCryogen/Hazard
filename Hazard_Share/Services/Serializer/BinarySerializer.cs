@@ -226,10 +226,10 @@ public static class BinarySerializer
     /// <param name="serializableObjects">An array of <see cref="IBinarySerializable"/> objects to load.</param>
     /// <param name="fileName">The <see cref="string">name</see> of the file to read from.</param>
     /// <param name="streamLoc">The <see cref="long">position</see> of the <see cref="FileStream"/> at which to begin reading the file.</param>
-    public static bool Load(IBinarySerializable[] serializableObjects, string fileName, long streamLoc)
+    public static bool Load(IBinarySerializable[] serializableObjects, string fileName, long startStreamPosition, out long endStreamPosition)
     {
         using FileStream fileStream = new(fileName, FileMode.Open, FileAccess.Read);
-        fileStream.Position = streamLoc;
+        fileStream.Position = startStreamPosition;
         using BinaryReader reader = new(fileStream);
 
         bool errors = false;
@@ -241,6 +241,7 @@ public static class BinarySerializer
                 errors = true;
             }
         }
+        endStreamPosition = fileStream.Position;
         return !errors;
     }
 

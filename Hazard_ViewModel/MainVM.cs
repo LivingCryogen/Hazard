@@ -7,6 +7,7 @@ using Hazard_Share.Interfaces.View;
 using Hazard_Share.Interfaces.ViewModel;
 using Hazard_Share.Services.Serializer;
 using Hazard_ViewModel.Services;
+using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
 
 namespace Hazard_ViewModel;
@@ -18,7 +19,7 @@ namespace Hazard_ViewModel;
 /// Provided by the DI system.</param>
 /// <param name="wpfTimer">An <see cref="IDispatcherTimer"/> service exposing a WPF timer class to this <see cref="MainVM"/>. Provided by the DI system.</param>
 /// <param name="bootStrapper">The <see cref="IBootStrapperService"/> instance persists before and after <see cref="IGame"/>s and boots them up. Provided by the DI system.</param>
-public partial class MainVM(IGameService gameService, IDialogState dialogService, IDispatcherTimer wpfTimer, IBootStrapperService bootStrapper) : MainVM_Base(gameService, bootStrapper)
+public partial class MainVM(IGameService gameService, IDialogState dialogService, IDispatcherTimer wpfTimer, IBootStrapperService bootStrapper, ILogger<MainVM_Base> logger) : MainVM_Base(gameService, bootStrapper, logger)
 {
     private readonly IGameService _gameService = gameService;
     private readonly IDialogState _dialogService = dialogService;
@@ -27,7 +28,7 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
 
     /// <remarks>
     /// This concrete implementation overrides <see cref="MainVM_Base.HandleStateChanged(object?, string)"/>.
-    /// </remarks>
+    /// </remarks>fs
     /// <inheritdoc cref="MainVM_Base.HandleStateChanged(object?, string)"/>.
     public override void HandleStateChanged(object? sender, string propName)
     {

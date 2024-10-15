@@ -11,6 +11,7 @@ using Hazard_Share.Services.Serializer;
 using Hazard_ViewModel.EventArgs;
 using Hazard_ViewModel.Services;
 using Hazard_ViewModel.SubElements.Cards;
+using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -25,12 +26,15 @@ public partial class MainVM_Base : ObservableObject, IMainVM
 {
     private readonly IBootStrapperService _bootStrapper;
     private readonly IGameService _gameService;
+    private readonly ILogger _logger;
     internal readonly CardInfoFactory? _cardInfoFactory = null;
+    private string? _colorNames;
 
-    public MainVM_Base(IGameService gameService, IBootStrapperService bootStrapper)
+    public MainVM_Base(IGameService gameService, IBootStrapperService bootStrapper, ILogger<MainVM_Base> logger)
     {
         _bootStrapper = bootStrapper;
         _gameService = gameService;
+        _logger = logger;
         Territories = [];
         PlayerDetails = [];
         ContinentBonuses = [];
@@ -151,14 +155,14 @@ public partial class MainVM_Base : ObservableObject, IMainVM
             tempMap.Add((ContID)i, DisplayNameBuilder.MakeDisplayName(((ContID)i).ToString()));
         return new(tempMap);
     }
-    public virtual string[] LoadColorNames(string fileName, out long streamLoc) {
-        using FileStream openStream = new(fileName, FileMode.Open, FileAccess.Read);
-        using BinaryReader reader = new(openStream);
-        string colors = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+    public string[] ParseColorNames() {
+
+        if (_colorNames == null)
+            return [];
+        
         // Regular Expressions used here to pattern-match, using a "zero-width assertion", finding where the next character is a Capital letter ("(?=[A-Z])") which is not preceded by the beginning of a string ("(?<!^)");
         string pattern = @"(?<!^)(?=[A-Z])";
-        string[] colorMatches = Regex.Split(colors, pattern);
-        streamLoc = openStream.Position;
+        string[] colorMatches = Regex.Split(_colorNames, pattern);
         return colorMatches;
     }
     public void Initialize(string[] players, string[] colors, string? fileName)
@@ -166,15 +170,10 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         string[] playerNames = players;
         string[] colorNames = colors;
         long? streamPosition = null;
-        if (fileName != null) {
-            colors = LoadColorNames(fileName, out long streamLoc);
-            streamPosition = streamLoc;
-        }
-        
+
         (var currentGame, var regulator) = _gameService.CreateGameWithRegulator(colors.Length);
         CurrentGame = currentGame;
         Regulator = regulator;
-        CurrentGame.Initialize(playerNames, fileName, streamPosition); // if fileName and streamPosition aren't null, playerNames should be empty, and vice versa
 
         CurrentGame.PlayerLost += OnPlayerLose;
         CurrentGame.PlayerWon += OnPlayerWin;
@@ -183,6 +182,15 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         CurrentGame.Board.ContinentOwnerChanged += OnContinentFlip;
         regulator.PromptBonusChoice += OnTerritoryBonusChoice;
         regulator.PromptTradeIn += OnPromptTradeIn;
+
+        if (fileName != null) {
+            BinarySerializer.Load([this, CurrentGame, Regulator], fileName);
+            colors = ParseColorNames();
+        }
+        else {
+            _colorNames = string.Concat(colors);
+            CurrentGame.UpdatePlayerNames(playerNames);
+        }
 
         for (int i = 0; i < CurrentGame.Board.Geography.NumTerritories; i++)
             Territories.Add(new TerritoryInfo(i) { Armies = CurrentGame.Board.Armies[(TerrID)i] });
@@ -343,7 +351,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// <param name="saveParams">A <see cref="Tuple{T1, T2}"/>, where T1 is the <see cref="string">name</see> of the save file, and T2 is a <see cref="bool"/> with a <see langword="true"/> value if the save file is new;<br/>
     /// otherwise, its value is <see langword="false"/>, and T1 is <see langword="null"/>. </param>
     /// <returns><see langword="true"/> if the save game command can be completed given <paramref name="saveParams"/>"/>; otherwise, <see langword="false"/></returns>
-    public bool CanSaveGame((string? FileName, bool NewFile) saveParams)
+    public bool CanSaveGame((string FileName, bool NewFile) saveParams)
     {
         if (saveParams.NewFile == false && string.IsNullOrEmpty(_bootStrapper.SaveFileName))
             return false;
@@ -352,18 +360,16 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     }
     [RelayCommand(CanExecute = nameof(CanSaveGame))]
     /// <inheritdoc cref="IMainVM.SaveGame(ValueTuple{string, bool})">
-    public void SaveGame((string? FileName, bool NewFile) saveParams)
+    public async Task SaveGame((string FileName, bool NewFile) saveParams)
     {
-        if (!saveParams.NewFile) {
-            string fileName = _bootStrapper.SaveFileName;
+        string fileName;
+        if (!saveParams.NewFile)
+            fileName = _bootStrapper.SaveFileName;
+        else
+            fileName = saveParams.FileName;
 
-            _ = CurrentGame?.Save(false, fileName, ColorNames());
-        }
-        else {
-            string fileName = saveParams.FileName!;
-            _bootStrapper.SaveFileName = fileName;
-            _ = CurrentGame?.Save(true, fileName, ColorNames());
-        }
+        if (CurrentGame != null && Regulator != null)
+            await BinarySerializer.Save([this, CurrentGame, Regulator], fileName, saveParams.NewFile);
     }
     [RelayCommand]
     /// <inheritdoc cref="IMainVM.LoadGame(string)">
@@ -459,15 +465,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     {
         Regulator?.AwardTradeInBonus((TerrID)target);
     }
-    private string ColorNames()
-    {
-        if (PlayerDetails == null) return string.Empty;
 
-        StringBuilder colorNamesBuilder = new();
-        foreach (IPlayerData player in PlayerDetails)
-            colorNamesBuilder.Append(player.ColorName);
-        return colorNamesBuilder.ToString();
-    }
     internal void Refresh()
     {
         if (CurrentGame == null || CurrentGame.Board == null || PlayerDetails == null)
@@ -483,6 +481,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
             Territories[i].PlayerOwner = CurrentGame.Board.TerritoryOwner[(TerrID)i];
         }
         for (int i = 0; i < NumPlayers; i++) {
+            PlayerDetails[i].Name = CurrentGame.Players[i].Name;
             PlayerDetails[i].Number = CurrentGame.Players[i].Number;
             PlayerDetails[i].ArmyPool = CurrentGame.Players![i].ArmyPool;
             PlayerDetails[i].ArmyBonus = CurrentGame.Players[i].ArmyBonus;
@@ -535,6 +534,27 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     public string MakeDisplayName(string name)
     {
         return DisplayNameBuilder.MakeDisplayName(name) ?? string.Empty;
+    }
+
+    bool IBinarySerializable.LoadFromBinary(BinaryReader reader)
+    {
+        bool loadComplete = true;
+        try {
+            _colorNames = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+        } catch (Exception ex) {
+            _logger.LogError("An exception was thrown while loading {Regulator}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+            loadComplete = false;
+        }
+        return loadComplete;
+    }
+
+    async Task<SerializedData[]> IBinarySerializable.GetBinarySerials()
+    {
+        return await Task.Run(() =>
+        {
+            SerializedData[] saveData = [new(typeof(string), [_colorNames ?? string.Empty])];
+            return saveData;
+        });
     }
     #endregion
 }

@@ -48,7 +48,7 @@ public interface IPlayer : IBinarySerializable
     /// <value>
     /// A <see langword="string"/>.
     /// </value>
-    string Name { get; }
+    string Name { get; set; }
     /// <summary>
     /// Gets the number of the player.
     /// </summary>

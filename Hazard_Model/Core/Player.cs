@@ -69,7 +69,7 @@ public class Player : IPlayer
     #region Properties
     /// <inheritdoc cref="IPlayer.Name"/>.
     /// <remarks>Can be set privately to accomodate loading from serial values.</remarks>
-    public string Name { get; private set; }
+    public string Name { get; set; }
     /// <inheritdoc cref="IPlayer.Number"/>.
     /// <remarks>Can be set privately to accomodate loading from serial values.</remarks>
     public int Number { get; private set; }

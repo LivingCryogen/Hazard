@@ -77,12 +77,13 @@ public interface IGame : IBinarySerializable
     IRuleValues Values { get; set; }
 
 
-    abstract void Initialize(string[] names, string? fileName, long? streamLoc);
+    abstract void Initialize();
+    abstract void UpdatePlayerNames(string[] names);
     /// <summary>
     /// Save game state to a file.
     /// </summary>
     /// <param name="isNewFile">A boolean indicating whether the save file is new.</param>
     /// <param name="fileName">The name of the save file.</param>
     /// <param name="precedingData">Data from the View and/or ViewModel to be written to the save file first.</param>
-    abstract Task Save(bool isNewFile, string fileName, string precedingData);
+    public Task Save(bool isNewFile, string fileName, string precedingData);
 }
