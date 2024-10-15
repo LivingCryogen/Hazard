@@ -15,9 +15,19 @@ public class Player : IPlayer
     private readonly IBoard _board;
     private readonly CardFactory _cardFactory;
     private int _armyPool;
+    /// <summary>
+    /// Builds a <see cref="IPlayer"/> when the <see cref="string">name</see> is unknown.
+    /// </summary>
+    /// <param name="number">The number of the player (0 or higher).</param>
+    /// <param name="numPlayers">The number of total players in the game.</param>
+    /// <param name="values">The <see cref="IRuleValues"/> implementation providing game-rule defined values and equations.</param>
+    /// <param name="board">The <see cref="IBoard"/> implementation describing initial board state.</param>
+    /// <param name="logger">An <see cref="ILogger"/>.</param>  
+    /// <param name="cardFactory">A <see cref="CardFactory"/>, usually from <see cref="Entities.CardBase.CardFactory"/>.</param>
     public Player(int number, int numPlayers, CardFactory cardFactory, IRuleValues values, IBoard board, ILogger<Player> logger)
     {
         _logger = logger;
+        Name = string.Empty;
         Number = number;
         ControlledTerritories = [];
         _values = values;
@@ -27,15 +37,15 @@ public class Player : IPlayer
         _cardFactory = cardFactory;
     }
     /// <summary>
-    /// Builds a <see cref="IPlayer"/> given certain rules values and an initial board state.
+    /// Builds a <see cref="IPlayer"/> when the <see cref="string">name</see> is known.
     /// </summary>
     /// <param name="name">The name of the player.</param>
     /// <param name="number">The number of the player (0 or higher).</param>
     /// <param name="numPlayers">The number of total players in the game.</param>
     /// <param name="values">The <see cref="IRuleValues"/> implementation providing game-rule defined values and equations.</param>
     /// <param name="board">The <see cref="IBoard"/> implementation describing initial board state.</param>
-    /// <param name="logger">An <see cref="ILogger"/>. Note that, since the <see cref="DataAccess.BinarySerializer"/> is responsible for initializing this on <see cref="DataAccess.BinarySerializer.LoadGame"/>, <br/>
-    /// this logger must be provided by another class object, and is *not* injected via DI.</param>
+    /// <param name="logger">An <see cref="ILogger"/>.</param>
+    /// <param name="cardFactory">A <see cref="CardFactory"/>, usually from <see cref="Entities.CardBase.CardFactory"/>.</param>
     public Player(string name, int number, int numPlayers, CardFactory cardFactory, IRuleValues values, IBoard board, ILogger<Player> logger)
     {
         _logger = logger;
@@ -87,6 +97,7 @@ public class Player : IPlayer
     #endregion
 
     #region Methods
+    /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
     public async Task<SerializedData[]> GetBinarySerials()
     {
         return await Task.Run(async () =>
@@ -108,7 +119,7 @@ public class Player : IPlayer
             return data.ToArray();
         });
     }
-
+    /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;

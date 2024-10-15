@@ -7,14 +7,17 @@ using System.Reflection;
 namespace Hazard_Share.Interfaces.Model;
 
 /// <summary>
-/// Base interface for all cards. Provides default properties and methods allowing for run-time serialization and a stub for deserialization. 
+/// Base interface for all cards. Provides default properties and methods allowing for run-time serialization. 
 /// </summary>
 /// <remarks>
-/// The default serialization methods <see cref="GetSaveData"/>, <see cref="TryConvertToSerial"/>, and <see cref="TryGetPropertySerials"/> <br/>
-/// use reflection and should be overridden if there are performance concerns.
+/// Default serialization methods provided for <see cref="IBinarySerializable.GetBinarySerials()"/>, and internally <see cref="TryGetConvertibles(PropertyInfo, out IConvertible[])"/>,<br/> use reflection and should be overridden if there are performance concerns.
 /// </remarks>
 public interface ICard : IBinarySerializable
 {
+    /// <summary>
+    /// Gets or sets the logger.
+    /// </summary>
+    /// <value>An <see cref="ILogger"/>.</value>
     ILogger Logger { get; set; }
     /// <summary>
     /// Gets a binary conversion <see cref="Type"/> for each property, by name, of the <see cref="ICard"/>. 
@@ -23,10 +26,16 @@ public interface ICard : IBinarySerializable
     /// A map of property name <see cref="string"/>s to <see cref="Type"/>s.
     /// </value>
     /// <remarks>
-    /// The map is used for binary serialization by <see cref="Hazard_Model.DataAccess.BinarySerializer.SerializeCardInfo"/>. If an <see cref="ICard"/> is to be serialized via this method, <br/>
-    /// it must initialize <see cref="PropertySerializableTypeMap"/> before calls to <see cref="Hazard_Model.DataAccess.BinarySerializer.WriteData"/>.
+    /// The map is used for binary deserialization by <see cref="BinarySerializer.Load(IBinarySerializable[], string)"/>.
     /// </remarks>
     Dictionary<string, Type> PropertySerializableTypeMap { get; }
+    /// <summary>
+    /// The name of this <see cref="ICard"/>'s <see cref="Type"/>.
+    /// </summary>
+    /// <value>A <see cref="string"/>.</value>
+    /// <remarks>
+    /// Serves as a cached value that allows us to avoid multiple reflection method calls (e.g.: .GetType()). 
+    /// </remarks>
     string TypeName { get; set; }
     /// <summary>
     /// Gets the name of the parent <see cref="Type"/> of this <see cref="ICard"/>. 
@@ -59,7 +68,7 @@ public interface ICard : IBinarySerializable
     /// <see langword="true"/> if this <see cref="ICard"/> can be traded in. Otherwise, <see langword="false"/>.
     /// </value>
     bool IsTradeable { get; set; }
-
+    /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
     async Task<SerializedData[]> IBinarySerializable.GetBinarySerials()
     {
         return await Task.Run(() =>
@@ -88,6 +97,15 @@ public interface ICard : IBinarySerializable
             return serialData.ToArray();
         });
     }
+    /// <summary>
+    /// Tries to convert a property's value(s) to <see cref="IConvertible"/>(s).
+    /// </summary>
+    /// <param name="propInfo">The <see cref="PropertyInfo"/> of the property to be converted.</param>
+    /// <param name="convertibles">An array of the property's values converted to <see cref="IConvertible"/>.</param>
+    /// <returns><see langword="true"/> if the value conversion was successful; otherwise, <see langword="false"/>.</returns>
+    /// <remarks>
+    /// <see cref="ICard"/> default methods should be overridden once the <see cref="ICard"/> implementation is finalized for performance reasons (they use reflection).
+    /// </remarks>
     bool TryGetConvertibles(PropertyInfo propInfo, out IConvertible[] convertibles)
     {
         switch (propInfo.PropertyType) {
@@ -173,7 +191,7 @@ public interface ICard : IBinarySerializable
                 return false;
         }
     }
-
+    /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     bool IBinarySerializable.LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;
@@ -226,7 +244,7 @@ public interface ICard : IBinarySerializable
                     if (elementType.IsEnum)
                         cardProps[propIndex].SetValue(this, BinarySerializer.ReadEnums(reader, serialType, numValsLoaded));
                     else if (elementType == typeof(string))
-                        cardProps[propIndex].SetValue(this, BinarySerializer.ReadStrings(reader, serialType, numValsLoaded));
+                        cardProps[propIndex].SetValue(this, BinarySerializer.ReadStrings(reader, numValsLoaded));
                     else
                         cardProps[propIndex].SetValue(this, BinarySerializer.ReadConvertibles(reader, serialType, numValsLoaded));
                 }
