@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IBinarySerializable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\ICardSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\ICardSetData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ViewModel\IGameService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Registry\RegistryRelationEnum.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enums\TerrID.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IAssetFactory.cs" />

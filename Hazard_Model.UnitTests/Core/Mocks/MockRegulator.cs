@@ -1,15 +1,16 @@
-﻿using Hazard_Share.Enums;
+﻿using Hazard_Model.Core;
+using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
 
 namespace Hazard_Model.Tests.Core.Mocks;
 
-public class MockRegulator(ILogger logger) : IRegulator
+public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
 {
-    private MockGame? _currentGame = null;
-    private ILogger _logger = logger;
-    private int _numPlayers = 0;
+    private MockGame _currentGame = currentGame;
+    private readonly ILogger _logger = logger;
+    private int _numPlayers = currentGame.Players.Count;
     private int _actionsCounter = 3;
     private int _prevActionCount = 4;
     public int CurrentActionsLimit { get; set; } = 5;
@@ -84,12 +85,8 @@ public class MockRegulator(ILogger logger) : IRegulator
         throw new NotImplementedException();
     }
 
-    public void Initialize(IGame game)
+    public void Initialize()
     {
-        _currentGame = (MockGame)game;
-        _logger = ((MockGame)game).Logger;
-        _numPlayers = _currentGame.Players.Count;
-
         CurrentActionsLimit = _currentGame.Values.SetupActionsPerPlayers[_numPlayers];
 
         if (_currentGame?.State?.CurrentPhase == GamePhase.TwoPlayerSetup) {

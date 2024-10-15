@@ -1,8 +1,10 @@
-﻿using Hazard_Model.Entities;
+﻿using Hazard_Model.DataAccess;
+using Hazard_Model.Entities;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Services.Registry;
 using Hazard_Share.Services.Serializer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Hazard_Model.Core;
@@ -17,12 +19,11 @@ namespace Hazard_Model.Core;
 /// <param name="logger">An <see cref="ILogger{Game}"/> for logging debug information, warnings, errors.</param>
 /// <param name="assetFetcher">An <see cref="IAssetFetcher"/> connecting the Model and the DAL through bespoke methods. Provides assets to <see cref="Game"/> properties, eg: <example><see cref="IAssetFetcher.FetchCardSets"/> for <see cref="Game.Cards"/></example>.</param>
 /// <param name="typeRegister">An <see cref="ITypeRegister{ITypeRelations}"/> serving as an Application Registry. Simplifies asset loading and configuration extension. Required for operation of <see cref="ICard"/>'s default methods.</param>
-public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILoggerFactory loggerFactory, IAssetFetcher assetFetcher, ITypeRegister<ITypeRelations> typeRegister) : IGame
+public class Game(int numPlayers, ILoggerFactory loggerFactory, IAssetFetcher assetFetcher, ITypeRegister<ITypeRelations> typeRegister, IConfiguration config) : IGame
 {
     private readonly IAssetFetcher _assetFetcher = assetFetcher;
     private readonly ITypeRegister<ITypeRelations> _typeRegister = typeRegister;
     private readonly ILoggerFactory _loggerFactory = loggerFactory;
-
     /// <inheritdoc cref="IGame.ID"/>.
     public Guid ID { get; set; }
     private string? VMSaveData { get; set; } = null;
@@ -34,13 +35,11 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
     /// <value>An implementation of <see cref="ILogger{T}"/>.</value>
     public ILogger Logger { get; private set; } = loggerFactory.CreateLogger<Game>();
     /// <inheritdoc cref="IGame.Values"/>.
-    public IRuleValues Values { get; set; } = values;
+    public IRuleValues Values { get; set; } = assetFetcher.FetchRuleValues();
     /// <inheritdoc cref="IGame.Board"/>.
-    public IBoard Board { get; set; } = board;
-    /// <inheritdoc cref="IGame.Regulator"/>.
-    public IRegulator Regulator { get; set; } = regulator;
+    public IBoard Board { get; set; } = new EarthBoard(config, loggerFactory.CreateLogger<EarthBoard>());
     /// <inheritdoc cref="IGame.State"/>.
-    public StateMachine State { get; set; } = new(0, loggerFactory.CreateLogger<StateMachine>());
+    public StateMachine State { get; private set; } = new(numPlayers, loggerFactory.CreateLogger<StateMachine>());
     /// <inheritdoc cref="IGame.Cards"/>.
     public CardBase Cards { get; set; } = new(loggerFactory, typeRegister);
     /// <inheritdoc cref="IGame.Players"/>.
@@ -60,20 +59,16 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
             else
                 BinarySerializer.Load([this], fileName);
         else {
-            int numPlayers = names.Length;
             Cards.InitializeFromAssets(_assetFetcher, DefaultCardMode);
-            State = new(numPlayers, _loggerFactory.CreateLogger<StateMachine>());
-
-            if (numPlayers > 1) {
-                for (int i = 0; i < numPlayers; i++) {
-                    Players.Add(new Player(names[i], i, numPlayers, Cards.CardFactory, Values, Board, _loggerFactory.CreateLogger<Player>()));
-                    Players.Last().PlayerLost += OnPlayerLost;
-                    Players.Last().PlayerWon += OnPlayerWin;
-                }
+            int numPlayers = names.Length;
+            for (int i = 0; i < numPlayers; i++) {
+                Players.Add(new Player(names[i], i, numPlayers, Cards.CardFactory, Values, Board, _loggerFactory.CreateLogger<Player>()));
+                Players.Last().PlayerLost += OnPlayerLost;
+                Players.Last().PlayerWon += OnPlayerWin;
             }
-        }
 
-        Regulator.Initialize(this);
+            State = new(numPlayers, _loggerFactory.CreateLogger<StateMachine>());
+        }
     }
     /// <inheritdoc cref="IGame.Save"/>.
     public async Task Save(bool isNewFile, string fileName, string vMSaveData)
@@ -96,7 +91,6 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
             foreach (IPlayer player in Players)
                 saveData.AddRange(player?.GetBinarySerials().Result ?? []);
             saveData.AddRange(State?.GetBinarySerials().Result ?? []);
-            saveData.AddRange(Regulator?.GetBinarySerials().Result ?? []);
 
             return saveData.ToArray();
         });
@@ -120,9 +114,11 @@ public class Game(IRuleValues values, IBoard board, IRegulator regulator, ILogge
             }
             State = new(numPlayers, _loggerFactory.CreateLogger<StateMachine>());
             State.LoadFromBinary(reader);
-            Regulator.LoadFromBinary(reader);
-            if (Regulator.Reward is ICard rewardCard)
-                Cards.MapCardsToSets([rewardCard]);
+            //Regulator = _regulatorFactory.Build(this, State);
+            //Regulator.LoadFromBinary(reader);
+            //Regulator.Initialize();
+            //if (Regulator.Reward is ICard rewardCard)
+            //    Cards.MapCardsToSets([rewardCard]);
         } catch (Exception ex) {
             Logger.LogError("An exception was thrown while loading {Regulator}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;

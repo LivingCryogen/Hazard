@@ -1,16 +1,19 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hazard.ViewModel.SubElements;
+using Hazard_Model.Core;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces;
 using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Interfaces.View;
 using Hazard_Share.Interfaces.ViewModel;
+using Hazard_Share.Services.Serializer;
 using Hazard_ViewModel.EventArgs;
 using Hazard_ViewModel.Services;
 using Hazard_ViewModel.SubElements.Cards;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 
 namespace Hazard_ViewModel;
@@ -21,54 +24,22 @@ namespace Hazard_ViewModel;
 public partial class MainVM_Base : ObservableObject, IMainVM
 {
     private readonly IBootStrapperService _bootStrapper;
+    private readonly IGameService _gameService;
     internal readonly CardInfoFactory? _cardInfoFactory = null;
 
-    public MainVM_Base(IGame game, IBootStrapperService bootStrapper)
+    public MainVM_Base(IGameService gameService, IBootStrapperService bootStrapper)
     {
         _bootStrapper = bootStrapper;
-        CurrentGame = game;
-        if (CurrentGame?.Board == null) throw new NullReferenceException(nameof(CurrentGame.Board));
-        if (CurrentGame?.Regulator == null) throw new NullReferenceException(nameof(CurrentGame.Regulator));
-
+        _gameService = gameService;
         Territories = [];
-
-        for (int i = 0; i < CurrentGame.Board.Geography.NumTerritories; i++) {
-            Territories.Add(new TerritoryInfo(i) { Armies = CurrentGame!.Board!.Armies[(TerrID)i] });
-        }
-        var contIDValues = Enum.GetValues(typeof(ContID));
-        int numContIDValues = contIDValues.Length - 1; // -1 is needed because of ContID.Null
-        Dictionary<ContID, string> tempMap = [];
-        for (int i = 0; i < numContIDValues; i++)
-            tempMap.Add((ContID)i, DisplayNameBuilder.MakeDisplayName(((ContID)i).ToString()));
-        ContNameMap = new(tempMap);
-
-        CurrentGame.PlayerLost += OnPlayerLose;
-        CurrentGame.PlayerWon += OnPlayerWin;
-        CurrentGame.Regulator.PromptBonusChoice += OnTerritoryBonusChoice;
-        CurrentGame.Regulator.PromptTradeIn += OnPromptTradeIn;
-        CurrentGame.Board.ContinentOwnerChanged += OnContinentFlip;
+        PlayerDetails = [];
+        ContinentBonuses = [];
+        ContNameMap = MakeContIDDisplayNameMap();
     }
 
-    /// <inheritdoc cref="IMainVM.PlayerTurnChanging"/>
-    public event EventHandler<int>? PlayerTurnChanging;
-    /// <inheritdoc cref="IMainVM.TerritoryChoiceRequest"/>
-    public event EventHandler<Tuple<int, string>[]>? TerritoryChoiceRequest;
-    /// <inheritdoc cref="IMainVM.RequestTradeIn"/>
-    public event EventHandler<int>? RequestTradeIn;
-    /// <inheritdoc cref="IMainVM.ForceTradeIn"/>
-    public event EventHandler<int>? ForceTradeIn;
-    /// <inheritdoc cref="IMainVM.AttackRequest"/>
-    public event EventHandler<int>? AttackRequest;
-    /// <inheritdoc cref="IMainVM.AdvanceRequest"/>
-    public event EventHandler<ITroopsAdvanceEventArgs>? AdvanceRequest;
-    /// <inheritdoc cref="IMainVM.DiceThrown"/>
-    public event EventHandler<IDiceThrownEventArgs>? DiceThrown;
-    /// <inheritdoc cref="IMainVM.PlayerTurnChanging"/>
-    public event EventHandler<int>? PlayerLost;
-    /// <inheritdoc cref="IMainVM.PlayerWon"/>
-    public event EventHandler<int>? PlayerWon;
-    /// <inheritdoc cref="IMainVM.CurrentGame"/>
-    public IGame? CurrentGame { get; init; }
+    #region Properties
+    public IGame? CurrentGame { get; set; }
+    public IRegulator? Regulator { get; set; }
     /// <inheritdoc cref="IMainVM.CurrentPhase"/>
     [ObservableProperty] private GamePhase _currentPhase;
     /// <inheritdoc cref="IMainVM.PlayerTurn"/>
@@ -98,16 +69,16 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// </value>
     [ObservableProperty] private bool _phaseStageTwo;
     /// <inheritdoc cref="IMainVM.Territories"/>
-    [ObservableProperty] private ObservableCollection<ITerritoryInfo>? _territories;
+    [ObservableProperty] private ObservableCollection<ITerritoryInfo> _territories;
     /// <inheritdoc cref="IMainVM.PlayerDetails"/>
-    [ObservableProperty] private ObservableCollection<IPlayerData>? _playerDetails;
+    [ObservableProperty] private ObservableCollection<IPlayerData> _playerDetails;
     /// <summary>
     /// Gets a list of the army bonuses granted if a player controls each territory, in order of the <see cref="int"/> value of <see cref="ContID"/>.
     /// </summary>
     /// <value>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="int"/> if the <see cref="MainVM_Base"/> is initialized; otherwise, <see langword="null"/>.
     /// </value>
-    [ObservableProperty] private ObservableCollection<int>? _continentBonuses;
+    [ObservableProperty] private ObservableCollection<int> _continentBonuses;
     /// <inheritdoc cref="IMainVM.ContNameMap"/>
     public ReadOnlyDictionary<ContID, string> ContNameMap { get; init; }
     /// <inheritdoc cref="IMainVM.TerritorySelected"/>
@@ -127,7 +98,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// <value>
     /// An <see cref="int"/> between 2-6, if <see cref="CurrentGame"/> is initialized; otherwise, 0.
     /// </value>
-    public int NumPlayers => (CurrentGame?.Players?.Count ?? 0);
+    public int NumPlayers => CurrentGame?.Players.Count ?? 0;
     /// <summary>
     /// Gets the number of bonus armies awarded to the next <see cref="IPlayer"/> to trade in a set of cards.
     /// </summary>
@@ -146,6 +117,90 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     public ICommand DeliverAttackReward_Command { get => DeliverAttackRewardCommand; }
     public ICommand UndoConfirmInput_Command { get => UndoConfirmInputCommand; }
     public ICommand ChooseTerritoryBonus_Command { get => ChooseTerritoryBonusCommand; }
+    #endregion
+
+    #region Events
+    /// <inheritdoc cref="IMainVM.PlayerTurnChanging"/>
+    public event EventHandler<int>? PlayerTurnChanging;
+    /// <inheritdoc cref="IMainVM.TerritoryChoiceRequest"/>
+    public event EventHandler<Tuple<int, string>[]>? TerritoryChoiceRequest;
+    /// <inheritdoc cref="IMainVM.RequestTradeIn"/>
+    public event EventHandler<int>? RequestTradeIn;
+    /// <inheritdoc cref="IMainVM.ForceTradeIn"/>
+    public event EventHandler<int>? ForceTradeIn;
+    /// <inheritdoc cref="IMainVM.AttackRequest"/>
+    public event EventHandler<int>? AttackRequest;
+    /// <inheritdoc cref="IMainVM.AdvanceRequest"/>
+    public event EventHandler<ITroopsAdvanceEventArgs>? AdvanceRequest;
+    /// <inheritdoc cref="IMainVM.DiceThrown"/>
+    public event EventHandler<IDiceThrownEventArgs>? DiceThrown;
+    /// <inheritdoc cref="IMainVM.PlayerTurnChanging"/>
+    public event EventHandler<int>? PlayerLost;
+    /// <inheritdoc cref="IMainVM.PlayerWon"/>
+    public event EventHandler<int>? PlayerWon;
+    /// <inheritdoc cref="IMainVM.CurrentGame"/>
+    #endregion
+
+    #region Methods
+    private ReadOnlyDictionary<ContID, string> MakeContIDDisplayNameMap()
+    {
+        var contIDValues = Enum.GetValues(typeof(ContID));
+        int numContIDValues = contIDValues.Length - 1; // -1 is needed because of ContID.Null
+        Dictionary<ContID, string> tempMap = [];
+        for (int i = 0; i < numContIDValues; i++)
+            tempMap.Add((ContID)i, DisplayNameBuilder.MakeDisplayName(((ContID)i).ToString()));
+        return new(tempMap);
+    }
+    public virtual string[] LoadColorNames(string fileName, out long streamLoc) {
+        using FileStream openStream = new(fileName, FileMode.Open, FileAccess.Read);
+        using BinaryReader reader = new(openStream);
+        string colors = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+        // Regular Expressions used here to pattern-match, using a "zero-width assertion", finding where the next character is a Capital letter ("(?=[A-Z])") which is not preceded by the beginning of a string ("(?<!^)");
+        string pattern = @"(?<!^)(?=[A-Z])";
+        string[] colorMatches = Regex.Split(colors, pattern);
+        streamLoc = openStream.Position;
+        return colorMatches;
+    }
+    public void Initialize(string[] players, string[] colors, string? fileName)
+    {
+        string[] playerNames = players;
+        string[] colorNames = colors;
+        long? streamPosition = null;
+        if (fileName != null) {
+            colors = LoadColorNames(fileName, out long streamLoc);
+            streamPosition = streamLoc;
+        }
+        
+        (var currentGame, var regulator) = _gameService.CreateGameWithRegulator(colors.Length);
+        CurrentGame = currentGame;
+        Regulator = regulator;
+        CurrentGame.Initialize(playerNames, fileName, streamPosition); // if fileName and streamPosition aren't null, playerNames should be empty, and vice versa
+
+        CurrentGame.PlayerLost += OnPlayerLose;
+        CurrentGame.PlayerWon += OnPlayerWin;
+        CurrentGame.State.StateChanged += HandleStateChanged;
+        CurrentGame.Board.TerritoryChanged += HandleTerritoryChanged;
+        CurrentGame.Board.ContinentOwnerChanged += OnContinentFlip;
+        regulator.PromptBonusChoice += OnTerritoryBonusChoice;
+        regulator.PromptTradeIn += OnPromptTradeIn;
+
+        for (int i = 0; i < CurrentGame.Board.Geography.NumTerritories; i++)
+            Territories.Add(new TerritoryInfo(i) { Armies = CurrentGame.Board.Armies[(TerrID)i] });
+
+        for (int i = 0; i < NumPlayers; i++) {
+            PlayerData newPlayerData = new(CurrentGame.Players[i], colors[i], this);
+            PlayerDetails.Add(newPlayerData);
+        }
+        for (int i = 0; i < CurrentGame.Values.ContinentBonus.Count - 1; i++) // Count needs -1 because of Null entry
+            ContinentBonuses.Add(CurrentGame.Values.ContinentBonus[(ContID)i]);
+
+        Refresh();
+    }
+    /// <exception cref="NotImplementedException">Thrown if no implementation is provided by an inheriting class.</exception>
+    /// <inheritdoc cref="IMainVM.Initialize(ValueTuple{string, string}[])"/>
+    public virtual void Initialize((string Name, string ColorName)[] namesAndColors) { throw new NotImplementedException(); }
+    /// <inheritdoc cref="IMainVM.Initialize(string)"/>
+    public virtual void Initialize(string fileName) { throw new NotImplementedException(); }
     /// <summary>
     /// The "CanExecute" function for <see cref="TerritorySelectCommand"/>.
     /// </summary>
@@ -182,12 +237,11 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// <param name="propName">The <see cref="string">name</see> of the property that changed within <paramref name="sender"/>.</param>
     /// <exception cref="NotImplementedException">Thrown if no implementation is provided by an inheriting class.</exception>
     public virtual void HandleTerritoryChanged(object? sender, ITerritoryChangedEventArgs e) { throw new NotImplementedException(); }
-    /// <exception cref="NotImplementedException">Thrown if no implementation is provided by an inheriting class.</exception>
-    /// <inheritdoc cref="IMainVM.Initialize(ValueTuple{string, string}[])"/>
-    public virtual void Initialize((string Name, string ColorName)[] namesAndColors) { throw new NotImplementedException(); }
-    /// <inheritdoc cref="IMainVM.Initialize(string)"/>
-    public virtual void Initialize(string fileName)
-    { }
+
+
+
+
+
     /// <summary>
     /// Invokes <see cref="PlayerTurnChanging"/>.
     /// </summary>
@@ -339,7 +393,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         TerrID target = (TerrID)advanceParams[1];
         int numAdvance = advanceParams[2];
 
-        CurrentGame!.Regulator!.MoveArmies(source, target, numAdvance);
+        Regulator?.MoveArmies(source, target, numAdvance);
     }
     /// <summary>
     /// CanExecute logic for the <see cref="TradeInCommand"/>.
@@ -348,7 +402,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// <returns><see langword="true"/> if the cards may be traded; otherwise, <see langword="false"/>.</returns>
     public bool CanTradeIn(Tuple<int, int[]> tradeParams)
     {
-        if (CurrentGame == null || CurrentGame.State == null || CurrentGame.Regulator == null)
+        if (CurrentGame == null || CurrentGame.State == null || Regulator == null)
             return false;
 
         int player = tradeParams.Item1;
@@ -362,7 +416,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
 
         var tradeIndices = tradeParams.Item2;
 
-        if (CurrentGame.Regulator.CanTradeInCards(player, tradeIndices))
+        if (Regulator.CanTradeInCards(player, tradeIndices))
             return true;
 
         return false;
@@ -374,7 +428,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     [RelayCommand(CanExecute = nameof(CanTradeIn))]
     public void TradeIn(Tuple<int, int[]> tradeParams)
     {
-        CurrentGame!.Regulator!.TradeInCards(tradeParams.Item1, tradeParams.Item2);
+        Regulator?.TradeInCards(tradeParams.Item1, tradeParams.Item2);
     }
     /// <summary>
     /// CanExecute logic for the <see cref="DeliverAttackRewardCommand"/>.
@@ -382,7 +436,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// <returns><see langword="true"/> if a <see cref="ICard">reward</see> can be deliverd to the <see cref="IPlayer"/> at end of turn. See <see cref="IRegulator.Reward"/>.</returns>
     public bool CanDeliverAttackReward()
     {
-        if (CurrentGame?.Regulator?.Reward != null && (CurrentGame?.State?.CurrentPhase ?? GamePhase.Null) == GamePhase.Move)
+        if (Regulator?.Reward != null && (CurrentGame?.State?.CurrentPhase ?? GamePhase.Null) == GamePhase.Move)
             return true;
         else return false;
     }
@@ -392,7 +446,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     [RelayCommand(CanExecute = nameof(CanDeliverAttackReward))]
     public void DeliverAttackReward()
     {
-        CurrentGame?.Regulator?.DeliverCardReward();
+        Regulator?.DeliverCardReward();
     }
     /// <summary>
     /// Executes logic for the <see cref="ChooseTerritoryBonusCommand"/>. 
@@ -403,7 +457,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     [RelayCommand]
     public void ChooseTerritoryBonus(int target)
     {
-        CurrentGame?.Regulator?.AwardTradeInBonus((TerrID)target);
+        Regulator?.AwardTradeInBonus((TerrID)target);
     }
     private string ColorNames()
     {
@@ -482,4 +536,5 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     {
         return DisplayNameBuilder.MakeDisplayName(name) ?? string.Empty;
     }
+    #endregion
 }

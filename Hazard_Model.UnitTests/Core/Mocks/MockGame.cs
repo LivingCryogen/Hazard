@@ -22,12 +22,14 @@ public class MockGame : IGame
             new MockPlayer(0, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>()),
             new MockPlayer(1, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>())
         ];
-        Regulator.Initialize(this);
+        State = new StateMachine(Players.Count, new LoggerStubT<StateMachine>());
+        Regulator = new MockRegulator(new LoggerStubT<MockRegulator>(), this);
+        Regulator.Initialize();
     }
 
     public Microsoft.Extensions.Logging.ILogger<MockGame> Logger { get => _logger; }
     public IBoard Board { get; set; } = new MockBoard();
-    public IRegulator Regulator { get; set; } = new MockRegulator(new LoggerStubT<MockRegulator>());
+    public IRegulator Regulator { get; set; } 
     public IRuleValues Values { get; set; } = new MockRuleValues();
     public Guid ID { get; set; }
     public bool DefaultCardMode { get; set; } = true;

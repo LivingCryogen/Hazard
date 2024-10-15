@@ -10,4 +10,5 @@ public interface IAssetFetcher
     /// </summary>
     /// <returns>An array of ready <see cref="ICard"/> instances for use by a <see cref="Hazard_Model.Entities.Deck"/>, if data retrieval is successful. If not, <c>null</c>.</returns>
     List<ICardSet>? FetchCardSets();
+    IRuleValues FetchRuleValues();
 }

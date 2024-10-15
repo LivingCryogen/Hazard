@@ -7,12 +7,12 @@ using Microsoft.Extensions.Logging;
 namespace Hazard_Model.Core;
 
 /// <inheritdoc cref="IRegulator"/>
-public class Regulator(ILogger<Regulator> logger) : IRegulator
+public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulator
 {
-    private Game? _currentGame = null;
-    private StateMachine? _machine = null;
+    private IGame _currentGame = currentGame;
+    private StateMachine _machine = currentGame.State;
     private readonly ILogger _logger = logger;
-    private int _numPlayers = 0;
+    private int _numPlayers = currentGame.State.NumPlayers;
     private int _actionsCounter = 0;
     private int _prevActionCount = 0;
 
@@ -74,17 +74,14 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
         return loadComplete;
     }
     /// <inheritdoc cref="IRegulator.Initialize(IGame)"/>
-    public void Initialize(IGame game)
+    public void Initialize()
     {
-        _currentGame = (Game)game;
-        _numPlayers = _currentGame.Players.Count;
-        _machine = _currentGame.State;
-
         if (_actionsCounter == 0 && _currentGame.Values.SetupActionsPerPlayers.TryGetValue(_numPlayers, out int actions))
             CurrentActionsLimit = actions;
 
-        if (_currentGame.State.CurrentPhase == GamePhase.TwoPlayerSetup) {
-            _currentGame.TwoPlayerAutoSetup();
+        if (_machine.CurrentPhase == GamePhase.TwoPlayerSetup) {
+            if (_currentGame is Game game)
+                game.TwoPlayerAutoSetup();
             _prevActionCount = _actionsCounter;
         }
 
@@ -92,14 +89,23 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
     }
     private void IncrementAction()
     {
+        if (_machine == null) {
+            _logger.LogError("{Regulator} attempted to increment an action while State Machine was null.", this);
+            return;
+        }
+        if (_currentGame == null) {
+            _logger.LogError("{Regulator} attempted to increment an action while _currentGame was null.", this);
+            return;
+        }
+
         _actionsCounter++;
-        if (_currentGame.State.CurrentPhase == GamePhase.DefaultSetup) {
+        if (_machine.CurrentPhase == GamePhase.DefaultSetup) {
             if (_actionsCounter >= _currentGame.Board.Geography.NumTerritories && !_machine.PhaseStageTwo)
                 _machine.PhaseStageTwo = true;
         }
-        else if (_currentGame.State.CurrentPhase == GamePhase.Move) {
-            if (!_currentGame.State.PhaseStageTwo)
-                _currentGame.State.PhaseStageTwo = true;
+        else if (_machine.CurrentPhase == GamePhase.Move) {
+            if (!_machine.PhaseStageTwo)
+                _machine.PhaseStageTwo = true;
         }
 
         if (_actionsCounter >= CurrentActionsLimit)
@@ -114,8 +120,8 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
     }
     /// <inheritdoc cref="IRegulator.ClaimOrReinforce(TerrID)"/>
     public void ClaimOrReinforce(TerrID territory)
-    {
-        if (_machine?.CurrentPhase == GamePhase.DefaultSetup) {
+    { 
+        if (_machine.CurrentPhase == GamePhase.DefaultSetup) {
             _currentGame.Players[_machine.PlayerTurn].ArmyPool--;
 
             if (!_machine.PhaseStageTwo) {
@@ -209,9 +215,9 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
     /// <inheritdoc cref="IRegulator.CanTradeInCards(int, int[])"/>
     public bool CanTradeInCards(int playerNum, int[] handIndices)
     {
-        if (_currentGame == null || _currentGame.State == null) return false;
+        if (_currentGame == null || _machine == null) return false;
 
-        if (playerNum != _currentGame.State.PlayerTurn)
+        if (playerNum != _machine.PlayerTurn)
             return false;
 
         if (handIndices.Length < 3)
