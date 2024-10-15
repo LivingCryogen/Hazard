@@ -15,7 +15,7 @@ public class TroopCardSet : ICardSet
     /// <inheritdoc cref="ICardSet.MemberTypeName"/>
     public string MemberTypeName { get; } = nameof(TroopCard);
     /// <inheritdoc cref="ICardSet.Cards"/>
-    public ICard[]? Cards { get; set; } = null;
+    public List<ICard> Cards { get; set; } = [];
     /// <inheritdoc cref="ICardSet.ForcesTrade"/>
     public bool ForcesTrade { get; } = true;
 

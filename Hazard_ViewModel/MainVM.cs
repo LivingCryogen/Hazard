@@ -4,6 +4,8 @@ using Hazard_Model.EventArgs;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
 using Hazard_Share.Interfaces.View;
+using Hazard_Share.Services.Serializer;
+using System.Text.RegularExpressions;
 
 namespace Hazard_ViewModel;
 /// <summary>
@@ -26,9 +28,7 @@ public partial class MainVM(IGame game, IDialogState dialogService, IDispatcherT
         var playerNames = namesAndColors.Select(item => item.Name).ToArray();
         var playerColors = namesAndColors.Select(item => item.ColorName).ToArray();
 
-        if (namesAndColors.Length > 1)
-            CurrentGame.Initialize(playerNames);
-
+        CurrentGame.Initialize(playerNames, null, null);
 
         PlayerDetails = [];
         for (int i = 0; i < NumPlayers; i++) {
@@ -46,6 +46,43 @@ public partial class MainVM(IGame game, IDialogState dialogService, IDispatcherT
             CurrentGame.Board!.TerritoryChanged += HandleTerritoryChanged;
         if (NumPlayers == 2)
             base.Refresh();
+    }
+    public override void Initialize(string fileName)
+    {
+        if (CurrentGame == null)
+            throw new NullReferenceException($"The property {CurrentGame} of {this} was null during initialization.");
+
+        FileStream openStream = new(fileName, FileMode.Open, FileAccess.Read);
+        BinaryReader reader = new(openStream);
+
+        string colors = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+        long streamLoc = openStream.Position;
+        openStream.Close();
+        reader.Dispose();
+        openStream.Dispose();
+
+        // Regular Expressions used here to pattern-match, using a "zero-width assertion", finding where the next character is a Capital letter ("(?=[A-Z])") which is not preceded by the beginning of a string ("(?<!^)");
+        string pattern = @"(?<!^)(?=[A-Z])";
+        string[] colorMatches = Regex.Split(colors, pattern);
+        CurrentGame.Initialize(colorMatches, fileName, streamLoc);
+
+        PlayerDetails = [];
+        for (int i = 0; i < NumPlayers; i++) {
+            PlayerData newPlayerData = new(CurrentGame.Players![i], colorMatches[i], this);
+            PlayerDetails.Add(newPlayerData);
+        }
+
+        ContinentBonuses = [];
+        for (int i = 0; i < CurrentGame.Values!.ContinentBonus!.Count - 1; i++) // Count needs -1 because of Null entry
+        {
+            ContinentBonuses.Add(CurrentGame.Values.ContinentBonus[(ContID)i]);
+        }
+
+        CurrentGame.State.StateChanged += HandleStateChanged;
+        CurrentGame.Board.TerritoryChanged += HandleTerritoryChanged;
+
+
+        Refresh();
     }
     /// <remarks>
     /// This concrete implementation overrides <see cref="MainVM_Base.HandleStateChanged(object?, string)"/>.
@@ -106,7 +143,7 @@ public partial class MainVM(IGame game, IDialogState dialogService, IDispatcherT
     /// <inheritdoc cref="MainVM_Base.CanTerritorySelect(int)"/>
     public override bool CanTerritorySelect(int selected)
     {
-        if (CurrentGame?.State == null || CurrentGame?.Board == null)
+        if (CurrentGame?.State == null || CurrentGame?.Board == null || CurrentGame?.Regulator == null)
             return false;
 
         TerrID territory = (TerrID)selected;

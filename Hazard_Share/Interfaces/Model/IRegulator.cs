@@ -9,7 +9,7 @@ namespace Hazard_Share.Interfaces.Model;
 /// Currently, as 'facade' presented to the input side of the ViewModel, this contains a variety of bespoke methods. In the future, a Stack of Player Actions <br/>
 /// should be implemented, where these Actions are represented by a class with a property that would allow for a Strategy Pattern here. This would then enable <br/>
 /// Undo/Redo and Player Action history. The resulting refactor would also hide/remove these methods from this public interface. </remarks>
-public interface IRegulator
+public interface IRegulator : IBinarySerializable
 {
     /// <summary>
     /// Gets or Sets the current limit on player actions during this <see cref="GamePhase"/>.
@@ -84,16 +84,4 @@ public interface IRegulator
     /// </summary>
     /// <param name="game">The newly created <see cref="IGame"/>.</param>
     abstract void Initialize(IGame game);
-    /// <summary>
-    /// Initializes this instance using an <see cref="IGame"/> and values recently loaded via <see cref="Hazard_Model.DataAccess.BinarySerializer"/>.
-    /// </summary>
-    /// <param name="game">The <see cref="IGame"/> which called <see cref="Hazard_Model.DataAccess.BinarySerializer.LoadGame"/>.</param>
-    /// <param name="loadedValues">The values deserialized by <see cref="Hazard_Model.DataAccess.BinarySerializer.LoadRegulatorValues(BinaryReader)"/>.</param>
-    abstract void Initialize(IGame game, object?[] loadedValues);
-    /// <summary>
-    /// Builds save data necessary for binary serialization/deserialization by <see cref="Hazard_Model.DataAccess.BinarySerializer"/>.
-    /// </summary>
-    /// <returns>A <see cref="List{T}"/> of <see cref="Tuple{T1, T2}"/>, where T1 is an object containing the value to serialized, and T2 is the <see cref="Type"/> it should be serialized with. <br/>
-    /// This prepares for <see cref="Hazard_Model.DataAccess.BinarySerializer.WriteData"/>.</returns>
-    abstract List<(object? Datum, Type? dataType)> GetSaveData();
 }

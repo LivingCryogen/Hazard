@@ -1,6 +1,7 @@
 ﻿using Hazard_Model.EventArgs;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
+using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
 
 namespace Hazard_Model.Core;
@@ -28,48 +29,75 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
     public event EventHandler<IPromptTradeEventArgs>? PromptTradeIn;
 
     #region Methods
+    public async Task<SerializedData[]> GetBinarySerials()
+    {
+        int numRewards = 0;
+        List<SerializedData> rewardData = [];
+        if (Reward != null) {
+            rewardData.AddRange(await Reward.GetBinarySerials());
+            numRewards = 1;
+        }
+        else rewardData = [];
+
+        SerializedData[] saveData = [
+            new(typeof(int), [_actionsCounter]),
+            new(typeof(int), [_prevActionCount]),
+            new(typeof(int), [CurrentActionsLimit]),
+            new(typeof(int), [numRewards]),
+            ..rewardData
+        ];
+
+        return saveData;
+    }
+    public bool LoadFromBinary(BinaryReader reader)
+    {
+        bool loadComplete = true;
+        try {
+            _actionsCounter = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            _prevActionCount = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            CurrentActionsLimit = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            int numRewards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            if (numRewards == 0)
+                Reward = null;
+            else {
+                string cardTypeName = reader.ReadString();
+                if (_currentGame?.Cards?.CardFactory.BuildCard(cardTypeName) is not ICard rewardCard) {
+                    throw new InvalidDataException("While loading Regulator, construction of the reward card failed");
+                }
+                rewardCard.LoadFromBinary(reader);
+                Reward = rewardCard;
+            }
+        } catch (Exception ex) {
+            _logger.LogError("An exception was thrown while loading {Regulator}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+            loadComplete = false;
+        }
+        return loadComplete;
+    }
     /// <inheritdoc cref="IRegulator.Initialize(IGame)"/>
     public void Initialize(IGame game)
     {
         _currentGame = (Game)game;
-        _numPlayers = _currentGame.Players!.Count;
+        _numPlayers = _currentGame.Players.Count;
         _machine = _currentGame.State;
 
+        if (_actionsCounter == 0 && _currentGame.Values.SetupActionsPerPlayers.TryGetValue(_numPlayers, out int actions))
+            CurrentActionsLimit = actions;
 
-        CurrentActionsLimit = _currentGame!.Values!.SetupActionsPerPlayers![_numPlayers];
-
-        if (_currentGame!.State!.CurrentPhase == GamePhase.TwoPlayerSetup) {
-            _currentGame!.TwoPlayerAutoSetup();
+        if (_currentGame.State.CurrentPhase == GamePhase.TwoPlayerSetup) {
+            _currentGame.TwoPlayerAutoSetup();
             _prevActionCount = _actionsCounter;
         }
 
-        _machine!.StateChanged += HandleStateChanged;
-    }
-    /// <inheritdoc cref="IRegulator.Initialize(IGame, object?[])"/>
-    public void Initialize(IGame game, object?[] loadedValues)
-    {
-        _currentGame = (Game)game;
-        _numPlayers = _currentGame.Players!.Count;
-
-        _machine = _currentGame.State;
-        _machine!.StateChanged += HandleStateChanged;
-
-        if (loadedValues != null) {
-            _actionsCounter = (int)(loadedValues?[0] ?? 0);
-            _prevActionCount = (int)(loadedValues?[1] ?? 0);
-            CurrentActionsLimit = (int)(loadedValues?[2] ?? 0);
-            if (((int?)loadedValues?[3] ?? 0) == 1)
-                Reward = (ICard)loadedValues![4]!;
-        }
+        _machine.StateChanged += HandleStateChanged;
     }
     private void IncrementAction()
     {
         _actionsCounter++;
-        if (_currentGame!.State!.CurrentPhase.Equals(GamePhase.DefaultSetup)) {
-            if (_actionsCounter >= _currentGame.Board!.Geography.NumTerritories && !_machine!.PhaseStageTwo)
-                _machine!.PhaseStageTwo = true;
+        if (_currentGame.State.CurrentPhase == GamePhase.DefaultSetup) {
+            if (_actionsCounter >= _currentGame.Board.Geography.NumTerritories && !_machine.PhaseStageTwo)
+                _machine.PhaseStageTwo = true;
         }
-        else if (_currentGame.State.CurrentPhase.Equals(GamePhase.Move)) {
+        else if (_currentGame.State.CurrentPhase == GamePhase.Move) {
             if (!_currentGame.State.PhaseStageTwo)
                 _currentGame.State.PhaseStageTwo = true;
         }
@@ -87,36 +115,36 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
     /// <inheritdoc cref="IRegulator.ClaimOrReinforce(TerrID)"/>
     public void ClaimOrReinforce(TerrID territory)
     {
-        if (_machine!.CurrentPhase == GamePhase.DefaultSetup) {
-            _currentGame!.Players![_machine.PlayerTurn].ArmyPool--;
+        if (_machine?.CurrentPhase == GamePhase.DefaultSetup) {
+            _currentGame.Players[_machine.PlayerTurn].ArmyPool--;
 
             if (!_machine.PhaseStageTwo) {
-                _currentGame.Board!.Claims(_machine.PlayerTurn, territory);
+                _currentGame.Board.Claims(_machine.PlayerTurn, territory);
                 _currentGame.Players[_machine.PlayerTurn].AddTerritory(territory);
             }
             else
-                _currentGame.Board!.Reinforce(territory);
+                _currentGame.Board.Reinforce(territory);
 
             IncrementAction();
 
-            if (_machine!.CurrentPhase == GamePhase.DefaultSetup)
+            if (_machine.CurrentPhase == GamePhase.DefaultSetup)
                 _machine.IncrementPlayerTurn();
         }
-        else if (_machine!.CurrentPhase == GamePhase.TwoPlayerSetup) {
-            _currentGame!.Board!.Reinforce(territory);
+        else if (_machine.CurrentPhase == GamePhase.TwoPlayerSetup) {
+            _currentGame.Board.Reinforce(territory);
             IncrementAction();
 
             int actDiff = _actionsCounter - _prevActionCount;
             switch (actDiff) {
                 case 1:
-                    _currentGame!.Players![_machine.PlayerTurn].ArmyPool--;
+                    _currentGame.Players[_machine.PlayerTurn].ArmyPool--;
                     break;
                 case 2:
-                    _currentGame!.Players![_machine.PlayerTurn].ArmyPool--;
+                    _currentGame.Players[_machine.PlayerTurn].ArmyPool--;
                     _machine.PhaseStageTwo = true;
                     break;
                 case 3:
-                    if (_machine!.CurrentPhase == GamePhase.TwoPlayerSetup) {
+                    if (_machine.CurrentPhase == GamePhase.TwoPlayerSetup) {
                         _machine.PhaseStageTwo = false;
                         _machine.IncrementPlayerTurn();
                         _prevActionCount = _actionsCounter;
@@ -125,8 +153,8 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
             }
         }
         else if (_machine.CurrentPhase == GamePhase.Place) {
-            _currentGame!.Players![_machine.PlayerTurn].ArmyPool--;
-            _currentGame.Board!.Reinforce(territory);
+            _currentGame.Players[_machine.PlayerTurn].ArmyPool--;
+            _currentGame.Board.Reinforce(territory);
             IncrementAction();
         }
     }
@@ -279,24 +307,6 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
             }
         }
     }
-    /// <inheritdoc cref="IRegulator.GetSaveData"/>
-    public List<(object? Datum, Type? dataType)> GetSaveData()
-    {
-        List<(object? Datum, Type? dataType)> savedata = [];
-        savedata.Add((_actionsCounter, typeof(int)));
-        savedata.Add((_prevActionCount, typeof(int)));
-        savedata.Add((CurrentActionsLimit, typeof(int)));
-        if (Reward != null) {
-            savedata.Add((1, typeof(int)));
-            savedata.Add((Reward.GetSaveData(_logger), null));
-        }
-        else {
-            savedata.Add((0, typeof(int)));
-            savedata.Add((null, null));
-        }
-
-        return savedata;
-    }
     private ICard[]? GetCardsFromHand(int playerNum, int[] handIndices)
     {
         if (_currentGame == null || _currentGame.Cards == null)
@@ -328,7 +338,6 @@ public class Regulator(ILogger<Regulator> logger) : IRegulator
             player.RemoveCard(discardIndex);
         }
     }
-
     #endregion
 }
 

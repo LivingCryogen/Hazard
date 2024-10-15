@@ -4,7 +4,7 @@ namespace Hazard_Share.Interfaces.Model;
 /// <summary>
 /// A representation of a player in the game.
 /// </summary>
-public interface IPlayer
+public interface IPlayer : IBinarySerializable
 {
     /// <summary>
     /// Gets the current bonus the player receives to their army pool at the start of each turn (during <see cref="GamePhase.Place"/>).
@@ -43,21 +43,21 @@ public interface IPlayer
     /// </value>
     List<ICard> Hand { get; set; }
     /// <summary>
-    /// Gets or initializes the name of the player.
+    /// Gets or sets the name of the player.
     /// </summary>
     /// <value>
     /// A <see langword="string"/>.
     /// </value>
-    string Name { get; init; }
+    string Name { get; }
     /// <summary>
-    /// Gets or initializes the number of the player.
+    /// Gets the number of the player.
     /// </summary>
     /// <value>
     /// An integer from 0-5. 
     /// </value>
-    int Number { get; init; }
+    int Number { get; }
     /// <summary>
-    /// Gets or sets a flag that indicates the player is currently holding a set of cards which represent a valid trade.
+    /// Gets a flag that indicates the player is currently holding a set of cards which represent a valid trade.
     /// </summary>
     /// <value>
     /// <see langword="true"/> if <see cref="IPlayer.Hand"/> contains <see cref="ICard"/>s that satisfy their <see cref="ICardSet"/>'s definitions of a valid trade<br/>
@@ -115,10 +115,4 @@ public interface IPlayer
     /// <param name="handIndex">A <see cref="int"/> representing the <see cref="Hand"/> index of the <see cref="ICard"/> to be removed.</param>
     /// <returns><see langword="true"/> if successfully removed; otherwise, <see langword="false"/>.</returns>
     bool RemoveCard(int handIndex);
-    /// <summary>
-    /// Builds save data necessary for binary serialization/deserialization by <see cref="Hazard_Model.DataAccess.BinarySerializer"/>.
-    /// </summary>
-    /// <returns>A <see cref="List{T}"/> of <see cref="Tuple{T1, T2}"/>, where T1 is an object containing the value to serialized, and T2 is the <see cref="Type"/> it should be serialized with. <br/>
-    /// This prepares for <see cref="Hazard_Model.DataAccess.BinarySerializer.WriteData"/>.</returns>
-    public List<(object? Datum, Type? DataType)> GetSaveData();
 }

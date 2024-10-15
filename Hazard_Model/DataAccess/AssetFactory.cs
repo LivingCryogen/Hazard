@@ -12,16 +12,18 @@ namespace Hazard_Model.DataAccess;
  * by adding, for example, another <see cref="ICard"/>, this class must extend. */
 public class AssetFactory : IAssetFactory
 {
-    private readonly ILogger _logger;
+    private readonly ILoggerFactory _loggerFactory;
+    private readonly ILogger<AssetFactory> _logger;
     private readonly IDataProvider? _dataProvider;
 
     /// <summary>
     /// Constructs an <see cref="AssetFactory"/> with an injected <see cref="ILogger"/> but without a <see cref="IDataProvider"/>.
     /// </summary>
     /// <param name="logger">An <see cref="ILogger"/> for logging debug information and errors.</param>
-    public AssetFactory(ILogger logger)
+    public AssetFactory(ILogger<AssetFactory> logger, ILoggerFactory loggerFactory)
     {
         _logger = logger;
+        _loggerFactory = loggerFactory;
     }
 
     /// <summary>
@@ -29,9 +31,10 @@ public class AssetFactory : IAssetFactory
     /// </summary>
     /// <param name="logger">An <see cref="ILogger"/> for logging debug information and errors.</param>
     /// <param name="dataProvider">An <see cref="IDataProvider"/> which reads off data from external sources (e.g., data files).</param>
-    public AssetFactory(ILogger<AssetFactory> logger, IDataProvider dataProvider)
+    public AssetFactory(IDataProvider dataProvider, ILogger<AssetFactory> logger, ILoggerFactory loggerFactory)
     {
         _logger = logger;
+        _loggerFactory = loggerFactory;
         _dataProvider = dataProvider;
     }
     /** <summary>
@@ -52,7 +55,7 @@ public class AssetFactory : IAssetFactory
         var dataObject = _dataProvider?.GetData(typeName);
 
         if (dataObject is ICardSet cardSet) {
-            cardSet.Cards = BuildTroopCards(cardSet);
+            cardSet.Cards = [.. BuildTroopCards(cardSet)];
             return cardSet;
         }
 
@@ -78,7 +81,7 @@ public class AssetFactory : IAssetFactory
             for (int j = 0; j < troopCardSet.JData.Targets[i].Length; j++)
                 targets.Add(troopCardSet.JData.Targets[i][j]);
 
-            troopCards.Add(new TroopCard(troopCardSet) {
+            troopCards.Add(new TroopCard(troopCardSet, _loggerFactory.CreateLogger<TroopCard>()) {
                 Target = [.. targets],
                 Insigne = ((ITroopCardSetData)troopCardSet.JData).Insignia[i],
             });

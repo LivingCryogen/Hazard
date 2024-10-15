@@ -1,5 +1,6 @@
 ﻿using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
+using Microsoft.Extensions.Logging;
 
 namespace Hazard_Model.Entities.Cards;
 
@@ -11,25 +12,31 @@ public class TroopCard : ITroopCard
     /// <summary>
     /// Constructs an empty <see cref="TroopCard"/>.
     /// </summary>
-    public TroopCard()
-    { }
+    public TroopCard() { }
+    public TroopCard(ILogger<TroopCard> logger)
+    {
+        Logger = logger;
+    }
     /// <summary>
     /// Constructs a <see cref="TroopCard"/> as a member of the <paramref name="cardSet"/> collection.
     /// </summary>
     /// <param name="cardSet">The <see cref="ICardSet"/> to which this <see cref="TroopCard"/> belongs.</param>
-    public TroopCard(ICardSet cardSet)
+    public TroopCard(ICardSet cardSet, ILogger<TroopCard> logger)
     {
         CardSet = cardSet;
         ParentTypeName = cardSet.GetType().Name;
+        Logger = logger;
     }
     /// <inheritdoc cref="ICard.PropertySerializableTypeMap"/>
     public Dictionary<string, Type> PropertySerializableTypeMap { get; } = new()
     {
-        { nameof(Target), typeof(int) },
+        { nameof(Target), typeof(TerrID) },
         { nameof(Insigne), typeof(int) },
         { nameof(ParentTypeName), typeof(string) },
         { nameof(IsTradeable), typeof(bool) }
     };
+    public ILogger Logger { get; set; }
+    public string TypeName { get; set; } = nameof(TroopCard);
     /// <summary>
     /// Gets or sets the name of a <see cref="TroopCard"/>'s 'parent': the <see cref="ICardSet"/> that contains it.
     /// </summary>
@@ -55,34 +62,4 @@ public class TroopCard : ITroopCard
     /// <inheritdoc cref="ITroopCard.Insigne"/>
     public TroopInsignia Insigne { get; set; }
     Enum ITroopCard.Insigne { get => Insigne; set { Insigne = (TroopInsignia)value; } }
-    /// <inheritdoc cref="ICard.InitializePropertyFromBinary(BinaryReader, string, int)"/>
-    public bool InitializePropertyFromBinary(BinaryReader reader, string propName, int numValues)
-    {
-        if (propName == nameof(Insigne)) {
-            Insigne = (TroopInsignia)reader.ReadInt32();
-            return true;
-        }
-        else if (propName == nameof(Target)) {
-            if (numValues == 0) {
-                Target = [];
-                return true;
-            }
-            else {
-                Target = new TerrID[numValues];
-                for (int i = 0; i < numValues; i++)
-                    Target[i] = (TerrID)reader.ReadInt32();
-
-                return true;
-            }
-        }
-        else if (propName == nameof(ParentTypeName)) {
-            ParentTypeName = reader.ReadString();
-            return true;
-        }
-        else if (propName == nameof(IsTradeable)) {
-            IsTradeable = reader.ReadBoolean();
-            return true;
-        }
-        return false;
-    }
 }

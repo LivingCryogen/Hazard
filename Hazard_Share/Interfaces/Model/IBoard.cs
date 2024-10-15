@@ -5,7 +5,7 @@ namespace Hazard_Share.Interfaces.Model;
 /// <summary>
 /// Represents the Game Board and Actions that directly affect the armies, territories, and continents on the board.
 /// </summary>
-public interface IBoard
+public interface IBoard : IBinarySerializable
 {
     /// <summary>
     /// Notifies <see cref="Hazard_Share.Interfaces.ViewModel.IMainVM"/> that a territory's owner or armies have changed.

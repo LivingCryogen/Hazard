@@ -2,14 +2,17 @@
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces;
 using Hazard_Share.Interfaces.Model;
+using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
 namespace Hazard_Model.Entities;
 /// <remarks>The default board of the base game is based on Earth from around the Napoleonic Era (1792-1800).</remarks>
 /// <inheritdoc cref="IBoard"/>
-public class EarthBoard : IBoard
+public class EarthBoard : IBoard, IBinarySerializable
 {
+    private readonly ILogger<EarthBoard> _logger;
     /// <remarks>
     /// <para> Currently the Graph of territories to their neighbors is implemented naively with Dictionaries. This is just fine for small boards <br/>
     /// (like the default), but to enable larger possible options, as well as to gain experience with the actual Graph class, this may <br/>
@@ -545,8 +548,9 @@ public class EarthBoard : IBoard
     /// Builds an Earth board using configuration '.json' values.
     /// </summary>
     /// <param name="config">An <see cref="IConfiguration"/>. Typically injected by the DI system.</param>
-    public EarthBoard(IConfiguration config)
+    public EarthBoard(IConfiguration config, ILogger<EarthBoard> logger)
     {
+        _logger = logger;
         Armies = [];
         TerritoryOwner = [];
         for (int i = 0; i < Geography.NumTerritories; i++) {
@@ -680,6 +684,52 @@ public class EarthBoard : IBoard
             }
         }
         else throw new ArgumentException("Non-null TerrID required.", nameof(changed));
+    }
+    public async Task<SerializedData[]> GetBinarySerials()
+    {
+        return await Task.Run(() =>
+        {
+            int numCont = ContinentOwner.Count;
+            int numTerr = TerritoryOwner.Count;
+            int numData = 2 + numCont + (numTerr * 2);
+            SerializedData[] saveData = new SerializedData[numData];
+            saveData[0] = new(typeof(int), [numCont]);
+            saveData[1] = new(typeof(int), [numTerr]);
+            int dataIndex = 2;
+            for (int i = 0; i < numCont; i++) {
+                saveData[dataIndex] = new(typeof(int), [ContinentOwner[(ContID)i]]);
+                dataIndex++;
+            }
+            for (int i = 0; i < numTerr; i++) {
+                saveData[dataIndex] = new(typeof(int), [TerritoryOwner[(TerrID)i]]);
+                dataIndex++;
+                saveData[dataIndex] = new(typeof(int), [Armies[(TerrID)i]]);
+                dataIndex++;
+            }
+
+            return saveData;
+        });
+    }
+    public bool LoadFromBinary(BinaryReader reader)
+    {
+        bool loadComplete = true;
+        try {
+            int numCont = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            int numTerr = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            ContinentOwner.Clear();
+            for (int i = 0; i < numCont; i++)
+                ContinentOwner.Add((ContID)i, (int)BinarySerializer.ReadConvertible(reader, typeof(int)));
+            TerritoryOwner.Clear();
+            Armies.Clear();
+            for (int i = 0; i < numTerr; i++) {
+                TerritoryOwner.Add((TerrID)i, (int)BinarySerializer.ReadConvertible(reader, typeof(int)));
+                Armies.Add((TerrID)i, (int)BinarySerializer.ReadConvertible(reader, typeof(int)));
+            }
+        } catch (Exception ex) {
+            _logger.LogError("An exception was thrown while loading {EarthBoard}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+            loadComplete = false;
+        }
+        return loadComplete;
     }
     #endregion
 }

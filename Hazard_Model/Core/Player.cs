@@ -1,6 +1,8 @@
-﻿using Hazard_Model.EventArgs;
+﻿using Hazard_Model.Entities.Cards;
+using Hazard_Model.EventArgs;
 using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
+using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
 using System.Collections.Specialized;
 
@@ -11,18 +13,40 @@ public class Player : IPlayer
     private readonly ILogger _logger;
     private readonly IRuleValues _values;
     private readonly IBoard _board;
+    private readonly CardFactory _cardFactory;
     private int _armyPool;
     /// <summary>
-    /// Builds a <see cref="IPlayer"/> given certain rules values and an initial board state.
+    /// Builds a <see cref="IPlayer"/> when the <see cref="string">name</see> is unknown.
+    /// </summary>
+    /// <param name="number">The number of the player (0 or higher).</param>
+    /// <param name="numPlayers">The number of total players in the game.</param>
+    /// <param name="values">The <see cref="IRuleValues"/> implementation providing game-rule defined values and equations.</param>
+    /// <param name="board">The <see cref="IBoard"/> implementation describing initial board state.</param>
+    /// <param name="logger">An <see cref="ILogger"/>.</param>  
+    /// <param name="cardFactory">A <see cref="CardFactory"/>, usually from <see cref="Entities.CardBase.CardFactory"/>.</param>
+    public Player(int number, int numPlayers, CardFactory cardFactory, IRuleValues values, IBoard board, ILogger<Player> logger)
+    {
+        _logger = logger;
+        Name = string.Empty;
+        Number = number;
+        ControlledTerritories = [];
+        _values = values;
+        ArmyPool = _values!.SetupStartingPool![numPlayers];
+        Hand = [];
+        _board = board;
+        _cardFactory = cardFactory;
+    }
+    /// <summary>
+    /// Builds a <see cref="IPlayer"/> when the <see cref="string">name</see> is known.
     /// </summary>
     /// <param name="name">The name of the player.</param>
     /// <param name="number">The number of the player (0 or higher).</param>
     /// <param name="numPlayers">The number of total players in the game.</param>
     /// <param name="values">The <see cref="IRuleValues"/> implementation providing game-rule defined values and equations.</param>
     /// <param name="board">The <see cref="IBoard"/> implementation describing initial board state.</param>
-    /// <param name="logger">An <see cref="ILogger"/>. Note that, since the <see cref="DataAccess.BinarySerializer"/> is responsible for initializing this on <see cref="DataAccess.BinarySerializer.LoadGame"/>, <br/>
-    /// this logger must be provided by another class object, and is *not* injected via DI.</param>
-    public Player(string name, int number, int numPlayers, IRuleValues values, IBoard board, ILogger logger)
+    /// <param name="logger">An <see cref="ILogger"/>.</param>
+    /// <param name="cardFactory">A <see cref="CardFactory"/>, usually from <see cref="Entities.CardBase.CardFactory"/>.</param>
+    public Player(string name, int number, int numPlayers, CardFactory cardFactory, IRuleValues values, IBoard board, ILogger<Player> logger)
     {
         _logger = logger;
         Name = name;
@@ -32,6 +56,7 @@ public class Player : IPlayer
         ArmyPool = _values!.SetupStartingPool![numPlayers];
         Hand = [];
         _board = board;
+        _cardFactory = cardFactory;
     }
 
     /// <inheritdoc cref="IPlayer.PlayerChanged"/>.
@@ -43,9 +68,11 @@ public class Player : IPlayer
 
     #region Properties
     /// <inheritdoc cref="IPlayer.Name"/>.
-    public string Name { get; init; }
+    /// <remarks>Can be set privately to accomodate loading from serial values.</remarks>
+    public string Name { get; private set; }
     /// <inheritdoc cref="IPlayer.Number"/>.
-    public int Number { get; init; }
+    /// <remarks>Can be set privately to accomodate loading from serial values.</remarks>
+    public int Number { get; private set; }
     /// <inheritdoc cref="IPlayer.HasCardSet"/>.
     public bool HasCardSet { get; set; } = false;
     /// <inheritdoc cref="IPlayer.ArmyBonus"/>.
@@ -64,26 +91,61 @@ public class Player : IPlayer
         }
     }
     /// <inheritdoc cref="IPlayer.Hand"/>.
-    public List<ICard> Hand { get; set; }
+    public List<ICard> Hand { get; set; } = [];
     /// <inheritdoc cref="IPlayer.ControlledTerritories"/>.
-    public List<TerrID> ControlledTerritories { get; set; }
+    public List<TerrID> ControlledTerritories { get; set; } = [];
     #endregion
 
     #region Methods
-    /// <inheritdoc cref="IPlayer.GetSaveData"/>.
-    public List<(object? Datum, Type? DataType)> GetSaveData()
+    /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
+    public async Task<SerializedData[]> GetBinarySerials()
     {
-        List<(object? Datum, Type? DataType)> data = [
-        (Name, typeof(string)),
-        (_armyPool, typeof(int)),
-        (ContinentBonus, typeof(int)),
-        (ControlledTerritories.Count, typeof(int)) ];
-        foreach (TerrID territory in ControlledTerritories)
-            data.Add((territory, typeof(TerrID)));
-        data.Add((Hand.Count, typeof(int)));
-        foreach (ICard card in Hand)
-            data.Add((card.GetSaveData(_logger), typeof(ICard)));
-        return data;
+        return await Task.Run(async () =>
+        {
+            List<SerializedData> data = [
+                new (typeof(string), [Name]),
+                new (typeof(int), [ArmyPool]),
+                new (typeof(int), [ContinentBonus]),
+                new (typeof(bool), [HasCardSet]),
+                new (typeof(int), [ControlledTerritories.Count])
+            ];
+            for (int i = 0; i < ControlledTerritories.Count; i++)
+                data.Add(new(typeof(TerrID), [ControlledTerritories[i]]));
+            data.Add(new(typeof(int), [Hand.Count]));
+            for (int i = 0; i < Hand.Count; i++) {
+                IEnumerable<SerializedData> cardSerials = await Hand[i].GetBinarySerials();
+                data.AddRange(cardSerials ?? []);
+            }
+            return data.ToArray();
+        });
+    }
+    /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
+    public bool LoadFromBinary(BinaryReader reader)
+    {
+        bool loadComplete = true;
+        try {
+            Name = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+            ArmyPool = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            ContinentBonus = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            HasCardSet = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool));
+            int numControlledTerritories = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            ControlledTerritories = [];
+            for (int i = 0; i < numControlledTerritories; i++)
+                ControlledTerritories.Add((TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID)));
+            int numCards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            Hand = [];
+            for (int i = 0; i < numCards; i++) {
+                string cardTypeName = reader.ReadString();
+                ICard newCard = _cardFactory.BuildCard(cardTypeName);
+                newCard.LoadFromBinary(reader);
+                Hand.Add(newCard);
+            }
+        } catch (Exception ex) {
+            _logger.LogError("An exception was thrown while loading {Player}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+            loadComplete = false;
+        }
+
+        return loadComplete;
     }
     /// <inheritdoc cref="IPlayer.GetsTradeBonus(int)"/>.
     public void GetsTradeBonus(int tradeInBonus)
@@ -114,12 +176,6 @@ public class Player : IPlayer
         if (e != null) {
             if (!(e.OldItems == null && e.NewItems == null)) {
                 PlayerChanged?.Invoke(this, new PlayerChangedEventArgs(nameof(ControlledTerritories), e.OldItems?[0], e.NewItems?[0]));
-
-                if (e.NewItems != null) {
-                    if (ControlledTerritories.Count >= _board.Geography.NumTerritories)
-                        PlayerWon?.Invoke(this, new());
-                }
-
                 if (e.OldItems != null) {
                     if (ControlledTerritories.Count <= 0)
                         PlayerLost?.Invoke(this, new());

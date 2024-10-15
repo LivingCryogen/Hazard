@@ -1,18 +1,21 @@
 ﻿using Hazard_Share.Enums;
+using Hazard_Share.Interfaces.Model;
+using Hazard_Share.Services.Serializer;
+using Microsoft.Extensions.Logging;
 using System.Collections;
 
 namespace Hazard_Model.Core;
 /// <summary>
 /// The game's state machine.
 /// </summary>
-public class StateMachine
+public class StateMachine : IBinarySerializable
 {
+    private readonly ILogger<StateMachine> _logger;
     private GamePhase _currentPhase = GamePhase.Null;
     private bool _phaseStageTwo = false;
     private int _playerTurn = 0;
     private int _round = 0;
     private readonly int _numPlayers = 0;
-    private BitArray _isActivePlayer;
     private int _numTrades = 0;
 
     /// <summary>
@@ -28,22 +31,24 @@ public class StateMachine
     /// </summary>
     /// <param name="numPlayers">The number of players.</param>
     /// <exception cref="StateMachine(int)">Thrown when the number of players given is not 2-6.</exception>
-    public StateMachine(int numPlayers)
+    public StateMachine(int numPlayers, ILogger<StateMachine> logger)
     {
         _numPlayers = numPlayers;
+        _logger = logger;
 
         if (_numPlayers == 2)
             CurrentPhase = GamePhase.TwoPlayerSetup;
         else if (_numPlayers > 2 && _numPlayers < 7)
             CurrentPhase = GamePhase.DefaultSetup;
         else
-            throw new ArgumentOutOfRangeException(nameof(numPlayers));
+            CurrentPhase = GamePhase.Null;
 
-        _isActivePlayer = new(_numPlayers);
-        _isActivePlayer.SetAll(true);
+        IsActivePlayer = new(_numPlayers);
+        IsActivePlayer.SetAll(true);
     }
 
     #region Properties
+    public BitArray IsActivePlayer { get; private set; }
     /// <summary>
     /// Gets what phase the game is currently in, or sets the phase and invokes <see cref="StateChanged"/>.
     /// </summary>
@@ -130,6 +135,38 @@ public class StateMachine
     #endregion
 
     #region Methods
+    public async Task<SerializedData[]> GetBinarySerials()
+    {
+        return await Task.Run(() =>
+        {
+            SerializedData[] saveData = [
+                new(typeof(byte), [BitArrayToByte(IsActivePlayer)]),
+                new(typeof(bool), [_phaseStageTwo]),
+                new(typeof(GamePhase), [_currentPhase]),
+                new(typeof(int), [_playerTurn]),
+                new(typeof(int), [_round]),
+                new(typeof(int), [_numTrades]),
+            ];
+            return saveData;
+        });
+    }
+    public bool LoadFromBinary(BinaryReader reader)
+    {
+        bool loadComplete = true;
+        try {
+            byte activePlayerByte = (byte)BinarySerializer.ReadConvertible(reader, typeof(byte));
+            IsActivePlayer = new(new byte[] { activePlayerByte }); // Reverse of "BitArrayToByte()" method
+            _phaseStageTwo = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool));
+            _currentPhase = (GamePhase)BinarySerializer.ReadConvertible(reader, typeof(GamePhase));
+            _playerTurn = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            _round = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            _numTrades = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+        } catch (Exception ex) {
+            _logger.LogError("An exception was thrown while loading {Player}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+            loadComplete = false;
+        }
+        return loadComplete;
+    }
     /// <summary>
     /// End the current round and perform end of round actions.
     /// </summary>
@@ -218,7 +255,7 @@ public class StateMachine
     public void DisablePlayer(int player)
     {
         if (player >= 0 && player < _numPlayers)
-            _isActivePlayer[player] = false;
+            IsActivePlayer[player] = false;
     }
     private int NextActivePlayer() // begins checking at PlayerTurn + 1, looping to beginning if at the end of the Player list
     {
@@ -230,7 +267,7 @@ public class StateMachine
 
         int index = start;
         do {
-            if (_isActivePlayer[index])
+            if (IsActivePlayer[index])
                 return index;
             else
                 index++;
@@ -247,7 +284,7 @@ public class StateMachine
         if (start >= 0 && start < _numPlayers) {
             int index = start;
             do {
-                if (_isActivePlayer[index])
+                if (IsActivePlayer[index])
                     return index;
                 else
                     index++;
@@ -260,24 +297,6 @@ public class StateMachine
         }
         else throw new ArgumentOutOfRangeException(nameof(start));
     }
-
-    /// <summary>
-    /// Generates binary serialization data for <see cref="Hazard_Model.DataAccess.BinarySerializer.WriteData"/>.
-    /// </summary>
-    /// <returns>A list of Tuples, each containing a property value paired with the intended Binary conversion <see cref="Type"/>.</returns>
-    public List<(object? Datum, Type? dataType)> GetSaveData()
-    {
-        List<(object? Datum, Type? dataType)> data = [
-            (BitArrayToByte(_isActivePlayer), typeof(byte)),
-            (_phaseStageTwo, typeof(bool)),
-            (_currentPhase, typeof(GamePhase)),
-            (_playerTurn, typeof(int)),
-            ( _round, typeof(int)),
-            ( _numTrades, typeof(int))
-        ];
-        return data;
-    }
-
     /// <summary>
     /// Initializes <see cref="_isActivePlayer"/> from a saved game. 
     /// </summary>
@@ -285,9 +304,8 @@ public class StateMachine
     public void InitializePlayerStatusArray(byte data)
     {
         byte[] dataArray = [data];
-        _isActivePlayer = new(dataArray);
+        IsActivePlayer = new(dataArray);
     }
-
     /// <summary>
     /// Converts a <see cref="BitArray"/> of length 8 or less into a <see cref="byte"/> for binary serialization.
     /// </summary>

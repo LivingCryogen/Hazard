@@ -1,41 +1,104 @@
-﻿using Hazard_Share.Enums;
+﻿using Hazard_Model.Tests.Entities.Mocks;
+using Hazard_Share.Enums;
 using Hazard_Share.Interfaces.Model;
+using Hazard_Share.Services.Serializer;
 using Microsoft.Extensions.Logging;
 
 namespace Hazard_Model.Tests.Core.Mocks;
 
-internal class MockPlayer(ILogger logger) : IPlayer
+internal class MockPlayer : IPlayer
 {
-    private readonly ILogger _logger = logger;
-    public int ArmyBonus { get; }
+    private readonly ILogger _logger;
+    private readonly MockCardFactory _cardFactory;
+    private readonly IBoard _board;
 
-    public int ArmyPool { get => 5; set => throw new NotImplementedException(); }
-    public int ContinentBonus { get => 6; set => throw new NotImplementedException(); }
-    public List<TerrID> ControlledTerritories { get => [TerrID.Null, TerrID.Alaska]; set => throw new NotImplementedException(); }
-    public List<ICard> Hand { get => []; set => throw new NotImplementedException(); }
-    public string Name { get => nameof(MockPlayer); init => throw new NotImplementedException(); }
-    public int Number { get; init; }
-    public bool HasCardSet { get => false; set => throw new NotImplementedException(); }
+    public MockPlayer(int number, MockCardFactory cardFactory, IRuleValues values, IBoard board, ILogger<MockPlayer> logger)
+    {
+        _logger = logger;
+        Number = number;
+        ControlledTerritories = [];
+        Hand = [];
+        _board = board;
+        _cardFactory = cardFactory;
+    }
+
+    public MockPlayer(string name, int number, MockCardFactory cardFactory, IRuleValues values, IBoard board, ILogger<MockPlayer> logger)
+    {
+        _logger = logger;
+        Name = name;
+        Number = number;
+        ControlledTerritories = [];
+
+
+        Hand = [];
+        _board = board;
+        _cardFactory = cardFactory;
+    }
+
+    public int ArmyBonus { get; }
+    public int ArmyPool { get; set; } = 10;
+    public int ContinentBonus { get; set; } = 6;
+    public List<TerrID> ControlledTerritories { get; set; }
+    public List<ICard> Hand { get; set; } = [];
+    public string Name { get; set; } = "YourFatherSmeltOfElderBerries!";
+    public int Number { get; set; }
+    public bool HasCardSet { get; set; } = false;
 
 #pragma warning disable CS0414 // For unit-testing, these are unused. If integration tests are built, they should be, at which time these warnings should be re-enabled.
     public event EventHandler<IPlayerChangedEventArgs>? PlayerChanged = null;
     public event EventHandler? PlayerLost = null;
     public event EventHandler? PlayerWon = null;
 #pragma warning restore CS0414
-    public List<(object? Datum, Type? DataType)> GetSaveData()
+    public async Task<SerializedData[]> GetBinarySerials()
     {
-        List<(object? Datum, Type? DataType)> data = [
-            (Name, typeof(string)),
-            (ArmyPool, typeof(int)),
-            (ContinentBonus, typeof(int)),
-            (ControlledTerritories.Count, typeof(int)) ];
-        foreach (TerrID territory in ControlledTerritories)
-            data.Add((territory, typeof(TerrID)));
-        data.Add((Hand.Count, typeof(int)));
-        foreach (ICard card in Hand)
-            data.Add((card.GetSaveData(_logger), typeof(ITroopCard)));
-        return data;
+        return await Task.Run(async () =>
+        {
+            List<SerializedData> data = [
+                new (typeof(string), [Name]),
+                new (typeof(int), [ArmyPool]),
+                new (typeof(int), [ContinentBonus]),
+                new (typeof(bool), [HasCardSet]),
+                new (typeof(int), [ControlledTerritories.Count])
+            ];
+            for (int i = 0; i < ControlledTerritories.Count; i++)
+                data.Add(new(typeof(TerrID), [ControlledTerritories[i]]));
+            data.Add(new(typeof(int), [Hand.Count]));
+            for (int i = 0; i < Hand.Count; i++) {
+                IEnumerable<SerializedData> cardSerials = await Hand[i].GetBinarySerials();
+                data.AddRange(cardSerials ?? []);
+            }
+            return data.ToArray();
+        });
     }
+
+    public bool LoadFromBinary(BinaryReader reader)
+    {
+        bool loadComplete = true;
+        try {
+            Name = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+            ArmyPool = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            ContinentBonus = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            HasCardSet = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool));
+            int numControlledTerritories = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            ControlledTerritories = [];
+            for (int i = 0; i < numControlledTerritories; i++)
+                ControlledTerritories.Add((TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID)));
+            int numCards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            Hand = [];
+            for (int i = 0; i < numCards; i++) {
+                string cardTypeName = reader.ReadString();
+                ICard newCard = _cardFactory.BuildCard(cardTypeName);
+                newCard.LoadFromBinary(reader);
+                Hand.Add(newCard);
+            }
+        } catch (Exception ex) {
+            _logger.LogError("An exception was thrown while loading {Player}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+            loadComplete = false;
+        }
+
+        return loadComplete;
+    }
+
     public bool AddCard(ICard card)
     {
         throw new NotImplementedException();

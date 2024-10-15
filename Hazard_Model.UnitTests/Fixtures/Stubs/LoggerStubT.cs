@@ -2,7 +2,7 @@
 
 namespace Hazard_Model.Tests.Fixtures.Stubs;
 
-public class LoggerStub : ILogger
+public class LoggerStubT<T> : ILogger<T> where T : class
 {
     public LogLevel LastLoggedLevel { get; private set; }
 

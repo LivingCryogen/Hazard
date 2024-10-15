@@ -60,7 +60,7 @@ namespace Hazard_Model.Tests.Entities
                     cardResults[i][j] = 0;
             }
 
-            Dictionary<Guid, int> cardIDMap = [];
+            Dictionary<string, int> cardIDMap = [];
 
             /* For each Mock Card, we want a table that records the number of times it appears at a given Library position
              * after an arbitray number of shuffles. This will allow us to test the randomness of the Shuffler. */
@@ -77,7 +77,7 @@ namespace Hazard_Model.Tests.Entities
                 testDeck.Shuffle();
 
                 for (int position = 0; position < _numCards; position++) {
-                    Guid cardID = ((MockCard)testDeck.Library[position]).ID; // discover which Card is at position
+                    string cardID = ((MockCard)testDeck.Library[position]).ID; // discover which Card is at position
                     int tableRow = cardIDMap[cardID]; // Find the row in the table mapped to this Card numID
                     drawResultsTable[tableRow][position]++; // Increment the count for this library position
                 }
@@ -123,7 +123,7 @@ namespace Hazard_Model.Tests.Entities
             Assert.IsNotNull(testDeck.DiscardPile);
             int numLibrary = testDeck.Library.Count;
             int numDiscards = testDeck.DiscardPile.Count;
-            Guid[] discardIDs = testDeck.DiscardPile
+            string[] discardIDs = testDeck.DiscardPile
                 .Select(card => (MockCard)card)
                 .Select(card => card.ID)
                 .ToArray();
@@ -158,13 +158,17 @@ namespace Hazard_Model.Tests.Entities
             Assert.IsNotNull(testDeck.Library);
             Assert.IsNotNull(testDeck.DiscardPile);
             int numDiscards = testDeck.DiscardPile.Count;
-            Guid aDiscardID = ((MockCard)testDeck.DiscardPile[18]).ID;
+            string aDiscardID = ((MockCard)testDeck.DiscardPile[numDiscards - 1]).ID;
 
-            var card = testDeck.DrawCard();
+            var drawnCard = testDeck.DrawCard();
+            MockCard mockCard = (MockCard)drawnCard;
 
             Assert.IsTrue(testDeck.Library.Count == numDiscards - 1);
             Assert.IsTrue(testDeck.DiscardPile.Count == 0);
-            Assert.IsTrue(testDeck.Library.Where(item => ((MockCard)item).ID == aDiscardID).Any());
+            bool testIDinLibrary = testDeck.Library.Where(card => ((MockCard)card).ID == aDiscardID).Any();
+            Assert.IsTrue(testIDinLibrary || mockCard.ID == aDiscardID);
+            if (testIDinLibrary)
+                Assert.IsTrue(mockCard.ID != aDiscardID);
         }
     }
 }

@@ -11,7 +11,6 @@ using Hazard_ViewModel.Services;
 using Hazard_ViewModel.SubElements.Cards;
 using System.Collections.ObjectModel;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Input;
 
 namespace Hazard_ViewModel;
@@ -188,37 +187,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     public virtual void Initialize((string Name, string ColorName)[] namesAndColors) { throw new NotImplementedException(); }
     /// <inheritdoc cref="IMainVM.Initialize(string)"/>
     public virtual void Initialize(string fileName)
-    {
-        FileStream openStream = new(fileName, FileMode.Open, FileAccess.Read);
-
-        BinaryReader reader = new(openStream);
-
-        string colors = reader.ReadString();
-
-        // Regular Expressions used here to pattern-match, using a "zero-width assertion", finding where the next character is a Capital letter ("(?=[A-Z])") which is not preceded by the beginning of a string ("(?<!^)");
-        string pattern = @"(?<!^)(?=[A-Z])";
-        string[] colorMatches = Regex.Split(colors, pattern);
-
-        CurrentGame!.Initialize(openStream);
-
-        PlayerDetails = [];
-        for (int i = 0; i < NumPlayers; i++) {
-            PlayerData newPlayerData = new(CurrentGame.Players![i], colorMatches[i], this);
-            PlayerDetails.Add(newPlayerData);
-        }
-
-        ContinentBonuses = [];
-        for (int i = 0; i < CurrentGame.Values!.ContinentBonus!.Count - 1; i++) // Count needs -1 because of Null entry
-        {
-            ContinentBonuses.Add(CurrentGame.Values.ContinentBonus[(ContID)i]);
-        }
-
-        CurrentGame!.State!.StateChanged += HandleStateChanged;
-        CurrentGame.Board!.TerritoryChanged += HandleTerritoryChanged;
-
-        openStream.Close();
-        Refresh();
-    }
+    { }
     /// <summary>
     /// Invokes <see cref="PlayerTurnChanging"/>.
     /// </summary>
@@ -334,12 +303,12 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         if (!saveParams.NewFile) {
             string fileName = _bootStrapper.SaveFileName;
 
-            _ = CurrentGame!.Save(false, fileName, ColorNames());
+            _ = CurrentGame?.Save(false, fileName, ColorNames());
         }
         else {
             string fileName = saveParams.FileName!;
             _bootStrapper.SaveFileName = fileName;
-            _ = CurrentGame!.Save(true, fileName, ColorNames());
+            _ = CurrentGame?.Save(true, fileName, ColorNames());
         }
     }
     [RelayCommand]
