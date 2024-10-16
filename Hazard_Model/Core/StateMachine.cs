@@ -47,7 +47,7 @@ public class StateMachine : IBinarySerializable
     }
 
     #region Properties
-    public int NumPlayers { get; }
+    public int NumPlayers { get; private set; }
     public BitArray IsActivePlayer { get; private set; }
     /// <summary>
     /// Gets what phase the game is currently in, or sets the phase and invokes <see cref="StateChanged"/>.
@@ -140,6 +140,7 @@ public class StateMachine : IBinarySerializable
         return await Task.Run(() =>
         {
             SerializedData[] saveData = [
+                new(typeof(int), [NumPlayers]),
                 new(typeof(byte), [BitArrayToByte(IsActivePlayer)]),
                 new(typeof(bool), [_phaseStageTwo]),
                 new(typeof(GamePhase), [_currentPhase]),
@@ -154,6 +155,7 @@ public class StateMachine : IBinarySerializable
     {
         bool loadComplete = true;
         try {
+            NumPlayers = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             byte activePlayerByte = (byte)BinarySerializer.ReadConvertible(reader, typeof(byte));
             IsActivePlayer = new(new byte[] { activePlayerByte }); // Reverse of "BitArrayToByte()" method
             _phaseStageTwo = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool));

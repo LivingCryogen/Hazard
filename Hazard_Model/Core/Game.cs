@@ -110,7 +110,6 @@ public class Game(int numPlayers, ILoggerFactory loggerFactory, IAssetFetcher as
                 newPlayer.PlayerWon += OnPlayerWin;
                 Players.Add(newPlayer);
             }
-            State = new(numPlayers, _loggerFactory.CreateLogger<StateMachine>());
             State.LoadFromBinary(reader);
         } catch (Exception ex) {
             Logger.LogError("An exception was thrown while loading {Regulator}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
