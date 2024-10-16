@@ -7,7 +7,7 @@ namespace Hazard_Share.Interfaces.ViewModel;
 /// <summary>
 /// Defines public exposures of the main ViewModel. Enables decoupled DI injection into the primary View.
 /// </summary>
-public interface IMainVM
+public interface IMainVM : IBinarySerializable
 {
     #region Properties
     /// <summary>
@@ -200,7 +200,7 @@ public interface IMainVM
     /// Executes logic of the <see cref="SaveGame_Command"/>.
     /// </summary>
     /// <param name="saveParams">A <see cref="Tuple{T1, T2}"/>, where T1 is the <see cref="string"/> file name, and T2 is a <see cref="bool"/> indicating whether it is a new file.</param>
-    abstract void SaveGame((string FileName, bool NewFile) saveParams);
+    abstract Task SaveGame((string FileName, bool NewFile) saveParams);
     /// <summary>
     /// Executes logic of the <see cref="LoadGame_Command"/>.
     /// </summary>
