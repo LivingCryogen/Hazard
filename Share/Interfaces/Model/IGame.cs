@@ -76,8 +76,6 @@ public interface IGame : IBinarySerializable
     /// </value>
     IRuleValues Values { get; set; }
 
-
-    abstract void Initialize();
     abstract void UpdatePlayerNames(string[] names);
     /// <summary>
     /// Save game state to a file.

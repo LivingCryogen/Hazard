@@ -168,11 +168,6 @@ public class MockGame : IGame
         return loadComplete;
     }
 
-    void IGame.Initialize()
-    {
-        throw new NotImplementedException();
-    }
-
     void IGame.UpdatePlayerNames(string[] names)
     {
         throw new NotImplementedException();

@@ -13,54 +13,62 @@ namespace Model.Core;
 /// <summary>
 /// The top-level class for an individual Game.
 /// </summary>
-/// <param name="values">An <see cref="IRuleValues"/>; required for game-rule constants and calculators.</param>
-/// <param name="board">An <see cref="IBoard"/> storing data and relations between Board objects. Necessary for tracking game state.</param>
-/// <param name="regulator">An <see cref="IRegulator"/> enforcing game-rule logic in response to player actions. The 'facade' for the input side of the VM.</param>
-/// <param name="logger">An <see cref="ILogger{Game}"/> for logging debug information, warnings, errors.</param>
-/// <param name="assetFetcher">An <see cref="IAssetFetcher"/> connecting the Model and the DAL through bespoke methods. Provides assets to <see cref="Game"/> properties, eg: <example><see cref="IAssetFetcher.FetchCardSets"/> for <see cref="Game.Cards"/></example>.</param>
-/// <param name="typeRegister">An <see cref="ITypeRegister{ITypeRelations}"/> serving as an Application Registry. Simplifies asset loading and configuration extension. Required for operation of <see cref="ICard"/>'s default methods.</param>
-public class Game(int numPlayers, ILoggerFactory loggerFactory, IAssetFetcher assetFetcher, ITypeRegister<ITypeRelations> typeRegister, IConfiguration config) : IGame
+public class Game : IGame
 {
-    private readonly IAssetFetcher _assetFetcher = assetFetcher;
-    private readonly ITypeRegister<ITypeRelations> _typeRegister = typeRegister;
-    private readonly ILoggerFactory _loggerFactory = loggerFactory;
-    private readonly int _numPlayers = numPlayers;
+    private readonly IAssetFetcher _assetFetcher;
+    private readonly ITypeRegister<ITypeRelations> _typeRegister;
+    private readonly ILoggerFactory _loggerFactory;
+    /// <summary>
+    /// Constructs a new Game given a number of players and DI-injected DAL, configuration, and logger.
+    /// </summary>
+    /// <param name="numPlayers">The <see cref="int">number</see> of <see cref="IPlayer"/> for this <see cref="Game"/>.<br/> Used during initialization of <see cref="StateMachine"/> and <see cref="Players"/>.
+    /// <br/>When loading from a file, this will be 0, and components will not be updated until <see cref="LoadFromBinary(BinaryReader)"/> is called.</param>
+    /// <param name="loggerFactory">Builds configured <see cref="ILogger"/>s for various components when and where the DI system does not do so directly.</param>
+    /// <param name="assetFetcher">Connects the Model and the DAL through bespoke methods. Provides assets to <see cref="Game"/> properties, eg: <example><see cref="IAssetFetcher.FetchCardSets"/> for <see cref="Game.Cards"/></example>.</param>
+    /// <param name="typeRegister">Serves as an Application Type Registry. Simplifies asset loading and configuration extension.<br/> Required for operation of <see cref="ICard"/>'s default methods and DAL operations.</param>
+    /// <param name="config"></param>
+    public Game(int numPlayers, ILoggerFactory loggerFactory, IAssetFetcher assetFetcher, ITypeRegister<ITypeRelations> typeRegister, IConfiguration config)
+    {
+        _assetFetcher = assetFetcher;
+        _typeRegister = typeRegister;
+        _loggerFactory = loggerFactory;
+        ID = Guid.NewGuid();
+        Logger = loggerFactory.CreateLogger<Game>();
+        Board = new EarthBoard(config, loggerFactory.CreateLogger<EarthBoard>());
+        State = new(numPlayers, loggerFactory.CreateLogger<StateMachine>());
+        Cards = new(loggerFactory, typeRegister);
+        Cards.InitializeFromAssets(_assetFetcher, DefaultCardMode);
+        Players = [];
+        for (int i = 0; i < numPlayers; i++) {
+            Players.Add(new Player(i, State.NumPlayers, Cards.CardFactory, Values, Board, _loggerFactory.CreateLogger<Player>()));
+            Players.Last().PlayerLost += OnPlayerLost;
+            Players.Last().PlayerWon += OnPlayerWin;
+        }
+    }
+
     /// <inheritdoc cref="IGame.ID"/>.
     public Guid ID { get; set; }
     /// <inheritdoc cref="IGame.DefaultCardMode"/>
     public bool DefaultCardMode { get; set; } = true; // future implementation of Mission Cards or other ICard extensions would hinge on this being set to false
     /// <summary>
-    /// Gets or sets a logger for  debug information and errors. Should be provided by the DI system.
+    /// Gets or sets a logger for logging debug information and errors. Provided by the DI system indirectly via an <see cref="ILoggerFactory"/>.
     /// </summary>
     /// <value>An implementation of <see cref="ILogger{T}"/>.</value>
-    public ILogger Logger { get; private set; } = loggerFactory.CreateLogger<Game>();
+    public ILogger Logger { get; private set; }
     /// <inheritdoc cref="IGame.Values"/>.
     public IRuleValues Values { get; set; } = new RuleValues(); /// = assetFetcher.FetchRuleValues();
-                                                                /// <inheritdoc cref="IGame.Board"/>.
-    public IBoard Board { get; set; } = new EarthBoard(config, loggerFactory.CreateLogger<EarthBoard>());
+    /// <inheritdoc cref="IGame.Board"/>.
+    public IBoard Board { get; set; }
     /// <inheritdoc cref="IGame.State"/>.
-    public StateMachine State { get; private set; } = new(numPlayers, loggerFactory.CreateLogger<StateMachine>());
+    public StateMachine State { get; private set; } 
     /// <inheritdoc cref="IGame.Cards"/>.
-    public CardBase Cards { get; set; } = new(loggerFactory, typeRegister);
+    public CardBase Cards { get; set; } 
     /// <inheritdoc cref="IGame.Players"/>.
-    public List<IPlayer> Players { get; set; } = [];
+    public List<IPlayer> Players { get; set; }
     /// <inheritdoc cref="IGame.PlayerLost"/>.
     public event EventHandler<int>? PlayerLost;
     /// <inheritdoc cref="IGame.PlayerWon"/>.
     public event EventHandler<int>? PlayerWon;
-    /// <inheritdoc cref="IGame.Initialize(string[])"/>.
-    public void Initialize()
-    {
-        ID = Guid.NewGuid();
-
-        Cards.InitializeFromAssets(_assetFetcher, DefaultCardMode);
-
-        for (int i = 0; i < numPlayers; i++) {
-            Players.Add(new Player(i, _numPlayers, Cards.CardFactory, Values, Board, _loggerFactory.CreateLogger<Player>()));
-            Players.Last().PlayerLost += OnPlayerLost;
-            Players.Last().PlayerWon += OnPlayerWin;
-        }
-    }
 
     public void UpdatePlayerNames(string[] names)
     {
