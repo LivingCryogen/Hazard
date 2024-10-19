@@ -144,7 +144,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     #endregion
 
     #region Methods
-    private ReadOnlyDictionary<ContID, string> MakeContIDDisplayNameMap()
+    private static ReadOnlyDictionary<ContID, string> MakeContIDDisplayNameMap()
     {
         var contIDValues = Enum.GetValues(typeof(ContID));
         int numContIDValues = contIDValues.Length - 1; // -1 is needed because of ContID.Null
@@ -168,7 +168,6 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     {
         string[] playerNames = players;
         string[] colorNames = colors;
-        long? streamPosition = null;
 
         (var currentGame, var regulator) = _gameService.CreateGameWithRegulator(colors.Length);
         CurrentGame = currentGame;
@@ -484,8 +483,8 @@ public partial class MainVM_Base : ObservableObject, IMainVM
             PlayerDetails[i].Number = CurrentGame.Players[i].Number;
             PlayerDetails[i].ArmyPool = CurrentGame.Players![i].ArmyPool;
             PlayerDetails[i].ArmyBonus = CurrentGame.Players[i].ArmyBonus;
-            for (int j = 0; j < CurrentGame.Players[i].ControlledTerritories.Count; j++)
-                PlayerDetails[i].Realm.Add(CurrentGame.Players[i].ControlledTerritories[j]);
+            foreach(TerrID territory in CurrentGame.Players[i].ControlledTerritories)
+                PlayerDetails[i].Realm.Add(territory);
             if (PlayerDetails[i].Hand == null)
                 PlayerDetails[i].Hand = [];
             else

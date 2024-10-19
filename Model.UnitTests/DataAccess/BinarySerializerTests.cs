@@ -103,9 +103,7 @@ public class BinarySerializerTests
                 Assert.AreEqual(_toSerialGame.Players[i].ContinentBonus, _deserialGame.Players[i].ContinentBonus);
                 Assert.AreEqual(_toSerialGame.Players[i].HasCardSet, _deserialGame.Players[i].HasCardSet);
                 Assert.AreEqual(_toSerialGame.Players[i].ControlledTerritories.Count, _deserialGame.Players[i].ControlledTerritories.Count);
-                for (int j = 0; j < _toSerialGame.Players[i].ControlledTerritories.Count; j++) {
-                    Assert.AreEqual(_toSerialGame.Players[i].ControlledTerritories[j], _deserialGame.Players[i].ControlledTerritories[j]);
-                }
+                Assert.IsTrue(_toSerialGame.Players[i].ControlledTerritories.SetEquals(_deserialGame.Players[i].ControlledTerritories));
                 Assert.AreEqual(_toSerialGame.Players[i].Hand.Count, _deserialGame.Players[i].Hand.Count);
                 for (int j = 0; j < _toSerialGame.Players[i].Hand.Count; j++) {
                     Assert.AreEqual(_toSerialGame.Players[i].Hand[j].ParentTypeName, _deserialGame.Players[i].Hand[j].ParentTypeName);
@@ -332,9 +330,7 @@ public class BinarySerializerTests
                 Assert.AreEqual(_toSerialGame.Players[i].ArmyPool, _deserialGame.Players[i].ArmyPool);
                 Assert.AreEqual(_toSerialGame.Players[i].ContinentBonus, _deserialGame.Players[i].ContinentBonus);
                 Assert.AreEqual(_toSerialGame.Players[i].ControlledTerritories.Count, _deserialGame.Players[i].ControlledTerritories.Count);
-                for (int j = 0; j < _toSerialGame.Players[i].ControlledTerritories.Count; j++) {
-                    Assert.AreEqual(_toSerialGame.Players[i].ControlledTerritories[j], _deserialGame.Players[i].ControlledTerritories[j]);
-                }
+                Assert.IsTrue(_toSerialGame.Players[i].ControlledTerritories.SetEquals(_deserialGame.Players[i].ControlledTerritories));
                 Assert.AreEqual(_toSerialGame.Players[i].Hand.Count, _deserialGame.Players[i].Hand.Count);
                 for (int j = 0; j < _toSerialGame.Players[i].Hand.Count; j++) {
                     Assert.AreEqual(_toSerialGame.Players[i].Hand[j].ParentTypeName, _deserialGame.Players[i].Hand[j].ParentTypeName);

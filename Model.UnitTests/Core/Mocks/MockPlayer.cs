@@ -10,7 +10,6 @@ internal class MockPlayer : IPlayer
 {
     private readonly ILogger _logger;
     private readonly MockCardFactory _cardFactory;
-    private readonly IBoard _board;
 
     public MockPlayer(int number, MockCardFactory cardFactory, IRuleValues values, IBoard board, ILogger<MockPlayer> logger)
     {
@@ -18,7 +17,6 @@ internal class MockPlayer : IPlayer
         Number = number;
         ControlledTerritories = [];
         Hand = [];
-        _board = board;
         _cardFactory = cardFactory;
     }
 
@@ -31,14 +29,13 @@ internal class MockPlayer : IPlayer
 
 
         Hand = [];
-        _board = board;
         _cardFactory = cardFactory;
     }
 
     public int ArmyBonus { get; }
     public int ArmyPool { get; set; } = 10;
     public int ContinentBonus { get; set; } = 6;
-    public List<TerrID> ControlledTerritories { get; set; }
+    public HashSet<TerrID> ControlledTerritories { get; set; }
     public List<ICard> Hand { get; set; } = [];
     public string Name { get; set; } = "YourFatherSmeltOfElderBerries!";
     public int Number { get; set; }
@@ -60,8 +57,8 @@ internal class MockPlayer : IPlayer
                 new (typeof(bool), [HasCardSet]),
                 new (typeof(int), [ControlledTerritories.Count])
             ];
-            for (int i = 0; i < ControlledTerritories.Count; i++)
-                data.Add(new(typeof(TerrID), [ControlledTerritories[i]]));
+            foreach (TerrID territory in ControlledTerritories)
+                data.Add(new(typeof(TerrID), [territory]));
             data.Add(new(typeof(int), [Hand.Count]));
             for (int i = 0; i < Hand.Count; i++) {
                 IEnumerable<SerializedData> cardSerials = await Hand[i].GetBinarySerials();
@@ -70,7 +67,6 @@ internal class MockPlayer : IPlayer
             return data.ToArray();
         });
     }
-
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;

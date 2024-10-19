@@ -2,52 +2,29 @@
 
 namespace Share.Interfaces.Model;
 /// <summary>
-/// A representation of a player in the game.
+/// Represents a player in the game.
 /// </summary>
 public interface IPlayer : IBinarySerializable
 {
     /// <summary>
-    /// Gets the current bonus the player receives to their army pool at the start of each turn (during <see cref="GamePhase.Place"/>).
+    /// Should fire when this IPlayer's property values change.
     /// </summary>
-    /// <value>
-    /// An integer. The default rules never allow this to fall below 3 (<see cref="Model.Assets.RuleValues.MinimumArmyBonus"/>. <br/>
-    /// It is calculated by <see cref="IRuleValues.CalculateArmyBonus(int, List{ContID})"/>.
-    /// </value>
-    int ArmyBonus { get; }
+    event EventHandler<IPlayerChangedEventArgs>? PlayerChanged;
     /// <summary>
-    /// Gets or sets the current number of armies a player has left to place during <see cref="GamePhase.Place"/>.
+    /// Fires when this IPlayer has lost the game (by default, when they control no territories).
     /// </summary>
-    /// <value>
-    /// An integer with an initial value equal to <see cref="ArmyBonus"/> that is reduced when an <see cref="IPlayer"/> places an army during <see cref="GamePhase.Place"/>.
-    /// </value>
-    int ArmyPool { get; set; }
+    event EventHandler? PlayerLost;
     /// <summary>
-    /// Gets or sets the increase to <see cref="ArmyBonus"/> a player receives from controlling continents.
+    /// Fires when this IPlayer has won the game.
     /// </summary>
-    /// <value>
-    /// A natural number (0 or positive integer) determined by <see cref="IRuleValues.ContinentBonus"/>es and the extent of the player's <see cref="ControlledTerritories"/>.
-    /// </value>
-    int ContinentBonus { get; set; }
-    /// <summary>
-    /// Gets or sets a list of territories controlled by the player.
-    /// </summary>
-    /// <value>
-    /// A <see cref="List{T}"/> of <see cref="TerrID"/>, one for each territory.
-    /// </value>
-    List<TerrID> ControlledTerritories { get; set; }
-    /// <summary>
-    /// Gets or sets a list of cards in the player's hand.
-    /// </summary>
-    /// <value>
-    /// A <see cref="List{T}"/> of <see cref="ICard"/>, one for each card. Default rules initialize this list as empty.
-    /// </value>
-    List<ICard> Hand { get; set; }
+    /// <remarks>
+    /// Unnecessary in the base game, but likely to be used when implementing Secret Missions.
+    /// </remarks>
+    event EventHandler? PlayerWon;
+
     /// <summary>
     /// Gets or sets the name of the player.
     /// </summary>
-    /// <value>
-    /// A <see langword="string"/>.
-    /// </value>
     string Name { get; set; }
     /// <summary>
     /// Gets the number of the player.
@@ -57,24 +34,55 @@ public interface IPlayer : IBinarySerializable
     /// </value>
     int Number { get; }
     /// <summary>
-    /// Gets a flag that indicates the player is currently holding a set of cards which represent a valid trade.
+    /// Gets a flag indicating whether the player holds a valid trade set of cards.
     /// </summary>
     /// <value>
-    /// <see langword="true"/> if <see cref="IPlayer.Hand"/> contains <see cref="ICard"/>s that satisfy their <see cref="ICardSet"/>'s definitions of a valid trade<br/>
-    /// (see <see cref="ICardSet.IsValidTrade(ICard[])"/> and <see cref="ICardSet.FindTradeSets(ICard[])"/>; otherwise <see langword="false"/>.</value>
+    /// <see langword="true"/> if <see cref="Hand"/> contains cards that satisfy their set's <see cref="ICardSet.IsValidTrade(ICard[])"/>; otherwise <see langword="false"/>.</value>
     bool HasCardSet { get; set; }
     /// <summary>
-    /// Should fire when this changes.
+    /// Gets the bonus a player receives to their army pool each turn.
     /// </summary>
-    event EventHandler<IPlayerChangedEventArgs>? PlayerChanged;
+    /// <value>
+    /// The default rules never allow this to fall below 3 (<see cref="IRuleValues.MinimumArmyBonus"/>.<br/>
+    /// It is calculated by <see cref="IRuleValues.CalculateArmyBonus(int, List{ContID})"/>.
+    /// </value>
+    /// <remarks>
+    /// Should be recalculated at the start of each turn (during <see cref="GamePhase.Place"/>)
+    /// </remarks>
+    int ArmyBonus { get; }
     /// <summary>
-    /// Fires when this <see cref="IPlayer"/> has lost the game (by default, when they control no territories).
+    /// Gets or sets the increase to <see cref="ArmyBonus"/> a player receives from controlling continents.
     /// </summary>
-    event EventHandler? PlayerLost;
+    /// <value>
+    /// A natural number (0 or positive integer) determined by <see cref="IRuleValues.ContinentBonus"/> and the extent of the player's <see cref="ControlledTerritories"/>.
+    /// </value>
+    int ContinentBonus { get; set; }
     /// <summary>
-    /// Fires when this <see cref="IPlayer"/> has won the game (by default, when they control a number of territories greater than or equal to the total provided by <see cref="IBoard.Geography"/>).
+    /// Gets or sets the current number of armies a player has left to place.
     /// </summary>
-    event EventHandler? PlayerWon;
+    /// <value>
+    /// An integer with an initial value equal to <see cref="ArmyBonus"/> that is reduced when an <see cref="IPlayer"/> places an army during <see cref="GamePhase.Place"/>.
+    /// </value>
+    int ArmyPool { get; set; }
+
+    /// <summary>
+    /// Gets a hashset of territories controlled by the player.
+    /// </summary>
+    /// <value>
+    /// A set of unique <see cref="TerrID"/>s, one for each territory under the player's control.
+    /// </value>
+    HashSet<TerrID> ControlledTerritories { get; }
+    /// <summary>
+    /// Gets a list of cards in the player's hand.
+    /// </summary>
+    /// <value>
+    /// Empty by default.
+    /// </value>
+    List<ICard> Hand { get; }
+
+
+
+
     /// <summary>
     /// Changes this <see cref="IPlayer"/> when they are given a bonus for card trade-in (ie, increases <see cref="ArmyPool"/>).
     /// </summary>

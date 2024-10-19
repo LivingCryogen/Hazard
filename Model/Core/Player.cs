@@ -16,14 +16,14 @@ public class Player : IPlayer
     private readonly CardFactory _cardFactory;
     private int _armyPool;
     /// <summary>
-    /// Builds a <see cref="IPlayer"/> when the <see cref="string">name</see> is unknown.
+    /// Constructs a player when their name is unknown.
     /// </summary>
     /// <param name="number">The number of the player (0 or higher).</param>
     /// <param name="numPlayers">The number of total players in the game.</param>
-    /// <param name="values">The <see cref="IRuleValues"/> implementation providing game-rule defined values and equations.</param>
-    /// <param name="board">The <see cref="IBoard"/> implementation describing initial board state.</param>
-    /// <param name="logger">An <see cref="ILogger"/>.</param>  
-    /// <param name="cardFactory">A <see cref="CardFactory"/>, usually from <see cref="Entities.CardBase.CardFactory"/>.</param>
+    /// <param name="values">Provides game-rule defined values and equations.</param>
+    /// <param name="board">The game board.</param>
+    /// <param name="logger">A logger for logging errors and debug information.</param>  
+    /// <param name="cardFactory">A factory for producing <see cref="ICard"/>s; necessary for populating <see cref="Hand"/> via <see cref="LoadFromBinary(BinaryReader)"/>.</param>
     public Player(int number, int numPlayers, CardFactory cardFactory, IRuleValues values, IBoard board, ILogger<Player> logger)
     {
         _logger = logger;
@@ -37,15 +37,15 @@ public class Player : IPlayer
         _cardFactory = cardFactory;
     }
     /// <summary>
-    /// Builds a <see cref="IPlayer"/> when the <see cref="string">name</see> is known.
+    /// Constructs a player with a user-provided name.
     /// </summary>
-    /// <param name="name">The name of the player.</param>
+    /// <param name="name">The name for the player provided by the user.</param>
     /// <param name="number">The number of the player (0 or higher).</param>
     /// <param name="numPlayers">The number of total players in the game.</param>
-    /// <param name="values">The <see cref="IRuleValues"/> implementation providing game-rule defined values and equations.</param>
-    /// <param name="board">The <see cref="IBoard"/> implementation describing initial board state.</param>
-    /// <param name="logger">An <see cref="ILogger"/>.</param>
-    /// <param name="cardFactory">A <see cref="CardFactory"/>, usually from <see cref="Entities.CardBase.CardFactory"/>.</param>
+    /// <param name="values">Provides game-rule defined values and equations.</param>
+    /// <param name="board">The game board.</param>
+    /// <param name="logger">A logger for logging errors and debug information.</param>  
+    /// <param name="cardFactory">A factory for producing <see cref="ICard"/>s; necessary for populating <see cref="Hand"/> via <see cref="LoadFromBinary(BinaryReader)"/>.</param>
     public Player(string name, int number, int numPlayers, CardFactory cardFactory, IRuleValues values, IBoard board, ILogger<Player> logger)
     {
         _logger = logger;
@@ -68,10 +68,8 @@ public class Player : IPlayer
 
     #region Properties
     /// <inheritdoc cref="IPlayer.Name"/>.
-    /// <remarks>Can be set privately to accomodate loading from serial values.</remarks>
     public string Name { get; set; }
     /// <inheritdoc cref="IPlayer.Number"/>.
-    /// <remarks>Can be set privately to accomodate loading from serial values.</remarks>
     public int Number { get; private set; }
     /// <inheritdoc cref="IPlayer.HasCardSet"/>.
     public bool HasCardSet { get; set; } = false;
@@ -90,10 +88,10 @@ public class Player : IPlayer
             }
         }
     }
+    /// <inheritdoc cref="IPlayer.ControlledTerritories"/>.
+    public HashSet<TerrID> ControlledTerritories { get; private set; } = [];
     /// <inheritdoc cref="IPlayer.Hand"/>.
     public List<ICard> Hand { get; set; } = [];
-    /// <inheritdoc cref="IPlayer.ControlledTerritories"/>.
-    public List<TerrID> ControlledTerritories { get; set; } = [];
     #endregion
 
     #region Methods
@@ -109,8 +107,8 @@ public class Player : IPlayer
                 new (typeof(bool), [HasCardSet]),
                 new (typeof(int), [ControlledTerritories.Count])
             ];
-            for (int i = 0; i < ControlledTerritories.Count; i++)
-                data.Add(new(typeof(TerrID), [ControlledTerritories[i]]));
+            foreach(TerrID territory in ControlledTerritories)
+                data.Add(new(typeof(TerrID), [territory]));
             data.Add(new(typeof(int), [Hand.Count]));
             for (int i = 0; i < Hand.Count; i++) {
                 IEnumerable<SerializedData> cardSerials = await Hand[i].GetBinarySerials();
@@ -222,8 +220,6 @@ public class Player : IPlayer
             if (ControlledTerritories.Contains(territory) == false) {
                 ControlledTerritories.Add(territory);
                 PlayerChanged?.Invoke(this, new PlayerChangedEventArgs(nameof(ControlledTerritories), null, territory));
-                if (ControlledTerritories.Count >= _board.Geography.NumTerritories)
-                    PlayerWon?.Invoke(this, new());
                 return true;
             }
             else return false;
