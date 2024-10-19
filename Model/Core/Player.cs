@@ -95,56 +95,6 @@ public class Player : IPlayer
     #endregion
 
     #region Methods
-    /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
-    public async Task<SerializedData[]> GetBinarySerials()
-    {
-        return await Task.Run(async () =>
-        {
-            List<SerializedData> data = [
-                new (typeof(string), [Name]),
-                new (typeof(int), [ArmyPool]),
-                new (typeof(int), [ContinentBonus]),
-                new (typeof(bool), [HasCardSet]),
-                new (typeof(int), [ControlledTerritories.Count])
-            ];
-            foreach(TerrID territory in ControlledTerritories)
-                data.Add(new(typeof(TerrID), [territory]));
-            data.Add(new(typeof(int), [Hand.Count]));
-            for (int i = 0; i < Hand.Count; i++) {
-                IEnumerable<SerializedData> cardSerials = await Hand[i].GetBinarySerials();
-                data.AddRange(cardSerials ?? []);
-            }
-            return data.ToArray();
-        });
-    }
-    /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
-    public bool LoadFromBinary(BinaryReader reader)
-    {
-        bool loadComplete = true;
-        try {
-            Name = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
-            ArmyPool = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-            ContinentBonus = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-            HasCardSet = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool));
-            int numControlledTerritories = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-            ControlledTerritories = [];
-            for (int i = 0; i < numControlledTerritories; i++)
-                ControlledTerritories.Add((TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID)));
-            int numCards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-            Hand = [];
-            for (int i = 0; i < numCards; i++) {
-                string cardTypeName = reader.ReadString();
-                ICard newCard = _cardFactory.BuildCard(cardTypeName);
-                newCard.LoadFromBinary(reader);
-                Hand.Add(newCard);
-            }
-        } catch (Exception ex) {
-            _logger.LogError("An exception was thrown while loading {Player}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
-            loadComplete = false;
-        }
-
-        return loadComplete;
-    }
     /// <inheritdoc cref="IPlayer.GetsTradeBonus(int)"/>.
     public void GetsTradeBonus(int tradeInBonus)
     {
@@ -154,12 +104,7 @@ public class Player : IPlayer
     /// <inheritdoc cref="IPlayer.GetControlledTargets(TerrID[])"/>.
     public TerrID[] GetControlledTargets(TerrID[] targets)
     {
-        List<TerrID> bonusTargets = [];
-        foreach (TerrID target in targets)
-            if (ControlledTerritories.Contains(target))
-                bonusTargets.Add(target);
-
-        return [.. bonusTargets]; // note : multiple possible targets must be winnowed down to 1 per rules; Input req'd
+        return [..targets.Intersect(ControlledTerritories)];
     }
     /// <summary>
     /// Fires when <see cref="IPlayer.ControlledTerritories"/> changes.
@@ -265,6 +210,56 @@ public class Player : IPlayer
             return true;
         }
         else return false;
+    }
+    /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
+    public async Task<SerializedData[]> GetBinarySerials()
+    {
+        return await Task.Run(async () =>
+        {
+            List<SerializedData> data = [
+                new (typeof(string), [Name]),
+                new (typeof(int), [ArmyPool]),
+                new (typeof(int), [ContinentBonus]),
+                new (typeof(bool), [HasCardSet]),
+                new (typeof(int), [ControlledTerritories.Count])
+            ];
+            foreach (TerrID territory in ControlledTerritories)
+                data.Add(new(typeof(TerrID), [territory]));
+            data.Add(new(typeof(int), [Hand.Count]));
+            for (int i = 0; i < Hand.Count; i++) {
+                IEnumerable<SerializedData> cardSerials = await Hand[i].GetBinarySerials();
+                data.AddRange(cardSerials ?? []);
+            }
+            return data.ToArray();
+        });
+    }
+    /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
+    public bool LoadFromBinary(BinaryReader reader)
+    {
+        bool loadComplete = true;
+        try {
+            Name = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+            ArmyPool = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            ContinentBonus = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            HasCardSet = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool));
+            int numControlledTerritories = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            ControlledTerritories = [];
+            for (int i = 0; i < numControlledTerritories; i++)
+                ControlledTerritories.Add((TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID)));
+            int numCards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            Hand = [];
+            for (int i = 0; i < numCards; i++) {
+                string cardTypeName = reader.ReadString();
+                ICard newCard = _cardFactory.BuildCard(cardTypeName);
+                newCard.LoadFromBinary(reader);
+                Hand.Add(newCard);
+            }
+        } catch (Exception ex) {
+            _logger.LogError("An exception was thrown while loading {Player}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+            loadComplete = false;
+        }
+
+        return loadComplete;
     }
     #endregion
 }
