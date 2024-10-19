@@ -36,7 +36,7 @@ public class MockGame : IGame
     public List<IPlayer> Players { get; set; }
     public StateMachine State { get; set; } = new(2, new LoggerStubT<StateMachine>());
     public MockCardBase Cards { get; set; } = new(SharedRegister.Registry);
-    CardBase IGame.Cards { get => Cards; set { Cards = (MockCardBase)value; } }
+    CardBase IGame.Cards { get => Cards; }
 
 #pragma warning disable CS0414 // For unit-testing, these are unused. If integration tests are built, they should be, at which time these warnings should be re-enabled.
     public event EventHandler<int>? PlayerLost = null;
@@ -118,7 +118,7 @@ public class MockGame : IGame
         throw new NotImplementedException();
     }
 
-    public Task Save(bool isNewFile, string fileName, string precedingData)
+    public Task Save(bool isNewFile, string fileName)
     {
         throw new NotImplementedException();
     }

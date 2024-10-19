@@ -29,7 +29,7 @@ public class StateMachine : IBinarySerializable
     /// Constructs the machine based on the number of players in the game.
     /// </summary>
     /// <param name="numPlayers">The number of players.</param>
-    /// <exception cref="StateMachine(int)">Thrown when the number of players given is not 2-6.</exception>
+    /// <param name="logger">Provided by an <see cref="ILoggerFactory"/> during <see cref="Game"/> construction.</param>
     public StateMachine(int numPlayers, ILogger<StateMachine> logger)
     {
         NumPlayers = numPlayers;
@@ -47,7 +47,20 @@ public class StateMachine : IBinarySerializable
     }
 
     #region Properties
+    /// <summary>
+    /// Gets or sets the <see cref="int">number</see> of <see cref="IPlayer"/> in the parent <see cref="Game"/>.
+    /// </summary>
+    /// <value>
+    /// An <see cref="int"/> from 2-6.
+    /// </value>
     public int NumPlayers { get; private set; }
+    /// <summary>
+    /// Gets or sets an array of flags indicating which <see cref="IPlayer"/>s are active.
+    /// </summary>
+    /// <value>
+    /// A <see cref="BitArray"/> of one <see cref="byte"/>. Each index of the array corresponds to a <see cref="IPlayer.Number"/>,<br/>
+    /// with a <see langword="true"/> (<see cref="int">1</see>) value indicating a player is active, and <see langword="false"/> (<see cref="int">0</see>) inactive.
+    /// </value>
     public BitArray IsActivePlayer { get; private set; }
     /// <summary>
     /// Gets what phase the game is currently in, or sets the phase and invokes <see cref="StateChanged"/>.
@@ -135,6 +148,7 @@ public class StateMachine : IBinarySerializable
     #endregion
 
     #region Methods
+    /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
     public async Task<SerializedData[]> GetBinarySerials()
     {
         return await Task.Run(() =>
@@ -151,6 +165,7 @@ public class StateMachine : IBinarySerializable
             return saveData;
         });
     }
+    /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;
@@ -251,7 +266,7 @@ public class StateMachine : IBinarySerializable
     /// <remarks>
     /// <para>Typically this is reserved for when a player has been defeated.<br/>
     /// Disable works by "skipping" disabled player numbers when incrementing <see cref="PlayerTurn"/>s and <see cref="Round"/>s.</para>
-    /// <seealso><para>See <see cref="NextActivePlayer()"/>, <see cref="NextActivePlayer(int)"/>, and <see cref="_isActivePlayer"/>.</para></seealso>
+    /// <seealso><para>See <see cref="NextActivePlayer()"/>, <see cref="NextActivePlayer(int)"/>, and <see cref="IsActivePlayer"/>.</para></seealso>
     /// </remarks>
     /// <param name="player"></param>
     public void DisablePlayer(int player)
@@ -300,9 +315,9 @@ public class StateMachine : IBinarySerializable
         else throw new ArgumentOutOfRangeException(nameof(start));
     }
     /// <summary>
-    /// Initializes <see cref="_isActivePlayer"/> from a saved game. 
+    /// Initializes <see cref="IsActivePlayer"/> from a saved game. 
     /// </summary>
-    /// <param name="data">A <see cref="byte"/> retrieved from <see cref="Model.DataAccess.BinarySerializer.LoadStateMachine(BinaryReader)"/>.</param>
+    /// <param name="data">A <see cref="byte"/> retrieved from <see cref="BinarySerializer.ReadConvertible(BinaryReader, Type)"/>.</param>
     public void InitializePlayerStatusArray(byte data)
     {
         byte[] dataArray = [data];

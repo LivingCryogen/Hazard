@@ -80,8 +80,10 @@ public interface IRegulator : IBinarySerializable
     /// </summary>
     void DeliverCardReward();
     /// <summary>
-    /// Initializes this instance with a brand new game.
+    /// Initializes an <see cref="IRegulator"/>.
     /// </summary>
-    /// <param name="game">The newly created <see cref="IGame"/>.</param>
+    /// <remarks>
+    /// This post-construction initialization step is needed to accomodate loading from save files.
+    /// </remarks>
     abstract void Initialize();
 }

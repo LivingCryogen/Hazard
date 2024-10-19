@@ -9,10 +9,10 @@ namespace Model.Core;
 /// <inheritdoc cref="IRegulator"/>
 public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulator
 {
-    private IGame _currentGame = currentGame;
-    private StateMachine _machine = currentGame.State;
+    private readonly IGame _currentGame = currentGame;
+    private readonly StateMachine _machine = currentGame.State;
     private readonly ILogger _logger = logger;
-    private int _numPlayers = currentGame.State.NumPlayers;
+    private readonly int _numPlayers = currentGame.State.NumPlayers;
     private int _actionsCounter = 0;
     private int _prevActionCount = 0;
 
@@ -29,6 +29,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     public event EventHandler<IPromptTradeEventArgs>? PromptTradeIn;
 
     #region Methods
+    /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
     public async Task<SerializedData[]> GetBinarySerials()
     {
         int numRewards = 0;
@@ -49,6 +50,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
 
         return saveData;
     }
+    /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;
@@ -73,7 +75,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         }
         return loadComplete;
     }
-    /// <inheritdoc cref="IRegulator.Initialize(IGame)"/>
+    /// <inheritdoc cref="IRegulator.Initialize"/>
     public void Initialize()
     {
         if (_actionsCounter == 0 && _currentGame.Values.SetupActionsPerPlayers.TryGetValue(_numPlayers, out int actions))

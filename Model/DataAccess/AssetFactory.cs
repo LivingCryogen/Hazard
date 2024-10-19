@@ -17,9 +17,10 @@ public class AssetFactory : IAssetFactory
     private readonly IDataProvider? _dataProvider;
 
     /// <summary>
-    /// Constructs an <see cref="AssetFactory"/> with an injected <see cref="ILogger"/> but without a <see cref="IDataProvider"/>.
+    /// Constructs an <see cref="AssetFactory"/> with an injected logger and logger factory but without a <see cref="IDataProvider"/>.
     /// </summary>
-    /// <param name="logger">An <see cref="ILogger"/> for logging debug information and errors.</param>
+    /// <param name="logger">A logger for logging debug information and errors.</param>
+    /// <param name="loggerFactory"></param>
     public AssetFactory(ILogger<AssetFactory> logger, ILoggerFactory loggerFactory)
     {
         _logger = logger;
@@ -27,7 +28,7 @@ public class AssetFactory : IAssetFactory
     }
 
     /// <summary>
-    /// Constructs an <see cref="AssetFactory"/> instance with injected logger and <see cref="IDataProvider"/>.
+    /// Constructs an <see cref="AssetFactory"/> instance with injected logger, logger factory, and Data Provider.
     /// </summary>
     /// <param name="logger">An <see cref="ILogger"/> for logging debug information and errors.</param>
     /// <param name="dataProvider">An <see cref="IDataProvider"/> which reads off data from external sources (e.g., data files).</param>
