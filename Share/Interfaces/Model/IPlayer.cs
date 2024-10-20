@@ -22,6 +22,7 @@ public interface IPlayer : IBinarySerializable
     /// </remarks>
     event EventHandler? PlayerWon;
 
+    #region Properties
     /// <summary>
     /// Gets or sets the name of the player.
     /// </summary>
@@ -64,7 +65,6 @@ public interface IPlayer : IBinarySerializable
     /// An integer with an initial value equal to <see cref="ArmyBonus"/> that is reduced when an <see cref="IPlayer"/> places an army during <see cref="GamePhase.Place"/>.
     /// </value>
     int ArmyPool { get; set; }
-
     /// <summary>
     /// Gets a hashset of territories controlled by the player.
     /// </summary>
@@ -79,12 +79,10 @@ public interface IPlayer : IBinarySerializable
     /// Empty by default.
     /// </value>
     List<ICard> Hand { get; }
-
-
-
+    #endregion
 
     /// <summary>
-    /// Changes this <see cref="IPlayer"/> when they are given a bonus for card trade-in (ie, increases <see cref="ArmyPool"/>).
+    /// Adds the trade-in bonus to <see cref="ArmyPool"/> when the player trades in cards.
     /// </summary>
     /// <param name="tradeInBonus">The bonus granted.</param>
     void GetsTradeBonus(int tradeInBonus);

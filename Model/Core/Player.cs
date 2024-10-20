@@ -31,7 +31,7 @@ public class Player : IPlayer
         Number = number;
         ControlledTerritories = [];
         _values = values;
-        ArmyPool = _values!.SetupStartingPool![numPlayers];
+        ArmyPool = _values.SetupStartingPool[numPlayers];
         Hand = [];
         _board = board;
         _cardFactory = cardFactory;
@@ -53,7 +53,7 @@ public class Player : IPlayer
         Number = number;
         ControlledTerritories = [];
         _values = values;
-        ArmyPool = _values!.SetupStartingPool![numPlayers];
+        ArmyPool = _values.SetupStartingPool![numPlayers];
         Hand = [];
         _board = board;
         _cardFactory = cardFactory;
@@ -94,7 +94,6 @@ public class Player : IPlayer
     public List<ICard> Hand { get; set; } = [];
     #endregion
 
-    #region Methods
     /// <inheritdoc cref="IPlayer.GetsTradeBonus(int)"/>.
     public void GetsTradeBonus(int tradeInBonus)
     {
@@ -105,26 +104,6 @@ public class Player : IPlayer
     public TerrID[] GetControlledTargets(TerrID[] targets)
     {
         return [..targets.Intersect(ControlledTerritories)];
-    }
-    /// <summary>
-    /// Fires when <see cref="IPlayer.ControlledTerritories"/> changes.
-    /// </summary>
-    /// <remarks>
-    /// Alerts the ViewModel to internal changes of this <see cref="IPlayer"/>'s <see cref="ControlledTerritories"/>.
-    /// </remarks>
-    /// <param name="sender">The internal collection, <see cref="ControlledTerritories"/>.</param>
-    /// <param name="e">An <see cref="NotifyCollectionChangedEventArgs"/> instance storing information about the changed member of <see cref="ControlledTerritories"/>.</param>
-    public void OnControlledTerritoriesChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        if (e != null) {
-            if (!(e.OldItems == null && e.NewItems == null)) {
-                PlayerChanged?.Invoke(this, new PlayerChangedEventArgs(nameof(ControlledTerritories), e.OldItems?[0], e.NewItems?[0]));
-                if (e.OldItems != null) {
-                    if (ControlledTerritories.Count <= 0)
-                        PlayerLost?.Invoke(this, new());
-                }
-            }
-        }
     }
     /// <inheritdoc cref="IPlayer.FindCardSet"/>
     public void FindCardSet()
@@ -261,6 +240,5 @@ public class Player : IPlayer
 
         return loadComplete;
     }
-    #endregion
 }
 
