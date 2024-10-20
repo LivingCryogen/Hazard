@@ -17,9 +17,6 @@ public interface IPlayer : IBinarySerializable
     /// <summary>
     /// Fires when this IPlayer has won the game.
     /// </summary>
-    /// <remarks>
-    /// Unnecessary in the base game, but likely to be used when implementing Secret Missions.
-    /// </remarks>
     event EventHandler? PlayerWon;
 
     #region Properties
@@ -87,20 +84,20 @@ public interface IPlayer : IBinarySerializable
     /// <param name="tradeInBonus">The bonus granted.</param>
     void GetsTradeBonus(int tradeInBonus);
     /// <summary>
-    /// Determines whether the Player currently holds a set of <see cref="ICard"/> that qualifies as a tradeable set according to their <see cref="ICardSet"/> definition. <br/>
-    /// (See <see cref="ICardSet.FindTradeSets(ICard[])"/> and <see cref="ICardSet.IsValidTrade(ICard[])"/>.
+    /// Gets an array of territories controlled by this player from among a given set.
+    /// </summary>
+    /// <param name="targets">An array of the territories to match.</param>
+    /// <returns>An array of those territories from among <paramref name="targets"/> controlled by this player.</returns>
+    TerrID[] GetControlledTargets(TerrID[] targets);
+    /// <summary>
+    /// Determines whether the player holds a set of <see cref="ICard"/>s that are a tradeable set according to<br/>
+    /// <see cref="ICardSet.FindTradeSets(ICard[])"/> and <see cref="ICardSet.IsValidTrade(ICard[])"/>.
     /// </summary>
     void FindCardSet();
     /// <summary>
-    /// Gets an array of territories controlled by this <see cref="IPlayer"/> from among a given set.
-    /// </summary>
-    /// <param name="targets">An array of <see cref="TerrID"/> representing the territories to match.</param>
-    /// <returns>An array of <see cref="TerrID"/> from among <paramref name="targets"/> controlled by this <see cref="IPlayer"/>.</returns>
-    TerrID[] GetControlledTargets(TerrID[] targets);
-    /// <summary>
     /// Adds a territory to this player's control.
     /// </summary>
-    /// <param name="territory">A <see cref="TerrID"/> representing the territory to add.</param>
+    /// <param name="territory">The territory to add.</param>
     /// <returns><see langword="true"/> if successfully added; otherwise, <see langword="false"/>.</returns>
     bool AddTerritory(TerrID territory);
     /// <summary>
@@ -108,17 +105,19 @@ public interface IPlayer : IBinarySerializable
     /// </summary>
     /// <param name="territory">A <see cref="TerrID"/> representing the territory to remove.</param>
     /// <returns><see langword="true"/> if successfully removed; otherwise, <see langword="false"/>.</returns>
+    /// <remarks>
+    /// Also fires <see cref="PlayerLost"/> if the count of <see cref="ControlledTerritories"/> falls to 0.
+    /// </remarks>
     bool RemoveTerritory(TerrID territory);
     /// <summary>
     /// Adds a card to this player's <see cref="Hand"/>.
     /// </summary>
     /// <param name="card">A <see cref="ICard"/> representing the card to add.</param>
-    /// <returns><see langword="true"/> if successfully added; otherwise, <see langword="false"/>.</returns>
-    bool AddCard(ICard card);
+    void AddCard(ICard card);
     /// <summary>
     /// Removes a card from this player's <see cref="Hand"/>.
     /// </summary>
-    /// <param name="handIndex">A <see cref="int"/> representing the <see cref="Hand"/> index of the <see cref="ICard"/> to be removed.</param>
+    /// <param name="handIndex">The <see cref="int">index</see> of <see cref="Hand"/> which holds the <see cref="ICard"/> to be removed.</param>
     /// <returns><see langword="true"/> if successfully removed; otherwise, <see langword="false"/>.</returns>
     bool RemoveCard(int handIndex);
 }

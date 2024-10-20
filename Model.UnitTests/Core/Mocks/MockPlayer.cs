@@ -95,7 +95,7 @@ internal class MockPlayer : IPlayer
         return loadComplete;
     }
 
-    public bool AddCard(ICard card)
+    public void AddCard(ICard card)
     {
         throw new NotImplementedException();
     }

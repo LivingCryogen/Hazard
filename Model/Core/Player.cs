@@ -4,7 +4,6 @@ using Model.EventArgs;
 using Share.Enums;
 using Share.Interfaces.Model;
 using Share.Services.Serializer;
-using System.Collections.Specialized;
 
 namespace Model.Core;
 /// <inheritdoc cref="IPlayer"/>.
@@ -64,6 +63,9 @@ public class Player : IPlayer
     /// <inheritdoc cref="IPlayer.PlayerLost"/>.
     public event EventHandler? PlayerLost;
     /// <inheritdoc cref="IPlayer.PlayerWon"/>.
+    /// <remarks>
+    /// Unnecessary in the base game, but likely to be used when implementing Secret Missions.
+    /// </remarks>
     public event EventHandler? PlayerWon;
 
     #region Properties
@@ -94,6 +96,10 @@ public class Player : IPlayer
     public List<ICard> Hand { get; set; } = [];
     #endregion
 
+    private int CalculateTotalBonus()
+    {
+        return _values.CalculateArmyBonus(ControlledTerritories.Count, _board[Number, nameof(ContID)].Cast<ContID>().ToList());
+    }
     /// <inheritdoc cref="IPlayer.GetsTradeBonus(int)"/>.
     public void GetsTradeBonus(int tradeInBonus)
     {
@@ -133,62 +139,46 @@ public class Player : IPlayer
                 HasCardSet = true;
         }
     }
-    private int CalculateTotalBonus()
-    {
-        return _values.CalculateArmyBonus(ControlledTerritories.Count, _board[Number, nameof(ContID)].Cast<ContID>().ToList());
-    }
     /// <inheritdoc cref="IPlayer.AddTerritory(TerrID)"/>
     public bool AddTerritory(TerrID territory)
     {
-        if (ControlledTerritories != null) {
-            if (ControlledTerritories.Contains(territory) == false) {
-                ControlledTerritories.Add(territory);
-                PlayerChanged?.Invoke(this, new PlayerChangedEventArgs(nameof(ControlledTerritories), null, territory));
-                return true;
-            }
-            else return false;
-        }
-        else return false;
+        if (ControlledTerritories.Contains(territory))
+            return false;
+
+        ControlledTerritories.Add(territory);
+        PlayerChanged?.Invoke(this, new PlayerChangedEventArgs(nameof(ControlledTerritories), null, territory));
+        return true;
     }
     /// <inheritdoc cref="IPlayer.RemoveTerritory(TerrID)"/>
     public bool RemoveTerritory(TerrID territory)
     {
-        if (ControlledTerritories != null) {
-            if (ControlledTerritories.Contains(territory) == true) {
-                ControlledTerritories.Remove(territory);
-                PlayerChanged?.Invoke(this, new PlayerChangedEventArgs(nameof(ControlledTerritories), territory, null));
-                if (ControlledTerritories.Count <= 0)
-                    PlayerLost?.Invoke(this, new());
-                return true;
-            }
-            else return false;
-        }
-        else return false;
+        if (!ControlledTerritories.Contains(territory))
+            return false;
+
+        ControlledTerritories.Remove(territory);
+        PlayerChanged?.Invoke(this, new PlayerChangedEventArgs(nameof(ControlledTerritories), territory, null));
+        if (ControlledTerritories.Count <= 0)
+            PlayerLost?.Invoke(this, new());
+        return true;
     }
     /// <inheritdoc cref="IPlayer.AddCard(ICard)"/>
-    public bool AddCard(ICard card)
+    public void AddCard(ICard card)
     {
-        if (Hand != null) {
-            Hand.Add(card);
-            FindCardSet();
-            PlayerChanged?.Invoke(this, new PlayerChangedEventArgs(nameof(Hand), null, card, Hand.Count - 1));
-            if (Hand.Contains(card))
-                return true;
-            else return false;
-        }
-        else return false;
+        Hand.Add(card);
+        FindCardSet();
+        PlayerChanged?.Invoke(this, new PlayerChangedEventArgs(nameof(Hand), null, card, Hand.Count - 1));
     }
     /// <inheritdoc cref="IPlayer.RemoveCard(int)"/>
     public bool RemoveCard(int handIndex)
     {
-        if (Hand != null && handIndex < Hand.Count) {
-            var temp = Hand[handIndex];
-            Hand.RemoveAt(handIndex);
-            FindCardSet();
-            PlayerChanged?.Invoke(this, new PlayerChangedEventArgs(nameof(Hand), temp, null, handIndex));
-            return true;
-        }
-        else return false;
+        if (handIndex < Hand.Count)
+            return false;
+        
+        var tempCard = Hand[handIndex];
+        Hand.RemoveAt(handIndex);
+        FindCardSet();
+        PlayerChanged?.Invoke(this, new PlayerChangedEventArgs(nameof(Hand), tempCard, null, handIndex));
+        return true;
     }
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
     public async Task<SerializedData[]> GetBinarySerials()
