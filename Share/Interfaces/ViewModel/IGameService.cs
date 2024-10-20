@@ -5,5 +5,5 @@ namespace Share.Interfaces.ViewModel;
 
 public interface IGameService
 {
-    (IGame Game, Regulator Regulator) CreateGameWithRegulator(int numPlayers);
+    (IGame Game, IRegulator Regulator) CreateGameWithRegulator(int numPlayers);
 }

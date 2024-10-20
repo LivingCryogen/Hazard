@@ -19,7 +19,7 @@ public class GameService(
     private readonly ITypeRegister<ITypeRelations> _registry = registry;
     private readonly IConfiguration _config = config;
 
-    public (IGame Game, Regulator Regulator) CreateGameWithRegulator(int numPlayers)
+    public (IGame Game, IRegulator Regulator) CreateGameWithRegulator(int numPlayers)
     {
         var game = new Game(numPlayers, _loggerFactory, _assetFetcher, _registry, _config);
         Regulator regulator = new(_loggerFactory.CreateLogger<Regulator>(), game);
