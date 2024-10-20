@@ -7,11 +7,8 @@ using Share.Services.Registry;
 
 namespace ViewModel.Services;
 
-public class GameService(
-    ILoggerFactory loggerFactory,
-    IAssetFetcher assetFetcher,
-    ITypeRegister<ITypeRelations> registry,
-    IConfiguration config)
+public class GameService(ILoggerFactory loggerFactory, IAssetFetcher assetFetcher, 
+    ITypeRegister<ITypeRelations> registry, IConfiguration config)
     : IGameService
 {
     private readonly ILoggerFactory _loggerFactory = loggerFactory;
