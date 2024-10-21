@@ -65,9 +65,6 @@ public class StateMachine : IBinarySerializable
     /// <summary>
     /// Gets what phase the game is currently in, or sets the phase and invokes <see cref="StateChanged"/>.
     /// </summary>
-    /// <value>
-    /// A <see cref="GamePhase"/> value representing the phase the game is in.
-    /// </value>
     public GamePhase CurrentPhase {
         get { return _currentPhase; }
         set {
@@ -79,10 +76,10 @@ public class StateMachine : IBinarySerializable
     }
     /// <summary>
     /// Gets a value indicating whether a two-part phase is in the first or second stage. Or, sets this value and invokes <see cref="StateChanged"/>.
-    /// <example>E.g.: In the first stage of <see cref="GamePhase.Attack"/>, the application must accept player input of the attack source.
-    /// In the second stage, it must use this selection together with a second input: the attack target.</example>
+    /// <para><example>E.g.: In the first stage of <see cref="GamePhase.Attack"/>, the model must accept input of the attack source.<br/>
+    /// In the second stage, it must use this selection together with a second input: the attack target.</example></para>
     /// </summary>
-    /// <value>True if the <see cref="CurrentPhase"/> is a two-stage <see cref="GamePhase"/> and is in its second stage. Otherwise, false.</value>  
+    /// <value><see langword="true"/> if the <see cref="CurrentPhase"/> is a two-stage <see cref="GamePhase"/> and is in its second stage. Otherwise, <see langword="false"/>.</value>  
     public bool PhaseStageTwo {
         get { return _phaseStageTwo; }
         set {
@@ -108,7 +105,7 @@ public class StateMachine : IBinarySerializable
         }
     }
     /// <summary>
-    /// Gets the number of rounds the game has entered. Or, sets this value and invokes <see cref="StateChanged"/>.
+    /// Gets the number of rounds the game has entered so far. Or, sets this value and invokes <see cref="StateChanged"/>.
     /// </summary>
     /// <remarks>A round is completed once <see cref="PlayerTurn"/> increases beyond <see cref="NumPlayers"/>. The 0th Round is the setup round.</remarks>
     /// <value>
@@ -187,7 +184,7 @@ public class StateMachine : IBinarySerializable
     /// <summary>
     /// End the current round and perform end of round actions.
     /// </summary>
-    /// <exception cref="Exception"></exception>
+    /// <exception cref="InvalidOperationException">Thrown if there is an attempt to calculate the next active player when all players are inactive.</exception>
     public void IncrementRound()
     {
         if (PhaseStageTwo)
@@ -197,7 +194,7 @@ public class StateMachine : IBinarySerializable
         if (firstActive != -1)
             PlayerTurn = firstActive;
         else
-            throw new Exception("No Active Player Remaining!");
+            throw new InvalidOperationException("No Active Player Remaining!");
 
         CurrentPhase = GamePhase.Place;
         Round++;
@@ -205,7 +202,7 @@ public class StateMachine : IBinarySerializable
     /// <summary>
     /// End the current <see cref="PlayerTurn"/> and perform end of turn actions.
     /// </summary>
-    /// <exception cref="Exception"></exception>
+    /// <exception cref="InvalidOperationException">Thrown if there is an attempt to calculate the next active player when all players are inactive.</exception>
     public void IncrementPlayerTurn()
     {
         if (CurrentPhase.Equals(GamePhase.DefaultSetup) || CurrentPhase.Equals(GamePhase.TwoPlayerSetup)) {
@@ -216,7 +213,7 @@ public class StateMachine : IBinarySerializable
                 if (firstActive != -1)
                     PlayerTurn = firstActive;
                 else
-                    throw new Exception("No Active Player Remaining!");
+                    throw new InvalidOperationException("No Active Player Remaining!");
             }
         }
         else if (PlayerTurn >= NumPlayers) {
@@ -227,7 +224,7 @@ public class StateMachine : IBinarySerializable
             if (firstActive != -1)
                 PlayerTurn = firstActive;
             else
-                throw new Exception("No Active Player Remaining!");
+                throw new InvalidOperationException("No Active Player Remaining!");
             CurrentPhase = GamePhase.Place;
         }
     }
@@ -317,7 +314,7 @@ public class StateMachine : IBinarySerializable
     /// <summary>
     /// Initializes <see cref="IsActivePlayer"/> from a saved game. 
     /// </summary>
-    /// <param name="data">A <see cref="byte"/> retrieved from <see cref="BinarySerializer.ReadConvertible(BinaryReader, Type)"/>.</param>
+    /// <param name="data">Typically, data from <see cref="BinarySerializer.ReadConvertible(BinaryReader, Type)"/>.</param>
     public void InitializePlayerStatusArray(byte data)
     {
         byte[] dataArray = [data];
@@ -326,9 +323,9 @@ public class StateMachine : IBinarySerializable
     /// <summary>
     /// Converts a <see cref="BitArray"/> of length 8 or less into a <see cref="byte"/> for binary serialization.
     /// </summary>
-    /// <param name="bitArray"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    /// <param name="bitArray">The array to convert.</param>
+    /// <returns>The converted byte.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="bitArray"/> has a length greater than 8.</exception>
     private static byte BitArrayToByte(BitArray bitArray)
     {
         byte[] converted = new byte[1];
