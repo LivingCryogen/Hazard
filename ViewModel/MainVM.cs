@@ -294,7 +294,14 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
         _dispatcherTimer.Tick += DisableAttack_Tick;
         _dispatcherTimer.Start();
 
-        Regulator?.Battle((TerrID)source, (TerrID)target, attackDice, defenseDice);
+        int[] attackRolls = [.. attackDice.OrderDescending()];
+        int[] defenseRolls = [.. defenseDice.OrderDescending()];
+        List<(int AttackRoll, int DefenseRoll)> diceResults = [];
+        for (int i = 0; i < defenseRolls.Length; i++)
+            if (i < attackRolls.Length)
+                diceResults.Add((attackRolls[i], defenseRolls[i]));
+
+        Regulator?.Battle((TerrID)source, (TerrID)target, [..diceResults]);
 
         RaiseDiceThrown(attackDice, defenseDice);
 

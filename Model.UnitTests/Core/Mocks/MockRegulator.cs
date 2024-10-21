@@ -69,7 +69,7 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
         throw new NotImplementedException();
     }
 
-    public void Battle(TerrID source, TerrID target, int[] attackResults, int[] defenseResults)
+    public void Battle(TerrID source, TerrID target, (int AttackRoll, int DefenseRoll)[] diceRolls)
     {
         throw new NotImplementedException();
     }
