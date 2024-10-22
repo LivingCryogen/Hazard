@@ -2,7 +2,7 @@
 
 namespace Share.Interfaces.Model;
 /// <summary>
-/// Provides data to <see cref="Share.Interfaces.Model.IAssetFactory"/>, enabling instance construction of <see cref="Type"/>s 
+/// Provides data to <see cref="IAssetFactory"/>, enabling instance construction of <see cref="Type"/>s 
 /// registered by a <see cref="TypeRegister"/>.<br/> The <see cref="TypeRegister"/> must contain <see cref="object"/>s designated 
 /// <see cref="RegistryRelation.DataFileName"/>, <see cref="RegistryRelation.DataConverter"/>,<br/> and possibly 
 /// <see cref="RegistryRelation.ConvertedDataType"/>. 
@@ -21,6 +21,6 @@ public interface IDataProvider
     /// Attempts to get data from source files needed to instantiate keyed <see cref="Type"/>s in the <see cref="TypeRegister"/>.<br/>
     /// </summary>
     /// <param name="typeName">The name <see cref="object"/> marked by <see cref="RegistryRelation.Name"/> for the <see cref="Type"/> to be constructed.</param>
-    /// <returns>An instance of the <see cref="object"/> marked <see cref="RegistryRelation.ConvertedDataType"/> in <see cref="TypeRegister"/>. If unsuccessful, <c>null</c>.</returns>
+    /// <returns>An instance of the <see cref="object"/> marked <see cref="RegistryRelation.ConvertedDataType"/> for <paramref name="typeName"/> in <see cref="TypeRegister"/>. If unsuccessful, <see langword="null"/>.</returns>
     object? GetData(string typeName);
 }

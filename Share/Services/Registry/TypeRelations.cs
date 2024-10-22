@@ -29,8 +29,8 @@ public class TypeRelations : ITypeRelations
         get {
             if (_relatedObjects.TryGetValue(relation, out object? value))
                 return value;
-            else
-                return null;
+            
+            return null;
         }
     }
 

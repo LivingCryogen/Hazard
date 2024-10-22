@@ -64,4 +64,5 @@ public interface ITypeRegister<T> where T : ITypeRelations
     /// Empties the registry.
     /// </summary>
     void Clear();
+    bool TryGetParentType(Type registeredType, out Type? parentType);
 }
