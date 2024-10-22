@@ -44,8 +44,8 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
     /// <param name="defaultMode">A <see langwod="boolean"/> flag to indicate whether the <see cref="IGame"/> is in default card mode or not.</param>
     public void InitializeFromAssets(IAssetFetcher assetFetcher, bool defaultMode)
     {
-        Sets = assetFetcher.FetchCardSets() ?? [];
-        if (Sets == null || Sets.Count == 0)
+        Sets = assetFetcher.FetchCardSets();
+        if (Sets.Count == 0)
             return;
 
         List<ICard> defaultCards = [];

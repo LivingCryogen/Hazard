@@ -6,9 +6,7 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 
 namespace Model.DataAccess;
-/** <inheritdoc cref="IDataProvider"/>
- * 
- */
+/// <inheritdoc cref="IDataProvider"/>
 public class DataProvider(string[] dataFileNames, ITypeRegister<ITypeRelations> typeRegister, ILogger<DataProvider> logger) : IDataProvider
 {
     private readonly ITypeRegister<ITypeRelations> _typeRegister = typeRegister;

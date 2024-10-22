@@ -8,7 +8,11 @@ public interface IAssetFetcher
     /// <summary>
     /// Begins the process of data reading, conversion, and object initialization for <see cref="ICard"/>s. 
     /// </summary>
-    /// <returns>An array of ready <see cref="ICard"/> instances for use by a <see cref="Model.Entities.Deck"/>, if data retrieval is successful. If not, <c>null</c>.</returns>
-    List<ICardSet>? FetchCardSets();
+    /// <returns>An array of ready <see cref="ICard"/> instances for use by a Deck, if data retrieval is successful. If not, <see langword="null"/>.</returns>
+    List<ICardSet> FetchCardSets();
+    /// <summary>
+    /// Begins the process of data reading, conversion, and object initialization for <see cref="IRuleValues"/>.
+    /// </summary>
+    /// <returns>The built RuleValues object.</returns>
     IRuleValues FetchRuleValues();
 }

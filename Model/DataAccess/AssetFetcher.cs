@@ -2,27 +2,22 @@
 using Share.Interfaces.Model;
 
 namespace Model.DataAccess;
-/// <summary>
+
 /// <inheritdoc cref="IAssetFetcher"/>
-/// </summary>
 public class AssetFetcher(IAssetFactory factory) : IAssetFetcher
 {
     private readonly IAssetFactory _factory = factory;
 
-    private static string[]? FindFilesContaining(string text)
+    private static string[] FindFilesContaining(string text)
     {
         string assetDirectory = Path.Combine(Environment.CurrentDirectory, "Assets");
 
         var searchDirectories = Directory.GetDirectories(assetDirectory).Append(assetDirectory);
         List<string> fileNames = [];
-        foreach (string directoryName in searchDirectories) {
-
+        foreach (string directoryName in searchDirectories) 
             fileNames.AddRange(Directory.GetFiles(directoryName).Where(name => name.Contains(text)));
-        }
 
-        if (fileNames.Count > 0)
-            return [.. fileNames];
-        else return null;
+        return [.. fileNames];
     }
 
     /// <summary>
@@ -34,24 +29,18 @@ public class AssetFetcher(IAssetFactory factory) : IAssetFetcher
     /// a "default data file name" to RegistryRelation, or generalizing this class to AssetFetcher{T} and building 
     /// file discovery logic between it and <see cref="Share.Services.Registry.TypeRegister"/> may be more
     /// functional/elegant.
-    public List<ICardSet>? FetchCardSets()
+    public List<ICardSet> FetchCardSets()
     {
         List<ICardSet> cardSets = [];
-        var filePaths = FindFilesContaining("CardSet"); // hard-coded here, may want to change at some point
-        if (filePaths != null) {
-            foreach (string path in filePaths) {
-                string fileName = Path.GetFileNameWithoutExtension(path);
-                string typeName = fileName.Replace("Set", "");
-                var data = _factory.GetAsset(typeName);
-                if (data != null)
-                    cardSets.Add((ICardSet)data);
-            }
+        string[] filePaths = FindFilesContaining("CardSet"); // hard-coded here, may want to change at some point
+        foreach (string path in filePaths) {
+            string fileName = Path.GetFileNameWithoutExtension(path);
+            string typeName = fileName.Replace("Set", "");
+            if (_factory.GetAsset(typeName) is ICardSet cardSetData)
+                cardSets.Add(cardSetData);
         }
 
-        if (cardSets.Count > 0)
-            return cardSets;
-        else
-            return null;
+        return cardSets;
     }
     public IRuleValues FetchRuleValues()
     {
