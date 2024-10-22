@@ -8,7 +8,7 @@ using Share.Services.Serializer;
 using System.Collections.ObjectModel;
 
 namespace Model.Entities;
-/// <remarks>The default board of the base game is based on Earth from around the Napoleonic Era (1792-1800).</remarks>
+/// <remarks>The default board of the base game is based on Earth circa 1800.</remarks>
 /// <inheritdoc cref="IBoard"/>
 public class EarthBoard : IBoard, IBinarySerializable
 {
@@ -577,30 +577,26 @@ public class EarthBoard : IBoard, IBinarySerializable
     /// <summary>
     /// Gets this board's geography.
     /// </summary>
-    /// <value>An <see cref="IGeography"/> instance.</value>
     public IGeography Geography { get; } = new EarthGeography();
     /// <summary>
     /// Gets or inits the territory to armies map.
     /// </summary>
-    /// <value>A <see cref="Dictionary{TKey, TValue}"/> keyed by <see cref="TerrID"/> to <see cref="int"/> values.</value>
     public Dictionary<TerrID, int> Armies { get; init; }
     /// <summary>
     /// Gets or inits the territory to owner (player number) map.
     /// </summary>
-    /// <value>A <see cref="Dictionary{TKey, TValue}"/> keyed by <see cref="TerrID"/> to <see cref="int"/> values.</value>
     public Dictionary<TerrID, int> TerritoryOwner { get; init; }
     /// <summary>
     /// Gets or inits the continent to owner (player number) map.
     /// </summary>
-    /// <value>A <see cref="Dictionary{TKey, TValue}"/> keyed by <see cref="ContID"/> to <see cref="int"/> values.</value>
     public Dictionary<ContID, int> ContinentOwner { get; init; }
     #endregion
     /// <summary>
     /// Gets a list of territories or continents owned by a player.
     /// </summary>
-    /// <param name="playerNumber">The number of the <see cref="IPlayer"/> who owns the territories or continents.</param>
+    /// <param name="playerNumber">The <see cref="int">number</see> of the <see cref="IPlayer"/> who owns the territories or continents.</param>
     /// <param name="enumName">The name of <see cref="TerrID"/> or of <see cref="ContID"/>, for territory and continent, respectively.</param>
-    /// <returns>A <see cref="List{T}"/> of objects containing either <see cref="TerrID"/> or <see cref="ContID"/>.</returns>
+    /// <returns>A <see cref="List{T}"/> of either <see cref="TerrID"/> or <see cref="ContID"/>.</returns>
     public List<object> this[int playerNumber, string enumName] {
         get {
             if (string.IsNullOrEmpty(enumName)) return [];
@@ -610,14 +606,13 @@ public class EarthBoard : IBoard, IBinarySerializable
                     .Select(pair => pair.Key)
                     .Cast<object>()
                     .ToList();
-            else if (enumName.Equals(nameof(ContID))) {
+            if (enumName.Equals(nameof(ContID))) 
                 return ContinentOwner
                     .Where(pair => pair.Value == playerNumber)
                     .Select(pair => pair.Key)
                     .Cast<object>()
                     .ToList();
-            }
-            else return [];
+            return [];
         }
     }
 
@@ -663,27 +658,26 @@ public class EarthBoard : IBoard, IBinarySerializable
     /// <inheritdoc cref="IBoard.CheckContinentFlip(TerrID, int)"/>
     public void CheckContinentFlip(TerrID changed, int previousOwner)
     {
-        if (changed != TerrID.Null) {
-            int newOwner = TerritoryOwner[changed];
-            var changedHomeContinent = EarthGeography.TerrIDToContinent(changed);
-            List<TerrID> continentTerritories = EarthGeography.ContinentMembers[changedHomeContinent];
-            if (continentTerritories != null && continentTerritories.Count > 0) {
-                if (ContinentOwner[changedHomeContinent] == previousOwner && previousOwner > -1) {
-                    ContinentOwner[changedHomeContinent] = -1;
-                    if (continentTerritories.All(item => TerritoryOwner[item] == newOwner)) {
-                        ContinentOwner[changedHomeContinent] = newOwner;
-                    }
-                    ContinentOwnerChanged?.Invoke(this, new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
-                }
-                else {
-                    if (continentTerritories.All(item => TerritoryOwner[item] == newOwner)) {
-                        ContinentOwner[changedHomeContinent] = newOwner;
-                        ContinentOwnerChanged?.Invoke(this, new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
-                    }
-                }
-            }
+        if (changed == TerrID.Null)
+            throw new ArgumentException("Non-null TerrID required.", nameof(changed));
+
+        int newOwner = TerritoryOwner[changed];
+        var changedHomeContinent = EarthGeography.TerrIDToContinent(changed);
+        List<TerrID> continentTerritories = EarthGeography.ContinentMembers[changedHomeContinent];
+        if (continentTerritories == null || continentTerritories.Count <= 0)
+            return;
+
+        if (ContinentOwner[changedHomeContinent] == previousOwner && previousOwner > -1) {
+            ContinentOwner[changedHomeContinent] = -1;
+            if (continentTerritories.All(item => TerritoryOwner[item] == newOwner)) 
+                ContinentOwner[changedHomeContinent] = newOwner;
+            
+            ContinentOwnerChanged?.Invoke(this, new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
         }
-        else throw new ArgumentException("Non-null TerrID required.", nameof(changed));
+        else if (continentTerritories.All(item => TerritoryOwner[item] == newOwner)) {
+            ContinentOwner[changedHomeContinent] = newOwner;
+            ContinentOwnerChanged?.Invoke(this, new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
+        }
     }
     public async Task<SerializedData[]> GetBinarySerials()
     {

@@ -10,9 +10,6 @@ namespace Model.DataAccess.Cards;
 /// <summary>
 /// The base card set '.json' converter. 
 /// </summary>
-/// <remarks>
-/// 
-/// </remarks>
 public class TroopCardSetDataJConverter : JsonConverter<TroopCardSet>, ICardSetDataJConverter
 {
     /// <inheritdoc cref="ICardSetDataJConverter.ReadCardSetData(string)"/>
@@ -24,15 +21,15 @@ public class TroopCardSetDataJConverter : JsonConverter<TroopCardSet>, ICardSetD
         return Read(ref reader, typeof(TroopCardSet), options: JsonSerializerOptions.Default);
     }
     /// <summary>
-    /// Reads a CardSet .json into a <see cref="TroopCardSet"/> object. 
+    /// Reads a CardSet '.json' into a <see cref="TroopCardSet"/> object. 
     /// </summary>
     /// <remarks>
     /// Overrides <see cref="JsonConverter{T}.Read(ref Utf8JsonReader, Type, JsonSerializerOptions)"/>. 
     /// </remarks>
-    /// <param name="reader">A <see cref="Utf8JsonReader"/> provided the <see langword="byte"/>s of a '.json' data file registered in a <see cref="TypeRegister"/>.</param>
+    /// <param name="reader">A Json reader provided the <see langword="byte"/>s of a '.json' data file registered in a <see cref="TypeRegister"/>.</param>
     /// <param name="typeToConvert">The target conversion <see cref="Type"/>, usually marked by <see cref="RegistryRelation.ConvertedDataType"/> in a <see cref="TypeRegister"/>.</param>
     /// <param name="options">Should be <see cref="JsonSerializerOptions.Default"/>.</param>
-    /// <returns>A <see cref="TroopCardSetData"/> which <see cref="Share.Interfaces.Model.IAssetFactory"/> will use to build <see cref="TroopCard"/>s.</returns>
+    /// <returns>A <see cref="TroopCardSet"/> which <see cref="IAssetFactory"/> will use to build <see cref="TroopCard"/>s.</returns>
     public override TroopCardSet? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         TroopCardSet? newTroopCardSet = new() { JData = new TroopCardSetData() };
@@ -90,7 +87,7 @@ public class TroopCardSetDataJConverter : JsonConverter<TroopCardSet>, ICardSetD
                         newTroopCardSet.JData.Targets = [.. cardSetTargets];
                         newTroopCardSet.JData.Insignia = [.. cardSetInsignia];
                     }
-                    break;
+                break;
             }
         }
 

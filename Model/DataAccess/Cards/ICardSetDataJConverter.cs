@@ -1,6 +1,7 @@
 ﻿using Share.Interfaces.Model;
 using Share.Services.Registry;
 using System.Text.Json.Serialization;
+
 namespace Model.DataAccess.Cards;
 /// <summary>
 /// Converts '.json' data of a CardSet file to <see cref="ICardSet"/>. 
