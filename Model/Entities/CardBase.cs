@@ -9,39 +9,39 @@ namespace Model.Entities;
 /// Encapsulates all objects primarily using <see cref="ICard"/>s.
 /// </summary>
 /// <remarks>
-/// E.g. <see cref="GameDeck"/> and <see cref="Model.Entities.Cards.TroopCardSet"/>.
+/// E.g. <see cref="GameDeck"/> and <see cref="ICardSet"/>s.
 /// </remarks>
-/// <param name="logger">An <see cref="ILogger"/> for logging debug information and errors.</param>
+/// <param name="loggerFactory">Instantiates loggers for logging debug information and errors.</param>
+/// <param name="registry">The application's type registry.</param>
 public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations> registry) : IBinarySerializable
 {
     private readonly ILogger _logger = loggerFactory.CreateLogger<CardBase>();
     private readonly ILoggerFactory _loggerFactory = loggerFactory;
+    /// <summary>
+    /// Gets a factory for making <see cref="ICard"/>s.
+    /// </summary>
+    /// <remarks>
+    /// Used when loading from a save file; see <see cref="LoadFromBinary"/>.
+    /// </remarks>
     public CardFactory CardFactory { get; } = new(registry);
     /// <summary>
-    /// Gets or sets the list of <see cref="ICardSet"/>s used in this <see cref="IGame"/>.
+    /// Gets or sets a list of card sets.
     /// </summary>
-    /// <value>
-    /// A <see cref="List{T}"/> if <see cref="CardBase"/>is initialized; otherwise, <see langword="null"/>.
-    /// </value>
     public List<ICardSet> Sets { get; set; } = [];
-    Dictionary<string, ICardSet> CardTypeNamesToCardSetsMap { get; } = [];
     /// <summary>
     /// Gets or sets the deck of cards to be used for this game.
     /// </summary>
-    /// <value>
-    /// A <see cref="Deck"/> if <see cref="CardBase"/>is initialized; otherwise, <see langword="null"/>.
-    /// </value>
     public Deck GameDeck { get; set; } = new();
     /// <summary>
-    /// Initializes a <see cref="CardBase"/> with assets provided by <see cref="IAssetFetcher"/>.
+    /// Initializes a cardbase with assets provided by <see cref="IAssetFetcher"/>.
     /// </summary>
     /// <remarks>
     /// When a new game is started, the <see cref="CardBase"/> will include all <see cref="ICard"/>s that can be found and converted from 'CardSet.json' files <br/>
     /// (see <see cref="IAssetFetcher.FetchCardSets"/>, and <see cref="IAssetFactory.GetAsset(string)"/>). 
     /// <br/> Then, if <paramref name="defaultMode"/> is set to true, only <see cref="ITroopCard"/>s will be retained.
     /// </remarks>
-    /// <param name="assetFetcher">The application's sole <see cref="IAssetFetcher"/>.</param>
-    /// <param name="defaultMode">A <see langwod="boolean"/> flag to indicate whether the <see cref="IGame"/> is in default card mode or not.</param>
+    /// <param name="assetFetcher">Gets initialized assets (objects loaded from data files) for specific Model properties.</param>
+    /// <param name="defaultMode">A <see langwod="boolean"/> flag to indicate whether the <see cref="IGame"/> is in default card mode.</param>
     public void InitializeFromAssets(IAssetFetcher assetFetcher, bool defaultMode)
     {
         Sets = assetFetcher.FetchCardSets();
@@ -56,7 +56,7 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
                 defaultCards.AddRange(set.Cards);
                 var setTypeName = set.GetType().Name;
                 foreach (ICard card in defaultCards)
-                    if (card.ParentTypeName == setTypeName && set.MemberTypeName == card.GetType().Name && card.CardSet == null)
+                    if (card.CardSet == null && set.IsParent(card))
                         card.CardSet = set;
             }
         }
@@ -67,23 +67,38 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
 
         GameDeck.Shuffle();
     }
+    /// <summary>
+    /// Initializes a library when loading the game from a save file.
+    /// </summary>
+    /// <param name="cards">The library's cards built during <see cref="LoadFromBinary(BinaryReader)"/>.</param>
     public void InitializeLibrary(ICard[] cards)
     {
         MapCardsToSets(cards);
         GameDeck.Library.AddRange(cards);
     }
+    /// <summary>
+    /// Initializes a discard pile when loading the game from a save file.
+    /// </summary>
+    /// <param name="cards">The discard pile's cards built during <see cref="LoadFromBinary(BinaryReader)"/>.</param>
     public void InitializeDiscardPile(ICard[] cards)
     {
         MapCardsToSets(cards);
         GameDeck.DiscardPile.AddRange(cards);
     }
+    /// <summary>
+    /// Ensures cards and card sets are properly mapped.
+    /// </summary>
+    /// <remarks>
+    /// Necessary since application and/or game logic may depend on <see cref="ICard.CardSet"/> (e.g. <see cref="ICardSet.IsValidTrade(ICard[])"/>).
+    /// </remarks>
+    /// <param name="cards">The cards whose sets must be discovered and mapped to.</param>
     public void MapCardsToSets(ICard[] cards)
     {
         Sets ??= [];
 
         Dictionary<string, ICardSet> cardSetToTypeNameMap = [];
         foreach (ICardSet set in Sets)
-            cardSetToTypeNameMap.Add(set.Name, set);
+            cardSetToTypeNameMap.Add(set.TypeName, set);
 
         foreach (ICard card in cards) {
             if (cardSetToTypeNameMap.TryGetValue(card.ParentTypeName, out ICardSet? parentSet)) {
@@ -124,11 +139,9 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
                 if (!Sets.Contains(loadedSet))
                     Sets.Add(loadedSet);
     }
-
+    /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
     public async Task<SerializedData[]> GetBinarySerials()
     {
-        if (GameDeck == null)
-            return [];
         return await Task.Run(async () =>
         {
             List<SerializedData> serials = [];
@@ -150,6 +163,7 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
             return serials.ToArray();
         });
     }
+    /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     public bool LoadFromBinary(BinaryReader reader)
     {
         GameDeck.Library = [];

@@ -11,12 +11,12 @@
 public interface ICardSet
 {
     /// <summary>
-    /// Gets the name of the card set.
+    /// Gets the name of this card set's <see cref="Type"/>.
     /// </summary>
-    /// <value>
-    /// A string.
-    /// </value>
-    public string Name { get; }
+    /// <remarks>
+    /// Serves as a cached value that allows us to avoid multiple reflection method calls (e.g.: .GetType()). 
+    /// </remarks>
+    public string TypeName { get; }
     /// <summary>
     /// Gets the '.json' data object for this card set.
     /// </summary>
@@ -65,4 +65,18 @@ public interface ICardSet
     /// <param name="cards">An array of <see cref="ICard"/>s to test.</param>
     /// <returns><see langword="true"/> if the collection <paramref name="cards"/> qualifies exactly as a valid trade-set. Otherwise, <see langword="false"/>.</returns>
     public bool IsValidTrade(ICard[] cards);
+    /// <summary>
+    /// Validates a card as a member of the set. 
+    /// </summary>
+    /// <param name="card"></param>
+    /// <returns><see langword="true"/> if the card's relevant properties verify it belongs to this set; otherwise, <see langword="false"/>.</returns>
+    public bool IsParent(ICard card)
+    {
+        if (MemberTypeName != card.TypeName)
+            return false;
+        if (card.ParentTypeName != TypeName)
+            return false;
+        
+        return true;
+    }
 }

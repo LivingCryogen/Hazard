@@ -32,7 +32,6 @@ public interface ICard : IBinarySerializable
     /// <summary>
     /// The name of this <see cref="ICard"/>'s <see cref="Type"/>.
     /// </summary>
-    /// <value>A <see cref="string"/>.</value>
     /// <remarks>
     /// Serves as a cached value that allows us to avoid multiple reflection method calls (e.g.: .GetType()). 
     /// </remarks>

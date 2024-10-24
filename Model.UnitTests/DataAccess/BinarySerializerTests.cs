@@ -142,7 +142,7 @@ public class BinarySerializerTests
             Assert.IsNotNull(_deserialGame.Cards.Sets);
             Assert.AreEqual(_toSerialGame.Cards.Sets.Count, _deserialGame.Cards.Sets.Count);
             for (int i = 0; i < _toSerialGame.Cards.Sets.Count; i++) {
-                Assert.AreEqual(_toSerialGame.Cards.Sets[i].Name, _deserialGame!.Cards.Sets[i].Name);
+                Assert.AreEqual(_toSerialGame.Cards.Sets[i].TypeName, _deserialGame!.Cards.Sets[i].TypeName);
                 Assert.AreEqual(_toSerialGame.Cards.Sets[i].MemberTypeName, _deserialGame!.Cards.Sets[i].MemberTypeName);
                 Assert.IsNotNull(_toSerialGame.Cards.Sets[i].Cards);
                 Assert.IsNotNull(_deserialGame.Cards.Sets[i].Cards);
@@ -156,7 +156,7 @@ public class BinarySerializerTests
                     Assert.IsNotNull(_toSerialGame.Cards.Sets[i].Cards[j].CardSet);
                     Assert.IsNotNull(_deserialGame.Cards.Sets[i].Cards[j].CardSet);
 #pragma warning disable CS8602 // for some reason the compiler doesn't recognize that the previous two null checks should affect this next Assert.
-                    Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].CardSet.Name, _deserialGame.Cards.Sets[i].Cards[j].CardSet.Name);
+                    Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].CardSet.TypeName, _deserialGame.Cards.Sets[i].Cards[j].CardSet.TypeName);
 #pragma warning restore CS8602
                     Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].Target[0], _deserialGame.Cards.Sets[i].Cards[j].Target[0]); // could test the entire array but the default Targets are always length 1
                 }
@@ -178,7 +178,7 @@ public class BinarySerializerTests
                 Assert.IsNotNull(_toSerialGame.Cards.GameDeck.Library[j].CardSet);
                 Assert.IsNotNull(_deserialGame.Cards.GameDeck.Library[j].CardSet);
 #pragma warning disable CS8602 // for some reason the compiler doesn't recognize that the previous two null checks should affect this next Assert.
-                Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].CardSet.Name, _deserialGame.Cards.GameDeck.Library[j].CardSet.Name);
+                Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].CardSet.TypeName, _deserialGame.Cards.GameDeck.Library[j].CardSet.TypeName);
 #pragma warning restore CS8602
                 Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].Target[0], _deserialGame.Cards.GameDeck.Library[j].Target[0]); // could test the entire array but the default Targets are always length 1
             }
@@ -193,7 +193,7 @@ public class BinarySerializerTests
                 Assert.IsNotNull(_toSerialGame.Cards.GameDeck.DiscardPile[j].CardSet);
                 Assert.IsNotNull(_deserialGame.Cards.GameDeck.DiscardPile[j].CardSet);
 #pragma warning disable CS8602 // for some reason the compiler doesn't recognize that the previous two null checks should affect this next Assert.
-                Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].CardSet.Name, _deserialGame.Cards.GameDeck.DiscardPile[j].CardSet.Name);
+                Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].CardSet.TypeName, _deserialGame.Cards.GameDeck.DiscardPile[j].CardSet.TypeName);
 #pragma warning restore CS8602
                 Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].Target[0], _deserialGame.Cards.GameDeck.DiscardPile[j].Target[0]); // could test the entire array but the default Targets are always length 1
             }
@@ -337,7 +337,7 @@ public class BinarySerializerTests
                     Assert.AreEqual(_toSerialGame.Players[i].Hand[j].Target.Length, _deserialGame.Players[i].Hand[j].Target.Length);
                     for (int k = 0; k < _toSerialGame.Players[i].Hand[j].Target.Length; k++) {
                         Assert.AreEqual(_toSerialGame.Players[i].Hand[j].Target[k], _deserialGame.Players[i].Hand[j].Target[k]);
-                        Assert.AreEqual(((ITroopCard)(_toSerialGame.Players[i].Hand[j])).Insigne, ((ITroopCard)(_deserialGame.Players[i].Hand[j])).Insigne);
+                        Assert.AreEqual(((ITroopCard)(_toSerialGame.Players[i].Hand[j])).Insigne, ((ITroopCard)_deserialGame.Players[i].Hand[j]).Insigne);
                         Assert.IsNull(_toSerialGame.Players[i].Hand[j].CardSet);
                         Assert.AreEqual(_toSerialGame.Players[i].Hand[j].CardSet, _deserialGame.Players[i].Hand[j].CardSet); // two-step initialization means cardset isn't initialized until after LoadCardBase
                         Assert.AreEqual(_toSerialGame.Players[i].Hand[j].IsTradeable, _deserialGame.Players[i].Hand[j].IsTradeable);
@@ -360,7 +360,7 @@ public class BinarySerializerTests
             Assert.IsNotNull(_deserialGame.Cards.Sets);
             Assert.AreEqual(_toSerialGame.Cards.Sets.Count, _deserialGame.Cards.Sets.Count);
             for (int i = 0; i < _toSerialGame.Cards.Sets.Count; i++) {
-                Assert.AreEqual(_toSerialGame.Cards.Sets[i].Name, _deserialGame!.Cards.Sets[i].Name);
+                Assert.AreEqual(_toSerialGame.Cards.Sets[i].TypeName, _deserialGame!.Cards.Sets[i].TypeName);
                 Assert.AreEqual(_toSerialGame.Cards.Sets[i].MemberTypeName, _deserialGame!.Cards.Sets[i].MemberTypeName);
                 Assert.IsNotNull(_toSerialGame.Cards.Sets[i].Cards);
                 Assert.IsNotNull(_deserialGame.Cards.Sets[i].Cards);
@@ -374,7 +374,7 @@ public class BinarySerializerTests
                     Assert.IsNotNull(_toSerialGame.Cards.Sets[i].Cards[j].CardSet);
                     Assert.IsNotNull(_deserialGame.Cards.Sets[i].Cards[j].CardSet);
 #pragma warning disable CS8602 // for some reason the compiler doesn't recognize that the previous two null checks should affect this next Assert.
-                    Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].CardSet.Name, _deserialGame.Cards.Sets[i].Cards[j].CardSet.Name);
+                    Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].CardSet.TypeName, _deserialGame.Cards.Sets[i].Cards[j].CardSet.TypeName);
 #pragma warning restore CS8602
                     Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].Target[0], _deserialGame.Cards.Sets[i].Cards[j].Target[0]); // could test the entire array but the default Targets are always length 1
                 }
@@ -396,7 +396,7 @@ public class BinarySerializerTests
                 Assert.IsNotNull(_toSerialGame.Cards.GameDeck.Library[j].CardSet);
                 Assert.IsNotNull(_deserialGame.Cards.GameDeck.Library[j].CardSet);
 #pragma warning disable CS8602 // for some reason the compiler doesn't recognize that the previous two null checks should affect this next Assert.
-                Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].CardSet.Name, _deserialGame.Cards.GameDeck.Library[j].CardSet.Name);
+                Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].CardSet.TypeName, _deserialGame.Cards.GameDeck.Library[j].CardSet.TypeName);
 #pragma warning restore CS8602
                 Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].Target[0], _deserialGame.Cards.GameDeck.Library[j].Target[0]); // could test the entire array but the default Targets are always length 1
             }
@@ -411,7 +411,7 @@ public class BinarySerializerTests
                 Assert.IsNotNull(_toSerialGame.Cards.GameDeck.DiscardPile[j].CardSet);
                 Assert.IsNotNull(_deserialGame.Cards.GameDeck.DiscardPile[j].CardSet);
 #pragma warning disable CS8602 // for some reason the compiler doesn't recognize that the previous two null checks should affect this next Assert.
-                Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].CardSet.Name, _deserialGame.Cards.GameDeck.DiscardPile[j].CardSet.Name);
+                Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].CardSet.TypeName, _deserialGame.Cards.GameDeck.DiscardPile[j].CardSet.TypeName);
 #pragma warning restore CS8602
                 Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].Target[0], _deserialGame.Cards.GameDeck.DiscardPile[j].Target[0]); // could test the entire array but the default Targets are always length 1
             }

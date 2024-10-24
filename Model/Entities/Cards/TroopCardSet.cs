@@ -7,8 +7,8 @@ namespace Model.Entities.Cards;
 /// <inheritdoc cref="ICardSet"/>
 public class TroopCardSet : ICardSet
 {
-    /// <inheritdoc cref="ICardSet.Name"/>
-    public string Name { get; } = nameof(TroopCardSet);
+    /// <inheritdoc cref="ICardSet.TypeName"/>
+    public string TypeName { get; } = nameof(TroopCardSet);
     /// <inheritdoc cref="ICardSet.JData"/>
     public ITroopCardSetData? JData { get; set; } = null;
     ICardSetData? ICardSet.JData { get => (ICardSetData?)JData; }

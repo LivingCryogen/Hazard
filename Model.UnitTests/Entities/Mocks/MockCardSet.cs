@@ -4,7 +4,7 @@ namespace Model.Tests.Entities.Mocks;
 
 public class MockCardSet : ICardSet
 {
-    public string Name { get; } = nameof(MockCardSet);
+    public string TypeName { get; } = nameof(MockCardSet);
     public string MemberTypeName { get; } = nameof(MockCard);
     public ICardSetData? JData { get; set; } = null;
     public List<ICard> Cards { get; set; } = [];
