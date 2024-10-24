@@ -2,12 +2,15 @@
 
 namespace Model.Entities;
 /// <summary>
-/// Represents a Deck of cards. Each card targets at minimum one Territory <see cref="ICard"/>.
+/// A deck of cards.
 /// </summary>
+/// <remarks>
+/// Each <see cref="ICard">card</see> targets at minimum one territory: see <see cref="ICard.Target"/>.
+/// </remarks>
 public class Deck
 {
     /// <summary>
-    /// Constructs an empty Deck.
+    /// Constructs an empty deck.
     /// </summary>
     public Deck()
     {
@@ -15,9 +18,9 @@ public class Deck
         DiscardPile = [];
     }
     /// <summary>
-    /// Constructs a Deck from a group of cards, placing them all in the <see cref="Library"/>.
+    /// Constructs a deck from a group of cards, placing them all in the <see cref="Library"/>.
     /// </summary>
-    /// <param name="cards">An array of <see cref="ICard"/>s that will constitute the deck.</param>
+    /// <param name="cards">The cards that will constitute the deck.</param>
     public Deck(ICard[] cards)
     {
         Library = [.. cards];
@@ -26,21 +29,21 @@ public class Deck
     /// <remarks>
     /// This constructor is useful when a <see cref="Deck"/> is to be built from multiple <see cref="ICardSet.Cards"/> values.
     /// </remarks>
-    /// <param name="cards">An array of <see cref="ICard"/> arrays whose contents that will constitute the deck.</param>
+    /// <param name="cards">A staggered array of cards that will constitute the deck.</param>
     /// <inheritdoc cref="Deck(ICard[])"/>
     public Deck(ICard[][] cards)
     {
         Library = [.. cards.SelectMany(set => set.Select(card => card))];
         DiscardPile = [];
     }
-    /// <param name="cardSet">An <see cref="ICardSet"/> whose property <see cref="ICardSet.Cards"/> contains the <see cref="ICard"/>s that will constitute the deck.</param>
+    /// <param name="cardSet">A card set, whose property <see cref="ICardSet.Cards"/> contains the <see cref="ICard"/>s that will constitute the deck.</param>
     /// <inheritdoc cref="Deck(ICard[])"/>
     public Deck(ICardSet cardSet)
     {
         Library = [.. cardSet?.Cards ?? Enumerable.Empty<ICard>()];
         DiscardPile = [];
     }
-    /// <param name="cardSets">An array of <see cref="ICardSet"/>s, each of whose property <see cref="ICardSet.Cards"/> contains <see cref="ICard"/>s that will constitute the deck.</param>
+    /// <param name="cardSets">An array of card sets, each of whose property <see cref="ICardSet.Cards"/> contains <see cref="ICard"/>s that will constitute the deck.</param>
     /// <inheritdoc cref="Deck(ICard[])"/>
     public Deck(ICardSet[] cardSets)
     {
@@ -48,24 +51,18 @@ public class Deck
         DiscardPile = [];
     }
     /// <summary>
-    /// Gets or sets the library of the <see cref="Deck"/>.
+    /// Gets or sets the library.
     /// </summary>
     /// <remarks>
     /// A library is the collection of cards from which players draw (see <see cref="DrawCard"/>).
     /// </remarks>
-    /// <value>
-    /// A <see cref="List{T}"/> of <see cref="ICard"/>.
-    /// </value>
     public List<ICard> Library { get; set; }
     /// <summary>
-    /// Gets or sets the discard pile of the <see cref="Deck"/>.
+    /// Gets or sets the discard pile.
     /// </summary>
     /// <remarks>
-    /// A discard pile is the collection of cards to which cards are discarded when traded in (see <see cref="Discard(ICard)"/> and <see cref="IRegulator.TradeInCards(int, int[])"/>).
+    /// A discard pile is the collection to which cards are discarded when traded in; see <see cref="Discard(ICard)"/> and <see cref="IRegulator.TradeInCards(int, int[])"/>.
     /// </remarks>
-    /// <value>
-    /// A <see cref="List{T}"/> of <see cref="ICard"/>.
-    /// </value>
     public List<ICard> DiscardPile { get; set; }
     /// <summary>
     /// Draws a card from the bottom of the <see cref="Library"/>.
@@ -73,7 +70,7 @@ public class Deck
     /// <remarks>
     /// If <see cref="Library"/> is empty, <see cref="Shuffle"/> is called.
     /// </remarks>
-    /// <returns>An <see cref="ICard"/>.</returns>
+    /// <returns>The drawn card.</returns>
     public ICard DrawCard()
     {
         if (Library.Count + DiscardPile.Count <= 0)
@@ -88,7 +85,7 @@ public class Deck
     /// <summary>
     /// Adds a card to the discard pile.
     /// </summary>
-    /// <param name="card">The discarded <see cref="ICard"/>.</param>
+    /// <param name="card">The discarded card.</param>
     public void Discard(ICard card)
     {
         DiscardPile.Add(card);
@@ -96,13 +93,13 @@ public class Deck
     /// <summary>
     /// Adds a collection of cards to the discard pile.
     /// </summary>
-    /// <param name="cards">The discardeds <see cref="ICard"/>.</param>
+    /// <param name="cards">The discarded cards.</param>
     public void Discard(ICard[] cards)
     {
         DiscardPile.AddRange(cards);
     }
     /// <summary>
-    /// Shuffles the <see cref="Deck"/>.
+    /// Shuffles the deck.
     /// </summary>
     /// <remarks>
     /// Resulting <see cref="Library"/> order is generated by a Fisher-Yates shuffle algorithm. 
