@@ -1,9 +1,11 @@
-﻿using Share.Services.Registry;
+﻿using Model.Tests.Entities.Mocks;
+using Share.Services.Registry;
 
 namespace Model.Tests.Registry.Stubs;
 
 public class RegisterInitializerStub : IRegistryInitializer
 {
     public void PopulateRegistry(ITypeRegister<ITypeRelations> typeRegister)
-    { }
+    {
+    }
 }

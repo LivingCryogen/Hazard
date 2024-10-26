@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Model.Entities.Cards;
 using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Fixtures.Stubs;
 using Share.Enums;
@@ -15,10 +16,17 @@ public class MockCard : ITroopCard
         FighterJet = 1,
         Tank = 2
     }
-
     public MockCard()
     {
+    }
+    public MockCard(ILoggerFactory loggerFactory)
+    {
+        Logger = loggerFactory.CreateLogger<MockCard>();
+    }
+    public MockCard(ILogger<MockCard> logger)
+    {
         IsTradeable = true;
+        Logger = logger;
     }
     public MockCard(ICardSet cardSet)
     {
