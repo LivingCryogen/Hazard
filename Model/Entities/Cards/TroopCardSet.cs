@@ -51,10 +51,10 @@ public class TroopCardSet : ICardSet
             return null;
     }
     /// <remarks>
-    /// This default set of <see cref="TroopCard"/> stipulates a matching set of <see cref="ICard"/>: <br/>
-    /// (1) contains 3 of its cards <br/>
+    /// <see cref="TroopCard"/>, as the default card set, stipulates a matching set of <see cref="ICard"/>: <br/>
+    /// (1) contains three cards <br/>
     /// (2) contains only tradeble cards (see <see cref="ICard.IsTradeable"/>) <br/>
-    /// (3) contains <see cref="TroopCard"/>s with all identical or all different <see cref="TroopInsignia"/> (after wilds).
+    /// (3) contains <see cref="TroopCard"/>s with all identical OR all different <see cref="TroopInsignia"/> (after wilds).
     /// </remarks>
     /// <inheritdoc cref="ICardSet.IsValidTrade(ICard[])"/>
     public bool IsValidTrade(ICard[] cards)
@@ -82,10 +82,27 @@ public class TroopCardSet : ICardSet
     {
         if (insigniaValues.Length != 3) return false;
         // every combination of 3 cards with any Wilds is a valid Trade
-        if (insigniaValues[0] == (int)TroopInsignia.Wild || insigniaValues[1] == (int)TroopInsignia.Wild || insigniaValues[2] == (int)TroopInsignia.Wild) return true;
-        int totalValue = insigniaValues.Sum();
-        // 1 of each Insignia is covered by the second test: 1 + 2 + 3 = 3 * 2
-        if (totalValue == 3 * (int)TroopInsignia.Soldier || totalValue == 3 * (int)TroopInsignia.Cavalry || totalValue == 3 * (int)TroopInsignia.Artillery) return true;
+        if (ContainsWild(insigniaValues)) return true;
+        if (HasMatch(insigniaValues)) return true;
         return false;
+    }
+    private static bool ContainsWild(int[] insignia)
+    {
+        foreach (int insigne in insignia)
+            if (insigne == (int)TroopInsignia.Wild)
+                return true;
+
+        return false;
+    }
+    private static bool HasMatch(int[] insignia)
+    {
+        int totalValue = insignia.Sum();
+        // The other matching set -- 1 of each Insignia -- is covered by the "three Cavalry" test: 1 + 2 + 3 = 3 * 2
+        return totalValue switch {
+            (int)TroopInsignia.Soldier * 3 => true,
+            (int)TroopInsignia.Cavalry * 3 => true,
+            (int)TroopInsignia.Artillery * 3 => true,
+            _ => false,
+        };
     }
 }

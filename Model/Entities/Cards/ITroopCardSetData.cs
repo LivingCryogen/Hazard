@@ -8,7 +8,7 @@ namespace Model.Entities.Cards;
 public interface ITroopCardSetData : ICardSetData
 {
     /// <summary>
-    /// Gets or sets insignia values, obtained from <see cref="IDataProvider"/>, for each <see cref="ITroopCard"/> in a <see cref="TroopCardSet"/>.
+    /// Gets or sets insignia values for each <see cref="ITroopCard"/> in a <see cref="TroopCardSet"/>.
     /// </summary>
     TroopInsignia[] Insignia { get; set; }
 }
