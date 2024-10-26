@@ -548,6 +548,7 @@ public class EarthBoard : IBoard, IBinarySerializable
     /// Builds an Earth board using configuration '.json' values.
     /// </summary>
     /// <param name="config">An <see cref="IConfiguration"/>. Typically injected by the DI system.</param>
+    /// <param name="logger">A logger for debug information and errors.</param>
     public EarthBoard(IConfiguration config, ILogger<EarthBoard> logger)
     {
         _logger = logger;
@@ -679,6 +680,7 @@ public class EarthBoard : IBoard, IBinarySerializable
             ContinentOwnerChanged?.Invoke(this, new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
         }
     }
+    /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
     public async Task<SerializedData[]> GetBinarySerials()
     {
         return await Task.Run(() =>
@@ -704,6 +706,7 @@ public class EarthBoard : IBoard, IBinarySerializable
             return saveData;
         });
     }
+    /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;

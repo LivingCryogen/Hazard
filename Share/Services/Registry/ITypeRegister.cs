@@ -64,5 +64,11 @@ public interface ITypeRegister<T> where T : ITypeRelations
     /// Empties the registry.
     /// </summary>
     void Clear();
+    /// <summary>
+    /// Checks whether a registered type has a registered parent, and returns it if so.
+    /// </summary>
+    /// <param name="registeredType">The type already registered.</param>
+    /// <param name="parentType">The type registered as parent of <paramref name="registeredType"/>.</param>
+    /// <returns><see langword="true"/> if <paramref name="registeredType"/> has a registered parent type in the registry; otherwise, <see langword="false"/>.</returns>
     bool TryGetParentType(Type registeredType, out Type? parentType);
 }

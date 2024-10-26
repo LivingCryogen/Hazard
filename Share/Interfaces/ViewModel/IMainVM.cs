@@ -11,40 +11,27 @@ public interface IMainVM : IBinarySerializable
 {
     #region Properties
     /// <summary>
-    /// Gets or inits the current <see cref="IGame"/>.
+    /// Gets or inits the current Game.
     /// </summary>
     /// <value>
     /// The current <see cref="IGame"/> instance if both it and the <see cref="IMainVM"/> have been initialized; otherwise <see langword="null"/>. <br/>
-    /// See <see cref="IGame.Initialize(string[])"/>, <see cref="IGame.Initialize(FileStream)"/>, and <see cref="IMainVM.Initialize(string)"/>, <see cref="IMainVM.Initialize(ValueTuple{string, string}[])"/>.
     /// </value>
     IGame? CurrentGame { get; set; }
     /// <summary>
     /// Gets or sets the current game phase.
     /// </summary>
-    /// <value>
-    /// A <see cref="GamePhase"/>.
-    /// </value>
     GamePhase CurrentPhase { get; set; }
     /// <summary>
     /// Gets or sets the currently selected territory.
     /// </summary>
-    /// <value>
-    /// A <see cref="TerrID"/>.
-    /// </value>
     TerrID TerritorySelected { get; set; }
     /// <summary>
     /// Gets or sets a collection of territory information for display.
     /// </summary>
-    /// <value>
-    /// An <see cref="ObservableCollection{T}"/>, where T is <see cref="ITerritoryInfo"/>.
-    /// </value>
     ObservableCollection<ITerritoryInfo> Territories { get; set; }
     /// <summary>
     /// Gets or sets a collection of player information for display.
     /// </summary>
-    /// <value>
-    /// An <see cref="ObservableCollection{T}"/>, where T is <see cref="IPlayerData"/>.
-    /// </value>
     ObservableCollection<IPlayerData> PlayerDetails { get; set; }
     /// <summary>
     /// Gets a map of <see cref="ContID"/> to their <see cref="string">name</see>s.
@@ -64,80 +51,49 @@ public interface IMainVM : IBinarySerializable
     /// Gets or sets a value indicating whose turn it is.
     /// </summary>
     /// <value>
-    /// An <see cref="int"/>, 0-5, representing the current <see cref="IPlayer"/> whose turn it is. <br/>
-    /// See <see cref="IPlayer.Number"/> and <see cref="Model.Core.StateMachine.PlayerTurn"/>.
+    /// The <see cref="IPlayer.Number"/> whose turn it is. <br/>
     /// </value>
     int PlayerTurn { get; set; }
     /// <summary>
     /// Gets the number of bonus armies that will be awarded on the next card trade-in.
     /// </summary>
-    /// <value>
-    /// An <see cref="int"/>.
-    /// </value>
     int NextTradeBonus { get; }
 
     /// <summary>
     /// Gets the new game command.
     /// </summary>
-    /// <value>
-    /// An <see cref="ICommand"/>.
-    /// </value>
     ICommand NewGame_Command { get; }
     /// <summary>
     /// Gets the save game command.
     /// </summary>
-    /// <value>
-    /// An <see cref="ICommand"/>.
-    /// </value>
     ICommand SaveGame_Command { get; }
     /// <summary>
     /// Gets the load game command.
     /// </summary>
-    /// <value>
-    /// An <see cref="ICommand"/>.
-    /// </value>
     ICommand LoadGame_Command { get; }
     /// <summary>
     /// Gets the territory select command.
     /// </summary>
-    /// <value>
-    /// An <see cref="ICommand"/>.
-    /// </value>
     ICommand TerritorySelect_Command { get; }
     /// <summary>
     /// Gets the trade-in command.
     /// </summary>
-    /// <value>
-    /// An <see cref="ICommand"/>.
-    /// </value>
     ICommand TradeIn_Command { get; }
     /// <summary>
     /// Gets the troop advance command.
     /// </summary>
-    /// <value>
-    /// An <see cref="ICommand"/>.
-    /// </value>
     ICommand Advance_Command { get; }
     /// <summary>
     /// Gets the deliver reward command.
     /// </summary>
-    /// <value>
-    /// An <see cref="ICommand"/>.
-    /// </value>
     ICommand DeliverAttackReward_Command { get; }
     /// <summary>
     /// Gets the undo confirm input command.
     /// </summary>
-    /// <value>
-    /// An <see cref="ICommand"/>.
-    /// </value>
     ICommand UndoConfirmInput_Command { get; }
     /// <summary>
     /// Gets the choose territory bonus command.
     /// </summary>
-    /// <value>
-    /// An <see cref="ICommand"/>.
-    /// </value>
     ICommand ChooseTerritoryBonus_Command { get; }
     #endregion
 
@@ -153,7 +109,7 @@ public interface IMainVM : IBinarySerializable
     /// Fires when a player input is needed to choose between territories. 
     /// </summary>
     /// <remarks>
-    /// See <see cref="Model.Core.Regulator.PromptBonusChoice"/>.
+    /// See <see cref="IRegulator.PromptBonusChoice"/>.
     /// </remarks>
     event EventHandler<Tuple<int, string>[]> TerritoryChoiceRequest;
     /// <summary>
@@ -190,6 +146,12 @@ public interface IMainVM : IBinarySerializable
     /// </summary>
     event EventHandler<int>? PlayerWon;
     #endregion
+    /// <summary>
+    /// Initializes the MainViewModel using either newly input values or the name of a save file.
+    /// </summary>
+    /// <param name="players">An array of names of the players in the new game.</param>
+    /// <param name="colors">An array of color namesfor the players in the new game.</param>
+    /// <param name="fileName">The name of the save file to use if any; otherwise, <see langword="null"/>.</param>
     abstract void Initialize(string[] players, string[] colors, string? fileName);
     /// <summary>
     /// Executes logic of the <see cref="NewGame_Command"/>.

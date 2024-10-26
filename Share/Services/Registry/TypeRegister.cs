@@ -134,7 +134,7 @@ public class TypeRegister : ITypeRegister<ITypeRelations>
         if (_typeRelata?.Count > 0)
             _typeRelata.Clear();
     }
-
+    /// <inheritdoc cref="ITypeRegister{T}.TryGetParentType(Type, out Type?)"/>
     public bool TryGetParentType(Type registeredType, out Type? parentType)
     {
         if (!_typeRelata.TryGetValue(registeredType, out ITypeRelations? registeredRelations) || registeredRelations == null) {

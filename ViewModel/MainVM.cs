@@ -35,8 +35,8 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
                         CurrentPhase = CurrentGame?.State?.CurrentPhase ?? GamePhase.Null;
 
                         TerritorySelected = TerrID.Null;
-                        if (CurrentPhase.Equals(GamePhase.Move))
-                            _moveTargets = null;
+                        if (CurrentPhase == GamePhase.Move)
+                            _moveTargets.Clear();
 
                         TerritorySelectCommand.NotifyCanExecuteChanged();
                         break;

@@ -223,9 +223,10 @@ public static class BinarySerializer
         return !errors;
     }
     /// <inheritdoc cref="Load(IBinarySerializable[], string)"/>
-    /// <param name="serializableObjects">An array of <see cref="IBinarySerializable"/> objects to load.</param>
-    /// <param name="fileName">The <see cref="string">name</see> of the file to read from.</param>
-    /// <param name="streamLoc">The <see cref="long">position</see> of the <see cref="FileStream"/> at which to begin reading the file.</param>
+    /// <param name="serializableObjects">An array of  objects to load.</param>
+    /// <param name="fileName">The nameof the file to read from.</param>
+    /// <param name="startStreamPosition">The position of the <see cref="FileStream"/> at which to begin reading the file.</param>
+    /// <param name="endStreamPosition">The position of the <see cref="FileStream"/> after loading is complete.</param>
     public static bool Load(IBinarySerializable[] serializableObjects, string fileName, long startStreamPosition, out long endStreamPosition)
     {
         using FileStream fileStream = new(fileName, FileMode.Open, FileAccess.Read);
