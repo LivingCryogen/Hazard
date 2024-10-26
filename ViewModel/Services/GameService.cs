@@ -6,8 +6,8 @@ using Share.Interfaces.ViewModel;
 using Share.Services.Registry;
 
 namespace ViewModel.Services;
-/// <inheritdoc cref="IGameService"/>
-public class GameService(ILoggerFactory loggerFactory, IAssetFetcher assetFetcher, 
+
+public class GameService(ILoggerFactory loggerFactory, IAssetFetcher assetFetcher,
     ITypeRegister<ITypeRelations> registry, IConfiguration config)
     : IGameService
 {
@@ -15,7 +15,7 @@ public class GameService(ILoggerFactory loggerFactory, IAssetFetcher assetFetche
     private readonly IAssetFetcher _assetFetcher = assetFetcher;
     private readonly ITypeRegister<ITypeRelations> _registry = registry;
     private readonly IConfiguration _config = config;
-    /// <inheritdoc cref="IGameService.CreateGameWithRegulator(int)"/>
+
     public (IGame Game, IRegulator Regulator) CreateGameWithRegulator(int numPlayers)
     {
         var game = new Game(numPlayers, _loggerFactory, _assetFetcher, _registry, _config);

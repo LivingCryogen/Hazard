@@ -1,5 +1,4 @@
-﻿using Model.Core;
-using Share.Interfaces.Model;
+﻿using Share.Interfaces.Model;
 
 namespace Share.Interfaces.ViewModel;
 /// <summary>

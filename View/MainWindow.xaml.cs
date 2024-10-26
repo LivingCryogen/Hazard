@@ -1,8 +1,6 @@
-﻿using Share.Enums;
+﻿using Microsoft.Win32;
+using Share.Enums;
 using Share.Interfaces.ViewModel;
-using View.Converters;
-using ViewModel;
-using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -11,6 +9,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using View.Converters;
+using ViewModel;
 
 namespace View;
 

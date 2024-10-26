@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Model.Entities.Cards;
 using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Fixtures.Stubs;
 using Share.Enums;

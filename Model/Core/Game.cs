@@ -63,12 +63,12 @@ public class Game : IGame
     public ILogger Logger { get; private set; }
     /// <inheritdoc cref="IGame.Values"/>.
     public IRuleValues Values { get; private set; } = new RuleValues(); /// = assetFetcher.FetchRuleValues();
-    /// <inheritdoc cref="IGame.Board"/>.
+                                                                        /// <inheritdoc cref="IGame.Board"/>.
     public IBoard Board { get; private set; }
     /// <inheritdoc cref="IGame.State"/>.
-    public StateMachine State { get; private set; } 
+    public StateMachine State { get; private set; }
     /// <inheritdoc cref="IGame.Cards"/>.
-    public CardBase Cards { get; private set; } 
+    public CardBase Cards { get; private set; }
     /// <inheritdoc cref="IGame.Players"/>.
     public List<IPlayer> Players { get; private set; }
     #endregion

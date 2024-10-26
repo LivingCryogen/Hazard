@@ -1,8 +1,8 @@
 ﻿using Share.Interfaces;
 using Share.Interfaces.ViewModel;
-using ViewModel;
 using System.Windows;
 using System.Windows.Controls;
+using ViewModel;
 
 namespace View.TemplateSelectors;
 

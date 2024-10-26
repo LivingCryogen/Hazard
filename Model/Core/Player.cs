@@ -109,7 +109,7 @@ public class Player : IPlayer
     /// <inheritdoc cref="IPlayer.GetControlledTargets(TerrID[])"/>.
     public TerrID[] GetControlledTargets(TerrID[] targets)
     {
-        return [..targets.Intersect(ControlledTerritories)];
+        return [.. targets.Intersect(ControlledTerritories)];
     }
     /// <inheritdoc cref="IPlayer.FindCardSet"/>
     public void FindCardSet()
@@ -173,7 +173,7 @@ public class Player : IPlayer
     {
         if (handIndex < Hand.Count)
             return false;
-        
+
         var tempCard = Hand[handIndex];
         Hand.RemoveAt(handIndex);
         FindCardSet();

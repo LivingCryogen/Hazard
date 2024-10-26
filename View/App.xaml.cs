@@ -1,4 +1,8 @@
-﻿using Model.Assets;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Model.Assets;
 using Model.Core;
 using Model.DataAccess;
 using Model.Entities;
@@ -9,16 +13,12 @@ using Share.Interfaces.View;
 using Share.Interfaces.ViewModel;
 using Share.Services.Registry;
 using Share.Services.Serializer;
-using View.Services;
-using ViewModel;
-using ViewModel.Services;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Windows;
 using System.Windows.Threading;
+using View.Services;
+using ViewModel;
+using ViewModel.Services;
 
 namespace View;
 

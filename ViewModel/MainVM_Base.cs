@@ -483,7 +483,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
             PlayerDetails[i].Number = CurrentGame.Players[i].Number;
             PlayerDetails[i].ArmyPool = CurrentGame.Players![i].ArmyPool;
             PlayerDetails[i].ArmyBonus = CurrentGame.Players[i].ArmyBonus;
-            foreach(TerrID territory in CurrentGame.Players[i].ControlledTerritories)
+            foreach (TerrID territory in CurrentGame.Players[i].ControlledTerritories)
                 PlayerDetails[i].Realm.Add(territory);
             if (PlayerDetails[i].Hand == null)
                 PlayerDetails[i].Hand = [];

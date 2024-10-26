@@ -2,7 +2,6 @@
 using Model.DataAccess.Cards;
 using Share.Interfaces.Model;
 using Share.Services.Registry;
-using System.Reflection;
 using System.Text.Json.Serialization;
 
 namespace Model.DataAccess;
@@ -51,11 +50,11 @@ public class DataProvider(string[] dataFileNames, ITypeRegister<ITypeRelations> 
             return null;
         if (_typeRegister[registeredType] is not ITypeRelations registeredRelations)
             return null;
-        
+
         // If a registered Type has no associated DataFile, but it is a Type of a Collection which DOES have a DataFile, use the Collection Type instead
         if (registeredRelations[RegistryRelation.DataFileName] == null &&
             CanGetDataFromParent(registeredType, out Type? parentType, out ITypeRelations? parentRelations) &&
-            parentType != null && 
+            parentType != null &&
             parentRelations != null) {
             registeredRelations = parentRelations;
             registeredType = parentType;

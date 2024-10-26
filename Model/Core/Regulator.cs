@@ -48,11 +48,11 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
                     force = true;
                 PromptTradeIn?.Invoke(this, new PromptTradeEventArgs(_machine.PlayerTurn, force));
                 break;
-        
+
             case GamePhase.Attack:
                 _currentGame.State.PhaseStageTwo = false;
                 break;
-        
+
             case GamePhase.Move:
                 CurrentActionsLimit = _actionsCounter + 1;
                 break;
@@ -61,11 +61,11 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     private void IncrementAction()
     {
         _actionsCounter++;
-        
+
         if (_machine.CurrentPhase == GamePhase.DefaultSetup && ActionsExceedTerritoryCount() && !_machine.PhaseStageTwo)
-                _machine.PhaseStageTwo = true;
+            _machine.PhaseStageTwo = true;
         else if (_machine.CurrentPhase == GamePhase.Move && !_machine.PhaseStageTwo)
-                _machine.PhaseStageTwo = true;
+            _machine.PhaseStageTwo = true;
 
         if (_actionsCounter >= CurrentActionsLimit)
             ActionLimitHit();
@@ -180,7 +180,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     public void Battle(TerrID source, TerrID target, (int AttackRoll, int DefenseRoll)[] diceRolls)
     {
         _actionsCounter++;
-        
+
         int sourceLoss = 0;
         int targetLoss = 0;
         foreach (var (AttackRoll, DefenseRoll) in diceRolls)
@@ -270,7 +270,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     {
         if (Reward == null)
             return;
-        
+
         _currentGame.Players[_machine.PlayerTurn].AddCard(Reward);
         Reward = null;
     }

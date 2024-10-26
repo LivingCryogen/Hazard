@@ -1,5 +1,5 @@
-﻿using Model.DataAccess.Cards;
-using Model.DataAccess;
+﻿using Model.DataAccess;
+using Model.DataAccess.Cards;
 using Model.Entities.Cards;
 
 namespace Share.Interfaces.Model;
@@ -75,7 +75,7 @@ public interface ICardSet
             return false;
         if (card.ParentTypeName != TypeName)
             return false;
-        
+
         return true;
     }
 }

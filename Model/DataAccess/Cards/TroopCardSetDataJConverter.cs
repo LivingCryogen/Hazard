@@ -87,7 +87,7 @@ public class TroopCardSetDataJConverter : JsonConverter<TroopCardSet>, ICardSetD
                         newTroopCardSet.JData.Targets = [.. cardSetTargets];
                         newTroopCardSet.JData.Insignia = [.. cardSetInsignia];
                     }
-                break;
+                    break;
             }
         }
 

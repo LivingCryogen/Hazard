@@ -1,5 +1,4 @@
-﻿using Model.Tests.Entities.Mocks;
-using Share.Services.Registry;
+﻿using Share.Services.Registry;
 
 namespace Model.Tests.Registry.Stubs;
 

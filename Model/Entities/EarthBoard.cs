@@ -607,7 +607,7 @@ public class EarthBoard : IBoard, IBinarySerializable
                     .Select(pair => pair.Key)
                     .Cast<object>()
                     .ToList();
-            if (enumName.Equals(nameof(ContID))) 
+            if (enumName.Equals(nameof(ContID)))
                 return ContinentOwner
                     .Where(pair => pair.Value == playerNumber)
                     .Select(pair => pair.Key)
@@ -670,9 +670,9 @@ public class EarthBoard : IBoard, IBinarySerializable
 
         if (ContinentOwner[changedHomeContinent] == previousOwner && previousOwner > -1) {
             ContinentOwner[changedHomeContinent] = -1;
-            if (continentTerritories.All(item => TerritoryOwner[item] == newOwner)) 
+            if (continentTerritories.All(item => TerritoryOwner[item] == newOwner))
                 ContinentOwner[changedHomeContinent] = newOwner;
-            
+
             ContinentOwnerChanged?.Invoke(this, new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
         }
         else if (continentTerritories.All(item => TerritoryOwner[item] == newOwner)) {

@@ -148,9 +148,9 @@ public class TypeRegister : ITypeRegister<ITypeRelations>
         // Validate parent-member relationship
         if (registeredRelations[RegistryRelation.CollectionName] is not string regCollectionName || regCollectionName != collection.Name)
             throw new InvalidDataException($"The name of the type registered as the parent collection of type {registeredType} did not match the registered collection name of {registeredType}.");
-        if (!_typeRelata.TryGetValue(collection, out ITypeRelations? regCollectionRelations) || regCollectionRelations == null) 
+        if (!_typeRelata.TryGetValue(collection, out ITypeRelations? regCollectionRelations) || regCollectionRelations == null)
             throw new InvalidDataException($"The type registered as the parent collection of type {registeredType} did not have any registered relations with which to validate its relation to {registeredType}.");
-        if (regCollectionRelations[RegistryRelation.ElementType] is not Type regMemberType || regMemberType != registeredType) 
+        if (regCollectionRelations[RegistryRelation.ElementType] is not Type regMemberType || regMemberType != registeredType)
             throw new InvalidDataException($"The type registered as the parent collection of type {registeredType} did not have a registered member type equal to type {registeredType}.");
 
         parentType = collection;

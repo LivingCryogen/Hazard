@@ -35,8 +35,8 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
                         CurrentPhase = CurrentGame?.State?.CurrentPhase ?? GamePhase.Null;
 
                         TerritorySelected = TerrID.Null;
-                        if (CurrentPhase == GamePhase.Move)
-                            _moveTargets.Clear();
+                        if (CurrentPhase.Equals(GamePhase.Move))
+                            _moveTargets = null;
 
                         TerritorySelectCommand.NotifyCanExecuteChanged();
                         break;
@@ -301,7 +301,7 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
             if (i < attackRolls.Length)
                 diceResults.Add((attackRolls[i], defenseRolls[i]));
 
-        Regulator?.Battle((TerrID)source, (TerrID)target, [..diceResults]);
+        Regulator?.Battle((TerrID)source, (TerrID)target, [.. diceResults]);
 
         RaiseDiceThrown(attackDice, defenseDice);
 

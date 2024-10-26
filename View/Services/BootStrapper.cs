@@ -1,7 +1,7 @@
-﻿using Share.Interfaces.View;
-using Share.Interfaces.ViewModel;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Share.Interfaces.View;
+using Share.Interfaces.ViewModel;
 using System.Windows;
 
 namespace View.Services;

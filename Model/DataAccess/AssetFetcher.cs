@@ -14,7 +14,7 @@ public class AssetFetcher(IAssetFactory factory) : IAssetFetcher
 
         var searchDirectories = Directory.GetDirectories(assetDirectory).Append(assetDirectory);
         List<string> fileNames = [];
-        foreach (string directoryName in searchDirectories) 
+        foreach (string directoryName in searchDirectories)
             fileNames.AddRange(Directory.GetFiles(directoryName).Where(name => name.Contains(text)));
 
         return [.. fileNames];
