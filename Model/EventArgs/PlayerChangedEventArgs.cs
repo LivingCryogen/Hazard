@@ -5,7 +5,7 @@ namespace Model.EventArgs;
 public class PlayerChangedEventArgs : System.EventArgs, IPlayerChangedEventArgs
 {
     /// <summary>
-    /// Creates an event arg for when an <see cref="IPlayer"/> property changes, but no stored values need to be passed. (Ie, the alert and a property name is sufficient)
+    /// Constructs a PlayerChangedEventArgs for when an <see cref="IPlayer"/> property changes, but no stored values need to be passed. (Ie, the alert and a property name is sufficient)
     /// </summary>
     /// <param name="propName">The name of the property which changed.</param>
     public PlayerChangedEventArgs(string propName)
@@ -13,7 +13,7 @@ public class PlayerChangedEventArgs : System.EventArgs, IPlayerChangedEventArgs
         PropertyName = propName;
     }
     /// <summary>
-    /// Creates an event arg for when an <see cref="IPlayer"/> property changes *other than* <see cref="IPlayer.Hand"/>.
+    /// Constructs a PlayerChangedEventArgs for when any property on <see cref="IPlayer"/> changes apart from tha <see cref="IPlayer.Hand"/>.
     /// </summary>
     /// <param name="propName">The name of the property which changed.</param>
     /// <param name="oldValue">The old value, from before the change.</param>
@@ -25,7 +25,7 @@ public class PlayerChangedEventArgs : System.EventArgs, IPlayerChangedEventArgs
         NewValue = newValue;
     }
     /// <summary>
-    /// Creates an event arg for when <see cref="IPlayer.Hand"/> changes.
+    /// Constructs a PlayerChangedEventArgs for when <see cref="IPlayer.Hand"/> changes.
     /// </summary>
     /// <param name="propName">The name of the property which changed.</param>
     /// <param name="oldValue">The old value, from before the change.</param>

@@ -1,13 +1,16 @@
 ﻿namespace Share.Interfaces.Model;
 /// <summary>
-/// A <see cref="System.EventArgs"/> which fires when a player must be prompted with the option to trade in cards.
+/// An <see cref="EventArgs"/> for <see cref="IRegulator.PromptTradeIn"/>.
 /// </summary>
+/// <remarks>
+/// Fires when a player must be prompted with the option to trade in cards.
+/// </remarks>
 public interface IPromptTradeEventArgs
 {
     /// <summary>
     /// Gets the number of the player prompted.
     /// </summary>
-    /// <value>An <see cref="int"/> between 0 and 5.</value>
+    /// <value>A <see cref="int">number</see> matching the <see cref="IPlayer.Number"/> of the player to prompt.</value>
     int Player { get; }
     /// <summary>
     /// Gets a flag indicating whether the trade is forced.

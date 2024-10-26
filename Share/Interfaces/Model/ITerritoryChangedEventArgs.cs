@@ -2,16 +2,13 @@
 
 namespace Share.Interfaces.Model;
 /// <summary>
-/// Encapsulates data for <see cref="System.EventArgs"/> classes subscribed to <see cref="IBoard.TerritoryChanged"/>.
+/// Encapsulates data for <see cref="EventArgs"/> classes subscribed to <see cref="IBoard.TerritoryChanged"/>.
 /// </summary>
 public interface ITerritoryChangedEventArgs
 {
     /// <summary>
-    /// Gets or inits the id of the territory that changed.
+    /// Gets or inits the ID of the territory that changed.
     /// </summary>
-    /// <value>
-    /// A <see cref="TerrID"/>.
-    /// </value>
     public TerrID Changed { get; init; }
     /// <summary>
     /// Gets or inits the number of the player now associated with the changed territory.

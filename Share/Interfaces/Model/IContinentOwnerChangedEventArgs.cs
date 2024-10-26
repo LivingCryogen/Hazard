@@ -1,17 +1,22 @@
-﻿namespace Share.Interfaces;
-using Share.Enums;
+﻿using Share.Enums;
+
+namespace Share.Interfaces;
 
 /// <summary>
-/// Recipe for the <see cref="System.EventArgs"/> used by <see cref="Model.Entities.EarthBoard.ContinentOwnerChanged"/>.
+/// Recipe for the <see cref="EventArgs"/> used by <see cref="Model.IBoard.ContinentOwnerChanged"/>.
 /// </summary>
 public interface IContinentOwnerChangedEventArgs
 {
     /// <summary>
-    /// The ID of the Continent that changed.
+    /// Gets or inits a value representing the the Continent that changed.
     /// </summary>
     public ContID Changed { get; init; }
     /// <summary>
-    /// The <see cref="Model.Core.Player.Number"/> of the owner, if any, before the change occurred.
+    /// Gets or inits a value representing the Continent's previous owner.
     /// </summary>
+    /// <value>
+    /// If <see cref="Changed"/> was previously owned by a human player, their <see cref="Model.IPlayer.Number"/>; otherwise, <see langword="null"/>.<br/>
+    /// If necessary, no prior ownership may be represented by -1.
+    /// </value>    
     public int? OldPlayer { get; init; }
 }
