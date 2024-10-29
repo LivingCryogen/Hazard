@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Model.EventArgs;
 using Shared.Enums;
+using Shared.Geography;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Interfaces.View;
@@ -90,7 +91,7 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
             return false;
 
         int owner = Territories![(int)territory].PlayerOwner;
-        IGeography geography = CurrentGame.Board.Geography;
+        // IGeography geography = CurrentGame.Board.Geography;
 
         switch (CurrentPhase) {
             case GamePhase.Null: return false;
@@ -397,14 +398,14 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
 
     private List<TerrID> GetMoveTargets(TerrID territory, int playerOwner)
     {
-        var sourceWeb = CurrentGame?.Board.Geography.NeighborWeb;
-        if (sourceWeb == null)
+        var neighbors = WorldGeography.GetNeighbors(territory);
+        if (neighbors.Count <= 0)
             return [];
 
         List<TerrID> targetList = [];
-        foreach (TerrID potentialNeighbor in sourceWeb[territory])
-            if (Territories![(int)potentialNeighbor].PlayerOwner == playerOwner)
-                targetList.Add(potentialNeighbor);
+        foreach (TerrID potentialTarget in neighbors)
+            if (Territories[(int)potentialTarget].PlayerOwner == playerOwner)
+                targetList.Add(potentialTarget);
 
         return targetList;
     }

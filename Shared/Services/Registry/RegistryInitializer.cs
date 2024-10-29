@@ -1,5 +1,7 @@
-﻿using Model.DataAccess.Cards;
+﻿using Model.DataAccess;
+using Model.DataAccess.Cards;
 using Model.Entities.Cards;
+using Shared.Geography;
 using Shared.Interfaces.Model;
 using System.Text.Json.Serialization;
 
@@ -57,6 +59,8 @@ public class RegistryInitializer : IRegistryInitializer
      * require adding additional structs/records and population logic. */
     public void PopulateRegistry(ITypeRegister<ITypeRelations> registry)
     {
+        RegisterGeography(registry);
+
         foreach (var registryInfo in _cardTypeRegistryRecords) {
             TypeRelations cardRelations = new();
             cardRelations.Add(registryInfo.Name, RegistryRelation.Name);
@@ -74,5 +78,15 @@ public class RegistryInitializer : IRegistryInitializer
             cardSetRelations.Add(registryInfo.ConvertedDataType, RegistryRelation.ConvertedDataType);
             registry.Register(registryInfo.CardSetType, cardSetRelations);
         }
+    }
+
+    private void RegisterGeography(ITypeRegister<ITypeRelations> registry)
+    {
+        TypeRelations geographyRelations = new();
+        geographyRelations.Add(nameof(WorldGeography), RegistryRelation.Name);
+        geographyRelations.Add("Assets\\EarthGeography.json", RegistryRelation.DataFileName);
+        geographyRelations.Add(typeof(GeographyInitializer), RegistryRelation.ConvertedDataType);
+        geographyRelations.Add(new GeographyJConverter(), RegistryRelation.DataConverter);
+        registry.Register(typeof(WorldGeography), geographyRelations);
     }
 }

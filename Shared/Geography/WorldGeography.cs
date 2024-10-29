@@ -7,10 +7,12 @@ namespace Shared.Geography;
 
 public static class WorldGeography
 {
+    private static ReadOnlyDictionary<ContID, HashSet<TerrID>>? _continentMembers;
+    private static ReadOnlyDictionary<TerrID, ContID>? _terrIDToContID;
+    private static ReadOnlyDictionary<TerrID, HashSet<TerrID>>? _neighborWeb;
     public static int NumTerritories { get; private set; }
     public static int NumContinents { get; private set; }
-    public static ReadOnlyDictionary<ContID, HashSet<TerrID>> ContinentMembers { get; private set; }
-    public static ReadOnlyDictionary<TerrID, ContID> TerrIDToContID { get; private set; }
+
 
     public static void Initialize(GeographyInitializer initializer)
     {
@@ -19,6 +21,7 @@ public static class WorldGeography
 
         Dictionary<ContID, HashSet<TerrID>> continentMembers = [];
         Dictionary<TerrID, ContID> terrIDToContID = [];
+        Dictionary<TerrID, HashSet<TerrID>> neighborWeb = [];
         foreach(var contTerrPair in initializer.ContinentMembers) {
             if (contTerrPair.Key is not ContID continent)
                 continue;
@@ -28,57 +31,58 @@ public static class WorldGeography
                     continue;
                 continentMembers[continent].Add(territory);
                 terrIDToContID[territory] = continent;
+
+                if (!initializer.TerritoryNeighbors.TryGetValue(territory, out HashSet<Enum>? neighbors) || neighbors == null)
+                    continue;
+
+                foreach (Enum terrEnum in neighbors) {
+                    if (terrEnum is not TerrID neighborTerritory)
+                        continue;
+                    neighborWeb[territory].Add(neighborTerritory);
+                }
             }
         }
-        ContinentMembers = new(continentMembers);
-        TerrIDToContID = new(terrIDToContID);
+        _continentMembers = new(continentMembers);
+        _terrIDToContID = new(terrIDToContID);
+        _neighborWeb = new(neighborWeb);
     }
-    /// <summary>
-    /// Determines which continent contains a specified territory.
-    /// </summary>
-    /// <param name="terrID">The specified territory.</param>
-    /// <returns>The containing continent.</returns>
-    //public static ContID TerrIDToContID(TerrID terrID)
-    //{
-    //    return (int)terrID switch {
-    //        -1 => ContID.Null,
-    //        int n when n >= 0 && n <= 8 => ContID.NorthAmerica,
-    //        int n when n >= 9 && n <= 12 => ContID.SouthAmerica,
-    //        int n when n >= 13 && n <= 19 => ContID.Europe,
-    //        int n when n >= 20 && n <= 25 => ContID.Africa,
-    //        int n when n >= 26 && n <= 37 => ContID.Asia,
-    //        int n when n >= 38 && n <= 41 => ContID.Oceania,
-    //        _ => throw new ArgumentOutOfRangeException(nameof(terrID))
-    //    };
-    //}
+
+    public static ContID TerritoryToContinent(TerrID terrID)
+    {
+        if (_terrIDToContID == null)
+            return ContID.Null;
+        if (!_terrIDToContID.TryGetValue(terrID, out var continent))
+            return ContID.Null;
+        return continent;
+    }
 
     public static HashSet<TerrID> GetContinentMembers(ContID continent)
     {
-        return (int)continent switch {
-            -1 => [TerrID.Null],
-
-        };
-        /// <summary>
-        /// Determines whether a given set of territories fully encompasses a specified continent.
-        /// </summary>
-        /// <param name="territoryList">The territories to test.</param>
-        /// <param name="continent">The continet which may fall within <paramref name="territoryList"/>.</param>
-        /// <returns><see langword="true"/> if <paramref name="territoryList"/> includes all of the territories within <paramref name="continent"/>; otherwise, <see langword="false"/>.</returns>
-        static bool IncludesContinent(HashSet<TerrID> territoryList, ContID continent)
-        {
-            foreach (TerrID territory in territoryList)
-                if (TerrIDToContID(territory) != continent)
-            var continentList = ContinentMembers[continent];
-            return continentList.All(territoryList.Contains) && continentList.Count > 0;
-        }
+        if (_continentMembers == null)
+            return [];
+        if (!_continentMembers.TryGetValue(continent, out var members) || members == null)
+            return [];
+        return members;
+    }
+    public static bool IncludesContinent(HashSet<TerrID> territoryList, ContID continent)
+    {
+        if (_continentMembers == null)
+            return false;
+        if (!_continentMembers.TryGetValue(continent, out var continentMembers) || continentMembers is not HashSet<TerrID> contMembers)
+            return false;
+        if (contMembers.Count <= 0 || territoryList.Count <= 0)
+            return false;
+        if (!contMembers.IsSubsetOf(territoryList))
+            return false;
+        return true;
     }
 
-    /// <summary>
-    /// Gets a mapping of territories to the their neighbors.
-    /// </summary>
-    /// <remarks>
-    /// A naive implementation of a Graph, this is performant enough for small graphs and search depths (~2). But it should be replaced <br/>
-    /// if an extension or modification will require signifacantly large graphs or deeper searches.
-    /// </remarks>
-    // public ReadOnlyDictionary<TerrID, HashSet<TerrID>> NeighborWeb { get; } = new(new Dictionary<TerrID, HashSet<TerrID>>());
+    public static HashSet<TerrID> GetNeighbors(TerrID territory)
+    {
+        if (_neighborWeb == null)
+            return [];
+        if (!_neighborWeb.TryGetValue(territory, out HashSet<TerrID>? neighbors) || neighbors == null)
+            return [];
+        return neighbors;
+    }
 }

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Hazard.ViewModel.SubElements;
 using Microsoft.Extensions.Logging;
 using Shared.Enums;
+using Shared.Geography;
 using Shared.Geography.Enums;
 using Shared.Interfaces;
 using Shared.Interfaces.Model;
@@ -191,7 +192,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
             CurrentGame.UpdatePlayerNames(playerNames);
         }
 
-        for (int i = 0; i < CurrentGame.Board.Geography.NumTerritories; i++)
+        for (int i = 0; i < WorldGeography.NumTerritories; i++)
             Territories.Add(new TerritoryInfo(i) { Armies = CurrentGame.Board.Armies[(TerrID)i] });
 
         for (int i = 0; i < NumPlayers; i++) {

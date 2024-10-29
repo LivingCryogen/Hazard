@@ -1,4 +1,4 @@
-﻿using Shared.Enums;
+﻿using Shared.Geography.Enums;
 using Shared.Interfaces;
 
 namespace Model.EventArgs;

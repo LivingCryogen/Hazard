@@ -1,5 +1,6 @@
 ﻿using Model.Entities;
-using Shared.Enums;
+using Shared.Geography;
+using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Interfaces.ViewModel;
 
@@ -13,7 +14,7 @@ public readonly struct CardInfo : ICardInfo
         card.Target.CopyTo(TargetTerritory, 0);
         List<ContID> continents = [];
         foreach (TerrID territory in TargetTerritory) {
-            var continent = EarthBoard.EarthGeography.TerrIDToContinent(territory);
+            var continent = WorldGeography.TerritoryToContinent(territory);
             continents.Add(continent);
         }
         TargetContinent = continents.Distinct().ToArray();
@@ -35,7 +36,7 @@ public readonly struct CardInfo : ICardInfo
         card.Target.CopyTo(TargetTerritory, 0);
         List<ContID> continents = [];
         foreach (TerrID territory in TargetTerritory) {
-            var continent = EarthBoard.EarthGeography.TerrIDToContinent(territory);
+            var continent = WorldGeography.TerritoryToContinent(territory);
             continents.Add(continent);
         }
         var filteredContinentList = continents.Distinct();

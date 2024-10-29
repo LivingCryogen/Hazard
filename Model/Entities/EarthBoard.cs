@@ -128,8 +128,8 @@ public class EarthBoard: IBoard, IBinarySerializable
             throw new ArgumentException("Non-null TerrID required.", nameof(changed));
 
         int newOwner = TerritoryOwner[changed];
-        var changedHomeContinent = Shared.Geography.TerrIDToContinent(changed);
-        var continentTerritories = EarthGeography.ContinentMembers[changedHomeContinent];
+        var changedHomeContinent = WorldGeography.TerritoryToContinent(changed);
+        var continentTerritories = WorldGeography.GetContinentMembers(changedHomeContinent);
         if (continentTerritories == null || continentTerritories.Count <= 0)
             return;
 
