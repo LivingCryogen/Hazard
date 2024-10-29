@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Model.Core;
-using Share.Interfaces.Model;
-using Share.Interfaces.ViewModel;
-using Share.Services.Registry;
+using Shared.Interfaces.Model;
+using Shared.Interfaces.ViewModel;
+using Shared.Services.Registry;
 
 namespace ViewModel.Services;
 

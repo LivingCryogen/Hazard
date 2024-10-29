@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Share.Enums;
-using Share.Interfaces.ViewModel;
+using Shared.Enums;
+using Shared.Interfaces.ViewModel;
 using ViewModel.Services;
 
 namespace Hazard.ViewModel.SubElements;
@@ -8,7 +8,7 @@ namespace Hazard.ViewModel.SubElements;
 /// Encapsulates display data for each territory element. 
 /// </summary>
 /// <remarks>
-/// The Model layer sources: <see cref="Share.Interfaces.Model.IBoard.Geography"/> and other IBoard and IPlayer data. <br/>
+/// The Model layer sources: <see cref="Shared.Interfaces.Model.IBoard.Geography"/> and other IBoard and IPlayer data. <br/>
 /// The View will bind Territory UI elements to this in some way.
 /// </remarks>
 public partial class TerritoryInfo : ObservableObject, ITerritoryInfo

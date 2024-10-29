@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Share.Interfaces.View;
-using Share.Interfaces.ViewModel;
+using Shared.Geography;
+using Shared.Interfaces.Model;
+using Shared.Interfaces.View;
+using Shared.Interfaces.ViewModel;
 using System.Windows;
 
 namespace View.Services;
@@ -42,6 +44,8 @@ public class BootStrapper(App mainApp, ILogger<BootStrapper> logger) : IBootStra
             var viewModel = _mainApp.AppHost.Services.GetRequiredService<IMainVM>();
             _logger.LogInformation("Initializing game from source: {FileName}.", fileName);
             viewModel.Initialize([], [], fileName);
+            if (viewModel.CurrentGame is IGame currentGame)
+                WorldGeography.Initialize(currentGame.AssetFetcher.FetchGeography());
             ((MainWindow)_mainApp.MainWindow).Initialize(viewModel);
             _mainApp.MainWindow.Show();
         }
@@ -65,6 +69,8 @@ public class BootStrapper(App mainApp, ILogger<BootStrapper> logger) : IBootStra
 
         var viewModel = _mainApp.AppHost.Services.GetRequiredService<IMainVM>();
         viewModel.Initialize(playerNames, playerColors, null);
+        if (viewModel.CurrentGame is IGame currentGame)
+            WorldGeography.Initialize(currentGame.AssetFetcher.FetchGeography());
         ((MainWindow)(_mainApp.MainWindow)).Initialize(viewModel);
         _mainApp.MainWindow.Show();
     }

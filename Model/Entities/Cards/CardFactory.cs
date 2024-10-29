@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using Share.Interfaces.Model;
-using Share.Services.Registry;
+using Shared.Interfaces.Model;
+using Shared.Services.Registry;
 
 namespace Model.Entities.Cards;
 /// <summary>

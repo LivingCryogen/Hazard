@@ -1,4 +1,4 @@
-﻿using Share.Interfaces.ViewModel;
+﻿using Shared.Interfaces.ViewModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;

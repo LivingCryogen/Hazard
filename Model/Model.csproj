@@ -23,5 +23,5 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
   </ItemGroup>
 
-  <Import Project="..\Share\Share.projitems" Label="Shared" />
+  <Import Project="..\Shared.\Shared.projitems" Label="Shared" />
 </Project>

@@ -1,6 +1,6 @@
 ﻿using Model.Tests.DataAccess.Mocks;
 using Model.Tests.Entities.Mocks;
-using Share.Services.Registry;
+using Shared.Services.Registry;
 
 namespace Model.Tests.Fixtures.Mocks;
 

@@ -1,5 +1,5 @@
-﻿using Share.Enums;
-using Share.Interfaces.Model;
+﻿using Shared.Geography.Enums;
+using Shared.Interfaces.Model;
 using System.Collections.ObjectModel;
 
 namespace Model.Assets;

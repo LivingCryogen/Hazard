@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Fixtures.Stubs;
-using Share.Enums;
-using Share.Interfaces.Model;
+using Shared.Enums;
+using Shared.Interfaces.Model;
 
 namespace Model.Tests.Entities.Mocks;
 

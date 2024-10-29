@@ -1,5 +1,5 @@
-﻿using Share.Enums;
-using Share.Interfaces.Model;
+﻿using Shared.Enums;
+using Shared.Interfaces.Model;
 
 namespace Model.EventArgs;
 /// <inheritdoc cref="ITerritoryChangedEventArgs"/>

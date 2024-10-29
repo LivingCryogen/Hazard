@@ -1,5 +1,5 @@
 ﻿using Model.Tests.Fixtures.Mocks;
-using Share.Services.Registry;
+using Shared.Services.Registry;
 
 namespace Model.Tests.Fixtures;
 

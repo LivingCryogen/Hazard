@@ -1,5 +1,5 @@
-﻿using Share.Enums;
-using Share.Interfaces;
+﻿using Shared.Enums;
+using Shared.Interfaces;
 
 namespace Model.EventArgs;
 

@@ -5,9 +5,9 @@ using Model.Entities;
 using Model.Tests.Entities.Mocks;
 using Model.Tests.Fixtures;
 using Model.Tests.Fixtures.Stubs;
-using Share.Enums;
-using Share.Interfaces.Model;
-using Share.Services.Serializer;
+using Shared.Enums;
+using Shared.Interfaces.Model;
+using Shared.Services.Serializer;
 
 namespace Model.Tests.Core.Mocks;
 

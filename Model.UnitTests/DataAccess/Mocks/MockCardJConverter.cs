@@ -2,7 +2,7 @@
 using Model.Tests.Entities.Mocks;
 using Model.Tests.Fixtures;
 using Model.Tests.Fixtures.Mocks;
-using Share.Interfaces.Model;
+using Shared.Interfaces.Model;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 

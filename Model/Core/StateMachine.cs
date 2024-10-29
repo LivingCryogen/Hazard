@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using Share.Enums;
-using Share.Interfaces.Model;
-using Share.Services.Serializer;
+using Shared.Enums;
+using Shared.Interfaces.Model;
+using Shared.Services.Serializer;
 using System.Collections;
 
 namespace Model.Core;
@@ -21,7 +21,7 @@ public class StateMachine : IBinarySerializable
     /// Indicates that a <see cref="StateMachine"/> public property has changed value.
     /// </summary>
     /// <remarks>
-    /// Both <see cref="Regulator"/> and <see cref="Share.Interfaces.ViewModel.IMainVM"/> subscribe to this event.
+    /// Both <see cref="Regulator"/> and <see cref="Shared.Interfaces.ViewModel.IMainVM"/> subscribe to this event.
     /// </remarks>
     public EventHandler<string>? StateChanged;
 

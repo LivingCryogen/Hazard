@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Model.Entities;
 using Model.Tests.DataAccess.Mocks;
-using Share.Services.Registry;
+using Shared.Services.Registry;
 
 namespace Model.Tests.Entities.Mocks;
 

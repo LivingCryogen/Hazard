@@ -5,13 +5,13 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model", "Model\Model.csproj", "{6618F309-05A2-48EA-8390-6D7D74C32799}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Share", "Share\Share.shproj", "{5466ED96-BB7E-48FC-8FEB-8C5F4DFB473F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model.Tests", "Model.UnitTests\Model.Tests.csproj", "{B7FE1E31-A3B6-4A7E-A137-6CBE30127952}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModel", "ViewModel\ViewModel.csproj", "{ED4C7D62-A430-4D1D-AEB0-B1211C329FA5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "View", "View\View.csproj", "{56048DAE-0B63-4211-9B27-EC70085B1907}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{A96ED368-04FE-470B-AE91-E534ED9D57B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +43,7 @@ Global
 		SolutionGuid = {B68E4C7A-C22B-4FAC-A68E-96A570F5462F}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Share\Share.projitems*{6618f309-05a2-48ea-8390-6d7d74c32799}*SharedItemsImports = 5
+		Shared\Shared.projitems*{6618f309-05a2-48ea-8390-6d7d74c32799}*SharedItemsImports = 5
+		Shared\Shared.projitems*{a96ed368-04fe-470b-ae91-e534ed9d57b0}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

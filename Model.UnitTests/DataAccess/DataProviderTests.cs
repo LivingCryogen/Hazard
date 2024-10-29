@@ -6,8 +6,8 @@ using Model.Tests.Entities.Mocks;
 using Model.Tests.Fixtures;
 using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Fixtures.Stubs;
-using Share.Interfaces.Model;
-using Share.Services.Registry;
+using Shared.Interfaces.Model;
+using Shared.Services.Registry;
 
 namespace Model.Tests.DataAccess;
 

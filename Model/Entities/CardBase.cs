@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Model.Entities.Cards;
-using Share.Interfaces.Model;
-using Share.Services.Registry;
-using Share.Services.Serializer;
+using Shared.Interfaces.Model;
+using Shared.Services.Registry;
+using Shared.Services.Serializer;
 
 namespace Model.Entities;
 /// <summary>

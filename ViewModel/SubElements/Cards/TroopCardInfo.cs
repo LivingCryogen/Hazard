@@ -1,7 +1,7 @@
-﻿using Share.Enums;
-using Share.Interfaces;
-using Share.Interfaces.Model;
-using Share.Interfaces.ViewModel;
+﻿using Shared.Enums;
+using Shared.Interfaces;
+using Shared.Interfaces.Model;
+using Shared.Interfaces.ViewModel;
 using ViewModel.Services;
 
 namespace ViewModel.SubElements.Cards;

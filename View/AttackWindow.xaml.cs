@@ -1,6 +1,6 @@
 ﻿using Hazard.ViewModel.SubElements;
-using Share.Enums;
-using Share.Interfaces.ViewModel;
+using Shared.Enums;
+using Shared.Interfaces.ViewModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;

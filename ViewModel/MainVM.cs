@@ -1,10 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Model.EventArgs;
-using Share.Enums;
-using Share.Interfaces.Model;
-using Share.Interfaces.View;
-using Share.Interfaces.ViewModel;
+using Shared.Enums;
+using Shared.Geography.Enums;
+using Shared.Interfaces.Model;
+using Shared.Interfaces.View;
+using Shared.Interfaces.ViewModel;
 
 namespace ViewModel;
 /// <summary>

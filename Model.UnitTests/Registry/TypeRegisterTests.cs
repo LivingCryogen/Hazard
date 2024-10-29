@@ -3,8 +3,8 @@ using Model.Tests.DataAccess.Mocks;
 using Model.Tests.Fixtures;
 using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Registry.Stubs;
-using Share.Interfaces.Model;
-using Share.Services.Registry;
+using Shared.Interfaces.Model;
+using Shared.Services.Registry;
 
 namespace Model.Tests.Registry;
 
@@ -49,7 +49,7 @@ public class TypeRegisterTests
     {
         Assert.IsNotNull(_testRegister);
         _testRegister.Register(typeof(SharedRegister));
-        _testRegister.AddRelation(typeof(SharedRegister), ("Shared.txt", RegistryRelation.DataFileName));
+        _testRegister.AddRelation(typeof(SharedRegister), ("Shared..txt", RegistryRelation.DataFileName));
         _testRegister.AddRelation(typeof(SharedRegister), (new MockCardDataJConverter(), RegistryRelation.DataConverter));
 
         var type = _testRegister[RegistryRelation.Name];

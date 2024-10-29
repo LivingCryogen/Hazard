@@ -1,5 +1,5 @@
-﻿using Share.Interfaces.Model;
-using Share.Services.Registry;
+﻿using Shared.Interfaces.Model;
+using Shared.Services.Registry;
 using System.Text.Json.Serialization;
 
 namespace Model.DataAccess.Cards;
