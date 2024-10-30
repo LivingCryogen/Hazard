@@ -38,7 +38,7 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
 
                         TerritorySelected = TerrID.Null;
                         if (CurrentPhase.Equals(GamePhase.Move))
-                            _moveTargets = null;
+                            _moveTargets = [];
 
                         TerritorySelectCommand.NotifyCanExecuteChanged();
                         break;
@@ -139,7 +139,7 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
                     if (owner.Equals(CurrentGame!.State!.PlayerTurn))
                         return false;
                     else {
-                        if (geography.NeighborWeb != null && geography.NeighborWeb[TerritorySelected].Contains(territory))
+                        if (WorldGeography.GetNeighbors(TerritorySelected).Contains(territory))
                             return true;
                         return false;
                     }

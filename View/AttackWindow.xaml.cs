@@ -1,5 +1,5 @@
 ﻿using Hazard.ViewModel.SubElements;
-using Shared.Enums;
+using Shared.Geography.Enums;
 using Shared.Interfaces.ViewModel;
 using System.ComponentModel;
 using System.Windows;

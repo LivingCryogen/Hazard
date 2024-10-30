@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Model.Tests.Entities.Mocks;
-using Shared.Enums;
+using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Services.Serializer;
 

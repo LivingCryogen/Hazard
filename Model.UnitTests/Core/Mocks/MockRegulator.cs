@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Shared.Enums;
+using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Services.Serializer;
 

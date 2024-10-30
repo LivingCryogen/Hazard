@@ -2,6 +2,7 @@
 using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Fixtures.Stubs;
 using Shared.Enums;
+using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 
 namespace Model.Tests.Entities.Mocks;

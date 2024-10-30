@@ -2,6 +2,7 @@
 
 public enum MockTerrID : int
 {
+    Null = -1,
     Alabama = 0,
     Alaska = 1,
     Arizona = 2,

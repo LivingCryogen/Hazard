@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Shared.Enums;
+using Shared.Geography.Enums;
 using Shared.Interfaces.ViewModel;
 using ViewModel.Services;
 

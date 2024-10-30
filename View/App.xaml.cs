@@ -110,7 +110,6 @@ public partial class App : Application
             services.AddTransient<IContinentOwnerChangedEventArgs, ContinentOwnerChangedEventArgs>();
             services.AddTransient<IRuleValues, RuleValues>();
             services.AddTransient<IBoard, EarthBoard>();
-            services.AddTransient<IGeography, EarthBoard.EarthGeography>();
             services.AddTransient<IRegulator, Regulator>();
             services.AddTransient<IGame, Game>();
             services.AddTransient<IMainVM, MainVM>();

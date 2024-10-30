@@ -17,16 +17,6 @@ public class GeographyInitializer
     public string[] TerritoryNames { get; private set; } = [];
     public Dictionary<Enum, HashSet<Enum>> ContinentMembers { get; } = [];
     public Dictionary<Enum, HashSet<Enum>> TerritoryNeighbors { get; } = [];
-    public bool IsEmpty {
-        get =>
-    ContinentEnumType == null &&
-    TerritoryEnumType == null &&
-    ContinentNames.Length == 0 &&
-    TerritoryNames.Length == 0 &&
-    ContinentMembers.Count == 0 &&
-    TerritoryNeighbors.Count == 0
-    ;
-    }
 
     public void SetEnumTypes((string ContinentEnumName, string TerritoryEnumName) names)
     {
