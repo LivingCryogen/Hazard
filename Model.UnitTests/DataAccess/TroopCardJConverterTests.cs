@@ -25,7 +25,8 @@ public class TroopCardJConverterTests
             Assert.IsTrue(targetList.Length > 0);
         foreach (MockTerrID mockID in Enum.GetValues(typeof(MockTerrID))) {
             var mockTargets = cardSetData.Targets.SelectMany(array => array).Cast<MockTerrID>();
-            Assert.IsTrue(mockTargets.Contains(mockID));
+            if (mockID != MockTerrID.Null)
+                Assert.IsTrue(mockTargets.Contains(mockID));
         }
     }
 }

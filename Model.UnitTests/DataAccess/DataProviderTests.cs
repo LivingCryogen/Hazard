@@ -96,7 +96,8 @@ public class DataProviderTests
             Assert.IsTrue(targetList.Length > 0);
         foreach (MockTerrID mockID in Enum.GetValues(typeof(MockTerrID))) {
             var mockTargets = returnedCardSetData.Targets.SelectMany(array => array).Cast<MockTerrID>();
-            Assert.IsTrue(mockTargets.Contains(mockID));
+            if (mockID != MockTerrID.Null)
+                Assert.IsTrue(mockTargets.Contains(mockID));
         }
     }
 }
