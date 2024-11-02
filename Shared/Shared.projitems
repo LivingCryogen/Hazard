@@ -15,7 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Geography\Enums\ContID.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enums\GamePhase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Geography\Enums\TerrID.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Geography\WorldGeography.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Geography\BoardGeography.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Geography\GeographyInitializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IAssetFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IAssetFetcher.cs" />

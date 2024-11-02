@@ -8,11 +8,11 @@ namespace Shared.Interfaces.Model;
 public interface IRegulator : IBinarySerializable
 {
     /// <summary>
-    /// Gets the limit on player actions during this <see cref="GamePhase"/>.
+    /// Gets the limit on player actions during this <see cref="Enums.GamePhase"/>.
     /// </summary>
     int CurrentActionsLimit { get; set; }
     /// <summary>
-    /// Gets the number of player actions taken during this <see cref="GamePhase"/>.
+    /// Gets the number of player actions taken during this <see cref="Enums.GamePhase"/>.
     /// </summary>
     int PhaseActions { get; }
     /// <summary>
@@ -29,12 +29,12 @@ public interface IRegulator : IBinarySerializable
     /// </summary>
     event EventHandler<IPromptTradeEventArgs>? PromptTradeIn;
     /// <summary>
-    /// Updates game state in response to a territory being selected during Setup or Place phases (see <see cref="GamePhase"/>).
+    /// Updates game state in response to a territory being selected during Setup or Place phases (see <see cref="Enums.GamePhase"/>).
     /// </summary>
     /// <param name="territory">The <see cref="TerrID"/> of the territory selected.</param>
     void ClaimOrReinforce(TerrID territory);
     /// <summary>
-    /// Updates the game state in response to the 'Move' action, in which a player moves a number of armies from one controlled territory to another during <see cref="GamePhase.Move"/>.
+    /// Updates the game state in response to the 'Move' action, in which a player moves a number of armies from one controlled territory to another during <see cref="Enums.GamePhase.Move"/>.
     /// </summary>
     /// <param name="source">The source of the moving armies.</param>
     /// <param name="target">The target of the move.</param>
@@ -46,7 +46,7 @@ public interface IRegulator : IBinarySerializable
     /// <param name="player">The <see cref="int">number</see> of the player whose hand contains the cards to be traded.</param>
     /// <param name="handIndices">An array of <see cref="int">indices</see> of the <see cref="ICard"/>s within <see cref="IPlayer.Hand"/> that are to be traded.</param>
     /// <returns><see langword="true"/> if circumstances allow the trade; otherwise, <see langword="false"/>. <br/></returns>
-    /// <remarks>Typically, relevant factors include the <see cref="ICard"/> values, their <see cref="ICardSet"/> trading functions, and the current <see cref="GamePhase"/>.</remarks>
+    /// <remarks>Typically, relevant factors include the <see cref="ICard"/> values, their <see cref="ICardSet"/> trading functions, and the current <see cref="Enums.GamePhase"/>.</remarks>
     bool CanTradeInCards(int player, int[] handIndices);
     /// <summary>
     /// Executes game-rule logic for trading in cards from a player.

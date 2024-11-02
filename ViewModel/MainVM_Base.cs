@@ -192,7 +192,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
             CurrentGame.UpdatePlayerNames(playerNames);
         }
 
-        for (int i = 0; i < WorldGeography.NumTerritories; i++)
+        for (int i = 0; i < BoardGeography.NumTerritories; i++)
             Territories.Add(new TerritoryInfo(i) { Armies = CurrentGame.Board.Armies[(TerrID)i] });
 
         for (int i = 0; i < NumPlayers; i++) {

@@ -45,7 +45,7 @@ public interface IPlayer : IBinarySerializable
     /// It is calculated by <see cref="IRuleValues.CalculateArmyBonus(int, List{ContID})"/>.
     /// </value>
     /// <remarks>
-    /// Should be recalculated at the start of each turn (during <see cref="GamePhase.Place"/>)
+    /// Should be recalculated at the start of each turn (during <see cref="Enums.GamePhase.Place"/>)
     /// </remarks>
     int ArmyBonus { get; }
     /// <summary>
@@ -59,7 +59,7 @@ public interface IPlayer : IBinarySerializable
     /// Gets or sets the current number of armies a player has left to place.
     /// </summary>
     /// <value>
-    /// An integer with an initial value equal to <see cref="ArmyBonus"/> that is reduced when an <see cref="IPlayer"/> places an army during <see cref="GamePhase.Place"/>.
+    /// An integer with an initial value equal to <see cref="ArmyBonus"/> that is reduced when an <see cref="IPlayer"/> places an army during <see cref="Enums.GamePhase.Place"/>.
     /// </value>
     int ArmyPool { get; set; }
     /// <summary>

@@ -18,6 +18,9 @@ public interface IGame : IBinarySerializable
     event EventHandler<int>? PlayerWon;
 
     #region Properties
+    /// <summary>
+    /// Gets the facade of the DAL.
+    /// </summary>
     public IAssetFetcher AssetFetcher { get; }
     /// <summary>
     /// Gets the unique ID of the game.

@@ -14,7 +14,7 @@ public readonly struct CardInfo : ICardInfo
         card.Target.CopyTo(TargetTerritory, 0);
         List<ContID> continents = [];
         foreach (TerrID territory in TargetTerritory) {
-            var continent = WorldGeography.TerritoryToContinent(territory);
+            var continent = BoardGeography.TerritoryToContinent(territory);
             continents.Add(continent);
         }
         TargetContinent = continents.Distinct().ToArray();
@@ -36,7 +36,7 @@ public readonly struct CardInfo : ICardInfo
         card.Target.CopyTo(TargetTerritory, 0);
         List<ContID> continents = [];
         foreach (TerrID territory in TargetTerritory) {
-            var continent = WorldGeography.TerritoryToContinent(territory);
+            var continent = BoardGeography.TerritoryToContinent(territory);
             continents.Add(continent);
         }
         var filteredContinentList = continents.Distinct();

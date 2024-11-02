@@ -139,7 +139,7 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
                     if (owner.Equals(CurrentGame!.State!.PlayerTurn))
                         return false;
                     else {
-                        if (WorldGeography.GetNeighbors(TerritorySelected).Contains(territory))
+                        if (BoardGeography.GetNeighbors(TerritorySelected).Contains(territory))
                             return true;
                         return false;
                     }
@@ -398,7 +398,7 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
 
     private List<TerrID> GetMoveTargets(TerrID territory, int playerOwner)
     {
-        var neighbors = WorldGeography.GetNeighbors(territory);
+        var neighbors = BoardGeography.GetNeighbors(territory);
         if (neighbors.Count <= 0)
             return [];
 

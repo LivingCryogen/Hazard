@@ -7,7 +7,7 @@
     "**/obj",
     "**/platforms"
   ],
-  "EnumNames" : ["ContID", "TerrID"],
+  "EnumNames": [ "Shared.Geography.Enums.ContID", "Shared.Geography.Enums.TerrID" ],
   "NorthAmerica": [
     "Alaska",
     "NorthwestTerritory",
