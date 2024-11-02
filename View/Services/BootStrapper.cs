@@ -44,8 +44,6 @@ public class BootStrapper(App mainApp, ILogger<BootStrapper> logger) : IBootStra
             var viewModel = _mainApp.AppHost.Services.GetRequiredService<IMainVM>();
             _logger.LogInformation("Initializing game from source: {FileName}.", fileName);
             viewModel.Initialize([], [], fileName);
-            if (viewModel.CurrentGame is IGame currentGame)
-                WorldGeography.Initialize(currentGame.AssetFetcher.FetchGeography());
             ((MainWindow)_mainApp.MainWindow).Initialize(viewModel);
             _mainApp.MainWindow.Show();
         }
@@ -69,8 +67,6 @@ public class BootStrapper(App mainApp, ILogger<BootStrapper> logger) : IBootStra
 
         var viewModel = _mainApp.AppHost.Services.GetRequiredService<IMainVM>();
         viewModel.Initialize(playerNames, playerColors, null);
-        if (viewModel.CurrentGame is IGame currentGame)
-            WorldGeography.Initialize(currentGame.AssetFetcher.FetchGeography());
         ((MainWindow)(_mainApp.MainWindow)).Initialize(viewModel);
         _mainApp.MainWindow.Show();
     }

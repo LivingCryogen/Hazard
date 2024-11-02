@@ -20,11 +20,11 @@ public class GeographyInitializer
 
     public void SetEnumTypes((string ContinentEnumName, string TerritoryEnumName) names)
     {
-        if (Type.GetType(string.Concat("Hazard.Shared.Geography.Enums.", names.ContinentEnumName, _assemblyName)) is not Type continentEnumType)
-            throw new InvalidDataException($"");
+        if (Type.GetType(names.ContinentEnumName) is not Type continentEnumType)    
+            throw new InvalidDataException($"{this} could not locate a Continent Enum.");
         ContinentEnumType = continentEnumType;
-        if (Type.GetType(string.Concat("Hazard.Shared.Geography.Enums.", names.TerritoryEnumName, _assemblyName)) is not Type territoryEnumType)
-            throw new InvalidDataException($"");
+        if (Type.GetType(names.TerritoryEnumName) is not Type territoryEnumType)
+            throw new InvalidDataException($"{this} could not locate a Territory Enum.");
         TerritoryEnumType = territoryEnumType;
 
         ContinentNames = Enum.GetNames(ContinentEnumType);
@@ -35,11 +35,14 @@ public class GeographyInitializer
     {
         if (ContinentEnumType == null || TerritoryEnumType == null)
             return false;
-        if (Enum.ToObject(ContinentEnumType, continentName) is not Enum continentEnum)
+        if (Enum.Parse(ContinentEnumType, continentName) is not Enum continentEnum)
             return false;
-        if (Enum.ToObject(TerritoryEnumType, territoryName) is not Enum territoryEnum)
+        if (Enum.Parse(TerritoryEnumType, territoryName) is not Enum territoryEnum)
             return false;
         try {
+            if (!ContinentMembers.ContainsKey(continentEnum)) 
+                ContinentMembers.Add(continentEnum, []);
+            
             ContinentMembers[continentEnum].Add(territoryEnum);
         } catch {
             return false;
@@ -51,11 +54,18 @@ public class GeographyInitializer
     {
         if (TerritoryEnumType == null)
             return false;
-        if (Enum.ToObject(TerritoryEnumType, territoryName) is not Enum territoryEnum)
+        if (Enum.Parse(TerritoryEnumType, territoryName) is not Enum territoryEnum)
             return false;
-        if (Enum.ToObject(TerritoryEnumType, neighborName) is not Enum neighborEnum)
+        if (Enum.Parse(TerritoryEnumType, neighborName) is not Enum neighborEnum)
             return false;
-        TerritoryNeighbors[territoryEnum].Add(neighborEnum);
+        try {
+            if (!TerritoryNeighbors.ContainsKey(territoryEnum))
+                TerritoryNeighbors.Add(territoryEnum, []);
+
+            TerritoryNeighbors[territoryEnum].Add(neighborEnum);
+        } catch {
+            return false;
+        }
         return true;
     }
 }

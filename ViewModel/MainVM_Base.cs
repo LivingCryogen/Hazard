@@ -471,13 +471,13 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         if (CurrentGame == null || CurrentGame.Board == null || PlayerDetails == null)
             return;
 
-        CurrentPhase = CurrentGame!.State!.CurrentPhase;
+        CurrentPhase = CurrentGame.State.CurrentPhase;
         PlayerTurn = CurrentGame.State.PlayerTurn;
         Round = CurrentGame.State.Round;
         PhaseStageTwo = CurrentGame.State.PhaseStageTwo;
 
-        for (int i = 0; i < Territories!.Count; i++) {
-            Territories[i].Armies = CurrentGame.Board!.Armies[(TerrID)i];
+        for (int i = 0; i < Territories.Count; i++) {
+            Territories[i].Armies = CurrentGame.Board.Armies[(TerrID)i];
             Territories[i].PlayerOwner = CurrentGame.Board.TerritoryOwner[(TerrID)i];
         }
         for (int i = 0; i < NumPlayers; i++) {

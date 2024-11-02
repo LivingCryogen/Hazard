@@ -9,6 +9,7 @@
 	
   <ItemGroup>
     <None Remove="Assets\Cards\TroopCardSet.json" />
+    <None Remove="Assets\WorldGeography.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +22,12 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\WorldGeography.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <Import Project="..\Shared.\Shared.projitems" Label="Shared" />

@@ -99,7 +99,7 @@ public class DataProvider(string[] dataFileNames, ITypeRegister<ITypeRelations> 
             try {
                 ReadOnlySpan<byte> jsonROSpan = File.ReadAllBytes(registeredFileName);
                 var reader = new Utf8JsonReader(jsonROSpan);
-                var geographyInitializer = geographyConverter.Read(ref reader, typeof(GeographyInitializer), options: JsonSerializerOptions.Default) ??
+                return geographyConverter.Read(ref reader, typeof(GeographyInitializer), options: JsonSerializerOptions.Default) ??
                     throw new InvalidDataException($"{geographyConverter} failed to return a valid {nameof(GeographyInitializer)}.");
             } catch (Exception e) {
                 _logger.LogError("{Converter} encountered an exception attempting to read Geography data: {Message}", geographyConverter, e.Message);

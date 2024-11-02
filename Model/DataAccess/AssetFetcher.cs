@@ -50,6 +50,6 @@ public class AssetFetcher(IAssetFactory factory) : IAssetFetcher
     }
     public GeographyInitializer FetchGeography()
     {
-        return (GeographyInitializer?)_factory.GetAsset(nameof(GeographyInitializer)) ?? new GeographyInitializer();
+        return (GeographyInitializer?)_factory.GetAsset(nameof(WorldGeography)) ?? new GeographyInitializer();
     }
 }

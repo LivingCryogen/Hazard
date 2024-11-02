@@ -32,6 +32,7 @@ public class Game : IGame
         AssetFetcher = assetFetcher;
         _typeRegister = typeRegister;
         _loggerFactory = loggerFactory;
+        WorldGeography.Initialize(AssetFetcher.FetchGeography());
         ID = Guid.NewGuid();
         Logger = loggerFactory.CreateLogger<Game>();
         Board = new EarthBoard(config, loggerFactory.CreateLogger<EarthBoard>());

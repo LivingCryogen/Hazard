@@ -21,29 +21,47 @@ public class GeographyJConverter : JsonConverter<GeographyInitializer>
     public override GeographyInitializer? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         GeographyInitializer initializer = new();
+        while (reader.Read())
+            //if (reader.TokenType == JsonTokenType.EndObject)
+            //    break;
 
-        reader.Read();
-        if (reader.TokenType == JsonTokenType.PropertyName && reader.ValueTextEquals("exlude"))
-            reader.Skip();
+            if (reader.TokenType == JsonTokenType.PropertyName && reader.ValueTextEquals("EnumNames")) 
+                LoadInitializer(reader, initializer);
+        
+        return initializer;
+    }
 
-        if (reader.TokenType != JsonTokenType.PropertyName || !reader.ValueTextEquals("EnumNames"))
-            throw new InvalidDataException(GetErrorMessage(reader, "EnumNames"));
-        reader.Read(); // move to value
-        string continentEnumName = reader.GetString() ?? throw new InvalidDataException(GetErrorMessage(reader, "Continent Enum name"));
-        string territoryEnumName = reader.GetString() ?? throw new InvalidDataException(GetErrorMessage(reader, "Territory Enum name"));
-        initializer.SetEnumTypes((continentEnumName, territoryEnumName));
-        reader.Read(); // move past end of the Array
+    public override void Write(Utf8JsonWriter writer, GeographyInitializer value, JsonSerializerOptions options)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void LoadInitializer(Utf8JsonReader reader, GeographyInitializer initializer)
+    {
+        string? continentEnumName = null;
+        string? territoryEnumName = null;
+        while (reader.Read() && reader.TokenType != JsonTokenType.EndArray) {
+            if (reader.TokenType == JsonTokenType.String && continentEnumName == null) {
+                continentEnumName = reader.GetString() ?? throw new InvalidDataException(GetErrorMessage(reader, "Continent Enum name"));
+                continue;
+            }
+            if (reader.TokenType == JsonTokenType.String && continentEnumName != null && territoryEnumName == null)
+                territoryEnumName = reader.GetString() ?? throw new InvalidDataException(GetErrorMessage(reader, "Territory Enum name"));
+            
+            if (continentEnumName != null && territoryEnumName!= null)
+                initializer.SetEnumTypes((continentEnumName, territoryEnumName));
+        }
 
         int numContinents = initializer.ContinentNames.Length - 1; // -1 to accomodate .Null
         for (int i = 0; i < numContinents; i++) {
             reader.Read(); // move to Propety Name
             if (reader.TokenType != JsonTokenType.PropertyName)
                 throw new InvalidDataException(GetErrorMessage(reader, "A PropertyName"));
-            reader.Read(); // move to value
             string continentName = reader.GetString() ?? throw new InvalidDataException(GetErrorMessage(reader, $"A valid Continent name"));
             if (!initializer.ContinentNames.Contains(continentName))
                 throw new InvalidDataException(GetErrorMessage(reader, $"A valid Continent name in {continentEnumName}"));
 
+            reader.Read(); // move to StartArray
             while (reader.Read() && reader.TokenType != JsonTokenType.EndArray) {
                 Type continentType = initializer.ContinentEnumType ?? throw new InvalidDataException($"{initializer.ContinentEnumType} was invalid.");
                 string territoryName = reader.GetString() ?? throw new InvalidDataException(GetErrorMessage(reader, $"A valid Territory name"));
@@ -62,17 +80,11 @@ public class GeographyJConverter : JsonConverter<GeographyInitializer>
             if (!initializer.TerritoryNames.Contains(territoryName))
                 throw new InvalidDataException($"Continent member Territory name for {initializer} was invalid.");
 
+            reader.Read(); // move past StartArray
             while (reader.Read() && reader.TokenType != JsonTokenType.EndArray) {
                 string neighborName = reader.GetString() ?? throw new InvalidDataException(GetErrorMessage(reader, $"A valid Territory name"));
                 initializer.AddTerritoryNeighbor(territoryName, neighborName);
             }
         }
-
-        return initializer;
-    }
-
-    public override void Write(Utf8JsonWriter writer, GeographyInitializer value, JsonSerializerOptions options)
-    {
-        throw new NotImplementedException();
     }
 }

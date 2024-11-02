@@ -29,12 +29,17 @@ public static class WorldGeography
             foreach (Enum territoryEnum in contTerrPair.Value) {
                 if (territoryEnum is not TerrID territory)
                     continue;
+
+                if (!continentMembers.ContainsKey(continent))
+                    continentMembers.Add(continent, []);
+
                 continentMembers[continent].Add(territory);
                 terrIDToContID[territory] = continent;
+                if (!neighborWeb.ContainsKey(territory))
+                    neighborWeb.Add(territory, []);
 
                 if (!initializer.TerritoryNeighbors.TryGetValue(territory, out HashSet<Enum>? neighbors) || neighbors == null)
                     continue;
-
                 foreach (Enum terrEnum in neighbors) {
                     if (terrEnum is not TerrID neighborTerritory)
                         continue;
