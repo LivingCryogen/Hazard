@@ -74,7 +74,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     }
     private bool ActionsExceedTerritoryCount()
     {
-        return _actionsCounter >= WorldGeography.NumTerritories;
+        return _actionsCounter >= BoardGeography.NumTerritories;
     }
     private void ActionLimitHit()
     {

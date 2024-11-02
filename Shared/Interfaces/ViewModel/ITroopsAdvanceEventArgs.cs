@@ -27,14 +27,14 @@ public interface ITroopsAdvanceEventArgs
     /// </value>
     int Min { get; init; }
     /// <summary>
-    /// Gets or inits the <see cref="int"/> value of the source territory's <see cref="Shared.Enums.TerrID"/>.
+    /// Gets or inits the <see cref="int"/> value of the source territory's <see cref="Geography.Enums.TerrID"/>.
     /// </summary>
     /// <value>
     /// An <see cref="int"/>.
     /// </value>
     int Source { get; init; }
     /// <summary>
-    /// Gets or inits the <see cref="int"/> value of the target territory's <see cref="Shared.Enums.TerrID"/>.
+    /// Gets or inits the <see cref="int"/> value of the target territory's <see cref="Geography.Enums.TerrID"/>.
     /// </summary>
     /// <value>
     /// An <see cref="int"/>.

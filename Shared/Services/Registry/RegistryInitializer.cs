@@ -83,10 +83,10 @@ public class RegistryInitializer : IRegistryInitializer
     private void RegisterGeography(ITypeRegister<ITypeRelations> registry)
     {
         TypeRelations geographyRelations = new();
-        geographyRelations.Add(nameof(WorldGeography), RegistryRelation.Name);
-        geographyRelations.Add(Path.Combine("Assets", nameof(WorldGeography) + ".json"), RegistryRelation.DataFileName);
+        geographyRelations.Add(nameof(BoardGeography), RegistryRelation.Name);
+        geographyRelations.Add(Path.Combine("Assets", nameof(BoardGeography) + ".json"), RegistryRelation.DataFileName);
         geographyRelations.Add(typeof(GeographyInitializer), RegistryRelation.ConvertedDataType);
         geographyRelations.Add(new GeographyJConverter(), RegistryRelation.DataConverter);
-        registry.Register(typeof(WorldGeography), geographyRelations);
+        registry.Register(typeof(BoardGeography), geographyRelations);
     }
 }

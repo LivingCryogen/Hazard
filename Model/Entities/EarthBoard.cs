@@ -23,13 +23,13 @@ public class EarthBoard: IBoard, IBinarySerializable
         _logger = logger;
         Armies = [];
         TerritoryOwner = [];
-        for (int i = 0; i < WorldGeography.NumTerritories; i++) {
+        for (int i = 0; i < BoardGeography.NumTerritories; i++) {
             Armies.Add((TerrID)i, int.Parse(config["startingArmies"] ?? "0"));
             TerritoryOwner.Add((TerrID)i, -1);
         }
 
         ContinentOwner = [];
-        for (int i = 0; i < WorldGeography.NumContinents; i++)
+        for (int i = 0; i < BoardGeography.NumContinents; i++)
             ContinentOwner.Add((ContID)i, -1);
     }
     /// <summary>
@@ -128,8 +128,8 @@ public class EarthBoard: IBoard, IBinarySerializable
             throw new ArgumentException("Non-null TerrID required.", nameof(changed));
 
         int newOwner = TerritoryOwner[changed];
-        var changedHomeContinent = WorldGeography.TerritoryToContinent(changed);
-        var continentTerritories = WorldGeography.GetContinentMembers(changedHomeContinent);
+        var changedHomeContinent = BoardGeography.TerritoryToContinent(changed);
+        var continentTerritories = BoardGeography.GetContinentMembers(changedHomeContinent);
         if (continentTerritories == null || continentTerritories.Count <= 0)
             return;
 

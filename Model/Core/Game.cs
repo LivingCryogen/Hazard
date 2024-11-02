@@ -32,7 +32,7 @@ public class Game : IGame
         AssetFetcher = assetFetcher;
         _typeRegister = typeRegister;
         _loggerFactory = loggerFactory;
-        WorldGeography.Initialize(AssetFetcher.FetchGeography());
+        BoardGeography.Initialize(AssetFetcher.FetchGeography());
         ID = Guid.NewGuid();
         Logger = loggerFactory.CreateLogger<Game>();
         Board = new EarthBoard(config, loggerFactory.CreateLogger<EarthBoard>());
@@ -53,6 +53,7 @@ public class Game : IGame
     public event EventHandler<int>? PlayerWon;
 
     #region Properties
+    /// <inheritdoc cref="IGame.AssetFetcher"/>
     public IAssetFetcher AssetFetcher { get; }
     /// <inheritdoc cref="IGame.ID"/>.
     public Guid ID { get; private set; }
@@ -120,13 +121,13 @@ public class Game : IGame
         if (Players.Count != 2) return;
 
         // Distribute all initial territories between the two players and a "dummy AI" player randomly
-        int numTerritories = WorldGeography.NumTerritories / 3;
+        int numTerritories = BoardGeography.NumTerritories / 3;
         int[] playerPool = [numTerritories, numTerritories, numTerritories];
         Random rand = new();
         byte poolsEmpty = 0b000; // bitwise flags
         byte[] masks = [0b001, 0b010, 0b100]; // flag bitwise manipulators
 
-        for (int i = 0; i < WorldGeography.NumTerritories; i++) {
+        for (int i = 0; i < BoardGeography.NumTerritories; i++) {
             // select the random player, making sure not to select a player without any selections left
             int player;
             switch (poolsEmpty) {
