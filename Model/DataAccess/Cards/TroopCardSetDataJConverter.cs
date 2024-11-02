@@ -38,7 +38,10 @@ public class TroopCardSetDataJConverter : JsonConverter<TroopCardSet>, ICardSetD
 
             switch (tokenType) {
                 case JsonTokenType.PropertyName:
-                    if (reader.ValueTextEquals("exclude")) { reader.Skip(); }
+                    if (reader.ValueTextEquals("exclude")) { 
+                        reader.Skip();
+                        continue;
+                    }
                     if (reader.ValueTextEquals("TroopCards")) {
                         reader.Read(); // move to value
 
