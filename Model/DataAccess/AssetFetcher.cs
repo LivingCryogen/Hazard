@@ -1,5 +1,7 @@
 ﻿using Model.Assets;
-using Share.Interfaces.Model;
+using Model.Entities;
+using Shared.Geography;
+using Shared.Interfaces.Model;
 
 namespace Model.DataAccess;
 
@@ -24,10 +26,10 @@ public class AssetFetcher(IAssetFactory factory) : IAssetFetcher
     /// Discovers local data files that contain <see cref="ICard"/>s and hands off their names to <see cref="AssetFactory"/>.
     /// </summary>
     /// <returns>A list of <see cref="ICard"/> arrays ("card sets") read from local data files containing "CardSet" in thier names. The files must comport with 
-    /// <see cref="Type"/>s, <see cref="Cards.ICardSetDataJConverter"/>s, and conversion target types from <see cref="Share.Services.Registry.TypeRegister"/>.</returns>
+    /// <see cref="Type"/>s, <see cref="Cards.ICardSetDataJConverter"/>s, and conversion target types from <see cref="Shared.Services.Registry.TypeRegister"/>.</returns>
     /// For now, there is a hard-coded default name associated here with the datafile. In the future, adding
     /// a "default data file name" to RegistryRelation, or generalizing this class to AssetFetcher{T} and building 
-    /// file discovery logic between it and <see cref="Share.Services.Registry.TypeRegister"/> may be more
+    /// file discovery logic between it and <see cref="Shared.Services.Registry.TypeRegister"/> may be more
     /// functional/elegant.
     public List<ICardSet> FetchCardSets()
     {
@@ -42,8 +44,17 @@ public class AssetFetcher(IAssetFactory factory) : IAssetFetcher
 
         return cardSets;
     }
+    /// <inheritdoc cref="IAssetFetcher.FetchRuleValues"/>
+    /// <remarks>
+    /// Currently running on a hard-coded data object, to be replaced with either configuration values or DAL asset generation.
+    /// </remarks>
     public IRuleValues FetchRuleValues()
     {
         return new RuleValues();
+    }
+    /// <inheritdoc cref="IAssetFetcher.FetchGeography"/>
+    public GeographyInitializer FetchGeography()
+    {
+        return (GeographyInitializer?)_factory.GetAsset(nameof(BoardGeography)) ?? new GeographyInitializer();
     }
 }

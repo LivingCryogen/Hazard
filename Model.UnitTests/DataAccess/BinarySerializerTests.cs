@@ -3,9 +3,10 @@ using Model.Tests.Entities.Mocks;
 using Model.Tests.Fixtures;
 using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Fixtures.Stubs;
-using Share.Enums;
-using Share.Interfaces.Model;
-using Share.Services.Serializer;
+using Shared.Enums;
+using Shared.Geography.Enums;
+using Shared.Interfaces.Model;
+using Shared.Services.Serializer;
 
 namespace Model.Tests.DataAccess;
 
@@ -35,8 +36,6 @@ public class BinarySerializerTests
         if (BinarySerializer.Load([_deserialGame.Board], _testFileName)) {
             Assert.IsNotNull(_toSerialGame.Board);
             Assert.IsNotNull(_deserialGame.Board);
-            Assert.AreEqual(_toSerialGame.Board.Geography.NumTerritories, _deserialGame.Board.Geography.NumTerritories);
-            Assert.AreEqual(_toSerialGame.Board.Geography.NumContinents, _deserialGame.Board.Geography.NumContinents);
             foreach (var contKey in _toSerialGame.Board.ContinentOwner.Keys)
                 Assert.AreEqual(_toSerialGame.Board.ContinentOwner[contKey], _deserialGame.Board.ContinentOwner[contKey]);
             foreach (var terrKey in _toSerialGame.Board.TerritoryOwner.Keys) {
@@ -313,8 +312,6 @@ public class BinarySerializerTests
             #region BoardAsserts
             Assert.IsNotNull(_toSerialGame.Board);
             Assert.IsNotNull(_deserialGame.Board);
-            Assert.AreEqual(_toSerialGame.Board.Geography.NumTerritories, _deserialGame.Board.Geography.NumTerritories);
-            Assert.AreEqual(_toSerialGame.Board.Geography.NumContinents, _deserialGame.Board.Geography.NumContinents);
             foreach (var contKey in _toSerialGame.Board.ContinentOwner.Keys)
                 Assert.AreEqual(_toSerialGame.Board.ContinentOwner[contKey], _deserialGame.Board.ContinentOwner[contKey]);
             foreach (var terrKey in _toSerialGame.Board.TerritoryOwner.Keys) {

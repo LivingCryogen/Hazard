@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using Share.Enums;
-using Share.Interfaces.Model;
+using Shared.Geography.Enums;
+using Shared.Interfaces.Model;
 
 namespace Model.Entities.Cards;
 

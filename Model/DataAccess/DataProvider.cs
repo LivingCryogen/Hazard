@@ -1,7 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Model.DataAccess.Cards;
-using Share.Interfaces.Model;
-using Share.Services.Registry;
+using Shared.Geography;
+using Shared.Interfaces.Model;
+using Shared.Services.Registry;
+using System.Buffers.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Model.DataAccess;
@@ -92,6 +95,18 @@ public class DataProvider(string[] dataFileNames, ITypeRegister<ITypeRelations> 
                 return null;
             }
         }
+        if (converter is GeographyJConverter geographyConverter) {
+            try {
+                ReadOnlySpan<byte> jsonROSpan = File.ReadAllBytes(registeredFileName);
+                var reader = new Utf8JsonReader(jsonROSpan);
+                return geographyConverter.Read(ref reader, typeof(GeographyInitializer), options: JsonSerializerOptions.Default) ??
+                    throw new InvalidDataException($"{geographyConverter} failed to return a valid {nameof(GeographyInitializer)}.");
+            } catch (Exception e) {
+                _logger.LogError("{Converter} encountered an exception attempting to read Geography data: {Message}", geographyConverter, e.Message);
+                return null;
+            }
+        }
+    
         // Later extensions would get appended here
         return null;
     }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
-using Share.Enums;
-using Share.Interfaces.ViewModel;
+using Shared.Enums;
+using Shared.Interfaces.ViewModel;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;

@@ -1,6 +1,6 @@
 ﻿using Model.Tests.Entities.Mocks;
 using Model.Tests.Fixtures;
-using Share.Services.Registry;
+using Shared.Services.Registry;
 using System.Text.Json;
 
 namespace Model.Tests.DataAccess.Mocks;
@@ -25,7 +25,7 @@ public class MockDataFiles
         FileProcessor.Move(temp, CardSetPath);
         BuildMockCardSetJson();
 
-        // Shared Registry DataFile name must be added for the MockCardSet class
+        // Shared. Registry DataFile name must be added for the MockCardSet class
         if (SharedRegister.Registry[typeof(MockCardSet)]![RegistryRelation.DataFileName] == null)
             SharedRegister.Registry.AddRelation(typeof(MockCardSet), (CardSetPath, RegistryRelation.DataFileName));
         else {

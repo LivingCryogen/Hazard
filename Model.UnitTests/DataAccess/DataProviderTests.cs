@@ -6,8 +6,8 @@ using Model.Tests.Entities.Mocks;
 using Model.Tests.Fixtures;
 using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Fixtures.Stubs;
-using Share.Interfaces.Model;
-using Share.Services.Registry;
+using Shared.Interfaces.Model;
+using Shared.Services.Registry;
 
 namespace Model.Tests.DataAccess;
 
@@ -96,7 +96,8 @@ public class DataProviderTests
             Assert.IsTrue(targetList.Length > 0);
         foreach (MockTerrID mockID in Enum.GetValues(typeof(MockTerrID))) {
             var mockTargets = returnedCardSetData.Targets.SelectMany(array => array).Cast<MockTerrID>();
-            Assert.IsTrue(mockTargets.Contains(mockID));
+            if (mockID != MockTerrID.Null)
+                Assert.IsTrue(mockTargets.Contains(mockID));
         }
     }
 }

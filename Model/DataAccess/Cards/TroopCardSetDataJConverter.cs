@@ -1,7 +1,7 @@
 ﻿using Model.Entities.Cards;
-using Share.Enums;
-using Share.Interfaces.Model;
-using Share.Services.Registry;
+using Shared.Geography.Enums;
+using Shared.Interfaces.Model;
+using Shared.Services.Registry;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -38,6 +38,10 @@ public class TroopCardSetDataJConverter : JsonConverter<TroopCardSet>, ICardSetD
 
             switch (tokenType) {
                 case JsonTokenType.PropertyName:
+                    if (reader.ValueTextEquals("exclude")) { 
+                        reader.Skip();
+                        continue;
+                    }
                     if (reader.ValueTextEquals("TroopCards")) {
                         reader.Read(); // move to value
 

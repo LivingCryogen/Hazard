@@ -1,4 +1,4 @@
-﻿using Share.Interfaces.View;
+﻿using Shared.Interfaces.View;
 using System.Windows.Threading;
 
 namespace View.Services;

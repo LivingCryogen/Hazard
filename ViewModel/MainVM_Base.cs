@@ -2,12 +2,14 @@
 using CommunityToolkit.Mvvm.Input;
 using Hazard.ViewModel.SubElements;
 using Microsoft.Extensions.Logging;
-using Share.Enums;
-using Share.Interfaces;
-using Share.Interfaces.Model;
-using Share.Interfaces.View;
-using Share.Interfaces.ViewModel;
-using Share.Services.Serializer;
+using Shared.Enums;
+using Shared.Geography;
+using Shared.Geography.Enums;
+using Shared.Interfaces;
+using Shared.Interfaces.Model;
+using Shared.Interfaces.View;
+using Shared.Interfaces.ViewModel;
+using Shared.Services.Serializer;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
@@ -190,7 +192,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
             CurrentGame.UpdatePlayerNames(playerNames);
         }
 
-        for (int i = 0; i < CurrentGame.Board.Geography.NumTerritories; i++)
+        for (int i = 0; i < BoardGeography.NumTerritories; i++)
             Territories.Add(new TerritoryInfo(i) { Armies = CurrentGame.Board.Armies[(TerrID)i] });
 
         for (int i = 0; i < NumPlayers; i++) {
@@ -469,13 +471,13 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         if (CurrentGame == null || CurrentGame.Board == null || PlayerDetails == null)
             return;
 
-        CurrentPhase = CurrentGame!.State!.CurrentPhase;
+        CurrentPhase = CurrentGame.State.CurrentPhase;
         PlayerTurn = CurrentGame.State.PlayerTurn;
         Round = CurrentGame.State.Round;
         PhaseStageTwo = CurrentGame.State.PhaseStageTwo;
 
-        for (int i = 0; i < Territories!.Count; i++) {
-            Territories[i].Armies = CurrentGame.Board!.Armies[(TerrID)i];
+        for (int i = 0; i < Territories.Count; i++) {
+            Territories[i].Armies = CurrentGame.Board.Armies[(TerrID)i];
             Territories[i].PlayerOwner = CurrentGame.Board.TerritoryOwner[(TerrID)i];
         }
         for (int i = 0; i < NumPlayers; i++) {

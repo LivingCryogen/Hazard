@@ -1,5 +1,5 @@
 ﻿using Model.Tests.Entities.Mocks;
-using Share.Interfaces.Model;
+using Shared.Interfaces.Model;
 
 namespace Model.Tests.DataAccess.Mocks;
 

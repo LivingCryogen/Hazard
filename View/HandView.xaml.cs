@@ -1,5 +1,5 @@
-﻿using Share.Interfaces;
-using Share.Interfaces.ViewModel;
+﻿using Shared.Interfaces;
+using Shared.Interfaces.ViewModel;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;

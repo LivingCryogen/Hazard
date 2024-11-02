@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Model.Entities.Cards;
 using Model.EventArgs;
-using Share.Enums;
-using Share.Interfaces.Model;
-using Share.Services.Serializer;
+using Shared.Geography.Enums;
+using Shared.Interfaces.Model;
+using Shared.Services.Serializer;
 
 namespace Model.Core;
 /// <inheritdoc cref="IPlayer"/>.

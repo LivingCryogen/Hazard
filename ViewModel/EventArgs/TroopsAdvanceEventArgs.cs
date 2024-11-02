@@ -1,4 +1,4 @@
-﻿using Share.Interfaces.ViewModel;
+﻿using Shared.Interfaces.ViewModel;
 
 namespace ViewModel.EventArgs;
 

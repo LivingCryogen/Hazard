@@ -1,4 +1,4 @@
-﻿using Share.Interfaces.Model;
+﻿using Shared.Interfaces.Model;
 
 namespace Model.EventArgs;
 /// <inheritdoc cref="IPlayerChangedEventArgs"/>

@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
-using Share.Enums;
-using Share.Interfaces.Model;
-using Share.Services.Serializer;
+using Shared.Enums;
+using Shared.Geography.Enums;
+using Shared.Interfaces.Model;
+using Shared.Services.Serializer;
 
 namespace Model.Tests.Core.Mocks;
 

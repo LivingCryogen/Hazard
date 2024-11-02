@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Model.Entities;
 using Model.Entities.Cards;
-using Share.Enums;
-using Share.Interfaces.Model;
-using Share.Services.Registry;
+using Shared.Geography;
+using Shared.Geography.Enums;
+using Shared.Interfaces.Model;
+using Shared.Services.Registry;
 
 namespace Model.DataAccess;
 
@@ -55,12 +56,14 @@ public class AssetFactory : IAssetFactory
     {
         var dataObject = _dataProvider?.GetData(typeName);
 
-        if (dataObject is ICardSet cardSet) {
-            cardSet.Cards = [.. BuildTroopCards(cardSet)];
-            return cardSet;
+        switch (dataObject) {
+            case ICardSet cardSet:
+                cardSet.Cards = [.. BuildTroopCards(cardSet)];
+                return cardSet;
+            case GeographyInitializer geographyInitializer:
+                return geographyInitializer;
+            default: return null;
         }
-
-        return null;
     }
     /// <summary>
     /// Builds TroopCards from the data in <see cref="TroopCardSetData"/>.

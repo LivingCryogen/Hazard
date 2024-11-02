@@ -1,10 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Model.EventArgs;
-using Share.Enums;
-using Share.Interfaces.Model;
-using Share.Interfaces.View;
-using Share.Interfaces.ViewModel;
+using Shared.Enums;
+using Shared.Geography;
+using Shared.Geography.Enums;
+using Shared.Interfaces.Model;
+using Shared.Interfaces.View;
+using Shared.Interfaces.ViewModel;
 
 namespace ViewModel;
 /// <summary>
@@ -36,7 +38,7 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
 
                         TerritorySelected = TerrID.Null;
                         if (CurrentPhase.Equals(GamePhase.Move))
-                            _moveTargets = null;
+                            _moveTargets = [];
 
                         TerritorySelectCommand.NotifyCanExecuteChanged();
                         break;
@@ -89,7 +91,7 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
             return false;
 
         int owner = Territories![(int)territory].PlayerOwner;
-        IGeography geography = CurrentGame.Board.Geography;
+        // IGeography geography = CurrentGame.Board.Geography;
 
         switch (CurrentPhase) {
             case GamePhase.Null: return false;
@@ -137,7 +139,7 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
                     if (owner.Equals(CurrentGame!.State!.PlayerTurn))
                         return false;
                     else {
-                        if (geography.NeighborWeb != null && geography.NeighborWeb[TerritorySelected].Contains(territory))
+                        if (BoardGeography.GetNeighbors(TerritorySelected).Contains(territory))
                             return true;
                         return false;
                     }
@@ -396,14 +398,14 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
 
     private List<TerrID> GetMoveTargets(TerrID territory, int playerOwner)
     {
-        var sourceWeb = CurrentGame?.Board.Geography.NeighborWeb;
-        if (sourceWeb == null)
+        var neighbors = BoardGeography.GetNeighbors(territory);
+        if (neighbors.Count <= 0)
             return [];
 
         List<TerrID> targetList = [];
-        foreach (TerrID potentialNeighbor in sourceWeb[territory])
-            if (Territories![(int)potentialNeighbor].PlayerOwner == playerOwner)
-                targetList.Add(potentialNeighbor);
+        foreach (TerrID potentialTarget in neighbors)
+            if (Territories[(int)potentialTarget].PlayerOwner == playerOwner)
+                targetList.Add(potentialTarget);
 
         return targetList;
     }

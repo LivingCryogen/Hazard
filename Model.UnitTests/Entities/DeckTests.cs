@@ -1,6 +1,6 @@
 using Model.Entities;
 using Model.Tests.Entities.Mocks;
-using Share.Interfaces.Model;
+using Shared.Interfaces.Model;
 using System.Diagnostics;
 
 namespace Model.Tests.Entities

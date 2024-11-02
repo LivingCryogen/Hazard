@@ -1,15 +1,15 @@
 ﻿using Microsoft.Extensions.Logging;
 using Model.Tests.Fixtures.Stubs;
-using Share.Enums;
-using Share.Interfaces;
-using Share.Interfaces.Model;
-using Share.Services.Serializer;
+using Shared.Geography.Enums;
+using Shared.Interfaces;
+using Shared.Interfaces.Model;
+using Shared.Services.Serializer;
 
 namespace Model.Tests.Entities.Mocks;
 
 internal class MockBoard : IBoard
 {
-    private ILogger<MockBoard> _logger = new LoggerStubT<MockBoard>();
+    private readonly ILogger<MockBoard> _logger = new LoggerStubT<MockBoard>();
     public List<object> this[int playerNumber, string enumName] => throw new NotImplementedException();
 
     public MockBoard()
@@ -21,8 +21,6 @@ internal class MockBoard : IBoard
         ContinentOwner = [];
         ContinentOwner.Add(ContID.NorthAmerica, -1);
     }
-
-    public IGeography Geography => new MockGeography();
 
     public Dictionary<TerrID, int> Armies { get; init; }
     public Dictionary<TerrID, int> TerritoryOwner { get; init; }

@@ -4,9 +4,9 @@ using Model.Tests.DataAccess.Mocks;
 using Model.Tests.Entities.Mocks;
 using Model.Tests.Fixtures;
 using Model.Tests.Fixtures.Stubs;
-using Share.Enums;
-using Share.Interfaces.Model;
-using Share.Services.Registry;
+using Shared.Geography.Enums;
+using Shared.Interfaces.Model;
+using Shared.Services.Registry;
 
 namespace Model.Tests.DataAccess;
 

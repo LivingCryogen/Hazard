@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Model.EventArgs;
-using Share.Enums;
-using Share.Interfaces.Model;
-using Share.Services.Serializer;
+using Shared.Enums;
+using Shared.Geography.Enums;
+using Shared.Geography;
+using Shared.Interfaces.Model;
+using Shared.Services.Serializer;
 
 namespace Model.Core;
 
@@ -72,7 +74,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     }
     private bool ActionsExceedTerritoryCount()
     {
-        return _actionsCounter >= _currentGame.Board.Geography.NumTerritories;
+        return _actionsCounter >= BoardGeography.NumTerritories;
     }
     private void ActionLimitHit()
     {

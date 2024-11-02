@@ -2,12 +2,16 @@
 using Microsoft.Testing.Platform.Logging;
 using Model.Core;
 using Model.Entities;
+using Model.Tests.DataAccess.Stubs;
 using Model.Tests.Entities.Mocks;
 using Model.Tests.Fixtures;
+using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Fixtures.Stubs;
-using Share.Enums;
-using Share.Interfaces.Model;
-using Share.Services.Serializer;
+using Shared.Enums;
+using Shared.Geography;
+using Shared.Geography.Enums;
+using Shared.Interfaces.Model;
+using Shared.Services.Serializer;
 
 namespace Model.Tests.Core.Mocks;
 
@@ -25,9 +29,11 @@ public class MockGame : IGame
         State = new StateMachine(Players.Count, new LoggerStubT<StateMachine>());
         Regulator = new MockRegulator(new LoggerStubT<MockRegulator>(), this);
         Regulator.Initialize();
+        AssetFetcher = new AssetFetcherStub();
     }
 
     public Microsoft.Extensions.Logging.ILogger<MockGame> Logger { get => _logger; }
+    public IAssetFetcher AssetFetcher { get; }
     public IBoard Board { get; set; } = new MockBoard();
     public IRegulator Regulator { get; set; }
     public IRuleValues Values { get; set; } = new MockRuleValues();
@@ -48,7 +54,6 @@ public class MockGame : IGame
         Players.Clear();
         Cards.Wipe();
         State = new StateMachine(2, new LoggerStubT<StateMachine>());
-        ((MockGeography)Board.Geography).Wipe();
         Board.Armies.Clear();
         Board.ContinentOwner.Clear();
         ((MockRegulator)Regulator).Wipe();
@@ -59,13 +64,13 @@ public class MockGame : IGame
         if (Players.Count != 2) return;
 
         // Distribute all initial territories between the two players and a "dummy AI" player randomly
-        int numTerritories = Board.Geography.NumTerritories / 3;
+        int numTerritories = MockGeography.NumTerritories / 3;
         int[] playerPool = [numTerritories, numTerritories, numTerritories];
         Random rand = new();
         byte poolsEmpty = 0b000; // bitwise flags
         byte[] masks = [0b001, 0b010, 0b100]; // flag bitwise manipulators
 
-        for (int i = 0; i < Board!.Geography.NumTerritories; i++) {
+        for (int i = 0; i < MockGeography.NumTerritories; i++) {
             // select the random player, making sure not to select a player without any selections left
             int player;
             switch (poolsEmpty) {

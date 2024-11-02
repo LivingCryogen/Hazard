@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Share.Interfaces.View;
-using Share.Interfaces.ViewModel;
+using Shared.Geography;
+using Shared.Interfaces.Model;
+using Shared.Interfaces.View;
+using Shared.Interfaces.ViewModel;
 using System.Windows;
 
 namespace View.Services;

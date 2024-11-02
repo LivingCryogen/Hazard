@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Share.Enums;
-using Share.Interfaces.Model;
-using Share.Interfaces.ViewModel;
+using Shared.Geography.Enums;
+using Shared.Interfaces.Model;
+using Shared.Interfaces.ViewModel;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using ViewModel;
