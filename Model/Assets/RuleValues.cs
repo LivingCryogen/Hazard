@@ -62,7 +62,7 @@ public class RuleValues : IRuleValues
     public int CalculateBaseTradeInBonus(int numTrades)
     {
         if (numTrades > 0 && numTrades < 6)
-            return 2 + 2 * numTrades; // 1|4, 2|6, 3|8, 4|10, 5|12 -- according to Hasbro's default rules
+            return 2 + 2 * numTrades; // 1|4, 2|6, 3|8, 4|10, 5|12 -- according to default rules
         else if (numTrades == 6)
             return 15;
         else if (numTrades > 6)
