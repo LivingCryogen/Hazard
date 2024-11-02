@@ -2,11 +2,11 @@
 /// <summary>
 /// Simple ID values for the Territories of the game board.
 /// </summary>
-/// The order and numbers are arbitrarily chosen by, roughly, moving from left to right, top to bottom, and staying within a Continent until it is complete.
-/// <see cref="Enum"/> was chosen over other options because, if starting with 0, it both identifies and enumerates easily while being immutable at runtime.
-/// <example>E.g. <code>int territoryArmies = <see cref="Model.Entities.EarthBoard"/>[<see cref="TerrID"/>];</code>
-/// gets the armies on the territory identified by <see cref="TerrID"/> while <code><see langword="for"/> (<see langword="int"/> i = 0; i &lt; 41; i++) { <see cref="Model.Entities.EarthBoard.Armies"/>
-/// .[(<see cref="TerrID"/>)i] = 0; }/></code> easily sets all territory armies to 0. And there is no risk of change as with some IEnumerables.</example>
+/* The order and numbers are arbitrarily chosen by, roughly, moving from left to right, top to bottom, and staying within a Continent until it is complete.
+*An Enum was chosen over other options because, if starting with 0, it both identifies and enumerates easily while being immutable at runtime.
+* <example>E.g. <code>int territoryArmies = <see cref="Model.Entities.EarthBoard"/>[<see cref="TerrID"/>];</code>
+* gets the armies on the territory identified by <see cref="TerrID"/> while <code><see langword="for"/> (<see langword="int"/> i = 0; i &lt; 41; i++) { <see cref="Model.Entities.EarthBoard.Armies"/>.
+* [(<see cref="TerrID"/>)i] = 0; }/></code> easily sets all territory armies to 0. And there is no risk of change as with some IEnumerables.</example> */
 public enum TerrID : int
 {
     /// <summary>

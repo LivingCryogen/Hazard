@@ -3,7 +3,7 @@
 namespace Shared.Interfaces.Model;
 
 /// <summary>
-/// Represents the Game Board and Actions that directly affect the armies, territories, and continents on the board.
+/// Encapsulates Data and Actions that directly affect the armies, territories, and continents on the game board.
 /// </summary>
 public interface IBoard : IBinarySerializable
 {
@@ -37,7 +37,7 @@ public interface IBoard : IBinarySerializable
     /// <summary>
     /// Gets a list of territories or of continents on the board owned by a specfied player.
     /// </summary>
-    /// <param name="playerNumber">The number of the specified <see cref="IPlayer"/>.</param>
+    /// <param name="playerNumber">The number of the specified player.</param>
     /// <param name="enumName">The name of either <see cref="TerrID"/> or <see cref="ContID"/>, for territories owner or continents owned, respectively.</param>
     /// <returns>A list of all territories OR a list of all continents owned by player <paramref name="playerNumber"/>.</returns>
     List<object> this[int playerNumber, string enumName] { get; }
@@ -47,10 +47,13 @@ public interface IBoard : IBinarySerializable
     /// <remarks>
     /// This change should also fire <see cref="TerritoryChanged"/> and subsequent events.
     /// </remarks>
-    /// <param name="newPlayer">The number of the <see cref="IPlayer"/> that takes the territory.<paramref name="newPlayer"/></param>
+    /// <param name="newPlayer">The number of the player that takes the territory.<paramref name="newPlayer"/></param>
     /// <param name="territory">The ID of the territory taken control of by <paramref name="newPlayer"/>.</param>
     void Claims(int newPlayer, TerrID territory);
     /// <remarks>This is a variation on <see cref="Claims(int, TerrID)"/> meant to enable overriding the default one army per claim.</remarks>
+    /// <param name="newPlayer">The number of the player that takes the territory.<paramref name="newPlayer"/></param>
+    /// <param name="territory">The ID of the territory taken control of by <paramref name="newPlayer"/>.</param>
+    /// <param name="armies">The number of armies the new owner controls in the territory.</param>
     /// <inheritdoc cref="Claims(int, TerrID)"/>
     void Claims(int newPlayer, TerrID territory, int armies);
     /// <summary>

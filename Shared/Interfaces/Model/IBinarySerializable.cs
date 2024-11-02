@@ -9,12 +9,12 @@ public interface IBinarySerializable
     /// <summary>
     /// Loads the <see cref="IBinarySerializable"/> with binary values read from a file.
     /// </summary>
-    /// <param name="reader">A <see cref="BinaryReader"/> whose <see cref="BinaryReader.BaseStream"/> was previously written to using <see cref="BinarySerializer"/> and <see cref="GetBinarySerials"/>.</param>
+    /// <param name="reader">A reader whose <see cref="BinaryReader.BaseStream"/> was previously written to using <see cref="BinarySerializer"/> and <see cref="GetBinarySerials"/>.</param>
     /// <returns><see langword="true"/> if the load succeeded without exceptions; otherwise, <see langword="false"/>.</returns>
     bool LoadFromBinary(BinaryReader reader);
     /// <summary>
     /// Asynchronously serializes the <see cref="IBinarySerializable"/>.
     /// </summary>
-    /// <returns>A <see cref="Task"/> whose result is an array of <see cref="SerializedData"/>.</returns>
+    /// <returns>A task whose result contains serialized object data.</returns>
     Task<SerializedData[]> GetBinarySerials();
 }

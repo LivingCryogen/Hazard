@@ -2,9 +2,9 @@
 /// <summary>
 /// Categorizes the phases of the game state.
 /// </summary>
-/// Rules stipulate that, after setup, a Player's Turn consists of, in order: <see cref="GamePhase.Place"/>, <see cref="GamePhase.Attack"/>, 
-/// and <see cref="GamePhase.Move"/>.
-/// Note: This is a bit clunky -- especially with the new addition of "TwoPlayerSetup" -- but I'm not yet sure how to streamline things.
+/// <remarks>Rules stipulate that, after setup, a Player's Turn consists of, in order: Place, Attack, and Move.
+/// Note: This is a bit clunky -- especially with the new addition of "TwoPlayerSetup" -- but is workable for now.
+/// </remarks>
 public enum GamePhase : int
 {
     /// <summary>

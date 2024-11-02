@@ -10,7 +10,7 @@ public interface IAssetFetcher
     /// <summary>
     /// Begins the process of data reading, conversion, and object initialization for <see cref="ICard"/>s. 
     /// </summary>
-    /// <returns>An array of ready <see cref="ICard"/> instances for use by a Deck, if data retrieval is successful. If not, <see langword="null"/>.</returns>
+    /// <returns>A list of card sets whose <see cref="ICardSet.Cards"/>.</returns>
     List<ICardSet> FetchCardSets();
     /// <summary>
     /// Begins the process of data reading, conversion, and object initialization for <see cref="IRuleValues"/>.
@@ -20,6 +20,6 @@ public interface IAssetFetcher
     /// <summary>
     /// Begins the process of data reading, conversion, and object initialization for <see cref="BoardGeography"/>.
     /// </summary>
-    /// <returns>An initializer object to be used with <see cref="BoardGeography.Initialize(GeographyInitializer)"/>.</returns>
+    /// <returns>An initializer object to be used with <see cref="BoardGeography.Initialize"/>.</returns>
     GeographyInitializer FetchGeography();
 }

@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Shared.Interfaces.Model;
+﻿using Shared.Interfaces.Model;
 
 namespace Shared.Geography;
 /// <summary>
@@ -11,7 +10,6 @@ namespace Shared.Geography;
 /// </remarks>
 public class GeographyInitializer
 {
-    private readonly string _assemblyName = Assembly.GetExecutingAssembly().GetName().Name ?? string.Empty;
     /// <summary>
     /// Gets or sets the Type variable read from the data file corresponding to <see cref="Enums.ContID"/>.
     /// </summary>

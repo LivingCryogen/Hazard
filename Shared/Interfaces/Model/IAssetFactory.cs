@@ -1,7 +1,7 @@
 ﻿namespace Shared.Interfaces.Model;
 
 /// <summary>
-/// Instantiates classes for registered <see cref="Type"/>s at run-time.
+/// Instantiates classes for registered types at run-time.
 /// </summary>
 /// <remarks>
 /// <see cref="IAssetFactory"/> is intended for use in the Data Access Layer.
