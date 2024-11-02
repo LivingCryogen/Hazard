@@ -1,0 +1,188 @@
+{
+  "exclude": [
+    "**/bin",
+    "**/bower_components",
+    "**/jspm_packages",
+    "**/node_modules",
+    "**/obj",
+    "**/platforms"
+  ],
+  "TroopCards": [
+    {
+      "Targets": [ "Alaska" ],
+      "Insignia": "Soldier"
+    },
+    {
+      "Targets": [ "NorthwestTerritory" ],
+      "Insignia": "Artillery"
+    },
+    {
+      "Targets": [ "Greenland" ],
+      "Insignia": "Cavalry"
+    },
+    {
+      "Targets": [ "Alberta" ],
+      "Insignia": "Cavalry"
+    },
+    {
+      "Targets": [ "Ontario" ],
+      "Insignia": "Cavalry"
+    },
+    {
+      "Targets": [ "Quebec" ],
+      "Insignia": "Cavalry"
+    },
+    {
+      "Targets": [ "WesternUnitedStates" ],
+      "Insignia": "Artillery"
+    },
+    {
+      "Targets": [ "EasternUnitedStates" ],
+      "Insignia": "Artillery"
+    },
+    {
+      "Targets": [ "CentralAmerica" ],
+      "Insignia": "Artillery"
+    },
+    {
+      "Targets": [ "Venezuela" ],
+      "Insignia": "Soldier"
+    },
+    {
+      "Targets": [ "Peru" ],
+      "Insignia": "Soldier"
+    },
+    {
+      "Targets": [ "Brazil" ],
+      "Insignia": "Artillery"
+    },
+    {
+      "Targets": [ "Argentina" ],
+      "Insignia": "Soldier"
+    },
+    {
+      "Targets": [ "Iceland" ],
+      "Insignia": "Soldier"
+    },
+    {
+      "Targets": [ "Scandinavia" ],
+      "Insignia": "Cavalry"
+    },
+    {
+      "Targets": [ "Ukraine" ],
+      "Insignia": "Cavalry"
+    },
+    {
+      "Targets": [ "GreatBritain" ],
+      "Insignia": "Artillery"
+    },
+    {
+      "Targets": [ "NorthernEurope" ],
+      "Insignia": "Artillery"
+    },
+    {
+      "Targets": [ "WesternEurope" ],
+      "Insignia": "Artillery"
+    },
+    {
+      "Targets": [ "SouthernEurope" ],
+      "Insignia": "Artillery"
+    },
+    {
+      "Targets": [ "NorthAfrica" ],
+      "Insignia": "Cavalry"
+    },
+    {
+      "Targets": [ "Egypt" ],
+      "Insignia": "Soldier"
+    },
+    {
+      "Targets": [ "EastAfrica" ],
+      "Insignia": "Soldier"
+    },
+    {
+      "Targets": [ "Congo" ],
+      "Insignia": "Soldier"
+    },
+    {
+      "Targets": [ "SouthAfrica" ],
+      "Insignia": "Artillery"
+    },
+    {
+      "Targets": [ "Madagascar" ],
+      "Insignia": "Cavalry"
+    },
+    {
+      "Targets": [ "Ural" ],
+      "Insignia": "Cavalry"
+    },
+    {
+      "Targets": [ "Siberia" ],
+      "Insignia": "Cavalry"
+    },
+    {
+      "Targets": [ "Yakutsk" ],
+      "Insignia": "Cavalry"
+    },
+    {
+      "Targets": [ "Kamchatka" ],
+      "Insignia": "Soldier"
+    },
+    {
+      "Targets": [ "Irkutsk" ],
+      "Insignia": "Cavalry"
+    },
+    {
+      "Targets": [ "Afghanistan" ],
+      "Insignia": "Cavalry"
+    },
+    {
+      "Targets": [ "China" ],
+      "Insignia": "Soldier"
+    },
+    {
+      "Targets": [ "Mongolia" ],
+      "Insignia": "Soldier"
+    },
+    {
+      "Targets": [ "Japan" ],
+      "Insignia": "Artillery"
+    },
+    {
+      "Targets": [ "MiddleEast" ],
+      "Insignia": "Soldier"
+    },
+    {
+      "Targets": [ "India" ],
+      "Insignia": "Cavalry"
+    },
+    {
+      "Targets": [ "Siam" ],
+      "Insignia": "Soldier"
+    },
+    {
+      "Targets": [ "Indonesia" ],
+      "Insignia": "Artillery"
+    },
+    {
+      "Targets": [ "NewGuinea" ],
+      "Insignia": "Soldier"
+    },
+    {
+      "Targets": [ "WesternAustralia" ],
+      "Insignia": "Artillery"
+    },
+    {
+      "Targets": [ "EasternAustralia" ],
+      "Insignia": "Artillery"
+    },
+    {
+      "Targets": [ "Null" ],
+      "Insignia": "Wild"
+    },
+    {
+      "Targets": [ "Null" ],
+      "Insignia": "Wild"
+    }
+  ]
+}

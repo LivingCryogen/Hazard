@@ -1,0 +1,20 @@
+﻿<Application x:Class="View.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" ShutdownMode="OnExplicitShutdown">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Uid="ViewResourceDictionary" Source="pack://application:,,,/View;component/ViewResourcesDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <CommandBinding x:Key="NewGameWindow" />
+            <Style TargetType="{x:Type Window}" x:Key="DefaultWindowStyle">
+                <Setter Property="Background" Value="{StaticResource DeepOceanBlue}"/>
+                <Setter Property="Foreground" Value="Beige" />
+                <Setter Property="FontFamily" Value="Courier New" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="ResizeMode" Value="NoResize" />
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
