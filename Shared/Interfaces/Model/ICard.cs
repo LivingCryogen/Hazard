@@ -14,20 +14,18 @@ namespace Shared.Interfaces.Model;
 /// </remarks>
 public interface ICard : IBinarySerializable
 {
+    #region Properties
     /// <summary>
     /// Gets or sets the logger.
     /// </summary>
     ILogger Logger { get; set; }
     /// <summary>
-    /// Maps the name of each serializable property to its type. 
+    /// Contains the name of each property that should be serialized via <see cref="IBinarySerializable.GetBinarySerials"/>. 
     /// </summary>
     /// <value>
-    /// Type values must be IConvertibles or IEnumberable{IConvertible} for work with <see cref="BinarySerializer"/>.
+    /// Names should match 'nameof(Property)', and the property must be an IConvertible or IEnumberable{IConvertible} for work with <see cref="BinarySerializer"/>.
     /// </value>
-    /// <remarks>
-    /// The map is used for binary deserialization by <see cref="BinarySerializer"/>.
-    /// </remarks>
-    Dictionary<string, Type> PropertySerializableTypeMap { get; }
+    HashSet<string> SerializablePropertyNames { get; }
     /// <summary>
     /// The name of this card's type.
     /// </summary>
@@ -60,6 +58,7 @@ public interface ICard : IBinarySerializable
     /// <see langword="true"/> if this card can be traded in. Otherwise, <see langword="false"/>.
     /// </value>
     bool IsTradeable { get; set; }
+    #endregion
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
     async Task<SerializedData[]> IBinarySerializable.GetBinarySerials()
     {
@@ -71,24 +70,27 @@ public interface ICard : IBinarySerializable
 
             List<SerializedData> serialData = [];
             // The Name tag must be read on the other end with BinaryReader.ReadString()
-            serialData.Add(new SerializedData(typeof(int), [PropertySerializableTypeMap.Count], instanceType.Name)); 
+            serialData.Add(new SerializedData(typeof(int), [SerializablePropertyNames.Count], instanceType.Name)); 
             foreach (PropertyInfo propInfo in orderedProperties) {
-                if (!PropertySerializableTypeMap.TryGetValue(propInfo.Name, out Type? mappedType) || mappedType is null || 
-                    !BinarySerializer.IsSerializable(mappedType)) {
-                    Logger.LogWarning("", );
+                string propName = propInfo.Name;
+                Type propType = propInfo.PropertyType;
+                if (!SerializablePropertyNames.Contains(propName))
+                    continue;
+                if (!BinarySerializer.IsSerializable(propType)) {
+                    Logger.LogWarning("{Card} attempted to serialize a property, {Name}, that was not serializable.", this, propName);
                     continue;
                 }
                 if (propInfo.GetValue(this) is not object propValue)
                     continue;
                 IConvertible[] propConvertibles = new IConvertible[1];
-                if (typeof(IEnumerable).IsAssignableFrom(mappedType) && mappedType != typeof(string)) {
+                if (typeof(IEnumerable).IsAssignableFrom(propType) && propInfo.PropertyType != typeof(string)) {
                     propConvertibles = BinarySerializer.ToIConvertibleCollection((IEnumerable)propValue);
                 }
                 else
                     propConvertibles[0] = (IConvertible)propValue;
 
                 serialData.Add(new SerializedData(typeof(int), [propConvertibles.Length]));
-                serialData.Add(new SerializedData(mappedType, [.. propConvertibles], propInfo.Name)); // Name is used by SerialPropertyTypeMap
+                serialData.Add(new SerializedData(propType, [.. propConvertibles], propInfo.Name)); // Name is used by SerialPropertyTypeMap
             }
             return serialData.ToArray();
         });
@@ -103,25 +105,21 @@ public interface ICard : IBinarySerializable
             var cardProps = this.GetType().GetProperties();
             int loadedNumProperties = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             
-            if (loadedNumProperties != PropertySerializableTypeMap.Count)
+            if (loadedNumProperties != SerializablePropertyNames.Count)
                 return false;
             if (cardProps.Select(prop => prop.Name) is not IEnumerable<string> propertyNames)
                 return false;
-            // .OrderBy is necessary to ensure .Intersect does not scramble the order and lead to mismatches with the file being read MUST BE DONE ON SERIALIZED END!!
-            var mappedPropNames = PropertySerializableTypeMap.Keys
-                .Intersect(propertyNames)
-                .OrderBy(name => name)
-                .ToArray();
-            if (mappedPropNames is not string[] orderedMappedNames)
+            if (propertyNames.OrderBy(name => name).ToHashSet() is not HashSet<string> orderedPropNames)
                 return false;
 
-            for(int i = 0; i < orderedMappedNames.Length; i++) {
+            foreach(string propName in orderedPropNames) {
                 int numValues = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
                 string readPropName = reader.ReadString();
-                if (readPropName != orderedMappedNames[i]) {
+                if (readPropName != propName) {
                     Logger.LogError("{Card} attempted to load from binary, but there was a property name mismatch.", this);
                     return false;
                 }
+
             }
 
             int numProperties = cardProps.Length;
