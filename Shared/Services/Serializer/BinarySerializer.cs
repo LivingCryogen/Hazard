@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Shared.Interfaces.Model;
+using System.Collections;
 using System.Text;
 
 namespace Shared.Services.Serializer;
@@ -245,7 +246,6 @@ public static class BinarySerializer
         endStreamPosition = fileStream.Position;
         return !errors;
     }
-
     private async static Task<bool> WriteSerializableObject(IBinarySerializable serializableObject, BinaryWriter writer)
     {
         try {
@@ -270,5 +270,72 @@ public static class BinarySerializer
             return false;
         }
         return true;
+    }
+    /// <summary>
+    /// Determines whether objects of a given Type are serializable.
+    /// </summary>
+    /// <param name="type">The type to test.</param>
+    /// <returns><see langword=""</returns>
+    public static bool IsSerializable(Type type)
+    {
+        return type switch {
+            Type t when t == typeof(string) => true,
+            Type t when t.IsEnum => t.GetEnumUnderlyingType() == typeof(int),
+            Type t when t.IsPrimitive => true,
+            Type t when IsIConvertibleCollection(t) => true,
+            _ => false
+        };
+    }
+    private static bool IsIConvertibleCollection(Type type)
+    {
+        if (!typeof(IEnumerable).IsAssignableFrom(type))
+            return false;
+
+        // test if an Array contains IConvertible elements
+        if (type.IsArray) {
+            var elementType = type.GetElementType();
+            return typeof(IConvertible).IsAssignableFrom(elementType);
+        }
+
+        // test if a non-generic IEnumerable contains IConvertible elements
+        if (!type.IsGenericType) {
+            
+            if (Activator.CreateInstance(type) is not IEnumerable testInstance)
+                return false;
+            foreach (var element in testInstance)
+                if (element is not IConvertible)
+                    return false;
+            return true;
+        }
+        
+        // test if a generic IEnumerable -- that must implement IEnumerable<T> -- has IConvertible T
+        // Find the IEnumerable<> interface
+        var typeInterfaces = type.GetInterfaces();
+        Type? genericType = null;
+        foreach (var iFace in typeInterfaces) {
+            if (iFace.IsGenericType && iFace.GetGenericTypeDefinition() == typeof(IEnumerable<>)) {
+                genericType = iFace.GetGenericArguments()[0];
+                break;
+            }
+        }
+        if (genericType != null)
+            return typeof(IConvertible).IsAssignableFrom(genericType);
+        return false;
+    }
+    /// <summary>
+    /// Casts a collection into a collection of IConvertibles.
+    /// </summary>
+    /// <param name="collection">The collection to cast.</param>
+    /// <returns>An array of IConvertibles; if an element could not be successfully cast, it is skipped.</returns>
+    public static IConvertible[] ToIConvertibleCollection(IEnumerable collection)
+    {
+        List<IConvertible> propConvertibles = [];
+        foreach (var value in collection) {
+            try {
+                propConvertibles.Add((IConvertible)value);
+            }
+            catch { continue; }
+        }
+        return [.. propConvertibles];
     }
 }

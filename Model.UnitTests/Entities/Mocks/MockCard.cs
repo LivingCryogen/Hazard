@@ -42,15 +42,15 @@ public class MockCard : ITroopCard
     public Dictionary<string, Type> PropertySerializableTypeMap { get; } = new()
     {
         { nameof(ID), typeof(string) },
-        { nameof(Target), typeof(MockTerrID) },
+        { nameof(Target), typeof(MockTerrID[]) },
         { nameof(Insigne), typeof(Insignia) },
         { nameof(ParentTypeName), typeof(string) },
         { nameof(IsTradeable), typeof(bool) },
-        { nameof(TestInts), typeof(int) },
-        { nameof(TestBools), typeof(bool) },
-        { nameof(TestLongs), typeof(long) },
-        { nameof(TestBytes), typeof(byte) },
-        { nameof(TestStrings), typeof(string)}
+        { nameof(TestInts), typeof(int[]) },
+        { nameof(TestBools), typeof(bool[]) },
+        { nameof(TestLongs), typeof(long[]) },
+        { nameof(TestBytes), typeof(byte[]) },
+        { nameof(TestStrings), typeof(string[])}
     };
     public string ID { get; set; } = Guid.NewGuid().ToString();
     public ILogger Logger { get; set; } = new LoggerStubT<MockCard>();

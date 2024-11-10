@@ -39,8 +39,8 @@ public class TroopCard : ITroopCard
     /// <inheritdoc cref="ICard.PropertySerializableTypeMap"/>
     public Dictionary<string, Type> PropertySerializableTypeMap { get; } = new()
     {
-        { nameof(Target), typeof(TerrID) },
-        { nameof(Insigne), typeof(int) },
+        { nameof(Target), typeof(TerrID[]) },
+        { nameof(Insigne), typeof(TroopInsignia) },
         { nameof(ParentTypeName), typeof(string) },
         { nameof(IsTradeable), typeof(bool) }
     };
