@@ -148,9 +148,9 @@ public class BinarySerializerTests
                 Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards.Count, _deserialGame.Cards.Sets[i].Cards.Count);
                 for (int j = 0; j < _toSerialGame.Cards.Sets[i].Cards.Count; j++) {
                     Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].ParentTypeName, _deserialGame!.Cards.Sets[i].Cards![j].ParentTypeName);
-                    Assert.IsNotNull(_toSerialGame.Cards.Sets[i].Cards[j].PropertySerializableTypeMap);
-                    Assert.IsNotNull(_deserialGame.Cards.Sets[i].Cards[j].PropertySerializableTypeMap);
-                    Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].PropertySerializableTypeMap.Keys.Count, _deserialGame.Cards.Sets[i].Cards[j].PropertySerializableTypeMap.Keys.Count);
+                    Assert.IsNotNull(_toSerialGame.Cards.Sets[i].Cards[j].SerializablePropertyNames);
+                    Assert.IsNotNull(_deserialGame.Cards.Sets[i].Cards[j].SerializablePropertyNames);
+                    Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].SerializablePropertyNames.Count, _deserialGame.Cards.Sets[i].Cards[j].SerializablePropertyNames.Count);
                     Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].IsTradeable, _deserialGame.Cards.Sets[i].Cards[j].IsTradeable);
                     Assert.IsNotNull(_toSerialGame.Cards.Sets[i].Cards[j].CardSet);
                     Assert.IsNotNull(_deserialGame.Cards.Sets[i].Cards[j].CardSet);
@@ -170,9 +170,9 @@ public class BinarySerializerTests
             Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library.Count, _deserialGame!.Cards.GameDeck.Library.Count);
             for (int j = 0; j < _toSerialGame.Cards.GameDeck.Library.Count; j++) {
                 Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].ParentTypeName, _deserialGame!.Cards.GameDeck.Library[j].ParentTypeName);
-                Assert.IsNotNull(_toSerialGame.Cards.GameDeck.Library[j].PropertySerializableTypeMap);
-                Assert.IsNotNull(_deserialGame.Cards.GameDeck.Library[j].PropertySerializableTypeMap);
-                Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].PropertySerializableTypeMap.Keys.Count, _deserialGame.Cards.GameDeck.Library[j].PropertySerializableTypeMap.Keys.Count);
+                Assert.IsNotNull(_toSerialGame.Cards.GameDeck.Library[j].SerializablePropertyNames);
+                Assert.IsNotNull(_deserialGame.Cards.GameDeck.Library[j].SerializablePropertyNames);
+                Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].SerializablePropertyNames.Count, _deserialGame.Cards.GameDeck.Library[j].SerializablePropertyNames.Count);
                 Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].IsTradeable, _deserialGame.Cards.GameDeck.Library[j].IsTradeable);
                 Assert.IsNotNull(_toSerialGame.Cards.GameDeck.Library[j].CardSet);
                 Assert.IsNotNull(_deserialGame.Cards.GameDeck.Library[j].CardSet);
@@ -185,9 +185,9 @@ public class BinarySerializerTests
             Assert.IsNotNull(_deserialGame.Cards.GameDeck.DiscardPile);
             for (int j = 0; j < _toSerialGame.Cards.GameDeck.DiscardPile.Count; j++) {
                 Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].ParentTypeName, _deserialGame!.Cards.GameDeck.DiscardPile[j].ParentTypeName);
-                Assert.IsNotNull(_toSerialGame.Cards.GameDeck.DiscardPile[j].PropertySerializableTypeMap);
-                Assert.IsNotNull(_deserialGame.Cards.GameDeck.DiscardPile[j].PropertySerializableTypeMap);
-                Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].PropertySerializableTypeMap.Keys.Count, _deserialGame.Cards.GameDeck.DiscardPile[j].PropertySerializableTypeMap.Keys.Count);
+                Assert.IsNotNull(_toSerialGame.Cards.GameDeck.DiscardPile[j].SerializablePropertyNames);
+                Assert.IsNotNull(_deserialGame.Cards.GameDeck.DiscardPile[j].SerializablePropertyNames);
+                Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].SerializablePropertyNames.Count, _deserialGame.Cards.GameDeck.DiscardPile[j].SerializablePropertyNames.Count);
                 Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].IsTradeable, _deserialGame.Cards.GameDeck.DiscardPile[j].IsTradeable);
                 Assert.IsNotNull(_toSerialGame.Cards.GameDeck.DiscardPile[j].CardSet);
                 Assert.IsNotNull(_deserialGame.Cards.GameDeck.DiscardPile[j].CardSet);
@@ -364,9 +364,9 @@ public class BinarySerializerTests
                 Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards.Count, _deserialGame.Cards.Sets[i].Cards.Count - 13); // There are 13 additional cards added from Arranged Players and Regulator.Reward
                 for (int j = 0; j < _toSerialGame.Cards.Sets[i].Cards.Count; j++) {
                     Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].ParentTypeName, _deserialGame!.Cards.Sets[i].Cards![j].ParentTypeName);
-                    Assert.IsNotNull(_toSerialGame.Cards.Sets[i].Cards[j].PropertySerializableTypeMap);
-                    Assert.IsNotNull(_deserialGame.Cards.Sets[i].Cards[j].PropertySerializableTypeMap);
-                    Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].PropertySerializableTypeMap.Keys.Count, _deserialGame.Cards.Sets[i].Cards[j].PropertySerializableTypeMap.Keys.Count);
+                    Assert.IsNotNull(_toSerialGame.Cards.Sets[i].Cards[j].SerializablePropertyNames);
+                    Assert.IsNotNull(_deserialGame.Cards.Sets[i].Cards[j].SerializablePropertyNames);
+                    Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].SerializablePropertyNames.Count, _deserialGame.Cards.Sets[i].Cards[j].SerializablePropertyNames.Count);
                     Assert.AreEqual(_toSerialGame.Cards.Sets[i].Cards[j].IsTradeable, _deserialGame.Cards.Sets[i].Cards[j].IsTradeable);
                     Assert.IsNotNull(_toSerialGame.Cards.Sets[i].Cards[j].CardSet);
                     Assert.IsNotNull(_deserialGame.Cards.Sets[i].Cards[j].CardSet);
@@ -386,9 +386,9 @@ public class BinarySerializerTests
             Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library.Count, _deserialGame!.Cards.GameDeck.Library.Count);
             for (int j = 0; j < _toSerialGame.Cards.GameDeck.Library.Count; j++) {
                 Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].ParentTypeName, _deserialGame!.Cards.GameDeck.Library[j].ParentTypeName);
-                Assert.IsNotNull(_toSerialGame.Cards.GameDeck.Library[j].PropertySerializableTypeMap);
-                Assert.IsNotNull(_deserialGame.Cards.GameDeck.Library[j].PropertySerializableTypeMap);
-                Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].PropertySerializableTypeMap.Keys.Count, _deserialGame.Cards.GameDeck.Library[j].PropertySerializableTypeMap.Keys.Count);
+                Assert.IsNotNull(_toSerialGame.Cards.GameDeck.Library[j].SerializablePropertyNames);
+                Assert.IsNotNull(_deserialGame.Cards.GameDeck.Library[j].SerializablePropertyNames);
+                Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].SerializablePropertyNames.Count, _deserialGame.Cards.GameDeck.Library[j].SerializablePropertyNames.Count);
                 Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].IsTradeable, _deserialGame.Cards.GameDeck.Library[j].IsTradeable);
                 Assert.IsNotNull(_toSerialGame.Cards.GameDeck.Library[j].CardSet);
                 Assert.IsNotNull(_deserialGame.Cards.GameDeck.Library[j].CardSet);
@@ -401,9 +401,9 @@ public class BinarySerializerTests
             Assert.IsNotNull(_deserialGame.Cards.GameDeck.DiscardPile);
             for (int j = 0; j < _toSerialGame.Cards.GameDeck.DiscardPile.Count; j++) {
                 Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].ParentTypeName, _deserialGame!.Cards.GameDeck.DiscardPile[j].ParentTypeName);
-                Assert.IsNotNull(_toSerialGame.Cards.GameDeck.DiscardPile[j].PropertySerializableTypeMap);
-                Assert.IsNotNull(_deserialGame.Cards.GameDeck.DiscardPile[j].PropertySerializableTypeMap);
-                Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].PropertySerializableTypeMap.Keys.Count, _deserialGame.Cards.GameDeck.DiscardPile[j].PropertySerializableTypeMap.Keys.Count);
+                Assert.IsNotNull(_toSerialGame.Cards.GameDeck.DiscardPile[j].SerializablePropertyNames);
+                Assert.IsNotNull(_deserialGame.Cards.GameDeck.DiscardPile[j].SerializablePropertyNames);
+                Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].SerializablePropertyNames.Count, _deserialGame.Cards.GameDeck.DiscardPile[j].SerializablePropertyNames.Count);
                 Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].IsTradeable, _deserialGame.Cards.GameDeck.DiscardPile[j].IsTradeable);
                 Assert.IsNotNull(_toSerialGame.Cards.GameDeck.DiscardPile[j].CardSet);
                 Assert.IsNotNull(_deserialGame.Cards.GameDeck.DiscardPile[j].CardSet);

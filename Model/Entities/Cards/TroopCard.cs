@@ -25,25 +25,8 @@ public class TroopCard : ITroopCard
     {
         Logger = logger;
     }
-    /// <summary>
-    /// Constructs a TroopCard as a member of the <paramref name="cardSet"/> collection.
-    /// </summary>
-    /// <param name="cardSet">The <see cref="ICardSet"/> to which this <see cref="TroopCard"/> belongs.</param>
-    /// <param name="logger">A logger for debug information and errors.</param>
-    public TroopCard(ICardSet cardSet, ILogger<TroopCard> logger)
-    {
-        CardSet = cardSet;
-        ParentTypeName = cardSet.GetType().Name;
-        Logger = logger;
-    }
-    /// <inheritdoc cref="ICard.PropertySerializableTypeMap"/>
-    public Dictionary<string, Type> PropertySerializableTypeMap { get; } = new()
-    {
-        { nameof(Target), typeof(TerrID[]) },
-        { nameof(Insigne), typeof(TroopInsignia) },
-        { nameof(ParentTypeName), typeof(string) },
-        { nameof(IsTradeable), typeof(bool) }
-    };
+    /// <inheritdoc cref="ICard.SerializablePropertyNames"/>
+    public HashSet<string> SerializablePropertyNames { get; } = [nameof(Target), nameof(Insigne), nameof(ParentTypeName), nameof(IsTradeable)];
     /// <inheritdoc cref="ICard.Logger"/>
     public ILogger Logger { get; set; }
     /// <inheritdoc cref="ICard.TypeName"/>

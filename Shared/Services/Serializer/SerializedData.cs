@@ -10,31 +10,65 @@ namespace Shared.Services.Serializer;
 public readonly struct SerializedData
 {
     /// <summary>
-    /// Constructs a <see cref="SerializedData"/> for a set of <see cref="IConvertible"/>values with a <see cref="string">tag</see>.
+    /// Constructs SerializedData for a single, untagged value.
     /// </summary>
-    /// <param name="serialType">The <see cref="Type"/> of the values which are now stored in <paramref name="serialValues"/>.</param>
-    /// <param name="serialValues">An array of <see cref="IConvertible"/> storing (potentially converted) values for type <paramref name="serialType"/>.</param>
-    /// <param name="tag">A metadata <see cref="string"></see>tag for the values.</param>
-    public SerializedData(Type serialType, IConvertible[] serialValues, string? tag)
+    /// <param name="serialType">The type of the value in <paramref name="value"/>.</param>
+    /// <param name="value">The serializable value.</param>
+    public SerializedData(Type serialType, IConvertible value)
     {
         SerialType = serialType;
+        SerialValues = [value];
+    }
+    /// <summary>
+    /// Constructs SerializedData for a single, tagged value.
+    /// </summary>
+    /// <param name="serialType">The type of the value in <paramref name="value"/>.</param>
+    /// <param name="value">The serializable value.</param>
+    /// <param name="tag">A tag (will precede the type and value when written via <see cref="BinarySerializer"/>).</param>
+    public SerializedData(Type serialType, IConvertible value, string tag)
+    {
+        SerialType = serialType;
+        SerialValues = [value];
+        Tag = tag;
+    }
+    /// <summary>
+    /// Constructs SerializedData for a set of <see cref="IConvertible"/>values with a <see cref="string">tag</see><br/>
+    /// when they may be part of an IConvertible collection.
+    /// </summary>
+    /// <param name="serialType">The type of the values which are now stored in <paramref name="serialValues"/>.</param>
+    /// <param name="serialValues">An array of <see cref="IConvertible"/> storing (potentially converted) values for type <paramref name="serialType"/>.</param>
+    /// <param name="tag">A metadata <see cref="string"></see>tag for the values.</param>
+    public SerializedData(Type serialType, IConvertible[] serialValues, string tag)
+    {
+        SerialType = serialType;
+        if (BinarySerializer.IsIConvertibleCollection(serialType, out Type? memberType))
+            MemberType = memberType;
         SerialValues = serialValues;
         Tag = tag;
     }
     /// <summary>
-    /// Constructs a <see cref="SerializedData"/> for a set of <see cref="IConvertible"/> values.
+    /// Constructs SerializedData for a set of <see cref="IConvertible"/> values<br/> when they may be part of an IConvertible collection.
     /// </summary>
     /// <inheritdoc cref="SerializedData.SerializedData(Type, IConvertible[], string?)"/>
     public SerializedData(Type serialType, IConvertible[] serialValues)
     {
         SerialType = serialType;
+        if (BinarySerializer.IsIConvertibleCollection(serialType, out Type? memberType))
+            MemberType = memberType;
         SerialValues = serialValues;
     }
+    /// <summary>
+    /// Gets or inits the Type of the members of <see cref="SerialType"/>, if any.
+    /// </summary>
+    /// <value>
+    /// If <see cref="SerialType"/> is a serializable collection type, the type of its members; otherwise, <see langword="null"/>.
+    /// </value>
+    public Type? MemberType { get; init; } = null;
     /// <summary>
     /// Gets or inits the serial <see cref="Type"/> associated with the <see cref="SerialValues"/>.
     /// </summary>
     /// <value>
-    /// A <see cref="Type"/>. To be compatible with <see cref="BinarySerializer"/>, this should be a type of <see cref="byte"/> or implementer of <see cref="IConvertible"/>.<br/>
+    /// A <see cref="Type"/>. To be compatible with <see cref="BinarySerializer"/>, this should be a type of <see cref="byte"/> or implementer of <see cref="IConvertible"/>, or an <see cref="System.Collections.IEnumerable"/> of them.<br/>
     /// </value>
     public Type SerialType { get; init; }
     /// <summary>

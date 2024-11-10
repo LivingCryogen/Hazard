@@ -88,7 +88,8 @@ public class AssetFactory : IAssetFactory
             for (int j = 0; j < troopCardSet.JData.Targets[i].Length; j++)
                 targets.Add(troopCardSet.JData.Targets[i][j]);
 
-            troopCards.Add(new TroopCard(troopCardSet, _loggerFactory.CreateLogger<TroopCard>()) {
+            troopCards.Add(new TroopCard(_loggerFactory.CreateLogger<TroopCard>()) {
+                CardSet = troopCardSet,
                 Target = [.. targets],
                 Insigne = ((ITroopCardSetData)troopCardSet.JData).Insignia[i],
             });

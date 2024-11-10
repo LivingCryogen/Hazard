@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Shared.Interfaces.Model;
 using System.Collections;
+using System.Reflection;
 using System.Text;
 
 namespace Shared.Services.Serializer;
@@ -253,17 +254,20 @@ public static class BinarySerializer
                 _logger?.LogError("BinarySerializer failed to write {object} because it did not return a valid SerializedData[].", serializableObject);
                 return false;
             }
+
             foreach (SerializedData saveDatum in saveData) {
-                if (saveDatum.Tag != null)
-                    if (saveDatum.SerialValues.Length == 1)
+                if (saveDatum.MemberType is not null) {
+                    if (saveDatum.Tag != null)
+                        WriteTaggedConvertibles(writer, saveDatum.MemberType, saveDatum.SerialValues, saveDatum.Tag);
+                    else
+                        WriteConvertibles(writer, saveDatum.MemberType, saveDatum.SerialValues);
+                }
+                else {
+                    if (saveDatum.Tag != null)
                         WriteTaggedConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0], saveDatum.Tag);
                     else
-                        WriteTaggedConvertibles(writer, saveDatum.SerialType, saveDatum.SerialValues, saveDatum.Tag);
-                else
-                    if (saveDatum.SerialValues.Length > 1)
-                    WriteConvertibles(writer, saveDatum.SerialType, saveDatum.SerialValues);
-                else if (saveDatum.SerialValues.Length == 1)
-                    WriteConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0]);
+                        WriteConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0]);
+                }
             }
         } catch (Exception ex) {
             _logger?.LogError("{Message}.", ex.Message);
@@ -275,36 +279,55 @@ public static class BinarySerializer
     /// Determines whether objects of a given Type are serializable.
     /// </summary>
     /// <param name="type">The type to test.</param>
-    /// <returns><see langword=""</returns>
+    /// <returns><see langword="true"/> if objects of type <paramref name="type"/> are serialazble by <see cref="BinarySerializer"/>.</returns>
     public static bool IsSerializable(Type type)
     {
         return type switch {
             Type t when t == typeof(string) => true,
             Type t when t.IsEnum => t.GetEnumUnderlyingType() == typeof(int),
             Type t when t.IsPrimitive => true,
-            Type t when IsIConvertibleCollection(t) => true,
+            Type t when IsIConvertibleCollection(t, out _) => true,
             _ => false
         };
     }
-    private static bool IsIConvertibleCollection(Type type)
+    /// <summary>
+    /// Determines whether a Type is a collection type of IConvertibles.
+    /// </summary>
+    /// <param name="type">The type to test.</param>
+    /// <param name="memberType">If <paramref name="type"/> is a collection of IConvertibles, the type of its members; otherwise, <see langword="null"/>.</param>
+    /// <returns></returns>
+    public static bool IsIConvertibleCollection(Type type, out Type? memberType)
     {
-        if (!typeof(IEnumerable).IsAssignableFrom(type))
+        if (!typeof(IEnumerable).IsAssignableFrom(type) || type == typeof(string)) {
+            memberType = null;
             return false;
+        }
 
         // test if an Array contains IConvertible elements
         if (type.IsArray) {
             var elementType = type.GetElementType();
+            memberType = elementType;
             return typeof(IConvertible).IsAssignableFrom(elementType);
         }
 
         // test if a non-generic IEnumerable contains IConvertible elements
         if (!type.IsGenericType) {
-            
-            if (Activator.CreateInstance(type) is not IEnumerable testInstance)
+
+            if (Activator.CreateInstance(type) is not IEnumerable testInstance) {
+                memberType = null;
                 return false;
-            foreach (var element in testInstance)
-                if (element is not IConvertible)
+            }
+            Type? elementType = null;
+            foreach (var element in testInstance) {
+                if (element is not IConvertible) {
+                    memberType = null;
                     return false;
+                }
+
+                elementType ??= element.GetType();
+            }
+
+            memberType = elementType;
             return true;
         }
         
@@ -318,8 +341,11 @@ public static class BinarySerializer
                 break;
             }
         }
-        if (genericType != null)
+        if (genericType != null) {
+            memberType = genericType;
             return typeof(IConvertible).IsAssignableFrom(genericType);
+        }
+        memberType = null;
         return false;
     }
     /// <summary>
@@ -338,4 +364,5 @@ public static class BinarySerializer
         }
         return [.. propConvertibles];
     }
+    
 }
