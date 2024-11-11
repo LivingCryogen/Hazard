@@ -1,6 +1,6 @@
 ﻿namespace Shared.Interfaces.Model;
 /// <summary>
-/// An <see cref="EventArgs"/> for <see cref="IRegulator.PromptTradeIn"/>.
+/// A contract for EventArgs used by <see cref="IRegulator.PromptTradeIn"/>.
 /// </summary>
 /// <remarks>
 /// Fires when a player must be prompted with the option to trade in cards.

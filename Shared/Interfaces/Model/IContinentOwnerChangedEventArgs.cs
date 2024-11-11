@@ -3,7 +3,7 @@
 namespace Shared.Interfaces;
 
 /// <summary>
-/// Recipe for the <see cref="EventArgs"/> used by <see cref="Model.IBoard.ContinentOwnerChanged"/>.
+/// EventArgs contract as used by <see cref="Model.IBoard.ContinentOwnerChanged"/>.
 /// </summary>
 public interface IContinentOwnerChangedEventArgs
 {

@@ -12,7 +12,7 @@ public interface IMainVM : IBinarySerializable
 {
     #region Properties
     /// <summary>
-    /// Gets or inits the current Game.
+    /// Gets or sets the current Game.
     /// </summary>
     /// <value>
     /// The current <see cref="IGame"/> instance if both it and the <see cref="IMainVM"/> have been initialized; otherwise <see langword="null"/>. <br/>
@@ -35,10 +35,10 @@ public interface IMainVM : IBinarySerializable
     /// </summary>
     ObservableCollection<IPlayerData> PlayerDetails { get; set; }
     /// <summary>
-    /// Gets a map of <see cref="ContID"/> to their <see cref="string">name</see>s.
+    /// Gets a map of <see cref="ContID"/> to their names.
     /// </summary>
     /// <remarks>
-    /// Functions as a cache so as to avoid multiple <see cref="Enum"/> method calls.
+    /// A cache that helps avoid multiple <see cref="Enum"/> method calls.
     /// </remarks>
     ReadOnlyDictionary<ContID, string> ContNameMap { get; }
     /// <summary>
@@ -103,7 +103,7 @@ public interface IMainVM : IBinarySerializable
     /// Fires if the turn is changing control between players.
     /// </summary>
     /// <remarks>
-    /// Warns the View that the Player Turn will change; this is needed in a single-seat multiplayer game so that players can keep information hidden.
+    /// Warns the View that the Player Turn will soon change; this is needed in a single-seat multiplayer game so that players can keep information hidden.
     /// </remarks>
     event EventHandler<int>? PlayerTurnChanging;
     /// <summary>
@@ -150,24 +150,24 @@ public interface IMainVM : IBinarySerializable
     /// <summary>
     /// Initializes the MainViewModel using either newly input values or the name of a save file.
     /// </summary>
-    /// <param name="players">An array of names of the players in the new game.</param>
-    /// <param name="colors">An array of color namesfor the players in the new game.</param>
-    /// <param name="fileName">The name of the save file to use if any; otherwise, <see langword="null"/>.</param>
+    /// <param name="players">The players in the new game.</param>
+    /// <param name="colors">The color names for the players in the new game.</param>
+    /// <param name="fileName">The name of the save file to use, if any; otherwise, <see langword="null"/>.</param>
     abstract void Initialize(string[] players, string[] colors, string? fileName);
     /// <summary>
     /// Executes logic of the <see cref="NewGame_Command"/>.
     /// </summary>
-    /// <param name="parameter"></param>
-    abstract void NewGame(object? parameter);
+    /// <param name="namesAndColors">The names and colors of the new players.</param>
+    abstract void NewGame(ValueTuple<string, string>[] namesAndColors);
     /// <summary>
     /// Executes logic of the <see cref="SaveGame_Command"/>.
     /// </summary>
-    /// <param name="saveParams">A <see cref="Tuple{T1, T2}"/>, where T1 is the <see cref="string"/> file name, and T2 is a <see cref="bool"/> indicating whether it is a new file.</param>
+    /// <param name="saveParams">The file name to save to, and a flag indicating whether it is a new file.</param>
     abstract Task SaveGame((string FileName, bool NewFile) saveParams);
     /// <summary>
     /// Executes logic of the <see cref="LoadGame_Command"/>.
     /// </summary>
-    /// <param name="fileName">The <see cref="string">name</see> of the file from which to load.</param>
+    /// <param name="fileName">The name of the file from which to load.</param>
     abstract void LoadGame(string fileName);
     /// <summary>
     /// Executes logic of the <see cref="TerritorySelect_Command"/>.

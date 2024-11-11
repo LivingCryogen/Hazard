@@ -12,7 +12,7 @@ namespace ViewModel;
 /// <summary>
 /// The full implementation of the principal ViewModel. Prepares data and commands for binding and use by the View based on the Model's state.
 /// </summary>
-/// <param name="game">The <see cref="IGame"/> from which this <see cref="MainVM"/> must derive its data. Provided by DI system.</param>
+/// <param name="game">The game from which to derive data. Provided by DI system.</param>
 /// <param name="dialogService">A <see cref="IDialogState"/> which allows this <see cref="MainVM"/> to discover if a dialog window is open in the View. <br/>
 /// Provided by the DI system.</param>
 /// <param name="wpfTimer">An <see cref="IDispatcherTimer"/> service exposing a WPF timer class to this <see cref="MainVM"/>. Provided by the DI system.</param>
