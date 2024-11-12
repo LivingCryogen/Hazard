@@ -8,14 +8,14 @@ public class TypeRelations : ITypeRelations
     private readonly Dictionary<RegistryRelation, object> _relatedObjects = [];
 
     /// <summary>
-    /// Constructs an empty <see cref="TypeRelations"/> instance.
+    /// Constructs an empty TypeRelations.
     /// </summary>
     public TypeRelations()
     { }
     /// <summary>
-    /// Constructs a <see cref="TypeRelations"/> instance from an array of objects and their relation to a keyed <see cref="Type"/> within a <see cref="TypeRegister"/>. 
+    /// Constructs a TypeRelations from a collection of objects under specific relations. 
     /// </summary>
-    /// <param name="relations">An array of Tuples containing the objects related to the keyed <see cref="Type"/>, each with a <see cref="RegistryRelation"/> categorizing that relation.</param>
+    /// <param name="relations">The related objects, each with a <see cref="RegistryRelation"/> categorizing their relation to a keyed Type in a <see cref="TypeRegister"/>.</param>
     public TypeRelations((object, RegistryRelation)[] relations)
     {
         foreach (var relation in relations)
@@ -35,7 +35,6 @@ public class TypeRelations : ITypeRelations
     }
 
     /** <inheritdoc cref="ITypeRelations.Add(object, RegistryRelation)"/>
-     * <exception cref="ArgumentNullException">Thrown if <paramref name="obj"/> is <c>null</c>.</exception>
      * <exception cref="ArgumentException">Thrown if there is already an <see cref="object"/> associated with the given <paramref name="relation"/>, or if the type of <paramref name="obj"/> is incompatible with the given <paramref name="relation"/>.</exception>
      * Extension of <see cref="RegistryRelation"/> will usually require adding additional handling here. */
     public void Add(object obj, RegistryRelation relation)
@@ -46,18 +45,19 @@ public class TypeRelations : ITypeRelations
             case RegistryRelation.Name:
                 if (obj is not string)
                     throw new ArgumentException($"{obj} is not a string. {relation} only targets objects of type string.");
-                else
-                    _relatedObjects.Add(relation, obj);
+                
+                _relatedObjects.Add(relation, obj);
                 break;
             case RegistryRelation.CollectionName:
                 if (obj is not string)
                     throw new ArgumentException($"{obj} is not a string. {relation} only targets objects of type string.");
-                else
-                    _relatedObjects.Add(relation, obj);
+                
+                _relatedObjects.Add(relation, obj);
                 break;
             case RegistryRelation.CollectionType:
                 if (obj is not Type)
                     throw new ArgumentException($"{obj} is not a Type. {relation} only targets Type objects.");
+                
                 _relatedObjects.Add(relation, obj);
                 break;
             case RegistryRelation.ElementType:
@@ -69,20 +69,20 @@ public class TypeRelations : ITypeRelations
             case RegistryRelation.DataFileName:
                 if (obj is not string)
                     throw new ArgumentException($"{obj} is not a string. {relation} only targets objects of type string.");
-                else
-                    _relatedObjects.Add(relation, obj);
+                
+                _relatedObjects.Add(relation, obj);
                 break;
             case RegistryRelation.DataConverter:
                 if (!obj.GetType().IsClass)
                     throw new ArgumentException($"{obj} is not a reference object, and cannot be a DataConverter.");
-                else
-                    _relatedObjects.Add(relation, obj);
+                
+                _relatedObjects.Add(relation, obj);
                 break;
             case RegistryRelation.ConvertedDataType:
-                if (obj is Type)
-                    _relatedObjects.Add(relation, obj);
-                else
+                if (obj is not Type)
                     throw new ArgumentException($"{obj} is not a Type, and cannot be registered as a ConvertedDataType.");
+                
+                _relatedObjects.Add(relation, obj);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(relation), $"{relation} was not accepted. Verify that this ITypeRelations instance accepts {relation}.");

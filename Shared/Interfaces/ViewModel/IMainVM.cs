@@ -172,29 +172,29 @@ public interface IMainVM : IBinarySerializable
     /// <summary>
     /// Executes logic of the <see cref="TerritorySelect_Command"/>.
     /// </summary>
-    /// <param name="territory">The <see cref="TerrID"/> of the territory selected.</param>
+    /// <param name="territory">The ID of the territory selected.</param>
     abstract void TerritorySelect(int territory);
     /// <summary>
     /// Executes logic of the <see cref="ChooseTerritoryBonus_Command"/>.
     /// </summary>
-    /// <param name="target">The <see cref="int"/> value of the selected territory's <see cref="TerrID"/>.</param>
+    /// <param name="target">The underlying value of the target territory's <see cref="TerrID"/>.</param>
     abstract void ChooseTerritoryBonus(int target);
     /// <summary>
     /// Sums the total number of armies owned by a player.
     /// </summary>
-    /// <param name="player">An <see cref="int"/> corresponding to the <see cref="IPlayer.Number"/> of the player whose armies will be summed.</param>
-    /// <returns>An <see cref="int"/>.</returns>
+    /// <param name="player">The <see cref="IPlayer.Number"/> of the player whose armies will be summed.</param>
+    /// <returns>A positive <see cref="int"/>.</returns>
     int SumArmies(int player);
     /// <summary>
     /// Sums the total number of territories controlled by a player.
     /// </summary>
-    /// <param name="player">An <see cref="int"/> corresponding to the <see cref="IPlayer.Number"/> of the player whose territories will be counted.</param>
-    /// <returns>An <see cref="int"/>.</returns>
+    /// <param name="player">The <see cref="IPlayer.Number"/> of the player whose territories will be counted.</param>
+    /// <returns>A positive <see cref="int"/>.</returns>
     int SumTerritories(int player);
     /// <summary>
     /// Makes names suitable for display in the UI.
     /// </summary>
-    /// <param name="name">The <see cref="string">name</see> to be amended.</param>
-    /// <returns>A <see cref="string"/>.</returns>
+    /// <param name="name">The name to be amended.</param>
+    /// <returns>The name, edited for display.</returns>
     string MakeDisplayName(string name);
 }
