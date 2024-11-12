@@ -12,12 +12,9 @@ public readonly struct CardInfo : ICardInfo
     {
         TargetTerritory = new TerrID[card.Target.Length];
         card.Target.CopyTo(TargetTerritory, 0);
-        List<ContID> continents = [];
-        foreach (TerrID territory in TargetTerritory) {
-            var continent = BoardGeography.TerritoryToContinent(territory);
-            continents.Add(continent);
-        }
-        TargetContinent = continents.Distinct().ToArray();
+        TargetContinent = TargetTerritory.Select(terr => BoardGeography.TerritoryToContinent(terr))
+            .Distinct()
+            .ToArray();
         Owner = null;
         OwnerHandIndex = null;
     }
@@ -34,13 +31,9 @@ public readonly struct CardInfo : ICardInfo
     {
         TargetTerritory = new TerrID[card.Target.Length];
         card.Target.CopyTo(TargetTerritory, 0);
-        List<ContID> continents = [];
-        foreach (TerrID territory in TargetTerritory) {
-            var continent = BoardGeography.TerritoryToContinent(territory);
-            continents.Add(continent);
-        }
-        var filteredContinentList = continents.Distinct();
-        TargetContinent = filteredContinentList.ToArray();
+        TargetContinent = TargetTerritory.Select(terr => BoardGeography.TerritoryToContinent(terr))
+            .Distinct()
+            .ToArray();
         Owner = owner;
         OwnerHandIndex = ownerHandIndex;
     }

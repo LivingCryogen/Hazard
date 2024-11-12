@@ -344,18 +344,14 @@ public partial class AttackWindow : Window
 
     private void HandleDiceThrown(object? sender, IDiceThrownEventArgs results)
     {
-        int numAttackDice = results.AttackResults.Count;
-        int numDefenseDice = results.DefenseResults.Count;
-
         _currentSpinType = DetermineSpin();
         int tenthSeconds = _currentSpinType.ToString().ElementAt(5) - '0';
         long spinTicks = tenthSeconds * 1000000; // A second includes 10,000,000 ticks. Each diceroll sound file duration lasts tenths of seconds, so tick conversion needs * 1,000,000. 
 
-        for (int i = 0; i < numAttackDice; i++)
-            _attackDiceAnimations[i] = BuildDiceAnimation(AttackDieFaces, spinTicks, results.AttackResults[i]);
-
-        for (int i = 0; i < numDefenseDice; i++)
-            _defenseDiceAnimations[i] = BuildDiceAnimation(DefenseDieFaces, spinTicks, results.DefenseResults[i]);
+        foreach (int attackRoll in results.AttackResults)
+            BuildDiceAnimation(AttackDieFaces, spinTicks, attackRoll);
+        foreach (int defenseRoll in results.DefenseResults)
+            BuildDiceAnimation(AttackDieFaces, spinTicks, defenseRoll);
 
         SetDiceVisibility(DiceGroup.All);
         BeginDiceAnimations();

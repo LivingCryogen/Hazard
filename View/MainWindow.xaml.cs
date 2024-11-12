@@ -240,7 +240,7 @@ public partial class MainWindow : Window
         _handViews[playerNumber].Message = "You must trade in a set of cards.";
         _handViews[playerNumber].ShowDialog();
     }
-    private void OnTerritoryChoiceRequest(object? sender, Tuple<int, string>[] choices)
+    private void OnTerritoryChoiceRequest(object? sender, ValueTuple<int, string>[] choices)
     {
         Debug.Assert(_vM != null, "ViewModel should never be null here since this method handles an event from it.");
         TerritoryChoice pickTerritory = new(choices, PlayerColors[_vM!.PlayerTurn], _vM);

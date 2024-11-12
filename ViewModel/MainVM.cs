@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using Model.Core;
 using Model.EventArgs;
 using Shared.Enums;
 using Shared.Geography;
@@ -7,55 +8,52 @@ using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Interfaces.View;
 using Shared.Interfaces.ViewModel;
+using System.Reflection.PortableExecutable;
 
 namespace ViewModel;
 /// <summary>
 /// The full implementation of the principal ViewModel. Prepares data and commands for binding and use by the View based on the Model's state.
 /// </summary>
 /// <param name="game">The game from which to derive data. Provided by DI system.</param>
-/// <param name="dialogService">A <see cref="IDialogState"/> which allows this <see cref="MainVM"/> to discover if a dialog window is open in the View. <br/>
-/// Provided by the DI system.</param>
-/// <param name="wpfTimer">An <see cref="IDispatcherTimer"/> service exposing a WPF timer class to this <see cref="MainVM"/>. Provided by the DI system.</param>
-/// <param name="bootStrapper">The <see cref="IBootStrapperService"/> instance persists before and after <see cref="IGame"/>s and boots them up. Provided by the DI system.</param>
-public partial class MainVM(IGameService gameService, IDialogState dialogService, IDispatcherTimer wpfTimer, IBootStrapperService bootStrapper, ILogger<MainVM_Base> logger) : MainVM_Base(gameService, bootStrapper, logger)
+/// <param name="dialogService">Determines whether a dialog window is open in the View.</param>
+/// <param name="wpfTimer">Exposes a UI timer class.</param>
+/// <param name="bootStrapper">A persistent application boot service.</param>
+public partial class MainVM(IGameService gameService,
+    IDialogState dialogService,
+    IDispatcherTimer wpfTimer,
+    IBootStrapperService bootStrapper,
+    ILogger<MainVM_Base> logger) 
+    : MainVM_Base(gameService, bootStrapper, logger)
 {
     private readonly IGameService _gameService = gameService;
     private readonly IDialogState _dialogService = dialogService;
     private readonly IDispatcherTimer _dispatcherTimer = wpfTimer;
-    private List<TerrID> _moveTargets = [];
+    private HashSet<TerrID> _moveTargets = [];
 
-    /// <remarks>
-    /// This concrete implementation overrides <see cref="MainVM_Base.HandleStateChanged(object?, string)"/>.
-    /// </remarks>fs
     /// <inheritdoc cref="MainVM_Base.HandleStateChanged(object?, string)"/>.
     public override void HandleStateChanged(object? sender, string propName)
     {
-        if (sender != null) {
-            if (!string.IsNullOrEmpty(propName)) {
-                switch (propName) {
-                    case "CurrentPhase":
-                        CurrentPhase = CurrentGame?.State?.CurrentPhase ?? GamePhase.Null;
+        if (sender is not StateMachine stateMachine || string.IsNullOrEmpty(propName))
+            return;
 
-                        TerritorySelected = TerrID.Null;
-                        if (CurrentPhase.Equals(GamePhase.Move))
-                            _moveTargets = [];
-
-                        TerritorySelectCommand.NotifyCanExecuteChanged();
-                        break;
-                    case "PlayerTurn":
-                        if (PlayerDetails != null)
-                            PlayerDetails[PlayerTurn].ArmyBonus = CurrentGame?.Players[PlayerTurn].ArmyBonus ?? 0;
-                        PlayerTurn = CurrentGame!.State!.PlayerTurn;
-                        RaisePlayerTurnChanging(PlayerTurn);
-                        break;
-                    case "Round": Round = CurrentGame!.State!.Round; break;
-                    case "PhaseStageTwo": PhaseStageTwo = CurrentGame!.State!.PhaseStageTwo; break;
-                    case "NumTrades": NumTrades = CurrentGame!.State!.NumTrades; break;
-                }
-            }
-            else throw new ArgumentNullException(nameof(propName));
+        switch (propName) {
+            case "CurrentPhase":
+                CurrentPhase = stateMachine.CurrentPhase;
+                TerritorySelected = TerrID.Null;
+                if (CurrentPhase.Equals(GamePhase.Move))
+                    _moveTargets = [];
+                TerritorySelectCommand.NotifyCanExecuteChanged();
+                break;
+            case "PlayerTurn":
+                if (PlayerDetails != null)
+                    PlayerDetails[PlayerTurn].ArmyBonus = CurrentGame?.Players[PlayerTurn].ArmyBonus ?? 0;
+                PlayerTurn = stateMachine.PlayerTurn;
+                RaisePlayerTurnChanging(PlayerTurn);
+                break;
+            case "Round": Round = stateMachine.Round; break;
+            case "PhaseStageTwo": PhaseStageTwo = stateMachine.PhaseStageTwo; break;
+            case "NumTrades": NumTrades = stateMachine.NumTrades; break;
         }
-        else throw new ArgumentNullException(nameof(sender));
     }
     /// <inheritdoc cref="MainVM_Base.HandleTerritoryChanged(object?, ITerritoryChangedEventArgs)"/>
     public override void HandleTerritoryChanged(object? sender, ITerritoryChangedEventArgs e)
@@ -63,113 +61,58 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
         if (e is not TerritoryChangedEventArgs || Territories == null || PlayerDetails == null)
             return;
 
-        var f = (TerritoryChangedEventArgs)e;
-        if (f.Player == null) {
-            Territories[(int)f.Changed].Armies = CurrentGame!.Board!.Armies[f.Changed];
-            int owner = CurrentGame.Board.TerritoryOwner[f.Changed];
+        if (e.Player == null) {
+            Territories[(int)e.Changed].Armies = CurrentGame?.Board.Armies[e.Changed] ?? 0;
+            int owner = CurrentGame?.Board.TerritoryOwner[e.Changed] ?? -1;
             if (owner > -1)
                 PlayerDetails[owner].NumArmies = base.SumArmies(owner);
 
         }
-        else if (f.Player > -2 && f.Player < NumPlayers) {
-            Territories![(int)f.Changed].PlayerOwner = CurrentGame!.Board!.TerritoryOwner[f.Changed];
-            Territories![(int)f.Changed].Armies = CurrentGame!.Board!.Armies[f.Changed];
-            if ((int)f.Player > -1)
-                PlayerDetails[(int)f.Player].NumArmies = base.SumArmies((int)f.Player);
+        else if (e.Player > -2 && e.Player < NumPlayers) {
+            Territories[(int)e.Changed].PlayerOwner = CurrentGame?.Board.TerritoryOwner[e.Changed] ?? -1;
+            Territories[(int)e.Changed].Armies = CurrentGame?.Board.Armies[e.Changed] ?? -1;
+            if ((int)e.Player > -1)
+                PlayerDetails[(int)e.Player].NumArmies = base.SumArmies((int)e.Player);
         }
-        else
-            throw new ArgumentOutOfRangeException(nameof(e));
-    }
+    } 
     /// <inheritdoc cref="MainVM_Base.CanTerritorySelect(int)"/>
     public override bool CanTerritorySelect(int selected)
     {
-        if (CurrentGame?.State == null || CurrentGame?.Board == null || Regulator == null)
+        if (CurrentGame?.State is not StateMachine stateMachine || CurrentGame?.Board == null || Regulator == null)
             return false;
 
         TerrID territory = (TerrID)selected;
         if (territory == TerrID.Null)
             return false;
 
-        int owner = Territories![(int)territory].PlayerOwner;
-        // IGeography geography = CurrentGame.Board.Geography;
+        int owner = Territories[(int)territory].PlayerOwner;
 
-        switch (CurrentPhase) {
-            case GamePhase.Null: return false;
-
-            case GamePhase.DefaultSetup:
-                if (owner == -1 && CurrentGame.State.PhaseStageTwo == false)
-                    return true;
-                else if (owner == CurrentGame.State.PlayerTurn && !CurrentGame.State!.PhaseStageTwo)
-                    return false;
-                else if (owner != CurrentGame.State.PlayerTurn && CurrentGame.State!.PhaseStageTwo)
-                    return false;
-                else if (owner == CurrentGame.State.PlayerTurn && CurrentGame.State!.PhaseStageTwo)
-                    return true;
-                else return false;
-            case GamePhase.TwoPlayerSetup:
-                if (PhaseStageTwo) {
-                    if (owner == -1) {
-                        return true;
-                    }
-                    else {
-                        return false;
-                    }
-                }
-                else if (!PhaseStageTwo) {
-                    if (owner.Equals(CurrentGame!.State!.PlayerTurn))
-                        return true;
-                    else return false;
-                }
-                break;
-            case GamePhase.Place:
-                if (owner == CurrentGame.State.PlayerTurn)
-                    return true;
-                else return false;
-
-            case GamePhase.Attack:
-                if (TerritorySelected == TerrID.Null) {
-                    if (owner.Equals(CurrentGame!.State!.PlayerTurn)) {
-                        if (Territories[(int)territory].Armies < 2)
-                            return false;
-                        else return true;
-                    }
-                    else return false;
-                }
-                else {
-                    if (owner.Equals(CurrentGame!.State!.PlayerTurn))
-                        return false;
-                    else {
-                        if (BoardGeography.GetNeighbors(TerritorySelected).Contains(territory))
-                            return true;
-                        return false;
-                    }
-                }
-
-            case GamePhase.Move:
-                if (CurrentGame!.State!.PlayerTurn == owner) {
-                    if (TerritorySelected == TerrID.Null) {
-                        int numArmies = Territories[(int)territory].Armies;
-                        if (numArmies < 2)
-                            return false;
-                        else return true;
-                    }
-                    else if (TerritorySelected != TerrID.Null && TerritorySelected != territory) {
-                        if (_moveTargets!.Contains(territory))
-                            return true;
-                        else return false;
-                    }
-                    else return false;
-                }
-                else return false;
-        }
-
-        return false;
+        return CurrentPhase switch {
+            GamePhase.DefaultSetup => 
+                stateMachine.PhaseStageTwo switch {
+                false when owner == -1 => true, // claiming unowned territory
+                true when owner == stateMachine.PlayerTurn => true, // reinforcing owned territory
+                _ => false
+                },
+            GamePhase.TwoPlayerSetup => 
+                stateMachine.PhaseStageTwo switch {
+                false when owner == stateMachine.PlayerTurn => true, // reinforcing auto-assigned territory
+                true when owner == -1 => true, // reinforcing AI territory
+                _ => false
+                },
+            GamePhase.Place => owner == stateMachine.PlayerTurn, // place an army on an owned territory
+            GamePhase.Attack => TerritorySelected == TerrID.Null ?
+                (owner == stateMachine.PlayerTurn && Territories[selected].Armies >= 2) // select valid Attack source
+                : (owner != stateMachine.PlayerTurn && BoardGeography.GetNeighbors(TerritorySelected).Contains(territory)), // select valid Attack target
+            GamePhase.Move => TerritorySelected == TerrID.Null ?
+                (Territories[selected].Armies >= 2) // select valid Move source
+                : (TerritorySelected != territory && _moveTargets.Contains(territory)), // select valid Move target
+            _ => false
+        };
     }
     /// <inheritdoc cref="MainVM_Base.TerritorySelect(int)"/>
     public override void TerritorySelect(int selected)
     {
-        if (Territories == null) throw new NullReferenceException(nameof(Territories));
-
         var territory = (TerrID)selected;
         if (territory == TerrID.Null)
             return;
@@ -188,37 +131,36 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
             case GamePhase.Attack:
                 if (TerritorySelected == TerrID.Null) {
                     TerritorySelected = territory;
-                    Territories[(int)territory].IsSelected = true;
+                    Territories[selected].IsSelected = true;
                 }
                 else {
                     var sourceTerritory = (int)TerritorySelected;
                     Territories[sourceTerritory].IsSelected = false;
-                    Territories[(int)territory].IsSelected = true;
+                    Territories[selected].IsSelected = true;
                     TerritorySelected = territory;
                     AttackEnabled = true;
                     base.RaiseAttackRequest(sourceTerritory);
                 }
                 break;
-
             case GamePhase.Move:
                 if (TerritorySelected == TerrID.Null) {
                     TerritorySelected = territory;
-                    Territories[(int)territory].IsSelected = true;
-                    _moveTargets = GetMoveTargets(TerritorySelected, Territories[(int)TerritorySelected].PlayerOwner);
+                    Territories[selected].IsSelected = true;
+                    _moveTargets = GetMoveTargets(TerritorySelected, Territories[selected].PlayerOwner);
                     PhaseStageTwo = true;
                 }
                 else {
-                    var moveSource = TerritorySelected;
-                    Territories[(int)TerritorySelected].IsSelected = false;
+                    var moveSource = (int)TerritorySelected;
+                    Territories[moveSource].IsSelected = false;
                     TerritorySelected = TerrID.Null;
                     _moveTargets = [];
                     PhaseStageTwo = false;
-                    int maxMoving = Territories[(int)moveSource].Armies - 1;
+                    int maxMoving = Territories[moveSource].Armies - 1;
 
                     if (maxMoving > 1)
-                        base.RaiseAdvanceRequest((int)moveSource, (int)territory, 1, maxMoving, false);
+                        base.RaiseAdvanceRequest(moveSource, selected, 1, maxMoving, false);
                     else if (maxMoving == 1) {
-                        int[] advanceParams = [(int)moveSource, (int)territory, 1];
+                        int[] advanceParams = [moveSource, selected, 1];
                         if (base.CanAdvance(advanceParams))
                             base.AdvanceCommand.Execute(advanceParams);
                     }
@@ -231,27 +173,27 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
     /// <summary>
     /// CanExecute logic for the <see cref="AttackCommand"/>.
     /// </summary>
-    /// <param name="attackParams">An <see cref="int">array</see> containing values <br/>
-    /// [0]: the <see cref="int">value</see> of the <see cref="TerrID"/> of the territory which is the attack source.<br/>
-    /// [1]: the <see cref="int">value</see> of the <see cref="TerrID"/> of the territory which is the target.<br/>
-    /// [2]: the <see cref="int">number</see> of dice used by the attacker.</param> 
-    /// <returns><see langword="true"/> if an attack may occur given the <paramref name="attackParams"/> values; otherwise, <see langword="false"/>.</returns>
+    /// <param name="attackParams">Command parameters:
+    /// [0]: the underlying value of the attacking <see cref="TerrID">territory</see>.<br/>
+    /// [1]: the underlying value of the defending <see cref="TerrID">territory</see>.<br/>
+    /// [2]: the number of dice used by the attacker.</param> 
+    /// <returns><see langword="true"/> if an attack may occur given <paramref name="attackParams"/> values; otherwise, <see langword="false"/>.</returns>
     public bool CanAttack(params int[] attackParams)
     {
         if (Territories == null)
             return false;
-
         if (attackParams == null)
             return true;
-        else {
-            int source = attackParams[0];
-            int target = attackParams[1];
-            int numAttackDice = attackParams[2];
-
-            if (numAttackDice <= (Territories[source].Armies - 1) && !Territories[source].PlayerOwner.Equals(Territories[target].PlayerOwner) && AttackEnabled)
-                return true;
-            else return false;
-        }
+        if (!AttackEnabled)
+            return false;
+        int source = attackParams[0];
+        int target = attackParams[1];
+        if (Territories[source].PlayerOwner == Territories[target].PlayerOwner)
+            return false;
+        int numAttackDice = attackParams[2];
+        if (numAttackDice <= Territories[source].Armies - 1)
+            return true;
+        return false;
     }
     /// <summary>
     /// Executes logic for the <see cref="AttackCommand"/>.
@@ -259,10 +201,10 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
     /// <remarks>
     /// Generates random results ("rolls dice") given the number available to attacking and defending player, then passes these on to the Model.
     /// </remarks>
-    /// <param name="attackParams">An <see cref="int">array</see> containing values <br/>
-    /// [0]: the <see cref="int">value</see> of the <see cref="TerrID"/> of the territory which is the attack source.<br/>
-    /// [1]: the <see cref="int">value</see> of the <see cref="TerrID"/> of the territory which is the target.<br/>
-    /// [2]: the <see cref="int">number</see> of dice used by the attacker.</param> 
+    /// <param name="attackParams">Command parameters:
+    /// [0]: the underlying value of the attacking <see cref="TerrID">territory</see>.<br/>
+    /// [1]: the underlying value of the defending <see cref="TerrID">territory</see>.<br/>
+    /// [2]: the number of dice used by the attacker.</param> 
     [RelayCommand(CanExecute = nameof(CanAttack))]
     public void Attack(params int[] attackParams)
     {
@@ -298,12 +240,9 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
 
         int[] attackRolls = [.. attackDice.OrderDescending()];
         int[] defenseRolls = [.. defenseDice.OrderDescending()];
-        List<(int AttackRoll, int DefenseRoll)> diceResults = [];
-        for (int i = 0; i < defenseRolls.Length; i++)
-            if (i < attackRolls.Length)
-                diceResults.Add((attackRolls[i], defenseRolls[i]));
+        var results = attackRolls.Zip(defenseRolls);
 
-        Regulator?.Battle((TerrID)source, (TerrID)target, [.. diceResults]);
+        Regulator?.Battle((TerrID)source, (TerrID)target, [.. results]);
 
         RaiseDiceThrown(attackDice, defenseDice);
 
@@ -313,17 +252,18 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
 
     private void DisableAttack_Tick(object? sender, System.EventArgs e)
     {
+        if (sender is not IDispatcherTimer timer)
+            return;
         AttackEnabled = true;
-
-        ((IDispatcherTimer)sender!).Stop();
+        timer.Stop();
     }
     private bool CanCancelSelect()
     {
-        if (_dialogService.IsDialogOpen) return false;
-
-        if (TerritorySelected != TerrID.Null)
-            return true;
-        else return false;
+        if (_dialogService.IsDialogOpen) 
+            return false;
+        if (TerritorySelected == TerrID.Null)
+            return false;
+        return true;
     }
     [RelayCommand(CanExecute = nameof(CanCancelSelect))]
     private void CancelSelect()
@@ -334,22 +274,19 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
     }
     private bool CanConfirmInput()
     {
-        if (_dialogService.IsDialogOpen) return false;
-
-        if (CurrentPhase.Equals(GamePhase.Attack) || CurrentPhase.Equals(GamePhase.Move))
-            return true;
-        else
+        if (_dialogService.IsDialogOpen) 
             return false;
+        if (!(CurrentPhase == GamePhase.Attack || CurrentPhase == GamePhase.Move))
+            return false;
+        return true;
     }
     [RelayCommand(CanExecute = nameof(CanConfirmInput))]
     private void ConfirmInput()
     {
         if (CanCancelSelect())
             CancelSelect();
-
         if (CurrentPhase == GamePhase.Move && CanDeliverAttackReward())
             DeliverAttackReward();
-
         CurrentGame?.State.IncrementPhase();
     }
     /// <summary>
@@ -358,14 +295,13 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
     /// <returns><see langword="true"/> if an input confirmation may be undone; otherwise, <see langword="false"/>.</returns>
     public override bool CanUndoConfirmInput()
     {
-        if (CurrentGame?.State.CurrentPhase == GamePhase.Move) {
-            if (Regulator == null)
-                return false;
-            if (Regulator.PhaseActions > 1)
-                return false;
-            else return true;
-        }
-        else return false;
+        if (CurrentGame?.State.CurrentPhase != GamePhase.Move)
+            return false;
+        if (Regulator == null)
+            return false;
+        if (Regulator.PhaseActions > 1)
+            return false;
+        return true;
     }
     /// <summary>
     /// Executes logic for the <see cref="UndoConfirmInput"/> command.
@@ -379,12 +315,11 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
 
     private bool CanSkipPlayerTurn()
     {
-        if (_dialogService.IsDialogOpen) return false;
-
-        if (CurrentPhase.Equals(GamePhase.Attack) || CurrentPhase.Equals(GamePhase.Move))
-            return true;
-        else
+        if (_dialogService.IsDialogOpen) 
             return false;
+        if (!(CurrentPhase == GamePhase.Attack || CurrentPhase == GamePhase.Move))
+            return false;
+        return true;
     }
 
     [RelayCommand(CanExecute = nameof(CanSkipPlayerTurn))]
@@ -392,21 +327,16 @@ public partial class MainVM(IGameService gameService, IDialogState dialogService
     {
         if (CanCancelSelect())
             CancelSelect();
-
-        CurrentGame!.State!.IncrementPlayerTurn();
+        CurrentGame?.State.IncrementPlayerTurn();
     }
 
-    private List<TerrID> GetMoveTargets(TerrID territory, int playerOwner)
+    private HashSet<TerrID> GetMoveTargets(TerrID territory, int playerOwner)
     {
         var neighbors = BoardGeography.GetNeighbors(territory);
         if (neighbors.Count <= 0)
             return [];
-
-        List<TerrID> targetList = [];
-        foreach (TerrID potentialTarget in neighbors)
-            if (Territories[(int)potentialTarget].PlayerOwner == playerOwner)
-                targetList.Add(potentialTarget);
-
-        return targetList;
+        return neighbors
+            .Where(neighbor => Territories[(int)neighbor].PlayerOwner == playerOwner)
+            .ToHashSet();
     }
 }

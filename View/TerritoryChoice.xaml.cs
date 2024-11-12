@@ -14,7 +14,7 @@ public partial class TerritoryChoice : Window
     {
         InitializeComponent();
     }
-    public TerritoryChoice(Tuple<int, string>[] territoryData, SolidColorBrush ownerColor, IMainVM vM)
+    public TerritoryChoice(ValueTuple<int, string>[] territoryData, SolidColorBrush ownerColor, IMainVM vM)
     {
         InitializeComponent();
         BoardVM = vM;
@@ -34,12 +34,12 @@ public partial class TerritoryChoice : Window
     public static readonly DependencyProperty TerritoryChoiceItemsProperty =
         DependencyProperty.Register("TerritoryChoiceItems", typeof(Tuple<int, string, Geometry, SolidColorBrush>[]), typeof(TerritoryChoice), new PropertyMetadata());
 
-    public Tuple<int, string>[] TerritoryChoiceData {
-        get { return (Tuple<int, string>[])GetValue(TerritoryChoiceDataProperty); }
+    public ValueTuple<int, string>[] TerritoryChoiceData {
+        get { return (ValueTuple<int, string>[])GetValue(TerritoryChoiceDataProperty); }
         set { SetValue(TerritoryChoiceDataProperty, value); }
     }
     public static readonly DependencyProperty TerritoryChoiceDataProperty =
-        DependencyProperty.Register("TerritoryChoiceData", typeof(Tuple<int, string>[]), typeof(TerritoryChoice), new PropertyMetadata());
+        DependencyProperty.Register("TerritoryChoiceData", typeof(ValueTuple<int, string>[]), typeof(TerritoryChoice), new PropertyMetadata());
     #endregion
 
     private void CommandBinding_MakeChoiceCanExecute(object sender, CanExecuteRoutedEventArgs e)

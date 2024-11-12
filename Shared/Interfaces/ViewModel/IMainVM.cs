@@ -112,7 +112,7 @@ public interface IMainVM : IBinarySerializable
     /// <remarks>
     /// See <see cref="IRegulator.PromptBonusChoice"/>.
     /// </remarks>
-    event EventHandler<Tuple<int, string>[]> TerritoryChoiceRequest;
+    event EventHandler<ValueTuple<int, string>[]> TerritoryChoiceRequest;
     /// <summary>
     /// Fires when the application should deliver a prompt allowing a player to trade in their cards.
     /// </summary>
