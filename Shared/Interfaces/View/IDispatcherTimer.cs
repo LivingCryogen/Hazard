@@ -11,9 +11,6 @@ public interface IDispatcherTimer
     /// <summary>
     /// Gets or sets the interval that the timer will run.
     /// </summary>
-    /// <value>
-    /// A <see cref="TimeSpan"/>.
-    /// </value>
     TimeSpan Interval { get; set; }
     /// <summary>
     /// Gets or sets a flag indicating whether the timer is enabled.

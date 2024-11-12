@@ -1,9 +1,9 @@
 ﻿namespace Shared.Interfaces.Model;
 /// <summary>
-/// A recipe for <see cref="EventArgs"/> used by <see cref="IPlayer.PlayerChanged"/>.
+/// Contract for EventArgs used by <see cref="IPlayer.PlayerChanged"/>.
 /// </summary>
 /// <remarks>
-/// To be used primarily by <see cref="ViewModel.IPlayerData"/>.
+/// Consumed primarily by <see cref="ViewModel.IPlayerData"/>.
 /// </remarks>
 public interface IPlayerChangedEventArgs
 {

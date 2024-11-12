@@ -1,7 +1,7 @@
 ﻿namespace Shared.Interfaces.ViewModel;
 
 /// <summary>
-/// Encapsulates data for <see cref="System.EventArgs"/> used by <see cref="IMainVM.AdvanceRequest"/>.
+/// Contract for EventArgs used by <see cref="IMainVM.AdvanceRequest"/>.
 /// </summary>
 public interface ITroopsAdvanceEventArgs
 {
@@ -16,28 +16,22 @@ public interface ITroopsAdvanceEventArgs
     /// Gets or inits the maximum number of armies that may be advanced.
     /// </summary>
     /// <value>
-    /// An <see cref="int"/> at >= the number of dice used by the attacker.
+    /// A number >= the number of dice used by the attacker.
     /// </value>
     int Max { get; init; }
     /// <summary>
     /// Gets or inits the minimum number of armies that may be advanced.
     /// </summary>
     /// <value>
-    /// An <see cref="int"/> at >= the number of dice used by the attacker.
+    /// A number >= the number of dice used by the attacker.
     /// </value>
     int Min { get; init; }
     /// <summary>
-    /// Gets or inits the <see cref="int"/> value of the source territory's <see cref="Geography.Enums.TerrID"/>.
+    /// Gets or inits the underlying value of the source territory's Enum ID.
     /// </summary>
-    /// <value>
-    /// An <see cref="int"/>.
-    /// </value>
     int Source { get; init; }
     /// <summary>
-    /// Gets or inits the <see cref="int"/> value of the target territory's <see cref="Geography.Enums.TerrID"/>.
+    /// Gets or inits the underlying value of the target territory's Enum ID.
     /// </summary>
-    /// <value>
-    /// An <see cref="int"/>.
-    /// </value>
     int Target { get; init; }
 }

@@ -10,8 +10,8 @@ namespace Shared.Services.Serializer;
 /// A binary serializer for <see cref="IBinarySerializable"/> objects. 
 /// </summary>
 /// <remarks>
-/// <para><see cref="BinarySerializer"/> and <see cref="IBinarySerializable"/> work with <see cref="SerializedData"/>, which requires <see cref="IConvertible"/> values.
-/// This serializer encodes <see cref="IConvertible"/> values, with un-encoded optional <see cref="string">tags</see>.</para>
+/// <para><see cref="BinarySerializer"/> and <see cref="IBinarySerializable"/> work with <see cref="SerializedData"/>, which requires <see cref="IConvertible"/> values.<br/>
+/// It encodes <see cref="IConvertible"/> values with optional un-encoded <see cref="string">tags</see>.</para>
 /// <para>To read back tagged values, (assuming BinaryReader reader):
 /// <example><code>var readTag = reader.readString();<br/>
 /// var readValue = (T)BinarySerializer.ReadConvertible(reader, typeof(T));</code><br/>
@@ -22,17 +22,17 @@ public static class BinarySerializer
 {
     private static ILogger? _logger;
     /// <summary>
-    /// Initializes this <see cref="BinarySerializer"/>'s <see cref="ILogger"/>.
+    /// Initializes the logger using a factory.
     /// </summary>
-    /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> configured to create the appropriate <see cref="ILogger"/>.</param>
+    /// <param name="loggerFactory">A logger factory configured to create the appropriate <see cref="ILogger"/>.</param>
     public static void InitializeLogger(ILoggerFactory loggerFactory)
     {
         _logger = loggerFactory.CreateLogger(typeof(BinarySerializer));
     }
     /// <summary>
-    /// Initializes this <see cref="BinarySerializer"/>'s <see cref="ILogger"/>.
+    /// Initializes the logger.
     /// </summary>
-    /// <param name="logger">An <see cref="ILogger"/>.</param>
+    /// <param name="logger">The logger.</param>
     public static void InitializeLogger(ILogger logger)
     {
         _logger = logger;
@@ -80,16 +80,15 @@ public static class BinarySerializer
             WriteConvertible(writer, type, value);
     }
     /// <summary>
-    /// Reads an <see cref="IConvertible"/> value previously written using <see cref="BinarySerializer"/>.
+    /// Reads a value previously written as an IConvertible using <see cref="BinarySerializer"/>.
     /// </summary>
-    /// <param name="reader">A <see cref="BinaryReader"/> whose <see cref="BinaryReader.BaseStream"/> was previously written to.</param>
-    /// <param name="type">The final<see cref="Type"/> expected.</param>
-    /// <returns>An <see cref="IConvertible"/> whose <see cref="Type"/> matches <paramref name="type"/>.</returns>
-    /// <remarks><paramref name="type"/> is compatible with any <see cref="IConvertible"/>.</remarks>
+    /// <param name="reader">A reader whose <see cref="BinaryReader.BaseStream"/> was previously written to.</param>
+    /// <param name="type">The final type expected. Must implement IConvertible.</param>
+    /// <returns>An IConvertible of type <paramref name="type"/>.</returns>
     public static IConvertible ReadConvertible(BinaryReader reader, Type type)
     {
         int length = reader.ReadInt32();
-        byte[] bytes = reader.ReadBytes(length);
+        byte[] bytes = reader.ReadBytes(length); 
         return BytesToConvertible(type, bytes);
     }
     private static object ReadEnum(BinaryReader reader, Type type)
@@ -99,12 +98,12 @@ public static class BinarySerializer
         return BytesToEnumObject(type, bytes);
     }
     /// <summary>
-    /// Reads an array of <see cref="IConvertible"/> values previously written using <see cref="BinarySerializer"/>.
+    /// Reads an array of values previously written as <see cref="IConvertible"/>s using <see cref="BinarySerializer"/>.
     /// </summary>
-    /// <param name="reader">A <see cref="BinaryReader"/> whose <see cref="BinaryReader.BaseStream"/> was previously written to.</param>
-    /// <param name="type">The underlying <see cref="Type"/> of the expected <see cref="Array"/>. Must be an <see cref="IConvertible"/> other than <see cref="string"/> and <see cref="Enum"/>.</param>
-    /// <param name="numValues">The <see cref="int">number</see> of values expected in the read <see cref="Array"/>.</param>
-    /// <returns>An <see cref="Array"/> of <see cref="IConvertible"/>s, exlcuding <see cref="string"/> and <see cref="Enum"/>, whose <see cref="Type"/> matches <paramref name="type"/>.</returns>
+    /// <param name="reader">A reader whose <see cref="BinaryReader.BaseStream"/> was previously written to.</param>
+    /// <param name="type">The underlying type of the expected array. Must implement <see cref="IConvertible"/>, excluding <see cref="string"/> and <see cref="Enum"/>.</param>
+    /// <param name="numValues">The number of values expected.</param>
+    /// <returns><see cref="IConvertible"/>s of type <paramref name="type"/>, excluding <see cref="string"/> and <see cref="Enum"/>.</returns>
     /// <remarks>
     /// <see cref="Array"/>s of type <see cref="string"/> and <see cref="Enum"/> require <see cref="ReadStrings(BinaryReader, int)"/> and <see cref="ReadEnums(BinaryReader, Type, int)"/>, respectively.
     /// </remarks>
@@ -120,11 +119,11 @@ public static class BinarySerializer
         return returnArray;
     }
     /// <summary>
-    /// Reads an array of <see cref="string"/> values previously written using <see cref="BinarySerializer"/>.
+    /// Reads an array of string values previously written using <see cref="BinarySerializer"/>.
     /// </summary>
-    /// <param name="reader">A <see cref="BinaryReader"/> whose <see cref="BinaryReader.BaseStream"/> was previously written to.</param>
-    /// <param name="numValues">The <see cref="int">number</see> of values in the array (ie: length).</param>
-    /// <returns>An <see cref="Array"/> of <see cref="string"/>s.</returns>
+    /// <param name="reader">A reader whose <see cref="BinaryReader.BaseStream"/> was previously written to.</param>
+    /// <param name="numValues">The number of values in the array (ie: length).</param>
+    /// <returns>An <see cref="Array"/> of <see cref="string"/>.</returns>
     public static Array ReadStrings(BinaryReader reader, int numValues)
     {
         Array returnArray = Array.CreateInstance(typeof(string), numValues);
@@ -133,13 +132,13 @@ public static class BinarySerializer
         return returnArray;
     }
     /// <summary>
-    /// Reads an array of <see cref="Enum"/> values which were previously written using <see cref="BinarySerializer"/>.
+    /// Reads an array of Enum values which were previously written using <see cref="BinarySerializer"/>.
     /// </summary>
-    /// <param name="reader">A <see cref="BinaryReader"/> whose <see cref="BinaryReader.BaseStream"/> was previously written to.</param>
-    /// <param name="type">The member <see cref="Type"/> of <see cref="Enum"/> to be read. Should be the same as was previously written.</param>
-    /// <param name="numValues">The <see cref="int">number</see> of values in the array (ie: length).</param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
+    /// <param name="reader">A reader whose <see cref="BinaryReader.BaseStream"/> was previously written to.</param>
+    /// <param name="type">The type of Enum to be read. Should be the same as was previously written.</param>
+    /// <param name="numValues">The number of values in the array (ie: length).</param>
+    /// <returns>An <see cref="Array"/> of <see cref="Enum"/>.</returns>
+    /// <exception cref="ArgumentException">Thrown if <paramref name="type"/> is not an <see cref="Enum"/>.</exception>
     public static Array ReadEnums(BinaryReader reader, Type type, int numValues)
     {
         if (!type.IsEnum)
@@ -165,9 +164,9 @@ public static class BinarySerializer
     /// <summary>
     /// Serializes <see cref="IBinarySerializable"/> objects and writes them to a file. 
     /// </summary>
-    /// <param name="serializableObjects">An array of <see cref="IBinarySerializable"/> objects.</param>
-    /// <param name="fileName">The <see cref="string">name</see> of the save file to be written.</param>
-    /// <param name="newFile">A <see cref="bool">flag</see> indicating whether the file is a new file.</param>
+    /// <param name="serializableObjects">The objects to serialize and save.</param>
+    /// <param name="fileName">The name of the save file.</param>
+    /// <param name="newFile">A flag indicating whether the file is a new file.</param>
     /// <returns>A <see cref="Task"/>.</returns>
     /// <remarks>
     /// See <see cref="WriteSerializableObject"/> and <see cref="IBinarySerializable.GetBinarySerials()"/>.
@@ -205,8 +204,8 @@ public static class BinarySerializer
     /// <summary>
     /// Loads <see cref="IBinarySerializable"/> objects with deserialized values previously written by <see cref="BinarySerializer"/>.
     /// </summary>
-    /// <param name="serializableObjects">An array of <see cref="IBinarySerializable"/> objects to load.</param>
-    /// <param name="fileName">The <see cref="string">name</see> of the file to read from.</param>
+    /// <param name="serializableObjects">The objects to load.</param>
+    /// <param name="fileName">The name of the file to read.</param>
     /// <returns><see langword="true"/> if deserialization and loading completed without exceptions; otherwise, <see langword="false"/>.</returns>
     public static bool Load(IBinarySerializable[] serializableObjects, string fileName)
     {
@@ -225,7 +224,7 @@ public static class BinarySerializer
         return !errors;
     }
     /// <inheritdoc cref="Load(IBinarySerializable[], string)"/>
-    /// <param name="serializableObjects">An array of  objects to load.</param>
+    /// <param name="serializableObjects">An array of serializable objects to load.</param>
     /// <param name="fileName">The nameof the file to read from.</param>
     /// <param name="startStreamPosition">The position of the <see cref="FileStream"/> at which to begin reading the file.</param>
     /// <param name="endStreamPosition">The position of the <see cref="FileStream"/> after loading is complete.</param>
@@ -279,7 +278,7 @@ public static class BinarySerializer
     /// Determines whether objects of a given Type are serializable.
     /// </summary>
     /// <param name="type">The type to test.</param>
-    /// <returns><see langword="true"/> if objects of type <paramref name="type"/> are serialazble by <see cref="BinarySerializer"/>.</returns>
+    /// <returns><see langword="true"/> if objects of type <paramref name="type"/> are serializable by <see cref="BinarySerializer"/>.</returns>
     public static bool IsSerializable(Type type)
     {
         return type switch {
@@ -295,7 +294,7 @@ public static class BinarySerializer
     /// </summary>
     /// <param name="type">The type to test.</param>
     /// <param name="memberType">If <paramref name="type"/> is a collection of IConvertibles, the type of its members; otherwise, <see langword="null"/>.</param>
-    /// <returns></returns>
+    /// <returns><see langword="true"/> if the collection is a collection of IConvertibles; otherwise, <see langword="false"/>.</returns>
     public static bool IsIConvertibleCollection(Type type, out Type? memberType)
     {
         if (!typeof(IEnumerable).IsAssignableFrom(type) || type == typeof(string)) {
@@ -352,7 +351,7 @@ public static class BinarySerializer
     /// Casts a collection into a collection of IConvertibles.
     /// </summary>
     /// <param name="collection">The collection to cast.</param>
-    /// <returns>An array of IConvertibles; if an element could not be successfully cast, it is skipped.</returns>
+    /// <returns>The cast IConvertibles; if an element could not be successfully cast, it is skipped.</returns>
     public static IConvertible[] ToIConvertibleCollection(IEnumerable collection)
     {
         List<IConvertible> propConvertibles = [];

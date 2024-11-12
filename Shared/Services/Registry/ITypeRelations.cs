@@ -1,7 +1,7 @@
 ﻿namespace Shared.Services.Registry;
 
 /// <summary>
-/// Contains values for the keyed <see cref="Type"/> in a <see cref="TypeRegister"/> entry.
+/// Encapsulates objects under specific relations as values for a <see cref="TypeRegister"/> entry.
 /// </summary>
 public interface ITypeRelations
 {
@@ -15,19 +15,18 @@ public interface ITypeRelations
     /// <summary>
     /// Retrieves the <see cref="object"/> in a <see cref="TypeRegister"/> entry given its relation type.
     /// </summary>
-    /// <param name="relation">The <see cref="RegistryRelation"/> with which the <see cref="object"/> was registered.</param>
-    /// <returns>The related <see cref="object"/> or, if none, <c>null</c>.</returns>
+    /// <param name="relation">The relation under which the <see cref="object"/> was registered.</param>
+    /// <returns>The related <see cref="object"/> or, if none, <see langword="null"/>.</returns>
     object? this[RegistryRelation relation] { get; }
-
     /// <summary>
-    /// Adds another element to the pre-existing <see cref="TypeRelations"/> value for a keyed <see cref="Type"/> within a <see cref="TypeRegister"/>.
+    /// Adds an object under a specific relation.
     /// </summary>
-    /// <param name="obj">The <see cref="object"/> to be related to the <see cref="Type"/>.</param>
-    /// <param name="relation">The <see cref="RegistryRelation"/> describing the <paramref name="obj"/>'s relation to the <see cref="Type"/>.</param>
+    /// <param name="obj">The <see cref="object"/> to be registered as related.</param>
+    /// <param name="relation">The relation type.</param>
     void Add(object obj, RegistryRelation relation);
     /// <summary>
-    /// Removes a value from a pre-existing keyed <see cref="Type"/> within a <see cref="TypeRegister"/>.
+    /// Removes an object/relation pair.
     /// </summary>
-    /// <param name="relation">The <see cref="RegistryRelation"/> with which the value was registered.</param>
+    /// <param name="relation">The relation with which the value was registered.</param>
     void Remove(RegistryRelation relation);
 }

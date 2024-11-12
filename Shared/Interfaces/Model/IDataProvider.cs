@@ -2,11 +2,13 @@
 
 namespace Shared.Interfaces.Model;
 /// <summary>
-/// Provides data to <see cref="IAssetFactory"/>, enabling instance construction of <see cref="Type"/>s 
-/// registered by a <see cref="TypeRegister"/>.<br/> The <see cref="TypeRegister"/> must contain <see cref="object"/>s designated 
-/// <see cref="RegistryRelation.DataFileName"/>, <see cref="RegistryRelation.DataConverter"/>,<br/> and possibly 
-/// <see cref="RegistryRelation.ConvertedDataType"/>. 
+/// Reads and converts data from data files.
 /// </summary>
+/// <remarks>
+/// Provides data to <see cref="IAssetFactory"/>, enabling instance construction of <see cref="Type"/>s registered by a <see cref="TypeRegister"/>.<br/>
+/// The <see cref="TypeRegister"/> must contain <see cref="object"/>s designated <see cref="RegistryRelation.DataFileName"/>, <see cref="RegistryRelation.DataConverter"/>,<br/>
+/// and possibly <see cref="RegistryRelation.ConvertedDataType"/>. 
+/// </remarks>  
 public interface IDataProvider
 {
     /// <summary>

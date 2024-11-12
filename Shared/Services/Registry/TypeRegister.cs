@@ -8,43 +8,44 @@ public class TypeRegister : ITypeRegister<ITypeRelations>
     /// <summary>
     /// Constructs the registry and populates it with default entries.
     /// </summary>
-    /// <param name="initializer">An implementation of <see cref="IRegistryInitializer"/>, such as <see cref="RegistryInitializer"/>, which provides default values for initial Registry entries.</param>
+    /// <param name="initializer">Provides default values for initial Registry entries.</param>
     public TypeRegister(IRegistryInitializer initializer)
     {
         initializer.PopulateRegistry(this);
     }
-
+    /// <remarks>
+    /// Assumes unique Type name entries and will return the first found.
+    /// </remarks>
     /** <inheritdoc cref="ITypeRegister{T}.this[string]"/>
-     * Implementation: Performs a linear search through the dictionary for values containing <paramref name="registeredName"/>.
+     * Implementation: Performs a linear search through the dictionary for values containing <paramref name="lookupName"/>.
      * If <see cref="_typeRelata"/> remains small, this is fine. If it were to grow large, it would be better to split off Names
      * from <see cref="ITypeRelations"/> and create a dedicated Name/Type dictionary. */
-    public Type? this[string registeredName] {
+    public Type? this[string lookupName] {
         get {
-            if (string.IsNullOrEmpty(registeredName))
+            if (string.IsNullOrEmpty(lookupName))
                 return null;
 
-            foreach (Type type in _typeRelata.Keys) {
-                if (_typeRelata[type][RegistryRelation.Name] != null) {
-                    if ((string?)_typeRelata[type][RegistryRelation.Name] == registeredName)
-                        return type;
-                }
-            }
+            foreach (Type type in _typeRelata.Keys)
+                if (_typeRelata[type][RegistryRelation.Name] is not string registeredName || registeredName != lookupName) 
+                    continue;
+                else
+                    return type;
 
             return null;
         }
     }
-    /** <inheritdoc cref="ITypeRegister{T}.this[Type]"/>
-     * Getter catches <see cref="KeyNotFoundException"/>, returning null instead.*/
+    /// <inheritdoc cref="ITypeRegister{T}.this[Type]"/>
     public ITypeRelations? this[Type type] {
         get {
-            try {
+            if (_typeRelata.TryGetValue(type, out ITypeRelations? relata) && relata != null)
                 return _typeRelata[type];
-            } catch (KeyNotFoundException e) { _ = e; return null; }
-        }
+            else return null;
+        } 
+        
         set {
             if (value is ITypeRelations and not null)
                 Register(type, value);
-            else throw new ArgumentException($"{value} is not a valid instance as it does not implement ITypeRelations.", nameof(value));
+            else throw new ArgumentException($"{value} is not a valid instance (it is null or does not implement ITypeRelations.)", nameof(value));
         }
     }
     /** <inheritdoc cref="ITypeRegister{T}.this[RegistryRelation]"/>
@@ -85,7 +86,7 @@ public class TypeRegister : ITypeRegister<ITypeRelations>
         _typeRelata.Add(type, typeRelations);
     }
 
-    /// <exception cref="ArgumentNullException">The registered <see cref="Type"/>.</exception>
+    /// <exception cref="ArgumentNullException">The registered type.</exception>
     /// <exception cref="ArgumentException">Thrown if <paramref name="type"/> is already registered.</exception>
     public void AddRelation(Type type, (object, RegistryRelation) newRelation)
     {
@@ -97,9 +98,8 @@ public class TypeRegister : ITypeRegister<ITypeRelations>
     /// <summary>
     /// Remove an object relation from a pre-existing registry entry. If the resulting entry has an empty set of object relations, it is entirely removed via <seealso cref="DeRegister(Type)"/>.
     /// </summary>
-    /// <param name="type">The registered <see cref="Type"/></param>
-    /// <param name="targetRelation">The <see cref="RegistryRelation"/> to remove, along with its paired <see cref="object"/>.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="type"/> is <c>null</c>.</exception>
+    /// <param name="type">The registered type.</param>
+    /// <param name="targetRelation">The relation to remove, along with its paired <see cref="object"/>.</param>
     /// <exception cref="KeyNotFoundException">Thrown if <paramref name="type"/> is not found in the registry.</exception>
     /// <exception cref="ArgumentException">Thrown if <paramref name="targetRelation"/> is not registered to <paramref name="type"/>.</exception>
     public void RemoveRelation(Type type, RegistryRelation targetRelation)
@@ -116,7 +116,7 @@ public class TypeRegister : ITypeRegister<ITypeRelations>
     /// <summary>
     /// Remove a Type's entry, including any contained object relations.
     /// </summary>
-    /// <param name="type">The <see cref="Type"/> to remove.</param>
+    /// <param name="type">The type to remove.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="type"/> is <c>null</c>.</exception>
     /// <exception cref="ArgumentException">Thrown if <paramref name="type"/> is not found in the registry.</exception>
     public void DeRegister(Type type)

@@ -2,7 +2,7 @@
 
 namespace Shared.Interfaces.Model;
 /// <summary>
-/// Encapsulates data for <see cref="EventArgs"/> classes subscribed to <see cref="IBoard.TerritoryChanged"/>.
+/// A contract for EventArgs used by <see cref="IBoard.TerritoryChanged"/>.
 /// </summary>
 public interface ITerritoryChangedEventArgs
 {
@@ -14,7 +14,7 @@ public interface ITerritoryChangedEventArgs
     /// Gets or inits the number of the player now associated with the changed territory.
     /// </summary>
     /// <value>
-    /// An <see cref="int"/> if the change involved an see <see cref="IPlayer"/> (ie, if ownership changed); otherwise, <see langword="null"/>.
+    /// <see cref="int">0-5</see> if the change involved an see <see cref="IPlayer"/> (ie, if ownership changed); otherwise, <see langword="null"/>.
     /// </value>
     public int? Player { get; init; }
 }

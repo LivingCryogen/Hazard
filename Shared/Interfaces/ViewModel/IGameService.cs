@@ -9,7 +9,7 @@ public interface IGameService
     /// <summary>
     /// Initializes a Game with its Regulator.
     /// </summary>
-    /// <param name="numPlayers">The <see cref="int">number</see> of players in the Game.</param>
-    /// <returns>A <see cref="Tuple{T1, T2}"/> containing the initialized Game and the initialized Regulator, respectively.</returns>
+    /// <param name="numPlayers">The number of players in the Game.</param>
+    /// <returns>An initialized Game paired with its initialized Regulator.</returns>
     (IGame Game, IRegulator Regulator) CreateGameWithRegulator(int numPlayers);
 }

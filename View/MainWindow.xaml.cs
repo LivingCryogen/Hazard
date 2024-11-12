@@ -340,7 +340,7 @@ public partial class MainWindow : Window
 
     private void CommandBindingNew_CanExecute(object sender, CanExecuteRoutedEventArgs e)
     {
-        if (_vM?.NewGame_Command.CanExecute(null) ?? false)
+        if (_vM?.NewGame_Command.CanExecute(Array.Empty<ValueTuple<string, string>>()) ?? false)
             e.CanExecute = true;
         else
             e.CanExecute = false;
