@@ -41,7 +41,7 @@ public interface IPlayer : IBinarySerializable
     /// Gets the bonus a player receives to their army pool each turn.
     /// </summary>
     /// <value>
-    /// The default rules never allow this to fall below 3 (<see cref="IRuleValues.MinimumArmyBonus"/>.<br/>
+    /// The default rules never allow this to fall below 3 (<see cref="IRuleValues.MinimumArmyBonus"/>).<br/>
     /// It is calculated by <see cref="IRuleValues.CalculateArmyBonus(int, List{ContID})"/>.
     /// </value>
     /// <remarks>
@@ -63,18 +63,12 @@ public interface IPlayer : IBinarySerializable
     /// </value>
     int ArmyPool { get; set; }
     /// <summary>
-    /// Gets a hashset of territories controlled by the player.
+    /// Gets the territories controlled by the player.
     /// </summary>
-    /// <value>
-    /// A set of unique <see cref="TerrID"/>s, one for each territory under the player's control.
-    /// </value>
     HashSet<TerrID> ControlledTerritories { get; }
     /// <summary>
     /// Gets a list of cards in the player's hand.
     /// </summary>
-    /// <value>
-    /// Empty by default.
-    /// </value>
     List<ICard> Hand { get; }
     #endregion
 
@@ -84,15 +78,18 @@ public interface IPlayer : IBinarySerializable
     /// <param name="tradeInBonus">The bonus granted.</param>
     void GetsTradeBonus(int tradeInBonus);
     /// <summary>
-    /// Gets an array of territories controlled by this player from among a given set.
+    /// Gets territories controlled by this player from among a given set.
     /// </summary>
-    /// <param name="targets">An array of the territories to match.</param>
-    /// <returns>An array of those territories from among <paramref name="targets"/> controlled by this player.</returns>
+    /// <param name="targets">The territories to match.</param>
+    /// <returns>Those territories from among <paramref name="targets"/> controlled by this player.</returns>
     TerrID[] GetControlledTargets(TerrID[] targets);
     /// <summary>
+    /// Finds trade-in card sets in the player's hand.
+    /// </summary>
+    /// <remarks>
     /// Determines whether the player holds a set of <see cref="ICard"/>s that are a tradeable set according to<br/>
     /// <see cref="ICardSet.FindTradeSets(ICard[])"/> and <see cref="ICardSet.IsValidTrade(ICard[])"/>.
-    /// </summary>
+    /// </remarks>
     void FindCardSet();
     /// <summary>
     /// Adds a territory to this player's control.
@@ -103,7 +100,7 @@ public interface IPlayer : IBinarySerializable
     /// <summary>
     /// Removes a territory from this player's control.
     /// </summary>
-    /// <param name="territory">A <see cref="TerrID"/> representing the territory to remove.</param>
+    /// <param name="territory">The territory to remove.</param>
     /// <returns><see langword="true"/> if successfully removed; otherwise, <see langword="false"/>.</returns>
     /// <remarks>
     /// Also fires <see cref="PlayerLost"/> if the count of <see cref="ControlledTerritories"/> falls to 0.
@@ -112,12 +109,12 @@ public interface IPlayer : IBinarySerializable
     /// <summary>
     /// Adds a card to this player's <see cref="Hand"/>.
     /// </summary>
-    /// <param name="card">A <see cref="ICard"/> representing the card to add.</param>
+    /// <param name="card">The card to add.</param>
     void AddCard(ICard card);
     /// <summary>
     /// Removes a card from this player's <see cref="Hand"/>.
     /// </summary>
-    /// <param name="handIndex">The <see cref="int">index</see> of <see cref="Hand"/> which holds the <see cref="ICard"/> to be removed.</param>
+    /// <param name="handIndex">The <see cref="int">index</see> of <see cref="Hand"/> which holds the card to be removed.</param>
     /// <returns><see langword="true"/> if successfully removed; otherwise, <see langword="false"/>.</returns>
     bool RemoveCard(int handIndex);
 }

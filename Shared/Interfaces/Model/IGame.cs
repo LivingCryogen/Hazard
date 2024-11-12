@@ -25,12 +25,6 @@ public interface IGame : IBinarySerializable
     /// <summary>
     /// Gets the unique ID of the game.
     /// </summary>
-    /// <value>
-    /// A <see cref="Guid"/> unique to this instance.
-    /// </value>
-    /// <remarks>
-    /// Should be useful for save/load and game data storage (to be implemented later).
-    /// </remarks>
     public Guid ID { get; }
     /// <summary>
     /// Gets a flag indicating whether the game is set to default card mode.
@@ -70,12 +64,12 @@ public interface IGame : IBinarySerializable
     /// <remarks>
     /// Useful after loading a game from a file.
     /// </remarks>
-    /// <param name="names">An array of <see cref="string">names</see> in player number order.</param>
+    /// <param name="names">Player names in ascending player number order.</param>
     abstract void UpdatePlayerNames(string[] names);
     /// <summary>
     /// Save to a file.
     /// </summary>
-    /// <param name="isNewFile">A boolean indicating whether the save file is new.</param>
+    /// <param name="isNewFile">Indicates whether the save file is new.</param>
     /// <param name="fileName">The name of the save file.</param>
     public Task Save(bool isNewFile, string fileName);
 }

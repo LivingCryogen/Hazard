@@ -4,6 +4,7 @@ using Model.Tests.Fixtures.Stubs;
 using Shared.Enums;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
+using System;
 
 namespace Model.Tests.Entities.Mocks;
 
@@ -39,19 +40,19 @@ public class MockCard : ITroopCard
     public Insignia Insigne { get; set; }
     Enum ITroopCard.Insigne { get => Insigne; set { Insigne = (Insignia)Convert.ToInt32(value); } }
 
-    public Dictionary<string, Type> PropertySerializableTypeMap { get; } = new()
-    {
-        { nameof(ID), typeof(string) },
-        { nameof(Target), typeof(MockTerrID[]) },
-        { nameof(Insigne), typeof(Insignia) },
-        { nameof(ParentTypeName), typeof(string) },
-        { nameof(IsTradeable), typeof(bool) },
-        { nameof(TestInts), typeof(int[]) },
-        { nameof(TestBools), typeof(bool[]) },
-        { nameof(TestLongs), typeof(long[]) },
-        { nameof(TestBytes), typeof(byte[]) },
-        { nameof(TestStrings), typeof(string[])}
-    };
+    public HashSet<string> SerializablePropertyNames { get; } = [
+        nameof(ID),
+        nameof(Target),
+        nameof(Insigne),
+        nameof(ParentTypeName),                    
+        nameof(IsTradeable),
+        nameof(TestInts), 
+        nameof(TestBools), 
+        nameof(TestLongs), 
+        nameof(TestBytes), 
+        nameof(TestStrings), 
+        ];
+
     public string ID { get; set; } = Guid.NewGuid().ToString();
     public ILogger Logger { get; set; } = new LoggerStubT<MockCard>();
     public ICardSet? CardSet { get; set; }

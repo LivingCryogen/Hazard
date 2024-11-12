@@ -6,7 +6,7 @@ namespace Shared.Interfaces.Model;
 
 
 /// <summary>
-/// Data and methods for a collection of specified <see cref="ICard"/>s.
+/// Data and methods for a collection of Cards.
 /// </summary>
 /// <remarks>
 /// <see cref="ICardSet"/> is initialized in two steps: <br/>
@@ -16,10 +16,10 @@ namespace Shared.Interfaces.Model;
 public interface ICardSet
 {
     /// <summary>
-    /// Gets the name of this card set's <see cref="Type"/>.
+    /// Gets the name of this card set's type.
     /// </summary>
     /// <remarks>
-    /// Serves as a cached value that allows us to avoid multiple reflection method calls (e.g.: .GetType()). 
+    ///A cached value to help avoid multiple reflection method calls (e.g.: .GetType()). 
     /// </remarks>
     public string TypeName { get; }
     /// <summary>
@@ -29,11 +29,11 @@ public interface ICardSet
     /// This is provided by the DAL in new games, but will remain <see langword="null"/> when loading from a save file.
     /// </remarks>
     /// <value>
-    /// An <see cref="ICardSetData"/> instance if the <see cref="ICardSet"/> has been loaded by the DAL; otherwise, <see langword="null"/>.
+    /// A card set if it has been loaded by the DAL; otherwise, <see langword="null"/>.
     /// </value>
     public ICardSetData? JData { get; }
     /// <summary>
-    /// Gets the name of the <see cref="Type"/> which is the intended member of this collection.
+    /// Gets the name of the type which is the intended member of this collection.
     /// <br/> E.g. "TroopCard", see <see cref="TroopCard"/>.
     /// </summary>
     /// <remarks>
@@ -45,7 +45,7 @@ public interface ICardSet
     /// </summary>
     public List<ICard> Cards { get; set; }
     /// <summary>
-    /// Gets a flag indicating if a trade should be forced when a matching set of <see cref="ICard"/>s from this <see cref="ICardSet"/> are obtained.
+    /// Gets a flag indicating if a trade should be forced when a matching set of <see cref="ICard"/>s from this set are obtained.
     /// </summary>
     /// <value>
     /// <see langword="true"/> if obtaining matching cards (satisfying <see cref="IsValidTrade"/>) should force an <see cref="IPlayer"/> to trade (via <see cref="IRegulator.TradeInCards(int, int[])"/>).

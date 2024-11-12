@@ -335,15 +335,12 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// <summary>
     /// Executes logic for the <see cref="NewGameCommand"/>.
     /// </summary>
-    /// <param name="parameter">An <see cref="object"/> that contains names and colors of the new players, if any; otherwise, <see langword="null"/>.</param>
+    /// <param name="parameter">Names and colors of the new players.</param>
     [RelayCommand]
-    public void NewGame(object? parameter)
+    public void NewGame(ValueTuple<string, string>[] namesAndColors)
     {
-        if (parameter != null) {
-            var newNamesAndColors = parameter as ValueTuple<string, string>[];
-            var shuffledParam = ShuffleOrder(newNamesAndColors ?? [(string.Empty, string.Empty)]);
-            _bootStrapper.InitializeGame(shuffledParam);
-        }
+        var shuffledParam = ShuffleOrder(namesAndColors ?? [(string.Empty, string.Empty)]);
+        _bootStrapper.InitializeGame(shuffledParam);
     }
     /// <summary>
     /// "CanExecute" logic for the <see cref="SaveGameCommand"/>.

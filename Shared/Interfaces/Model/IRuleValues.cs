@@ -11,22 +11,18 @@ public interface IRuleValues
     /// <summary>
     /// Gets the minimum number to add to a player's army count on their turn.
     /// </summary>
-    /// <value>A positive integer.</value>
     int MinimumArmyBonus { get; }
     /// <summary>
     /// Gets the number of armies to add to a player's army count if they trade in a set of cards.
     /// </summary>
-    /// <value>A positive integer.</value>
     int TerritoryTradeInBonus { get; }
     /// <summary>
     /// Gets the maximum number of dice allowed an attacking player.
     /// </summary>
-    /// <value>A positive integer.</value>
     int AttackersLimit { get; }
     /// <summary>
     /// Gets the maximum number of dice allowed a defending player.
     /// </summary>
-    /// <value>A positive integer.</value>
     int DefendersLimit { get; }
     /// <summary>
     /// Gets map of the number of bonus armies granted for controlling a given continent (see <see cref="ContID"/>).
@@ -37,7 +33,7 @@ public interface IRuleValues
     /// </summary>
     ReadOnlyDictionary<int, int> SetupActionsPerPlayers { get; }
     /// <summary>
-    /// Gets the number of armies distributed to a player during setup given the total number of players.
+    /// Gets a map of the number of armies distributed to a player during setup given the total number of players.
     /// </summary>
     ReadOnlyDictionary<int, int> SetupStartingPool { get; }
     /// <summary>
