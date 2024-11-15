@@ -47,16 +47,17 @@ public partial class NewGameWindow : Window
         NewPlayerColor = [null, null, null, null, null, null];
         NewPlayerName = ["", "", "", "", "", ""];
 
-        foreach (var obs in ColorsRemaining)
-            foreach (var colorPair in _armyColors)
+        foreach (ObservableCollection<Tuple<ArmyColor, SolidColorBrush>> obs in ColorsRemaining) {
+            foreach (Tuple<ArmyColor, SolidColorBrush> colorPair in _armyColors)
                 obs.Add(colorPair);
-        
+        }
 
-        foreach (var child in NewGameGrid.Children) {
-            if (child.GetType() != typeof(WrapPanel))
-                return;
-            if (((WrapPanel)child).Name != "NumPlayersWrap")
-                ((WrapPanel)child).IsEnabled = false;
+        foreach (object obj in NewGameGrid.Children) {
+            Type childType = obj.GetType();
+            if (childType.Equals(typeof(WrapPanel))) {
+                if (((WrapPanel)obj).Name != "NumPlayersWrap")
+                    ((WrapPanel)obj).IsEnabled = false;
+            }
         }
         _newGameCommand = newGameCommand;
         DataContext = this;
