@@ -482,7 +482,7 @@
     </Window.InputBindings>
     <Canvas Name="MainCanvas">
         <Image Name="MainMapImage" Source="{StaticResource WorldMap}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Menu IsMainMenu="True" Name="MainMenu" AllowDrop="True" Background="Transparent" Margin="8" DataContext="{Binding }">
+        <Menu IsMainMenu="True" Name="MainMenu" AllowDrop="True" Background="Transparent" Margin="8" DataContext="{Binding}">
             <Menu.Resources>
                 <Style TargetType="MenuItem">
                     <Style.Setters>
@@ -595,12 +595,12 @@
                     <TextBlock Grid.Row="5" Grid.Column="0" Text="Asia" Foreground="{StaticResource #Asia}" />
                     <TextBlock Grid.Row="6" Grid.Column="0" Text="Oceania" Foreground="{StaticResource #Oceania}" />
 
-                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ContinentBonuses[0]}" Foreground="{StaticResource #NorthAmerica}" HorizontalAlignment="Right"/>
-                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ContinentBonuses[1]}" Foreground="{StaticResource #SouthAmerica}" HorizontalAlignment="Right"/>
-                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ContinentBonuses[2]}" Foreground="{StaticResource #Europe}" HorizontalAlignment="Right"/>
-                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ContinentBonuses[3]}" Foreground="{StaticResource #Africa}" HorizontalAlignment="Right"/>
-                    <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding ContinentBonuses[4]}" Foreground="{StaticResource #Asia}" HorizontalAlignment="Right"/>
-                    <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding ContinentBonuses[5]}" Foreground="{StaticResource #Oceania}" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ContinentBonuses[0], FallbackValue=0}" Foreground="{StaticResource #NorthAmerica}" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ContinentBonuses[1], FallbackValue=0}" Foreground="{StaticResource #SouthAmerica}" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ContinentBonuses[2], FallbackValue=0}" Foreground="{StaticResource #Europe}" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ContinentBonuses[3], FallbackValue=0}" Foreground="{StaticResource #Africa}" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding ContinentBonuses[4], FallbackValue=0}" Foreground="{StaticResource #Asia}" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding ContinentBonuses[5], FallbackValue=0}" Foreground="{StaticResource #Oceania}" HorizontalAlignment="Right"/>
                 </Grid>
             </Border>
         </Border>

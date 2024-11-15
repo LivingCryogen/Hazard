@@ -38,6 +38,8 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         Territories = [];
         PlayerDetails = [];
         ContinentBonuses = [];
+        foreach (var ID in Enum.GetValues(typeof(ContID)))
+            ContinentBonuses.Add(0);
         ContNameMap = MakeContIDDisplayNameMap();
     }
 
@@ -194,7 +196,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
             PlayerDetails.Add(newPlayerData);
         }
         for (int i = 0; i < CurrentGame.Values.ContinentBonus.Count - 1; i++) // Count needs -1 because of Null entry
-            ContinentBonuses.Add(CurrentGame.Values.ContinentBonus[(ContID)i]);
+            ContinentBonuses[i] = CurrentGame.Values.ContinentBonus[(ContID)i];
 
         Refresh();
     }
@@ -379,7 +381,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// </summary>
     /// <param name="tradeParams">The number of the player trading paired with <see cref="IPlayer.Hand"/> index values of the cards to be traded.</param>
     /// <returns><see langword="true"/> if the cards may be traded; otherwise, <see langword="false"/>.</returns>
-    public bool CanTradeIn(Tuple<int, int[]> tradeParams)
+    public bool CanTradeIn(ValueTuple<int, int[]> tradeParams)
     {
         if (CurrentGame == null || CurrentGame.State == null || Regulator == null)
             return false;
@@ -402,7 +404,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// </summary>
     /// <param name="tradeParams">The number of the player trading paired with <see cref="IPlayer.Hand"/> index values of the cards to be traded.</param>
     [RelayCommand(CanExecute = nameof(CanTradeIn))]
-    public void TradeIn(Tuple<int, int[]> tradeParams)
+    public void TradeIn(ValueTuple<int, int[]> tradeParams)
     {
         Regulator?.TradeInCards(tradeParams.Item1, tradeParams.Item2);
     }
