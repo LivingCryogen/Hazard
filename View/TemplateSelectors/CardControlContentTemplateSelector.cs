@@ -15,22 +15,22 @@ public class CardControlContentTemplateSelector(MainVM_Base vM) : DataTemplateSe
 
     public override DataTemplate? SelectTemplate(object item, DependencyObject container)
     {
-        if (container is FrameworkElement control && item is ICardInfo cardInfo) {
-            if (cardInfo is ITroopCardInfo troopCardInfo) {
-                if (cardInfo.Owner.Equals(_vM.PlayerTurn)) {
-                    if (!string.IsNullOrEmpty(troopCardInfo.InsigniaName)) {
-                        if (troopCardInfo.InsigniaName.Equals("Wild"))
-                            return _wildTemplate;
-                        else if (troopCardInfo.InsigniaName.Equals("Soldier") || troopCardInfo.InsigniaName.Equals("Cavalry") || troopCardInfo.InsigniaName.Equals("Artillery"))
-                            return _troopTemplate;
-                        else throw new ArgumentOutOfRangeException(nameof(item), "The Insignia Name for this ICardInfo was not recognized.");
-                    }
-                    else return _backTemplate; // Placeholder for future non-troopcards (possibly Mission cards?)
-                }
-                else return _backTemplate;
-            }
-            else throw new NotImplementedException($"{nameof(SelectTemplate)} received parameter {item} that was not of a supported type. Supported types include: ITroopCardInfo.");
+        if (container is not FrameworkElement control || item is not ICardInfo cardInfo)
+            return null;
+
+        if (cardInfo is ITroopCardInfo troopCardInfo) {
+            if (cardInfo.Owner != _vM.PlayerTurn || string.IsNullOrEmpty(troopCardInfo.InsigniaName))
+                return _backTemplate;
+
+            if (troopCardInfo.InsigniaName == "Wild")
+                return _wildTemplate;
+            else if (troopCardInfo.InsigniaName == "Soldier" || troopCardInfo.InsigniaName == "Cavalry" || troopCardInfo.InsigniaName == "Artillery")
+                return _troopTemplate;
+            throw new ArgumentOutOfRangeException(nameof(item), "The Insignia Name for this ICardInfo was not recognized.");
         }
-        else throw new ArgumentNullException(nameof(container));
+
+        // Extensions of ICard beyond ITroopCard must have template selection logic added here
+
+        throw new NotImplementedException($"{nameof(SelectTemplate)} received parameter {item} that was not of a supported type. Supported types include: ITroopCardInfo.");
     }
 }

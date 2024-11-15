@@ -25,28 +25,26 @@ public class BootStrapper(App mainApp, ILogger<BootStrapper> logger) : IBootStra
     }
     public void InitializeGame(string fileName)
     {
-        if (!string.IsNullOrEmpty(fileName)) {
-            SaveFileName = fileName;
-
-            MainWindow mainWindow = new();
-            _mainApp.MainWindow = mainWindow;
-
-            _logger.LogInformation($"Closing old Windows...");
-            foreach (Window window in Application.Current.Windows) {
-                if (window != mainWindow) {
-                    if (window is MainWindow oldWindow)
-                        oldWindow.SetShutDown(false);
-
-                    window.Close();
-                }
-            }
-
-            var viewModel = _mainApp.AppHost.Services.GetRequiredService<IMainVM>();
-            _logger.LogInformation("Initializing game from source: {FileName}.", fileName);
-            viewModel.Initialize([], [], fileName);
-            ((MainWindow)_mainApp.MainWindow).Initialize(viewModel);
-            _mainApp.MainWindow.Show();
+        if (string.IsNullOrEmpty(fileName))
+            return;
+        SaveFileName = fileName;
+        MainWindow mainWindow = new();
+        _mainApp.MainWindow = mainWindow;
+        
+        _logger.LogInformation($"Closing old Windows...");
+        foreach (Window window in Application.Current.Windows) {
+            if (window == mainWindow)
+                continue;
+            if (window is MainWindow oldWindow)
+            oldWindow.SetShutDown(false);
+            window.Close();
         }
+        
+        var viewModel = _mainApp.AppHost.Services.GetRequiredService<IMainVM>();
+        _logger.LogInformation("Initializing game from source: {FileName}.", fileName);
+        viewModel.Initialize([], [], fileName);
+        ((MainWindow)_mainApp.MainWindow).Initialize(viewModel);
+        _mainApp.MainWindow.Show();
     }
     public void InitializeGame((string Name, string Color)[] namesAndColors)
     {
@@ -57,12 +55,11 @@ public class BootStrapper(App mainApp, ILogger<BootStrapper> logger) : IBootStra
         MainWindow mainWindow = new();
         _mainApp.MainWindow = mainWindow;
         foreach (Window window in Application.Current.Windows) {
-            if (window != mainWindow) {
-                if (window is MainWindow oldMain)
-                    oldMain.SetShutDown(false);
-
-                window.Close();
-            }
+            if (window == mainWindow)
+                continue;
+            if (window is MainWindow oldWindow)
+                oldWindow.SetShutDown(false);
+            window.Close();
         }
 
         var viewModel = _mainApp.AppHost.Services.GetRequiredService<IMainVM>();

@@ -49,10 +49,7 @@ public partial class App : Application
     #region Methods
     private protected bool DetermineDevMode()
     {
-        if (_environmentName is string envName && envName == Environments.Development)
-            return true;
-        else
-            return false;
+        return _environmentName is string envName && envName == Environments.Development;
     }
     private protected IHost BuildAppHost(out string[]? dataFileNames)
     {
@@ -67,7 +64,7 @@ public partial class App : Application
 
             var builtConfig = config.Build();
 
-            configuredDataFileNames = (string[]?)builtConfig.GetSection("DataFileNames").Get<string[]>();
+            configuredDataFileNames = builtConfig.GetSection("DataFileNames").Get<string[]>();
         });
 
         if (_devMode) {
@@ -96,7 +93,9 @@ public partial class App : Application
             services.AddSingleton<ITypeRegister<ITypeRelations>, TypeRegister>();
             services.AddSingleton<IDataProvider>(serviceProvider =>
             {
-                return new DataProvider(this.DataFileNames, serviceProvider.GetRequiredService<ITypeRegister<ITypeRelations>>(), serviceProvider.GetRequiredService<ILogger<DataProvider>>());
+                return new DataProvider(this.DataFileNames,
+                    serviceProvider.GetRequiredService<ITypeRegister<ITypeRelations>>(),
+                    serviceProvider.GetRequiredService<ILogger<DataProvider>>());
             });
             services.AddTransient<IAssetFetcher, AssetFetcher>();
             services.AddTransient<IAssetFactory, AssetFactory>();
@@ -138,12 +137,15 @@ public partial class App : Application
     }
     protected void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
-        if (!_devMode) {
-            string errorMsg = string.Format("An unhandled exception occurred: {0}. Source: {1}. Inner Exception: {2}. Data: {3}. HResult: {4}. StackTrace: {5}. The Application will now close.", e.Exception.Message, e.Exception.Source, e.Exception.InnerException, e.Exception.Data, e.Exception.HResult, e.Exception.StackTrace);
-            MessageBox.Show(errorMsg, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            e.Handled = true;
-            this.Shutdown();
-        }
+        if (_devMode) 
+            return;
+
+        string errorMsg = string.Format(
+            "An unhandled exception occurred: {0}. Source: {1}. Inner Exception: {2}. Data: {3}. HResult: {4}. StackTrace: {5}. The Application will now close.",
+            e.Exception.Message, e.Exception.Source, e.Exception.InnerException, e.Exception.Data, e.Exception.HResult, e.Exception.StackTrace);
+        MessageBox.Show(errorMsg, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        e.Handled = true;
+        Shutdown();
     }
     #endregion
 }

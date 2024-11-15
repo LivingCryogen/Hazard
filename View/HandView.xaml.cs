@@ -57,27 +57,25 @@ namespace View
         #region Methods
         public void OnHandCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.NewItems != null && e.OldItems == null) // item added
-            {
-                if (e.NewItems[0] is ICardInfo and not null) {
-                    foreach (ICardInfo item in e.NewItems) {
+            switch (e.NewItems, e.OldItems) {
+                case (not null, null): // item added
+                    if (e.NewItems[0] is not ICardInfo)
+                        return;
+                    foreach(ICardInfo item in e.NewItems) {
                         AddCard(item);
 
-                        if (item is ITroopCardInfo) {
-                            CardView drawnCardView = new() { Card = CardControls.Last(), Message = $"{PlayerOwnerName}, you have drawn:" };
-                            drawnCardView.ShowDialog();
-                        }
+                        CardView drawnCardView = new() { Card = CardControls.Last(), Message = $"{PlayerOwnerName}, you have drawn:" };
+                        drawnCardView.ShowDialog();
                     }
-                }
+                    break;
+                case (null, not null): // item removed
+                    if (e.OldItems[0] is ICardInfo)
+                        RemoveCard(e.OldStartingIndex);
+                    break;
+                case (null, null): // items cleared
+                    CardControls.Clear();
+                    break;
             }
-            else if (e.OldItems != null && e.NewItems == null) // item removed
-            {
-                if (e.OldItems[0] is ICardInfo and not null) {
-                    RemoveCard(e.OldStartingIndex);
-                }
-            }
-            else if (e.OldItems == null && e.NewItems == null) // items cleared
-                CardControls.Clear();
 
             CommandManager.InvalidateRequerySuggested();
         }
@@ -88,12 +86,11 @@ namespace View
                 return;
             }
             List<int> selectedIndices = [];
-            foreach (var selection in selected) {
+            foreach (var selection in selected)
                 if (_handBox != null)
                     selectedIndices.Add(_handBox.Items.IndexOf(selection));
-            }
-
-            Tuple<int, int[]> tradeParams = new(PlayerOwner, [.. selectedIndices]);
+            
+            ValueTuple<int, int[]> tradeParams = new(PlayerOwner, [.. selectedIndices]);
 
             if (!ViewModel.TradeIn_Command.CanExecute(tradeParams)) {
                 e.CanExecute = false;
@@ -110,13 +107,14 @@ namespace View
         private void CommandBinding_TradeInExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             var selectedItems = _handBox?.SelectedItems;
-            if (selectedItems == null) return;
+            if (selectedItems == null)
+                return;
             List<int> tradedIndices = [];
             foreach (TroopCardControl cardControl in selectedItems)
                 tradedIndices.Add(_handBox!.Items.IndexOf(cardControl));
             selectedItems.Clear();
 
-            Tuple<int, int[]> tradeParams = new(PlayerOwner, [.. tradedIndices]);
+            ValueTuple<int, int[]> tradeParams = new(PlayerOwner, [.. tradedIndices]);
             ViewModel.TradeIn_Command.Execute(tradeParams);
             ForceTrade = false;
             Close();
@@ -143,15 +141,17 @@ namespace View
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!_isShuttingDown) {
-                e.Cancel = true;
-                if (!(ForceTrade == true && CardControls.Count >= 5)) {
-                    Message = "";
-                    _handBox?.SelectedItems.Clear();
-                    this.Hide();
-                }
+            if (_isShuttingDown) {
+                _handBox?.SelectedItems.Clear();
+                return;
             }
-            _handBox?.SelectedItems.Clear();
+            e.Cancel = true;
+            bool ForcingTrade = ForceTrade == true && CardControls.Count >= 5;
+            if (!ForcingTrade) {
+                Message = "";
+                _handBox?.SelectedItems.Clear();
+                this.Hide();
+            }
         }
         public void ShutDown()
         {

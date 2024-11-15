@@ -25,19 +25,17 @@ public partial class CardView : Window
                 int? owner = card.Owner;
                 if (owner == null)
                     return;
-                else {
-                    TroopCardControl cardClone = new() {
-                        PlayerTurn = (int)owner,
-                        Owner = (int)owner,
-                        CardFace = card.CardFace,
-                        Insignia = card.Insignia,
-                        Territory = card.Territory,
-                        TerritoryColor = card.TerritoryColor,
-                        TerritoryShape = card.TerritoryShape,
-                        Content = card.Content
-                    };
-                    _card = cardClone;
-                }
+                TroopCardControl cardClone = new() {
+                    PlayerTurn = (int)owner,
+                    Owner = (int)owner,
+                    CardFace = card.CardFace,
+                    Insignia = card.Insignia,
+                    Territory = card.Territory,
+                    TerritoryColor = card.TerritoryColor,
+                    TerritoryShape = card.TerritoryShape,
+                    Content = card.Content
+                };
+                _card = cardClone;
             }
 
             _cardGrid.Children.Add(_card);

@@ -10,9 +10,9 @@ public class PlayerTurnToCardFace : IMultiValueConverter
         int ownerNumber = (int)values[1];
         Face cardFace = (Face)values[2];
 
-        if (playerTurn.Equals(ownerNumber))
+        if (playerTurn == ownerNumber)
             return cardFace;
-        else return Face.Null;
+        return Face.Null;
     }
 
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

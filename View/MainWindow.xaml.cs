@@ -64,8 +64,9 @@ public partial class MainWindow : Window
         PlayerColors = [];
         int numPlayers = _vM.PlayerDetails.Count;
 
+        var app = (App)Application.Current;
         for (int i = 0; i < numPlayers; i++)
-            PlayerColors.Add((SolidColorBrush)((App)Application.Current).FindResource($"Army.{_vM.PlayerDetails[i].ColorName}"));
+            PlayerColors.Add((SolidColorBrush)app.FindResource($"Army.{_vM.PlayerDetails[i].ColorName}"));
 
         _vM.PlayerTurnChanging += OnPlayerTurnChanging;
         _vM.AttackRequest += OnAttackRequest;
@@ -92,10 +93,16 @@ public partial class MainWindow : Window
     {
         if (_vM == null) return;
         for (int i = 0; i < numPlayers; i++) {
-            _handViews[i] = new(_vM) { MainWindow = this, PlayerOwner = i, PlayerOwnerName = _vM.PlayerDetails[i].Name, CardFactory = _cardControlFactory!, Title = $"{_vM.PlayerDetails[i].Name}'s Hand" };
-            for (int j = 0; j < _vM.PlayerDetails[i].Hand.Count; j++)
-                _handViews[i].AddCard(_vM.PlayerDetails[i].Hand[j]);
-            _vM.PlayerDetails[i].Hand.CollectionChanged += _handViews[i].OnHandCollectionChanged;
+            _handViews[i] = new(_vM) {
+                MainWindow = this,
+                PlayerOwner = i,
+                PlayerOwnerName = _vM.PlayerDetails[i].Name,
+                CardFactory = _cardControlFactory ?? new(_vM),
+                Title = $"{_vM.PlayerDetails[i].Name}'s Hand"
+                };
+        for (int j = 0; j < _vM.PlayerDetails[i].Hand.Count; j++)
+            _handViews[i].AddCard(_vM.PlayerDetails[i].Hand[j]);
+        _vM.PlayerDetails[i].Hand.CollectionChanged += _handViews[i].OnHandCollectionChanged;
         }
     }
     private void BuildPlayerDataBoxes(int numPlayers)
@@ -152,10 +159,10 @@ public partial class MainWindow : Window
     }
     private void BuildTerritoryButtons()
     {
-        if (_vM == null) throw new ArgumentNullException(nameof(_vM));
-        _territoryButtons = new TerritoryElement[_vM.Territories.Count];
-        for (int index = 0; index < _vM.Territories.Count; index++) {
-            TerritoryElement toAdd = new(index, _vM.Territories[index].Name);
+        int numTerritories = _vM?.Territories.Count ?? -1;
+        _territoryButtons = new TerritoryElement[numTerritories];
+        for (int index = 0; index < numTerritories; index++) {
+            TerritoryElement toAdd = new(index, _vM!.Territories[index].Name); // if vM is null, this for loop is skipped entirely
 
             Binding selectBinding = new("TerritorySelectCommand");
             toAdd.SetBinding(TerritoryElement.CommandProperty, selectBinding);
@@ -197,24 +204,25 @@ public partial class MainWindow : Window
         scaleY = screenSpace.Height / 1100;
         var scaleProduct = scaleY * scaleX;
 
-        if (FindName("MainCanvas") is Canvas mainCanvas) {
-            if (scaleProduct != 1) {
-                Transform canvasTransform = new ScaleTransform(scaleX, scaleY);
-                mainCanvas.LayoutTransform = canvasTransform;
-            }
+        if (FindName("MainCanvas") is not Canvas mainCanvas)
+            return;
+
+        if (scaleProduct != 1) {
+            Transform canvasTransform = new ScaleTransform(scaleX, scaleY);
+            mainCanvas.LayoutTransform = canvasTransform;
         }
     }
     private void OnPlayerTurnChanging(object? sender, int playerNumber)
     {
-        foreach (HandView handView in _handViews) {
+        foreach (HandView handView in _handViews) 
             if (handView.ShowActivated)
                 handView.Hide();
-        }
+        
 
-        foreach (Window window in Application.Current.Windows) {
+        foreach (Window window in Application.Current.Windows) 
             if (window is CardView)
                 window.Close();
-        }
+        
 
         Debug.Assert(_vM != null, "ViewModel should never be null here since this method handles an event from it.");
         bool notDefaultSetup = _vM!.CurrentPhase != GamePhase.DefaultSetup;
@@ -282,17 +290,19 @@ public partial class MainWindow : Window
     }
     private void OnAdvancePopupUnloaded(object? sender, EventArgs e)
     {
-        if (AdvanceParams != null) {
-            foreach (Window window in Application.Current.Windows)
-                if (window is AttackWindow)
-                    window.Close();
-            Debug.Assert(_vM != null, "ViewModel should never be null here since this method handles an event from it.");
-            if (_vM!.DeliverAttackReward_Command.CanExecute(null))
-                _vM.DeliverAttackReward_Command.Execute(null);
+        if (AdvanceParams == null || _vM == null)
+            return;
 
-            if (_vM.Advance_Command.CanExecute(AdvanceParams))
-                _vM.Advance_Command.Execute(AdvanceParams);
-        }
+        foreach (Window window in Application.Current.Windows)
+            if (window is AttackWindow)
+                window.Close();
+        
+        if (_vM.DeliverAttackReward_Command.CanExecute(null))
+            _vM.DeliverAttackReward_Command.Execute(null);
+        
+        if (_vM.Advance_Command.CanExecute(AdvanceParams))
+            _vM.Advance_Command.Execute(AdvanceParams);
+        
 
         AdvanceParams = null;
     }
@@ -303,8 +313,9 @@ public partial class MainWindow : Window
     }
     private void OnPlayerWin(object? sender, int e)
     {
-        Debug.Assert(_vM != null, "ViewModel should never be null here since this method handles an event from it.");
-        WinnerWindow congrats = new(_vM!.PlayerDetails[e].Name, PlayerColors[e], Height);
+        if (_vM == null)
+            return;
+        WinnerWindow congrats = new(_vM.PlayerDetails[e].Name, PlayerColors[e], Height);
         congrats.ShowDialog();
         CommandManager.InvalidateRequerySuggested();
     }
@@ -347,8 +358,9 @@ public partial class MainWindow : Window
     }
     private void CommandBindingNew_Executed(object sender, ExecutedRoutedEventArgs e)
     {
-        Debug.Assert(_vM != null, "ViewModel should never be null here since New_CanExecute should return false if it is.");
-        NewGameWindow newGameWindow = new(SetShutDown, _vM!.NewGame_Command);
+        if (_vM == null)
+            return;
+        NewGameWindow newGameWindow = new(SetShutDown, _vM.NewGame_Command);
         newGameWindow.Show();
     }
     private void CommandBindingOpen_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -357,17 +369,20 @@ public partial class MainWindow : Window
     }
     private void CommandBindingOpen_Executed(object sender, ExecutedRoutedEventArgs e)
     {
-        OpenFileDialog openDialog = new() { AddExtension = true, DefaultExt = ".hzd", Filter = "Hazard! Save Games (.hzd)|*.hzd" };
-        bool? opened = openDialog.ShowDialog();
-        if (opened == null || !(bool)opened)
+        OpenFileDialog openDialog = new() { 
+            AddExtension = true,
+            DefaultExt = ".hzd",
+            Filter = "Hazard! Save Games (.hzd)|*.hzd" 
+        };
+        if (openDialog.ShowDialog() is not bool dialogOpened || !dialogOpened)
             return;
 
         if (_handViews != null)
             foreach (HandView handView in _handViews)
-                handView?.ShutDown();
+                handView.ShutDown();
 
         _isShuttingDown = false;
-        if (_vM?.LoadGame_Command?.CanExecute(openDialog.FileName) == true)
+        if (_vM?.LoadGame_Command.CanExecute(openDialog.FileName) == true)
             ((MainVM_Base)_vM).LoadGame_Command.Execute(openDialog.FileName);
     }
     private void CommandBindingSaveAs_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -379,13 +394,16 @@ public partial class MainWindow : Window
     }
     private void CommandBindingSaveAs_Executed(object sender, ExecutedRoutedEventArgs e)
     {
-        SaveFileDialog saveAsDialog = new() { AddExtension = true, DefaultExt = ".hzd", Filter = "Hazard! Save Games (.hzd)|*.hzd" };
+        SaveFileDialog saveAsDialog = new() { 
+            AddExtension = true, 
+            DefaultExt = ".hzd", 
+            Filter = "Hazard! Save Games (.hzd)|*.hzd" 
+        };
         bool? result = saveAsDialog.ShowDialog();
 
         if (result.HasValue && !string.IsNullOrEmpty(saveAsDialog.FileName)) {
             ValueTuple<string, bool> saveParams = new(saveAsDialog.FileName, true);
-            Debug.Assert(_vM != null, "ViewModel should never be null here since SaveAs_CanExecute should return false if it is.");
-            if (_vM.SaveGame_Command.CanExecute(saveParams))
+            if (_vM?.SaveGame_Command.CanExecute(saveParams) ?? false)
                 _vM.SaveGame_Command.Execute(saveParams);
         }
     }
@@ -398,8 +416,7 @@ public partial class MainWindow : Window
     private void CommandBindingSave_Executed(object sender, ExecutedRoutedEventArgs e)
     {
         ValueTuple<string?, bool> saveParams = new(null, false);
-        Debug.Assert(_vM != null, "ViewModel should never be null here since Save_CanExecute should return false if it is.");
-        if (_vM!.SaveGame_Command.CanExecute(saveParams))
+        if (_vM?.SaveGame_Command.CanExecute(saveParams) ?? false)
             _vM.SaveGame_Command.Execute(saveParams);
     }
     private void CommandBindingClose_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -408,15 +425,14 @@ public partial class MainWindow : Window
     }
     private void CommandBindingClose_Executed(object sender, ExecutedRoutedEventArgs e)
     {
-        this.Close();
+        Close();
     }
 
     private void Window_Closing(object sender, CancelEventArgs e)
     {
-        if (_handViews != null) {
+        if (_handViews != null) 
             foreach (HandView handView in _handViews)
                 handView.ShutDown();
-        }
     }
     protected override void OnClosed(EventArgs e)
     {
@@ -429,7 +445,7 @@ public partial class MainWindow : Window
     {
         if (shutdownFlag)
             _isShuttingDown = true;
-        else if (!shutdownFlag)
+        else
             _isShuttingDown = false;
     }
     #endregion

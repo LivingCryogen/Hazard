@@ -11,14 +11,14 @@ public class CardControlFactory(IMainVM viewModel)
     public UserControl GetCardControl(ICardInfo card)
     {
         Face newCardFace;
-        if (card is ITroopCardInfo troopCard) {
-            if (!string.IsNullOrEmpty(troopCard.InsigniaName)) {
-                if (troopCard.InsigniaName.Equals("Wild"))
-                    newCardFace = Face.Wild;
-                else if (troopCard.InsigniaName.Equals("Soldier") || troopCard.InsigniaName.Equals("Cavalry") || troopCard.InsigniaName.Equals("Artillery"))
-                    newCardFace = Face.Troop;
-                else throw new ArgumentOutOfRangeException(nameof(card));
-            }
+        if (card is ITroopCardInfo troopCard) { 
+            if (string.IsNullOrEmpty(troopCard.InsigniaName))
+                throw new ArgumentOutOfRangeException(nameof(card));
+
+            if (troopCard.InsigniaName == "Wild")
+                newCardFace = Face.Wild;
+            else if (troopCard.InsigniaName == "Soldier" || troopCard.InsigniaName == "Cavalry" || troopCard.InsigniaName == "Artillery")
+                newCardFace = Face.Troop;
             else throw new ArgumentOutOfRangeException(nameof(card));
 
             TroopCardControl newCard = new(_viewModel) {
@@ -31,6 +31,9 @@ public class CardControlFactory(IMainVM viewModel)
 
             return newCard;
         }
-        else throw new ArgumentOutOfRangeException(nameof(card));
+
+        // extensions to ICard beyond ITroopCard must add their CardControl creation logic here
+
+        throw new ArgumentOutOfRangeException(nameof(card));
     }
 }
