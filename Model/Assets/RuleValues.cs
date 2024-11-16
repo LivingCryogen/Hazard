@@ -1,4 +1,5 @@
-﻿using Shared.Geography.Enums;
+﻿using Microsoft.Extensions.Configuration;
+using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using System.Collections.ObjectModel;
 
@@ -8,35 +9,48 @@ namespace Model.Assets;
 /// This implementation is hard-coded and could readily be replaced by '.json' file(s) with converters, a la <see cref="ITroopCard"/>.
 /// </remarks>
 /// <inheritdoc cref="IRuleValues"/>.
-public class RuleValues : IRuleValues
+public class RuleValues(IConfiguration config) : IRuleValues
 {
     /// <inheritdoc cref="IRuleValues.MinimumArmyBonus"/>.
-    public int MinimumArmyBonus { get; } = 3;
+    public int MinimumArmyBonus { get; } = int.Parse(config["MinimumArmyBonus"] ?? "");
     /// <inheritdoc cref="IRuleValues.TerritoryTradeInBonus"/>.
-    public int TerritoryTradeInBonus { get; } = 2;
+    public int TerritoryTradeInBonus { get; } = int.Parse(config["TerritoryTradeInBonus"] ?? "");
     /// <inheritdoc cref="IRuleValues.AttackersLimit"/>.
-    public int AttackersLimit { get; } = 3;
+    public int AttackersLimit { get; } = int.Parse(config["AttackersLimit"] ?? "");
     /// <inheritdoc cref="IRuleValues.DefendersLimit"/>.
-    public int DefendersLimit { get; } = 2;
+    public int DefendersLimit { get; } = int.Parse(config["DefendersLimit"] ?? "");
     /// <inheritdoc cref="IRuleValues.ContinentBonus"/>.
-    public ReadOnlyDictionary<ContID, int> ContinentBonus { get; } = new(new Dictionary<ContID, int>()
-    {
-        { ContID.Null, -1 },
-        { ContID.NorthAmerica, 5 },
-        { ContID.SouthAmerica, 2 },
-        { ContID.Europe, 5 },
-        { ContID.Africa, 3 },
-        { ContID.Asia, 7 },
-        { ContID.Oceania, 2 }
-    });
+    public ReadOnlyDictionary<ContID, int> ContinentBonus { get; } = 
+        new(new Dictionary<ContID, int>() {
+                { ContID.Null, -1 },
+                { ContID.NorthAmerica, int.Parse(config.GetSection("ContinentBonuses")["NorthAmericaBonus"] ?? "") },
+                { ContID.SouthAmerica, int.Parse(config.GetSection("ContinentBonuses")["SouthAmericaBonus"] ?? "") },
+                { ContID.Europe, int.Parse(config.GetSection("ContinentBonuses")["EuropeBonus"] ?? "") },
+                { ContID.Africa, int.Parse(config.GetSection("ContinentBonuses")["AfricaBonus"] ?? "") },
+                { ContID.Asia, int.Parse(config.GetSection("ContinentBonuses")["AsiaBonus"] ?? "") },
+                { ContID.Oceania, int.Parse(config.GetSection("ContinentBonuses")["OceaniaBonus"] ?? "") }
+            }
+        );
     /// <inheritdoc cref="IRuleValues.SetupActionsPerPlayers"/>.
     public ReadOnlyDictionary<int, int> SetupActionsPerPlayers { get; } =
-        new(new Dictionary<int, int>()
-            { { 2, 78 }, { 3, 105 }, { 4, 120 }, { 5, 125 }, { 6, 120 } });
+        new(new Dictionary<int, int>() { 
+                { 2, int.Parse(config.GetSection("SetupActionsPerPlayers")["Two"] ?? "") },
+                { 3, int.Parse(config.GetSection("SetupActionsPerPlayers")["Three"] ?? "") },
+                { 4, int.Parse(config.GetSection("SetupActionsPerPlayers")["Four"] ?? "") },
+                { 5, int.Parse(config.GetSection("SetupActionsPerPlayers")["Five"] ?? "") },
+                { 6, int.Parse(config.GetSection("SetupActionsPerPlayers")["Six"] ?? "") }
+            }
+        );
     /// <inheritdoc cref="IRuleValues.SetupStartingPool"/>.
     public ReadOnlyDictionary<int, int> SetupStartingPool { get; } =
-        new(new Dictionary<int, int>()
-            { { 2, 26 }, { 3, 35 }, { 4, 30 }, { 5, 25 }, { 6, 20 } });
+        new(new Dictionary<int, int>() {
+                { 2, int.Parse(config.GetSection("SetupStartingPool")["Two"] ?? "") },
+                { 3, int.Parse(config.GetSection("SetupStartingPool")["Three"] ?? "") },
+                { 4, int.Parse(config.GetSection("SetupStartingPool")["Four"] ?? "") },
+                { 5, int.Parse(config.GetSection("SetupStartingPool")["Five"] ?? "") },
+                { 6, int.Parse(config.GetSection("SetupStartingPool")["Six"] ?? "") }
+            }
+        );
     /// <inheritdoc cref="IRuleValues.CalculateTerritoryBonus(int)"/>.
     public int CalculateTerritoryBonus(int numTerritories)
     {

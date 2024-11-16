@@ -24,7 +24,7 @@ public class EarthBoard: IBoard, IBinarySerializable
         Armies = [];
         TerritoryOwner = [];
         for (int i = 0; i < BoardGeography.NumTerritories; i++) {
-            Armies.Add((TerrID)i, int.Parse(config["startingArmies"] ?? "0"));
+            Armies.Add((TerrID)i, int.Parse(config["StartingArmies"] ?? "0"));
             TerritoryOwner.Add((TerrID)i, -1);
         }
 

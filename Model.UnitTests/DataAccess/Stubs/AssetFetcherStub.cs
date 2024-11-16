@@ -19,9 +19,4 @@ public class AssetFetcherStub : IAssetFetcher
     {
         throw new NotImplementedException();
     }
-
-    IRuleValues IAssetFetcher.FetchRuleValues()
-    {
-        throw new NotImplementedException();
-    }
 }

@@ -278,7 +278,7 @@ public partial class MainWindow : Window
         else
             message = "How many Armies should relocate?";
 
-        TroopAdvanceWindow advancePopup = new(e.Source, e.Target, e.Min, e.Max, message, AdvanceParams) {
+        TroopAdvanceWindow advancePopup = new(e.Source, e.Target, e.Min, e.Max, message, this) {
             DataContext = context,
             WindowStartupLocation = WindowStartupLocation.CenterScreen,
             SizeToContent = SizeToContent.WidthAndHeight,

@@ -36,6 +36,7 @@ public class Game : IGame
         ID = Guid.NewGuid();
         Logger = loggerFactory.CreateLogger<Game>();
         Board = new EarthBoard(config, loggerFactory.CreateLogger<EarthBoard>());
+        Values = new RuleValues(config);
         State = new(numPlayers, loggerFactory.CreateLogger<StateMachine>());
         Cards = new(loggerFactory, typeRegister);
         Cards.InitializeFromAssets(AssetFetcher, DefaultCardMode);
@@ -65,8 +66,8 @@ public class Game : IGame
     /// <value>An implementation of <see cref="ILogger{T}"/>.</value>
     public ILogger Logger { get; private set; }
     /// <inheritdoc cref="IGame.Values"/>.
-    public IRuleValues Values { get; private set; } = new RuleValues(); /// = assetFetcher.FetchRuleValues();
-                                                                        /// <inheritdoc cref="IGame.Board"/>.
+    public IRuleValues Values { get; private set; } 
+    /// <inheritdoc cref="IGame.Board"/>
     public IBoard Board { get; private set; }
     /// <inheritdoc cref="IGame.State"/>.
     public StateMachine State { get; private set; }
