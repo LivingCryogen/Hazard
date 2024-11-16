@@ -44,14 +44,6 @@ public class AssetFetcher(IAssetFactory factory) : IAssetFetcher
 
         return cardSets;
     }
-    /// <inheritdoc cref="IAssetFetcher.FetchRuleValues"/>
-    /// <remarks>
-    /// Currently running on a hard-coded data object, to be replaced with either configuration values or DAL asset generation.
-    /// </remarks>
-    public IRuleValues FetchRuleValues()
-    {
-        return new RuleValues();
-    }
     /// <inheritdoc cref="IAssetFetcher.FetchGeography"/>
     public GeographyInitializer FetchGeography()
     {

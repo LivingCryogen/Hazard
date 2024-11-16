@@ -13,11 +13,6 @@ public interface IAssetFetcher
     /// <returns>A list of card sets whose <see cref="ICardSet.Cards"/>.</returns>
     List<ICardSet> FetchCardSets();
     /// <summary>
-    /// Begins the process of data reading, conversion, and object initialization for <see cref="IRuleValues"/>.
-    /// </summary>
-    /// <returns>The built RuleValues object.</returns>
-    IRuleValues FetchRuleValues();
-    /// <summary>
     /// Begins the process of data reading, conversion, and object initialization for <see cref="BoardGeography"/>.
     /// </summary>
     /// <returns>An initializer object to be used with <see cref="BoardGeography.Initialize"/>.</returns>

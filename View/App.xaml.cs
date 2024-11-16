@@ -28,7 +28,7 @@ namespace View;
 /// </summary>
 public partial class App : Application
 {
-    private readonly string? _environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+    private readonly string? _environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
     private readonly bool _devMode;
 
 
@@ -59,7 +59,7 @@ public partial class App : Application
         host.ConfigureAppConfiguration((hostingContext, config) =>
         {
             config.SetBasePath(Directory.GetCurrentDirectory());
-            config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{_environmentName}.json", optional: true, reloadOnChange: true);
 
             var builtConfig = config.Build();
