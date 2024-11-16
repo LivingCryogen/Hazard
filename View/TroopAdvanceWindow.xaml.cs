@@ -11,16 +11,16 @@ public partial class TroopAdvanceWindow : Window
     private readonly int _source = 0;
     private readonly int _target = 0;
     private readonly int _minAdvance = 0;
-    private readonly MainWindow? _parentWindow;
+    private int[]? _advanceParams;
 
     public TroopAdvanceWindow()
     {
         InitializeComponent();
     }
-    public TroopAdvanceWindow(int source, int target, int min, int max, string message, MainWindow parent)
+    public TroopAdvanceWindow(int source, int target, int min, int max, string message, int[]? advanceParams)
     {
         InitializeComponent();
-        _parentWindow = parent;
+        _advanceParams = advanceParams;
 
         MessageTextBlock.Text = message;
         for (int i = min; i <= max; i++)
@@ -39,8 +39,8 @@ public partial class TroopAdvanceWindow : Window
         int numAdvance = NumAdvanceBox.SelectedIndex + _minAdvance;
         int[] advanceParams = [_source, _target, numAdvance];
 
-        if (_parentWindow != null)
-            _parentWindow.AdvanceParams = advanceParams;
+        _advanceParams ??= new int[3];
+        _advanceParams = advanceParams;
     }
     private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
     {

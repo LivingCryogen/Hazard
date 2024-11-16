@@ -119,93 +119,111 @@ class TerritoryElement : ButtonBase
 
         return newPosition;
     }
-    private protected static Point FindSimpleStationPosition(Rect bounds, Geometry territory, Size size)
+
+    private protected static Point FindSimpleStationPosition(Rect bounds, Geometry terrGeo, Size size)
     {
-        Point testPoint = new(bounds.Left + bounds.Width / 2, bounds.Top + bounds.Height / 2);
-        double testY = testPoint.Y + size.Height;
-        double testX = testPoint.X + size.Width;
-
-        if (territory.FillContains(testPoint) && territory.FillContains(new Point(testX, testY)))
+        Point testPoint = new(
+            bounds.Left + bounds.Width / 2, 
+            bounds.Top + bounds.Height / 2);
+        Point testPoint2 = GetOppositeVertexPoint(testPoint, size);
+        if (GeometryFillContainsPoints(terrGeo, [testPoint, testPoint2]))
             return testPoint;
 
-        testPoint = new(bounds.Left + bounds.Width / 3, bounds.Top + bounds.Height / 3);
-        testY = testPoint.Y + size.Height;
-        testX = testPoint.X + size.Width;
-
-        if (territory.FillContains(testPoint) && territory.FillContains(new Point(testX, testY)))
+        testPoint = new(
+            bounds.Left + bounds.Width / 3,
+            bounds.Top + bounds.Height / 3);
+        testPoint2 = GetOppositeVertexPoint(testPoint, size);
+        if (GeometryFillContainsPoints(terrGeo, [testPoint, testPoint2]))
             return testPoint;
 
-        testPoint = new(bounds.Left + bounds.Width / 3, bounds.Top + 2 * (bounds.Height / 3));
-        testY = testPoint.Y + size.Height;
-        testX = testPoint.X + size.Width;
-
-        if (territory.FillContains(testPoint) && territory.FillContains(new Point(testX, testY)))
+        testPoint = new(
+            bounds.Left + bounds.Width / 3,
+            bounds.Top + 2 * (bounds.Height / 3));
+        testPoint2 = GetOppositeVertexPoint(testPoint, size);
+        if (GeometryFillContainsPoints(terrGeo, [testPoint, testPoint2]))
             return testPoint;
 
-        testPoint = new(bounds.Left + 2 * (bounds.Width / 3), bounds.Top + bounds.Height / 3);
-        testY = testPoint.Y + size.Height;
-        testX = testPoint.X + size.Width;
-
-        if (territory.FillContains(testPoint) && territory.FillContains(new Point(testX, testY)))
+        testPoint = new(
+            bounds.Left + 2 * (bounds.Width / 3), 
+            bounds.Top + bounds.Height / 3);
+        testPoint2 = GetOppositeVertexPoint(testPoint, size);
+        if (GeometryFillContainsPoints(terrGeo, [testPoint, testPoint2]))
             return testPoint;
 
-        testPoint = new(bounds.Left + 2 * (bounds.Width / 3), bounds.Top + 2 * (bounds.Height / 3));
-        testY = testPoint.Y + size.Height;
-        testX = testPoint.X + size.Width;
-
-        if (territory.FillContains(testPoint) && territory.FillContains(new Point(testX, testY)))
+        testPoint = new(
+            bounds.Left + 2 * (bounds.Width / 3), 
+            bounds.Top + 2 * (bounds.Height / 3));
+        testPoint2 = GetOppositeVertexPoint(testPoint, size);
+        if (GeometryFillContainsPoints(terrGeo, [testPoint, testPoint2]))
             return testPoint;
 
-        testPoint = new(bounds.Left + bounds.Width / 3, bounds.Top + bounds.Height / 2);
-        testY = testPoint.Y + size.Height;
-        testX = testPoint.X + size.Width;
-
-        if (territory.FillContains(testPoint) && territory.FillContains(new Point(testX, testY)))
+        testPoint = new(
+            bounds.Left + bounds.Width / 3, 
+            bounds.Top + bounds.Height / 2);
+        testPoint2 = GetOppositeVertexPoint(testPoint, size);
+        if (GeometryFillContainsPoints(terrGeo, [testPoint, testPoint2]))
             return testPoint;
 
-        testPoint = new(bounds.Left + 2 * (bounds.Width / 3), bounds.Top + bounds.Height / 2);
-        testY = testPoint.Y + size.Height;
-        testX = testPoint.X + size.Width;
-
-        if (territory.FillContains(testPoint) && territory.FillContains(new Point(testX, testY)))
+        testPoint = new(
+            bounds.Left + 2 * (bounds.Width / 3), 
+            bounds.Top + bounds.Height / 2);
+        testPoint2 = GetOppositeVertexPoint(testPoint, size);
+        if (GeometryFillContainsPoints(terrGeo, [testPoint, testPoint2]))
             return testPoint;
 
-        testPoint = new(bounds.Left + bounds.Width / 2, bounds.Top + bounds.Height / 2);
-        testY = testPoint.Y;
-        testX = testPoint.X + size.Width;
-
-        if (territory.FillContains(testPoint) && territory.FillContains(new Point(testX, testY)))
+        testPoint = new(
+            bounds.Left + bounds.Width / 2, 
+            bounds.Top + bounds.Height / 2);
+        testPoint2 = new (
+            testPoint.Y,
+            testPoint.X + size.Width);
+        if (GeometryFillContainsPoints(terrGeo, [testPoint, testPoint2]))
             return testPoint;
 
-        return new(bounds.Left + bounds.Width / 2, bounds.Top + bounds.Height / 2);
+        return new(
+            bounds.Left + bounds.Width / 2, 
+            bounds.Top + bounds.Height / 2);
     }
+    private static Point GetOppositeVertexPoint(Point origin, Size size)
+    {
+        return new(origin.Y + size.Height, origin.X + size.Width);
+    }
+    private static bool GeometryFillContainsPoints(Geometry geometry, Point[] points)
+    {
+        foreach (Point point in points)
+            if (!geometry.FillContains(point))
+                return false;
+        return true;
+    }
+
     private protected void DrawTerritory(DrawingContext drawingContext)
     {
-        if (Geometry != null) {
-            if (IsPreSelected)
-                drawingContext.DrawGeometry(_preselectColor, new Pen(Color, .5), Geometry);
-            else
-                drawingContext.DrawGeometry(Color, new Pen(Color, .5), Geometry);
-        }
+        if (Geometry == null)
+            return;
+        if (IsPreSelected)
+            drawingContext.DrawGeometry(_preselectColor, new Pen(Color, .5), Geometry);
+        else
+            drawingContext.DrawGeometry(Color, new Pen(Color, .5), Geometry);
     }
     private protected void DrawStation(DrawingContext drawingContext)
     {
-        if (Station.Size.IsEmpty == false)
-            drawingContext.DrawRoundedRectangle(StationBackgroundColor, new Pen(StationBackgroundColor, 1), Station, 2.5, 2.5);
+        if (!Station.Size.IsEmpty)
+            drawingContext.DrawRoundedRectangle(
+                StationBackgroundColor, new Pen(StationBackgroundColor, 1), Station, 2.5, 2.5);
     }
     private protected void DrawStationText(DrawingContext drawingContext)
     {
-        if (StationContent != null) {
-            FormattedText drawText = new(StationContent, new("en-us"), FlowDirection.LeftToRight, new("Courier New"), 19, StationTextColor, 50);
-            drawingContext.DrawText(drawText, Station.TopLeft);
-        }
+        if (StationContent == null)
+            return;
+        FormattedText drawText = new(
+            StationContent, new("en-us"), FlowDirection.LeftToRight, new("Courier New"), 19, StationTextColor, 50);
+        drawingContext.DrawText(drawText, Station.TopLeft);
     }
     private void OnMouseEnter(object sender, MouseEventArgs e)
     {
-        if (Command.CanExecute(ID)) {
+        if (Command.CanExecute(ID))
             if (!IsPreSelected)
                 IsPreSelected = true;
-        }
     }
     private void OnMouseLeave(object sender, MouseEventArgs e)
     {

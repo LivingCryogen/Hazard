@@ -12,7 +12,7 @@ public partial class TerritoryChoice : Window
 {
     public TerritoryChoice()
     {
-        InitializeComponent();
+        InitializeComponent(); 
     }
     public TerritoryChoice(ValueTuple<int, string>[] territoryData, SolidColorBrush ownerColor, IMainVM vM)
     {
@@ -21,7 +21,11 @@ public partial class TerritoryChoice : Window
         TerritoryChoiceData = territoryData;
         TerritoryChoiceItems = new Tuple<int, string, Geometry, SolidColorBrush>[territoryData.Length];
         for (int i = 0; i < territoryData.Length; i++)
-            TerritoryChoiceItems[i] = new(territoryData[i].Item1, territoryData[i].Item2, ((App)Application.Current).FindResource($"{territoryData[i].Item2}Geometry") as Geometry ?? Geometry.Empty, ownerColor);
+            TerritoryChoiceItems[i] = new(
+                territoryData[i].Item1,
+                territoryData[i].Item2,
+                ((App)Application.Current).FindResource($"{territoryData[i].Item2}Geometry") as Geometry ?? Geometry.Empty,
+                ownerColor);
     }
 
     public IMainVM? BoardVM { get; init; }

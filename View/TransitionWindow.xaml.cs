@@ -43,17 +43,17 @@ namespace View
         }
         private void CountdownToClose_Tick(object? sender, EventArgs e)
         {
-            if (sender != null) {
-                _secondsLeft -= 1;
-
-                if (_countdownBlock != null)
-                    _countdownBlock.Text = _secondsLeft.ToString();
-                CommandManager.InvalidateRequerySuggested();
-
-                if (_secondsLeft <= 0) {
-                    ((DispatcherTimer)sender).Stop();
-                    Close();
-                }
+            if (sender == null)
+                return;
+            _secondsLeft -= 1;
+            
+            if (_countdownBlock != null)
+                _countdownBlock.Text = _secondsLeft.ToString();
+            CommandManager.InvalidateRequerySuggested();
+            
+            if (_secondsLeft <= 0) {
+                ((DispatcherTimer)sender).Stop();
+                Close();
             }
         }
         private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
