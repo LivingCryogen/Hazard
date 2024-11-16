@@ -1,6 +1,4 @@
-﻿using Model.Assets;
-using Model.Entities;
-using Shared.Geography;
+﻿using Shared.Geography;
 using Shared.Interfaces.Model;
 
 namespace Model.DataAccess;

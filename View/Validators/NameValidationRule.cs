@@ -11,7 +11,7 @@ public class NameValidationRule : ValidationRule
             throw new ArgumentException("Input not recognized.");
         if (text.Length > 0)
             return ValidationResult.ValidResult;
-        
+
         return new ValidationResult(false, $"Player Name missing.");
     }
 }

@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Shared.Geography;
-using Shared.Interfaces.Model;
 using Shared.Interfaces.View;
 using Shared.Interfaces.ViewModel;
 using System.Windows;
@@ -30,16 +28,16 @@ public class BootStrapper(App mainApp, ILogger<BootStrapper> logger) : IBootStra
         SaveFileName = fileName;
         MainWindow mainWindow = new();
         _mainApp.MainWindow = mainWindow;
-        
+
         _logger.LogInformation($"Closing old Windows...");
         foreach (Window window in Application.Current.Windows) {
             if (window == mainWindow)
                 continue;
             if (window is MainWindow oldWindow)
-            oldWindow.SetShutDown(false);
+                oldWindow.SetShutDown(false);
             window.Close();
         }
-        
+
         var viewModel = _mainApp.AppHost.Services.GetRequiredService<IMainVM>();
         _logger.LogInformation("Initializing game from source: {FileName}.", fileName);
         viewModel.Initialize([], [], fileName);

@@ -1,16 +1,10 @@
-﻿using Shared.Geography.Enums;
-using Shared.Geography;
-using System;
-using System.Collections.Generic;
+﻿using Model.Tests.Fixtures.Mocks;
+using Shared.Geography.Enums;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Model.Tests.Fixtures.Mocks;
 
 namespace Model.Tests.Fixtures;
 
-public static class MockGeography 
+public static class MockGeography
 {
     private static ReadOnlyDictionary<ContID, HashSet<TerrID>>? _continentMembers;
     private static ReadOnlyDictionary<TerrID, ContID>? _terrIDToContID;

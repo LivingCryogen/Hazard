@@ -99,10 +99,10 @@ public partial class MainWindow : Window
                 PlayerOwnerName = _vM.PlayerDetails[i].Name,
                 CardFactory = _cardControlFactory ?? new(_vM),
                 Title = $"{_vM.PlayerDetails[i].Name}'s Hand"
-                };
-        for (int j = 0; j < _vM.PlayerDetails[i].Hand.Count; j++)
-            _handViews[i].AddCard(_vM.PlayerDetails[i].Hand[j]);
-        _vM.PlayerDetails[i].Hand.CollectionChanged += _handViews[i].OnHandCollectionChanged;
+            };
+            for (int j = 0; j < _vM.PlayerDetails[i].Hand.Count; j++)
+                _handViews[i].AddCard(_vM.PlayerDetails[i].Hand[j]);
+            _vM.PlayerDetails[i].Hand.CollectionChanged += _handViews[i].OnHandCollectionChanged;
         }
     }
     private void BuildPlayerDataBoxes(int numPlayers)
@@ -214,15 +214,15 @@ public partial class MainWindow : Window
     }
     private void OnPlayerTurnChanging(object? sender, int playerNumber)
     {
-        foreach (HandView handView in _handViews) 
+        foreach (HandView handView in _handViews)
             if (handView.ShowActivated)
                 handView.Hide();
-        
 
-        foreach (Window window in Application.Current.Windows) 
+
+        foreach (Window window in Application.Current.Windows)
             if (window is CardView)
                 window.Close();
-        
+
 
         Debug.Assert(_vM != null, "ViewModel should never be null here since this method handles an event from it.");
         bool notDefaultSetup = _vM!.CurrentPhase != GamePhase.DefaultSetup;
@@ -296,13 +296,13 @@ public partial class MainWindow : Window
         foreach (Window window in Application.Current.Windows)
             if (window is AttackWindow)
                 window.Close();
-        
+
         if (_vM.DeliverAttackReward_Command.CanExecute(null))
             _vM.DeliverAttackReward_Command.Execute(null);
-        
+
         if (_vM.Advance_Command.CanExecute(AdvanceParams))
             _vM.Advance_Command.Execute(AdvanceParams);
-        
+
 
         AdvanceParams = null;
     }
@@ -369,10 +369,10 @@ public partial class MainWindow : Window
     }
     private void CommandBindingOpen_Executed(object sender, ExecutedRoutedEventArgs e)
     {
-        OpenFileDialog openDialog = new() { 
+        OpenFileDialog openDialog = new() {
             AddExtension = true,
             DefaultExt = ".hzd",
-            Filter = "Hazard! Save Games (.hzd)|*.hzd" 
+            Filter = "Hazard! Save Games (.hzd)|*.hzd"
         };
         if (openDialog.ShowDialog() is not bool dialogOpened || !dialogOpened)
             return;
@@ -394,10 +394,10 @@ public partial class MainWindow : Window
     }
     private void CommandBindingSaveAs_Executed(object sender, ExecutedRoutedEventArgs e)
     {
-        SaveFileDialog saveAsDialog = new() { 
-            AddExtension = true, 
-            DefaultExt = ".hzd", 
-            Filter = "Hazard! Save Games (.hzd)|*.hzd" 
+        SaveFileDialog saveAsDialog = new() {
+            AddExtension = true,
+            DefaultExt = ".hzd",
+            Filter = "Hazard! Save Games (.hzd)|*.hzd"
         };
         bool? result = saveAsDialog.ShowDialog();
 
@@ -430,7 +430,7 @@ public partial class MainWindow : Window
 
     private void Window_Closing(object sender, CancelEventArgs e)
     {
-        if (_handViews != null) 
+        if (_handViews != null)
             foreach (HandView handView in _handViews)
                 handView.ShutDown();
     }

@@ -3,7 +3,6 @@ using Model.DataAccess.Cards;
 using Shared.Geography;
 using Shared.Interfaces.Model;
 using Shared.Services.Registry;
-using System.Buffers.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -106,7 +105,7 @@ public class DataProvider(string[] dataFileNames, ITypeRegister<ITypeRelations> 
                 return null;
             }
         }
-    
+
         // Later extensions would get appended here
         return null;
     }

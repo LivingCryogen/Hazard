@@ -6,6 +6,6 @@ public class TimerService
 {
     public static Timer GetTimer()
     {
-        return (Timer) new DispatcherTimer();
+        return (Timer)new DispatcherTimer();
     }
 }

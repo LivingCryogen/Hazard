@@ -1,7 +1,6 @@
 ﻿using Model.Entities.Cards;
 using Model.Tests.Entities.Mocks;
 using Model.Tests.Fixtures.Mocks;
-using Shared.Enums;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 

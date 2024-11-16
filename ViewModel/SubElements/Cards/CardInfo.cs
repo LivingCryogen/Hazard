@@ -1,5 +1,4 @@
-﻿using Model.Entities;
-using Shared.Geography;
+﻿using Shared.Geography;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Interfaces.ViewModel;

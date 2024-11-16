@@ -1,5 +1,4 @@
-﻿using Shared.Interfaces;
-using Shared.Interfaces.ViewModel;
+﻿using Shared.Interfaces.ViewModel;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
@@ -61,7 +60,7 @@ namespace View
                 case (not null, null): // item added
                     if (e.NewItems[0] is not ICardInfo)
                         return;
-                    foreach(ICardInfo item in e.NewItems) {
+                    foreach (ICardInfo item in e.NewItems) {
                         AddCard(item);
 
                         CardView drawnCardView = new() { Card = CardControls.Last(), Message = $"{PlayerOwnerName}, you have drawn:" };
@@ -89,7 +88,7 @@ namespace View
             foreach (var selection in selected)
                 if (_handBox != null)
                     selectedIndices.Add(_handBox.Items.IndexOf(selection));
-            
+
             ValueTuple<int, int[]> tradeParams = new(PlayerOwner, [.. selectedIndices]);
 
             if (!ViewModel.TradeIn_Command.CanExecute(tradeParams)) {

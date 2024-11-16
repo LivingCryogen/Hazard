@@ -1,10 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Fixtures.Stubs;
-using Shared.Enums;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
-using System;
 
 namespace Model.Tests.Entities.Mocks;
 
@@ -44,13 +42,13 @@ public class MockCard : ITroopCard
         nameof(ID),
         nameof(Target),
         nameof(Insigne),
-        nameof(ParentTypeName),                    
+        nameof(ParentTypeName),
         nameof(IsTradeable),
-        nameof(TestInts), 
-        nameof(TestBools), 
-        nameof(TestLongs), 
-        nameof(TestBytes), 
-        nameof(TestStrings), 
+        nameof(TestInts),
+        nameof(TestBools),
+        nameof(TestLongs),
+        nameof(TestBytes),
+        nameof(TestStrings),
         ];
 
     public string ID { get; set; } = Guid.NewGuid().ToString();

@@ -1,7 +1,7 @@
 ﻿using Shared.Geography.Enums;
 using System.Collections.ObjectModel;
 
-namespace Shared.Geography; 
+namespace Shared.Geography;
 /// <summary>
 /// Encapsulates maps and methods for board Geography.
 /// </summary>
@@ -30,7 +30,7 @@ public static class BoardGeography
         Dictionary<ContID, HashSet<TerrID>> continentMembers = [];
         Dictionary<TerrID, ContID> terrIDToContID = [];
         Dictionary<TerrID, HashSet<TerrID>> neighborWeb = [];
-        foreach(var contTerrPair in initializer.ContinentMembers) {
+        foreach (var contTerrPair in initializer.ContinentMembers) {
             if (contTerrPair.Key is not ContID continent)
                 continue;
 

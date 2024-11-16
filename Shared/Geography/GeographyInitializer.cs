@@ -41,7 +41,7 @@ public class GeographyInitializer
     /// <exception cref="InvalidDataException">Thrown when Enum types could not be generated from <paramref name="names"/>.</exception>
     public void SetEnumTypes((string ContinentEnumName, string TerritoryEnumName) names)
     {
-        if (Type.GetType(names.ContinentEnumName) is not Type continentEnumType || !continentEnumType.IsEnum)    
+        if (Type.GetType(names.ContinentEnumName) is not Type continentEnumType || !continentEnumType.IsEnum)
             throw new InvalidDataException($"{this} could not locate a Continent Enum.");
         ContinentEnumType = continentEnumType;
         if (Type.GetType(names.TerritoryEnumName) is not Type territoryEnumType || !territoryEnumType.IsEnum)
@@ -66,9 +66,9 @@ public class GeographyInitializer
         if (Enum.Parse(TerritoryEnumType, territoryName) is not Enum territoryEnum)
             return false;
         try {
-            if (!ContinentMembers.ContainsKey(continentEnum)) 
+            if (!ContinentMembers.ContainsKey(continentEnum))
                 ContinentMembers.Add(continentEnum, []);
-            
+
             ContinentMembers[continentEnum].Add(territoryEnum);
         } catch {
             return false;

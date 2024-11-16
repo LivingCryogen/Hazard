@@ -66,7 +66,7 @@ public class Game : IGame
     /// <value>An implementation of <see cref="ILogger{T}"/>.</value>
     public ILogger Logger { get; private set; }
     /// <inheritdoc cref="IGame.Values"/>.
-    public IRuleValues Values { get; private set; } 
+    public IRuleValues Values { get; private set; }
     /// <inheritdoc cref="IGame.Board"/>
     public IBoard Board { get; private set; }
     /// <inheritdoc cref="IGame.State"/>.

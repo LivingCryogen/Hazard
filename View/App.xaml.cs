@@ -7,7 +7,6 @@ using Model.Core;
 using Model.DataAccess;
 using Model.Entities;
 using Model.EventArgs;
-using Shared.Geography;
 using Shared.Interfaces;
 using Shared.Interfaces.Model;
 using Shared.Interfaces.View;
@@ -137,7 +136,7 @@ public partial class App : Application
     }
     protected void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
-        if (_devMode) 
+        if (_devMode)
             return;
 
         string errorMsg = string.Format(

@@ -20,7 +20,7 @@ public class RuleValues(IConfiguration config) : IRuleValues
     /// <inheritdoc cref="IRuleValues.DefendersLimit"/>.
     public int DefendersLimit { get; } = int.Parse(config["DefendersLimit"] ?? "");
     /// <inheritdoc cref="IRuleValues.ContinentBonus"/>.
-    public ReadOnlyDictionary<ContID, int> ContinentBonus { get; } = 
+    public ReadOnlyDictionary<ContID, int> ContinentBonus { get; } =
         new(new Dictionary<ContID, int>() {
                 { ContID.Null, -1 },
                 { ContID.NorthAmerica, int.Parse(config.GetSection("ContinentBonuses")["NorthAmericaBonus"] ?? "") },
@@ -33,7 +33,7 @@ public class RuleValues(IConfiguration config) : IRuleValues
         );
     /// <inheritdoc cref="IRuleValues.SetupActionsPerPlayers"/>.
     public ReadOnlyDictionary<int, int> SetupActionsPerPlayers { get; } =
-        new(new Dictionary<int, int>() { 
+        new(new Dictionary<int, int>() {
                 { 2, int.Parse(config.GetSection("SetupActionsPerPlayers")["Two"] ?? "") },
                 { 3, int.Parse(config.GetSection("SetupActionsPerPlayers")["Three"] ?? "") },
                 { 4, int.Parse(config.GetSection("SetupActionsPerPlayers")["Four"] ?? "") },

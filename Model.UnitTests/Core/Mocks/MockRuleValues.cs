@@ -1,5 +1,4 @@
-﻿using Shared.Enums;
-using Shared.Geography.Enums;
+﻿using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using System.Collections.ObjectModel;
 

@@ -38,7 +38,7 @@ public partial class TroopAdvanceWindow : Window
     {
         int numAdvance = NumAdvanceBox.SelectedIndex + _minAdvance;
         if (_parent != null)
-        _parent.AdvanceParams = [_source, _target, numAdvance];
+            _parent.AdvanceParams = [_source, _target, numAdvance];
     }
     private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
     {

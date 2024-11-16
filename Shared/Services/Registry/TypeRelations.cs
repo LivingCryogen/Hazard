@@ -45,19 +45,19 @@ public class TypeRelations : ITypeRelations
             case RegistryRelation.Name:
                 if (obj is not string)
                     throw new ArgumentException($"{obj} is not a string. {relation} only targets objects of type string.");
-                
+
                 _relatedObjects.Add(relation, obj);
                 break;
             case RegistryRelation.CollectionName:
                 if (obj is not string)
                     throw new ArgumentException($"{obj} is not a string. {relation} only targets objects of type string.");
-                
+
                 _relatedObjects.Add(relation, obj);
                 break;
             case RegistryRelation.CollectionType:
                 if (obj is not Type)
                     throw new ArgumentException($"{obj} is not a Type. {relation} only targets Type objects.");
-                
+
                 _relatedObjects.Add(relation, obj);
                 break;
             case RegistryRelation.ElementType:
@@ -69,19 +69,19 @@ public class TypeRelations : ITypeRelations
             case RegistryRelation.DataFileName:
                 if (obj is not string)
                     throw new ArgumentException($"{obj} is not a string. {relation} only targets objects of type string.");
-                
+
                 _relatedObjects.Add(relation, obj);
                 break;
             case RegistryRelation.DataConverter:
                 if (!obj.GetType().IsClass)
                     throw new ArgumentException($"{obj} is not a reference object, and cannot be a DataConverter.");
-                
+
                 _relatedObjects.Add(relation, obj);
                 break;
             case RegistryRelation.ConvertedDataType:
                 if (obj is not Type)
                     throw new ArgumentException($"{obj} is not a Type, and cannot be registered as a ConvertedDataType.");
-                
+
                 _relatedObjects.Add(relation, obj);
                 break;
             default:

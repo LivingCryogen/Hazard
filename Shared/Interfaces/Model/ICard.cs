@@ -70,7 +70,7 @@ public interface ICard : IBinarySerializable
 
             List<SerializedData> serialData = [];
             // The Name tag must be read on the other end with BinaryReader.ReadString()
-            serialData.Add(new SerializedData(typeof(int), SerializablePropertyNames.Count, instanceType.Name)); 
+            serialData.Add(new SerializedData(typeof(int), SerializablePropertyNames.Count, instanceType.Name));
             foreach (PropertyInfo propInfo in orderedProperties) {
                 string propName = propInfo.Name;
                 Type propType = propInfo.PropertyType;
@@ -95,7 +95,7 @@ public interface ICard : IBinarySerializable
             return serialData.ToArray();
         });
     }
-    
+
     /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     bool IBinarySerializable.LoadFromBinary(BinaryReader reader)
     {
@@ -104,7 +104,7 @@ public interface ICard : IBinarySerializable
         try {
             var cardProps = this.GetType().GetProperties();
             int loadedNumProperties = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-            
+
             if (loadedNumProperties != SerializablePropertyNames.Count)
                 return false;
             if (cardProps.Select(prop => prop.Name) is not IEnumerable<string> propertyNames)
@@ -115,13 +115,13 @@ public interface ICard : IBinarySerializable
                 return false;
 
 
-            foreach(string propName in orderedMatchNames) {
+            foreach (string propName in orderedMatchNames) {
                 int numValues = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
                 string readPropName = reader.ReadString();
                 if (readPropName != propName) {
                     Logger.LogError("{Card} attempted to load from binary, but there was a property name mismatch.", this);
                     return false;
-                }   
+                }
                 if (cardProps.Where(prop => prop.Name == readPropName).FirstOrDefault() is not PropertyInfo matchingProperty) {
                     Logger.LogError("{Card} attempted to load from binary, but the name of a loaded property, {name}, was not found.", this, readPropName);
                     return false;

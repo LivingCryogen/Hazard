@@ -10,7 +10,7 @@ using Shared.Services.Serializer;
 namespace Model.Entities;
 /// <remarks>The default board of the base game is based on Earth circa 1800.</remarks>
 /// <inheritdoc cref="IBoard"/>
-public class EarthBoard: IBoard, IBinarySerializable
+public class EarthBoard : IBoard, IBinarySerializable
 {
     private readonly ILogger<EarthBoard> _logger;
     /// <summary>

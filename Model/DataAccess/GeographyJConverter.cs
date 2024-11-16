@@ -1,13 +1,6 @@
 ﻿using Shared.Geography;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mime;
-using System.Reflection;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Model.DataAccess;
 /// <summary>
@@ -28,9 +21,9 @@ public class GeographyJConverter : JsonConverter<GeographyInitializer>
     {
         GeographyInitializer initializer = new();
         while (reader.Read())
-            if (reader.TokenType == JsonTokenType.PropertyName && reader.ValueTextEquals("EnumNames")) 
+            if (reader.TokenType == JsonTokenType.PropertyName && reader.ValueTextEquals("EnumNames"))
                 LoadInitializer(reader, initializer);
-        
+
         return initializer;
     }
     /// <inheritdoc/>
@@ -50,8 +43,8 @@ public class GeographyJConverter : JsonConverter<GeographyInitializer>
             }
             if (reader.TokenType == JsonTokenType.String && continentEnumName != null && territoryEnumName == null)
                 territoryEnumName = reader.GetString() ?? throw new InvalidDataException(GetErrorMessage("Territory Enum name"));
-            
-            if (continentEnumName != null && territoryEnumName!= null)
+
+            if (continentEnumName != null && territoryEnumName != null)
                 initializer.SetEnumTypes((continentEnumName, territoryEnumName));
         }
 

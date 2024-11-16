@@ -207,7 +207,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// <returns><see langword="true"/> if the territory can be selected; otherwise, <see langword="false"/>.</returns>
     public virtual bool CanTerritorySelect(int selected) => throw new NotImplementedException();
     /// <inheritdoc cref="IMainVM.TerritorySelect(int)"/>
-    [RelayCommand(CanExecute = nameof(CanTerritorySelect))] 
+    [RelayCommand(CanExecute = nameof(CanTerritorySelect))]
     public virtual void TerritorySelect(int selected) => throw new NotImplementedException();
     /// <summary>
     /// The "CanExecute" function for <see cref="UndoConfirmInputCommand"/>.
@@ -300,7 +300,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         var bonusTargetNames = bonusTargets.Select(terr => terr.ToString());
         var bonusTargetValues = bonusTargets.Select(terr => (int)terr);
         var choicesData = bonusTargetValues.Zip(bonusTargetNames);
-        TerritoryChoiceRequest?.Invoke(this, [..choicesData]);
+        TerritoryChoiceRequest?.Invoke(this, [.. choicesData]);
     }
     private void OnPlayerLose(object? sender, int e)
     {

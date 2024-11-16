@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Shared.Interfaces.Model;
 using System.Collections;
-using System.Reflection;
 using System.Text;
 
 namespace Shared.Services.Serializer;
@@ -88,7 +87,7 @@ public static class BinarySerializer
     public static IConvertible ReadConvertible(BinaryReader reader, Type type)
     {
         int length = reader.ReadInt32();
-        byte[] bytes = reader.ReadBytes(length); 
+        byte[] bytes = reader.ReadBytes(length);
         return BytesToConvertible(type, bytes);
     }
     private static object ReadEnum(BinaryReader reader, Type type)
@@ -329,7 +328,7 @@ public static class BinarySerializer
             memberType = elementType;
             return true;
         }
-        
+
         // test if a generic IEnumerable -- that must implement IEnumerable<T> -- has IConvertible T
         // Find the IEnumerable<> interface
         var typeInterfaces = type.GetInterfaces();
@@ -358,10 +357,9 @@ public static class BinarySerializer
         foreach (var value in collection) {
             try {
                 propConvertibles.Add((IConvertible)value);
-            }
-            catch { continue; }
+            } catch { continue; }
         }
         return [.. propConvertibles];
     }
-    
+
 }

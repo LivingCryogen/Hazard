@@ -8,7 +8,6 @@ using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Interfaces.View;
 using Shared.Interfaces.ViewModel;
-using System.Reflection.PortableExecutable;
 
 namespace ViewModel;
 /// <summary>
@@ -22,7 +21,7 @@ public partial class MainVM(IGameService gameService,
     IDialogState dialogService,
     IDispatcherTimer wpfTimer,
     IBootStrapperService bootStrapper,
-    ILogger<MainVM_Base> logger) 
+    ILogger<MainVM_Base> logger)
     : MainVM_Base(gameService, bootStrapper, logger)
 {
     private readonly IGameService _gameService = gameService;
@@ -74,7 +73,7 @@ public partial class MainVM(IGameService gameService,
             if ((int)e.Player > -1)
                 PlayerDetails[(int)e.Player].NumArmies = base.SumArmies((int)e.Player);
         }
-    } 
+    }
     /// <inheritdoc cref="MainVM_Base.CanTerritorySelect(int)"/>
     public override bool CanTerritorySelect(int selected)
     {
@@ -88,17 +87,17 @@ public partial class MainVM(IGameService gameService,
         int owner = Territories[(int)territory].PlayerOwner;
 
         return CurrentPhase switch {
-            GamePhase.DefaultSetup => 
+            GamePhase.DefaultSetup =>
                 stateMachine.PhaseStageTwo switch {
-                false when owner == -1 => true, // claiming unowned territory
-                true when owner == stateMachine.PlayerTurn => true, // reinforcing owned territory
-                _ => false
+                    false when owner == -1 => true, // claiming unowned territory
+                    true when owner == stateMachine.PlayerTurn => true, // reinforcing owned territory
+                    _ => false
                 },
-            GamePhase.TwoPlayerSetup => 
+            GamePhase.TwoPlayerSetup =>
                 stateMachine.PhaseStageTwo switch {
-                false when owner == stateMachine.PlayerTurn => true, // reinforcing auto-assigned territory
-                true when owner == -1 => true, // reinforcing AI territory
-                _ => false
+                    false when owner == stateMachine.PlayerTurn => true, // reinforcing auto-assigned territory
+                    true when owner == -1 => true, // reinforcing AI territory
+                    _ => false
                 },
             GamePhase.Place => owner == stateMachine.PlayerTurn, // place an army on an owned territory
             GamePhase.Attack => TerritorySelected == TerrID.Null ?
@@ -259,7 +258,7 @@ public partial class MainVM(IGameService gameService,
     }
     private bool CanCancelSelect()
     {
-        if (_dialogService.IsDialogOpen) 
+        if (_dialogService.IsDialogOpen)
             return false;
         if (TerritorySelected == TerrID.Null)
             return false;
@@ -274,7 +273,7 @@ public partial class MainVM(IGameService gameService,
     }
     private bool CanConfirmInput()
     {
-        if (_dialogService.IsDialogOpen) 
+        if (_dialogService.IsDialogOpen)
             return false;
         if (!(CurrentPhase == GamePhase.Attack || CurrentPhase == GamePhase.Move))
             return false;
@@ -315,7 +314,7 @@ public partial class MainVM(IGameService gameService,
 
     private bool CanSkipPlayerTurn()
     {
-        if (_dialogService.IsDialogOpen) 
+        if (_dialogService.IsDialogOpen)
             return false;
         if (!(CurrentPhase == GamePhase.Attack || CurrentPhase == GamePhase.Move))
             return false;

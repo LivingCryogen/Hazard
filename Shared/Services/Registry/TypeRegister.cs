@@ -26,7 +26,7 @@ public class TypeRegister : ITypeRegister<ITypeRelations>
                 return null;
 
             foreach (Type type in _typeRelata.Keys)
-                if (_typeRelata[type][RegistryRelation.Name] is not string registeredName || registeredName != lookupName) 
+                if (_typeRelata[type][RegistryRelation.Name] is not string registeredName || registeredName != lookupName)
                     continue;
                 else
                     return type;
@@ -40,8 +40,8 @@ public class TypeRegister : ITypeRegister<ITypeRelations>
             if (_typeRelata.TryGetValue(type, out ITypeRelations? relata) && relata != null)
                 return _typeRelata[type];
             else return null;
-        } 
-        
+        }
+
         set {
             if (value is ITypeRelations and not null)
                 Register(type, value);

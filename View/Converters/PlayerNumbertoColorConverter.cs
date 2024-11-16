@@ -12,7 +12,7 @@ public class PlayerNumbertoColorConverter : IMultiValueConverter
         List<SolidColorBrush> colorsList = [.. ((ObservableCollection<SolidColorBrush>)values[0])];
         int playerOwner = (int)values[1];
         int numPlayers = colorsList.Count;
-        
+
         if (numPlayers > 2) {
             if (playerOwner < 0)
                 return Brushes.Transparent;
