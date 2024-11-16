@@ -62,11 +62,11 @@ public class Player : IPlayer
     public event EventHandler<IPlayerChangedEventArgs>? PlayerChanged;
     /// <inheritdoc cref="IPlayer.PlayerLost"/>.
     public event EventHandler? PlayerLost;
-    /// <inheritdoc cref="IPlayer.PlayerWon"/>.
+    /* <inheritdoc cref="IPlayer.PlayerWon"/>.
     /// <remarks>
     /// Unnecessary in the base game, but likely to be used when implementing Secret Missions.
     /// </remarks>
-    // public event EventHandler? PlayerWon;
+     public event EventHandler? PlayerWon;*/
 
     #region Properties
     /// <inheritdoc cref="IPlayer.Name"/>.
