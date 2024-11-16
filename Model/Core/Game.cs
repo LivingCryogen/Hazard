@@ -44,7 +44,7 @@ public class Game : IGame
         for (int i = 0; i < numPlayers; i++) {
             Players.Add(new Player(i, State.NumPlayers, Cards.CardFactory, Values, Board, _loggerFactory.CreateLogger<Player>()));
             Players.Last().PlayerLost += OnPlayerLost;
-            Players.Last().PlayerWon += OnPlayerWin;
+            // Players.Last().PlayerWon += OnPlayerWin;
         }
     }
 
@@ -213,7 +213,7 @@ public class Game : IGame
                 newPlayer.LoadFromBinary(reader);
                 Cards.MapCardsToSets([.. newPlayer.Hand]);
                 newPlayer.PlayerLost += OnPlayerLost;
-                newPlayer.PlayerWon += OnPlayerWin;
+                // newPlayer.PlayerWon += OnPlayerWin;
                 Players.Add(newPlayer);
             }
             State.LoadFromBinary(reader);
