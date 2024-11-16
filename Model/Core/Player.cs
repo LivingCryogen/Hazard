@@ -66,7 +66,7 @@ public class Player : IPlayer
     /// <remarks>
     /// Unnecessary in the base game, but likely to be used when implementing Secret Missions.
     /// </remarks>
-    public event EventHandler? PlayerWon;
+    // public event EventHandler? PlayerWon;
 
     #region Properties
     /// <inheritdoc cref="IPlayer.Name"/>.

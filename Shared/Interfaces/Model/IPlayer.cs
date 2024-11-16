@@ -14,10 +14,10 @@ public interface IPlayer : IBinarySerializable
     /// Fires when this IPlayer has lost the game (by default, when they control no territories).
     /// </summary>
     event EventHandler? PlayerLost;
-    /// <summary>
+    /* <summary>
     /// Fires when this IPlayer has won the game.
-    /// </summary>
-    event EventHandler? PlayerWon;
+     </summary>
+     event EventHandler? PlayerWon; Likely to be used with next extension, Secret Missions. */
 
     #region Properties
     /// <summary>
