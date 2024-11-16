@@ -79,10 +79,11 @@ public partial class TroopCardControl : UserControl
         string ContinentName = cardInfo.TargetContinent[0].ToString();
         string InsigniaName = cardInfo.InsigniaName;
 
+        var app = (App)Application.Current;
         Territory = vM.MakeDisplayName(TerritoryName);
-        TerritoryShape = (Geometry)((App)Application.Current).Resources[$"{TerritoryName}Geometry"];
-        TerritoryColor = (SolidColorBrush)((App)Application.Current).Resources[$"#{ContinentName}"];
-        Insignia = (ImageSource?)((App)Application.Current).Resources[$"{InsigniaName}"];
+        TerritoryShape = (Geometry)app.Resources[$"{TerritoryName}Geometry"];
+        TerritoryColor = (SolidColorBrush)app.Resources[$"#{ContinentName}"];
+        Insignia = (ImageSource?)app.Resources[$"{InsigniaName}"];
 
         this.DataContext = this;
     }
