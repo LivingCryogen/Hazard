@@ -20,7 +20,7 @@ See the [Architecture](#architecture) and [Feature Highlights](#feature-highligh
 If the project were designed to be what it actually is -- a solo desktop application written in WPF with very little chance of extension -- it could be written much more simply. But that would be another project (one I may or may not undertake).
 
 ## Background
-In high school programming, I had a Visual Basic project I never got fully working which was to emulate Hasbro's *Risk*. I decided to achieve that early goal, but updated to use modern languages, frameworks, and other technologies.
+I had a Visual Basic project from a high school programming course that I never got fully working. It was to emulate Hasbro's *Risk*. I decided to achieve that long abandoned goal, but updated to use modern languages, frameworks, and other technologies.
 
 Discovering which languages and tools would be used today, I landed on Windows Presentation Foundation (WPF). Fortunately, Microsoft's C# and the .NET ecosystem have developed a great deal. In retrospect, this decision did narrow my initial focus to desktop development, but I also discovered that MVVM was widely used in web contexts as well (and much more so, it's close cousin MVC), so natural progress might lead to working in a web context in the medium to long term.
 
@@ -29,29 +29,28 @@ Discovering which languages and tools would be used today, I landed on Windows P
 
 Basically, this means that the game simulation (state and rules logic) is handled on the lowest, "Model" layer, the player interacts with a UI at the highest, "View" layer, and a "ViewModel" layer mediates between them. Often, as here, this means relying heavily on the Observer pattern, with bindings and events being central to the working structure of the application.
 
-Each layer -- Model, View, and ViewModel -- is encapsulated in its own Project (.csproj). There is a Shared Project including interfaces and globals (currently, enums and a registry service) referenced at the Model layer.
+Each layer -- Model, View, and ViewModel -- is encapsulated in its own Project (.csproj). There is a Shared Project referenced at the Model layer, including interfaces, global variables, and application services.
 
-Project/Layer references are asymmetrical, with "higher" layers referring to ("knowing about") lower layers, but not vice versa. That is, the Model has no references (beyond the Shared Project), the ViewModel referecences the Model, and the View references the ViewModel. The relations can be depicted like so: Model <- ViewModel <- View , with each arrow representing a reference.
+Project/Layer references are asymmetrical, with "higher" layers referring to ("knowing about") lower layers, but not vice versa. That is, the Model has no references (beyond the Shared Project), the ViewModel references the Model, and the View references the ViewModel. The relations can be depicted like so: Model <- ViewModel <- View , with each arrow representing a reference.
 
-In this case, there is one caveat: The start-up project for a WPF application could be separated from the three layers, but as is sometimes done for convenience, it is incorporated into the "View" Project for this solution because the DI system is housed in App.xaml.cs.
+In this case, there is one caveat: The start-up project for a WPF application could be separated from the three layers, but as is sometimes done for convenience, it is incorporated into the "View" Project for this solution because the DI system is housed in App.xaml.cs. This means the View technically references the Model, but only because the start-up process requires references to Shared interface definitions.
 
 ## Feature Highlights
 A few systems involved more effort or met emerging needs in interesting or satisfying ways (associated namespace parenthesized):
 
-1. A class Registry which registers classes and associated objects, like string names, data converters, etc. Combined with reflection, enables runtime operations for, e.g., loading assets. (Hazard_Shared.Services.Registry)
-2. Default methods on the card interface (ICard) which allows easy use of future ICard implementations with the DAL if properly Registered, and asset files properly structured. (Hazard_Share.Interfaces.Model.ICard)
-3. UI card system is sensitive to "hot-seat" requirements -- e.g., card fronts only visibile to current player.
-4. Unit Tests for the Data Access Layer, Registry, and Binary Serializer, as well a fun one for the Deck.Shuffle() method which assures that it is shuffling properly! These are not part of the Release, but are available in the source code under **Hazard_Model.UnitTests**. See [the staging tests section to get them running.](#staging-unit-tests)
-
+1. A class Registry which registers classes and associated objects, like string names, data converters, etc. Combined with reflection, enables runtime operations for, e.g., loading assets. (Shared.Services.Registry)
+2. Default methods on the card interface (ICard) which enables rapid proto-typing easy use of ICard implementations. (Shared.Interfaces.Model.ICard)
+3. A serializer class, BinarySerializer, that encodes, writes, and reads IConvertibles of any object implementing IBinarySerializable (Shared.Services.Serializer).
+4. A fully functional UI card system with visuals, trading, and a sensitivity to "hot-seat" requirements -- e.g., card fronts only visibile to current player. (View)
+5. Unit Tests for the Data Access Layer, Registry, and Binary Serializer, as well a fun one for the Deck.Shuffle() method which assures that it is shuffling properly! These are not part of the Release, but are available in the source code under **Hazard_Model.UnitTests**. See [the staging tests section to get them running.](#staging-unit-tests)
 
 ## Notable Features
 At specific layers, less intensive but still crucial or highly instructive systems include (namespace again parenthesized):
 
 **Model**
-1. Data Access Layer ties into the Application Registry and automatically loads '.json' game assets (for now, limited to card data). (.DataAccess)
-2. A BinarySerializer for reading and writing binary savefiles. (Core.Game.BinarySerializer)
-3. Automatic Board setup for 2-player games leverages a byte and bitwise manipulators (in lieu of bool[]). (Core.Game.TwoPlayerAutoSetup())
-4. An implementation of the Fischer-Yates shuffle algorithm. (Entities.Deck.Shuffle())
+1. Data Access Layer ties into the Application Registry and automatically loads '.json' game assets. (Model.DataAccess)
+2. Automatic Board setup for 2-player games leverages a byte and bitwise manipulators (in lieu of bool[]). (Core.Game.TwoPlayerAutoSetup())
+3. An implementation of the Fischer-Yates shuffle algorithm. (Entities.Deck.Shuffle())
 
 **View**
 1. Territories are custom FrameworkElements whose visuals are determined at runtime, enabling easy extension. (TerritoryElement, MainWindow.BuildTerritoryButtons())
@@ -86,15 +85,14 @@ Tests should be enabled once you have the complete source code in an IDE and you
 
 ## Short Term Improvements
 If it is a good use of time for *learning*, these would be the next steps:
-1. Update all game assets to load via '.json' or configuration files to match current ICard/ICardSet functionality and fulfill the promise of the current system. (Board geography, rule values, etc)
-2. Implement the 'Secret Mission' game option, complete with new Card type and win conditions.
+1. Implement the 'Secret Mission' game option, complete with new Card type and win conditions.
 
 ## Medium Term Possibilities
-If short-term improvements prove redundant from a learning or demonstrating stand point, some bigger, medium-term extensions could lead to future features like:
+Some bigger, medium-term extensions could lead to future features like:
 1. Multi-player support via TCP-IP, etc.
 2. A local queried archive (MySql) containing error/event logs, game data records, save files(?), or other information gathered across multiple games.
 ## Long Term Ideas
-Similarly, if continuing to develop this project further remains a good idea, here are some possible long-term paths:
+Here are some possible long-term paths:
 1. Cross-Platform via Avalonia or .NET Maui port
 2. Online Game Server enabling multiplayer via "lobby" or direct invite.
 3. After (2), back the Server with a database storing player account info, game records, and the like, enabling leaderboards, achievements, etc.
