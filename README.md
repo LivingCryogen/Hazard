@@ -39,7 +39,7 @@ In this case, there is one caveat: The start-up project for a WPF application co
 A few systems involved more effort or met emerging needs in interesting or satisfying ways (associated namespace parenthesized):
 
 1. A class Registry which registers classes and associated objects, like string names, data converters, etc. Combined with reflection, enables runtime operations for, e.g., loading assets. (Shared.Services.Registry)
-2. Default methods on the card interface (ICard) which enables rapid proto-typing easy use of ICard implementations. (Shared.Interfaces.Model.ICard)
+2. Default methods on the card interface leverage reflection to enable rapid proto-typing of ICard implementations. (Shared.Interfaces.Model.ICard)
 3. A serializer class, BinarySerializer, that encodes, writes, and reads IConvertibles of any object implementing IBinarySerializable (Shared.Services.Serializer).
 4. A fully functional UI card system with visuals, trading, and a sensitivity to "hot-seat" requirements -- e.g., card fronts only visibile to current player. (View)
 5. Unit Tests for the Data Access Layer, Registry, and Binary Serializer, as well a fun one for the Deck.Shuffle() method which assures that it is shuffling properly! These are not part of the Release, but are available in the source code under **Hazard_Model.UnitTests**. See [the staging tests section to get them running.](#staging-unit-tests)
