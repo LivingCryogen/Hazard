@@ -1,26 +1,29 @@
 # Hazard!
-*Hazard!* is a working "hot-seat" (local only) board game playable by two to six players based on the popular board game *Risk* (owned by Hasbro, Inc). Its source code is written entirely in C#, with the exception of the WPF UI which also relies on XAML.
+*Hazard!* is a working "hot-seat" board game playable by two to six players based on the popular board game *Risk* (owned by Hasbro, Inc). Its source code is written entirely in C#, with the exception of the WPF UI which also relies on XAML.
 
 ## Purpose
-As a software development portfolio project, Hazard has two primary purposes:
+As a portfolio project, Hazard has two primary purposes:
   1. To force learning on me, its sole developer.
   2. To demonstrate those learned skills.
 
-As a corrollary, it also aims at contemporary, professional industry standards in the
+As a corrollary, it also aims at contemporary, professional industry code standards for
 1. Writing
 2. Testing
 3. Documentation, and
-4. Organization/Architecture of code.
+4. Organization/Architecture.
+   
+## Over-Engineering
+Both primary purposes (1) and (2) above motivate intentional *over-engineering.* I took on the project ***as if* it were to be extended and worked on by teams** in a modern development environment. Smart, incremental development is the intended approach.
 
-This means it is intentionally "over-engineered": I took on the project ***as if* it were to be extended and worked on by teams** in a modern development environment. Smart, incremental development is the approach.
 See the [Architecture](#architecture) and [Feature Highlights](#feature-highlights) sections for more details. 
 
-If anyone has some fun or is charmed by my wife's art, then the project has achieved beyond its goals! :)
+If the project were designed to be what it actually is -- a solo desktop application written in WPF with very little chance of extension -- it could be written much more simply. But that would be another project (one I may or may not undertake).
 
 ## Background
-When choosing a first portfolio project, I remembered a high school Visual Basic program I never got fully working which was to emulate Hasbro's *Risk*. I decided to achieve that early goal, but updated to use modern languages, frameworks, and other technologies.
+In high school programming, I had a Visual Basic project I never got fully working which was to emulate Hasbro's *Risk*. I decided to achieve that early goal, but updated to use modern languages, frameworks, and other technologies.
 
-Discovering which languages and tools would be used today, I landed on Windows Presentation Foundation (WPF). Fortunately, Microsoft's C# and the .NET ecosystem has developed a great deal. In retrospect, this decision did narrow the initial focus to desktop development, but I also discovered that MVVM was widely used in web contexts as well (and much more so, it's close cousin MVC), so it appears that the focus might progress naturally to a web context in the medium to long term.
+Discovering which languages and tools would be used today, I landed on Windows Presentation Foundation (WPF). Fortunately, Microsoft's C# and the .NET ecosystem have developed a great deal. In retrospect, this decision did narrow my initial focus to desktop development, but I also discovered that MVVM was widely used in web contexts as well (and much more so, it's close cousin MVC), so natural progress might lead to working in a web context in the medium to long term.
+
 ## Architecture
 *Hazard!*'s design follows the Model-View-Viewmodel(MVVM) pattern. 
 
