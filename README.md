@@ -49,7 +49,7 @@ At specific layers, less intensive but still crucial or highly instructive syste
 
 **Model**
 1. Data Access Layer ties into the Application Registry and automatically loads '.json' game assets. (Model.DataAccess)
-2. Automatic Board setup for 2-player games leverages a byte and bitwise manipulators (in lieu of bool[]). (Core.Game.TwoPlayerAutoSetup())
+2. Automatic Board setup for 2-player games leverages a BitArray and bitwise manipulators (in lieu of bool[]). (Core.Game.TwoPlayerAutoSetup())
 3. An implementation of the Fischer-Yates shuffle algorithm. (Entities.Deck.Shuffle())
 
 **View**
