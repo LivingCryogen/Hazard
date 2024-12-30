@@ -119,8 +119,6 @@ public partial class AttackWindow : Window
     public static readonly DependencyProperty AttackEnabledProperty =
         DependencyProperty.Register("AttackEnabled", typeof(bool), typeof(AttackWindow), new PropertyMetadata(defaultValue: false));
 
-
-
     // Using a DependencyProperty as the backing store for AttackDice.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty NumAttackDiceProperty =
         DependencyProperty.Register("NumAttackDice", typeof(int), typeof(AttackWindow), new PropertyMetadata(defaultValue: 0));
@@ -197,17 +195,6 @@ public partial class AttackWindow : Window
     // Using a DependencyProperty as the backing store for TargetLoss.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty TargetLossProperty =
         DependencyProperty.Register("TargetLoss", typeof(int), typeof(AttackWindow), new PropertyMetadata(defaultValue: 0));
-
-    private void Window_Loaded(object sender, RoutedEventArgs e)
-    {
-        // randomize starting die visuals 
-        Random rand = new();
-        for (int i = 0; i < 3; i++) {
-            _attackDiceVisuals[i].Source = AttackDieFaces[rand.Next(1, 6)];
-            if (i < 2)
-                _defenseDiceVisuals[i].Source = DefenseDieFaces[rand.Next(1, 6)];
-        }
-    }
 
     public void Initialize(int source, int target, SolidColorBrush sourceColor, SolidColorBrush targetColor, IMainVM vM)
     {
@@ -348,10 +335,10 @@ public partial class AttackWindow : Window
         int tenthSeconds = _currentSpinType.ToString().ElementAt(5) - '0';
         long spinTicks = tenthSeconds * 1000000; // A second includes 10,000,000 ticks. Each diceroll sound file duration lasts tenths of seconds, so tick conversion needs * 1,000,000. 
 
-        foreach (int attackRoll in results.AttackResults)
-            BuildDiceAnimation(AttackDieFaces, spinTicks, attackRoll);
-        foreach (int defenseRoll in results.DefenseResults)
-            BuildDiceAnimation(AttackDieFaces, spinTicks, defenseRoll);
+        for (int i = 0; i < results.AttackResults.Length; i++)
+            _attackDiceAnimations[i] = BuildDiceAnimation(AttackDieFaces, spinTicks, results.AttackResults[i]);
+        for (int i = 0; i < results.DefenseResults.Length; i++)
+            _defenseDiceAnimations[i] = BuildDiceAnimation(DefenseDieFaces, spinTicks, results.DefenseResults[i]);
 
         SetDiceVisibility(DiceGroup.All);
         BeginDiceAnimations();
@@ -371,6 +358,11 @@ public partial class AttackWindow : Window
 
         _targetArmiesChanged = false;
         _sourceArmiesChanged = false;
+
+        for (int i = 0; i < results.AttackResults.Length; i++)
+            _attackDiceAnimations[i] = new();
+        for (int i = 0; i < results.DefenseResults.Length; i++)
+            _defenseDiceAnimations[i] = new();
     }
 
     private void UpdateDiceCount()
