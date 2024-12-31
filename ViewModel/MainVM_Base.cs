@@ -340,11 +340,15 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         string fileName;
         if (!saveParams.NewFile)
             fileName = _bootStrapper.SaveFileName;
-        else
+        else {
             fileName = saveParams.FileName;
+            _bootStrapper.SaveFileName = fileName;
+        }
 
         if (CurrentGame != null && Regulator != null)
             await BinarySerializer.Save([this, CurrentGame, Regulator], fileName, saveParams.NewFile);
+
+
     }
     [RelayCommand]
     /// <inheritdoc cref="IMainVM.LoadGame(string)">
