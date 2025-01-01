@@ -1,6 +1,7 @@
-﻿nav 
-{
-    padding: 1rem 0;
+﻿nav {
+    padding: 1rem 1rem;
+    text-align: center;
+    background-color: #2a3141;
 }
 body
 {
