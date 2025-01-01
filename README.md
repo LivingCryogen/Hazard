@@ -1,8 +1,6 @@
 # Hazard!
 I took on this demonstration project ***as if* it were to be extended and worked on by teams** in a modern development environment. Smart, incremental development is the intended approach.
 
-See the [Architecture](#architecture) and [Feature Highlights](#feature-highlights) sections for more details. 
-
 ## Architecture
 *Hazard!*'s design follows the Model-View-Viewmodel(MVVM) pattern. 
 
