@@ -7,8 +7,11 @@ a {
     color: #31c1cc;
     text-decoration-color: #31c1cc;
 }
-body
-{
+h {
+    color: #2a3141;
+}
+body {
+    color: #2a3141;
     text-align: center;
 }
 
