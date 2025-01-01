@@ -1,12 +1,11 @@
-﻿nav 
-{
+﻿nav {
     padding: 1rem 1rem;
     text-align: center;
-    background-color: #2a3141;
+    background-color: #2b4252;
 }
 a {
-    color: #24727f;
-    text-decoration-color: #24727f;
+    color: #31c1cc;
+    text-decoration-color: #31c1cc;
 }
 body
 {
