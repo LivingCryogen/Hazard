@@ -1,5 +1,5 @@
 # Hazard!
-## Over-Engineering
+### Over-Engineering
 I took on this demonstration project ***as if* it were to be extended and worked on by teams** in a modern development environment. Smart, incremental development is the intended approach. This is definitely *not* the simplest way you could develop the game.
 
 ## Architecture
