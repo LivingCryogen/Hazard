@@ -2,16 +2,33 @@
     padding: 1rem 1rem;
     text-align: center;
     background-color: #2b4252;
+    border-radius: 3px 3px;
 }
 a {
+    font-size: 16px;
     color: #31c1cc;
     text-decoration-color: #31c1cc;
 }
-h {
-    color: #2a3141;
+h1 {
+    font-size: 50px;
+    padding: 0 0;
+    margin: 0 0 0 0;
+}
+h3 {
+    padding: 0 0;
+    margin: 0 0 0 0;
+}
+h6 {
+    padding: 2px 2px;
+    margin: 0 0 0 0;
+}
+p {
+    font-size: 12px;
 }
 body {
-    color: #2a3141;
+    background-color: #2a3141;
+    color: #FFF5F5DC;
     text-align: center;
+    font-family: 'Courier New';
 }
 
