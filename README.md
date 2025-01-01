@@ -1,7 +1,4 @@
 # Hazard!
-### Over-Engineering
-I took on this demonstration project ***as if* it were to be extended and worked on by teams** in a modern development environment. Smart, incremental development is the intended approach. This is definitely *not* the simplest way you could develop the game.
-
 ## Architecture
 *Hazard!*'s design follows the Model-View-Viewmodel(MVVM) pattern. 
 
@@ -12,6 +9,9 @@ Each layer -- Model, View, and ViewModel -- is encapsulated in its own Project (
 Project/Layer references are asymmetrical, with "higher" layers referring to ("knowing about") lower layers, but not vice versa. That is, the Model has no references (beyond the Shared Project), the ViewModel references the Model, and the View references the ViewModel. The relations can be depicted like so: Model <- ViewModel <- View , with each arrow representing a reference.
 
 In this case, there is one caveat: The start-up project for a WPF application could be separated from the three layers, but as is sometimes done for convenience, it is incorporated into the "View" Project for this solution because the DI system is housed in App.xaml.cs. This means the View technically references the Model, but only because the start-up process requires references to Shared interface definitions.
+
+### Over-Engineering
+I took on this demonstration project ***as if* it were to be extended and worked on by teams** in a modern development environment. Smart, incremental development is the intended approach. This is definitely *not* the simplest way you could develop the game.
 
 ## Feature Highlights
 A few systems involved more effort or met emerging needs in interesting or satisfying ways (associated namespace parenthesized):
