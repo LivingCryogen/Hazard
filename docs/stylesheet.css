@@ -27,10 +27,23 @@ h5 {
     margin: 0 0 0 0;
 }
 p {
+    font-size: 1em;
+}
+.sub-p {
     font-size: .65em;
+    line-height: 0;
+}
+.indented-p {
+    text-indent: 2rem;
+    font-size: 1.5rem;
 }
 .dynamic-link {
     text-decoration: none;
+}
+.dynamic-content-area {
+    font-size: 1.5rem;
+    text-align: left;
+    padding: 2.5rem;
 }
 body {
     background-color: #2a3141;
