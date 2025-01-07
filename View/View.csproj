@@ -7,6 +7,7 @@
     <OutputType>WinExe</OutputType>
     <UseWPF>True</UseWPF>
     <StartupObject>View.App</StartupObject>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
