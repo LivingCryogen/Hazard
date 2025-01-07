@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Features</title>
+    <link rel="stylesheet" href="stylesheet.css">
+</head>
+<body>
+    Features
+
+    Architecture
+    Hazard!'s design follows the Model-View-Viewmodel(MVVM) pattern.
+
+    Basically, this means that the game simulation (state and rules logic) is handled on the lowest, "Model" layer, the player interacts with a UI at the highest, "View" layer, and a "ViewModel" layer mediates between them. Often, as here, this means relying heavily on the Observer pattern, with bindings and events being central to the working structure of the application.
+
+    Each layer -- Model, View, and ViewModel -- is encapsulated in its own Project (.csproj). There is a Shared Project referenced at the Model layer, including interfaces, global variables, and application services.
+
+    Project/Layer references are asymmetrical, with "higher" layers referring to ("knowing about") lower layers, but not vice versa. That is, the Model has no references (beyond the Shared Project), the ViewModel references the Model, and the View references the ViewModel. The relations can be depicted like so: Model ViewModel View , with each arrow representing a reference.
+
+In this case, there is one caveat: The start-up project for a WPF application could be separated from the three layers, but as is sometimes done for convenience, it is incorporated into the "View" Project for this solution because the DI system is housed in App.xaml.cs. This means the View technically references the Model, but only because the start-up process requires references to Shared interface definitions.
+
+Feature Highlights
+A few systems involved more effort or met emerging needs in interesting or satisfying ways (associated namespace parenthesized):
+
+A class Registry which registers classes and associated objects, like string names, data converters, etc. Combined with reflection, enables runtime operations for, e.g., loading assets. (Shared.Services.Registry)
+Default methods on the card interface leverage reflection to enable rapid proto-typing of ICard implementations. (Shared.Interfaces.Model.ICard)
+A serializer class, BinarySerializer, that encodes, writes, and reads IConvertibles of any object implementing IBinarySerializable (Shared.Services.Serializer).
+A fully functional UI card system with visuals, trading, and a sensitivity to "hot-seat" requirements -- e.g., card fronts only visibile to current player. (View)
+Unit Tests for the Data Access Layer, Registry, and Binary Serializer, as well a fun one for the Deck.Shuffle() method which assures that it is shuffling properly! These are not part of the Release, but are available in the source code under Hazard_Model.UnitTests. See the staging tests section to get them running.
+Notable Features
+At specific layers, less intensive but still crucial or highly instructive systems include (namespace again parenthesized):
+
+Model
+
+Data Access Layer ties into the Application Registry and automatically loads '.json' game assets. (Model.DataAccess)
+Automatic Board setup for 2-player games leverages a BitArray and bitwise manipulators (in lieu of bool[]). (Core.Game.TwoPlayerAutoSetup())
+An implementation of the Fischer-Yates shuffle algorithm. (Entities.Deck.Shuffle())
+View
+
+Territories are custom FrameworkElements whose visuals are determined at runtime, enabling easy extension. (TerritoryElement, MainWindow.BuildTerritoryButtons())
+Attacking and other player actions are accompanied by truly random dice-rolling, feedback animations, and hot-keys which allow for responsive and legible play. (AttackWindow, MainWindow.xaml)
+Responsive and illustrative application commands and windows, complete with keyboard short-cuts. (NewGameWindow, MainWindow.xaml InputBindings>
+Game State changes reflected in game rule notices/hints, and the information highlighted in Player data boxes. (MainWindow.xaml Resources, .BuildPlayerDataBoxes())
+An example of overengineering as learning, but still cool: Player data boxes are generated programatically (MainWindow.BuildPlayerDataBoxes())
+</body>
+</html>

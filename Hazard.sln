@@ -13,10 +13,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "View", "View\View.csproj", 
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{A96ED368-04FE-470B-AE91-E534ED9D57B0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHubPages", "GitHubPages", "{D54FF405-7D97-44E1-8498-FEEC18D45440}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHubPages", "GitHubPages\GitHubPages.csproj", "{36FCE15E-8FC8-4367-A009-491DFACE1EB2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{7D59BEDA-4AB0-43B3-8E91-39B4525EE4B8}"
 	ProjectSection(SolutionItems) = preProject
-		Landing.html = Landing.html
-		stylesheet.css = stylesheet.css
+		GitHubPages\wwwroot\Background.html = GitHubPages\wwwroot\Background.html
+		GitHubPages\wwwroot\Copyright.html = GitHubPages\wwwroot\Copyright.html
+		GitHubPages\wwwroot\Features.html = GitHubPages\wwwroot\Features.html
+		GitHubPages\wwwroot\index.html = GitHubPages\wwwroot\index.html
+		GitHubPages\wwwroot\nav.js = GitHubPages\wwwroot\nav.js
+		GitHubPages\wwwroot\stylesheet.css = GitHubPages\wwwroot\stylesheet.css
+		GitHubPages\wwwroot\Tour.html = GitHubPages\wwwroot\Tour.html
 	EndProjectSection
 EndProject
 Global
@@ -41,6 +48,10 @@ Global
 		{56048DAE-0B63-4211-9B27-EC70085B1907}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{56048DAE-0B63-4211-9B27-EC70085B1907}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56048DAE-0B63-4211-9B27-EC70085B1907}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36FCE15E-8FC8-4367-A009-491DFACE1EB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36FCE15E-8FC8-4367-A009-491DFACE1EB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36FCE15E-8FC8-4367-A009-491DFACE1EB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36FCE15E-8FC8-4367-A009-491DFACE1EB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
