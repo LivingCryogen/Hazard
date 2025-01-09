@@ -13,18 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "View", "View\View.csproj", 
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{A96ED368-04FE-470B-AE91-E534ED9D57B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHubPages", "GitHubPages\GitHubPages.csproj", "{36FCE15E-8FC8-4367-A009-491DFACE1EB2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{7D59BEDA-4AB0-43B3-8E91-39B4525EE4B8}"
-	ProjectSection(SolutionItems) = preProject
-		GitHubPages\wwwroot\Background.html = GitHubPages\wwwroot\Background.html
-		GitHubPages\wwwroot\Copyright.html = GitHubPages\wwwroot\Copyright.html
-		GitHubPages\wwwroot\Features.html = GitHubPages\wwwroot\Features.html
-		GitHubPages\wwwroot\index.html = GitHubPages\wwwroot\index.html
-		GitHubPages\wwwroot\nav.js = GitHubPages\wwwroot\nav.js
-		GitHubPages\wwwroot\stylesheet.css = GitHubPages\wwwroot\stylesheet.css
-		GitHubPages\wwwroot\Tour.html = GitHubPages\wwwroot\Tour.html
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubPages", "GitHubPages\GitHubPages.csproj", "{36FCE15E-8FC8-4367-A009-491DFACE1EB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
