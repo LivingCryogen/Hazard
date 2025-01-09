@@ -8,6 +8,7 @@
     <UseWPF>True</UseWPF>
     <StartupObject>View.App</StartupObject>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <AssemblyName>Hazard</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
