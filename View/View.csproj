@@ -9,8 +9,29 @@
     <StartupObject>View.App</StartupObject>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <AssemblyName>Hazard</AssemblyName>
+    <Configurations>Debug;Release;Release_FrameworkDependent;Release_SelfContained</Configurations>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <IsPublishable>True</IsPublishable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <IsPublishable>True</IsPublishable>
+  </PropertyGroup>
+<!-- Framework-Dependent Config -->
+  <PropertyGroup Condition="'$(Configuration)'=='Release_FrameworkDependent'">
+	  <PublishSingleFile>false</PublishSingleFile>
+	  <SelfContained>false</SelfContained>
+  </PropertyGroup>
+<!-- Self-Contained Deployment Config -->
+  <PropertyGroup Condition="'$(Configuration)'=='Release_SelfContained'">
+		<PublishSingleFile>true</PublishSingleFile>
+		<SelfContained>true</SelfContained>
+	    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+	
+	
   <ItemGroup>
     <None Remove="App.xaml" />
     <None Remove="appsettings.json" />
