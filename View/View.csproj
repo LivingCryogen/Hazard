@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -10,6 +9,7 @@
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <AssemblyName>Hazard</AssemblyName>
     <Configurations>Debug;Release;Release_FrameworkDependent;Release_SelfContained</Configurations>
+	<InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.Extensions.Configuration.Binder.SourceGeneration</InterceptorsNamespaces>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
