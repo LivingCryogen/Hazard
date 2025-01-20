@@ -4,8 +4,10 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # Private Project
-*PublishSAS*.*
-*PublishSAS*.*/
+HazardPublishSAS/local.settings.json
+HazardPublishSAS/bin/
+HazardPublishSAS/obj/
+
 
 # User-specific files
 *.rsuser
