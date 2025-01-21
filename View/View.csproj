@@ -7,6 +7,7 @@
     <UseWPF>True</UseWPF>
     <StartupObject>View.App</StartupObject>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
+	<GenerateManifests>True</GenerateManifests>
     <AssemblyName>Hazard</AssemblyName>
     <Configurations>Debug;Release;Release_FrameworkDependent;Release_SelfContained</Configurations>
 	<InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.Extensions.Configuration.Binder.SourceGeneration</InterceptorsNamespaces>
@@ -31,6 +32,12 @@
 		<PublishSingleFile>true</PublishSingleFile>
 		<SelfContained>true</SelfContained>
 	    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_FrameworkDependent|AnyCPU'">
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_SelfContained|AnyCPU'">
+    <Optimize>True</Optimize>
   </PropertyGroup>
 	
 	
