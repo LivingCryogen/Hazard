@@ -11,7 +11,16 @@
     <AssemblyName>Hazard</AssemblyName>
     <Configurations>Debug;Release;Release_FrameworkDependent;Release_SelfContained</Configurations>
 	<InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.Extensions.Configuration.Binder.SourceGeneration</InterceptorsNamespaces>
-	  <InterceptorsPreviewNamespaces>$(InterceptorsPreviewNamespaces);Microsoft.Extensions.Configuration.Binder.SourceGeneration</InterceptorsPreviewNamespaces>
+	<InterceptorsPreviewNamespaces>$(InterceptorsPreviewNamespaces);Microsoft.Extensions.Configuration.Binder.SourceGeneration</InterceptorsPreviewNamespaces>
+	<UserSecretsId>39e31212-36f1-4029-8e0b-8f8836ee9507</UserSecretsId>
+	<EnableAzureTrustedSigning>true</EnableAzureTrustedSigning>
+	  <AzureTrustedSigningConfiguration>
+		  <TrustedSigningAccount>$(TrustedSigning:Account)</TrustedSigningAccount>
+		  <TrustedSigningProfileName>$(TrustedSigning:ProfileName)</TrustedSigningProfileName>
+		  <TrustedSigningTenantId>$(TrustedSigning:TenantId)</TrustedSigningTenantId>
+		  <TrustedSigningClientId>$(TrustedSigning:ClientId)</TrustedSigningClientId>
+		  <TrustedSigningClientSecret>$(TrustedSigning:ClientSecret)</TrustedSigningClientSecret>
+	  </AzureTrustedSigningConfiguration>
   </PropertyGroup>
 	
 
@@ -134,6 +143,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Trusted.Signing.Client" Version="1.0.60" />
     <PackageReference Include="NHotkey.Wpf" Version="3.0.0" />
   </ItemGroup>
 

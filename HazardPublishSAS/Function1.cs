@@ -43,7 +43,6 @@ namespace HazardPublishSAS
                 return new BadRequestObjectResult("Invalid user type specified.");
 
             string connectionString = Environment.GetEnvironmentVariable("StorageConnectionString");
-             = Environment.GetEnvironmentVariable("StorageAccountKey");
 
             // Create Blob Client
             BlobServiceClient blobServiceClient = new BlobServiceClient(Environment.GetEnvironmentVariable("StorageConnectionString"));
