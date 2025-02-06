@@ -1,0 +1,43 @@
+# .NET Desktop
+# Build and run tests for .NET Desktop or Windows classic desktop solutions.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
+
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release_SelfContained'
+  publishPath: '$(Build.ArtifactStagingDirectory)\publish'
+  storageAccount: 'jm84storage'
+  containerName: 'hazard'
+  blobPath: 'self-contained'
+
+steps:
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    msbuildArgs: '/t:publish /p:PublishProfile=ClickOnce_SelfContained /p:Configuration=Release_SelfContained /p:PublishDir="$(publishPath)" /p:RuntimeIdentifier=win-x64 /p:SelfContained=True /p:PublishSingleFile=True /p:PublishReadyToRun=True /p:PublishProtocol=ClickOnce /p:GenerateManifests=true'
+
+- task: TrustedSigning@0
+  inputs:
+    Endpoint: 'https://eus.codesigning.azure.net/'
+    TrustedSigningAccountName: 'joshmcknightsigning'
+    CertificateProfileName: 'JoshuaMcKnight'
+    FilesFolder: '$(publishPath)'
+    FilesFolderRecurse: true
+    TimestampRfc3161: 'http://timestamp.acs.microsoft.com'
+    TimestampDigest: 'SHA256'
