@@ -12,7 +12,11 @@ pool:
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  buildConfiguration: 'Release_SelfContained'
+  publishPath: '$(Build.ArtifactStagingDirectory)\publish'
+  storageAccount: 'jm84storage'
+  containerName: 'hazard'
+  blobPath: 'self-contained'
 
 steps:
 - task: NuGetToolInstaller@1
@@ -26,8 +30,14 @@ steps:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+    msbuildArgs: '/t:publish /p:PublishProfile=ClickOnce_SelfContained /p:Configuration=Release_SelfContained /p:PublishDir="$(publishPath)" /p:RuntimeIdentifier=win-x64 /p:SelfContained=True /p:PublishSingleFile=True /p:PublishReadyToRun=True /p:PublishProtocol=ClickOnce /p:GenerateManifests=true'
 
-- task: VSTest@2
+- task: TrustedSigning@0
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    Endpoint: 'https://eus.codesigning.azure.net/'
+    TrustedSigningAccountName: 'joshmcknightsigning'
+    CertificateProfileName: 'JoshuaMcKnight'
+    FilesFolder: '$(publishPath)'
+    FilesFolderRecurse: true
+    TimestampRfc3161: 'http://timestamp.acs.microsoft.com'
+    TimestampDigest: 'SHA256'
