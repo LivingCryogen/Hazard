@@ -32,6 +32,7 @@ steps:
     command: 'restore'
     projects: '**/*.csproj'
     feedsToUse: 'select'
+    arguments: '--runtime win-x64'
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
@@ -41,7 +42,7 @@ steps:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    msbuildArgs: '/t:publish /p:PublishProfile=ClickOnce_SelfContained /p:Configuration=Release_SelfContained /p:PublishDir="$(publishPath)" /p:RuntimeIdentifier=win-x64 /p:SelfContained=True /p:PublishSingleFile=True /p:PublishReadyToRun=True /p:PublishProtocol=ClickOnce /p:GenerateManifests=true'
+    msbuildArgs: '/t:restore;publish /p:PublishProfile=ClickOnce_SelfContained /p:Configuration=Release_SelfContained /p:PublishDir="$(publishPath)" /p:RuntimeIdentifier=win-x64 /p:SelfContained=True /p:PublishSingleFile=True /p:PublishReadyToRun=True /p:PublishProtocol=ClickOnce /p:GenerateManifests=true'
 
 - task: TrustedSigning@0
   inputs:
