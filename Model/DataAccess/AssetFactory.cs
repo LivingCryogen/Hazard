@@ -72,14 +72,14 @@ public class AssetFactory : IAssetFactory
     /// within a <see cref="TypeRegister"/> entry for <see cref="TroopCard"/>.<br/> An instance is returned by <see cref="IDataProvider.GetData(string)"/> when passsed the <see cref="object"/> marked <see cref="RegistryRelation.Name"/>
     /// <br/>for <see cref="TroopCard"/> if the entry also includes a proper <see cref="RegistryRelation.DataFileName"/>.</param>
     /// <returns>An array of TroopCards for use by <see cref="Deck"/>.</returns>
-    public TroopCard[]? BuildTroopCards(ICardSet troopCardSet)
+    public TroopCard[] BuildTroopCards(ICardSet troopCardSet)
     {
         List<TroopCard> troopCards = [];
         if (troopCardSet.JData == null ||
             troopCardSet.JData.Targets == null ||
             ((ITroopCardSetData)troopCardSet.JData).Insignia == null) {
             _logger.LogWarning($"Valid ICardSetData for TroopCards not found by AssetFactory.");
-            return null;
+            return [];
         }
 
         int numTroopCards = troopCardSet.JData.Targets.Length;
@@ -97,7 +97,7 @@ public class AssetFactory : IAssetFactory
 
         if (troopCards.Count <= 0) {
             _logger.LogWarning($"TroopCardSet factory returned null set.");
-            return null;
+            return [];
         }
 
         return [.. troopCards];
