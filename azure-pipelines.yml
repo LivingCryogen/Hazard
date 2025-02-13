@@ -60,15 +60,3 @@ steps:
     FilesFolderRecurse: true
     TimestampRfc3161: 'http://timestamp.acs.microsoft.com'
     TimestampDigest: 'SHA256'
-    AzureTenantId: '13e78c0a-e121-4d61-bb96-366e18359f47'  # Your tenant ID
-    AzureClientId: 'fa0c17c5-68f8-4c08-af95-810ad70c8465'  # The app registration's client ID
-    # Authentication settings for OpenID Connect
-    ExcludeEnvironmentCredential: true
-    ExcludeWorkloadIdentityCredential: false  # Enable workload identity for OIDC
-    ExcludeManagedIdentityCredential: true
-    ExcludeSharedTokenCacheCredential: true
-    ExcludeVisualStudioCredential: true
-    ExcludeVisualStudioCodeCredential: true
-    ExcludeAzureCliCredential: true
-    ExcludeAzurePowershellCredential: true
-    ExcludeInteractiveBrowserCredential: true
