@@ -50,6 +50,14 @@ steps:
       /p:PublishProtocol=ClickOnce 
       /p:GenerateManifests=true'
 
+- task: AzureCLI@2
+  displayName: 'Azure Login'
+  inputs:
+    azureSubscription: 'JoshMcKnight Azure TopLevel'  # Use your actual service connection name
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      echo "Logged into Azure"
 - task: TrustedSigning@0
   inputs:
     Endpoint: 'https://eus.codesigning.azure.net/'
