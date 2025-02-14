@@ -19,36 +19,36 @@ variables:
   blobPath: 'self-contained'
 
 steps:
-- task: UseDotNet@2
-  inputs:
-    packageType: 'sdk'
-    version: '8.0.x'
-    includePreviewVersions: false
+#- task: UseDotNet@2
+#  inputs:
+#    packageType: 'sdk'
+#    version: '8.0.x'
+#    includePreviewVersions: false
 
-- task: NuGetToolInstaller@1
+#- task: NuGetToolInstaller@1
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'restore'
-    projects: '**/*.csproj'
-    feedsToUse: 'select'
-    arguments: '--runtime win-x64'
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+#- task: DotNetCoreCLI@2
+#  inputs:
+#    command: 'restore'
+#    projects: '**/*.csproj'
+#    feedsToUse: 'select'
+#    arguments: '--runtime win-x64'
+#- task: NuGetCommand@2
+#  inputs:
+#    restoreSolution: '$(solution)'
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-    msbuildArgs: '/t:restore;publish 
-      /p:PublishProfile=ClickOnce_SelfContained 
-      /p:Configuration=Release_SelfContained 
-      /p:PublishDir="$(publishPath)" 
-      /p:RuntimeIdentifier=win-x64 
-      /p:PublishProtocol=ClickOnce 
-      /p:GenerateManifests=true'
+#- task: VSBuild@1
+#  inputs:
+#    solution: '$(solution)'
+#    platform: '$(buildPlatform)'
+#    configuration: '$(buildConfiguration)'
+#    msbuildArgs: '/t:restore;publish 
+#      /p:PublishProfile=ClickOnce_SelfContained 
+#      /p:Configuration=Release_SelfContained 
+#      /p:PublishDir="$(publishPath)" 
+#      /p:RuntimeIdentifier=win-x64 
+#      /p:PublishProtocol=ClickOnce 
+#      /p:GenerateManifests=true'
 
 # Azure CLI task to ensure credentials are available
 - task: AzureCLI@2
