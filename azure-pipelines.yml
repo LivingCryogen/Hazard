@@ -56,8 +56,12 @@ steps:
     azureSubscription: 'JoshMcKnight Azure TopLevel'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
+    addSpnToEnvironment: true
     inlineScript: |
-      # Login and set subscription explicitly (without --allow-no-subscriptions)
+      # Explicit login
+      az login --service-principal -u "$servicePrincipalId" -t "$tenantId"
+      
+      # Set subscription
       az account set --subscription "e60fbeed-a1d7-4d83-828e-59d421eae26d"
       
       # Verify login state
