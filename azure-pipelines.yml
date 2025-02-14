@@ -57,7 +57,7 @@ steps:
    CertificateProfileName: 'JoshuaMcKnight'
    FilesFolder: '$(publishPath)'
    FilesFolderFilter: 'application,exe'
-   TimestampRfc3161: 'httpL//timestamp.acs.microsoft.com'
+   TimestampRfc3161: 'http://timestamp.acs.microsoft.com'
    TimestampDigest: 'SHA256'
    ExcludeAzureCliCredential: false
    ExcludeEnvironmentCredential: true
