@@ -50,43 +50,52 @@ steps:
       /p:PublishProtocol=ClickOnce 
       /p:GenerateManifests=true'
 
+# Azure CLI task to ensure credentials are available
 - task: AzureCLI@2
-  displayName: 'Azure Authentication'
   inputs:
     azureSubscription: 'JoshMcKnight Azure TopLevel'
+    addSpnToEnvironment: true # Automatically sets service principal details as environment variables
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
-    addSpnToEnvironment: true
     inlineScript: |
-      # Explicit login
-      az login --service-principal -u "$servicePrincipalId" -t "$tenantId"
+      # Print the environment variables to verify they are set
+      echo "Client ID (from environment): $servicePrincipalId"
+      echo "Tenant ID (from environment): $tenantId"
+      echo "Client Secret (from environment): $servicePrincipalSecret"
+      
+      # Explicit login using the automatically set environment variables
+      az login --service-principal -u "$servicePrincipalId" -p "$servicePrincipalSecret" -t "$tenantId"
       
       # Set subscription
       az account set --subscription "e60fbeed-a1d7-4d83-828e-59d421eae26d"
       
-       # Force token refresh
+      # Force token refresh
       az account get-access-token --resource https://management.azure.com/
-
+      
       # Verify login state
       az account show
 
-- script: echo "(1) -- Client ID:$servicePrincipalId, Tenant ID:$tenantId"
-  displayName: 'Verify environment variables (1)'
+# Delay to ensure credentials propagation
 - script: sleep 10
-  displayName: 'Add delay to attempt credential propagation' 
-- script: echo "(2) -- Client ID:$servicePrincipalId, Tenant ID:$tenantId"
-  displayName: 'Verify environment variables (2)'
+  displayName: 'Add delay to ensure credentials propagation'
 
+# TrustedSigning task using the credentials set by the Azure CLI task
 - task: TrustedSigning@0
-  displayName: 'Sign ClickOnce Package'
+  displayName: Sign with Trusted Signing
   inputs:
+    AzureTenantID: '$(AZURE_TENANT_ID)'
+    AzureClientID: '$(AZURE_CLIENT_ID)'
+    AzureClientSecret: '$(AZURE_CLIENT_SECRET)'
     Endpoint: 'https://eus.codesigning.azure.net/'
-    TrustedSigningAccountName: 'joshmcknightsigning'
-    CertificateProfileName: 'JoshuaMcKnight'
-    FilesFolder: '$(publishPath)'
-    FilesFolderFilter: 'application,exe'
+    TrustedSigningAccountName: 'my-codesigning-account'
+    CertificateProfileName: 'my-certificate-profile'
+    FilesFolder: '$(Build.SourcesDirectory)/MauiApp1/MauiApp1/bin/Release/net8.0-windows10.0.19041.0/win10-x64/AppPackages/'
+    FilesFolderFilter: 'msix'
+    FilesFolderRecurse: true
+    FilesFolderDepth: 1
+    FileDigest: 'SHA256'
     TimestampRfc3161: 'http://timestamp.acs.microsoft.com'
-    TimestampDigest: 'SHA256'
+    TimestampDigest:
     # Focus on Azure CLI authentication
     ExcludeEnvironmentCredential: true
     ExcludeWorkloadIdentityCredential: true
