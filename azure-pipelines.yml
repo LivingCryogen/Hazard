@@ -81,21 +81,18 @@ steps:
 
 # TrustedSigning task using the credentials set by the Azure CLI task
 - task: TrustedSigning@0
-  displayName: Sign with Trusted Signing
+  displayName: 'Sign ClickOnce Package'
   inputs:
     AzureTenantID: '$(AZURE_TENANT_ID)'
     AzureClientID: '$(AZURE_CLIENT_ID)'
     AzureClientSecret: '$(AZURE_CLIENT_SECRET)'
     Endpoint: 'https://eus.codesigning.azure.net/'
-    TrustedSigningAccountName: 'my-codesigning-account'
-    CertificateProfileName: 'my-certificate-profile'
-    FilesFolder: '$(Build.SourcesDirectory)/MauiApp1/MauiApp1/bin/Release/net8.0-windows10.0.19041.0/win10-x64/AppPackages/'
-    FilesFolderFilter: 'msix'
-    FilesFolderRecurse: true
-    FilesFolderDepth: 1
-    FileDigest: 'SHA256'
+    TrustedSigningAccountName: 'joshmcknightsigning'
+    CertificateProfileName: 'JoshuaMcKnight'
+    FilesFolder: '$(publishPath)'
+    FilesFolderFilter: 'application,exe'
     TimestampRfc3161: 'http://timestamp.acs.microsoft.com'
-    TimestampDigest:
+    TimestampDigest: 'SHA256'
     # Focus on Azure CLI authentication
     ExcludeEnvironmentCredential: true
     ExcludeWorkloadIdentityCredential: true
