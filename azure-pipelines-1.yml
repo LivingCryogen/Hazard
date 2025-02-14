@@ -21,15 +21,19 @@ steps:
    scriptType: 'bash'
    scriptLocation: 'inlineScript'
    inlineScript: |
-      # Your Azure CLI commands here
-      az account show
-      az group list
+      # Set subscription explicitly
       az account set --subscription "e60fbeed-a1d7-4d83-828e-59d421eae26d"
-      # Then check role assignments
-      az role assignment list \
-        --assignee "fa0c17c5-68f8-4c08-af95-810ad70c8465" \
-        --scope "/subscriptions/e60fbeed-a1d7-4d83-828e-59d421eae26d/resourceGroups/Admin/providers/Microsoft.CodeSigning/codesigningaccounts/joshmcknightsigning"
-
+      
+      # First check roles at resource group level
+      echo "Checking roles at resource group level:"
+      az role assignment list --resource-group "Admin"
+      
+      # Then try to get the Trusted Signing account details
+      echo "Checking Trusted Signing account details:"
+      az resource show \
+        --resource-group "Admin" \
+        --name "joshmcknightsigning" \
+        --resource-type "microsoft.codesigning/codesigningaccounts"
 - task: TrustedSigning@0
   
 #- task: NuGetToolInstaller@1
