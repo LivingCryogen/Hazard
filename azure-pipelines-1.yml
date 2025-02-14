@@ -15,22 +15,22 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: AzureCLI@2
+- task: TrustedSigning@0
   inputs:
-    azureSubscription: 'JoshMcKnight Azure TopLevel'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    addSpnToEnvironment: true  # This exposes service principal details
-    inlineScript: |
-      # Force subscription context
-      az account set --subscription "e60fbeed-a1d7-4d83-828e-59d421eae26d"
-      
-      # Now check roles
-      echo "Checking roles for service principal:"
-      az role assignment list --assignee "$servicePrincipalId" --all
-#- task: TrustedSigning@0
-  
-#- task: NuGetToolInstaller@1
+   Endpoint: 'https://eus.codesigning.azure.net/'
+   TrustedSigningAccountName: 'joshmcknightsigning'
+   CertificateProfileName: 'JoshuaMcKnight'
+   FilesFolder: '$(Build.SourcesDirectory)/N-A'
+   ExcludeAzureCliCredential: false
+   ExcludeEnvironmentCredential: true
+   ExcludeWorkloadIdentityCredential: true
+   ExcludeManagedIdentityCredential: true
+   ExcludeSharedTokenCacheCredential: true
+   ExcludeVisualStudioCodeCredential: true
+   ExcludeAzureDeveloperCliCredential: true
+   ExcludeInteractiveBrowserCredential: true
+   ExcludeAzurePowerShellCredential: true
+   ExcludeVisualStudioCredential: true
 
 #- task: NuGetCommand@2
 #  inputs:
