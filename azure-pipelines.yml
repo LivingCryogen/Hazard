@@ -74,8 +74,8 @@ steps:
   displayName: 'Verify environment variables (1)'
 - script: sleep 10
   displayName: 'Add delay to attempt credential propagation' 
-- script: echo "(1) -- Client ID:$servicePrincipalId, Tenant ID:$tenantId"
-  displayName: 'Verify environment variables (1)'
+- script: echo "(2) -- Client ID:$servicePrincipalId, Tenant ID:$tenantId"
+  displayName: 'Verify environment variables (2)'
 
 - task: TrustedSigning@0
   displayName: 'Sign ClickOnce Package'
