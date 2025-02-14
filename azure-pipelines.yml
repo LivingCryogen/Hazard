@@ -52,6 +52,9 @@ steps:
 
 - task: TrustedSigning@0
   inputs:
+    AzureTenantID: '$(tenant-id)'
+    AzureClientID: '$(client-id)'
+    AzureClientSecret: '$(client-secret)'
     Endpoint: 'https://eus.codesigning.azure.net/'
     TrustedSigningAccountName: 'joshmcknightsigning'
     CertificateProfileName: 'JoshuaMcKnight'
