@@ -19,81 +19,61 @@ variables:
   blobPath: 'self-contained'
 
 steps:
-#- task: UseDotNet@2
-#  inputs:
-#    packageType: 'sdk'
-#    version: '8.0.x'
-#    includePreviewVersions: false
-
-#- task: NuGetToolInstaller@1
-
-#- task: DotNetCoreCLI@2
-#  inputs:
-#    command: 'restore'
-#    projects: '**/*.csproj'
-#    feedsToUse: 'select'
-#    arguments: '--runtime win-x64'
-#- task: NuGetCommand@2
-#  inputs:
-#    restoreSolution: '$(solution)'
-
-#- task: VSBuild@1
-#  inputs:
-#    solution: '$(solution)'
-#    platform: '$(buildPlatform)'
-#    configuration: '$(buildConfiguration)'
-#    msbuildArgs: '/t:restore;publish 
-#      /p:PublishProfile=ClickOnce_SelfContained 
-#      /p:Configuration=Release_SelfContained 
-#      /p:PublishDir="$(publishPath)" 
-#      /p:RuntimeIdentifier=win-x64 
-#      /p:PublishProtocol=ClickOnce 
-#      /p:GenerateManifests=true'
-
-# Azure CLI task to ensure credentials are available
-- task: AzureCLI@2
+- task: UseDotNet@2
   inputs:
-    azureSubscription: 'JoshMcKnight Azure TopLevel'
-    addSpnToEnvironment: true # Automatically sets service principal details as environment variables
+    packageType: 'sdk'
+    version: '8.0.x'
+    includePreviewVersions: false
+
+- task: NuGetToolInstaller@1
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+    feedsToUse: 'select'
+    arguments: '--runtime win-x64'
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    msbuildArgs: '/t:restore;publish 
+      /p:PublishProfile=ClickOnce_SelfContained 
+      /p:Configuration=Release_SelfContained 
+      /p:PublishDir="$(publishPath)" 
+      /p:RuntimeIdentifier=win-x64 
+      /p:PublishProtocol=ClickOnce 
+      /p:GenerateManifests=true'
+
+- task: AzureCLI@2
+  displayName: 'Azure CLI'
+  inputs:
+    azureSubscription: 'JoshMcKnight Azure TopLevel'  # Replace with your connection name
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      # Print the environment variables to verify they are set
-      echo "Client ID (from environment): $servicePrincipalId"
-      echo "Tenant ID (from environment): $tenantId"
-      echo "Client Secret (from environment): $servicePrincipalSecret"
-      
-      # Explicit login using the automatically set environment variables
-      az login --service-principal -u "$servicePrincipalId" -p "$servicePrincipalSecret" -t "$tenantId"
-      
-      # Set subscription
-      az account set --subscription "e60fbeed-a1d7-4d83-828e-59d421eae26d"
-      
-      # Force token refresh
-      az account get-access-token --resource https://management.azure.com/
-      
-      # Verify login state
-      az account show
+      echo "##vso[task.setvariable variable=ARM_CLIENT_ID;issecret=true]$servicePrincipalId" 
+      echo "##vso[task.setvariable variable=ARM_ID_TOKEN;issecret=true]$idToken"
+      echo "##vso[task.setvariable variable=ARM_TENANT_ID;issecret=true]$tenantId"
+    addSpnToEnvironment: true
 
-# Delay to ensure credentials propagation
-- script: sleep 10
-  displayName: 'Add delay to ensure credentials propagation'
+- bash: |
+    az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
+  displayName: 'Azure Login'
 
-# TrustedSigning task using the credentials set by the Azure CLI task
 - task: TrustedSigning@0
-  displayName: 'Sign ClickOnce Package'
+  displayName: 'Sign with Trusted Signing'
   inputs:
-    AzureTenantID: '$(AZURE_TENANT_ID)'
-    AzureClientID: '$(AZURE_CLIENT_ID)'
-    AzureClientSecret: '$(AZURE_CLIENT_SECRET)'
     Endpoint: 'https://eus.codesigning.azure.net/'
     TrustedSigningAccountName: 'joshmcknightsigning'
     CertificateProfileName: 'JoshuaMcKnight'
     FilesFolder: '$(publishPath)'
     FilesFolderFilter: 'application,exe'
-    TimestampRfc3161: 'http://timestamp.acs.microsoft.com'
-    TimestampDigest: 'SHA256'
-    # Focus on Azure CLI authentication
     ExcludeEnvironmentCredential: true
     ExcludeWorkloadIdentityCredential: true
     ExcludeManagedIdentityCredential: true
