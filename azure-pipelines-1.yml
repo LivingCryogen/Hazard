@@ -24,7 +24,11 @@ steps:
       # Your Azure CLI commands here
       az account show
       az group list
-      az role assignment list --assignee "fa0c17c5-68f8-4c08-af95-810ad70c8465" --scope "/subscriptions/e60fbeed-a1d7-4d83-828e-59d421eae26d/resourceGroups/Admin/providers/Microsoft.CodeSigning/codesigningaccounts/joshmcknightsigning"
+      az account set --subscription "e60fbeed-a1d7-4d83-828e-59d421eae26d"
+      # Then check role assignments
+      az role assignment list \
+        --assignee "fa0c17c5-68f8-4c08-af95-810ad70c8465" \
+        --scope "/subscriptions/e60fbeed-a1d7-4d83-828e-59d421eae26d/resourceGroups/Admin/providers/Microsoft.CodeSigning/codesigningaccounts/joshmcknightsigning"
 
 - task: TrustedSigning@0
   
