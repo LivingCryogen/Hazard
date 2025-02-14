@@ -21,19 +21,16 @@ steps:
    scriptType: 'bash'
    scriptLocation: 'inlineScript'
    inlineScript: |
-      # Set subscription explicitly
-      az account set --subscription "e60fbeed-a1d7-4d83-828e-59d421eae26d"
-      
-      # First check roles at resource group level
-      echo "Checking roles at resource group level:"
-      az role assignment list --resource-group "Admin"
-      
-      # Then try to get the Trusted Signing account details
-      echo "Checking Trusted Signing account details:"
-      az resource show \
-        --resource-group "Admin" \
-        --name "joshmcknightsigning" \
-        --resource-type "microsoft.codesigning/codesigningaccounts"
+      # List all role assignments specifically for the Trusted Signing account
+      az role assignment list \
+        --scope "/subscriptions/e60fbeed-a1d7-4d83-828e-59d421eae26d/resourceGroups/Admin/providers/Microsoft.CodeSigning/codesigningaccounts/joshmcknightsigning" \
+        --include-inherited
+
+      # And also try to list assignments specifically for our service principal
+      echo "Checking specific service principal assignments:"
+      az role assignment list \
+        --assignee "298d2c06-f601-45a1-97d3-5dc20cd58fe4" \
+        --include-inherited
 - task: TrustedSigning@0
   
 #- task: NuGetToolInstaller@1
