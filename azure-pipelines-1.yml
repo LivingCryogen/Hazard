@@ -24,6 +24,10 @@ steps:
       # Your Azure CLI commands here
       az account show
       az group list
+      az role assignment list --assignee "JoshuaMcKnight-Hazard!-070487d7-4a78-4bc6-b477-c32b489fab68" --scope "/subscriptions/e60fbeed-a1d7-4d83-828e-59d421eae26d/resourceGroups/Admin/providers/Microsoft.CodeSigning/codesigningaccounts/joshmcknightsigning"
+
+- task: TrustedSigning@0
+  
 #- task: NuGetToolInstaller@1
 
 #- task: NuGetCommand@2
