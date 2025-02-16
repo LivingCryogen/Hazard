@@ -85,5 +85,6 @@ steps:
     ExcludeAzureDeveloperCliCredential: true
     ExcludeInteractiveBrowserCredential: true
 - bash: |
+    az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
     azcopy cp '$(publishPath)' 'https://$(storageAccount).blob.core.windows.net/$(containerName)/$(blobPath)' --recursive
   displayName: 'Azure Copy to Blob Storage'
