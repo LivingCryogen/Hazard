@@ -2,7 +2,6 @@
 # Build and run tests for .NET Desktop or Windows classic desktop solutions.
 # Add steps that publish symbols, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
-
 trigger:
 - main
 
@@ -12,37 +11,96 @@ pool:
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  buildConfiguration: 'Release_SelfContained'
+  publishPath: '$(Build.ArtifactStagingDirectory)\publish'
+  storageAccount: 'jm84storage'
+  containerName: 'hazard'
+  blobPath: 'self-contained'
+  applicationVersion: '1.0.0'
 
 steps:
-- task: TrustedSigning@0
+- task: UseDotNet@2
   inputs:
-   Endpoint: 'https://eus.codesigning.azure.net/'
-   TrustedSigningAccountName: 'joshmcknightsigning'
-   CertificateProfileName: 'JoshuaMcKnight'
-   FilesFolder: '$(Build.SourcesDirectory)/N-A'
-   ExcludeAzureCliCredential: false
-   ExcludeEnvironmentCredential: true
-   ExcludeWorkloadIdentityCredential: true
-   ExcludeManagedIdentityCredential: true
-   ExcludeSharedTokenCacheCredential: true
-   ExcludeVisualStudioCodeCredential: true
-   ExcludeAzureDeveloperCliCredential: true
-   ExcludeInteractiveBrowserCredential: true
-   ExcludeAzurePowerShellCredential: true
-   ExcludeVisualStudioCredential: true
+    packageType: 'sdk'
+    version: '8.0.x'
+    includePreviewVersions: false
 
-#- task: NuGetCommand@2
-#  inputs:
-#    restoreSolution: '$(solution)'
+# We can remove NuGetToolInstaller and use just DotNetCoreCLI for restore
+- task: DotNetCoreCLI@2
+  displayName: 'Restore NuGet packages'
+  inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+    feedsToUse: 'select'
+    arguments: '--runtime win-x64'
 
-#- task: VSBuild@1
-#  inputs:
-#    solution: '$(solution)'
-#    platform: '$(buildPlatform)'
-#    configuration: '$(buildConfiguration)'
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Application'
+  inputs:
+    command: 'publish'
+    projects: '**/*.csproj'
+    arguments: >
+      --configuration $(buildConfiguration)
+      --runtime win-x64
+      --self-contained true
+      --output "$(publishPath)"
+      /p:PublishReadyToRun=true
+      /p:PublishSingleFile=true
+      /p:PublishProtocol=ClickOnce
+      /p:GenerateManifests=true
+      /p:InstallUrl=https://$(storageAccount).blob.core.windows.net/$(containerName)/$(blobPath)/
+      /p:ApplicationVersion=$(applicationVersion)
+      /p:BootstrapperEnabled=true
+      /p:CreateWebPageOnPublish=true
+      /p:WebPageFileName=Publish.html
+      /p:Install=true
+      /p:InstallFrom=Web
+      /p:UpdateEnabled=true
+      /p:UpdateMode=Foreground
+      /p:MapFileExtensions=true
+      /p:IsWebBootstrapper=true
 
-#- task: VSTest@2
-#  inputs:
-#    platform: '$(buildPlatform)'
-#    configuration: '$(buildConfiguration)'
+- task: AzureCLI@2
+  displayName: 'Azure CLI'
+  inputs:
+    azureSubscription: 'JoshMcKnight Azure TopLevel'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      echo "##vso[task.setvariable variable=ARM_CLIENT_ID;issecret=true]$servicePrincipalId" 
+      echo "##vso[task.setvariable variable=ARM_ID_TOKEN;issecret=true]$idToken"
+      echo "##vso[task.setvariable variable=ARM_TENANT_ID;issecret=true]$tenantId"
+    addSpnToEnvironment: true
+
+- bash: |
+    az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
+  displayName: 'Azure Login'
+
+- task: TrustedSigning@0
+  displayName: 'Sign with Trusted Signing'
+  inputs:
+    Endpoint: 'https://eus.codesigning.azure.net/'
+    TrustedSigningAccountName: 'joshmcknightsigning'
+    CertificateProfileName: 'JoshuaMcKnight'
+    FilesFolder: '$(publishPath)'
+    FilesFolderFilter: 'application,exe'
+    ExcludeEnvironmentCredential: true
+    ExcludeWorkloadIdentityCredential: true
+    ExcludeManagedIdentityCredential: true
+    ExcludeSharedTokenCacheCredential: true
+    ExcludeVisualStudioCredential: true
+    ExcludeVisualStudioCodeCredential: true
+    ExcludeAzureCliCredential: false
+    ExcludeAzurePowershellCredential: true
+    ExcludeAzureDeveloperCliCredential: true
+    ExcludeInteractiveBrowserCredential: true
+
+- task: AzureFileCopy@5
+  displayName: 'Copy to Azure Blob Storage'
+  inputs:
+    SourcePath: '$(publishPath)'
+    azureSubscription: 'JoshMcKnight Azure TopLevel'
+    Destination: 'AzureBlob'
+    storage: 'jm84storage'
+    ContainerName: 'hazard'
+    BlobPrefix: 'self-contained'
