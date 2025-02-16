@@ -81,16 +81,21 @@ steps:
     ExcludeAzureDeveloperCliCredential: true
     ExcludeInteractiveBrowserCredential: true
 
-- powershell: |
-    # Download and install AzCopy
-    $ProgressPreference = 'SilentlyContinue'
-    Invoke-WebRequest -Uri "https://aka.ms/downloadazcopy-v10-windows" -OutFile "azcopy.zip"
-    Expand-Archive "azcopy.zip" -DestinationPath "."
-    $azcopyPath = Get-ChildItem -Path "." -Recurse -Filter "azcopy.exe" | Select-Object -First 1 -ExpandProperty FullName
-    
-    # Use connection string with AzCopy
-    $env:AZCOPY_AZURE_STORAGE_CONNECTION_STRING="$(StorageConnectionString)"
-    
-    # Perform the copy using local AzCopy
-    & $azcopyPath cp "$(publishPath)" "https://$(storageAccount).blob.core.windows.net/$(containerName)/$(blobPath)" --recursive
+- task: AzureCLI@2
   displayName: 'Copy to Blob Storage'
+  inputs:
+    azureSubscription: 'JoshMcKnight Azure TopLevel'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      # First get a storage-specific token
+      $storageToken = $(az account get-access-token --resource https://storage.azure.com/ --query accessToken -o tsv)
+      
+      # Upload using the storage token
+      az storage blob upload-batch `
+        --source "$(publishPath)" `
+        --destination "$(containerName)" `
+        --destination-path "$(blobPath)" `
+        --account-name "$(storageAccount)" `
+        --auth-mode login `
+        --sas-token $storageToken
