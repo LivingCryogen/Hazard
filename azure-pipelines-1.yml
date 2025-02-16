@@ -44,7 +44,10 @@ steps:
   displayName: 'Restore NuGet packages'
   inputs:
     command: 'restore'
-    projects: '**/*.csproj'
+    projects: |
+      **/Model.csproj
+      **/ViewModel.csproj
+      **/View.csproj
     feedsToUse: 'select'
     arguments: '--runtime win-x64'
 
