@@ -1,3 +1,8 @@
+# .NET Desktop
+# Build and run tests for .NET Desktop or Windows classic desktop solutions.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
+
 trigger:
 - main
 
@@ -5,13 +10,14 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release_SelfContained'
   publishPath: '$(Build.ArtifactStagingDirectory)\publish'
   storageAccount: 'jm84storage'
   containerName: 'hazard'
   blobPath: 'self-contained'
-  applicationVersion: '1.0.0'
-  msbuildArgs: '/t:Publish /p:RuntimeIdentifier=win-x64 /p:SelfContained=true /p:PublishDir=$(publishPath) /p:PublishReadyToRun=true /p:PublishSingleFile=true /p:PublishProtocol=ClickOnce /p:GenerateManifests=true /p:InstallUrl=https://$(storageAccount).blob.core.windows.net/$(containerName)/$(blobPath)/ /p:BootstrapperEnabled=true /p:CreateWebPageOnPublish=true /p:WebPageFileName=Publish.html /p:Install=true /p:InstallFrom=Web /p:UpdateEnabled=true /p:UpdateMode=Foreground /p:MapFileExtensions=true /p:IsWebBootstrapper=true'
+
 steps:
 - task: UseDotNet@2
   inputs:
@@ -19,49 +25,35 @@ steps:
     version: '8.0.x'
     includePreviewVersions: false
 
-- script: dotnet nuget locals all --clear
-  displayName: 'Clear NuGet Cache'
+- task: NuGetToolInstaller@1
+
 - task: DotNetCoreCLI@2
-  displayName: 'Restore NuGet packages'
   inputs:
     command: 'restore'
-    projects: |
-      $(Build.SourcesDirectory)/Model/Model.csproj
-      $(Build.SourcesDirectory)/ViewModel/ViewModel.csproj
-      $(Build.SourcesDirectory)/View/View.csproj
+    projects: '**/*.csproj'
     feedsToUse: 'select'
-    arguments: '--runtime win-x64 --self-contained'
+    arguments: '--runtime win-x64'
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
-- task: MSBuild@1
-  displayName: 'Publish Model'
-  inputs:
-    solution: '$(Build.SourcesDirectory)/Model/Model.csproj'
-    configuration: '$(buildConfiguration)'
-    platform: 'Any CPU'
-    msbuildArguments: '$(msbuildArgs)'
 
-- task: MSBuild@1
-  displayName: 'Publish ViewModel'
+- task: VSBuild@1
   inputs:
-    solution: '$(Build.SourcesDirectory)/ViewModel/ViewModel.csproj'
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    platform: 'Any CPU'
-    msbuildArguments: '$(msbuildArgs)'
-
-- task: MSBuild@1
-  displayName: 'Publish View'
-  inputs:
-    solution: '$(Build.SourcesDirectory)/View/View.csproj'
-    configuration: '$(buildConfiguration)'
-    platform: 'Any CPU'
-    msbuildArguments: '$(msbuildArgs) /p:AssemblyName=Hazard'
+    msbuildArgs: '/t:restore;publish 
+      /p:PublishProfile=ClickOnce_SelfContained 
+      /p:Configuration=Release_SelfContained 
+      /p:PublishDir="$(publishPath)" 
+      /p:RuntimeIdentifier=win-x64 
+      /p:PublishProtocol=ClickOnce 
+      /p:GenerateManifests=true'
 
 - task: AzureCLI@2
   displayName: 'Azure CLI'
   inputs:
-    azureSubscription: 'JoshMcKnight Azure TopLevel'
+    azureSubscription: 'JoshMcKnight Azure TopLevel'  # Replace with your connection name
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
@@ -92,7 +84,6 @@ steps:
     ExcludeAzurePowershellCredential: true
     ExcludeAzureDeveloperCliCredential: true
     ExcludeInteractiveBrowserCredential: true
-
 - task: AzureFileCopy@5
   displayName: 'Copy to Azure Blob Storage'
   inputs:
