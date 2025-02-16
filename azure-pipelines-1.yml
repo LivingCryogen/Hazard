@@ -5,8 +5,6 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release_SelfContained'
   publishPath: '$(Build.ArtifactStagingDirectory)\publish'
   storageAccount: 'jm84storage'
@@ -18,6 +16,8 @@ variables:
     --runtime win-x64
     --self-contained true
     --output "$(publishPath)"
+    /p:SolutionDir=$(Build.SourcesDirectory)
+    /p:BuildProjectReferences=false
     /p:PublishReadyToRun=true
     /p:PublishSingleFile=true
     /p:PublishProtocol=ClickOnce
