@@ -84,12 +84,6 @@ steps:
     ExcludeAzurePowershellCredential: true
     ExcludeAzureDeveloperCliCredential: true
     ExcludeInteractiveBrowserCredential: true
-- task: AzureFileCopy@5
-  displayName: 'Copy to Azure Blob Storage'
-  inputs:
-    SourcePath: '$(publishPath)'
-    azureSubscription: 'JoshMcKnight Azure TopLevel'
-    Destination: 'AzureBlob'
-    storage: 'jm84storage'
-    ContainerName: 'hazard'
-    BlobPrefix: 'self-contained'
+- bash: |
+    azcopy cp '$(publishPath)' 'https://$(storageAccount).blob.core.windows.net/$(containerName)/$(blobPath)' --recursive
+  displayName: 'Azure Copy to Blob Storage'
