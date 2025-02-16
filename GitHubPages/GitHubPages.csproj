@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Configurations>Debug;Release;Release_FrameworkDependent;Release_SelfContained</Configurations>
+    <Configurations>Debug;Release;</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
