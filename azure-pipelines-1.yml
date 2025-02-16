@@ -38,7 +38,10 @@ steps:
   displayName: 'Publish Application'
   inputs:
     command: 'publish'
-    projects: '**/*.csproj'
+    projects: |
+      **/*.csproj
+      !**/GitHubPages.csproj
+      !**/HazardPublishSAS.csproj
     arguments: >
       --configuration $(buildConfiguration)
       --runtime win-x64
