@@ -11,26 +11,7 @@ variables:
   containerName: 'hazard'
   blobPath: 'self-contained'
   applicationVersion: '1.0.0'
-  msbuildArgs: |
-    /t:Publish 
-    /p:RuntimeIdentifier=win-x64 
-    /p:SelfContained=true 
-    /p:PublishDir=$(publishPath) 
-    /p:PublishReadyToRun=true 
-    /p:PublishSingleFile=true 
-    /p:PublishProtocol=ClickOnce 
-    /p:GenerateManifests=true 
-    /p:InstallUrl=https://$(storageAccount).blob.core.windows.net/$(containerName)/$(blobPath)/ 
-    /p:BootstrapperEnabled=true 
-    /p:CreateWebPageOnPublish=true 
-    /p:WebPageFileName=Publish.html 
-    /p:Install=true 
-    /p:InstallFrom=Web 
-    /p:UpdateEnabled=true 
-    /p:UpdateMode=Foreground 
-    /p:MapFileExtensions=true 
-    /p:IsWebBootstrapper=true
-
+  msbuildArgs: '/t:Publish /p:RuntimeIdentifier=win-x64 /p:SelfContained=true /p:PublishDir=$(publishPath) /p:PublishReadyToRun=true /p:PublishSingleFile=true /p:PublishProtocol=ClickOnce /p:GenerateManifests=true /p:InstallUrl=https://$(storageAccount).blob.core.windows.net/$(containerName)/$(blobPath)/ /p:BootstrapperEnabled=true /p:CreateWebPageOnPublish=true /p:WebPageFileName=Publish.html /p:Install=true /p:InstallFrom=Web /p:UpdateEnabled=true /p:UpdateMode=Foreground /p:MapFileExtensions=true /p:IsWebBootstrapper=true'
 steps:
 - task: UseDotNet@2
   inputs:
