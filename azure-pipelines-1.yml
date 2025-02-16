@@ -33,6 +33,7 @@ steps:
     projects: '**/*.csproj'
     feedsToUse: 'select'
     arguments: '--runtime win-x64'
+
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
@@ -42,29 +43,32 @@ steps:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    msbuildArgs: '/t:restore;publish 
-      /p:PublishProfile=ClickOnce_SelfContained 
-      /p:Configuration=Release_SelfContained 
-      /p:PublishDir="$(publishPath)" 
-      /p:RuntimeIdentifier=win-x64 
-      /p:PublishProtocol=ClickOnce 
+    msbuildArgs: '/t:restore;publish
+      /p:PublishProfile=ClickOnce_SelfContained
+      /p:Configuration=Release_SelfContained
+      /p:PublishDir="$(publishPath)"
+      /p:RuntimeIdentifier=win-x64
+      /p:PublishProtocol=ClickOnce
       /p:GenerateManifests=true'
 
 - task: AzureCLI@2
-  displayName: 'Azure CLI'
+  displayName: 'Azure CLI Setup'
   inputs:
     azureSubscription: 'JoshMcKnight Azure TopLevel'  # Replace with your connection name
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      echo "##vso[task.setvariable variable=ARM_CLIENT_ID;issecret=true]$servicePrincipalId" 
+      echo "##vso[task.setvariable variable=ARM_CLIENT_ID;issecret=true]$servicePrincipalId"
       echo "##vso[task.setvariable variable=ARM_ID_TOKEN;issecret=true]$idToken"
       echo "##vso[task.setvariable variable=ARM_TENANT_ID;issecret=true]$tenantId"
+      
+      # Perform single login that will be used for subsequent steps
+      az login --service-principal -u $servicePrincipalId --tenant $tenantId --allow-no-subscriptions --federated-token $idToken
+      
+      # Get and store the access token for storage operations
+      ACCESS_TOKEN=$(az account get-access-token --resource https://storage.azure.com/ --query accessToken --output tsv)
+      echo "##vso[task.setvariable variable=STORAGE_ACCESS_TOKEN;issecret=true]$ACCESS_TOKEN"
     addSpnToEnvironment: true
-
-- bash: |
-    az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
-  displayName: 'Azure Login'
 
 - task: TrustedSigning@0
   displayName: 'Sign with Trusted Signing'
@@ -84,9 +88,10 @@ steps:
     ExcludeAzurePowershellCredential: true
     ExcludeAzureDeveloperCliCredential: true
     ExcludeInteractiveBrowserCredential: true
+
 - bash: |
-    az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
-    ACCESS_TOKEN=$(az account get-access-token --resource https://storage.azure.com/ --query accessToken --output tsv)
-    azcopy login --oauth-token $ACCESS_TOKEN
+    # Use access token directly with azcopy
+    export AZCOPY_AUTO_LOGIN_TYPE=SPN
+    export AZCOPY_SPA_CLIENT_SECRET=$(STORAGE_ACCESS_TOKEN)
     azcopy cp '$(publishPath)' 'https://$(storageAccount).blob.core.windows.net/$(containerName)/$(blobPath)' --recursive
-  displayName: 'Azure Copy to Blob Storage'
+  displayName: 'Copy to Blob Storage'
