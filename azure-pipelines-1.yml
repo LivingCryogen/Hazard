@@ -19,6 +19,8 @@ steps:
     version: '8.0.x'
     includePreviewVersions: false
 
+- script: dotnet nuget locals all --clear
+  displayName: 'Clear NuGet Cache'
 - task: DotNetCoreCLI@2
   displayName: 'Restore NuGet packages'
   inputs:
@@ -28,7 +30,7 @@ steps:
       $(Build.SourcesDirectory)/ViewModel/ViewModel.csproj
       $(Build.SourcesDirectory)/View/View.csproj
     feedsToUse: 'select'
-    arguments: '--runtime win-x64'
+    arguments: '--runtime win-x64 --self-contained'
 
 - task: MSBuild@1
   displayName: 'Publish Model'
