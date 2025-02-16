@@ -1,8 +1,3 @@
-# .NET Desktop
-# Build and run tests for .NET Desktop or Windows classic desktop solutions.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
-
 trigger:
 - main
 
@@ -52,9 +47,9 @@ steps:
       /p:GenerateManifests=true'
 
 - task: AzureCLI@2
-  displayName: 'Azure CLI Setup'
+  displayName: 'Azure CLI Setup for Signing'
   inputs:
-    azureSubscription: 'JoshMcKnight Azure TopLevel'  # Replace with your connection name
+    azureSubscription: 'JoshMcKnight Azure TopLevel'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
@@ -62,12 +57,8 @@ steps:
       echo "##vso[task.setvariable variable=ARM_ID_TOKEN;issecret=true]$idToken"
       echo "##vso[task.setvariable variable=ARM_TENANT_ID;issecret=true]$tenantId"
       
-      # Perform single login that will be used for subsequent steps
+      # Login for signing
       az login --service-principal -u $servicePrincipalId --tenant $tenantId --allow-no-subscriptions --federated-token $idToken
-      
-      # Get and store the access token for storage operations
-      ACCESS_TOKEN=$(az account get-access-token --resource https://storage.azure.com/ --query accessToken --output tsv)
-      echo "##vso[task.setvariable variable=STORAGE_ACCESS_TOKEN;issecret=true]$ACCESS_TOKEN"
     addSpnToEnvironment: true
 
 - task: TrustedSigning@0
@@ -89,9 +80,18 @@ steps:
     ExcludeAzureDeveloperCliCredential: true
     ExcludeInteractiveBrowserCredential: true
 
-- bash: |
-    # Use access token directly with azcopy
-    export AZCOPY_AUTO_LOGIN_TYPE=SPN
-    export AZCOPY_SPA_CLIENT_SECRET=$(STORAGE_ACCESS_TOKEN)
-    azcopy cp '$(publishPath)' 'https://$(storageAccount).blob.core.windows.net/$(containerName)/$(blobPath)' --recursive
+- task: AzureCLI@2
   displayName: 'Copy to Blob Storage'
+  inputs:
+    azureSubscription: 'JoshMcKnight Azure TopLevel'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      # Get storage-specific access token
+      ACCESS_TOKEN=$(az account get-access-token --resource https://storage.azure.com/ --query accessToken --output tsv)
+      
+      # Use the token with azcopy
+      export AZCOPY_AUTO_LOGIN_TYPE=SPN
+      export AZCOPY_SPA_CLIENT_SECRET=$ACCESS_TOKEN
+      
+      azcopy cp '$(publishPath)' 'https://$(storageAccount).blob.core.windows.net/$(containerName)/$(blobPath)' --recursive
