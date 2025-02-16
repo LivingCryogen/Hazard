@@ -81,15 +81,16 @@ steps:
     ExcludeAzureDeveloperCliCredential: true
     ExcludeInteractiveBrowserCredential: true
 
-- bash: |
+- powershell: |
     # Download and install AzCopy
-    wget https://aka.ms/downloadazcopy-v10-windows -O azcopy.zip
-    unzip azcopy.zip
-    cp ./azcopy_windows_amd64_*/azcopy.exe .
+    $ProgressPreference = 'SilentlyContinue'
+    Invoke-WebRequest -Uri "https://aka.ms/downloadazcopy-v10-windows" -OutFile "azcopy.zip"
+    Expand-Archive "azcopy.zip" -DestinationPath "."
+    $azcopyPath = Get-ChildItem -Path "." -Recurse -Filter "azcopy.exe" | Select-Object -First 1 -ExpandProperty FullName
     
     # Use connection string with AzCopy
-    export AZCOPY_AZURE_STORAGE_CONNECTION_STRING="$(StorageConnectionString)"
+    $env:AZCOPY_AZURE_STORAGE_CONNECTION_STRING="$(StorageConnectionString)"
     
     # Perform the copy using local AzCopy
-    ./azcopy.exe cp "$(publishPath)" "https://$(storageAccount).blob.core.windows.net/$(containerName)/$(blobPath)" --recursive
+    & $azcopyPath cp "$(publishPath)" "https://$(storageAccount).blob.core.windows.net/$(containerName)/$(blobPath)" --recursive
   displayName: 'Copy to Blob Storage'
