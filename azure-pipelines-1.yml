@@ -88,14 +88,10 @@ steps:
     scriptType: 'pscore'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      # First get a storage-specific token
-      $storageToken = $(az account get-access-token --resource https://storage.azure.com/ --query accessToken -o tsv)
-      
-      # Upload using the storage token
+      # Upload using the service principal auth
       az storage blob upload-batch `
         --source "$(publishPath)" `
         --destination "$(containerName)" `
         --destination-path "$(blobPath)" `
         --account-name "$(storageAccount)" `
-        --auth-mode login `
-        --sas-token $storageToken
+        --auth-mode login
