@@ -31,7 +31,12 @@ steps:
       $(Build.SourcesDirectory)/View/View.csproj
     feedsToUse: 'select'
     arguments: '--runtime win-x64 --self-contained'
-
+- task: DotNetCoreCLI@2
+  displayName: 'Install Runtime Pack'
+  inputs:
+    command: 'custom'
+    projects: '$(Build.SourcesDirectory)/Model/Model.csproj'
+    arguments: 'add package Microsoft.NETCore.App.Runtime.win-x64'
 - task: MSBuild@1
   displayName: 'Publish Model'
   inputs:
