@@ -11,13 +11,11 @@ variables:
   containerName: 'hazard'
   blobPath: 'self-contained'
   applicationVersion: '1.0.0'
-  publishArgs: >
-    --configuration $(buildConfiguration)
-    --runtime win-x64
-    --self-contained true
-    --output "$(publishPath)"
-    /p:SolutionDir=$(Build.SourcesDirectory)
-    /p:BuildProjectReferences=false
+  msbuildArgs: >
+    /t:Publish 
+    /p:RuntimeIdentifier=win-x64
+    /p:SelfContained=true
+    /p:PublishDir="$(publishPath)"
     /p:PublishReadyToRun=true
     /p:PublishSingleFile=true
     /p:PublishProtocol=ClickOnce
@@ -51,27 +49,30 @@ steps:
     feedsToUse: 'select'
     arguments: '--runtime win-x64'
 
-- task: DotNetCoreCLI@2
+- task: MSBuild@1
   displayName: 'Publish Model'
   inputs:
-    command: 'publish'
-    projects: '$(Build.SourcesDirectory)/Model/Model.csproj'
-    arguments: $(publishArgs)
+    solution: '$(Build.SourcesDirectory)/Model/Model.csproj'
+    configuration: '$(buildConfiguration)'
+    platform: 'Any CPU'
+    msbuildArguments: $(msbuildArgs)
 
-- task: DotNetCoreCLI@2
+- task: MSBuild@1
   displayName: 'Publish ViewModel'
   inputs:
-    command: 'publish'
-    projects: '$(Build.SourcesDirectory)/ViewModel/ViewModel.csproj'
-    arguments: $(publishArgs)
+    solution: '$(Build.SourcesDirectory)/ViewModel/ViewModel.csproj'
+    configuration: '$(buildConfiguration)'
+    platform: 'Any CPU'
+    msbuildArguments: $(msbuildArgs)
 
-- task: DotNetCoreCLI@2
+- task: MSBuild@1
   displayName: 'Publish View'
   inputs:
-    command: 'publish'
-    projects: '$(Build.SourcesDirectory)/View/View.csproj'
-    arguments: >
-      $(publishArgs)
+    solution: '$(Build.SourcesDirectory)/View/View.csproj'
+    configuration: '$(buildConfiguration)'
+    platform: 'Any CPU'
+    msbuildArguments: >
+      $(msbuildArgs)
       /p:AssemblyName=Hazard
 
 - task: AzureCLI@2
