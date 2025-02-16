@@ -81,21 +81,10 @@ steps:
     ExcludeAzureDeveloperCliCredential: true
     ExcludeInteractiveBrowserCredential: true
 
-- task: AzureCLI@2
+- bash: |
+    # Use connection string directly with azcopy
+    export AZCOPY_AZURE_STORAGE_CONNECTION_STRING="$(jm84storageConnectionString)"
+    
+    # Perform the copy
+    azcopy cp "$(publishPath)" "https://$(storageAccount).blob.core.windows.net/$(containerName)/$(blobPath)" --recursive
   displayName: 'Copy to Blob Storage'
-  inputs:
-    azureSubscription: 'JoshMcKnight Azure TopLevel'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      # Login to Azure (this uses the service connection's credentials)
-      az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
-      
-      # Get storage account key
-      STORAGE_KEY=$(az storage account keys list --account-name $(storageAccount) --query '[0].value' -o tsv)
-      
-      # Use storage key directly with azcopy
-      export AZCOPY_AZURE_STORAGE_KEY="$STORAGE_KEY"
-      
-      # Perform the copy
-      azcopy cp "$(publishPath)" "https://$(storageAccount).blob.core.windows.net/$(containerName)/$(blobPath)" --recursive
