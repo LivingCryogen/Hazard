@@ -45,9 +45,9 @@ steps:
   inputs:
     command: 'restore'
     projects: |
-      **/Model.csproj
-      **/ViewModel.csproj
-      **/View.csproj
+      $(Build.SourcesDirectory)/Model/Model.csproj
+      $(Build.SourcesDirectory)/ViewModel/ViewModel.csproj
+      $(Build.SourcesDirectory)/View/View.csproj
     feedsToUse: 'select'
     arguments: '--runtime win-x64'
 
@@ -55,21 +55,21 @@ steps:
   displayName: 'Publish Model'
   inputs:
     command: 'publish'
-    projects: '**/Model.csproj'
+    projects: '$(Build.SourcesDirectory)/Model/Model.csproj'
     arguments: $(publishArgs)
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish ViewModel'
   inputs:
     command: 'publish'
-    projects: '**/ViewModel.csproj'
+    projects: '$(Build.SourcesDirectory)/ViewModel/ViewModel.csproj'
     arguments: $(publishArgs)
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish View'
   inputs:
     command: 'publish'
-    projects: '**/View.csproj'
+    projects: '$(Build.SourcesDirectory)/View/View.csproj'
     arguments: >
       $(publishArgs)
       /p:AssemblyName=Hazard
