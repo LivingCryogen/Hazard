@@ -82,3 +82,18 @@ steps:
     ExcludeAzurePowershellCredential: true
     ExcludeAzureDeveloperCliCredential: true
     ExcludeInteractiveBrowserCredential: true
+
+- task: AzureCLI@2
+  displayName: 'Copy to Blob Storage'
+  inputs:
+    azureSubscription: 'JoshMcKnight Azure TopLevel'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      # Upload using the service principal auth
+      az storage blob upload-batch `
+        --source "$(publishPath)" `
+        --destination "$(containerName)" `
+        --destination-path "$(blobPath)" `
+        --account-name "$(storageAccount)" `
+        --auth-mode login
