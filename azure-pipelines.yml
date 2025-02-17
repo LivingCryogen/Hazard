@@ -1,8 +1,3 @@
-# .NET Desktop
-# Build and run tests for .NET Desktop or Windows classic desktop solutions.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
-
 trigger:
 - main
 
@@ -33,6 +28,7 @@ steps:
     projects: '**/*.csproj'
     feedsToUse: 'select'
     arguments: '--runtime win-x64'
+
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
@@ -42,22 +38,22 @@ steps:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    msbuildArgs: '/t:restore;publish 
-      /p:PublishProfile=ClickOnce_SelfContained 
-      /p:Configuration=Release_SelfContained 
-      /p:PublishDir="$(publishPath)" 
-      /p:RuntimeIdentifier=win-x64 
-      /p:PublishProtocol=ClickOnce 
+    msbuildArgs: '/t:restore;publish
+      /p:PublishProfile=ClickOnce_SelfContained
+      /p:Configuration=Release_SelfContained
+      /p:PublishDir="$(publishPath)"
+      /p:RuntimeIdentifier=win-x64
+      /p:PublishProtocol=ClickOnce
       /p:GenerateManifests=true'
 
 - task: AzureCLI@2
   displayName: 'Azure CLI'
   inputs:
-    azureSubscription: 'JoshMcKnight Azure TopLevel'  # Replace with your connection name
+    azureSubscription: 'JoshMcKnight Azure TopLevel'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      echo "##vso[task.setvariable variable=ARM_CLIENT_ID;issecret=true]$servicePrincipalId" 
+      echo "##vso[task.setvariable variable=ARM_CLIENT_ID;issecret=true]$servicePrincipalId"
       echo "##vso[task.setvariable variable=ARM_ID_TOKEN;issecret=true]$idToken"
       echo "##vso[task.setvariable variable=ARM_TENANT_ID;issecret=true]$tenantId"
     addSpnToEnvironment: true
@@ -84,3 +80,18 @@ steps:
     ExcludeAzurePowershellCredential: true
     ExcludeAzureDeveloperCliCredential: true
     ExcludeInteractiveBrowserCredential: true
+
+- task: AzureCLI@2
+  displayName: 'Copy to Blob Storage'
+  inputs:
+    azureSubscription: 'JoshMcKnight Azure TopLevel'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      # Upload using the service principal auth
+      az storage blob upload-batch `
+        --source "$(publishPath)" `
+        --destination "$(containerName)" `
+        --destination-path "$(blobPath)" `
+        --account-name "$(storageAccount)" `
+        --auth-mode login
