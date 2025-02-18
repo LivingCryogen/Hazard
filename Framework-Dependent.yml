@@ -91,9 +91,10 @@ steps:
         --destination-path "$(blobPath)" `
         --account-name "$(storageAccount)" `
         --auth-mode login
+        --overwrite true
       # Set content types for different file extensions
-      az storage blob update --container-name "$(containerName)" --name "$(blobPath)/*.application" --content-type "application/x-ms-application" --account-name "$(storageAccount)" --auth-mode login --overwrite
-      az storage blob update --container-name "$(containerName)" --name "$(blobPath)/*.manifest" --content-type "application/x-ms-manifest" --account-name "$(storageAccount)" --auth-mode login --overwrite
-      az storage blob update --container-name "$(containerName)" --name "$(blobPath)/*.deploy" --content-type "application/octet-stream" --account-name "$(storageAccount)" --auth-mode login --overwrite
-      az storage blob update --container-name "$(containerName)" --name "$(blobPath)/*.dll.deploy" --content-type "application/x-msdownload" --account-name "$(storageAccount)" --auth-mode login --overwrite
-      az storage blob update --container-name "$(containerName)" --name "$(blobPath)/*.exe.deploy" --content-type "application/x-msdownload" --account-name "$(storageAccount)" --auth-mode login --overwrite
+      az storage blob update --container-name "$(containerName)" --name "$(blobPath)/*.application" --content-type "application/x-ms-application" --account-name "$(storageAccount)" --auth-mode login
+      az storage blob update --container-name "$(containerName)" --name "$(blobPath)/*.manifest" --content-type "application/x-ms-manifest" --account-name "$(storageAccount)" --auth-mode login
+      az storage blob update --container-name "$(containerName)" --name "$(blobPath)/*.deploy" --content-type "application/octet-stream" --account-name "$(storageAccount)" --auth-mode login
+      az storage blob update --container-name "$(containerName)" --name "$(blobPath)/*.dll.deploy" --content-type "application/x-msdownload" --account-name "$(storageAccount)" --auth-mode login
+      az storage blob update --container-name "$(containerName)" --name "$(blobPath)/*.exe.deploy" --content-type "application/x-msdownload" --account-name "$(storageAccount)" --auth-mode login
