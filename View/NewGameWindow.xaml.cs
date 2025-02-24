@@ -98,7 +98,7 @@ public partial class NewGameWindow : Window
     }
     private void PlayerColorBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (sender is not ComboBox box) 
+        if (sender is not ComboBox box)
             return;
         if (e.AddedItems == null || e.AddedItems.Count <= 0)
             return;
@@ -112,7 +112,7 @@ public partial class NewGameWindow : Window
 
         RemoveFromOthers(pair, boxIndex);
 
-        if (e.RemovedItems.Count > 0) 
+        if (e.RemovedItems.Count > 0)
             AddToOthers(pair, boxIndex);
     }
     private void PlayerColorBox_DropDownOpened(object sender, EventArgs e)
@@ -155,7 +155,7 @@ public partial class NewGameWindow : Window
         foreach (object obj in grid.Children) {
             if (obj is not WrapPanel panel)
                 continue;
-            if (panel.Name != "" && panel.Name != "NumPlayersWrap") 
+            if (panel.Name != "" && panel.Name != "NumPlayersWrap")
                 returnList.Add(panel);
         }
 
@@ -166,7 +166,7 @@ public partial class NewGameWindow : Window
         for (int i = 0; i < 6; i++) {
             if (i == boxIndex)
                 continue;
-            if (ColorsRemaining[i].Contains(colorInfo)) 
+            if (ColorsRemaining[i].Contains(colorInfo))
                 ColorsRemaining[i].Remove(colorInfo);
         }
     }

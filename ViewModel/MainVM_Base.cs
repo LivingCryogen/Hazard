@@ -44,6 +44,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     }
 
     #region Properties
+    public required string AppPath { get; set; }
     public IGame? CurrentGame { get; set; }
     public IRegulator? Regulator { get; set; }
     /// <inheritdoc cref="IMainVM.CurrentPhase"/>

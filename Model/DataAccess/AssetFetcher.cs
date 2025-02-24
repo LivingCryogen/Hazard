@@ -1,16 +1,19 @@
-﻿using Shared.Geography;
+﻿using Microsoft.Extensions.Options;
+using Shared.Geography;
 using Shared.Interfaces.Model;
+using Shared.Services.Options;
 
 namespace Model.DataAccess;
 
 /// <inheritdoc cref="IAssetFetcher"/>
-public class AssetFetcher(IAssetFactory factory) : IAssetFetcher
+public class AssetFetcher(IAssetFactory factory, IOptions<AppConfig> options) : IAssetFetcher
 {
     private readonly IAssetFactory _factory = factory;
+    private readonly string _appPath = options.Value.AppPath;
 
-    private static string[] FindFilesContaining(string text)
+    private static string[] FindFilesContaining(string rootPath, string text)
     {
-        string assetDirectory = Path.Combine(Environment.CurrentDirectory, "Assets");
+        string assetDirectory = Path.Combine(rootPath, "Assets");
 
         var searchDirectories = Directory.GetDirectories(assetDirectory).Append(assetDirectory);
         List<string> fileNames = [];
@@ -32,7 +35,7 @@ public class AssetFetcher(IAssetFactory factory) : IAssetFetcher
     public List<ICardSet> FetchCardSets()
     {
         List<ICardSet> cardSets = [];
-        string[] filePaths = FindFilesContaining("CardSet"); // hard-coded here, may want to change at some point
+        string[] filePaths = FindFilesContaining(_appPath, "CardSet"); // hard-coded here, may want to change at some point
         foreach (string path in filePaths) {
             string fileName = Path.GetFileNameWithoutExtension(path);
             string typeName = fileName.Replace("Set", "");

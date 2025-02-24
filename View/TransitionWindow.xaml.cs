@@ -46,11 +46,11 @@ namespace View
             if (sender == null)
                 return;
             _secondsLeft -= 1;
-            
+
             if (_countdownBlock != null)
                 _countdownBlock.Text = _secondsLeft.ToString();
             CommandManager.InvalidateRequerySuggested();
-            
+
             if (_secondsLeft <= 0) {
                 ((DispatcherTimer)sender).Stop();
                 Close();

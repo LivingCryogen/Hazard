@@ -12,7 +12,7 @@ public partial class TerritoryChoice : Window
 {
     public TerritoryChoice()
     {
-        InitializeComponent(); 
+        InitializeComponent();
     }
     public TerritoryChoice(ValueTuple<int, string>[] territoryData, SolidColorBrush ownerColor, IMainVM vM)
     {

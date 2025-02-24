@@ -42,6 +42,13 @@ public interface IMainVM : IBinarySerializable
     /// </remarks>
     ReadOnlyDictionary<ContID, string> ContNameMap { get; }
     /// <summary>
+    /// Gets or sets the Path to the directory of the Application.
+    /// </summary>
+    /// <remarks>
+    /// Provided by the Dependency Injection system via <see cref="Microsoft.Extensions.Options"/>.
+    /// </remarks>
+    string AppPath { get; set; }
+    /// <summary>
     /// Gets or sets a flag indicating whether the attack command should be enabled.
     /// </summary>
     /// <value>

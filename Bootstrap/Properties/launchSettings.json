@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "View": {
+    "Bootstrap": {
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

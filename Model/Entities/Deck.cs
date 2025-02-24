@@ -47,10 +47,10 @@ public class Deck
     /// <inheritdoc cref="Deck(ICard[])"/>
     public Deck(ICardSet[] cardSets)
     {
-        Library = 
-            [.. 
-                cardSets?.SelectMany(item => 
-                    (item?.Cards ?? Enumerable.Empty<ICard>())) 
+        Library =
+            [..
+                cardSets?.SelectMany(item =>
+                    (item?.Cards ?? Enumerable.Empty<ICard>()))
                 ??
                 []
             ];

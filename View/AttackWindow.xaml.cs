@@ -436,8 +436,11 @@ public partial class AttackWindow : Window
 
     private static void PlayDiceSound(SpinType spinType)
     {
+        string spinAudioFile = spinType.ToString() + ".wav";
+        Uri spinAudioUri = new ($"pack://application:,,,/View;component/Audio/{spinAudioFile}", UriKind.Absolute);
+
         MediaPlayer dicePlayer = new();
-        dicePlayer.Open(new(spinType.ToString() + ".wav", UriKind.Relative));
+        dicePlayer.Open(spinAudioUri);
         dicePlayer.Volume = .5;
         dicePlayer.Play();
     }

@@ -2,6 +2,7 @@
 using Shared.Interfaces.Model;
 using System.Collections;
 using System.Text;
+using System.IO;
 
 namespace Shared.Services.Serializer;
 

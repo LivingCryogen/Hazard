@@ -1,4 +1,5 @@
 ﻿using Shared.Services.Serializer;
+using System.IO;
 
 namespace Shared.Interfaces.Model;
 /// <summary>

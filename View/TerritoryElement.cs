@@ -123,7 +123,7 @@ class TerritoryElement : ButtonBase
     private protected static Point FindSimpleStationPosition(Rect bounds, Geometry terrGeo, Size size)
     {
         Point testPoint = new(
-            bounds.Left + bounds.Width / 2, 
+            bounds.Left + bounds.Width / 2,
             bounds.Top + bounds.Height / 2);
         Point testPoint2 = GetOppositeVertexPoint(testPoint, size);
         if (GeometryFillContainsPoints(terrGeo, [testPoint, testPoint2]))
@@ -144,44 +144,44 @@ class TerritoryElement : ButtonBase
             return testPoint;
 
         testPoint = new(
-            bounds.Left + 2 * (bounds.Width / 3), 
+            bounds.Left + 2 * (bounds.Width / 3),
             bounds.Top + bounds.Height / 3);
         testPoint2 = GetOppositeVertexPoint(testPoint, size);
         if (GeometryFillContainsPoints(terrGeo, [testPoint, testPoint2]))
             return testPoint;
 
         testPoint = new(
-            bounds.Left + 2 * (bounds.Width / 3), 
+            bounds.Left + 2 * (bounds.Width / 3),
             bounds.Top + 2 * (bounds.Height / 3));
         testPoint2 = GetOppositeVertexPoint(testPoint, size);
         if (GeometryFillContainsPoints(terrGeo, [testPoint, testPoint2]))
             return testPoint;
 
         testPoint = new(
-            bounds.Left + bounds.Width / 3, 
+            bounds.Left + bounds.Width / 3,
             bounds.Top + bounds.Height / 2);
         testPoint2 = GetOppositeVertexPoint(testPoint, size);
         if (GeometryFillContainsPoints(terrGeo, [testPoint, testPoint2]))
             return testPoint;
 
         testPoint = new(
-            bounds.Left + 2 * (bounds.Width / 3), 
+            bounds.Left + 2 * (bounds.Width / 3),
             bounds.Top + bounds.Height / 2);
         testPoint2 = GetOppositeVertexPoint(testPoint, size);
         if (GeometryFillContainsPoints(terrGeo, [testPoint, testPoint2]))
             return testPoint;
 
         testPoint = new(
-            bounds.Left + bounds.Width / 2, 
+            bounds.Left + bounds.Width / 2,
             bounds.Top + bounds.Height / 2);
-        testPoint2 = new (
+        testPoint2 = new(
             testPoint.Y,
             testPoint.X + size.Width);
         if (GeometryFillContainsPoints(terrGeo, [testPoint, testPoint2]))
             return testPoint;
 
         return new(
-            bounds.Left + bounds.Width / 2, 
+            bounds.Left + bounds.Width / 2,
             bounds.Top + bounds.Height / 2);
     }
     private static Point GetOppositeVertexPoint(Point origin, Size size)
