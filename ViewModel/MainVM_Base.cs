@@ -38,7 +38,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         Territories = [];
         PlayerDetails = [];
         ContinentBonuses = [];
-        foreach (var ID in Enum.GetValues(typeof(ContID)))
+        for (int i = 0; i < Enum.GetValues(typeof(ContID)).Length; i++)
             ContinentBonuses.Add(0);
         ContNameMap = MakeContIDDisplayNameMap();
     }

@@ -3,13 +3,14 @@ using Microsoft.Extensions.Logging;
 using Shared.Interfaces.View;
 using Shared.Interfaces.ViewModel;
 using System.Windows;
+using View;
 
-namespace View.Services;
+namespace Bootstrap;
 
-public class BootStrapper(App mainApp, ILogger<BootStrapper> logger) : IBootStrapperService
+public class BootStrapper(ILogger<BootStrapper> logger) : IBootStrapperService
 {
-    private readonly App _mainApp = mainApp;
     private readonly ILogger _logger = logger;
+    private readonly App _mainApp = (App)Application.Current;
 
     public string SaveFileName { get; set; } = string.Empty;
 

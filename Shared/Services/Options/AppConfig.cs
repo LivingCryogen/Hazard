@@ -8,7 +8,14 @@ public class AppConfig
     /// Gets or sets the path of the current running Application's root folder.
     /// </summary>
     /// <remarks>
-    /// In developer mode, is should be set to <see cref="Environment.CurrentDirectory"/>; in production, the package manager (since containerized).
+    /// In developer mode, it should be set by <see cref="Path.GetDirectoryName(string?)"/> of <see cref="System.Reflection.Assembly.GetExecutingAssembly"/>; in production, to the MSIX package installation path (since containerized).
     /// </remarks>
     public string AppPath { get; set; } = string.Empty;
+    /// <summary>
+    /// Gets or sets the path of the save file associated with the running Application.
+    /// </summary>
+    /// <value>
+    /// The application's current save file path; if a game has not been loaded or saved yet, <see cref="string.Empty"/>.
+    /// </value>
+    public string SaveFileName { get; set; } = string.Empty;
 }

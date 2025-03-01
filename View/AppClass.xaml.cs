@@ -14,6 +14,7 @@ namespace View;
 public partial class App(IHost host, bool devMode, string installPath, string[] dataFileNames) : Application
 {
     public IHost Host { get; init; } = host;
+    private readonly IBootStrapperService _bootService = host.Services.GetRequiredService<IBootStrapperService>();
     public bool DevMode { get; init; } = devMode;
     public string InstallPath { get; init; } = installPath;
     public string[] DataFileNames { get; init; } = dataFileNames;
@@ -22,15 +23,10 @@ public partial class App(IHost host, bool devMode, string installPath, string[] 
     {
         base.OnStartup(e);
 
-        /// Static class logger initiatialization
-        var loggerFactory = Host.Services.GetRequiredService<ILoggerFactory>();
-        BinarySerializer.InitializeLogger(loggerFactory);
-
         /// Unhandled Exception catcher for production
         DispatcherUnhandledException += OnDispatcherUnhandledException;
 
-        var bootStrapper = Host.Services.GetRequiredService<IBootStrapperService>();
-        bootStrapper.InitializeGame();
+        _bootService.InitializeGame();
     }
     protected void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {

@@ -13,8 +13,10 @@ using Shared.Interfaces.View;
 using Shared.Interfaces.ViewModel;
 using Shared.Services.Options;
 using Shared.Services.Registry;
+using Shared.Services.Serializer;
 using System.IO;
 using System.Runtime.Versioning;
+using System.Windows;
 using View;
 using View.Services;
 using ViewModel;
@@ -31,13 +33,13 @@ namespace Bootstrap
         {
             string environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
             bool devMode = environmentName == Environments.Development;
-                
+
             string appPath = DetermineAppPath();
 
             var appHost = BuildAppHost(devMode, environmentName, appPath, out string[] dataFileNames);
-
+            InitializeStaticLoggers(appHost);
             var app = new App(appHost, devMode, appPath, dataFileNames);
-
+            app.InitializeComponent();
             app.Run();
         }
 
@@ -93,11 +95,11 @@ namespace Bootstrap
                 });
                 services.AddTransient<IAssetFetcher, AssetFetcher>();
                 services.AddTransient<IAssetFactory, AssetFactory>();
-                //services.AddSingleton<IBootStrapperService>(serviceProvider =>
-                //{
-                //    var logger = serviceProvider.GetRequiredService<ILogger<BootStrapper>>();
-                //    return new BootStrapper(this, logger);
-                //});
+                services.AddSingleton<IBootStrapperService>(serviceProvider =>
+                {
+                    var logger = serviceProvider.GetRequiredService<ILogger<BootStrapper>>();
+                    return new BootStrapper(logger);
+                });
                 services.AddTransient<IGameService, ViewModel.Services.GameService>();
                 services.AddTransient<ITerritoryChangedEventArgs, TerritoryChangedEventArgs>();
                 services.AddTransient<IContinentOwnerChangedEventArgs, ContinentOwnerChangedEventArgs>();
@@ -120,6 +122,13 @@ namespace Bootstrap
                 dataFileNames = [];
 
             return builtHost;
+        }
+        private static protected void InitializeStaticLoggers(IHost host)
+        {
+            var loggerFactory = host.Services.GetRequiredService<ILoggerFactory>();
+            BinarySerializer.InitializeLogger(loggerFactory);
+
+            // More here if/when needed....
         }
     }
 }
