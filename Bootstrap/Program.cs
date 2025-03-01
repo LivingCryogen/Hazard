@@ -28,6 +28,8 @@ namespace Bootstrap
 {
     public class Program
     {
+        public static BootStrapper? BootService { get; private set; } = null;
+
         [STAThread]
         static void Main()
         {
@@ -37,11 +39,16 @@ namespace Bootstrap
             string appPath = DetermineAppPath();
 
             var appHost = BuildAppHost(devMode, environmentName, appPath, out string[] dataFileNames);
+            BootService = (BootStrapper)appHost.Services.GetRequiredService<IBootStrapperService>();
             InitializeStaticLoggers(appHost);
             var app = new App(appHost, devMode, appPath, dataFileNames);
+            BootService.MainApp = app;
             app.InitializeComponent();
             app.Run();
+
+            appHost.Dispose();
         }
+
 
         public static string DetermineAppPath()
         {
@@ -89,7 +96,7 @@ namespace Bootstrap
                 services.AddSingleton<ITypeRegister<ITypeRelations>, TypeRegister>();
                 services.AddSingleton<IDataProvider>(serviceProvider =>
                 {
-                    return new Model.DataAccess.DataProvider(configuredDataFileNames ?? [],
+                    return new DataProvider(configuredDataFileNames ?? [],
                         serviceProvider.GetRequiredService<ITypeRegister<ITypeRelations>>(),
                         serviceProvider.GetRequiredService<ILogger<DataProvider>>());
                 });

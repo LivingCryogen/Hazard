@@ -37,7 +37,7 @@ public class TroopCard : ITroopCard
     /// <remarks>
     /// <see cref="ICardSet.MemberTypeName"/> of the parent should be equal to "TroopCard".
     /// </remarks>
-    public string ParentTypeName { get; private set; } = string.Empty;
+    public string ParentTypeName { get; private set; } = nameof(TroopCardSet);
     /// <summary>
     /// Gets or sets the parent collection containing this <see cref="TroopCard"/> in its <see cref="ICardSet.Cards"/> list.
     /// </summary>
