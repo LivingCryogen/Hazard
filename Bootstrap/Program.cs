@@ -38,15 +38,13 @@ namespace Bootstrap
 
             string appPath = DetermineAppPath();
 
-            var appHost = BuildAppHost(devMode, environmentName, appPath, out string[] dataFileNames);
+            using var appHost = BuildAppHost(devMode, environmentName, appPath, out string[] dataFileNames);
             BootService = (BootStrapper)appHost.Services.GetRequiredService<IBootStrapperService>();
             InitializeStaticLoggers(appHost);
             var app = new App(appHost, devMode, appPath, dataFileNames);
             BootService.MainApp = app;
             app.InitializeComponent();
             app.Run();
-
-            appHost.Dispose();
         }
 
 
