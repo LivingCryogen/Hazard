@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Shared.Interfaces.View;
+using Shared.Services.Options;
 using Shared.Services.Serializer;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -11,13 +14,13 @@ namespace View;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App(IHost host, bool devMode, string installPath, string[] dataFileNames) : Application
+public partial class App(IHost host, bool devMode, IOptions<AppConfig> appConfig) : Application
 {
     public IHost Host { get; init; } = host;
     private readonly IBootStrapperService _bootService = host.Services.GetRequiredService<IBootStrapperService>();
     public bool DevMode { get; init; } = devMode;
-    public string InstallPath { get; init; } = installPath;
-    public string[] DataFileNames { get; init; } = dataFileNames;
+    public string InstallPath { get; init; } = appConfig.Value.AppPath;
+    public ReadOnlyDictionary<string,string> DataFileMap { get; } = new(appConfig.Value.DataFileMap);
 
     protected override void OnStartup(StartupEventArgs e)
     {

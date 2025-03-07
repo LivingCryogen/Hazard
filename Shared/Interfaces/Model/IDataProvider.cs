@@ -1,4 +1,5 @@
 ﻿using Shared.Services.Registry;
+using System.Collections.ObjectModel;
 
 namespace Shared.Interfaces.Model;
 /// <summary>
@@ -12,13 +13,13 @@ namespace Shared.Interfaces.Model;
 public interface IDataProvider
 {
     /// <summary>
-    /// Gets the names of data files needed for asset generation.
+    /// Gets a map of the names and paths of data files needed for asset generation.
     /// </summary>
     /// <value>
     /// The names of data files as listed by 'appsettings.json.' 
     /// </value>
     /// <remarks>Retrieved during 'AppHost' building and injected via DI.</remarks>
-    string[] DataFileNames { get; }
+    ReadOnlyDictionary<string, string> DataFileMap { get; }
     /// <summary>
     /// Attempts to get data from source files needed to instantiate keyed <see cref="Type"/>s in the <see cref="TypeRegister"/>.<br/>
     /// </summary>

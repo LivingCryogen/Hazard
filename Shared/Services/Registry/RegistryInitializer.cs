@@ -4,6 +4,7 @@ using Model.DataAccess.Cards;
 using Model.Entities.Cards;
 using Shared.Geography;
 using Shared.Interfaces.Model;
+using Shared.Services.Options;
 using System.Text.Json.Serialization;
 
 namespace Shared.Services.Registry;
@@ -11,9 +12,9 @@ namespace Shared.Services.Registry;
 /** <inheritdoc cref="IRegistryInitializer"/>
  * <see cref="CardRegistryRecord"/> and <see cref="CardSetRegistryRecord"/> provides a stable pattern for adding more <see cref="ICard"/> types in the future.
  * For now we work only with the default, base set of <see cref="ICard"/>s implemented by <see cref="TroopCard"/> and <see cref="TroopCardSet"/>.*/
-public class RegistryInitializer : IRegistryInitializer
+public class RegistryInitializer(IOptions<AppConfig> options) : IRegistryInitializer
 {
-    private readonly string _appPath;
+    private string _geographyFilePath = options.Value.DataFileMap[nameof(BoardGeography) + ".json"];
 
     private struct CardRegistryRecord
     {
@@ -33,35 +34,27 @@ public class RegistryInitializer : IRegistryInitializer
         public Type ConvertedDataType;
     }
 
-    private readonly CardRegistryRecord[] _cardTypeRegistryRecords;
-    private readonly CardSetRegistryRecord[] _cardSetTypeRegistryRecords;
-
-    public RegistryInitializer(IOptions<Options.AppConfig> options)
-    {
-        _appPath = options.Value.AppPath;
-
-        _cardTypeRegistryRecords = [
-            new()
-            {
+    private readonly CardRegistryRecord[] _cardTypeRegistryRecords = 
+        [
+            new() {
                 CardType = typeof(TroopCard),
                 Name = nameof(TroopCard),
                 CardSetType = typeof(TroopCardSet),
                 SetName = nameof(TroopCardSet)
             }
         ];
-
-        _cardSetTypeRegistryRecords = [
+    private readonly CardSetRegistryRecord[] _cardSetTypeRegistryRecords =
+        [
             new()
             {
                 CardSetType = typeof(TroopCardSet),
                 Name = nameof(TroopCardSet),
                 CardType = typeof(TroopCard),
-                DataFileName = Path.Combine(_appPath, "Assets", "Cards", nameof(TroopCard) + "Set.json"),
+                DataFileName = options.Value.DataFileMap[nameof(TroopCard) + "Set.json"],
                 CardSetDataConverter = new TroopCardSetDataJConverter(),
                 ConvertedDataType = typeof(TroopCardSet) // The TroopCardSetDataJConverter returns an instance of TroopCardSet because the converter partially initializes it, providing 'JData'; final initialization is performed by the AssetFactory.
             }
         ];
-    }
 
     /** <inheritdoc cref="IRegistryInitializer"/>
      * Extending the program to initialize with data from files other that those for <see cref="ICard"/>s will
@@ -93,7 +86,7 @@ public class RegistryInitializer : IRegistryInitializer
     {
         TypeRelations geographyRelations = new();
         geographyRelations.Add(nameof(BoardGeography), RegistryRelation.Name);
-        geographyRelations.Add(Path.Combine(_appPath, "Assets", nameof(BoardGeography) + ".json"), RegistryRelation.DataFileName);
+        geographyRelations.Add(_geographyFilePath, RegistryRelation.DataFileName);
         geographyRelations.Add(typeof(GeographyInitializer), RegistryRelation.ConvertedDataType);
         geographyRelations.Add(new GeographyJConverter(), RegistryRelation.DataConverter);
         registry.Register(typeof(BoardGeography), geographyRelations);

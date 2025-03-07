@@ -12,10 +12,18 @@ public class AppConfig
     /// </remarks>
     public string AppPath { get; set; } = string.Empty;
     /// <summary>
-    /// Gets or sets the path of the save file associated with the running Application.
+    /// Gets or sets a map of data file paths keyed by their filenames (with extension).
     /// </summary>
     /// <value>
-    /// The application's current save file path; if a game has not been loaded or saved yet, <see cref="string.Empty"/>.
+    /// Each key should be a data file name with extension, read from the 'DataFileNames' property of 'appsettings.json.' <br/>
+    /// Their values are the full, absolute paths to these files, determined at runtime.
     /// </value>
-    public string SaveFileName { get; set; } = string.Empty;
+    public Dictionary<string, string> DataFileMap { get; set; } = [];
+    /// <summary>
+    /// Gets or sets the string used to search for CardSet datafiles at startup..
+    /// </summary>
+    /// <remarks>
+    /// See <see cref="Model.DataAccess.AssetFetcher.FetchCardSets"/>
+    /// </remarks>
+    public string CardDataSearchString { get; set; } = string.Empty;
 }

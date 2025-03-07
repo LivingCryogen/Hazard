@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Model.DataAccess;
 using Model.Entities;
 using Model.Tests.DataAccess.Mocks;
@@ -7,6 +8,8 @@ using Model.Tests.Fixtures;
 using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Fixtures.Stubs;
 using Shared.Interfaces.Model;
+using Shared.Services.Helpers;
+using Shared.Services.Options;
 using Shared.Services.Registry;
 
 namespace Model.Tests.DataAccess;
@@ -17,12 +20,18 @@ public class DataProviderTests
     private readonly MockDataFiles _mockFiles = new();
     ILogger<DataProvider> Logger { get; } = new LoggerStubT<DataProvider>();
     private readonly DataProvider? _testDataProvider;
-    private readonly string[]? _configDataFiles;
+    private readonly Dictionary<string, string> _configDataFileMap = [];
 
     public DataProviderTests()
     {
-        _configDataFiles = _mockFiles.ConfigDataFileList;
-        _testDataProvider = new(_configDataFiles, SharedRegister.Registry, Logger);
+        string mockFileName = Path.GetFileName(_mockFiles.ConfigDataFileList[0]);
+        string mockFilePath = _mockFiles.ConfigDataFileList[0];
+        _configDataFileMap.Add(mockFileName, mockFilePath);
+        AppConfig testConfig = new() {
+            DataFileMap = _configDataFileMap
+        };
+        var testOptions = Options.Create(testConfig);
+        _testDataProvider = new(SharedRegister.Registry, Logger, testOptions);
     }
 
     [TestMethod]

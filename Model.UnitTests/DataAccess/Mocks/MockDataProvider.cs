@@ -1,11 +1,12 @@
 ﻿using Model.Tests.Entities.Mocks;
 using Shared.Interfaces.Model;
+using System.Collections.ObjectModel;
 
 namespace Model.Tests.DataAccess.Mocks;
 
-public class MockDataProvider(string[] dataFileNames) : IDataProvider
+public class MockDataProvider(Dictionary<string, string> dataFileMap) : IDataProvider
 {
-    public string[] DataFileNames { get; private set; } = dataFileNames;
+    public ReadOnlyDictionary<string, string> DataFileMap { get; private set; } = new(dataFileMap);
 
     public object? GetData(string typeName)
     {

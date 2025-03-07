@@ -22,7 +22,9 @@ public class AssetFactoryTests
 
     public AssetFactoryTests()
     {
-        _dataProvider = new MockDataProvider(_mockFiles.ConfigDataFileList);
+        Dictionary<string, string> mockDataMap = [];
+        mockDataMap.Add(Path.GetFileName(_mockFiles.ConfigDataFileList[0]), _mockFiles.ConfigDataFileList[0]);
+        _dataProvider = new MockDataProvider(mockDataMap);
         TestFactory = new(_dataProvider, _logger, _loggerFactory);
     }
 

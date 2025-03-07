@@ -46,6 +46,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\View\IBootStrapperService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\View\IDialogState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\View\IDispatcherTimer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Helpers\DataFileFinder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Options\AppConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Registry\IRegistryInitializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Registry\ITypeRegister.cs" />

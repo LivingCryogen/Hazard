@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Shared.Geography;
 using Shared.Interfaces.Model;
+using Shared.Services.Helpers;
 using Shared.Services.Options;
 
 namespace Model.DataAccess;
@@ -9,19 +10,8 @@ namespace Model.DataAccess;
 public class AssetFetcher(IAssetFactory factory, IOptions<AppConfig> options) : IAssetFetcher
 {
     private readonly IAssetFactory _factory = factory;
-    private readonly string _appPath = options.Value.AppPath;
-
-    private static string[] FindFilesContaining(string rootPath, string text)
-    {
-        string assetDirectory = Path.Combine(rootPath, "Assets");
-
-        var searchDirectories = Directory.GetDirectories(assetDirectory).Append(assetDirectory);
-        List<string> fileNames = [];
-        foreach (string directoryName in searchDirectories)
-            fileNames.AddRange(Directory.GetFiles(directoryName).Where(name => name.Contains(text)));
-
-        return [.. fileNames];
-    }
+    private readonly Dictionary<string, string> _dataFileMap = new(options.Value.DataFileMap);
+    private readonly string _cardDataSearchString = options.Value.CardDataSearchString;
 
     /// <summary>
     /// Discovers local data files that contain <see cref="ICard"/>s and hands off their names to <see cref="AssetFactory"/>.
@@ -35,7 +25,10 @@ public class AssetFetcher(IAssetFactory factory, IOptions<AppConfig> options) : 
     public List<ICardSet> FetchCardSets()
     {
         List<ICardSet> cardSets = [];
-        string[] filePaths = FindFilesContaining(_appPath, "CardSet"); // hard-coded here, may want to change at some point
+        List<string> filePaths = [];
+        foreach (string fileName in _dataFileMap.Keys)
+            if (fileName.Contains(_cardDataSearchString))
+                filePaths.Add(_dataFileMap[fileName]);
         foreach (string path in filePaths) {
             string fileName = Path.GetFileNameWithoutExtension(path);
             string typeName = fileName.Replace("Set", "");
