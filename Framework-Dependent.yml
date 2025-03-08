@@ -1,136 +1,202 @@
-# .NET Desktop
-# Build and run tests for .NET Desktop or Windows classic desktop solutions.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
-
+# .NET Desktop MSIX packaging pipeline with stages
 trigger: none
 
-pool:
-  vmImage: 'windows-latest'
+stages:
+- stage: Build
+  jobs:
+  - job: BuildPackages
+    pool:
+      vmImage: 'windows-latest'
+    strategy:
+      matrix:
+        framework-dependent:
+          publishType: 'framework-dependent'
+          publishPath: '$(Build.ArtifactStagingDirectory)\publish\framework-dependent'
+          msixOutputPath: '$(Build.ArtifactStagingDirectory)\msix\framework-dependent'
+          blobPath: 'framework-dependent'
+          selfContained: 'false'
+          runtimeIdentifier: ''
+        self-contained:
+          publishType: 'self-contained'
+          publishPath: '$(Build.ArtifactStagingDirectory)\publish\self-contained'
+          msixOutputPath: '$(Build.ArtifactStagingDirectory)\msix\self-contained'
+          blobPath: 'self-contained'
+          selfContained: 'true'
+          runtimeIdentifier: 'win-$(buildPlatform)'
+    variables:
+      solution: '**/*.sln'
+      buildPlatform: 'x64'
+      buildConfiguration: 'Release'
+    steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '8.0.x'
+        includePreviewVersions: false
 
-variables:
-  solution: '**/*.sln'
-  buildPlatform: 'x64'
-  buildConfiguration: 'Release'
-  storageAccount: 'jm84storage'
-  containerName: 'hazard'
+    - task: NuGetToolInstaller@1
 
-strategy:
-  matrix:
-    framework-dependent:
-      publishType: 'framework-dependent'
-      publishPath: '$(Build.ArtifactStagingDirectory)\publish\framework-dependent'
-      msixOutputPath: '$(Build.ArtifactStagingDirectory)\msix\framework-dependent'
-      blobPath: 'framework-dependent'
-      selfContained: 'false'
-      runtimeIdentifier: ''
-    self-contained:
-      publishType: 'self-contained'
-      publishPath: '$(Build.ArtifactStagingDirectory)\publish\self-contained'
-      msixOutputPath: '$(Build.ArtifactStagingDirectory)\msix\self-contained'
-      blobPath: 'self-contained'
-      selfContained: 'true'
-      runtimeIdentifier: 'win-$(buildPlatform)'
-steps:
-- task: UseDotNet@2
-  inputs:
-    packageType: 'sdk'
-    version: '8.0.x'
-    includePreviewVersions: false
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'restore'
+        projects: '**/*.csproj'
+        feedsToUse: 'select'
+        
+    - task: NuGetCommand@2
+      inputs:
+        restoreSolution: '$(solution)'
 
-- task: NuGetToolInstaller@1
+    - task: VSBuild@1
+      inputs:
+        solution: '$(solution)'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+        msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:RuntimeIdentifier="$(runtimeIdentifier)" /p:SelfContained=$(selfContained)'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'restore'
-    projects: '**/*.csproj'
-    feedsToUse: 'select'
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+    - task: CopyFiles@2
+      displayName: 'Copy MSIX package to publish directory'
+      inputs:
+        SourceFolder: '$(msixOutputPath)'
+        Contents: '**/*.msix'
+        TargetFolder: '$(publishPath)'
+        CleanTargetFolder: false
+        OverWrite: true
+        
+    # Publish the build output as an artifact
+    - publish: $(publishPath)
+      artifact: $(publishType)
+      displayName: 'Publish $(publishType) Package'
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-    msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:RuntimeIdentifier="$(runtimeIdentifier)" /p:SelfContained=$(selfContained)'
-- task: CopyFiles@2
-  displayName: 'Copy MSIX package to publish directory'
-  inputs:
-    SourceFolder: '$(msixOutputPath)'
-    Contents: '**/*.msix'
-    TargetFolder: '$(publishPath)'
-    CleanTargetFolder: false
-    OverWrite: true
-- task: AzureCLI@2
-  displayName: 'Azure CLI'
-  inputs:
-    azureSubscription: 'JoshMcKnight Azure TopLevel'  # Replace with your connection name
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      echo "##vso[task.setvariable variable=ARM_CLIENT_ID;issecret=true]$servicePrincipalId" 
-      echo "##vso[task.setvariable variable=ARM_ID_TOKEN;issecret=true]$idToken"
-      echo "##vso[task.setvariable variable=ARM_TENANT_ID;issecret=true]$tenantId"
-    addSpnToEnvironment: true
+- stage: Sign
+  dependsOn: Build
+  jobs:
+  - job: SignPackages
+    pool:
+      vmImage: 'windows-latest'
+    variables:
+      storageAccount: 'jm84storage'
+      containerName: 'hazard'
+    steps:
+    - task: AzureCLI@2
+      displayName: 'Azure CLI'
+      inputs:
+        azureSubscription: 'JoshMcKnight Azure TopLevel'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          echo "##vso[task.setvariable variable=ARM_CLIENT_ID;issecret=true]$servicePrincipalId" 
+          echo "##vso[task.setvariable variable=ARM_ID_TOKEN;issecret=true]$idToken"
+          echo "##vso[task.setvariable variable=ARM_TENANT_ID;issecret=true]$tenantId"
+        addSpnToEnvironment: true
 
-- bash: |
-    az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
-  displayName: 'Azure Login'
+    - bash: |
+        az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
+      displayName: 'Azure Login'
 
-- task: TrustedSigning@0
-  displayName: 'Sign with Trusted Signing'
-  inputs:
-    Endpoint: 'https://eus.codesigning.azure.net/'
-    TrustedSigningAccountName: 'joshmcknightsigning'
-    CertificateProfileName: 'JoshuaMcKnight'
-    FilesFolder: '$(publishPath)'
-    FilesFolderFilter: 'application,exe,msix'
-    ExcludeEnvironmentCredential: true
-    ExcludeWorkloadIdentityCredential: true
-    ExcludeManagedIdentityCredential: true
-    ExcludeSharedTokenCacheCredential: true
-    ExcludeVisualStudioCredential: true
-    ExcludeVisualStudioCodeCredential: true
-    ExcludeAzureCliCredential: false
-    ExcludeAzurePowershellCredential: true
-    ExcludeAzureDeveloperCliCredential: true
-    ExcludeInteractiveBrowserCredential: true
+    # Download all artifacts from the Build stage
+    - download: current
+      displayName: 'Download All Artifacts'
 
-- task: AzureCLI@2
-  displayName: 'Copy to Blob Storage and Set Content Types'
-  inputs:
-    azureSubscription: 'JoshMcKnight Azure TopLevel'
-    scriptType: 'pscore'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      # Upload using the service principal auth with overwrite
-      az storage blob upload-batch `
-        --source "$(publishPath)" `
-        --destination "$(containerName)" `
-        --destination-path "$(blobPath)" `
-        --account-name "$(storageAccount)" `
-        --auth-mode login `
-        --overwrite $true
+    # Sign the framework-dependent package
+    - task: TrustedSigning@0
+      displayName: 'Sign Framework-Dependent Package'
+      inputs:
+        Endpoint: 'https://eus.codesigning.azure.net/'
+        TrustedSigningAccountName: 'joshmcknightsigning'
+        CertificateProfileName: 'JoshuaMcKnight'
+        FilesFolder: '$(Pipeline.Workspace)/framework-dependent'
+        FilesFolderFilter: 'application,exe,msix'
+        ExcludeEnvironmentCredential: true
+        ExcludeWorkloadIdentityCredential: true
+        ExcludeManagedIdentityCredential: true
+        ExcludeSharedTokenCacheCredential: true
+        ExcludeVisualStudioCredential: true
+        ExcludeVisualStudioCodeCredential: true
+        ExcludeAzureCliCredential: false
+        ExcludeAzurePowershellCredential: true
+        ExcludeAzureDeveloperCliCredential: true
+        ExcludeInteractiveBrowserCredential: true
 
-      # Update content types for different file extensions
-      az storage blob update `
-        --container-name "$(containerName)" `
-        --name "$(blobPath)/Hazard.application" `
-        --content-type "application/x-ms-application" `
-        --account-name "$(storageAccount)" `
-        --auth-mode login
-        az storage blob update `
-          --container-name "$(containerName)" `
-          --name "$(blobPath)/Application Files/Hazard_1_0_0_0/Hazard.dll.manifest" `
-          --content-type "application/x-ms-manifest" `
-          --account-name "$(storageAccount)" `
-          --auth-mode login
-      # Set content type for MSIX package
-      az storage blob update `
-        --container-name "$(containerName)" `
-        --name "$(blobPath)/Hazard.msix" `
-        --content-type "application/vnd.ms-appx" `
-        --account-name "$(storageAccount)" `
-        --auth-mode login
+    # Sign the self-contained package
+    - task: TrustedSigning@0
+      displayName: 'Sign Self-Contained Package'
+      inputs:
+        Endpoint: 'https://eus.codesigning.azure.net/'
+        TrustedSigningAccountName: 'joshmcknightsigning'
+        CertificateProfileName: 'JoshuaMcKnight'
+        FilesFolder: '$(Pipeline.Workspace)/self-contained'
+        FilesFolderFilter: 'application,exe,msix'
+        ExcludeEnvironmentCredential: true
+        ExcludeWorkloadIdentityCredential: true
+        ExcludeManagedIdentityCredential: true
+        ExcludeSharedTokenCacheCredential: true
+        ExcludeVisualStudioCredential: true
+        ExcludeVisualStudioCodeCredential: true
+        ExcludeAzureCliCredential: false
+        ExcludeAzurePowershellCredential: true
+        ExcludeAzureDeveloperCliCredential: true
+        ExcludeInteractiveBrowserCredential: true
+
+- stage: Deploy
+  dependsOn: Sign
+  jobs:
+  - job: DeployPackages
+    pool:
+      vmImage: 'windows-latest'
+    variables:
+      storageAccount: 'jm84storage'
+      containerName: 'hazard'
+    steps:
+    # Download all artifacts from the Sign stage
+    - download: current
+      displayName: 'Download All Artifacts'
+
+    # Deploy framework-dependent package
+    - task: AzureCLI@2
+      displayName: 'Deploy Framework-Dependent Package'
+      inputs:
+        azureSubscription: 'JoshMcKnight Azure TopLevel'
+        scriptType: 'pscore'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Upload framework-dependent package
+          az storage blob upload-batch `
+            --source "$(Pipeline.Workspace)/framework-dependent" `
+            --destination "$(containerName)" `
+            --destination-path "framework-dependent" `
+            --account-name "$(storageAccount)" `
+            --auth-mode login `
+            --overwrite $true
+            
+          # Set content type for MSIX
+          az storage blob update `
+            --container-name "$(containerName)" `
+            --name "framework-dependent/Hazard.msix" `
+            --content-type "application/vnd.ms-appx" `
+            --account-name "$(storageAccount)" `
+            --auth-mode login
+
+    # Deploy self-contained package
+    - task: AzureCLI@2
+      displayName: 'Deploy Self-Contained Package'
+      inputs:
+        azureSubscription: 'JoshMcKnight Azure TopLevel'
+        scriptType: 'pscore'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Upload self-contained package
+          az storage blob upload-batch `
+            --source "$(Pipeline.Workspace)/self-contained" `
+            --destination "$(containerName)" `
+            --destination-path "self-contained" `
+            --account-name "$(storageAccount)" `
+            --auth-mode login `
+            --overwrite $true
+            
+          # Set content type for MSIX
+          az storage blob update `
+            --container-name "$(containerName)" `
+            --name "self-contained/Hazard.msix" `
+            --content-type "application/vnd.ms-appx" `
+            --account-name "$(storageAccount)" `
+            --auth-mode login
