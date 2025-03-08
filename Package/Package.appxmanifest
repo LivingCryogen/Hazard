@@ -8,12 +8,12 @@
 
   <Identity
     Name="d99cb49a-ccb4-4885-8165-a820983ba7b4"
-    Publisher="CN=joshu"
-    Version="1.0.4.0" />
+    Publisher="CN=Joshua McKnight, O=Joshua McKnight, L=Lawrence, S=Kansas, C=US"
+    Version="1.0.0.0" />
 
   <Properties>
     <DisplayName>Hazard!</DisplayName>
-    <PublisherDisplayName>joshu</PublisherDisplayName>
+    <PublisherDisplayName>Joshua McKnight</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
