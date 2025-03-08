@@ -36,33 +36,40 @@ stages:
 
     - task: NuGetToolInstaller@1
 
-    - task: DotNetCoreCLI@2
-      displayName: 'Restore (framework-dependent)'
-      condition: eq(variables['selfContained'], 'false')
+# Run the NuGet restore first
+    - task: NuGetCommand@2
+      displayName: 'NuGet Restore'
       inputs:
-        command: 'restore'
-        projects: '**/*.csproj'
-        feedsToUse: 'select'
-
+        restoreSolution: '$(solution)'
+    
+    # Explicit restore for any runtime dependencies - for both types
     - task: DotNetCoreCLI@2
-      displayName: 'Restore (self-contained)'
-      condition: eq(variables['selfContained'], 'true')
+      displayName: 'Restore Runtime Dependencies'
       inputs:
         command: 'restore'
         projects: '**/*.csproj'
         feedsToUse: 'select'
         arguments: '--runtime win-$(buildPlatform)'
-
-    - task: NuGetCommand@2
-      inputs:
-        restoreSolution: '$(solution)'
-
+    
+    # For the framework-dependent build, make sure we reference but don't include the runtime
     - task: VSBuild@1
+      condition: eq(variables['selfContained'], 'false')
+      displayName: 'Build Framework-Dependent MSIX'
       inputs:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:RuntimeIdentifier="$(runtimeIdentifier)" /p:SelfContained=$(selfContained)'
+        msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=false /p:IncludeNativeLibrariesForSelfExtract=false'
+    
+    # For the self-contained build, include all necessary runtimes
+    - task: VSBuild@1
+      condition: eq(variables['selfContained'], 'true')
+      displayName: 'Build Self-Contained MSIX'
+      inputs:
+        solution: '$(solution)'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+        msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:RuntimeIdentifier=win-$(buildPlatform) /p:SelfContained=true /p:IncludeNativeLibrariesForSelfExtract=true'
 
     - task: CopyFiles@2
       displayName: 'Copy MSIX package to publish directory'
