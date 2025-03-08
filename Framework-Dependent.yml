@@ -37,11 +37,22 @@ stages:
     - task: NuGetToolInstaller@1
 
     - task: DotNetCoreCLI@2
+      displayName: 'Restore (framework-dependent)'
+      condition: eq(variables['selfContained'], 'false')
       inputs:
         command: 'restore'
         projects: '**/*.csproj'
         feedsToUse: 'select'
-        
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore (self-contained)'
+      condition: eq(variables['selfContained'], 'true')
+      inputs:
+        command: 'restore'
+        projects: '**/*.csproj'
+        feedsToUse: 'select'
+        arguments: '--runtime win-$(buildPlatform)'
+
     - task: NuGetCommand@2
       inputs:
         restoreSolution: '$(solution)'
