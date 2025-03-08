@@ -10,13 +10,29 @@ pool:
 
 variables:
   solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release_FrameworkDependent'
+  buildPlatform: 'x64'
+  buildConfiguration: 'Release'
   publishPath: '$(Build.ArtifactStagingDirectory)\publish'
+  msixOutputPath: '$(Build.ArtifactStagingDirectory)\msix'
   storageAccount: 'jm84storage'
   containerName: 'hazard'
-  blobPath: 'framework-dependent'
 
+strategy:
+  matrix:
+    framework-dependent:
+      publishType: 'framework-dependent'
+      publishPath: '$(Build.ArtifactStagingDirectory)\publish\framework-dependent'
+      msixOutputPath: '$(Build.ArtifactStagingDirectory)\msix\framework-dependent'
+      blobPath: 'framework-dependent'
+      selfContained: 'false'
+      runtimeIdentifier: ''
+    self-contained:
+      publishType: 'self-contained'
+      publishPath: '$(Build.ArtifactStagingDirectory)\publish\self-contained'
+      msixOutputPath: '$(Build.ArtifactStagingDirectory)\msix\self-contained'
+      blobPath: 'self-contained'
+      selfContained: 'true'
+      runtimeIdentifier: 'win-$(buildPlatform)'
 steps:
 - task: UseDotNet@2
   inputs:
@@ -40,8 +56,15 @@ steps:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    msbuildArgs: '/t:restore;publish /p:PublishProfile=ClickOnce_FrameworkDependent /p:Configuration=Release_FrameworkDependent /p:PublishDir="$(publishPath)" /p:PublishProtocol=ClickOnce /p:GenerateManifests=true /p:RuntimeIdentifier=win-x64 /p:PublishReadyToRun=true'
-
+    msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled= /p:RuntimeIdentifier="$(runtimeIdentifier)" /p:SelfContained=$(selfContained)'
+- task: CopyFiles@2
+  displayName: 'Copy MSIX package to publish directory'
+  inputs:
+    SourceFolder: '$(msixOutputPath)'
+    Contents: '**/*.msix'
+    TargetFolder: '$(publishPath)'
+    CleanTargetFolder: false
+    OverWrite: true
 - task: AzureCLI@2
   displayName: 'Azure CLI'
   inputs:
@@ -65,7 +88,7 @@ steps:
     TrustedSigningAccountName: 'joshmcknightsigning'
     CertificateProfileName: 'JoshuaMcKnight'
     FilesFolder: '$(publishPath)'
-    FilesFolderFilter: 'application,exe'
+    FilesFolderFilter: 'application,exe,msix'
     ExcludeEnvironmentCredential: true
     ExcludeWorkloadIdentityCredential: true
     ExcludeManagedIdentityCredential: true
@@ -106,3 +129,10 @@ steps:
           --content-type "application/x-ms-manifest" `
           --account-name "$(storageAccount)" `
           --auth-mode login
+      # Set content type for MSIX package
+      az storage blob update `
+        --container-name "$(containerName)" `
+        --name "$(blobPath)/Hazard.msix" `
+        --content-type "application/vnd.ms-appx" `
+        --account-name "$(storageAccount)" `
+        --auth-mode login
