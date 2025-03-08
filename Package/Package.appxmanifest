@@ -7,13 +7,13 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="0d43a269-1002-4d46-8cf2-573d79ed04cf"
-    Publisher="CN=Joshua McKnight"
-    Version="1.0.5.0" />
+    Name="d99cb49a-ccb4-4885-8165-a820983ba7b4"
+    Publisher="CN=joshu"
+    Version="1.0.4.0" />
 
   <Properties>
-    <DisplayName>Package</DisplayName>
-    <PublisherDisplayName>Joshua McKnight</PublisherDisplayName>
+    <DisplayName>Hazard!</DisplayName>
+    <PublisherDisplayName>joshu</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
@@ -31,12 +31,12 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="Package"
-        Description="Windows package for Hazard! by Joshua McKnight."
+        DisplayName="Hazard!"
+        Description="Hazard! packaging."
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"
         Square44x44Logo="Images\Square44x44Logo.png">
-        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png" />
+        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png"  ShortName="Hazard!"/>
         <uap:SplashScreen Image="Images\SplashScreen.png" />
       </uap:VisualElements>
     </Application>

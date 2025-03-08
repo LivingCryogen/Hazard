@@ -1,7 +1,13 @@
 ﻿using Hazard.ViewModel.SubElements;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Shared.Geography.Enums;
 using Shared.Interfaces.ViewModel;
+using Shared.Services.Options;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -81,6 +87,9 @@ public partial class AttackWindow : Window
         _defenseDiceVisuals[1] = DefenseDieVisual2;
         _lossIndicatorActiveAnimation = FindResource("LossIndicatorActiveAnimation") as Storyboard;
 
+        var appConfig = ((App)Application.Current).Host.Services.GetRequiredService(typeof(IOptions<AppConfig>));
+
+
         for (int i = 0; i < 3; i++) {
             _attackDiceVisuals[i].Visibility = Visibility.Hidden;
             if (i < 2)
@@ -104,6 +113,8 @@ public partial class AttackWindow : Window
     }
 
     #region Properties
+    public required ReadOnlyDictionary<string,string> SoundFileMap { get; init; }
+   
     public int MaxAttackDice => CalcMaxAttackDice();
     public int MaxDefenseDice => CalcMaxDefenseDice();
     public int NumAttackDice {
@@ -426,7 +437,7 @@ public partial class AttackWindow : Window
         else
             DefenseDieVisual1.BeginAnimation(Image.SourceProperty, _defenseDiceAnimations[0]);
     }
-
+ 
     private static SpinType DetermineSpin()
     {
         Random rand = new();
@@ -434,14 +445,20 @@ public partial class AttackWindow : Window
         return (SpinType)randType;
     }
 
-    private static void PlayDiceSound(SpinType spinType)
+    private void PlayDiceSound(SpinType spinType)
     {
-        string spinAudioFile = spinType.ToString() + ".wav";
-        Uri spinAudioUri = new ($"pack://application:,,,/View;component/Audio/{spinAudioFile}", UriKind.Absolute);
+        string spinAudioFileName = spinType.ToString() + ".wav";
+        string spinAudioPath = SoundFileMap[spinAudioFileName];
+        Uri spinAudioUri = new (spinAudioPath, UriKind.Absolute);
 
         MediaPlayer dicePlayer = new();
         dicePlayer.Open(spinAudioUri);
         dicePlayer.Volume = .5;
+
+        dicePlayer.MediaOpened += (s, e) => Console.WriteLine("Media opened successfully");
+        dicePlayer.MediaFailed += (s, e) => Console.WriteLine($"Media failed: {e.ErrorException.Message}");
+        dicePlayer.MediaEnded += (s, e) => Console.WriteLine("Media playback completed");
+
         dicePlayer.Play();
     }
 

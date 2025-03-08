@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Shared.Interfaces.View;
 using Shared.Interfaces.ViewModel;
+using Shared.Services.Options;
 using System.Windows;
 using View;
 
@@ -20,7 +22,9 @@ public class BootStrapper(ILogger<BootStrapper> logger) : IBootStrapperService
         if (MainApp == null)
             return;
         var viewModel = MainApp.Host.Services.GetRequiredService<IMainVM>();
-        MainWindow mainWindow = new();
+        MainWindow mainWindow = new() {
+            AppOptions = MainApp.Host.Services.GetRequiredService<IOptions<AppConfig>>()
+        };
         mainWindow.Initialize(viewModel);
         MainApp.MainWindow = mainWindow;
         MainApp.MainWindow.Show();
@@ -32,7 +36,9 @@ public class BootStrapper(ILogger<BootStrapper> logger) : IBootStrapperService
         if (string.IsNullOrEmpty(fileName))
             return;
         SaveFileName = fileName;
-        MainWindow mainWindow = new();
+        MainWindow mainWindow = new() {
+            AppOptions = MainApp.Host.Services.GetRequiredService<IOptions<AppConfig>>()
+        };
         MainApp.MainWindow = mainWindow;
 
         _logger.LogInformation($"Closing old Windows...");
@@ -58,7 +64,9 @@ public class BootStrapper(ILogger<BootStrapper> logger) : IBootStrapperService
         var playerColors = namesAndColors.Select(item => item.Color).ToArray();
         SaveFileName = string.Empty;
 
-        MainWindow mainWindow = new();
+        MainWindow mainWindow = new() {
+            AppOptions = MainApp.Host.Services.GetRequiredService<IOptions<AppConfig>>()
+        };
         MainApp.MainWindow = mainWindow;
         foreach (Window window in Application.Current.Windows) {
             if (window == mainWindow)

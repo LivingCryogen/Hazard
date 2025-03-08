@@ -14,16 +14,36 @@
       </PropertyGroup>
 
 	<ItemGroup>
-		<Resource Include="Audio\roll03.wav" />
-		<Resource Include="Audio\roll03b.wav" />
-		<Resource Include="Audio\roll03c.wav" />
-		<Resource Include="Audio\roll05.wav" />
-		<Resource Include="Audio\roll05b.wav" />
-		<Resource Include="Audio\roll05c.wav" />
-		<Resource Include="Audio\roll06.wav" />
-		<Resource Include="Audio\roll06b.wav" />
-		<Resource Include="Audio\roll06c.wav" />
-		<Resource Include="Audio\roll08.wav" />
+		<Content Include="Audio\roll03.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Audio\roll03b.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Audio\roll03c.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Audio\roll05.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Audio\roll05b.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Audio\roll05c.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Audio\roll06.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Audio\roll06b.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Audio\roll06c.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Audio\roll08.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
 

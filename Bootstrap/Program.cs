@@ -64,7 +64,9 @@ namespace Bootstrap
         {
             var host = Host.CreateDefaultBuilder();
             List<string> settingDataFileNames = [];
+            List<string> settingSoundFileNames = [];
             Dictionary<string, string> dataFileLocations = [];
+            Dictionary<string, string> soundFileLocations = [];
             string cardDataSearchString = string.Empty;
             return
                 host.ConfigureAppConfiguration((hostingContext, config) =>
@@ -77,6 +79,7 @@ namespace Bootstrap
 
                     
                     settingDataFileNames.AddRange(builtConfig.GetSection("DataFileNames").Get<string[]>() ?? []);
+                    settingSoundFileNames.AddRange(builtConfig.GetSection("SoundFileNames").Get<string[]>() ?? []);
                     cardDataSearchString = (string?)(builtConfig.GetValue(typeof(string), "CardDataSearchString")) ?? string.Empty;
 
                     for (int i = 0; i < settingDataFileNames.Count; i++) {
@@ -84,6 +87,12 @@ namespace Bootstrap
                         dataFileLocations.Add(
                             settingDataFileNames[i], 
                             DataFileFinder.FindFiles(appPath, settingDataFileNames[i])[0]);
+                    }
+                    for (int i = 0; i < settingSoundFileNames.Count; i++) {
+                        // Appconfig should only have 1 path discovered per file name, so we take only the first in the returned collection.
+                        soundFileLocations.Add(
+                            settingSoundFileNames[i],
+                            DataFileFinder.FindFiles(appPath, settingSoundFileNames[i])[0]);
                     }
                 })
                 .ConfigureLogging(logging =>
@@ -103,6 +112,8 @@ namespace Bootstrap
                         options.AppPath = appPath;
                         if (dataFileLocations.Count > 0)
                             options.DataFileMap = dataFileLocations;
+                        if (soundFileLocations.Count > 0)
+                            options.SoundFileMap = soundFileLocations;
                         options.CardDataSearchString = cardDataSearchString;
                     });
                     services.AddSingleton<IRegistryInitializer, RegistryInitializer>();

@@ -1,6 +1,10 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.Win32;
 using Shared.Enums;
 using Shared.Interfaces.ViewModel;
+using Shared.Services.Options;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -26,6 +30,7 @@ public partial class MainWindow : Window
     private CardControlFactory? _cardControlFactory;
     private readonly Border? _stateInfoBorder = null;
     private bool _isShuttingDown = true;
+    private ReadOnlyDictionary<string, string> _soundFileMap = new(new Dictionary<string, string>());
 
     public MainWindow()
     {
@@ -38,6 +43,7 @@ public partial class MainWindow : Window
         FitToScreenSpace();
     }
 
+    public required IOptions<AppConfig> AppOptions { get; init; }
     public int[]? AdvanceParams { get; set; } = null;
 
     #region DependencyProperties
@@ -63,7 +69,10 @@ public partial class MainWindow : Window
         DataContext = viewModel;
         PlayerColors = [];
         int numPlayers = _vM.PlayerDetails.Count;
-
+        
+        if (AppOptions.Value.SoundFileMap.Count > 0)
+            _soundFileMap = new(AppOptions.Value.SoundFileMap);
+        
         var app = (App)Application.Current;
         for (int i = 0; i < numPlayers; i++)
             PlayerColors.Add((SolidColorBrush)app.FindResource($"Army.{_vM.PlayerDetails[i].ColorName}"));
@@ -263,7 +272,9 @@ public partial class MainWindow : Window
         SolidColorBrush sourceColor = _territoryButtons[sourceTerritory].Color;
         SolidColorBrush targetColor = _territoryButtons[targetTerritory].Color;
 
-        AttackWindow newAttackWindow = new();
+        AttackWindow newAttackWindow = new() { 
+            SoundFileMap = _soundFileMap,
+        };
         newAttackWindow.Initialize(sourceTerritory, targetTerritory, sourceColor, targetColor, (IMainVM)DataContext);
         newAttackWindow.ShowDialog();
         CommandManager.InvalidateRequerySuggested();

@@ -20,6 +20,14 @@ public class AppConfig
     /// </value>
     public Dictionary<string, string> DataFileMap { get; set; } = [];
     /// <summary>
+    /// Gets or sets a map of sound file paths keyed by their filenames (with extension).
+    /// </summary>
+    /// <value>
+    /// Each key should be a sound file name with extension, read from the 'SoundFileNames' property of 'appsettings.json.' <br/>
+    /// Their values are the full, absolute paths to these files, determined at runtime.
+    /// </value>
+    public Dictionary<string, string> SoundFileMap { get; set; } = [];
+    /// <summary>
     /// Gets or sets the string used to search for CardSet datafiles at startup..
     /// </summary>
     /// <remarks>
