@@ -12,8 +12,6 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'x64'
   buildConfiguration: 'Release'
-  publishPath: '$(Build.ArtifactStagingDirectory)\publish'
-  msixOutputPath: '$(Build.ArtifactStagingDirectory)\msix'
   storageAccount: 'jm84storage'
   containerName: 'hazard'
 
@@ -56,7 +54,7 @@ steps:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled= /p:RuntimeIdentifier="$(runtimeIdentifier)" /p:SelfContained=$(selfContained)'
+    msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:RuntimeIdentifier="$(runtimeIdentifier)" /p:SelfContained=$(selfContained)'
 - task: CopyFiles@2
   displayName: 'Copy MSIX package to publish directory'
   inputs:
