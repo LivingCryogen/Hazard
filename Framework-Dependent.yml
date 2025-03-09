@@ -27,17 +27,12 @@ stages:
         version: '8.0.x'
         includePreviewVersions: false
 
-    - task: NuGetToolInstaller@1
-
-    - task: NuGetCommand@2
-      inputs:
-        restoreSolution: '$(solution)'
-
     - task: DotNetCoreCLI@2
       inputs:
         command: 'restore'
         projects: '**/*.csproj'
         feedsToUse: 'select'
+        includeNuGetOrg: True
 
     - task: VSBuild@1
       displayName: 'Build Framework-Dependent MSIX'
@@ -132,12 +127,6 @@ stages:
         packageType: 'sdk'
         version: '8.0.x'
         includePreviewVersions: false
-
-    - task: NuGetToolInstaller@1
-
-    - task: NuGetCommand@2
-      inputs:
-        restoreSolution: '$(solution)'
 
     - task: DotNetCoreCLI@2
       inputs:
