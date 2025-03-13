@@ -27,18 +27,17 @@ stages:
         version: '8.0.x'
         includePreviewVersions: false
 
+    - script: |
+        dotnet workload update
+      displayName: 'Update DotNet Workloads'
+
     # Standard restore command
     - task: DotNetCoreCLI@2
       inputs:
         command: 'restore'
         projects: '$(solution)'
         feedsToUse: 'select'
-        arguments: '--runtime win-x64'
-
-    - script: |
-        dotnet workload install windowsdesktop
-        dotnet workload install microsoft-net-runtime-win-x64
-      displayName: 'Install Windows Desktop and Runtime Workloads'
+        arguments: '--runtime win-x64 --no-cache'
 
     # Cache NuGet packages
     - task: Cache@2
