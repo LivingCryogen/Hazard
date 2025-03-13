@@ -42,7 +42,12 @@ stages:
         targetType: 'inline'
         script: |
           Write-Host "Performing global restore with runtime identifier..."
-          dotnet restore "$(solution)" --runtime win-x64 -v normal
+          # Find solution files and restore them with runtime
+          Get-ChildItem -Path "$(Build.SourcesDirectory)" -Filter "*.sln" -Recurse | ForEach-Object {
+            Write-Host "Restoring solution: $($_.FullName)"
+            dotnet restore "$($_.FullName)" --runtime win-x64 -v normal
+          }
+
 
     # NuGet installation and restore
     - task: NuGetToolInstaller@1
