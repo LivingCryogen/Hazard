@@ -13,6 +13,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <RuntimePackage Include="Microsoft.NETCore.App.Runtime.win-x64" />
+	<RuntimePackage Include="Microsoft.WindowsDesktop.App.Runtime.win-x64" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Properties\Resources.Designer.cs" />
     <Compile Remove="Properties\Settings.Designer.cs" />
   </ItemGroup>
