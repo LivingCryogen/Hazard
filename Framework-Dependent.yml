@@ -46,56 +46,55 @@ stages:
         feedsToUse: 'select'
         arguments: '--runtime win-x64'
     - task: PowerShell@2
-      displayName: 'Install Windows Desktop Runtime'
+      displayName: 'Runtime Investigation'
       inputs:
         targetType: 'inline'
         script: |
-          # Search for all available workloads
-          $allWorkloads = dotnet workload search
+          # First, check what we have before installing anything
+          Write-Host "===== BEFORE WORKLOAD INSTALLATION ====="
           
-          # Display all workloads for diagnostics
-          Write-Host "All available workloads:"
-          $allWorkloads | Out-String | Write-Host
+          # Get list of available workloads before
+          $workloadsBefore = dotnet workload list 2>&1 | Out-String
+          Write-Host "Available workloads:"
+          Write-Host $workloadsBefore
           
-          # Look specifically for the Windows desktop SDK workload
-          # Filter for workloads containing "windowsdesktop" or "desktop" but not "maui"
-          $desktopWorkloads = $allWorkloads | Where-Object { 
-            $_ -match "(windowsdesktop|microsoft-net-sdk-windowsdesktop)" -and $_ -notmatch "maui"
-          } | ForEach-Object {
-            if ($_ -match "^(\S+)") { $matches[1] }
-          }
+          # Get runtime packs in NuGet cache before
+          $runtimePacksBefore = Get-ChildItem -Path "$env:USERPROFILE\.nuget\packages" -Directory | 
+                                Where-Object { $_.Name -like "*runtime*" } | 
+                                Select-Object -ExpandProperty Name
           
-          # If we found appropriate workloads, install them
-          if ($desktopWorkloads) {
-            foreach ($workload in $desktopWorkloads) {
-              Write-Host "Installing Windows desktop workload: $workload"
-              dotnet workload install $workload
-            }
+          # Install wasm-tools
+          Write-Host "===== INSTALLING WASM-TOOLS ====="
+          dotnet workload install wasm-tools
+          
+          # Check what was installed
+          Write-Host "===== AFTER WORKLOAD INSTALLATION ====="
+          
+          # Get list of available workloads after
+          $workloadsAfter = dotnet workload list 2>&1 | Out-String
+          
+          # Get runtime packs in NuGet cache after
+          $runtimePacksAfter = Get-ChildItem -Path "$env:USERPROFILE\.nuget\packages" -Directory | 
+                              Where-Object { $_.Name -like "*runtime*" } | 
+                              Select-Object -ExpandProperty Name
+          
+          # Find new workloads
+          Write-Host "NEW WORKLOADS ADDED:"
+          if ($workloadsBefore -ne $workloadsAfter) {
+            Write-Host "Workloads added/changed. Full list:"
+            Write-Host $workloadsAfter
           } else {
-            # Fallback to a known ID if no matching workload found
-            Write-Host "No matching Windows desktop workload found. Trying fallback ID..."
-            dotnet workload install microsoft-net-sdk-windowsdesktop
+            Write-Host "No change in workloads"
           }
           
-          # Create props file to ensure runtime identifier is set
-          $propsContent = @"
-          <Project>
-            <PropertyGroup>
-              <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-              <SelfContained>$(SelfContained)</SelfContained>
-            </PropertyGroup>
-            <ItemGroup>
-              <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
-              <FrameworkReference Include="Microsoft.NETCore.App" />
-            </ItemGroup>
-          </Project>
-          "@
-          
-          $propsPath = "$(Build.SourcesDirectory)\Directory.Build.props"
-          Set-Content -Path $propsPath -Value $propsContent
-          
-          # Force a restore with the runtime identifier
-          dotnet restore $(solution) /p:RuntimeIdentifier=win-x64 /v:n
+          # Find new runtime packs
+          Write-Host "NEW RUNTIME PACKS ADDED:"
+          $newRuntimePacks = $runtimePacksAfter | Where-Object { $runtimePacksBefore -notcontains $_ }
+          if ($newRuntimePacks) {
+            $newRuntimePacks | ForEach-Object { Write-Host "- $_" }
+          } else {
+            Write-Host "No new runtime packs added"
+          }
     # Cache NuGet packages
     - task: Cache@2
       displayName: 'Cache NuGet packages'
