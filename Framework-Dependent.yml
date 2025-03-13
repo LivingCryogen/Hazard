@@ -49,8 +49,8 @@ stages:
       displayName: 'Install Windows Desktop Runtime'
       inputs:
         command: 'custom'
-        custom: 'add'
-        arguments: 'package Microsoft.WindowsDesktop.App.Runtime.win-x64 --version 8.0.0'
+        custom: 'workload'
+        arguments: 'install wasm-tools desktop --verbosity normal'
     # Cache NuGet packages
     - task: Cache@2
       displayName: 'Cache NuGet packages'
