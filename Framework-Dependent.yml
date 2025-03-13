@@ -50,13 +50,13 @@ stages:
         targetType: 'inline'
         script: |
           Write-Host "Installing runtime packs for win-x64..."
-          
-          # Directly install the runtime packs
-          dotnet add "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" package Microsoft.NETCore.App.Runtime.win-x64 --version 8.0.0 --no-restore
-          dotnet add "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" package Microsoft.WindowsDesktop.App.Runtime.win-x64 --version 8.0.0 --no-restore
-          
-          # Now do a full restore with runtime
+          # Install Windows desktop runtime workload
+          dotnet workload install wasm-tools
+          dotnet workload install microsoft-net-sdk-windowsdesktop
+          # Manual restore with runtime identifier
           dotnet restore "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" --runtime win-x64
+          # Check if the runtime packs were installed
+          dotnet list "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" package
     - task: VSBuild@1
       displayName: 'Build Framework-Dependent MSIX'
       inputs:
@@ -190,20 +190,21 @@ stages:
         command: 'restore'
         projects: '$(solution)'
         feedsToUse: 'select'
-# Explicitly install runtime packs
+
     - task: PowerShell@2
       displayName: 'Install Runtime Packs'
       inputs:
         targetType: 'inline'
         script: |
           Write-Host "Installing runtime packs for win-x64..."
-          
-          # Directly install the runtime packs
-          dotnet add "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" package Microsoft.NETCore.App.Runtime.win-x64 --version 8.0.0 --no-restore
-          dotnet add "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" package Microsoft.WindowsDesktop.App.Runtime.win-x64 --version 8.0.0 --no-restore
-          
-          # Now do a full restore with runtime
+          # Install Windows desktop runtime workload
+          dotnet workload install wasm-tools
+          dotnet workload install microsoft-net-sdk-windowsdesktop
+          # Manual restore with runtime identifier
           dotnet restore "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" --runtime win-x64
+          # Check if the runtime packs were installed
+          dotnet list "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" package
+
     - task: VSBuild@1
       displayName: 'Build Self-Contained MSIX'
       inputs:
