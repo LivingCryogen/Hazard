@@ -7,6 +7,7 @@ variables:
   buildConfiguration: 'Release'
   storageAccount: 'jm84storage'
   containerName: 'hazard'
+  NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
 
 stages:
 # Framework-Dependent Build and Deployment
@@ -21,21 +22,32 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
+    # Cache Nuget Packages
+    - task: Cache@2
+      displayName: 'Cache NuGet packages'
+      inputs:
+        key: 'nuget | "$(Agent.OS)" | **/packages.lock.json,**/packages.config,**/*.csproj'
+        restoreKeys: |
+          nuget | "$(Agent.OS)"
+        path: $(NUGET_PACKAGES)
+        cacheHitVar: 'CACHE_RESTORED'
+    # Cache .NET SDK
+    - task: Cache@2
+      displayName: 'Cache .NET SDK'
+      inputs:
+        key: 'dotnetsdk | "$(Agent.OS)" | 8.0.x'
+        path: $(Agent.TempDirectory)/.dotnet
+        cacheHitVar: 'DOTNETSDK_CACHE_RESTORED'
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
         version: '8.0.x'
         includePreviewVersions: false
-    - task: Cache@2
-      inputs:
-        key: 'nuget | "$(Agent.OS)" | **/packages.lock.json'
-        path: '$(Pipeline.Workspace)/.nuget/packages'
     - task: DotNetCoreCLI@2
       inputs:
         command: 'restore'
         projects: '**/*.csproj'
         feedsToUse: 'select'
-        includeNuGetOrg: True
 
     - task: VSBuild@1
       displayName: 'Build Framework-Dependent MSIX'
@@ -125,15 +137,36 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
+        # Cache NuGet packages - same key as framework-dependent build
+    - task: Cache@2
+      displayName: 'Cache NuGet packages'
+      inputs:
+        key: 'nuget | "$(Agent.OS)" | **/packages.lock.json,**/packages.config,**/*.csproj'
+        restoreKeys: |
+          nuget | "$(Agent.OS)"
+        path: $(NUGET_PACKAGES)
+        cacheHitVar: 'CACHE_RESTORED'
+
+    # Cache .NET SDK - same key as framework-dependent build
+    - task: Cache@2
+      displayName: 'Cache .NET SDK'
+      inputs:
+        key: 'dotnetsdk | "$(Agent.OS)" | 8.0.x'
+        path: $(Agent.TempDirectory)/.dotnet
+        cacheHitVar: 'DOTNETSDK_CACHE_RESTORED'
+
+    # Cache runtime for win-x64 specifically
+    - task: Cache@2
+      displayName: 'Cache win-x64 runtime'
+      inputs:
+        key: 'runtime | "$(Agent.OS)" | win-$(buildPlatform) | 8.0.x'
+        path: $(Agent.TempDirectory)/.dotnet/runtime
+        cacheHitVar: 'RUNTIME_CACHE_RESTORED'
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
         version: '8.0.x'
         includePreviewVersions: false
-    - task: Cache@2
-      inputs:
-        key: 'nuget | "$(Agent.OS)" | **/packages.lock.json'
-        path: '$(Pipeline.Workspace)/.nuget/packages'
     - task: DotNetCoreCLI@2
       inputs:
         command: 'restore'
