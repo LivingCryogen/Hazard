@@ -37,12 +37,7 @@ stages:
         command: 'restore'
         restoreSolution: '**/*.sln' # Replace with the path to your solution file
         arguments: '-RuntimeIdentifier win-x64' # Add the runtime identifier argument
-    - task: DotNetCoreCLI@2
-      displayName: 'Install Windows Desktop Runtime'
-      inputs:
-        command: 'custom'
-        custom: 'add'
-        arguments: 'package Microsoft.WindowsDesktop.App.Runtime.win-x64 --version 8.0.0'
+
     # Standard restore command
     - task: DotNetCoreCLI@2
       inputs:
@@ -50,7 +45,12 @@ stages:
         projects: '$(solution)'
         feedsToUse: 'select'
         arguments: '--runtime win-x64'
-
+    - task: DotNetCoreCLI@2
+      displayName: 'Install Windows Desktop Runtime'
+      inputs:
+        command: 'custom'
+        custom: 'add'
+        arguments: 'package Microsoft.WindowsDesktop.App.Runtime.win-x64 --version 8.0.0'
     # Cache NuGet packages
     - task: Cache@2
       displayName: 'Cache NuGet packages'
