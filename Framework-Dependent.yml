@@ -1,108 +1,278 @@
-# .NET Desktop
-# Build and run tests for .NET Desktop or Windows classic desktop solutions.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
-
+# .NET Desktop MSIX packaging pipeline with separate stages for build types
 trigger: none
-
-pool:
-  vmImage: 'windows-latest'
 
 variables:
   solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release_FrameworkDependent'
-  publishPath: '$(Build.ArtifactStagingDirectory)\publish'
+  buildPlatform: 'x64'
+  buildConfiguration: 'Release'
   storageAccount: 'jm84storage'
   containerName: 'hazard'
-  blobPath: 'framework-dependent'
 
-steps:
-- task: UseDotNet@2
-  inputs:
-    packageType: 'sdk'
-    version: '8.0.x'
-    includePreviewVersions: false
+stages:
+# Framework-Dependent Build and Deployment
+- stage: FrameworkDependent
+  displayName: 'Framework-Dependent Build'
+  variables:
+    publishPath: '$(Build.ArtifactStagingDirectory)\publish\framework-dependent'
+    msixOutputPath: '$(Build.ArtifactStagingDirectory)\msix\framework-dependent'
+    blobPath: 'framework-dependent'
+  jobs:
+  - job: Build
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '8.0.x'
+        includePreviewVersions: false
 
-- task: NuGetToolInstaller@1
+    # Cache NuGet packages
+    - task: Cache@2
+      displayName: 'Cache NuGet packages'
+      inputs:
+        key: 'nuget | "$(Agent.OS)" | **/*.csproj'
+        restoreKeys: |
+          nuget | "$(Agent.OS)"
+        path: $(Pipeline.Workspace)/.nuget/packages
+        cacheHitVar: 'CACHE_RESTORED'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'restore'
-    projects: '**/*.csproj'
-    feedsToUse: 'select'
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+    # Standard restore command
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'restore'
+        projects: '$(solution)'
+        feedsToUse: 'select'
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-    msbuildArgs: '/t:restore;publish /p:PublishProfile=ClickOnce_FrameworkDependent /p:Configuration=Release_FrameworkDependent /p:PublishDir="$(publishPath)" /p:PublishProtocol=ClickOnce /p:GenerateManifests=true /p:RuntimeIdentifier=win-x64 /p:PublishReadyToRun=true'
+    - task: VSBuild@1
+      displayName: 'Build Framework-Dependent MSIX'
+      inputs:
+        solution: '$(solution)'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+        msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=false'
 
-- task: AzureCLI@2
-  displayName: 'Azure CLI'
-  inputs:
-    azureSubscription: 'JoshMcKnight Azure TopLevel'  # Replace with your connection name
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      echo "##vso[task.setvariable variable=ARM_CLIENT_ID;issecret=true]$servicePrincipalId" 
-      echo "##vso[task.setvariable variable=ARM_ID_TOKEN;issecret=true]$idToken"
-      echo "##vso[task.setvariable variable=ARM_TENANT_ID;issecret=true]$tenantId"
-    addSpnToEnvironment: true
+    - task: CopyFiles@2
+      displayName: 'Copy MSIX package to publish directory'
+      inputs:
+        SourceFolder: '$(msixOutputPath)'
+        Contents: '**/*.msix'
+        TargetFolder: '$(publishPath)'
+        CleanTargetFolder: false
+        OverWrite: true
 
-- bash: |
-    az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
-  displayName: 'Azure Login'
+    - task: AzureCLI@2
+      displayName: 'Azure CLI'
+      inputs:
+        azureSubscription: 'JoshMcKnight Azure TopLevel'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          echo "##vso[task.setvariable variable=ARM_CLIENT_ID;issecret=true]$servicePrincipalId" 
+          echo "##vso[task.setvariable variable=ARM_ID_TOKEN;issecret=true]$idToken"
+          echo "##vso[task.setvariable variable=ARM_TENANT_ID;issecret=true]$tenantId"
+        addSpnToEnvironment: true
 
-- task: TrustedSigning@0
-  displayName: 'Sign with Trusted Signing'
-  inputs:
-    Endpoint: 'https://eus.codesigning.azure.net/'
-    TrustedSigningAccountName: 'joshmcknightsigning'
-    CertificateProfileName: 'JoshuaMcKnight'
-    FilesFolder: '$(publishPath)'
-    FilesFolderFilter: 'application,exe'
-    ExcludeEnvironmentCredential: true
-    ExcludeWorkloadIdentityCredential: true
-    ExcludeManagedIdentityCredential: true
-    ExcludeSharedTokenCacheCredential: true
-    ExcludeVisualStudioCredential: true
-    ExcludeVisualStudioCodeCredential: true
-    ExcludeAzureCliCredential: false
-    ExcludeAzurePowershellCredential: true
-    ExcludeAzureDeveloperCliCredential: true
-    ExcludeInteractiveBrowserCredential: true
+    - bash: |
+        az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
+      displayName: 'Azure Login'
 
-- task: AzureCLI@2
-  displayName: 'Copy to Blob Storage and Set Content Types'
-  inputs:
-    azureSubscription: 'JoshMcKnight Azure TopLevel'
-    scriptType: 'pscore'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      # Upload using the service principal auth with overwrite
-      az storage blob upload-batch `
-        --source "$(publishPath)" `
-        --destination "$(containerName)" `
-        --destination-path "$(blobPath)" `
-        --account-name "$(storageAccount)" `
-        --auth-mode login `
-        --overwrite $true
+    # Only run signing if directory exists and contains files to sign
+    - task: PowerShell@2
+      displayName: 'Check for files to sign'
+      inputs:
+        targetType: 'inline'
+        script: |
+          $path = "$(publishPath)"
+          if (Test-Path -Path $path) {
+            $filesToSign = Get-ChildItem -Path $path -Recurse -Include *.application,*.exe,*.msix -ErrorAction SilentlyContinue
+            if ($filesToSign.Count -gt 0) {
+              Write-Host "Found $($filesToSign.Count) files to sign in $path"
+              Write-Host "##vso[task.setvariable variable=FilesToSign]true"
+            } else {
+              Write-Host "No files found to sign in $path"
+              Write-Host "##vso[task.setvariable variable=FilesToSign]false"
+            }
+          } else {
+            Write-Host "Path does not exist: $path"
+            Write-Host "##vso[task.setvariable variable=FilesToSign]false"
+          }
 
-      # Update content types for different file extensions
-      az storage blob update `
-        --container-name "$(containerName)" `
-        --name "$(blobPath)/Hazard.application" `
-        --content-type "application/x-ms-application" `
-        --account-name "$(storageAccount)" `
-        --auth-mode login
-        az storage blob update `
-          --container-name "$(containerName)" `
-          --name "$(blobPath)/Application Files/Hazard_1_0_0_0/Hazard.dll.manifest" `
-          --content-type "application/x-ms-manifest" `
-          --account-name "$(storageAccount)" `
-          --auth-mode login
+    - task: TrustedSigning@0
+      displayName: 'Sign with Trusted Signing'
+      condition: eq(variables['FilesToSign'], 'true')
+      inputs:
+        Endpoint: 'https://eus.codesigning.azure.net/'
+        TrustedSigningAccountName: 'joshmcknightsigning'
+        CertificateProfileName: 'JoshuaMcKnight'
+        FilesFolder: '$(publishPath)'
+        FilesFolderFilter: 'application,exe,msix'
+        ExcludeEnvironmentCredential: true
+        ExcludeWorkloadIdentityCredential: true
+        ExcludeManagedIdentityCredential: true
+        ExcludeSharedTokenCacheCredential: true
+        ExcludeVisualStudioCredential: true
+        ExcludeVisualStudioCodeCredential: true
+        ExcludeAzureCliCredential: false
+        ExcludeAzurePowershellCredential: true
+        ExcludeAzureDeveloperCliCredential: true
+        ExcludeInteractiveBrowserCredential: true
+
+    - task: AzureCLI@2
+      displayName: 'Copy to Blob Storage and Set Content Types'
+      condition: eq(variables['FilesToSign'], 'true')
+      inputs:
+        azureSubscription: 'JoshMcKnight Azure TopLevel'
+        scriptType: 'pscore'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Upload using the service principal auth with overwrite
+          az storage blob upload-batch `
+            --source "$(publishPath)" `
+            --destination "$(containerName)" `
+            --destination-path "$(blobPath)" `
+            --account-name "$(storageAccount)" `
+            --auth-mode login `
+            --overwrite $true
+
+          # Set content type for MSIX package
+          az storage blob update `
+            --container-name "$(containerName)" `
+            --name "$(blobPath)/Hazard.msix" `
+            --content-type "application/vnd.ms-appx" `
+            --account-name "$(storageAccount)" `
+            --auth-mode login
+
+# Self-Contained Build and Deployment
+- stage: SelfContained
+  displayName: 'Self-Contained Build'
+  variables:
+    publishPath: '$(Build.ArtifactStagingDirectory)\publish\self-contained'
+    msixOutputPath: '$(Build.ArtifactStagingDirectory)\msix\self-contained'
+    blobPath: 'self-contained'
+  jobs:
+  - job: Build
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '8.0.x'
+        includePreviewVersions: false
+
+    # Cache NuGet packages
+    - task: Cache@2
+      displayName: 'Cache NuGet packages'
+      inputs:
+        key: 'nuget | "$(Agent.OS)" | **/*.csproj'
+        restoreKeys: |
+          nuget | "$(Agent.OS)"
+        path: $(Pipeline.Workspace)/.nuget/packages
+        cacheHitVar: 'CACHE_RESTORED'
+
+    # Standard restore command
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'restore'
+        projects: '$(solution)'
+        feedsToUse: 'select'
+
+    - task: VSBuild@1
+      displayName: 'Build Self-Contained MSIX'
+      inputs:
+        solution: '$(solution)'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+        msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=true'
+
+    - task: CopyFiles@2
+      displayName: 'Copy MSIX package to publish directory'
+      inputs:
+        SourceFolder: '$(msixOutputPath)'
+        Contents: '**/*.msix'
+        TargetFolder: '$(publishPath)'
+        CleanTargetFolder: false
+        OverWrite: true
+
+    - task: AzureCLI@2
+      displayName: 'Azure CLI'
+      inputs:
+        azureSubscription: 'JoshMcKnight Azure TopLevel'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          echo "##vso[task.setvariable variable=ARM_CLIENT_ID;issecret=true]$servicePrincipalId" 
+          echo "##vso[task.setvariable variable=ARM_ID_TOKEN;issecret=true]$idToken"
+          echo "##vso[task.setvariable variable=ARM_TENANT_ID;issecret=true]$tenantId"
+        addSpnToEnvironment: true
+
+    - bash: |
+        az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
+      displayName: 'Azure Login'
+
+    # Only run signing if directory exists and contains files to sign
+    - task: PowerShell@2
+      displayName: 'Check for files to sign'
+      inputs:
+        targetType: 'inline'
+        script: |
+          $path = "$(publishPath)"
+          if (Test-Path -Path $path) {
+            $filesToSign = Get-ChildItem -Path $path -Recurse -Include *.application,*.exe,*.msix -ErrorAction SilentlyContinue
+            if ($filesToSign.Count -gt 0) {
+              Write-Host "Found $($filesToSign.Count) files to sign in $path"
+              Write-Host "##vso[task.setvariable variable=FilesToSign]true"
+            } else {
+              Write-Host "No files found to sign in $path"
+              Write-Host "##vso[task.setvariable variable=FilesToSign]false"
+            }
+          } else {
+            Write-Host "Path does not exist: $path"
+            Write-Host "##vso[task.setvariable variable=FilesToSign]false"
+          }
+
+    - task: TrustedSigning@0
+      displayName: 'Sign with Trusted Signing'
+      condition: eq(variables['FilesToSign'], 'true')
+      inputs:
+        Endpoint: 'https://eus.codesigning.azure.net/'
+        TrustedSigningAccountName: 'joshmcknightsigning'
+        CertificateProfileName: 'JoshuaMcKnight'
+        FilesFolder: '$(publishPath)'
+        FilesFolderFilter: 'application,exe,msix'
+        ExcludeEnvironmentCredential: true
+        ExcludeWorkloadIdentityCredential: true
+        ExcludeManagedIdentityCredential: true
+        ExcludeSharedTokenCacheCredential: true
+        ExcludeVisualStudioCredential: true
+        ExcludeVisualStudioCodeCredential: true
+        ExcludeAzureCliCredential: false
+        ExcludeAzurePowershellCredential: true
+        ExcludeAzureDeveloperCliCredential: true
+        ExcludeInteractiveBrowserCredential: true
+
+    - task: AzureCLI@2
+      displayName: 'Copy to Blob Storage and Set Content Types'
+      condition: eq(variables['FilesToSign'], 'true')
+      inputs:
+        azureSubscription: 'JoshMcKnight Azure TopLevel'
+        scriptType: 'pscore'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Upload using the service principal auth with overwrite
+          az storage blob upload-batch `
+            --source "$(publishPath)" `
+            --destination "$(containerName)" `
+            --destination-path "$(blobPath)" `
+            --account-name "$(storageAccount)" `
+            --auth-mode login `
+            --overwrite $true
+
+          # Set content type for MSIX package
+          az storage blob update `
+            --container-name "$(containerName)" `
+            --name "$(blobPath)/Hazard.msix" `
+            --content-type "application/vnd.ms-appx" `
+            --account-name "$(storageAccount)" `
+            --auth-mode login
