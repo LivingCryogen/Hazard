@@ -27,6 +27,28 @@ stages:
         version: '8.0.x'
         includePreviewVersions: false
 
+    # Standard restore command
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'restore'
+        projects: '$(solution)'
+        feedsToUse: 'select'
+
+# Explicitly install runtime packs
+    - task: PowerShell@2
+      displayName: 'Install Runtime Packs'
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "Installing runtime packs for win-x64..."
+          # Install Windows desktop runtime workload
+          dotnet workload install ManagedDesktop
+          dotnet workload install UniversalBuildTools
+
+          # Manual restore with runtime identifier
+          dotnet restore "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" --runtime win-x64
+          # Check if the runtime packs were installed
+          dotnet list "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" package
     # Cache NuGet packages
     - task: Cache@2
       displayName: 'Cache NuGet packages'
@@ -36,27 +58,6 @@ stages:
           nuget | "$(Agent.OS)"
         path: $(Pipeline.Workspace)/.nuget/packages
         cacheHitVar: 'CACHE_RESTORED'
-
-    # Standard restore command
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: 'restore'
-        projects: '$(solution)'
-        feedsToUse: 'select'
-# Explicitly install runtime packs
-    - task: PowerShell@2
-      displayName: 'Install Runtime Packs'
-      inputs:
-        targetType: 'inline'
-        script: |
-          Write-Host "Installing runtime packs for win-x64..."
-          # Install Windows desktop runtime workload
-          dotnet workload install wasm-tools
-
-          # Manual restore with runtime identifier
-          dotnet restore "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" --runtime win-x64
-          # Check if the runtime packs were installed
-          dotnet list "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" package
     - task: VSBuild@1
       displayName: 'Build Framework-Dependent MSIX'
       inputs:
@@ -154,15 +155,6 @@ stages:
         includePreviewVersions: false
 
     # Cache NuGet packages
-    - task: Cache@2
-      displayName: 'Cache NuGet packages'
-      inputs:
-        key: 'nuget | "$(Agent.OS)" | **/*.csproj'
-        restoreKeys: |
-          nuget | "$(Agent.OS)"
-        path: $(Pipeline.Workspace)/.nuget/packages
-        cacheHitVar: 'CACHE_RESTORED'
-
     # Standard restore command
     - task: DotNetCoreCLI@2
       inputs:
@@ -177,12 +169,22 @@ stages:
         script: |
           Write-Host "Installing runtime packs for win-x64..."
           # Install Windows desktop runtime workload
-          dotnet workload install wasm-tools
+          dotnet workload install ManagedDesktop
+          dotnet workload install UniversalBuildTools
 
           # Manual restore with runtime identifier
           dotnet restore "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" --runtime win-x64
           # Check if the runtime packs were installed
           dotnet list "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" package
+
+    - task: Cache@2
+      displayName: 'Cache NuGet packages'
+      inputs:
+        key: 'nuget | "$(Agent.OS)" | **/*.csproj'
+        restoreKeys: |
+          nuget | "$(Agent.OS)"
+        path: $(Pipeline.Workspace)/.nuget/packages
+        cacheHitVar: 'CACHE_RESTORED'
 
     - task: VSBuild@1
       displayName: 'Build Self-Contained MSIX'
