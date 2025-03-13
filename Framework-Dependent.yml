@@ -27,9 +27,6 @@ stages:
         version: '8.0.x'
         includePreviewVersions: false
 
-    - script: |
-        dotnet workload update
-      displayName: 'Update DotNet Workloads'
 # Nuget Restore needed to properly handle Windows Runtime (for whatever reason)
     - task: NuGetToolInstaller@1
       displayName: Install NuGet
