@@ -153,7 +153,7 @@ stages:
     - task: Cache@2
       displayName: 'Cache .NET SDK'
       inputs:
-        key: 'dotnetsdk | "$(Agent.OS)" | 8.0.x'
+        key: 'dotnetsdk | "$(Agent.OS)" | "8.0.x"'
         path: $(Agent.TempDirectory)/.dotnet
         cacheHitVar: 'DOTNETSDK_CACHE_RESTORED'
 
@@ -161,7 +161,7 @@ stages:
     - task: Cache@2
       displayName: 'Cache win-x64 runtime'
       inputs:
-        key: 'runtime | "$(Agent.OS)" | win-$(buildPlatform) | 8.0.x'
+        key: 'runtime | "$(Agent.OS)" | "win-$(buildPlatform)" | "8.0.x"'
         path: $(Agent.TempDirectory)/.dotnet/runtime
         cacheHitVar: 'RUNTIME_CACHE_RESTORED'
     - task: UseDotNet@2
