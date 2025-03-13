@@ -35,7 +35,7 @@ stages:
     - task: Cache@2
       displayName: 'Cache .NET SDK'
       inputs:
-        key: 'dotnetsdk | "$(Agent.OS)" | 8.0.x'
+        key: 'dotnetsdk | "$(Agent.OS)" | "8.0.x"'
         restoreKeys: |
           dotnetsdk | "$(Agent.OS)"
         path: $(Agent.TempDirectory)/.dotnet
