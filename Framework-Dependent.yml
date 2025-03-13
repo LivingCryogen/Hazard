@@ -45,12 +45,40 @@ stages:
         projects: '$(solution)'
         feedsToUse: 'select'
         arguments: '--runtime win-x64'
-    - task: DotNetCoreCLI@2
+    - task: PowerShell@2
       displayName: 'Install Windows Desktop Runtime'
       inputs:
-        command: 'custom'
-        custom: 'workload'
-        arguments: 'install wasm-tools desktop --verbosity normal'
+        targetType: 'inline'
+        script: |
+          # Search for desktop workloads and capture the output
+          $searchResults = dotnet workload search desktop
+          
+          # Display the search results for diagnostics
+          Write-Host "Available desktop workloads:"
+          $searchResults | Out-String | Write-Host
+          
+          # Extract any workload IDs that contain "desktop" (case insensitive)
+          $desktopWorkloads = $searchResults | Select-String -Pattern "desktop" -CaseSensitive:$false | ForEach-Object { 
+            if ($_ -match "^(\S+)") { 
+              $matches[1] 
+            }
+          }
+          
+          # Install all matching workloads
+          if ($desktopWorkloads) {
+            foreach ($workload in $desktopWorkloads) {
+              Write-Host "Installing workload: $workload"
+              dotnet workload install $workload
+            }
+          } else {
+            Write-Host "No desktop workloads found. Using direct package installation approach."
+          }
+          
+          # Force install the runtime packs (this approach should work regardless)
+          Write-Host "Installing runtime packs directly with NuGet"
+          $packagesPath = "$env:USERPROFILE\.nuget\packages"
+          nuget install Microsoft.WindowsDesktop.App.Runtime.win-x64 -Version 8.0.0 -OutputDirectory $packagesPath
+          nuget install Microsoft.NETCore.App.Runtime.win-x64 -Version 8.0.0 -OutputDirectory $packagesPath
     # Cache NuGet packages
     - task: Cache@2
       displayName: 'Cache NuGet packages'
