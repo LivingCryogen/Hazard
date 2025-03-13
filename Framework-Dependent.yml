@@ -46,10 +46,12 @@ stages:
         version: '8.0.x'
         includePreviewVersions: false
     - task: DotNetCoreCLI@2
+      displayName: 'Restore with runtime identifier'
       inputs:
         command: 'restore'
         projects: '**/*.csproj'
         feedsToUse: 'select'
+        arguments: '--runtime win-$(buildPlatform)'
 
     - task: VSBuild@1
       displayName: 'Build Framework-Dependent MSIX'
@@ -57,7 +59,7 @@ stages:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=false'
+        msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=false /p:IncludeNativeLibrariesForSelfExtract=false'
 
     - task: CopyFiles@2
       displayName: 'Copy MSIX package to publish directory'
