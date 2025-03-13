@@ -90,27 +90,6 @@ stages:
         az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
       displayName: 'Azure Login'
 
-    # Only run signing if directory exists and contains files to sign
-    - task: PowerShell@2
-      displayName: 'Check for files to sign'
-      inputs:
-        targetType: 'inline'
-        script: |
-          $path = "$(publishPath)"
-          if (Test-Path -Path $path) {
-            $filesToSign = Get-ChildItem -Path $path -Recurse -Include *.application,*.exe,*.msix -ErrorAction SilentlyContinue
-            if ($filesToSign.Count -gt 0) {
-              Write-Host "Found $($filesToSign.Count) files to sign in $path"
-              Write-Host "##vso[task.setvariable variable=FilesToSign]true"
-            } else {
-              Write-Host "No files found to sign in $path"
-              Write-Host "##vso[task.setvariable variable=FilesToSign]false"
-            }
-          } else {
-            Write-Host "Path does not exist: $path"
-            Write-Host "##vso[task.setvariable variable=FilesToSign]false"
-          }
-
     - task: TrustedSigning@0
       displayName: 'Sign with Trusted Signing'
       condition: eq(variables['FilesToSign'], 'true')
@@ -237,28 +216,6 @@ stages:
     - bash: |
         az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
       displayName: 'Azure Login'
-
-    # Only run signing if directory exists and contains files to sign
-    - task: PowerShell@2
-      displayName: 'Check for files to sign'
-      inputs:
-        targetType: 'inline'
-        script: |
-          $path = "$(publishPath)"
-          if (Test-Path -Path $path) {
-            $filesToSign = Get-ChildItem -Path $path -Recurse -Include *.application,*.exe,*.msix -ErrorAction SilentlyContinue
-            if ($filesToSign.Count -gt 0) {
-              Write-Host "Found $($filesToSign.Count) files to sign in $path"
-              Write-Host "##vso[task.setvariable variable=FilesToSign]true"
-            } else {
-              Write-Host "No files found to sign in $path"
-              Write-Host "##vso[task.setvariable variable=FilesToSign]false"
-            }
-          } else {
-            Write-Host "Path does not exist: $path"
-            Write-Host "##vso[task.setvariable variable=FilesToSign]false"
-          }
-
     - task: TrustedSigning@0
       displayName: 'Sign with Trusted Signing'
       condition: eq(variables['FilesToSign'], 'true')
