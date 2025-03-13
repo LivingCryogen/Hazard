@@ -50,35 +50,52 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          # Search for desktop workloads and capture the output
-          $searchResults = dotnet workload search desktop
+          # Search for all available workloads
+          $allWorkloads = dotnet workload search
           
-          # Display the search results for diagnostics
-          Write-Host "Available desktop workloads:"
-          $searchResults | Out-String | Write-Host
+          # Display all workloads for diagnostics
+          Write-Host "All available workloads:"
+          $allWorkloads | Out-String | Write-Host
           
-          # Extract any workload IDs that contain "desktop" (case insensitive)
-          $desktopWorkloads = $searchResults | Select-String -Pattern "desktop" -CaseSensitive:$false | ForEach-Object { 
-            if ($_ -match "^(\S+)") { 
-              $matches[1] 
-            }
+          # Look specifically for the Windows desktop SDK workload
+          # Filter for workloads containing "windowsdesktop" or "desktop" but not "maui"
+          $desktopWorkloads = $allWorkloads | Where-Object { 
+            $_ -match "(windowsdesktop|microsoft-net-sdk-windowsdesktop)" -and $_ -notmatch "maui"
+          } | ForEach-Object {
+            if ($_ -match "^(\S+)") { $matches[1] }
           }
           
-          # Install all matching workloads
+          # If we found appropriate workloads, install them
           if ($desktopWorkloads) {
             foreach ($workload in $desktopWorkloads) {
-              Write-Host "Installing workload: $workload"
+              Write-Host "Installing Windows desktop workload: $workload"
               dotnet workload install $workload
             }
           } else {
-            Write-Host "No desktop workloads found. Using direct package installation approach."
+            # Fallback to a known ID if no matching workload found
+            Write-Host "No matching Windows desktop workload found. Trying fallback ID..."
+            dotnet workload install microsoft-net-sdk-windowsdesktop
           }
           
-          # Force install the runtime packs (this approach should work regardless)
-          Write-Host "Installing runtime packs directly with NuGet"
-          $packagesPath = "$env:USERPROFILE\.nuget\packages"
-          nuget install Microsoft.WindowsDesktop.App.Runtime.win-x64 -Version 8.0.0 -OutputDirectory $packagesPath
-          nuget install Microsoft.NETCore.App.Runtime.win-x64 -Version 8.0.0 -OutputDirectory $packagesPath
+          # Create props file to ensure runtime identifier is set
+          $propsContent = @"
+          <Project>
+            <PropertyGroup>
+              <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+              <SelfContained>$(SelfContained)</SelfContained>
+            </PropertyGroup>
+            <ItemGroup>
+              <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
+              <FrameworkReference Include="Microsoft.NETCore.App" />
+            </ItemGroup>
+          </Project>
+          "@
+          
+          $propsPath = "$(Build.SourcesDirectory)\Directory.Build.props"
+          Set-Content -Path $propsPath -Value $propsContent
+          
+          # Force a restore with the runtime identifier
+          dotnet restore $(solution) /p:RuntimeIdentifier=win-x64 /v:n
     # Cache NuGet packages
     - task: Cache@2
       displayName: 'Cache NuGet packages'
