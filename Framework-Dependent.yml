@@ -93,7 +93,6 @@ stages:
 
     - task: TrustedSigning@0
       displayName: 'Sign with Trusted Signing'
-      condition: eq(variables['FilesToSign'], 'true')
       inputs:
         Endpoint: 'https://eus.codesigning.azure.net/'
         TrustedSigningAccountName: 'joshmcknightsigning'
@@ -220,7 +219,6 @@ stages:
       displayName: 'Azure Login'
     - task: TrustedSigning@0
       displayName: 'Sign with Trusted Signing'
-      condition: eq(variables['FilesToSign'], 'true')
       inputs:
         Endpoint: 'https://eus.codesigning.azure.net/'
         TrustedSigningAccountName: 'joshmcknightsigning'
