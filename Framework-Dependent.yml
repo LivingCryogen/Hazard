@@ -51,7 +51,7 @@ stages:
         command: 'restore'
         projects: '**/*.csproj'
         feedsToUse: 'select'
-        arguments: '--runtime win-$(buildPlatform)'
+        arguments: '--runtime win-x64'
 
     - task: VSBuild@1
       displayName: 'Build Framework-Dependent MSIX'
