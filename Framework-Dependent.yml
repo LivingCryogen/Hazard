@@ -70,7 +70,7 @@ stages:
       displayName: 'Copy MSIX package to publish directory'
       inputs:
         SourceFolder: '$(msixOutputPath)'
-        Contents: '**/*.msix'
+        Contents: '**/*'
         TargetFolder: '$(publishPath)'
         CleanTargetFolder: false
         OverWrite: true
@@ -196,7 +196,7 @@ stages:
       displayName: 'Copy MSIX package to publish directory'
       inputs:
         SourceFolder: '$(msixOutputPath)'
-        Contents: '**/*.msix'
+        Contents: '**/*'
         TargetFolder: '$(publishPath)'
         CleanTargetFolder: false
         OverWrite: true
