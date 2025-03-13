@@ -60,7 +60,7 @@ stages:
       inputs:
         command: 'custom'
         custom: 'workload'
-        arguments: 'install wasm-tools wasm-experimental microsoft-net-runtime-mono-tooling microsoft-net-runtime-android microsoft-net-runtime-ios microsoft-net-runtime-maccatalyst microsoft-net-runtime-macos microsoft-net-sdk-blazorwebassembly-aot'
+        arguments: 'install wasm-tools'
 
     - task: DotNetCoreCLI@2
       displayName: '.NET Restore With Runtime Pack'
