@@ -112,7 +112,6 @@ stages:
 
     - task: AzureCLI@2
       displayName: 'Copy to Blob Storage and Set Content Types'
-      condition: eq(variables['FilesToSign'], 'true')
       inputs:
         azureSubscription: 'JoshMcKnight Azure TopLevel'
         scriptType: 'pscore'
@@ -238,7 +237,6 @@ stages:
 
     - task: AzureCLI@2
       displayName: 'Copy to Blob Storage and Set Content Types'
-      condition: eq(variables['FilesToSign'], 'true')
       inputs:
         azureSubscription: 'JoshMcKnight Azure TopLevel'
         scriptType: 'pscore'
