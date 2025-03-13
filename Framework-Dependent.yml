@@ -98,7 +98,6 @@ stages:
         TrustedSigningAccountName: 'joshmcknightsigning'
         CertificateProfileName: 'JoshuaMcKnight'
         FilesFolder: '$(publishPath)'
-        FilesFolderFilter: 'application,exe,msix,msixbundle'
         ExcludeEnvironmentCredential: true
         ExcludeWorkloadIdentityCredential: true
         ExcludeManagedIdentityCredential: true
@@ -223,7 +222,6 @@ stages:
         TrustedSigningAccountName: 'joshmcknightsigning'
         CertificateProfileName: 'JoshuaMcKnight'
         FilesFolder: '$(publishPath)'
-        FilesFolderFilter: 'application,exe,msix,msixbundle'
         ExcludeEnvironmentCredential: true
         ExcludeWorkloadIdentityCredential: true
         ExcludeManagedIdentityCredential: true
