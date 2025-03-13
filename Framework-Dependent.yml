@@ -141,7 +141,10 @@ stages:
         version: '8.0.x'
         includePreviewVersions: false
 
-    # Cache NuGet packages
+    - script: |
+        dotnet workload update
+      displayName: 'Update DotNet Workloads'
+
     # Standard restore command
     - task: DotNetCoreCLI@2
       inputs:
