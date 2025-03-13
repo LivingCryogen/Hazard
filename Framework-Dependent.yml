@@ -27,13 +27,23 @@ stages:
         version: '8.0.x'
         includePreviewVersions: false
 
-    # Install wasm-tools workload - key step that fixes runtime pack issues
+    # The key is to explicitly install wasm-tools AND properly specify runtime in multiple places
     - task: DotNetCoreCLI@2
       displayName: 'Install wasm-tools Workload'
       inputs:
         command: 'custom'
         custom: 'workload'
         arguments: 'install wasm-tools'
+        
+    # Explicit command to add runtime packs
+    - task: PowerShell@2
+      displayName: 'Check and Install Runtime Packs'
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "Installing runtime packs directly..."
+          dotnet add D:\a\1\s\Bootstrap\Bootstrap.csproj package Microsoft.NETCore.App.Runtime.win-x64 --version 8.0.0
+          dotnet add D:\a\1\s\Bootstrap\Bootstrap.csproj package Microsoft.WindowsDesktop.App.Runtime.win-x64 --version 8.0.0
 
     # NuGet installation and restore
     - task: NuGetToolInstaller@1
@@ -53,14 +63,14 @@ stages:
         projects: '$(solution)'
         arguments: '--runtime win-x64'
 
-    # Build the MSIX package
+    # Build with explicit runtime identifier in msbuild args
     - task: VSBuild@1
       displayName: 'Build Framework-Dependent MSIX'
       inputs:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=false'
+        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=false'
 
     # Copy MSIX to publish directory
     - task: CopyFiles@2
