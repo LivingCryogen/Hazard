@@ -33,22 +33,8 @@ stages:
         command: 'restore'
         projects: '$(solution)'
         feedsToUse: 'select'
+        arguments: '--runtime win-x64'
 
-# Explicitly install runtime packs
-    - task: PowerShell@2
-      displayName: 'Install Runtime Packs'
-      inputs:
-        targetType: 'inline'
-        script: |
-          Write-Host "Installing runtime packs for win-x64..."
-          # Install Windows desktop runtime workload
-          dotnet workload install ManagedDesktop
-          dotnet workload install UniversalBuildTools
-
-          # Manual restore with runtime identifier
-          dotnet restore "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" --runtime win-x64
-          # Check if the runtime packs were installed
-          dotnet list "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" package
     # Cache NuGet packages
     - task: Cache@2
       displayName: 'Cache NuGet packages'
@@ -158,21 +144,7 @@ stages:
         command: 'restore'
         projects: '$(solution)'
         feedsToUse: 'select'
-
-    - task: PowerShell@2
-      displayName: 'Install Runtime Packs'
-      inputs:
-        targetType: 'inline'
-        script: |
-          Write-Host "Installing runtime packs for win-x64..."
-          # Install Windows desktop runtime workload
-          dotnet workload install ManagedDesktop
-          dotnet workload install UniversalBuildTools
-
-          # Manual restore with runtime identifier
-          dotnet restore "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" --runtime win-x64
-          # Check if the runtime packs were installed
-          dotnet list "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" package
+        arguments: '--runtime win-x64'
 
     - task: Cache@2
       displayName: 'Cache NuGet packages'
