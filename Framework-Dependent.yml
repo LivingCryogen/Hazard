@@ -54,13 +54,33 @@ stages:
             }
           }
 
-    # .NET restore with RID
+    # Explicitly restore runtime packs for win-x64
     - task: DotNetCoreCLI@2
-      displayName: '.NET Restore with RID'
+      displayName: 'Install Required Runtime Packs'
+      inputs:
+        command: 'custom'
+        custom: 'workload'
+        arguments: 'install wasm-tools wasm-experimental microsoft-net-runtime-mono-tooling microsoft-net-runtime-android microsoft-net-runtime-ios microsoft-net-runtime-maccatalyst microsoft-net-runtime-macos microsoft-net-sdk-blazorwebassembly-aot'
+
+    - task: DotNetCoreCLI@2
+      displayName: '.NET Restore With Runtime Pack'
       inputs:
         command: 'restore'
         projects: '$(solution)'
-        arguments: '--runtime win-x64'
+        feedsToUse: 'select'
+        
+    # Explicitly install win-x64 runtime
+    - task: PowerShell@2
+      displayName: 'Explicitly Install Runtime Packs'
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "Installing required runtime packs..."
+          dotnet add package Microsoft.NETCore.App.Runtime.win-x64 --version 8.0.0
+          dotnet add package Microsoft.WindowsDesktop.App.Runtime.win-x64 --version 8.0.0
+          
+          # Force restore with runtime identifier
+          dotnet restore --runtime win-x64
 
     # Cache NuGet packages
     - task: Cache@2
@@ -72,7 +92,18 @@ stages:
         path: $(Pipeline.Workspace)/.nuget/packages
         cacheHitVar: 'CACHE_RESTORED'
 
-    # Build with explicit platform and RID settings
+    # Build with explicit platform and RID settings - two-step approach
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish .NET Project with Runtime'
+      inputs:
+        command: 'publish'
+        publishWebProjects: false
+        projects: '**/Bootstrap.csproj'
+        arguments: '--configuration $(buildConfiguration) --runtime win-x64 --self-contained false -p:PublishSingleFile=false -p:PublishReadyToRun=false'
+        zipAfterPublish: false
+        modifyOutputPath: true
+
+    # Now build the MSIX package
     - task: VSBuild@1
       displayName: 'Build Framework-Dependent MSIX'
       inputs:
@@ -165,7 +196,6 @@ stages:
             --content-type "application/vnd.ms-appx" `
             --account-name "$(storageAccount)" `
             --auth-mode login
-
 # Self-Contained Build and Deployment
 - stage: SelfContained
   displayName: 'Self-Contained Build'
