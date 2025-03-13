@@ -13,8 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <RuntimePackage Include="Microsoft.NETCore.App.Runtime.win-x64" />
-	<RuntimePackage Include="Microsoft.WindowsDesktop.App.Runtime.win-x64" />
+  	<FrameworkReference Update="Microsoft.NETCore.App" RuntimeFrameworkVersion="8.0.0" />
+  	<FrameworkReference Update="Microsoft.WindowsDesktop.App" RuntimeFrameworkVersion="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
