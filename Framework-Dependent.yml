@@ -52,7 +52,7 @@ stages:
           Write-Host "Installing runtime packs for win-x64..."
           # Install Windows desktop runtime workload
           dotnet workload install wasm-tools
-          dotnet workload install microsoft-net-sdk-windowsdesktop
+          dotnet workload install desktop
           # Manual restore with runtime identifier
           dotnet restore "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" --runtime win-x64
           # Check if the runtime packs were installed
@@ -199,7 +199,7 @@ stages:
           Write-Host "Installing runtime packs for win-x64..."
           # Install Windows desktop runtime workload
           dotnet workload install wasm-tools
-          dotnet workload install microsoft-net-sdk-windowsdesktop
+          dotnet workload install desktop
           # Manual restore with runtime identifier
           dotnet restore "$(Build.SourcesDirectory)\Bootstrap\Bootstrap.csproj" --runtime win-x64
           # Check if the runtime packs were installed
