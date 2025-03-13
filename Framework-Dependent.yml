@@ -27,7 +27,7 @@ stages:
         version: '8.0.x'
         includePreviewVersions: false
 
-# Nuget Restore needed to properly handle Windows Runtime (for whatever reason)
+    # NuGet installation and restore with explicit runtime
     - task: NuGetToolInstaller@1
       displayName: Install NuGet
 
@@ -35,66 +35,33 @@ stages:
       displayName: Restore NuGet Packages
       inputs:
         command: 'restore'
-        restoreSolution: '**/*.sln' # Replace with the path to your solution file
-        arguments: '-RuntimeIdentifier win-x64' # Add the runtime identifier argument
-
-    # Standard restore command
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: 'restore'
-        projects: '$(solution)'
-        feedsToUse: 'select'
-        arguments: '--runtime win-x64'
+        restoreSolution: '$(solution)'
+        
+    # Explicitly set Windows App SDK references if needed
     - task: PowerShell@2
-      displayName: 'Runtime Investigation'
+      displayName: 'Check Windows App SDK installation'
       inputs:
         targetType: 'inline'
         script: |
-          # First, check what we have before installing anything
-          Write-Host "===== BEFORE WORKLOAD INSTALLATION ====="
-          
-          # Get list of available workloads before
-          $workloadsBefore = dotnet workload list 2>&1 | Out-String
-          Write-Host "Available workloads:"
-          Write-Host $workloadsBefore
-          
-          # Get runtime packs in NuGet cache before
-          $runtimePacksBefore = Get-ChildItem -Path "$env:USERPROFILE\.nuget\packages" -Directory | 
-                                Where-Object { $_.Name -like "*runtime*" } | 
-                                Select-Object -ExpandProperty Name
-          
-          # Install wasm-tools
-          Write-Host "===== INSTALLING WASM-TOOLS ====="
-          dotnet workload install wasm-tools
-          
-          # Check what was installed
-          Write-Host "===== AFTER WORKLOAD INSTALLATION ====="
-          
-          # Get list of available workloads after
-          $workloadsAfter = dotnet workload list 2>&1 | Out-String
-          
-          # Get runtime packs in NuGet cache after
-          $runtimePacksAfter = Get-ChildItem -Path "$env:USERPROFILE\.nuget\packages" -Directory | 
-                              Where-Object { $_.Name -like "*runtime*" } | 
-                              Select-Object -ExpandProperty Name
-          
-          # Find new workloads
-          Write-Host "NEW WORKLOADS ADDED:"
-          if ($workloadsBefore -ne $workloadsAfter) {
-            Write-Host "Workloads added/changed. Full list:"
-            Write-Host $workloadsAfter
-          } else {
-            Write-Host "No change in workloads"
+          Write-Host "Checking if Windows App SDK is properly referenced..."
+          Get-ChildItem -Path "$(Build.SourcesDirectory)" -Filter "*.csproj" -Recurse | ForEach-Object {
+            $content = Get-Content $_.FullName -Raw
+            Write-Host "Project file: $($_.FullName)"
+            if ($content -match "Microsoft.WindowsAppSDK") {
+              Write-Host "Windows App SDK reference found"
+            } else {
+              Write-Host "No Windows App SDK reference found in this project"
+            }
           }
-          
-          # Find new runtime packs
-          Write-Host "NEW RUNTIME PACKS ADDED:"
-          $newRuntimePacks = $runtimePacksAfter | Where-Object { $runtimePacksBefore -notcontains $_ }
-          if ($newRuntimePacks) {
-            $newRuntimePacks | ForEach-Object { Write-Host "- $_" }
-          } else {
-            Write-Host "No new runtime packs added"
-          }
+
+    # .NET restore with RID
+    - task: DotNetCoreCLI@2
+      displayName: '.NET Restore with RID'
+      inputs:
+        command: 'restore'
+        projects: '$(solution)'
+        arguments: '--runtime win-x64'
+
     # Cache NuGet packages
     - task: Cache@2
       displayName: 'Cache NuGet packages'
@@ -104,13 +71,33 @@ stages:
           nuget | "$(Agent.OS)"
         path: $(Pipeline.Workspace)/.nuget/packages
         cacheHitVar: 'CACHE_RESTORED'
+
+    # Build with explicit platform and RID settings
     - task: VSBuild@1
       displayName: 'Build Framework-Dependent MSIX'
       inputs:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=false'
+        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=false'
+
+    # Verify MSIX creation success
+    - task: PowerShell@2
+      displayName: 'Verify MSIX Package'
+      inputs:
+        targetType: 'inline'
+        script: |
+          $msixPath = "$(msixOutputPath)"
+          Write-Host "Checking for MSIX packages in: $msixPath"
+          $msixFiles = Get-ChildItem -Path $msixPath -Filter "*.msix*" -Recurse
+          
+          if ($msixFiles.Count -eq 0) {
+            Write-Host "##vso[task.logissue type=warning]No MSIX packages found!"
+          } else {
+            foreach ($file in $msixFiles) {
+              Write-Host "Found MSIX package: $($file.FullName)"
+            }
+          }
 
     - task: CopyFiles@2
       displayName: 'Copy MSIX package to publish directory'
