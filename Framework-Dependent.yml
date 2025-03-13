@@ -70,7 +70,7 @@ stages:
       displayName: 'Copy MSIX package to publish directory'
       inputs:
         SourceFolder: '$(msixOutputPath)'
-        Contents: '**/*'
+        Contents: '**/*.msix*'
         TargetFolder: '$(publishPath)'
         CleanTargetFolder: false
         OverWrite: true
@@ -98,7 +98,7 @@ stages:
         TrustedSigningAccountName: 'joshmcknightsigning'
         CertificateProfileName: 'JoshuaMcKnight'
         FilesFolder: '$(publishPath)'
-        FilesFolderFilter: 'application,exe,msix'
+        FilesFolderFilter: 'application,exe,msix,msixbundle'
         ExcludeEnvironmentCredential: true
         ExcludeWorkloadIdentityCredential: true
         ExcludeManagedIdentityCredential: true
@@ -196,7 +196,7 @@ stages:
       displayName: 'Copy MSIX package to publish directory'
       inputs:
         SourceFolder: '$(msixOutputPath)'
-        Contents: '**/*'
+        Contents: '**/*.msix*'
         TargetFolder: '$(publishPath)'
         CleanTargetFolder: false
         OverWrite: true
@@ -223,7 +223,7 @@ stages:
         TrustedSigningAccountName: 'joshmcknightsigning'
         CertificateProfileName: 'JoshuaMcKnight'
         FilesFolder: '$(publishPath)'
-        FilesFolderFilter: 'application,exe,msix'
+        FilesFolderFilter: 'application,exe,msix,msixbundle'
         ExcludeEnvironmentCredential: true
         ExcludeWorkloadIdentityCredential: true
         ExcludeManagedIdentityCredential: true
