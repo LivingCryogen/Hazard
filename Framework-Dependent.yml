@@ -35,6 +35,11 @@ stages:
         feedsToUse: 'select'
         arguments: '--runtime win-x64'
 
+    - script: |
+        dotnet workload install windowsdesktop
+        dotnet workload install microsoft-net-runtime-win-x64
+      displayName: 'Install Windows Desktop and Runtime Workloads'
+
     # Cache NuGet packages
     - task: Cache@2
       displayName: 'Cache NuGet packages'
@@ -146,6 +151,10 @@ stages:
         feedsToUse: 'select'
         arguments: '--runtime win-x64'
 
+    - script: |
+        dotnet workload install windowsdesktop
+        dotnet workload install microsoft-net-runtime-win-x64
+      displayName: 'Install Windows Desktop and Runtime Workloads'
     - task: Cache@2
       displayName: 'Cache NuGet packages'
       inputs:
