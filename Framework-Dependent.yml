@@ -1,4 +1,4 @@
-# .NET Desktop MSIX packaging pipeline with separate stages for build types
+# Simplified .NET Desktop MSIX packaging pipeline
 trigger: none
 
 variables:
@@ -9,7 +9,6 @@ variables:
   containerName: 'hazard'
 
 stages:
-# Framework-Dependent Build and Deployment
 - stage: FrameworkDependent
   displayName: 'Framework-Dependent Build'
   variables:
@@ -21,13 +20,22 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
+    # Set up .NET SDK
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
         version: '8.0.x'
         includePreviewVersions: false
 
-    # NuGet installation and restore with explicit runtime
+    # Install wasm-tools workload - key step that fixes runtime pack issues
+    - task: DotNetCoreCLI@2
+      displayName: 'Install wasm-tools Workload'
+      inputs:
+        command: 'custom'
+        custom: 'workload'
+        arguments: 'install wasm-tools'
+
+    # NuGet installation and restore
     - task: NuGetToolInstaller@1
       displayName: Install NuGet
 
@@ -36,100 +44,25 @@ stages:
       inputs:
         command: 'restore'
         restoreSolution: '$(solution)'
-        
-    # Explicitly set Windows App SDK references if needed
-    - task: PowerShell@2
-      displayName: 'Check Windows App SDK installation'
-      inputs:
-        targetType: 'inline'
-        script: |
-          Write-Host "Checking if Windows App SDK is properly referenced..."
-          Get-ChildItem -Path "$(Build.SourcesDirectory)" -Filter "*.csproj" -Recurse | ForEach-Object {
-            $content = Get-Content $_.FullName -Raw
-            Write-Host "Project file: $($_.FullName)"
-            if ($content -match "Microsoft.WindowsAppSDK") {
-              Write-Host "Windows App SDK reference found"
-            } else {
-              Write-Host "No Windows App SDK reference found in this project"
-            }
-          }
 
-    # Explicitly restore runtime packs for win-x64
+    # Standard restore
     - task: DotNetCoreCLI@2
-      displayName: 'Install Required Runtime Packs'
-      inputs:
-        command: 'custom'
-        custom: 'workload'
-        arguments: 'install wasm-tools'
-
-    - task: DotNetCoreCLI@2
-      displayName: '.NET Restore With Runtime Pack'
+      displayName: 'Restore Solution'
       inputs:
         command: 'restore'
         projects: '$(solution)'
-        feedsToUse: 'select'
-        
-    # Explicitly install win-x64 runtime
-    - task: PowerShell@2
-      displayName: 'Explicitly Install Runtime Packs'
-      inputs:
-        targetType: 'inline'
-        script: |
-          Write-Host "Installing required runtime packs..."
-          dotnet add package Microsoft.NETCore.App.Runtime.win-x64 --version 8.0.0
-          dotnet add package Microsoft.WindowsDesktop.App.Runtime.win-x64 --version 8.0.0
-          
-          # Force restore with runtime identifier
-          dotnet restore --runtime win-x64
+        arguments: '--runtime win-x64'
 
-    # Cache NuGet packages
-    - task: Cache@2
-      displayName: 'Cache NuGet packages'
-      inputs:
-        key: 'nuget | "$(Agent.OS)" | **/*.csproj'
-        restoreKeys: |
-          nuget | "$(Agent.OS)"
-        path: $(Pipeline.Workspace)/.nuget/packages
-        cacheHitVar: 'CACHE_RESTORED'
-
-    # Build with explicit platform and RID settings - two-step approach
-    - task: DotNetCoreCLI@2
-      displayName: 'Publish .NET Project with Runtime'
-      inputs:
-        command: 'publish'
-        publishWebProjects: false
-        projects: '**/Bootstrap.csproj'
-        arguments: '--configuration $(buildConfiguration) --runtime win-x64 --self-contained false -p:PublishSingleFile=false -p:PublishReadyToRun=false'
-        zipAfterPublish: false
-        modifyOutputPath: true
-
-    # Now build the MSIX package
+    # Build the MSIX package
     - task: VSBuild@1
       displayName: 'Build Framework-Dependent MSIX'
       inputs:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=false'
+        msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=false'
 
-    # Verify MSIX creation success
-    - task: PowerShell@2
-      displayName: 'Verify MSIX Package'
-      inputs:
-        targetType: 'inline'
-        script: |
-          $msixPath = "$(msixOutputPath)"
-          Write-Host "Checking for MSIX packages in: $msixPath"
-          $msixFiles = Get-ChildItem -Path $msixPath -Filter "*.msix*" -Recurse
-          
-          if ($msixFiles.Count -eq 0) {
-            Write-Host "##vso[task.logissue type=warning]No MSIX packages found!"
-          } else {
-            foreach ($file in $msixFiles) {
-              Write-Host "Found MSIX package: $($file.FullName)"
-            }
-          }
-
+    # Copy MSIX to publish directory
     - task: CopyFiles@2
       displayName: 'Copy MSIX package to publish directory'
       inputs:
@@ -139,6 +72,7 @@ stages:
         CleanTargetFolder: false
         OverWrite: true
 
+    # Azure CLI setup
     - task: AzureCLI@2
       displayName: 'Azure CLI'
       inputs:
@@ -151,10 +85,12 @@ stages:
           echo "##vso[task.setvariable variable=ARM_TENANT_ID;issecret=true]$tenantId"
         addSpnToEnvironment: true
 
+    # Azure login
     - bash: |
         az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
       displayName: 'Azure Login'
 
+    # Sign the package
     - task: TrustedSigning@0
       displayName: 'Sign with Trusted Signing'
       inputs:
@@ -162,6 +98,7 @@ stages:
         TrustedSigningAccountName: 'joshmcknightsigning'
         CertificateProfileName: 'JoshuaMcKnight'
         FilesFolder: '$(publishPath)'
+        FilesFolderRecurse: true
         ExcludeEnvironmentCredential: true
         ExcludeWorkloadIdentityCredential: true
         ExcludeManagedIdentityCredential: true
@@ -173,6 +110,7 @@ stages:
         ExcludeAzureDeveloperCliCredential: true
         ExcludeInteractiveBrowserCredential: true
 
+    # Upload to blob storage
     - task: AzureCLI@2
       displayName: 'Copy to Blob Storage and Set Content Types'
       inputs:
