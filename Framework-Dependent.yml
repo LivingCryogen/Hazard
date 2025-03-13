@@ -27,7 +27,7 @@ stages:
         version: '8.0.x'
         includePreviewVersions: false
 
-    # The key is to explicitly install wasm-tools AND properly specify runtime in multiple places
+    # Install wasm-tools workload - this mysteriously helps with runtime packs
     - task: DotNetCoreCLI@2
       displayName: 'Install wasm-tools Workload'
       inputs:
@@ -35,15 +35,14 @@ stages:
         custom: 'workload'
         arguments: 'install wasm-tools'
         
-    # Explicit command to add runtime packs
+    # Global restore with runtime identifier - better approach than direct package installation
     - task: PowerShell@2
-      displayName: 'Check and Install Runtime Packs'
+      displayName: 'Global Runtime Pack Restore'
       inputs:
         targetType: 'inline'
         script: |
-          Write-Host "Installing runtime packs directly..."
-          dotnet add D:\a\1\s\Bootstrap\Bootstrap.csproj package Microsoft.NETCore.App.Runtime.win-x64 --version 8.0.0
-          dotnet add D:\a\1\s\Bootstrap\Bootstrap.csproj package Microsoft.WindowsDesktop.App.Runtime.win-x64 --version 8.0.0
+          Write-Host "Performing global restore with runtime identifier..."
+          dotnet restore "$(solution)" --runtime win-x64 -v normal
 
     # NuGet installation and restore
     - task: NuGetToolInstaller@1
