@@ -7,7 +7,6 @@ variables:
   buildConfiguration: 'Release'
   storageAccount: 'jm84storage'
   containerName: 'hazard'
-  NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
 
 stages:
 # Framework-Dependent Build and Deployment
@@ -22,36 +21,28 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
-    # Cache Nuget Packages
-    - task: Cache@2
-      displayName: 'Cache NuGet packages'
-      inputs:
-        key: 'nuget | "$(Agent.OS)" | **/packages.lock.json,**/packages.config,**/*.csproj'
-        restoreKeys: |
-          nuget | "$(Agent.OS)"
-        path: $(NUGET_PACKAGES)
-        cacheHitVar: 'CACHE_RESTORED'
-    # Cache .NET SDK
-    - task: Cache@2
-      displayName: 'Cache .NET SDK'
-      inputs:
-        key: 'dotnetsdk | "$(Agent.OS)" | "8.0.x"'
-        restoreKeys: |
-          dotnetsdk | "$(Agent.OS)"
-        path: $(Agent.TempDirectory)/.dotnet
-        cacheHitVar: 'DOTNETSDK_CACHE_RESTORED'
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
         version: '8.0.x'
         includePreviewVersions: false
+
+    # Cache NuGet packages
+    - task: Cache@2
+      displayName: 'Cache NuGet packages'
+      inputs:
+        key: 'nuget | "$(Agent.OS)" | **/*.csproj'
+        restoreKeys: |
+          nuget | "$(Agent.OS)"
+        path: $(Pipeline.Workspace)/.nuget/packages
+        cacheHitVar: 'CACHE_RESTORED'
+
+    # Standard restore command
     - task: DotNetCoreCLI@2
-      displayName: 'Restore with runtime identifier'
       inputs:
         command: 'restore'
-        projects: '**/*.csproj'
+        projects: '$(solution)'
         feedsToUse: 'select'
-        arguments: '--runtime win-x64'
 
     - task: VSBuild@1
       displayName: 'Build Framework-Dependent MSIX'
@@ -59,7 +50,7 @@ stages:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=false /p:IncludeNativeLibrariesForSelfExtract=false'
+        msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=false'
 
     - task: CopyFiles@2
       displayName: 'Copy MSIX package to publish directory'
@@ -86,8 +77,30 @@ stages:
         az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
       displayName: 'Azure Login'
 
+    # Only run signing if directory exists and contains files to sign
+    - task: PowerShell@2
+      displayName: 'Check for files to sign'
+      inputs:
+        targetType: 'inline'
+        script: |
+          $path = "$(publishPath)"
+          if (Test-Path -Path $path) {
+            $filesToSign = Get-ChildItem -Path $path -Recurse -Include *.application,*.exe,*.msix -ErrorAction SilentlyContinue
+            if ($filesToSign.Count -gt 0) {
+              Write-Host "Found $($filesToSign.Count) files to sign in $path"
+              Write-Host "##vso[task.setvariable variable=FilesToSign]true"
+            } else {
+              Write-Host "No files found to sign in $path"
+              Write-Host "##vso[task.setvariable variable=FilesToSign]false"
+            }
+          } else {
+            Write-Host "Path does not exist: $path"
+            Write-Host "##vso[task.setvariable variable=FilesToSign]false"
+          }
+
     - task: TrustedSigning@0
       displayName: 'Sign with Trusted Signing'
+      condition: eq(variables['FilesToSign'], 'true')
       inputs:
         Endpoint: 'https://eus.codesigning.azure.net/'
         TrustedSigningAccountName: 'joshmcknightsigning'
@@ -107,6 +120,7 @@ stages:
 
     - task: AzureCLI@2
       displayName: 'Copy to Blob Storage and Set Content Types'
+      condition: eq(variables['FilesToSign'], 'true')
       inputs:
         azureSubscription: 'JoshMcKnight Azure TopLevel'
         scriptType: 'pscore'
@@ -141,42 +155,28 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
-        # Cache NuGet packages - same key as framework-dependent build
-    - task: Cache@2
-      displayName: 'Cache NuGet packages'
-      inputs:
-        key: 'nuget | "$(Agent.OS)" | **/packages.lock.json,**/packages.config,**/*.csproj'
-        restoreKeys: |
-          nuget | "$(Agent.OS)"
-        path: $(NUGET_PACKAGES)
-        cacheHitVar: 'CACHE_RESTORED'
-
-    # Cache .NET SDK - same key as framework-dependent build
-    - task: Cache@2
-      displayName: 'Cache .NET SDK'
-      inputs:
-        key: 'dotnetsdk | "$(Agent.OS)" | "8.0.x"'
-        path: $(Agent.TempDirectory)/.dotnet
-        cacheHitVar: 'DOTNETSDK_CACHE_RESTORED'
-
-    # Cache runtime for win-x64 specifically
-    - task: Cache@2
-      displayName: 'Cache win-x64 runtime'
-      inputs:
-        key: 'runtime | "$(Agent.OS)" | "win-$(buildPlatform)" | "8.0.x"'
-        path: $(Agent.TempDirectory)/.dotnet/runtime
-        cacheHitVar: 'RUNTIME_CACHE_RESTORED'
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
         version: '8.0.x'
         includePreviewVersions: false
+
+    # Cache NuGet packages
+    - task: Cache@2
+      displayName: 'Cache NuGet packages'
+      inputs:
+        key: 'nuget | "$(Agent.OS)" | **/*.csproj'
+        restoreKeys: |
+          nuget | "$(Agent.OS)"
+        path: $(Pipeline.Workspace)/.nuget/packages
+        cacheHitVar: 'CACHE_RESTORED'
+
+    # Standard restore command
     - task: DotNetCoreCLI@2
       inputs:
         command: 'restore'
-        projects: '**/*.csproj'
+        projects: '$(solution)'
         feedsToUse: 'select'
-        arguments: '--runtime win-$(buildPlatform)'
 
     - task: VSBuild@1
       displayName: 'Build Self-Contained MSIX'
@@ -184,7 +184,7 @@ stages:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:RuntimeIdentifier=win-$(buildPlatform) /p:SelfContained=true /p:IncludeNativeLibrariesForSelfExtract=true'
+        msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=true'
 
     - task: CopyFiles@2
       displayName: 'Copy MSIX package to publish directory'
@@ -211,8 +211,30 @@ stages:
         az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
       displayName: 'Azure Login'
 
+    # Only run signing if directory exists and contains files to sign
+    - task: PowerShell@2
+      displayName: 'Check for files to sign'
+      inputs:
+        targetType: 'inline'
+        script: |
+          $path = "$(publishPath)"
+          if (Test-Path -Path $path) {
+            $filesToSign = Get-ChildItem -Path $path -Recurse -Include *.application,*.exe,*.msix -ErrorAction SilentlyContinue
+            if ($filesToSign.Count -gt 0) {
+              Write-Host "Found $($filesToSign.Count) files to sign in $path"
+              Write-Host "##vso[task.setvariable variable=FilesToSign]true"
+            } else {
+              Write-Host "No files found to sign in $path"
+              Write-Host "##vso[task.setvariable variable=FilesToSign]false"
+            }
+          } else {
+            Write-Host "Path does not exist: $path"
+            Write-Host "##vso[task.setvariable variable=FilesToSign]false"
+          }
+
     - task: TrustedSigning@0
       displayName: 'Sign with Trusted Signing'
+      condition: eq(variables['FilesToSign'], 'true')
       inputs:
         Endpoint: 'https://eus.codesigning.azure.net/'
         TrustedSigningAccountName: 'joshmcknightsigning'
@@ -232,6 +254,7 @@ stages:
 
     - task: AzureCLI@2
       displayName: 'Copy to Blob Storage and Set Content Types'
+      condition: eq(variables['FilesToSign'], 'true')
       inputs:
         azureSubscription: 'JoshMcKnight Azure TopLevel'
         scriptType: 'pscore'
