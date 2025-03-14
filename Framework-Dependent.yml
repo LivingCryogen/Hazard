@@ -193,6 +193,48 @@ stages:
               git config --global user.email "joshua.a.mcknight@gmail.com"
               git config --global user.name "Joshua McKnight via Azure Pipelines"
 
+      # Deploy to /docs
+        - task: PowerShell@2
+          displayName: 'Deploy to GitHub /docs'
+          inputs:
+           targetType: inline
+           script: |
+             # check current Branch
+             $currentBranch = git rev-parse --abbrev-ref HEAD
+             Write-Host "Current branch: $currentBranch"
+
+             # ensure we get changes
+             git pull origin $currentBranch
+
+             # ensure /docs exists
+             $docsDirectory = "$(Build.SourcesDirectory)/docs"
+             if (-not (Test-Path $docsDirectory)) {
+               Write-Host "Creating /docs..."
+               New-Item -Path $docsDirectory -ItemType Directory -Force | Out-Null
+               "" | Out-File -FilePath "$docsDirectory/.nojekyll" -NoNewline
+             }
+             # create /packages if needed
+             $packagesDirectory = "$docsDirectory/packages"
+             if (-not (Test-Path $packagesDirectory)) {
+               New-Item -Path $packagesDirectory -ItemType Directory -Force | Out-Null
+             }
+             # create /framework-dependent if needed
+             $FWDDirectory = "$packagesDirectory/framework-dependent"
+             if (-not (Test-Path $FWDDirectory)) {
+               New-Item -Path $FWDDirectory -ItemType Directory -Force | Out-Null
+             }
+
+             Copy-Item =Path "$(System.ArtifactsDirectory)/msix-package/*" -Destination $FWDDirectory -Recurse -Force
+             git add -A
+              # Check if there are changes to commit
+             $status = git status --porcelain
+             if ($status) {
+              Write-Host "Changes detected, committing and pushing..."
+              git commit -m "Update GitHub Pages from Azure DevOps build $(Build.BuildNumber)"
+              git push origin $currentBranch
+             } else {
+              Write-Host "No changes detected, skipping commit and push."
+             }
 
 # Upload to blob storage -- Deprecated in favor of GitHub Pages deployment
 #    - task: AzureCLI@2
