@@ -2,7 +2,7 @@
 trigger: none
 
 variables:
-  solution: '**/Hazard.sln'
+  solution: '**/*.sln'
   buildPlatform: 'x64'
   buildConfiguration: 'Release'
   storageAccount: 'jm84storage'
@@ -20,11 +20,11 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
-    # Cache .NET SDK
+    # Cache .NET SDK using a proper string key
     - task: Cache@2
       displayName: 'Cache .NET SDK'
       inputs:
-        key: 'dotnet | "$(Agent.OS)" | 8.0.x'
+        key: 'dotnet | "$(Agent.OS)" | sdk-8.0.x'
         path: $(Agent.ToolsDirectory)/dotnet
         cacheHitVar: 'DOTNET_CACHE_RESTORED'
       
@@ -36,11 +36,11 @@ stages:
         includePreviewVersions: false
       condition: ne(variables.DOTNET_CACHE_RESTORED, 'true')
 
-    # Cache workloads and runtime packs
+    # Cache workloads with a simple string key
     - task: Cache@2
-      displayName: 'Cache Workloads/Runtime Packs'
+      displayName: 'Cache Workloads'
       inputs:
-        key: 'workloads | "$(Agent.OS)" | 8.0.x | win-x64'
+        key: 'workloads | "$(Agent.OS)" | workloads-v1'
         path: $(DOTNET_CLI_HOME)/workloads
         cacheHitVar: 'WORKLOADS_CACHE_RESTORED'
         
@@ -65,11 +65,11 @@ stages:
             dotnet restore "$($_.FullName)" --runtime win-x64 -v normal
           }
 
-    # Cache NuGet packages
+    # Cache NuGet packages with a string-only key
     - task: Cache@2
       displayName: 'Cache NuGet packages'
       inputs:
-        key: 'nuget | "$(Agent.OS)" | **/packages.lock.json,**/packages.config,**/*.csproj,**/*.wapproj'
+        key: 'nuget | "$(Agent.OS)" | nuget-cache-v1'
         restoreKeys: |
           nuget | "$(Agent.OS)"
         path: $(Pipeline.Workspace)/.nuget/packages
@@ -130,11 +130,11 @@ stages:
         az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
       displayName: 'Azure Login'
 
-    # Cache signing certificates and credentials
+    # Cache signing credentials with a simple string key
     - task: Cache@2
       displayName: 'Cache Signing Credentials'
       inputs:
-        key: 'trusted-signing | "$(Agent.OS)" | joshmcknightsigning | JoshuaMcKnight'
+        key: 'trusted-signing | "$(Agent.OS)" | signing-v1'
         path: $(AZURE_CONFIG_DIR)
         cacheHitVar: 'SIGNING_CACHE_RESTORED'
         
