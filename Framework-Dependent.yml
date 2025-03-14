@@ -2,7 +2,7 @@
 trigger: none
 
 variables:
-  solution: '**/*.sln'
+  solution: '**/Hazard.sln'
   buildPlatform: 'x64'
   buildConfiguration: 'Release'
   storageAccount: 'jm84storage'
