@@ -20,13 +20,30 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
-    # Set up .NET SDK
+    # Cache .NET SDK
+    - task: Cache@2
+      displayName: 'Cache .NET SDK'
+      inputs:
+        key: 'dotnet | "$(Agent.OS)" | 8.0.x'
+        path: $(Agent.ToolsDirectory)/dotnet
+        cacheHitVar: 'DOTNET_CACHE_RESTORED'
+      
+    # Set up .NET SDK (skipped if cache is available)
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
         version: '8.0.x'
         includePreviewVersions: false
+      condition: ne(variables.DOTNET_CACHE_RESTORED, 'true')
 
+    # Cache workloads and runtime packs
+    - task: Cache@2
+      displayName: 'Cache Workloads/Runtime Packs'
+      inputs:
+        key: 'workloads | "$(Agent.OS)" | 8.0.x | win-x64'
+        path: $(DOTNET_CLI_HOME)/workloads
+        cacheHitVar: 'WORKLOADS_CACHE_RESTORED'
+        
     # Install wasm-tools workload - this mysteriously helps with runtime packs
     - task: DotNetCoreCLI@2
       displayName: 'Install wasm-tools Workload'
@@ -35,7 +52,7 @@ stages:
         custom: 'workload'
         arguments: 'install wasm-tools'
         
-    # Global restore with runtime identifier - better approach than direct package installation
+    # Global restore with runtime identifier - with proper path handling
     - task: PowerShell@2
       displayName: 'Global Runtime Pack Restore'
       inputs:
@@ -48,13 +65,22 @@ stages:
             dotnet restore "$($_.FullName)" --runtime win-x64 -v normal
           }
 
-
+    # Cache NuGet packages
+    - task: Cache@2
+      displayName: 'Cache NuGet packages'
+      inputs:
+        key: 'nuget | "$(Agent.OS)" | **/packages.lock.json,**/packages.config,**/*.csproj,**/*.wapproj'
+        restoreKeys: |
+          nuget | "$(Agent.OS)"
+        path: $(Pipeline.Workspace)/.nuget/packages
+        cacheHitVar: 'NUGET_CACHE_RESTORED'
+    
     # NuGet installation and restore
     - task: NuGetToolInstaller@1
-      displayName: Install NuGet
+      displayName: 'Install NuGet'
 
     - task: NuGetCommand@2
-      displayName: Restore NuGet Packages
+      displayName: 'Restore NuGet Packages'
       inputs:
         command: 'restore'
         restoreSolution: '$(solution)'
@@ -67,14 +93,14 @@ stages:
         projects: '$(solution)'
         arguments: '--runtime win-x64'
 
-    # Build with explicit runtime identifier in msbuild args
+    # Build with explicit framework references and dependencies
     - task: VSBuild@1
       displayName: 'Build Framework-Dependent MSIX'
       inputs:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=false'
+        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=false /p:AppxPackageIncludePrivateApis=true /p:BuildForStore=false /p:IncludeAllResourceLanguages=false'
 
     # Copy MSIX to publish directory
     - task: CopyFiles@2
@@ -104,6 +130,14 @@ stages:
         az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
       displayName: 'Azure Login'
 
+    # Cache signing certificates and credentials
+    - task: Cache@2
+      displayName: 'Cache Signing Credentials'
+      inputs:
+        key: 'trusted-signing | "$(Agent.OS)" | joshmcknightsigning | JoshuaMcKnight'
+        path: $(AZURE_CONFIG_DIR)
+        cacheHitVar: 'SIGNING_CACHE_RESTORED'
+        
     # Sign the package
     - task: TrustedSigning@0
       displayName: 'Sign with Trusted Signing'
@@ -124,7 +158,7 @@ stages:
         ExcludeAzureDeveloperCliCredential: true
         ExcludeInteractiveBrowserCredential: true
 
-    # Upload to blob storage# Upload to blob storage
+    # Upload to blob storage
     - task: AzureCLI@2
       displayName: 'Copy to Blob Storage and Set Content Types'
       inputs:
@@ -161,7 +195,6 @@ stages:
           } else {
             Write-Host "##vso[task.logissue type=warning]No MSIX files found to update content type"
           }
-
 # Self-Contained Build and Deployment
 - stage: SelfContained
   displayName: 'Self-Contained Build'
