@@ -147,6 +147,7 @@ stages:
         CertificateProfileName: 'JoshuaMcKnight'
         FilesFolder: '$(publishPath)'
         FilesFolderRecurse: true
+        FilesFolderFilter: '*.msixbundle'
         ExcludeEnvironmentCredential: true
         ExcludeWorkloadIdentityCredential: true
         ExcludeManagedIdentityCredential: true
