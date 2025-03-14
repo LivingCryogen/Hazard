@@ -63,16 +63,6 @@ stages:
             Write-Host "Restoring solution: $($_.FullName)"
             dotnet restore "$($_.FullName)" --runtime win-x64 -v normal
           }
-
-    # Cache NuGet packages
-    - task: Cache@2
-      displayName: 'Cache NuGet packages'
-      inputs:
-        key: 'nuget | "$(Agent.OS)" | "v1"'
-        restoreKeys: |
-          nuget | "$(Agent.OS)"
-        path: $(NUGET_PACKAGES)
-        cacheHitVar: 'NUGET_CACHE_RESTORED'
     
     # NuGet installation and restore
     - task: NuGetToolInstaller@1
