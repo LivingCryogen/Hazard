@@ -20,11 +20,11 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
-    # Cache .NET SDK using a proper string key
+    # Cache .NET SDK with proper string literals
     - task: Cache@2
       displayName: 'Cache .NET SDK'
       inputs:
-        key: 'dotnet | "$(Agent.OS)" | sdk-8.0.x'
+        key: 'dotnet | "$(Agent.OS)" | "sdk-8.0.x"'
         path: $(Agent.ToolsDirectory)/dotnet
         cacheHitVar: 'DOTNET_CACHE_RESTORED'
       
@@ -36,11 +36,11 @@ stages:
         includePreviewVersions: false
       condition: ne(variables.DOTNET_CACHE_RESTORED, 'true')
 
-    # Cache workloads with a simple string key
+    # Cache workloads with proper string literals
     - task: Cache@2
       displayName: 'Cache Workloads'
       inputs:
-        key: 'workloads | "$(Agent.OS)" | workloads-v1'
+        key: 'workloads | "$(Agent.OS)" | "v1"'
         path: $(DOTNET_CLI_HOME)/workloads
         cacheHitVar: 'WORKLOADS_CACHE_RESTORED'
         
@@ -65,11 +65,11 @@ stages:
             dotnet restore "$($_.FullName)" --runtime win-x64 -v normal
           }
 
-    # Cache NuGet packages with a string-only key
+    # Cache NuGet packages with proper string literals
     - task: Cache@2
       displayName: 'Cache NuGet packages'
       inputs:
-        key: 'nuget | "$(Agent.OS)" | nuget-cache-v1'
+        key: 'nuget | "$(Agent.OS)" | "v1"'
         restoreKeys: |
           nuget | "$(Agent.OS)"
         path: $(Pipeline.Workspace)/.nuget/packages
@@ -130,11 +130,11 @@ stages:
         az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
       displayName: 'Azure Login'
 
-    # Cache signing credentials with a simple string key
+    # Cache signing credentials with proper string literals
     - task: Cache@2
       displayName: 'Cache Signing Credentials'
       inputs:
-        key: 'trusted-signing | "$(Agent.OS)" | signing-v1'
+        key: 'signing | "$(Agent.OS)" | "v1"'
         path: $(AZURE_CONFIG_DIR)
         cacheHitVar: 'SIGNING_CACHE_RESTORED'
         
