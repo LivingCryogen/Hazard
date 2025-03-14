@@ -20,13 +20,6 @@ stages:
       vmImage: 'windows-latest'
     steps:
 
-    - task: Cache@2
-      displayName: 'Cache .NET SDK'
-      inputs:
-        key: 'dotnet | "$(Agent.OS)" | "sdk-8.0.x"'
-        path: $(Agent.ToolsDirectory)/dotnet
-        cacheHitVar: 'DOTNET_CACHE_RESTORED'
-      
     # Set up .NET SDK (skipped if cache is available)
     - task: UseDotNet@2
       inputs:
@@ -35,14 +28,6 @@ stages:
         includePreviewVersions: false
       condition: ne(variables.DOTNET_CACHE_RESTORED, 'true')
 
-    # Cache workloads
-    - task: Cache@2
-      displayName: 'Cache Workloads'
-      inputs:
-        key: 'workloads | "$(Agent.OS)" | "v1"'
-        path: $(DOTNET_CLI_HOME)/workloads
-        cacheHitVar: 'WORKLOADS_CACHE_RESTORED'
-        
     # Install wasm-tools workload - this mysteriously helps with runtime packs
     - task: DotNetCoreCLI@2
       displayName: 'Install wasm-tools Workload'
