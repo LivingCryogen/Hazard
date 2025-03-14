@@ -129,14 +129,6 @@ stages:
         az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
       displayName: 'Azure Login'
 
-    # Cache signing credentials with proper string literals
-    - task: Cache@2
-      displayName: 'Cache Signing Credentials'
-      inputs:
-        key: 'signing | "$(Agent.OS)" | "v1"'
-        path: $(AZURE_CONFIG_DIR)
-        cacheHitVar: 'SIGNING_CACHE_RESTORED'
-        
     # Sign the package
     - task: TrustedSigning@0
       displayName: 'Sign with Trusted Signing'
