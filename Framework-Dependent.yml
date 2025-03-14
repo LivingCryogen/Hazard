@@ -1,4 +1,4 @@
-# .NET Desktop MSIX packaging pipeline with separate stages for build types
+# Simplified .NET Desktop MSIX packaging pipeline
 trigger: none
 
 variables:
@@ -9,7 +9,6 @@ variables:
   containerName: 'hazard'
 
 stages:
-# Framework-Dependent Build and Deployment
 - stage: FrameworkDependent
   displayName: 'Framework-Dependent Build'
   variables:
@@ -21,51 +20,89 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
+    # Cache .NET SDK
+    - task: Cache@2
+      displayName: 'Cache .NET SDK'
+      inputs:
+        key: 'dotnet | "$(Agent.OS)" | 8.0.x'
+        path: $(Agent.ToolsDirectory)/dotnet
+        cacheHitVar: 'DOTNET_CACHE_RESTORED'
+      
+    # Set up .NET SDK (skipped if cache is available)
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
         version: '8.0.x'
         includePreviewVersions: false
+      condition: ne(variables.DOTNET_CACHE_RESTORED, 'true')
 
-    - script: |
-        dotnet workload update
-      displayName: 'Update DotNet Workloads'
-# Nuget Restore needed to properly handle Windows Runtime (for whatever reason)
-    - task: NuGetToolInstaller@1
-      displayName: Install NuGet
-
-    - task: NuGetCommand@2
-      displayName: Restore NuGet Packages
+    # Cache workloads and runtime packs
+    - task: Cache@2
+      displayName: 'Cache Workloads/Runtime Packs'
       inputs:
-        command: 'restore'
-        restoreSolution: '**/*.sln' # Replace with the path to your solution file
-        arguments: '-RuntimeIdentifier win-x64' # Add the runtime identifier argument
-
-    # Standard restore command
+        key: 'workloads | "$(Agent.OS)" | 8.0.x | win-x64'
+        path: $(DOTNET_CLI_HOME)/workloads
+        cacheHitVar: 'WORKLOADS_CACHE_RESTORED'
+        
+    # Install wasm-tools workload - this mysteriously helps with runtime packs
     - task: DotNetCoreCLI@2
+      displayName: 'Install wasm-tools Workload'
       inputs:
-        command: 'restore'
-        projects: '$(solution)'
-        feedsToUse: 'select'
-        arguments: '--runtime win-x64'
+        command: 'custom'
+        custom: 'workload'
+        arguments: 'install wasm-tools'
+        
+    # Global restore with runtime identifier - with proper path handling
+    - task: PowerShell@2
+      displayName: 'Global Runtime Pack Restore'
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "Performing global restore with runtime identifier..."
+          # Find solution files and restore them with runtime
+          Get-ChildItem -Path "$(Build.SourcesDirectory)" -Filter "*.sln" -Recurse | ForEach-Object {
+            Write-Host "Restoring solution: $($_.FullName)"
+            dotnet restore "$($_.FullName)" --runtime win-x64 -v normal
+          }
 
     # Cache NuGet packages
     - task: Cache@2
       displayName: 'Cache NuGet packages'
       inputs:
-        key: 'nuget | "$(Agent.OS)" | **/*.csproj'
+        key: 'nuget | "$(Agent.OS)" | **/packages.lock.json,**/packages.config,**/*.csproj,**/*.wapproj'
         restoreKeys: |
           nuget | "$(Agent.OS)"
         path: $(Pipeline.Workspace)/.nuget/packages
-        cacheHitVar: 'CACHE_RESTORED'
+        cacheHitVar: 'NUGET_CACHE_RESTORED'
+    
+    # NuGet installation and restore
+    - task: NuGetToolInstaller@1
+      displayName: 'Install NuGet'
+
+    - task: NuGetCommand@2
+      displayName: 'Restore NuGet Packages'
+      inputs:
+        command: 'restore'
+        restoreSolution: '$(solution)'
+
+    # Standard restore
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore Solution'
+      inputs:
+        command: 'restore'
+        projects: '$(solution)'
+        arguments: '--runtime win-x64'
+
+    # Build with explicit framework references and dependencies
     - task: VSBuild@1
       displayName: 'Build Framework-Dependent MSIX'
       inputs:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=false'
+        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=false /p:AppxPackageIncludePrivateApis=true /p:BuildForStore=false /p:IncludeAllResourceLanguages=false'
 
+    # Copy MSIX to publish directory
     - task: CopyFiles@2
       displayName: 'Copy MSIX package to publish directory'
       inputs:
@@ -75,6 +112,7 @@ stages:
         CleanTargetFolder: false
         OverWrite: true
 
+    # Azure CLI setup
     - task: AzureCLI@2
       displayName: 'Azure CLI'
       inputs:
@@ -87,10 +125,20 @@ stages:
           echo "##vso[task.setvariable variable=ARM_TENANT_ID;issecret=true]$tenantId"
         addSpnToEnvironment: true
 
+    # Azure login
     - bash: |
         az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
       displayName: 'Azure Login'
 
+    # Cache signing certificates and credentials
+    - task: Cache@2
+      displayName: 'Cache Signing Credentials'
+      inputs:
+        key: 'trusted-signing | "$(Agent.OS)" | joshmcknightsigning | JoshuaMcKnight'
+        path: $(AZURE_CONFIG_DIR)
+        cacheHitVar: 'SIGNING_CACHE_RESTORED'
+        
+    # Sign the package
     - task: TrustedSigning@0
       displayName: 'Sign with Trusted Signing'
       inputs:
@@ -98,6 +146,7 @@ stages:
         TrustedSigningAccountName: 'joshmcknightsigning'
         CertificateProfileName: 'JoshuaMcKnight'
         FilesFolder: '$(publishPath)'
+        FilesFolderRecurse: true
         ExcludeEnvironmentCredential: true
         ExcludeWorkloadIdentityCredential: true
         ExcludeManagedIdentityCredential: true
@@ -109,6 +158,7 @@ stages:
         ExcludeAzureDeveloperCliCredential: true
         ExcludeInteractiveBrowserCredential: true
 
+    # Upload to blob storage
     - task: AzureCLI@2
       displayName: 'Copy to Blob Storage and Set Content Types'
       inputs:
@@ -125,14 +175,26 @@ stages:
             --auth-mode login `
             --overwrite $true
 
-          # Set content type for MSIX package
-          az storage blob update `
-            --container-name "$(containerName)" `
-            --name "$(blobPath)/Hazard.msix" `
-            --content-type "application/vnd.ms-appx" `
-            --account-name "$(storageAccount)" `
-            --auth-mode login
-
+          # Get uploaded files to verify names
+          $uploadedFiles = az storage blob list --container-name "$(containerName)" --prefix "$(blobPath)" --account-name "$(storageAccount)" --auth-mode login --query "[].name" -o tsv
+          Write-Host "Uploaded files:"
+          $uploadedFiles | ForEach-Object { Write-Host "  $_" }
+          
+          # Find the msix/msixbundle file
+          $msixFile = $uploadedFiles | Where-Object { $_ -like "*.msix*" } | Select-Object -First 1
+          
+          if ($msixFile) {
+            Write-Host "Setting content type for: $msixFile"
+            # Set content type for MSIX package
+            az storage blob update `
+              --container-name "$(containerName)" `
+              --name "$msixFile" `
+              --content-type "application/vnd.ms-appx" `
+              --account-name "$(storageAccount)" `
+              --auth-mode login
+          } else {
+            Write-Host "##vso[task.logissue type=warning]No MSIX files found to update content type"
+          }
 # Self-Contained Build and Deployment
 - stage: SelfContained
   displayName: 'Self-Contained Build'
