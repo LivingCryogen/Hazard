@@ -158,43 +158,77 @@ stages:
         ExcludeAzureDeveloperCliCredential: true
         ExcludeInteractiveBrowserCredential: true
 
-    # Upload to blob storage
-    - task: AzureCLI@2
-      displayName: 'Copy to Blob Storage and Set Content Types'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Build to DevOps'
       inputs:
-        azureSubscription: 'JoshMcKnight Azure TopLevel'
-        scriptType: 'pscore'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          # Upload using the service principal auth with overwrite
-          az storage blob upload-batch `
-            --source "$(publishPath)" `
-            --destination "$(containerName)" `
-            --destination-path "$(blobPath)" `
-            --account-name "$(storageAccount)" `
-            --auth-mode login `
-            --overwrite $true
+       PathtoPublish: '$(publishPath)'
+       ArtifactName: 'msix-package'
+       publishLocation: Container
 
-          # Get uploaded files to verify names
-          $uploadedFiles = az storage blob list --container-name "$(containerName)" --prefix "$(blobPath)" --account-name "$(storageAccount)" --auth-mode login --query "[].name" -o tsv
-          Write-Host "Uploaded files:"
-          $uploadedFiles | ForEach-Object { Write-Host "  $_" }
-          
-          # Find the msix/msixbundle file
-          $msixFile = $uploadedFiles | Where-Object { $_ -like "*.msix*" } | Select-Object -First 1
-          
-          if ($msixFile) {
-            Write-Host "Setting content type for: $msixFile"
-            # Set content type for MSIX package
-            az storage blob update `
-              --container-name "$(containerName)" `
-              --name "$msixFile" `
-              --content-type "application/vnd.ms-appx" `
-              --account-name "$(storageAccount)" `
-              --auth-mode login
-          } else {
-            Write-Host "##vso[task.logissue type=warning]No MSIX files found to update content type"
-          }
+- stage: DeployFDBtoGHPages
+  displayName: 'Deploy FrameworkDependent Build to GHPages'
+  dependsOn: FrameworkDependent
+  jobs:
+    - job: Deploy
+      pool:
+        vmImage: 'windows-latest'
+      steps:
+        - task: DownloadBuildArtifacts@0
+          displayName: 'Download Built Artifacts'
+          inputs:
+           buildType: current
+           downloadType: 'single'
+           artifactName: 'msix-package'
+           downloadPath: '$(System.ArtifactsDirectory)'
+
+        - checkout: self
+          persistCredentials: true
+
+      # Configure commit authorship info
+        - task: PowerShell@2
+          displayName: 'Setup Git Configuration'
+          inputs:
+            targetType: 'inline'
+            script: |
+              git config --global user.email "joshua.a.mcknight@gmail.com"
+              git config --global user.name "Joshua McKnight via Azure Pipelines"
+
+
+# Upload to blob storage -- Deprecated in favor of GitHub Pages deployment
+#    - task: AzureCLI@2
+#      displayName: 'Copy to Blob Storage and Set Content Types'
+#      inputs:
+#        azureSubscription: 'JoshMcKnight Azure TopLevel'
+#        scriptType: 'pscore'
+#        scriptLocation: 'inlineScript'
+#        inlineScript: |
+#          # Upload using the service principal auth with overwrite
+#          az storage blob upload-batch `
+#            --source "$(publishPath)" `
+#            --destination "$(containerName)" `
+#            --destination-path "$(blobPath)" `
+#            --account-name "$(storageAccount)" `
+#            --auth-mode login `
+#            --overwrite $true
+#          # Get uploaded files to verify names
+#          $uploadedFiles = az storage blob list --container-name "$(containerName)" --prefix "$(blobPath)" --account-name "$(storageAccount)" --auth-mode login --query "[].name" -o tsv
+#          Write-Host "Uploaded files:"
+#          $uploadedFiles | ForEach-Object { Write-Host "  $_" }
+#          # Find the msix/msixbundle file
+#          $msixFile = $uploadedFiles | Where-Object { $_ -like "*.msix*" } | Select-Object -First 1
+#          
+#          if ($msixFile) {
+#            Write-Host "Setting content type for: $msixFile"
+#            # Set content type for MSIX package
+#            az storage blob update `
+#              --container-name "$(containerName)" `
+#              --name "$msixFile" `
+#              --content-type "application/vnd.ms-appx" `
+#              --account-name "$(storageAccount)" `
+#              --auth-mode login
+#          } else {
+#            Write-Host "##vso[task.logissue type=warning]No MSIX files found to update content type"
+#          }
 # Self-Contained Build and Deployment
 - stage: SelfContained
   displayName: 'Self-Contained Build'
