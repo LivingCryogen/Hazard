@@ -143,15 +143,15 @@ stages:
         - task: DownloadBuildArtifacts@0
           displayName: 'Download Built Artifacts'
           inputs:
-           buildType: current
-           downloadType: 'single'
-           artifactName: 'msix-package'
-           downloadPath: '$(System.ArtifactsDirectory)'
-
+            buildType: current
+            downloadType: 'single'
+            artifactName: 'msix-package'
+            downloadPath: '$(System.ArtifactsDirectory)'
+            
         - checkout: self
           persistCredentials: true
-
-      # Configure commit authorship info
+          
+        # Configure commit authorship info
         - task: PowerShell@2
           displayName: 'Setup Git Configuration'
           inputs:
@@ -159,69 +159,55 @@ stages:
             script: |
               git config --global user.email "joshua.a.mcknight@gmail.com"
               git config --global user.name "Joshua McKnight via Azure Pipelines"
-
-      # Deploy to /docs
+          
+        # Deploy to /docs
         - task: PowerShell@2
           displayName: 'Deploy to GitHub /docs'
           inputs:
-           targetType: inline
-           script: |
-             # check current Branch
-             $currentBranch = git rev-parse --abbrev-ref HEAD
-             Write-Host "Current branch: $currentBranch"
-
-             Write-Host "Current working directory:"
-             Get-Location
-
-             Set-Location $(Build.SourcesDirectory)
-             Write-Host "Repository root directory:"
-             Get-Location
-
-             if (Test-Path "$(Build.SourcesDirectory)/.gitignore") {
-              Write-Host "Contents of .gitignore:"
-              Get-Content "$(Build.SourcesDirectory)/.gitignore" }
-
-             # ensure we get changes
-             git pull origin $currentBranch
-
-             # ensure /docs exists
-             $docsDirectory = "$(Build.SourcesDirectory)/docs"
-             if (-not (Test-Path $docsDirectory)) {
-               Write-Host "Creating /docs..."
-               New-Item -Path $docsDirectory -ItemType Directory -Force | Out-Null
-               "" | Out-File -FilePath "$docsDirectory/.nojekyll" -NoNewline
-             }
-             # create /packages if needed
-             $packagesDirectory = "$docsDirectory/packages"
-             if (-not (Test-Path $packagesDirectory)) {
-               New-Item -Path $packagesDirectory -ItemType Directory -Force | Out-Null
-             }
-             # create /framework-dependent if needed
-             $FWDDirectory = "$packagesDirectory/framework-dependent"
-             if (-not (Test-Path $FWDDirectory)) {
-               New-Item -Path $FWDDirectory -ItemType Directory -Force | Out-Null
-             }
-             Write-Host "Source path contents:"
-             Get-ChildItem -Path "$(System.ArtifactsDirectory)/msix-package" -Recurse | ForEach-Object { Write-Host $_.FullName }
-
-             Copy-Item -Path "$(System.ArtifactsDirectory)/msix-package/*" -Destination $FWDDirectory -Recurse -Force -Verbose
-
-             Write-Host "Destination path contents after copy:"
-             Get-ChildItem -Path $FWDDirectory -Recurse | ForEach-Object { Write-Host $_.FullName }
-
-             Write-Host "Git status before add:"
-             git status
-
-             git add -f $docsDirectory
+            targetType: inline
+            script: |
+              # check current Branch
+              $currentBranch = git rev-parse --abbrev-ref HEAD
+              Write-Host "Current branch: $currentBranch"
+              
+              # ensure we get changes
+              git pull origin $currentBranch
+              
+              # ensure /docs exists
+              $docsDirectory = "$(Build.SourcesDirectory)/docs"
+              if (-not (Test-Path $docsDirectory)) {
+                Write-Host "Creating /docs..."
+                New-Item -Path $docsDirectory -ItemType Directory -Force | Out-Null
+                "" | Out-File -FilePath "$docsDirectory/.nojekyll" -NoNewline
+              }
+              
+              # create /packages if needed
+              $packagesDirectory = "$docsDirectory/packages"
+              if (-not (Test-Path $packagesDirectory)) {
+                New-Item -Path $packagesDirectory -ItemType Directory -Force | Out-Null
+              }
+              
+              # create /framework-dependent if needed
+              $FWDDirectory = "$packagesDirectory/framework-dependent"
+              if (-not (Test-Path $FWDDirectory)) {
+                New-Item -Path $FWDDirectory -ItemType Directory -Force | Out-Null
+              }
+              
+              # Copy files from artifacts to docs directory
+              Copy-Item -Path "$(System.ArtifactsDirectory)/msix-package/*" -Destination $FWDDirectory -Recurse -Force -Verbose
+              
+              # Add changes to git
+              git add -f $docsDirectory
+              
               # Check if there are changes to commit
-             $status = git status --porcelain
-             if ($status) {
-              Write-Host "Changes detected, committing and pushing..."
-              git commit -m "Update GitHub Pages from Azure DevOps build $(Build.BuildNumber)"
-              git push origin HEAD:main
-             } else {
-              Write-Host "No changes detected, skipping commit and push."
-             }
+              $status = git status --porcelain
+              if ($status) {
+                Write-Host "Changes detected, committing and pushing..."
+                git commit -m "Update GitHub Pages from Azure DevOps build $(Build.BuildNumber)"
+                git push origin HEAD:main
+              } else {
+                Write-Host "No changes detected, skipping commit and push."
+              }
 
 # Upload to blob storage -- Deprecated in favor of GitHub Pages deployment
 #    - task: AzureCLI@2
