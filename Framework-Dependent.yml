@@ -162,6 +162,65 @@ stages:
               Write-Host "BuildForStore setting found in project file"
             }
           }
+
+    - task: PowerShell@2
+      displayName: 'Analyze MSIX Bundle Contents'
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "Analyzing MSIX bundle contents..."
+          
+          # Find the msixbundle file
+          $bundleFile = Get-ChildItem -Path "$(msixOutputPath)" -Filter "*.msixbundle" -Recurse | Select-Object -First 1
+          
+          if ($bundleFile) {
+            Write-Host "Found bundle: $($bundleFile.FullName)"
+            
+            # Create temp directory for extraction
+            $tempDir = Join-Path $env:TEMP "BundleAnalysis"
+            if (Test-Path $tempDir) { Remove-Item $tempDir -Recurse -Force }
+            New-Item -Path $tempDir -ItemType Directory -Force | Out-Null
+            
+            # Temporarily rename to zip for extraction
+            $zipPath = "$($bundleFile.FullName).zip"
+            Copy-Item -Path $bundleFile.FullName -Destination $zipPath
+            
+            # Extract and analyze
+            try {
+              Expand-Archive -Path $zipPath -DestinationPath $tempDir -Force
+              
+              Write-Host "Bundle contents:"
+              Get-ChildItem -Path $tempDir -Recurse | ForEach-Object {
+                Write-Host " - $($_.FullName.Substring($tempDir.Length))"
+              }
+              
+              # Look for specific dependency packages
+              $runtimePackage = Get-ChildItem -Path $tempDir -Filter "*WindowsAppRuntime*" -Recurse
+              $vclibsPackage = Get-ChildItem -Path $tempDir -Filter "*VCLibs*" -Recurse
+              
+              if ($runtimePackage) {
+                Write-Host "Windows App Runtime is embedded in the bundle"
+              } else {
+                Write-Host "WARNING: Windows App Runtime does not appear to be embedded!"
+              }
+              
+              if ($vclibsPackage) {
+                Write-Host "VCLibs packages are embedded in the bundle"
+              } else {
+                Write-Host "WARNING: VCLibs packages do not appear to be embedded!"
+              }
+            }
+            catch {
+              Write-Host "Error analyzing bundle: $_"
+            }
+            finally {
+              # Clean up
+              Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
+              Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+            }
+          } else {
+            Write-Host "No msixbundle file found!"
+          }
     - task: CopyFiles@2
       displayName: 'Copy MSIX package to publish directory'
       inputs:
