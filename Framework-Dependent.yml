@@ -74,7 +74,7 @@ stages:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppInstallerUri="$(ghPagesBaseUrl)/packages/framework-dependent" /p:AppInstallerCheckForUpdateFrequency=OnApplicationRun /p:AppInstallerUpdateFrequency=1 /bl:$(Build.ArtifactStagingDirectory)\msbuild.binlog /v:detailed /p:AppxPackageSigningEnabled=False /p:SelfContained=false /p:AppxPackageIncludePrivateApis=true /p:BuildForStore=false /p:IncludeAllResourceLanguages=false'
+        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppInstallerUri="$(ghPagesBaseUrl)/packages/framework-dependent" /p:AppInstallerCheckForUpdateFrequency=OnApplicationRun /p:AppInstallerUpdateFrequency=1 /bl:$(Build.ArtifactStagingDirectory)\msbuild.binlog /v:detailed /p:AppxPackageSigningEnabled=False /p:SelfContained=false /p:AppxPackageIncludePrivateApis=false /p:BuildForStore=false /p:IncludeAllResourceLanguages=false'
 
     - task: PowerShell@2
       displayName: 'Debug AppInstaller Generation'
@@ -232,7 +232,7 @@ stages:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=true /p:AppxPackageIncludePrivateApis=true /p:BuildForStore=false /p:IncludeAllResourceLanguages=false'
+        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=true /p:AppxPackageIncludePrivateApis=false /p:BuildForStore=false /p:IncludeAllResourceLanguages=false'
 
     # Copy MSIX to publish directory
     - task: CopyFiles@2
