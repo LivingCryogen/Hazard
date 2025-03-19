@@ -115,11 +115,6 @@ stages:
             # Update the main bundle URI
             $content.AppInstaller.MainBundle.Uri = $content.AppInstaller.MainBundle.Uri -replace "/framework-dependent/framework-dependent/", "/framework-dependent/"
             
-            # Update all dependency URIs
-            foreach ($dependency in $content.AppInstaller.Dependencies.Package) {
-              $dependency.Uri = $dependency.Uri -replace "/framework-dependent/framework-dependent/", "/framework-dependent/"
-            }
-            
             # Save the modified XML
             $content.Save($file.FullName)
             Write-Host "Updated paths in appinstaller file"
