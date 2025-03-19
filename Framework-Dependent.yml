@@ -312,6 +312,36 @@ stages:
     /p:HoursBetweenUpdateChecks=0
     /p:AppxPackageOutput="Package"'
 
+    - task: PowerShell@2
+      displayName: 'Fix AppInstaller Paths'
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Find the appinstaller file
+          $appinstallerFiles = Get-ChildItem -Path "$(msixOutputPath)" -Filter "*.appinstaller" -Recurse
+          
+          foreach ($file in $appinstallerFiles) {
+            Write-Host "Found appinstaller file: $($file.FullName)"
+            
+            # Load the XML content
+            [xml]$content = Get-Content -Path $file.FullName
+            
+            # Update the main URI (top level)
+            $content.AppInstaller.Uri = $content.AppInstaller.Uri -replace "/self-contained/self-contained/", "/self-contained/"
+            
+            # Update the main bundle URI
+            $content.AppInstaller.MainBundle.Uri = $content.AppInstaller.MainBundle.Uri -replace "/self-contained/self-contained/", "/self-contained/"
+            
+            # Update all dependency URIs
+            foreach ($dependency in $content.AppInstaller.Dependencies.Package) {
+              $dependency.Uri = $dependency.Uri -replace "/self-contained/self-contained/", "/self-contained/"
+            }
+            
+            # Save the modified XML
+            $content.Save($file.FullName)
+            Write-Host "Updated paths in appinstaller file"
+          }
+
     # Copy MSIX to publish directory
     - task: CopyFiles@2
       displayName: 'Copy MSIX package to publish directory'
