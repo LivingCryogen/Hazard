@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<AppInstaller Uri="https://livingcryogen.github.io/Hazard/packages/framework-dependent/Package.appinstaller" Version="1.0.0.0" xmlns="http://schemas.microsoft.com/appx/appinstaller/2017/2">
-  <MainBundle Name="d99cb49a-ccb4-4885-8165-a820983ba7b4" Version="1.0.0.0" Publisher="CN=Joshua McKnight, O=Joshua McKnight, L=Lawrence, S=Kansas, C=US" Uri="https://livingcryogen.github.io/Hazard/packages/framework-dependent/Package_1.0.0.0_x64.msixbundle" />
-  <UpdateSettings>
-    <OnLaunch HoursBetweenUpdateChecks="0" />
-  </UpdateSettings>
-</AppInstaller>
