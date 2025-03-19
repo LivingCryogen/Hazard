@@ -92,7 +92,8 @@ stages:
     /p:AppxAutoIncrementPackageRevision=True 
     /p:GenerateTestArtifacts=True 
     /p:AppxPackageTestDir="$(msixOutputPath)\\"
-    /p:HoursBetweenUpdateChecks=0'
+    /p:HoursBetweenUpdateChecks=0
+    /p:AppxPackageOutput="Package"'
 
     - task: PowerShell@2
       displayName: 'Debug AppInstaller Generation'
@@ -279,7 +280,8 @@ stages:
     /p:AppxAutoIncrementPackageRevision=True 
     /p:GenerateTestArtifacts=True 
     /p:AppxPackageTestDir="$(msixOutputPath)\\"
-    /p:HoursBetweenUpdateChecks=0'
+    /p:HoursBetweenUpdateChecks=0
+    /p:AppxPackageOutput="Package"'
 
     # Copy MSIX to publish directory
     - task: CopyFiles@2
