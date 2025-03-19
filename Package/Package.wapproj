@@ -60,13 +60,6 @@
 		<NoWarn>$(NoWarn);NU1702</NoWarn>
 		<EntryPointProjectUniqueName>..\Bootstrap\Bootstrap.csproj</EntryPointProjectUniqueName>
 		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-		<AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
-		<AppxBundlePlatforms>x64</AppxBundlePlatforms>
-		<GenerateAppInstallerFile>True</GenerateAppInstallerFile>
-		<AppInstallerUri>https://jm84storage.blob.core.windows.net/hazard/framework-dependent</AppInstallerUri>
-		<AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
-		<AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
-		<AppxPackageIncludePrivateApis>true</AppxPackageIncludePrivateApis>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
 		<AppxBundle>Always</AppxBundle>
