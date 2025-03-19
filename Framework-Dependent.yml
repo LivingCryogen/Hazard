@@ -190,8 +190,14 @@ stages:
              if (-not (Test-Path $FWDDirectory)) {
                New-Item -Path $FWDDirectory -ItemType Directory -Force | Out-Null
              }
+             Write-Host "Source path contents:"
+             Get-ChildItem -Path "$(System.ArtifactsDirectory)/msix-package" -Recurse | ForEach-Object { Write-Host $_.FullName }
 
-             Copy-Item -Path "$(System.ArtifactsDirectory)/msix-package/*" -Destination $FWDDirectory -Recurse -Force
+             Copy-Item -Path "$(System.ArtifactsDirectory)/msix-package/*" -Destination $FWDDirectory -Recurse -Force -Verbose
+
+             Write-Host "Destination path contents after copy:"
+             Get-ChildItem -Path $FWDDirectory -Recurse | ForEach-Object { Write-Host $_.FullName }
+
              git add -A
               # Check if there are changes to commit
              $status = git status --porcelain
