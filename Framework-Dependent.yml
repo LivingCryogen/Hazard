@@ -245,7 +245,7 @@ stages:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=true /p:AppxPackageIncludePrivateApis=false /p:BuildForStore=false /p:IncludeAllResourceLanguages=false'
+        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True "/p:AppInstallerUri=https://livingcryogen.github.io/Hazard/packages/self-contained" /p:AppInstallerCheckForUpdateFrequency=OnApplicationRun /p:AppInstallerUpdateFrequency=1 /p:AppxPackageSigningEnabled=False /p:SelfContained=true /p:AppxPackageIncludePrivateApis=false /p:BuildForStore=false /p:IncludeAllResourceLanguages=false'
 
     # Copy MSIX to publish directory
     - task: CopyFiles@2
