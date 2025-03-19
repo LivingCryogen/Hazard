@@ -218,7 +218,7 @@ stages:
              if ($status) {
               Write-Host "Changes detected, committing and pushing..."
               git commit -m "Update GitHub Pages from Azure DevOps build $(Build.BuildNumber)"
-              git push origin $currentBranch
+              git push origin HEAD:main
              } else {
               Write-Host "No changes detected, skipping commit and push."
              }
