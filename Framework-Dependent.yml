@@ -74,7 +74,41 @@ stages:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=false /p:AppxPackageIncludePrivateApis=true /p:BuildForStore=false /p:IncludeAllResourceLanguages=false'
+        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppInstallerUri="$(ghPagesBaseUrl)/packages/framework-dependent" /p:AppInstallerCheckForUpdateFrequency=OnApplicationRun /p:AppInstallerUpdateFrequency=1 /bl:$(Build.ArtifactStagingDirectory)\msbuild.binlog /v:detailed /p:AppxPackageSigningEnabled=False /p:SelfContained=false /p:AppxPackageIncludePrivateApis=true /p:BuildForStore=false /p:IncludeAllResourceLanguages=false'
+
+    - task: PowerShell@2
+      displayName: 'Debug AppInstaller Generation'
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "==== MSIX BUILD OUTPUT DIRECTORY CONTENTS ===="
+          Get-ChildItem -Path "$(msixOutputPath)" -Recurse | ForEach-Object { Write-Host $_.FullName }
+          
+          Write-Host "==== SEARCHING FOR APPINSTALLER FILES ===="
+          $installerFiles = Get-ChildItem -Path "$(msixOutputPath)" -Filter "*.appinstaller" -Recurse
+          if ($installerFiles.Count -eq 0) {
+            Write-Host "No .appinstaller files found in output directory!"
+          } else {
+            Write-Host "Found $($installerFiles.Count) .appinstaller files:"
+            $installerFiles | ForEach-Object { Write-Host $_.FullName }
+          }
+          
+          # Check for build logs that might reveal why appinstaller wasn't generated
+          Write-Host "==== SEARCHING FOR BUILD LOGS WITH APPINSTALLER INFO ===="
+          $buildLogs = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Filter "*.binlog" -Recurse
+          if ($buildLogs.Count -gt 0) {
+            Write-Host "Build logs found, but would need to be analyzed separately"
+          } else {
+            Write-Host "No build logs found"
+          }
+          
+          # Check if the MSIX is configured for store deployment, which would prevent appinstaller
+          Write-Host "==== CHECKING PROJECT FILES FOR STORE SETTINGS ===="
+          $projFiles = Get-ChildItem -Path "$(Build.SourcesDirectory)" -Filter "*.wapproj" -Recurse
+          foreach($projFile in $projFiles) {
+            Write-Host "Examining $($projFile.FullName)"
+            $content = Get-Content $projFile.FullName
+            if ($
 
     # Copy MSIX to publish directory
     - task: CopyFiles@2
@@ -132,113 +166,6 @@ stages:
        ArtifactName: 'msix-package'
        publishLocation: Container
 
-- stage: DeployFDBtoGHPages
-  displayName: 'Deploy FrameworkDependent Build to GHPages'
-  dependsOn: FrameworkDependent
-  jobs:
-    - job: Deploy
-      pool:
-        vmImage: 'windows-latest'
-      steps:
-        - task: DownloadBuildArtifacts@0
-          displayName: 'Download Built Artifacts'
-          inputs:
-           buildType: current
-           downloadType: 'single'
-           artifactName: 'msix-package'
-           downloadPath: '$(System.ArtifactsDirectory)'
-
-        - checkout: self
-          persistCredentials: true
-
-      # Configure commit authorship info
-        - task: PowerShell@2
-          displayName: 'Setup Git Configuration'
-          inputs:
-            targetType: 'inline'
-            script: |
-              git config --global user.email "joshua.a.mcknight@gmail.com"
-              git config --global user.name "Joshua McKnight via Azure Pipelines"
-
-      # Deploy to /docs
-        - task: PowerShell@2
-          displayName: 'Deploy to GitHub /docs'
-          inputs:
-           targetType: inline
-           script: |
-             # check current Branch
-             $currentBranch = git rev-parse --abbrev-ref HEAD
-             Write-Host "Current branch: $currentBranch"
-
-             # ensure we get changes
-             git pull origin $currentBranch
-
-             # ensure /docs exists
-             $docsDirectory = "$(Build.SourcesDirectory)/docs"
-             if (-not (Test-Path $docsDirectory)) {
-               Write-Host "Creating /docs..."
-               New-Item -Path $docsDirectory -ItemType Directory -Force | Out-Null
-               "" | Out-File -FilePath "$docsDirectory/.nojekyll" -NoNewline
-             }
-             # create /packages if needed
-             $packagesDirectory = "$docsDirectory/packages"
-             if (-not (Test-Path $packagesDirectory)) {
-               New-Item -Path $packagesDirectory -ItemType Directory -Force | Out-Null
-             }
-             # create /framework-dependent if needed
-             $FWDDirectory = "$packagesDirectory/framework-dependent"
-             if (-not (Test-Path $FWDDirectory)) {
-               New-Item -Path $FWDDirectory -ItemType Directory -Force | Out-Null
-             }
-
-             Copy-Item =Path "$(System.ArtifactsDirectory)/msix-package/*" -Destination $FWDDirectory -Recurse -Force
-             git add -A
-              # Check if there are changes to commit
-             $status = git status --porcelain
-             if ($status) {
-              Write-Host "Changes detected, committing and pushing..."
-              git commit -m "Update GitHub Pages from Azure DevOps build $(Build.BuildNumber)"
-              git push origin $currentBranch
-             } else {
-              Write-Host "No changes detected, skipping commit and push."
-             }
-
-# Upload to blob storage -- Deprecated in favor of GitHub Pages deployment
-#    - task: AzureCLI@2
-#      displayName: 'Copy to Blob Storage and Set Content Types'
-#      inputs:
-#        azureSubscription: 'JoshMcKnight Azure TopLevel'
-#        scriptType: 'pscore'
-#        scriptLocation: 'inlineScript'
-#        inlineScript: |
-#          # Upload using the service principal auth with overwrite
-#          az storage blob upload-batch `
-#            --source "$(publishPath)" `
-#            --destination "$(containerName)" `
-#            --destination-path "$(blobPath)" `
-#            --account-name "$(storageAccount)" `
-#            --auth-mode login `
-#            --overwrite $true
-#          # Get uploaded files to verify names
-#          $uploadedFiles = az storage blob list --container-name "$(containerName)" --prefix "$(blobPath)" --account-name "$(storageAccount)" --auth-mode login --query "[].name" -o tsv
-#          Write-Host "Uploaded files:"
-#          $uploadedFiles | ForEach-Object { Write-Host "  $_" }
-#          # Find the msix/msixbundle file
-#          $msixFile = $uploadedFiles | Where-Object { $_ -like "*.msix*" } | Select-Object -First 1
-#          
-#          if ($msixFile) {
-#            Write-Host "Setting content type for: $msixFile"
-#            # Set content type for MSIX package
-#            az storage blob update `
-#              --container-name "$(containerName)" `
-#              --name "$msixFile" `
-#              --content-type "application/vnd.ms-appx" `
-#              --account-name "$(storageAccount)" `
-#              --auth-mode login
-#          } else {
-#            Write-Host "##vso[task.logissue type=warning]No MSIX files found to update content type"
-#          }
-# Self-Contained Build and Deployment
 - stage: SelfContained
   displayName: 'Self-Contained Build'
   variables:
@@ -250,47 +177,64 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
+
+    # Set up .NET SDK (skipped if cache is available)
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
         version: '8.0.x'
         includePreviewVersions: false
+      condition: ne(variables.DOTNET_CACHE_RESTORED, 'true')
 
-# Nuget Restore needed to properly handle Windows Runtime (for whatever reason)
+    # Install wasm-tools workload - this mysteriously helps with runtime packs
+    - task: DotNetCoreCLI@2
+      displayName: 'Install wasm-tools Workload'
+      inputs:
+        command: 'custom'
+        custom: 'workload'
+        arguments: 'install wasm-tools'
+        
+    # Global restore with runtime identifier - with proper path handling
+    - task: PowerShell@2
+      displayName: 'Global Runtime Pack Restore'
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "Performing global restore with runtime identifier..."
+          # Find solution files and restore them with runtime
+          Get-ChildItem -Path "$(Build.SourcesDirectory)" -Filter "*.sln" -Recurse | ForEach-Object {
+            Write-Host "Restoring solution: $($_.FullName)"
+            dotnet restore "$($_.FullName)" --runtime win-x64 -v normal
+          }
+    
+    # NuGet installation and restore
     - task: NuGetToolInstaller@1
-      displayName: Install NuGet
+      displayName: 'Install NuGet'
 
     - task: NuGetCommand@2
-      displayName: Restore NuGet Packages
+      displayName: 'Restore NuGet Packages'
       inputs:
         command: 'restore'
-        restoreSolution: '**/*.sln' # Replace with the path to your solution file
-        arguments: '-RuntimeIdentifier win-x64' # Add the runtime identifier argument
-    # Standard restore command
+        restoreSolution: '$(solution)'
+
+    # Standard restore
     - task: DotNetCoreCLI@2
+      displayName: 'Restore Solution'
       inputs:
         command: 'restore'
         projects: '$(solution)'
-        feedsToUse: 'select'
         arguments: '--runtime win-x64'
 
-    - task: Cache@2
-      displayName: 'Cache NuGet packages'
-      inputs:
-        key: 'nuget | "$(Agent.OS)" | **/*.csproj'
-        restoreKeys: |
-          nuget | "$(Agent.OS)"
-        path: $(Pipeline.Workspace)/.nuget/packages
-        cacheHitVar: 'CACHE_RESTORED'
-
+    # Build with explicit framework references and dependencies
     - task: VSBuild@1
       displayName: 'Build Self-Contained MSIX'
       inputs:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=true'
+        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=true /p:AppxPackageIncludePrivateApis=true /p:BuildForStore=false /p:IncludeAllResourceLanguages=false'
 
+    # Copy MSIX to publish directory
     - task: CopyFiles@2
       displayName: 'Copy MSIX package to publish directory'
       inputs:
@@ -300,6 +244,7 @@ stages:
         CleanTargetFolder: false
         OverWrite: true
 
+    # Azure CLI setup
     - task: AzureCLI@2
       displayName: 'Azure CLI'
       inputs:
@@ -312,9 +257,12 @@ stages:
           echo "##vso[task.setvariable variable=ARM_TENANT_ID;issecret=true]$tenantId"
         addSpnToEnvironment: true
 
+    # Azure login
     - bash: |
         az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
       displayName: 'Azure Login'
+
+    # Sign the package
     - task: TrustedSigning@0
       displayName: 'Sign with Trusted Signing'
       inputs:
@@ -322,6 +270,8 @@ stages:
         TrustedSigningAccountName: 'joshmcknightsigning'
         CertificateProfileName: 'JoshuaMcKnight'
         FilesFolder: '$(publishPath)'
+        FilesFolderRecurse: true
+        FilesFolderFilter: '*.msixbundle'
         ExcludeEnvironmentCredential: true
         ExcludeWorkloadIdentityCredential: true
         ExcludeManagedIdentityCredential: true
@@ -333,26 +283,163 @@ stages:
         ExcludeAzureDeveloperCliCredential: true
         ExcludeInteractiveBrowserCredential: true
 
-    - task: AzureCLI@2
-      displayName: 'Copy to Blob Storage and Set Content Types'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Build to DevOps'
       inputs:
-        azureSubscription: 'JoshMcKnight Azure TopLevel'
-        scriptType: 'pscore'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          # Upload using the service principal auth with overwrite
-          az storage blob upload-batch `
-            --source "$(publishPath)" `
-            --destination "$(containerName)" `
-            --destination-path "$(blobPath)" `
-            --account-name "$(storageAccount)" `
-            --auth-mode login `
-            --overwrite $true
+       PathtoPublish: '$(publishPath)'
+       ArtifactName: 'msix-package-self-contained'
+       publishLocation: Container
 
-          # Set content type for MSIX package
-          az storage blob update `
-            --container-name "$(containerName)" `
-            --name "$(blobPath)/Hazard.msix" `
-            --content-type "application/vnd.ms-appx" `
-            --account-name "$(storageAccount)" `
-            --auth-mode login
+- stage: DeployFDBtoGHPages
+  displayName: 'Deploy FrameworkDependent Build to GHPages'
+  dependsOn: FrameworkDependent
+  jobs:
+    - job: Deploy
+      pool:
+        vmImage: 'windows-latest'
+      steps:
+        - task: DownloadBuildArtifacts@0
+          displayName: 'Download Built Artifacts'
+          inputs:
+            buildType: current
+            downloadType: 'single'
+            artifactName: 'msix-package'
+            downloadPath: '$(System.ArtifactsDirectory)'
+            
+        - checkout: self
+          persistCredentials: true
+          
+        # Configure commit authorship info
+        - task: PowerShell@2
+          displayName: 'Setup Git Configuration'
+          inputs:
+            targetType: 'inline'
+            script: |
+              git config --global user.email "joshua.a.mcknight@gmail.com"
+              git config --global user.name "Joshua McKnight via Azure Pipelines"
+          
+        # Deploy to /docs
+        - task: PowerShell@2
+          displayName: 'Deploy to GitHub /docs'
+          inputs:
+            targetType: inline
+            script: |
+              # check current Branch
+              $currentBranch = git rev-parse --abbrev-ref HEAD
+              Write-Host "Current branch: $currentBranch"
+              
+              # ensure we get changes
+              git pull origin $currentBranch
+              
+              # ensure /docs exists
+              $docsDirectory = "$(Build.SourcesDirectory)/docs"
+              if (-not (Test-Path $docsDirectory)) {
+                Write-Host "Creating /docs..."
+                New-Item -Path $docsDirectory -ItemType Directory -Force | Out-Null
+                "" | Out-File -FilePath "$docsDirectory/.nojekyll" -NoNewline
+              }
+              
+              # create /packages if needed
+              $packagesDirectory = "$docsDirectory/packages"
+              if (-not (Test-Path $packagesDirectory)) {
+                New-Item -Path $packagesDirectory -ItemType Directory -Force | Out-Null
+              }
+              
+              # create /framework-dependent if needed
+              $FWDDirectory = "$packagesDirectory/framework-dependent"
+              if (-not (Test-Path $FWDDirectory)) {
+                New-Item -Path $FWDDirectory -ItemType Directory -Force | Out-Null
+              }
+              
+              # Copy files from artifacts to docs directory
+              Copy-Item -Path "$(System.ArtifactsDirectory)/msix-package/*" -Destination $FWDDirectory -Recurse -Force -Verbose
+              
+              # Add changes to git
+              git add -f $docsDirectory
+              
+              # Check if there are changes to commit
+              $status = git status --porcelain
+              if ($status) {
+                Write-Host "Changes detected, committing and pushing..."
+                git commit -m "Update GitHub Pages from Azure DevOps build $(Build.BuildNumber)"
+                git push origin HEAD:main
+              } else {
+                Write-Host "No changes detected, skipping commit and push."
+              }
+
+- stage: DeploySCtoGHPages
+  displayName: 'Deploy SelfContained Build to GHPages'
+  dependsOn: SelfContained
+  jobs:
+    - job: Deploy
+      pool:
+        vmImage: 'windows-latest'
+      steps:
+        - task: DownloadBuildArtifacts@0
+          displayName: 'Download Built Artifacts'
+          inputs:
+            buildType: current
+            downloadType: 'single'
+            artifactName: 'msix-package-self-contained'
+            downloadPath: '$(System.ArtifactsDirectory)'
+            
+        - checkout: self
+          persistCredentials: true
+          
+        # Configure commit authorship info
+        - task: PowerShell@2
+          displayName: 'Setup Git Configuration'
+          inputs:
+            targetType: 'inline'
+            script: |
+              git config --global user.email "joshua.a.mcknight@gmail.com"
+              git config --global user.name "Joshua McKnight via Azure Pipelines"
+          
+        # Deploy to /docs
+        - task: PowerShell@2
+          displayName: 'Deploy to GitHub /docs'
+          inputs:
+            targetType: inline
+            script: |
+              # check current Branch
+              $currentBranch = git rev-parse --abbrev-ref HEAD
+              Write-Host "Current branch: $currentBranch"
+              
+              # ensure we get changes
+              git pull origin $currentBranch
+              
+              # ensure /docs exists
+              $docsDirectory = "$(Build.SourcesDirectory)/docs"
+              if (-not (Test-Path $docsDirectory)) {
+                Write-Host "Creating /docs..."
+                New-Item -Path $docsDirectory -ItemType Directory -Force | Out-Null
+                "" | Out-File -FilePath "$docsDirectory/.nojekyll" -NoNewline
+              }
+              
+              # create /packages if needed
+              $packagesDirectory = "$docsDirectory/packages"
+              if (-not (Test-Path $packagesDirectory)) {
+                New-Item -Path $packagesDirectory -ItemType Directory -Force | Out-Null
+              }
+              
+              # create /self-contained if needed
+              $SCDirectory = "$packagesDirectory/self-contained"
+              if (-not (Test-Path $SCDirectory)) {
+                New-Item -Path $SCDirectory -ItemType Directory -Force | Out-Null
+              }
+              
+              # Copy files from artifacts to docs directory
+              Copy-Item -Path "$(System.ArtifactsDirectory)/msix-package-self-contained/*" -Destination $SCDirectory -Recurse -Force -Verbose
+              
+              # Add changes to git
+              git add -f $docsDirectory
+              
+              # Check if there are changes to commit
+              $status = git status --porcelain
+              if ($status) {
+                Write-Host "Changes detected, committing and pushing..."
+                git commit -m "Update GitHub Pages from Azure DevOps build $(Build.BuildNumber)"
+                git push origin HEAD:main
+              } else {
+                Write-Host "No changes detected, skipping commit and push."
+              }
