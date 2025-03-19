@@ -122,6 +122,16 @@ stages:
         CleanTargetFolder: false
         OverWrite: true
 
+# Copy appinstaller files
+    - task: CopyFiles@2
+      displayName: 'Copy AppInstaller files'
+      inputs:
+        SourceFolder: '$(msixOutputPath)'
+        Contents: '**/*.appinstaller'
+        TargetFolder: '$(publishPath)'
+        CleanTargetFolder: false
+        OverWrite: true
+
     # Azure CLI setup
     - task: AzureCLI@2
       displayName: 'Azure CLI'
@@ -242,6 +252,16 @@ stages:
       inputs:
         SourceFolder: '$(msixOutputPath)'
         Contents: '**/*.msix*'
+        TargetFolder: '$(publishPath)'
+        CleanTargetFolder: false
+        OverWrite: true
+
+# Copy appinstaller files
+    - task: CopyFiles@2
+      displayName: 'Copy AppInstaller files'
+      inputs:
+        SourceFolder: '$(msixOutputPath)'
+        Contents: '**/*.appinstaller'
         TargetFolder: '$(publishPath)'
         CleanTargetFolder: false
         OverWrite: true
