@@ -108,8 +108,10 @@ stages:
           foreach($projFile in $projFiles) {
             Write-Host "Examining $($projFile.FullName)"
             $content = Get-Content $projFile.FullName
-            if ($
-
+            if ($content -match "BuildForStore") {
+              Write-Host "BuildForStore setting found in project file"
+            }
+          }
     # Copy MSIX to publish directory
     - task: CopyFiles@2
       displayName: 'Copy MSIX package to publish directory'
