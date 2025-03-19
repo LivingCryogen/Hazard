@@ -170,6 +170,17 @@ stages:
              $currentBranch = git rev-parse --abbrev-ref HEAD
              Write-Host "Current branch: $currentBranch"
 
+             Write-Host "Current working directory:"
+             Get-Location
+
+             Set-Location $(Build.SourcesDirectory)
+             Write-Host "Repository root directory:"
+             Get-Location
+
+             if (Test-Path "$(Build.SourcesDirectory)/.gitignore") {
+              Write-Host "Contents of .gitignore:"
+              Get-Content "$(Build.SourcesDirectory)/.gitignore" }
+
              # ensure we get changes
              git pull origin $currentBranch
 
@@ -198,7 +209,10 @@ stages:
              Write-Host "Destination path contents after copy:"
              Get-ChildItem -Path $FWDDirectory -Recurse | ForEach-Object { Write-Host $_.FullName }
 
-             git add -A
+             Write-Host "Git status before add:"
+             git status
+
+             git add -f $docsDirectory
               # Check if there are changes to commit
              $status = git status --porcelain
              if ($status) {
