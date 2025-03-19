@@ -391,8 +391,21 @@ stages:
                 New-Item -Path $FWDDirectory -ItemType Directory -Force | Out-Null
               }
               
-              # Copy files from artifacts to docs directory
-              Copy-Item -Path "$(System.ArtifactsDirectory)/msix-package/*" -Destination $FWDDirectory -Recurse -Force -Verbose
+              # Copy files from artifacts to docs directory - MODIFY THIS PART
+              Write-Host "Copying files to $FWDDirectory..."
+              
+              # First, determine the source structure
+              $sourceDir = "$(System.ArtifactsDirectory)/msix-package"
+              $nestedDir = Get-ChildItem -Path $sourceDir -Directory -Filter "framework-dependent" -ErrorAction SilentlyContinue | Select-Object -First 1
+              
+              if ($nestedDir) {
+                # If there's already a nested framework-dependent folder, copy from inside it
+                Write-Host "Detected nested folder structure, adjusting copy source..."
+                Copy-Item -Path "$($nestedDir.FullName)/*" -Destination $FWDDirectory -Recurse -Force
+              } else {
+                # No nested folder, copy everything directly
+                Copy-Item -Path "$sourceDir/*" -Destination $FWDDirectory -Recurse -Force
+              }
               
               # Add changes to git
               git add -f $docsDirectory
@@ -406,7 +419,6 @@ stages:
               } else {
                 Write-Host "No changes detected, skipping commit and push."
               }
-
 - stage: DeploySCtoGHPages
   displayName: 'Deploy SelfContained Build to GHPages'
   dependsOn: SelfContained
