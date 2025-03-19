@@ -1,8 +1,7 @@
-# Simplified .NET Desktop MSIX packaging pipeline
 trigger: none
 
 variables:
-  solution: '**/*.sln'
+  solution: '**/Hazard.sln'
   buildPlatform: 'x64'
   buildConfiguration: 'Release'
   storageAccount: 'jm84storage'
@@ -20,14 +19,7 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
-    # Cache .NET SDK
-    - task: Cache@2
-      displayName: 'Cache .NET SDK'
-      inputs:
-        key: 'dotnet | "$(Agent.OS)" | 8.0.x'
-        path: $(Agent.ToolsDirectory)/dotnet
-        cacheHitVar: 'DOTNET_CACHE_RESTORED'
-      
+
     # Set up .NET SDK (skipped if cache is available)
     - task: UseDotNet@2
       inputs:
@@ -36,14 +28,6 @@ stages:
         includePreviewVersions: false
       condition: ne(variables.DOTNET_CACHE_RESTORED, 'true')
 
-    # Cache workloads and runtime packs
-    - task: Cache@2
-      displayName: 'Cache Workloads/Runtime Packs'
-      inputs:
-        key: 'workloads | "$(Agent.OS)" | 8.0.x | win-x64'
-        path: $(DOTNET_CLI_HOME)/workloads
-        cacheHitVar: 'WORKLOADS_CACHE_RESTORED'
-        
     # Install wasm-tools workload - this mysteriously helps with runtime packs
     - task: DotNetCoreCLI@2
       displayName: 'Install wasm-tools Workload'
@@ -64,16 +48,6 @@ stages:
             Write-Host "Restoring solution: $($_.FullName)"
             dotnet restore "$($_.FullName)" --runtime win-x64 -v normal
           }
-
-    # Cache NuGet packages
-    - task: Cache@2
-      displayName: 'Cache NuGet packages'
-      inputs:
-        key: 'nuget | "$(Agent.OS)" | **/packages.lock.json,**/packages.config,**/*.csproj,**/*.wapproj'
-        restoreKeys: |
-          nuget | "$(Agent.OS)"
-        path: $(Pipeline.Workspace)/.nuget/packages
-        cacheHitVar: 'NUGET_CACHE_RESTORED'
     
     # NuGet installation and restore
     - task: NuGetToolInstaller@1
@@ -130,14 +104,6 @@ stages:
         az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
       displayName: 'Azure Login'
 
-    # Cache signing certificates and credentials
-    - task: Cache@2
-      displayName: 'Cache Signing Credentials'
-      inputs:
-        key: 'trusted-signing | "$(Agent.OS)" | joshmcknightsigning | JoshuaMcKnight'
-        path: $(AZURE_CONFIG_DIR)
-        cacheHitVar: 'SIGNING_CACHE_RESTORED'
-        
     # Sign the package
     - task: TrustedSigning@0
       displayName: 'Sign with Trusted Signing'
@@ -147,6 +113,7 @@ stages:
         CertificateProfileName: 'JoshuaMcKnight'
         FilesFolder: '$(publishPath)'
         FilesFolderRecurse: true
+        FilesFolderFilter: '*.msixbundle'
         ExcludeEnvironmentCredential: true
         ExcludeWorkloadIdentityCredential: true
         ExcludeManagedIdentityCredential: true
@@ -158,43 +125,119 @@ stages:
         ExcludeAzureDeveloperCliCredential: true
         ExcludeInteractiveBrowserCredential: true
 
-    # Upload to blob storage
-    - task: AzureCLI@2
-      displayName: 'Copy to Blob Storage and Set Content Types'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Build to DevOps'
       inputs:
-        azureSubscription: 'JoshMcKnight Azure TopLevel'
-        scriptType: 'pscore'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          # Upload using the service principal auth with overwrite
-          az storage blob upload-batch `
-            --source "$(publishPath)" `
-            --destination "$(containerName)" `
-            --destination-path "$(blobPath)" `
-            --account-name "$(storageAccount)" `
-            --auth-mode login `
-            --overwrite $true
+       PathtoPublish: '$(publishPath)'
+       ArtifactName: 'msix-package'
+       publishLocation: Container
 
-          # Get uploaded files to verify names
-          $uploadedFiles = az storage blob list --container-name "$(containerName)" --prefix "$(blobPath)" --account-name "$(storageAccount)" --auth-mode login --query "[].name" -o tsv
-          Write-Host "Uploaded files:"
-          $uploadedFiles | ForEach-Object { Write-Host "  $_" }
-          
-          # Find the msix/msixbundle file
-          $msixFile = $uploadedFiles | Where-Object { $_ -like "*.msix*" } | Select-Object -First 1
-          
-          if ($msixFile) {
-            Write-Host "Setting content type for: $msixFile"
-            # Set content type for MSIX package
-            az storage blob update `
-              --container-name "$(containerName)" `
-              --name "$msixFile" `
-              --content-type "application/vnd.ms-appx" `
-              --account-name "$(storageAccount)" `
-              --auth-mode login
-          } else {
-            Write-Host "##vso[task.logissue type=warning]No MSIX files found to update content type"
-          }
+- stage: DeployFDBtoGHPages
+  displayName: 'Deploy FrameworkDependent Build to GHPages'
+  dependsOn: FrameworkDependent
+  jobs:
+    - job: Deploy
+      pool:
+        vmImage: 'windows-latest'
+      steps:
+        - task: DownloadBuildArtifacts@0
+          displayName: 'Download Built Artifacts'
+          inputs:
+           buildType: current
+           downloadType: 'single'
+           artifactName: 'msix-package'
+           downloadPath: '$(System.ArtifactsDirectory)'
+
+        - checkout: self
+          persistCredentials: true
+
+      # Configure commit authorship info
+        - task: PowerShell@2
+          displayName: 'Setup Git Configuration'
+          inputs:
+            targetType: 'inline'
+            script: |
+              git config --global user.email "joshua.a.mcknight@gmail.com"
+              git config --global user.name "Joshua McKnight via Azure Pipelines"
+
+      # Deploy to /docs
+        - task: PowerShell@2
+          displayName: 'Deploy to GitHub /docs'
+          inputs:
+           targetType: inline
+           script: |
+             # check current Branch
+             $currentBranch = git rev-parse --abbrev-ref HEAD
+             Write-Host "Current branch: $currentBranch"
+
+             # ensure we get changes
+             git pull origin $currentBranch
+
+             # ensure /docs exists
+             $docsDirectory = "$(Build.SourcesDirectory)/docs"
+             if (-not (Test-Path $docsDirectory)) {
+               Write-Host "Creating /docs..."
+               New-Item -Path $docsDirectory -ItemType Directory -Force | Out-Null
+               "" | Out-File -FilePath "$docsDirectory/.nojekyll" -NoNewline
+             }
+             # create /packages if needed
+             $packagesDirectory = "$docsDirectory/packages"
+             if (-not (Test-Path $packagesDirectory)) {
+               New-Item -Path $packagesDirectory -ItemType Directory -Force | Out-Null
+             }
+             # create /framework-dependent if needed
+             $FWDDirectory = "$packagesDirectory/framework-dependent"
+             if (-not (Test-Path $FWDDirectory)) {
+               New-Item -Path $FWDDirectory -ItemType Directory -Force | Out-Null
+             }
+
+             Copy-Item =Path "$(System.ArtifactsDirectory)/msix-package/*" -Destination $FWDDirectory -Recurse -Force
+             git add -A
+              # Check if there are changes to commit
+             $status = git status --porcelain
+             if ($status) {
+              Write-Host "Changes detected, committing and pushing..."
+              git commit -m "Update GitHub Pages from Azure DevOps build $(Build.BuildNumber)"
+              git push origin $currentBranch
+             } else {
+              Write-Host "No changes detected, skipping commit and push."
+             }
+
+# Upload to blob storage -- Deprecated in favor of GitHub Pages deployment
+#    - task: AzureCLI@2
+#      displayName: 'Copy to Blob Storage and Set Content Types'
+#      inputs:
+#        azureSubscription: 'JoshMcKnight Azure TopLevel'
+#        scriptType: 'pscore'
+#        scriptLocation: 'inlineScript'
+#        inlineScript: |
+#          # Upload using the service principal auth with overwrite
+#          az storage blob upload-batch `
+#            --source "$(publishPath)" `
+#            --destination "$(containerName)" `
+#            --destination-path "$(blobPath)" `
+#            --account-name "$(storageAccount)" `
+#            --auth-mode login `
+#            --overwrite $true
+#          # Get uploaded files to verify names
+#          $uploadedFiles = az storage blob list --container-name "$(containerName)" --prefix "$(blobPath)" --account-name "$(storageAccount)" --auth-mode login --query "[].name" -o tsv
+#          Write-Host "Uploaded files:"
+#          $uploadedFiles | ForEach-Object { Write-Host "  $_" }
+#          # Find the msix/msixbundle file
+#          $msixFile = $uploadedFiles | Where-Object { $_ -like "*.msix*" } | Select-Object -First 1
+#          
+#          if ($msixFile) {
+#            Write-Host "Setting content type for: $msixFile"
+#            # Set content type for MSIX package
+#            az storage blob update `
+#              --container-name "$(containerName)" `
+#              --name "$msixFile" `
+#              --content-type "application/vnd.ms-appx" `
+#              --account-name "$(storageAccount)" `
+#              --auth-mode login
+#          } else {
+#            Write-Host "##vso[task.logissue type=warning]No MSIX files found to update content type"
+#          }
 # Self-Contained Build and Deployment
 - stage: SelfContained
   displayName: 'Self-Contained Build'
