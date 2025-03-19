@@ -497,8 +497,21 @@ stages:
                 New-Item -Path $SCDirectory -ItemType Directory -Force | Out-Null
               }
               
-              # Copy files from artifacts to docs directory
-              Copy-Item -Path "$(System.ArtifactsDirectory)/msix-package-self-contained/*" -Destination $SCDirectory -Recurse -Force -Verbose
+              # Copy files from artifacts to docs directory - MODIFY THIS PART
+              Write-Host "Copying files to $SCDirectory..."
+              
+              # First, determine the source structure
+              $sourceDir = "$(System.ArtifactsDirectory)/msix-package-self-contained"
+              $nestedDir = Get-ChildItem -Path $sourceDir -Directory -Filter "self-contained" -ErrorAction SilentlyContinue | Select-Object -First 1
+              
+              if ($nestedDir) {
+                # If there's already a nested self-contained folder, copy from inside it
+                Write-Host "Detected nested folder structure, adjusting copy source..."
+                Copy-Item -Path "$($nestedDir.FullName)/*" -Destination $SCDirectory -Recurse -Force
+              } else {
+                # No nested folder, copy everything directly
+                Copy-Item -Path "$sourceDir/*" -Destination $SCDirectory -Recurse -Force
+              }
               
               # Add changes to git
               git add -f $docsDirectory
