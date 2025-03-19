@@ -125,6 +125,30 @@ stages:
           }
 
     - task: PowerShell@2
+      displayName: 'Check for Dependencies'
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "Checking for dependencies in build output..."
+          
+          # Look for the dependencies folder
+          $depFolder = Get-ChildItem -Path "$(msixOutputPath)" -Filter "Dependencies" -Directory -Recurse | Select-Object -First 1
+          
+          if ($depFolder) {
+            Write-Host "Found Dependencies folder: $($depFolder.FullName)"
+            $depFiles = Get-ChildItem -Path $depFolder.FullName -Recurse -Include "*.appx", "*.msix"
+            
+            if ($depFiles.Count -gt 0) {
+              Write-Host "Found dependency files:"
+              $depFiles | ForEach-Object { Write-Host " - $($_.Name)" }
+            } else {
+              Write-Host "No dependency files found in the folder!"
+            }
+          } else {
+            Write-Host "Dependencies folder not found in build output!"
+          }
+
+    - task: PowerShell@2
       displayName: 'Debug AppInstaller Generation'
       inputs:
         targetType: 'inline'
@@ -160,22 +184,14 @@ stages:
               Write-Host "BuildForStore setting found in project file"
             }
           }
-    # Copy MSIX to publish directory
     - task: CopyFiles@2
-      displayName: 'Copy MSIX package to publish directory'
+      displayName: 'Copy MSIX package and dependencies to publish directory'
       inputs:
         SourceFolder: '$(msixOutputPath)'
-        Contents: '**/*.msix*'
-        TargetFolder: '$(publishPath)'
-        CleanTargetFolder: false
-        OverWrite: true
-
-# Copy appinstaller files
-    - task: CopyFiles@2
-      displayName: 'Copy AppInstaller files'
-      inputs:
-        SourceFolder: '$(msixOutputPath)'
-        Contents: '**/*.appinstaller'
+        Contents: |
+          **/*.msix*
+          **/*.appinstaller
+          **/Dependencies/**
         TargetFolder: '$(publishPath)'
         CleanTargetFolder: false
         OverWrite: true
@@ -341,23 +357,14 @@ stages:
             $content.Save($file.FullName)
             Write-Host "Updated paths in appinstaller file"
           }
-
-    # Copy MSIX to publish directory
     - task: CopyFiles@2
-      displayName: 'Copy MSIX package to publish directory'
+      displayName: 'Copy MSIX package and dependencies to publish directory'
       inputs:
         SourceFolder: '$(msixOutputPath)'
-        Contents: '**/*.msix*'
-        TargetFolder: '$(publishPath)'
-        CleanTargetFolder: false
-        OverWrite: true
-
-# Copy appinstaller files
-    - task: CopyFiles@2
-      displayName: 'Copy AppInstaller files'
-      inputs:
-        SourceFolder: '$(msixOutputPath)'
-        Contents: '**/*.appinstaller'
+        Contents: |
+          **/*.msix*
+          **/*.appinstaller
+          **/Dependencies/**
         TargetFolder: '$(publishPath)'
         CleanTargetFolder: false
         OverWrite: true
