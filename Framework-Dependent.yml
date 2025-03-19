@@ -76,6 +76,40 @@ stages:
         configuration: '$(buildConfiguration)'
         msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstaller=True /p:AppxPackageSigningEnabled=False /p:SelfContained=false /p:AppxPackageIncludePrivateApis=true /p:BuildForStore=false /p:IncludeAllResourceLanguages=false'
 
+    - task: PowerShell@2
+      displayName: 'Debug AppInstaller Generation'
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "==== MSIX BUILD OUTPUT DIRECTORY CONTENTS ===="
+          Get-ChildItem -Path "$(msixOutputPath)" -Recurse | ForEach-Object { Write-Host $_.FullName }
+          
+          Write-Host "==== SEARCHING FOR APPINSTALLER FILES ===="
+          $installerFiles = Get-ChildItem -Path "$(msixOutputPath)" -Filter "*.appinstaller" -Recurse
+          if ($installerFiles.Count -eq 0) {
+            Write-Host "No .appinstaller files found in output directory!"
+          } else {
+            Write-Host "Found $($installerFiles.Count) .appinstaller files:"
+            $installerFiles | ForEach-Object { Write-Host $_.FullName }
+          }
+          
+          # Check for build logs that might reveal why appinstaller wasn't generated
+          Write-Host "==== SEARCHING FOR BUILD LOGS WITH APPINSTALLER INFO ===="
+          $buildLogs = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Filter "*.binlog" -Recurse
+          if ($buildLogs.Count -gt 0) {
+            Write-Host "Build logs found, but would need to be analyzed separately"
+          } else {
+            Write-Host "No build logs found"
+          }
+          
+          # Check if the MSIX is configured for store deployment, which would prevent appinstaller
+          Write-Host "==== CHECKING PROJECT FILES FOR STORE SETTINGS ===="
+          $projFiles = Get-ChildItem -Path "$(Build.SourcesDirectory)" -Filter "*.wapproj" -Recurse
+          foreach($projFile in $projFiles) {
+            Write-Host "Examining $($projFile.FullName)"
+            $content = Get-Content $projFile.FullName
+            if ($
+
     # Copy MSIX to publish directory
     - task: CopyFiles@2
       displayName: 'Copy MSIX package to publish directory'
