@@ -6,6 +6,7 @@ variables:
   buildConfiguration: 'Release'
   storageAccount: 'jm84storage'
   containerName: 'hazard'
+  ghPagesBaseUrl: 'https://livingcryogen.github.io/Hazard'
 
 stages:
 - stage: FrameworkDependent
