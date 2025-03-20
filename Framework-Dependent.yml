@@ -75,8 +75,7 @@ jobs:
       inputs:
         SourceFolder: '$(msixOutputPath)'
         Contents: |
-          **/*.msix*
-          **/*.appinstaller
+          **/*.msixbundle
         TargetFolder: '$(publishPath)'
         CleanTargetFolder: false
         OverWrite: true
