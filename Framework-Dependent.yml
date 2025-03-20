@@ -68,7 +68,7 @@ jobs:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="$(msixOutputPath)\\" /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxBundle=Always /p:GenerateAppInstallerFile=False /p:AppxPackageSigningEnabled=False /p:SelfContained=true /p:AppxPackageIncludePrivateApis=false /p:BuildForStore=false /p:IncludeAllResourceLanguages=false /p:AppxAutoIncrementPackageRevision=True /p:GenerateTestArtifacts=True /p:AppxPackageTestDir="$(msixOutputPath)\\"'
+        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir=$(msixOutputPath) /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms=$(buildPlatform) /p:AppxBundle=Always /p:GenerateAppInstallerFile=False /p:AppxPackageSigningEnabled=False /p:SelfContained=true /p:AppxPackageIncludePrivateApis=false /p:BuildForStore=false /p:IncludeAllResourceLanguages=false /p:AppxAutoIncrementPackageRevision=True /p:GenerateTestArtifacts=True /p:AppxPackageTestDir=$(msixOutputPath)'
 
     - task: CopyFiles@2
       displayName: 'Copy MSIX package to publish directory'
