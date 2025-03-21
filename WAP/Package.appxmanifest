@@ -7,23 +7,21 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="d99cb49a-ccb4-4885-8165-a820983ba7b4"
+    Name="723b6c7b-39d7-4794-9f26-4293ed99abcd"
     Publisher="CN=Joshua McKnight, O=Joshua McKnight, L=Lawrence, S=Kansas, C=US"
     Version="1.0.0.0" />
 
   <Properties>
-    <DisplayName>Hazard!</DisplayName>
+    <DisplayName>HazardGame</DisplayName>
     <PublisherDisplayName>Joshua McKnight</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
-  <Dependencies>
-    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
-    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.14393.0" MaxVersionTested="10.0.14393.0" />
-    <PackageDependency Name="Microsoft.WindowsAppRuntime.1.4" MinVersion="4000.1055.510.0" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" />
-    <PackageDependency Name="Microsoft.VCLibs.140.00.UWPDesktop" MinVersion="14.0.30704.0" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" />
-    <PackageDependency Name="Microsoft.NetCore.DesktopRuntime.8.0.x64" MinVersion="8.0.0.0" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" />
-  </Dependencies>
+<Dependencies>
+  <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+  <PackageDependency Name="Microsoft.WindowsAppRuntime.1.7" MinVersion="7000.310.1.0" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" />
+  <PackageDependency Name="Microsoft.VCLibs.140.00.UWPDesktop" MinVersion="14.0.30704.0" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" />
+</Dependencies>
 
   <Resources>
     <Resource Language="x-generate"/>
@@ -34,12 +32,12 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="Hazard!"
-        Description="Hazard! packaging."
+        DisplayName="HazardGame"
+        Description="Hazard! : Nothing Ventured, Nothing Gained. A strategic conquest game."
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"
         Square44x44Logo="Images\Square44x44Logo.png">
-        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png"  ShortName="Hazard!"/>
+        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png" />
         <uap:SplashScreen Image="Images\SplashScreen.png" />
       </uap:VisualElements>
     </Application>

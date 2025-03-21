@@ -51,15 +51,16 @@
 	<Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
 	<PropertyGroup>
 		<ProjectGuid>aadd690e-8ba4-4784-9e9f-24f6e4dc81ea</ProjectGuid>
-		<TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
-		<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
-		<AssetTargetFallback>net8.0-windows$(TargetPlatformVersion)</AssetTargetFallback>
+		<TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 		<RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
 		<DefaultLanguage>en-US</DefaultLanguage>
 		<AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
 		<NoWarn>$(NoWarn);NU1702</NoWarn>
 		<EntryPointProjectUniqueName>..\Bootstrap\Bootstrap.csproj</EntryPointProjectUniqueName>
 		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+		<!-- Add this to ensure Windows App SDK is properly bundled -->
+		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
 		<AppxBundle>Always</AppxBundle>
@@ -144,7 +145,7 @@
 	</ItemGroup>
 	<Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240227000" />
 		<PackageReference Include="Microsoft.VCRTForwarders.140" Version="1.0.7" />
 	</ItemGroup>

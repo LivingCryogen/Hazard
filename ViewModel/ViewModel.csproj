@@ -3,14 +3,14 @@
   <PropertyGroup>
 	<TargetFramework>net8.0</TargetFramework>
 	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	<Platforms>x64</Platforms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Configurations>Debug;Release;Release_FrameworkDependent;Release_SelfContained</Configurations>
-    <Platforms>x64</Platforms>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
   </ItemGroup>
 
   <ItemGroup>
