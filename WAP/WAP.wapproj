@@ -51,6 +51,8 @@
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
   <PropertyGroup>
     <ProjectGuid>e9395072-19a5-4104-94f0-969d4d43c8a5</ProjectGuid>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <AssetTargetFallback>net8.0-windows$(TargetPlatformVersion)</AssetTargetFallback>
     <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
