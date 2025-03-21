@@ -68,7 +68,7 @@ jobs:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir=$(msixOutputPath) /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms=$(buildPlatform) /p:AppxBundle=Always /p:GenerateAppInstallerFile=False /p:AppxPackageSigningEnabled=False /p:SelfContained=true /p:WindowsAppSDKSelfContained=true /p:AppxPackageIncludePrivateApis=false /p:BuildForStore=false /p:IncludeAllResourceLanguages=false /p:AppxAutoIncrementPackageRevision=True /p:GenerateTestArtifacts=True /p:AppxPackageTestDir=$(msixOutputPath) /p:TargetPlatformVersion=10.0.19041.0 /p:TargetPlatformMinVersion=10.0.17763.0 /p:WindowsPackageType=None /p:GenerateProjectSpecificOutputFolder=true /p:TargetPlatformIdentifier=UAP /p:MSBuildWarningsAsMessages=MSB3276'
+        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir=$(msixOutputPath) /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms=$(buildPlatform) /p:AppxBundle=Always /p:GenerateAppInstallerFile=False /p:AppxPackageSigningEnabled=False /p:SelfContained=true /p:WindowsAppSDKSelfContained=true /p:AppxPackageIncludePrivateApis=false /p:BuildForStore=false /p:IncludeAllResourceLanguages=false /p:AppxAutoIncrementPackageRevision=True /p:GenerateTestArtifacts=True /p:AppxPackageTestDir=$(msixOutputPath) /p:TargetPlatformVersion=10.0.19041.0 /p:TargetPlatformMinVersion=10.0.17763.0 /p:WindowsPackageType=None /p:GenerateProjectSpecificOutputFolder=true'
 
     - task: CopyFiles@2
       displayName: 'Copy MSIX bundle to publish directory'
