@@ -6,297 +6,21 @@ variables:
   buildConfiguration: 'Release'
   storageAccount: 'jm84storage'
   containerName: 'hazard'
-  ghPagesBaseUrl: 'https://livingcryogen.github.io/Hazard'
+  blobPath: '.'
+  publishPath: '$(Build.ArtifactStagingDirectory)\publish\'
+  msixOutputPath: '$(Build.ArtifactStagingDirectory)\msix\'
 
-stages:
-- stage: FrameworkDependent
-  displayName: 'Framework-Dependent Build'
-  variables:
-    publishPath: '$(Build.ArtifactStagingDirectory)\publish\framework-dependent'
-    msixOutputPath: '$(Build.ArtifactStagingDirectory)\msix\framework-dependent'
-    blobPath: 'framework-dependent'
-  jobs:
+jobs:
   - job: Build
     pool:
       vmImage: 'windows-latest'
     steps:
-
     # Set up .NET SDK (skipped if cache is available)
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
         version: '8.0.x'
         includePreviewVersions: false
-      condition: ne(variables.DOTNET_CACHE_RESTORED, 'true')
-
-    # Install wasm-tools workload - this mysteriously helps with runtime packs
-    - task: DotNetCoreCLI@2
-      displayName: 'Install wasm-tools Workload'
-      inputs:
-        command: 'custom'
-        custom: 'workload'
-        arguments: 'install wasm-tools'
-        
-    # Global restore with runtime identifier - with proper path handling
-    - task: PowerShell@2
-      displayName: 'Global Runtime Pack Restore'
-      inputs:
-        targetType: 'inline'
-        script: |
-          Write-Host "Performing global restore with runtime identifier..."
-          # Find solution files and restore them with runtime
-          Get-ChildItem -Path "$(Build.SourcesDirectory)" -Filter "*.sln" -Recurse | ForEach-Object {
-            Write-Host "Restoring solution: $($_.FullName)"
-            dotnet restore "$($_.FullName)" --runtime win-x64 -v normal
-          }
-    
-    # NuGet installation and restore
-    - task: NuGetToolInstaller@1
-      displayName: 'Install NuGet'
-
-    - task: NuGetCommand@2
-      displayName: 'Restore NuGet Packages'
-      inputs:
-        command: 'restore'
-        restoreSolution: '$(solution)'
-
-    # Standard restore
-    - task: DotNetCoreCLI@2
-      displayName: 'Restore Solution'
-      inputs:
-        command: 'restore'
-        projects: '$(solution)'
-        arguments: '--runtime win-x64'
-
-    # Build with explicit framework references and dependencies
-    - task: VSBuild@1
-      displayName: 'Build Framework-Dependent MSIX'
-      inputs:
-        solution: '$(solution)'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:RuntimeIdentifier=win-x64 
-    /p:AppxPackageDir="$(msixOutputPath)\\" 
-    /p:UapAppxPackageBuildMode=SideloadOnly 
-    /p:AppxBundlePlatforms="$(buildPlatform)" 
-    /p:AppxBundle=Always 
-    /p:GenerateAppInstallerFile=True 
-    /p:AppInstallerUri="https://livingcryogen.github.io/Hazard/packages/framework-dependent" 
-    /p:AppInstallerCheckForUpdateFrequency=OnApplicationRun 
-    /p:AppInstallerUpdateFrequency=1 
-    /p:AppxPackageSigningEnabled=False 
-    /p:SelfContained=false 
-    /p:AppxPackageIncludePrivateApis=false 
-    /p:BuildForStore=false 
-    /p:IncludeAllResourceLanguages=false
-    /p:AppxAutoIncrementPackageRevision=True 
-    /p:GenerateTestArtifacts=True 
-    /p:AppxPackageTestDir="$(msixOutputPath)\\"
-    /p:HoursBetweenUpdateChecks=0
-    /p:EmbedAllDependencies=True'
-
-    - task: PowerShell@2
-      displayName: 'Fix AppInstaller Paths'
-      inputs:
-        targetType: 'inline'
-        script: |
-          # Find the appinstaller file
-          $appinstallerFiles = Get-ChildItem -Path "$(msixOutputPath)" -Filter "*.appinstaller" -Recurse
-          
-          foreach ($file in $appinstallerFiles) {
-            Write-Host "Found appinstaller file: $($file.FullName)"
-            
-            # Load the XML content
-            [xml]$content = Get-Content -Path $file.FullName
-            
-            # Update the main URI (top level)
-            $content.AppInstaller.Uri = $content.AppInstaller.Uri -replace "/framework-dependent/framework-dependent/", "/framework-dependent/"
-            
-            # Update the main bundle URI
-            $content.AppInstaller.MainBundle.Uri = $content.AppInstaller.MainBundle.Uri -replace "/framework-dependent/framework-dependent/", "/framework-dependent/"
-            
-            # Since we're using EmbedAllDependencies=True, we should remove the Dependencies section
-            if ($content.AppInstaller.Dependencies) {
-              Write-Host "Removing Dependencies section from AppInstaller file"
-              $content.AppInstaller.RemoveChild($content.AppInstaller.Dependencies) | Out-Null
-            }
-
-            # Save the modified XML
-            $content.Save($file.FullName)
-            Write-Host "Updated paths in appinstaller file"
-          }
-
-    - task: PowerShell@2
-      displayName: 'Debug AppInstaller Generation'
-      inputs:
-        targetType: 'inline'
-        script: |
-          Write-Host "==== MSIX BUILD OUTPUT DIRECTORY CONTENTS ===="
-          Get-ChildItem -Path "$(msixOutputPath)" -Recurse | ForEach-Object { Write-Host $_.FullName }
-          
-          Write-Host "==== SEARCHING FOR APPINSTALLER FILES ===="
-          $installerFiles = Get-ChildItem -Path "$(msixOutputPath)" -Filter "*.appinstaller" -Recurse
-          if ($installerFiles.Count -eq 0) {
-            Write-Host "No .appinstaller files found in output directory!"
-          } else {
-            Write-Host "Found $($installerFiles.Count) .appinstaller files:"
-            $installerFiles | ForEach-Object { Write-Host $_.FullName }
-          }
-          
-          # Check for build logs that might reveal why appinstaller wasn't generated
-          Write-Host "==== SEARCHING FOR BUILD LOGS WITH APPINSTALLER INFO ===="
-          $buildLogs = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Filter "*.binlog" -Recurse
-          if ($buildLogs.Count -gt 0) {
-            Write-Host "Build logs found, but would need to be analyzed separately"
-          } else {
-            Write-Host "No build logs found"
-          }
-          
-          # Check if the MSIX is configured for store deployment, which would prevent appinstaller
-          Write-Host "==== CHECKING PROJECT FILES FOR STORE SETTINGS ===="
-          $projFiles = Get-ChildItem -Path "$(Build.SourcesDirectory)" -Filter "*.wapproj" -Recurse
-          foreach($projFile in $projFiles) {
-            Write-Host "Examining $($projFile.FullName)"
-            $content = Get-Content $projFile.FullName
-            if ($content -match "BuildForStore") {
-              Write-Host "BuildForStore setting found in project file"
-            }
-          }
-
-    - task: PowerShell@2
-      displayName: 'Analyze MSIX Bundle Contents'
-      inputs:
-        targetType: 'inline'
-        script: |
-          Write-Host "Analyzing MSIX bundle contents..."
-          
-          # Find the msixbundle file
-          $bundleFile = Get-ChildItem -Path "$(msixOutputPath)" -Filter "*.msixbundle" -Recurse | Select-Object -First 1
-          
-          if ($bundleFile) {
-            Write-Host "Found bundle: $($bundleFile.FullName)"
-            
-            # Create temp directory for extraction
-            $tempDir = Join-Path $env:TEMP "BundleAnalysis"
-            if (Test-Path $tempDir) { Remove-Item $tempDir -Recurse -Force }
-            New-Item -Path $tempDir -ItemType Directory -Force | Out-Null
-            
-            # Temporarily rename to zip for extraction
-            $zipPath = "$($bundleFile.FullName).zip"
-            Copy-Item -Path $bundleFile.FullName -Destination $zipPath
-            
-            # Extract and analyze
-            try {
-              Expand-Archive -Path $zipPath -DestinationPath $tempDir -Force
-              
-              Write-Host "Bundle contents:"
-              Get-ChildItem -Path $tempDir -Recurse | ForEach-Object {
-                Write-Host " - $($_.FullName.Substring($tempDir.Length))"
-              }
-              
-              # Look for specific dependency packages
-              $runtimePackage = Get-ChildItem -Path $tempDir -Filter "*WindowsAppRuntime*" -Recurse
-              $vclibsPackage = Get-ChildItem -Path $tempDir -Filter "*VCLibs*" -Recurse
-              
-              if ($runtimePackage) {
-                Write-Host "Windows App Runtime is embedded in the bundle"
-              } else {
-                Write-Host "WARNING: Windows App Runtime does not appear to be embedded!"
-              }
-              
-              if ($vclibsPackage) {
-                Write-Host "VCLibs packages are embedded in the bundle"
-              } else {
-                Write-Host "WARNING: VCLibs packages do not appear to be embedded!"
-              }
-            }
-            catch {
-              Write-Host "Error analyzing bundle: $_"
-            }
-            finally {
-              # Clean up
-              Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
-              Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-            }
-          } else {
-            Write-Host "No msixbundle file found!"
-          }
-    - task: CopyFiles@2
-      displayName: 'Copy MSIX package to publish directory'
-      inputs:
-        SourceFolder: '$(msixOutputPath)'
-        Contents: |
-          **/*.msix*
-          **/*.appinstaller
-        TargetFolder: '$(publishPath)'
-        CleanTargetFolder: false
-        OverWrite: true
-
-    # Azure CLI setup
-    - task: AzureCLI@2
-      displayName: 'Azure CLI'
-      inputs:
-        azureSubscription: 'JoshMcKnight Azure TopLevel'
-        scriptType: 'bash'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          echo "##vso[task.setvariable variable=ARM_CLIENT_ID;issecret=true]$servicePrincipalId" 
-          echo "##vso[task.setvariable variable=ARM_ID_TOKEN;issecret=true]$idToken"
-          echo "##vso[task.setvariable variable=ARM_TENANT_ID;issecret=true]$tenantId"
-        addSpnToEnvironment: true
-
-    # Azure login
-    - bash: |
-        az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
-      displayName: 'Azure Login'
-
-    # Sign the package
-    - task: TrustedSigning@0
-      displayName: 'Sign with Trusted Signing'
-      inputs:
-        Endpoint: 'https://eus.codesigning.azure.net/'
-        TrustedSigningAccountName: 'joshmcknightsigning'
-        CertificateProfileName: 'JoshuaMcKnight'
-        FilesFolder: '$(publishPath)'
-        FilesFolderRecurse: true
-        FilesFolderFilter: '*.msixbundle'
-        ExcludeEnvironmentCredential: true
-        ExcludeWorkloadIdentityCredential: true
-        ExcludeManagedIdentityCredential: true
-        ExcludeSharedTokenCacheCredential: true
-        ExcludeVisualStudioCredential: true
-        ExcludeVisualStudioCodeCredential: true
-        ExcludeAzureCliCredential: false
-        ExcludeAzurePowershellCredential: true
-        ExcludeAzureDeveloperCliCredential: true
-        ExcludeInteractiveBrowserCredential: true
-
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Build to DevOps'
-      inputs:
-       PathtoPublish: '$(publishPath)'
-       ArtifactName: 'msix-package'
-       publishLocation: Container
-
-- stage: SelfContained
-  displayName: 'Self-Contained Build'
-  variables:
-    publishPath: '$(Build.ArtifactStagingDirectory)\publish\self-contained'
-    msixOutputPath: '$(Build.ArtifactStagingDirectory)\msix\self-contained'
-    blobPath: 'self-contained'
-  jobs:
-  - job: Build
-    pool:
-      vmImage: 'windows-latest'
-    steps:
-
-    # Set up .NET SDK (skipped if cache is available)
-    - task: UseDotNet@2
-      inputs:
-        packageType: 'sdk'
-        version: '8.0.x'
-        includePreviewVersions: false
-      condition: ne(variables.DOTNET_CACHE_RESTORED, 'true')
 
     # Install wasm-tools workload - this mysteriously helps with runtime packs
     - task: DotNetCoreCLI@2
@@ -344,66 +68,17 @@ stages:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:RuntimeIdentifier=win-x64 
-    /p:AppxPackageDir="$(msixOutputPath)\\" 
-    /p:UapAppxPackageBuildMode=SideloadOnly 
-    /p:AppxBundlePlatforms="$(buildPlatform)" 
-    /p:AppxBundle=Always 
-    /p:GenerateAppInstallerFile=True 
-    /p:AppInstallerUri="https://livingcryogen.github.io/Hazard/docs/packages/self-contained" 
-    /p:AppInstallerCheckForUpdateFrequency=OnApplicationRun 
-    /p:AppInstallerUpdateFrequency=1 
-    /p:AppxPackageSigningEnabled=False 
-    /p:SelfContained=true 
-    /p:AppxPackageIncludePrivateApis=false 
-    /p:BuildForStore=false 
-    /p:IncludeAllResourceLanguages=false
-    /p:AppxAutoIncrementPackageRevision=True 
-    /p:GenerateTestArtifacts=True 
-    /p:AppxPackageTestDir="$(msixOutputPath)\\"
-    /p:HoursBetweenUpdateChecks=0
-    /p:AppxPackageOutput="Package"
-    /p:EmbedAllDependencies=True'
+        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir=$(msixOutputPath) /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms=$(buildPlatform) /p:AppxBundle=Always /p:GenerateAppInstallerFile=False /p:AppxPackageSigningEnabled=False /p:SelfContained=true /p:WindowsAppSDKSelfContained=true /p:AppxPackageIncludePrivateApis=false /p:BuildForStore=false /p:IncludeAllResourceLanguages=false /p:AppxAutoIncrementPackageRevision=True /p:GenerateTestArtifacts=True /p:AppxPackageTestDir=$(msixOutputPath) /p:TargetPlatformVersion=10.0.19041.0 /p:TargetPlatformMinVersion=10.0.17763.0 /p:WindowsPackageType=None /p:GenerateProjectSpecificOutputFolder=true /p:TargetFramework=net8.0-windows10.0.19041.0 /p:MSBuildWarningsAsMessages=MSB3276'
 
-    - task: PowerShell@2
-      displayName: 'Fix AppInstaller Paths'
-      inputs:
-        targetType: 'inline'
-        script: |
-          # Find the appinstaller file
-          $appinstallerFiles = Get-ChildItem -Path "$(msixOutputPath)" -Filter "*.appinstaller" -Recurse
-          
-          foreach ($file in $appinstallerFiles) {
-            Write-Host "Found appinstaller file: $($file.FullName)"
-            
-            # Load the XML content
-            [xml]$content = Get-Content -Path $file.FullName
-            
-            # Update the main URI (top level)
-            $content.AppInstaller.Uri = $content.AppInstaller.Uri -replace "/self-contained/self-contained/", "/self-contained/"
-            
-            # Update the main bundle URI
-            $content.AppInstaller.MainBundle.Uri = $content.AppInstaller.MainBundle.Uri -replace "/self-contained/self-contained/", "/self-contained/"
-            
-            # Since we're using EmbedAllDependencies=True, we should remove the Dependencies section
-            if ($content.AppInstaller.Dependencies) {
-              Write-Host "Removing Dependencies section from AppInstaller file"
-              $content.AppInstaller.RemoveChild($content.AppInstaller.Dependencies) | Out-Null
-            }
-
-            # Save the modified XML
-            $content.Save($file.FullName)
-            Write-Host "Updated paths in appinstaller file"
-          }
     - task: CopyFiles@2
-      displayName: 'Copy MSIX package to publish directory'
+      displayName: 'Copy MSIX bundle to publish directory'
       inputs:
         SourceFolder: '$(msixOutputPath)'
         Contents: |
-          **/*.msix*
+          **/*.msixbundle
           **/*.appinstaller
         TargetFolder: '$(publishPath)'
-        CleanTargetFolder: false
+        CleanTargetFolder: true
         OverWrite: true
 
     # Azure CLI setup
@@ -445,188 +120,37 @@ stages:
         ExcludeAzureDeveloperCliCredential: true
         ExcludeInteractiveBrowserCredential: true
 
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Build to DevOps'
+    - task: AzureCLI@2
+      displayName: 'Copy to Blob Storage and Set Content Types'
       inputs:
-       PathtoPublish: '$(publishPath)'
-       ArtifactName: 'msix-package-self-contained'
-       publishLocation: Container
-
-- stage: DeployFDBtoGHPages
-  displayName: 'Deploy FrameworkDependent Build to GHPages'
-  dependsOn: FrameworkDependent
-  jobs:
-    - job: Deploy
-      pool:
-        vmImage: 'windows-latest'
-      steps:
-        - task: DownloadBuildArtifacts@0
-          displayName: 'Download Built Artifacts'
-          inputs:
-            buildType: current
-            downloadType: 'single'
-            artifactName: 'msix-package'
-            downloadPath: '$(System.ArtifactsDirectory)'
-            
-        - checkout: self
-          persistCredentials: true
+        azureSubscription: 'JoshMcKnight Azure TopLevel'
+        scriptType: 'pscore'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Upload using the service principal auth with overwrite
+          az storage blob upload-batch `
+            --source "$(publishPath)" `
+            --destination "$(containerName)" `
+            --destination-path "$(blobPath)" `
+            --account-name "$(storageAccount)" `
+            --auth-mode login `
+            --overwrite $true
+          # Get uploaded files to verify names
+          $uploadedFiles = az storage blob list --container-name "$(containerName)" --prefix "$(blobPath)" --account-name "$(storageAccount)" --auth-mode login --query "[].name" -o tsv
+          Write-Host "Uploaded files:"
+          $uploadedFiles | ForEach-Object { Write-Host "  $_" }
+          # Find the msix/msixbundle file
+          $msixFile = $uploadedFiles | Where-Object { $_ -like "*.msix*" } | Select-Object -First 1
           
-        # Configure commit authorship info
-        - task: PowerShell@2
-          displayName: 'Setup Git Configuration'
-          inputs:
-            targetType: 'inline'
-            script: |
-              git config --global user.email "joshua.a.mcknight@gmail.com"
-              git config --global user.name "Joshua McKnight via Azure Pipelines"
-          
-        # Deploy to /docs
-        - task: PowerShell@2
-          displayName: 'Deploy to GitHub /docs'
-          inputs:
-            targetType: inline
-            script: |
-              # check current Branch
-              $currentBranch = git rev-parse --abbrev-ref HEAD
-              Write-Host "Current branch: $currentBranch"
-              
-              # ensure we get changes
-              git pull origin $currentBranch
-              
-              # ensure /docs exists
-              $docsDirectory = "$(Build.SourcesDirectory)/docs"
-              if (-not (Test-Path $docsDirectory)) {
-                Write-Host "Creating /docs..."
-                New-Item -Path $docsDirectory -ItemType Directory -Force | Out-Null
-                "" | Out-File -FilePath "$docsDirectory/.nojekyll" -NoNewline
-              }
-              
-              # create /packages if needed
-              $packagesDirectory = "$docsDirectory/packages"
-              if (-not (Test-Path $packagesDirectory)) {
-                New-Item -Path $packagesDirectory -ItemType Directory -Force | Out-Null
-              }
-              
-              # create /framework-dependent if needed
-              $FWDDirectory = "$packagesDirectory/framework-dependent"
-              if (-not (Test-Path $FWDDirectory)) {
-                New-Item -Path $FWDDirectory -ItemType Directory -Force | Out-Null
-              }
-              
-              # Copy files from artifacts to docs directory - MODIFY THIS PART
-              Write-Host "Copying files to $FWDDirectory..."
-              
-              # First, determine the source structure
-              $sourceDir = "$(System.ArtifactsDirectory)/msix-package"
-              $nestedDir = Get-ChildItem -Path $sourceDir -Directory -Filter "framework-dependent" -ErrorAction SilentlyContinue | Select-Object -First 1
-              
-              if ($nestedDir) {
-                # If there's already a nested framework-dependent folder, copy from inside it
-                Write-Host "Detected nested folder structure, adjusting copy source..."
-                Copy-Item -Path "$($nestedDir.FullName)/*" -Destination $FWDDirectory -Recurse -Force
-              } else {
-                # No nested folder, copy everything directly
-                Copy-Item -Path "$sourceDir/*" -Destination $FWDDirectory -Recurse -Force
-              }
-              
-              # Add changes to git
-              git add -f $docsDirectory
-              
-              # Check if there are changes to commit
-              $status = git status --porcelain
-              if ($status) {
-                Write-Host "Changes detected, committing and pushing..."
-                git commit -m "Update GitHub Pages from Azure DevOps build $(Build.BuildNumber)"
-                git push origin HEAD:main
-              } else {
-                Write-Host "No changes detected, skipping commit and push."
-              }
-- stage: DeploySCtoGHPages
-  displayName: 'Deploy SelfContained Build to GHPages'
-  dependsOn: SelfContained
-  jobs:
-    - job: Deploy
-      pool:
-        vmImage: 'windows-latest'
-      steps:
-        - task: DownloadBuildArtifacts@0
-          displayName: 'Download Built Artifacts'
-          inputs:
-            buildType: current
-            downloadType: 'single'
-            artifactName: 'msix-package-self-contained'
-            downloadPath: '$(System.ArtifactsDirectory)'
-            
-        - checkout: self
-          persistCredentials: true
-          
-        # Configure commit authorship info
-        - task: PowerShell@2
-          displayName: 'Setup Git Configuration'
-          inputs:
-            targetType: 'inline'
-            script: |
-              git config --global user.email "joshua.a.mcknight@gmail.com"
-              git config --global user.name "Joshua McKnight via Azure Pipelines"
-          
-        # Deploy to /docs
-        - task: PowerShell@2
-          displayName: 'Deploy to GitHub /docs'
-          inputs:
-            targetType: inline
-            script: |
-              # check current Branch
-              $currentBranch = git rev-parse --abbrev-ref HEAD
-              Write-Host "Current branch: $currentBranch"
-              
-              # ensure we get changes
-              git pull origin $currentBranch
-              
-              # ensure /docs exists
-              $docsDirectory = "$(Build.SourcesDirectory)/docs"
-              if (-not (Test-Path $docsDirectory)) {
-                Write-Host "Creating /docs..."
-                New-Item -Path $docsDirectory -ItemType Directory -Force | Out-Null
-                "" | Out-File -FilePath "$docsDirectory/.nojekyll" -NoNewline
-              }
-              
-              # create /packages if needed
-              $packagesDirectory = "$docsDirectory/packages"
-              if (-not (Test-Path $packagesDirectory)) {
-                New-Item -Path $packagesDirectory -ItemType Directory -Force | Out-Null
-              }
-              
-              # create /self-contained if needed
-              $SCDirectory = "$packagesDirectory/self-contained"
-              if (-not (Test-Path $SCDirectory)) {
-                New-Item -Path $SCDirectory -ItemType Directory -Force | Out-Null
-              }
-              
-              # Copy files from artifacts to docs directory - MODIFY THIS PART
-              Write-Host "Copying files to $SCDirectory..."
-              
-              # First, determine the source structure
-              $sourceDir = "$(System.ArtifactsDirectory)/msix-package-self-contained"
-              $nestedDir = Get-ChildItem -Path $sourceDir -Directory -Filter "self-contained" -ErrorAction SilentlyContinue | Select-Object -First 1
-              
-              if ($nestedDir) {
-                # If there's already a nested self-contained folder, copy from inside it
-                Write-Host "Detected nested folder structure, adjusting copy source..."
-                Copy-Item -Path "$($nestedDir.FullName)/*" -Destination $SCDirectory -Recurse -Force
-              } else {
-                # No nested folder, copy everything directly
-                Copy-Item -Path "$sourceDir/*" -Destination $SCDirectory -Recurse -Force
-              }
-              
-              # Add changes to git
-              git add -f $docsDirectory
-              
-              # Check if there are changes to commit
-              $status = git status --porcelain
-              if ($status) {
-                Write-Host "Changes detected, committing and pushing..."
-                git commit -m "Update GitHub Pages from Azure DevOps build $(Build.BuildNumber)"
-                git push origin HEAD:main
-              } else {
-                Write-Host "No changes detected, skipping commit and push."
-              }
+          if ($msixFile) {
+            Write-Host "Setting content type for: $msixFile"
+            # Set content type for MSIX package
+            az storage blob update `
+              --container-name "$(containerName)" `
+              --name "$msixFile" `
+              --content-type "application/vnd.ms-appx" `
+              --account-name "$(storageAccount)" `
+              --auth-mode login
+          } else {
+            Write-Host "##vso[task.logissue type=warning]No MSIX files found to update content type"
+          }
