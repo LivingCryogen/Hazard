@@ -4,7 +4,7 @@ namespace Model.Tests.Fixtures;
 
 public static class FileProcessor
 {
-    private static readonly IFileSystem _fileSystem;
+    private static readonly FileSystem _fileSystem;
 
     static FileProcessor()
     {
@@ -28,7 +28,7 @@ public static class FileProcessor
 
     public static string GetTempFile()
     {
-        return _fileSystem.Path.GetTempFileName();
+        return _fileSystem.Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
     }
 
     public static void Delete(string path)
