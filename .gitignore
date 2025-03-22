@@ -8,6 +8,8 @@
 *HazardPublishSAS/bin/
 *HazardPublishSAS/obj/
 
+#GIMP image files
+*.xcf
 
 # User-specific files
 *.rsuser
