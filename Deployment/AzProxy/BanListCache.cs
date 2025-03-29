@@ -4,66 +4,75 @@ namespace AzProxy;
 
 public interface IBanCache
 {
-
+    bool TryGetBan(string address, out Ban? ban);
+    bool TryUpdateBan(string address, Ban newBan, Ban oldBan);
+    void AddOrUpdateBan(string address, Func<string, Ban> addFactory, Func<string, Ban, Ban> updateFactory);
+    IEnumerable<string> GetUpdatedAddresses();
+    public void Initialize(HashSet<BanListEntry> banRecords);
+    public bool Initialized { get; }
 }
 
-public class BanListCache : IBanCache
+public class BanListCache(ILogger logger) : IBanCache
 {
-    public class TableChange
+    private readonly ILogger _logger = logger;
+    private readonly ConcurrentDictionary<string, Ban> _bans = [];
+    private readonly HashSet<string> _addressesUpdated = [];
+    private readonly object _lock = new();
+
+    public bool Initialized { get; private set; } = false;
+
+    public bool TryGetBan(string address, out Ban? ban)
     {
-        public bool IsNew { get; init; } = default;
-        public bool IsDeleted { get; init; } = default;
-        public string? Address { get; init; } = string.Empty;
-        public BanListEntry? AffectedEntry { get; init; } = null;
+        if (_bans.TryGetValue(address, out Ban? value) && value != null) {
+            ban = value;
+            return true;
+        }
+        ban = value;
+        return false;
     }
 
-    private readonly ILogger _logger;
-
-    public BanListCache(ILogger logger)
+    public void AddOrUpdateBan(string address, Func<string, Ban> addFactory, Func<string, Ban, Ban> updateFactory)
     {
-        _logger = logger;
+        _bans.AddOrUpdate(address, addFactory, updateFactory);
+
+        lock (_lock) {
+            _addressesUpdated.Add(address);
+        }
     }
 
-    // Stores banned addresses, their unban date, and the number of previous bans
-    public ConcurrentDictionary<string, (DateTimeOffset Unbanned, int BanCount)> TempBanList { get; } = [];
-    public List<string> PermaBanList { get; } = [];
-    public HashSet<TableChange> PendingChanges { get; } = [];
-
-    public (DateTimeOffset UnBanDate, int NumBans)? this[string address] {
-        get {
-            try {
-                if (PermaBanList.Contains(address))
-                    return (DateTimeOffset.MaxValue, 3); // indicates permaban
-                if (TempBanList.TryGetValue(address, out (DateTimeOffset, int) value))
-                    return value;
-                else
-                    return null;
-            } catch (ArgumentNullException) {
-                return null;
-            } catch (Exception ex) {
-                _logger.LogError(ex, "There was an error when referencing the banlist cache: {message.}", ex.Message);
-                return null;
+    public bool TryUpdateBan(string address, Ban newBan, Ban oldBan)
+    {
+        if (_bans.TryUpdate(address, newBan, oldBan)) {
+            lock (_lock) {
+                _addressesUpdated.Add(address);
             }
+            return true;
+        }
+        return false;
+    }
+
+    public IEnumerable<string> GetUpdatedAddresses() {
+        lock (_lock) {
+            return [.. _addressesUpdated];
         }
     }
 
-    public async Task<bool> Initialize(HashSet<BanListEntry> banRecords)
+    public void Initialize(HashSet<BanListEntry> banRecords)
     {
-
-    }
-
-    public void TempBan(string address, (string, DateTimeOffset) banInfo)
-    {
-        try {
-            foreach (var entry in newEntries)
-                _banListCache.TryAdd(entry.Item1, entry.Item2);
+        foreach (BanListEntry entry in banRecords) {
+            if (!entry.NowBanned)
+                continue;
+        
+            string address = entry.RowKey;
+            Ban cachedBan = new(
+                entry.IsLifetime ? Ban.BanType.Life : Ban.BanType.Temp,
+                entry.NumTempBans,
+                entry.UnbannedOn
+                );
+        
+            _bans.AddOrUpdate(address, _ => cachedBan, (_, _) => cachedBan);
         }
-        catch (Exception ex) {
-            var errorTime = DateTime.UtcNow;
-            _logger.LogError("{DateTime} : There was an error while attempting to update the banlist cache: {message}.",
-                errorTime, ex.Message);
-            _logger.LogInformation("Error at {time} reported: {data} ; {innerEx} ; {source} ; {trace}",
-                errorTime, ex.Data, ex.InnerException, ex.Source, ex.StackTrace);
-        }
+
+        Initialized = true;
     }
 }
