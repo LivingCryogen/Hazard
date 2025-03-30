@@ -47,7 +47,7 @@ namespace SecureURL
                     BlobContainerName = containerName,
                     BlobName = blobName,
                     Resource = "b", // b means blob (here, an individual file)
-                    ExpiresOn = DateTimeOffset.UtcNow.AddHours(1) // Token valid for 1 hour
+                    ExpiresOn = DateTimeOffset.UtcNow.AddSeconds(10) // Token valid for 10 seconds
                 };
                 sasBuilder.SetPermissions(BlobSasPermissions.Read);
 
