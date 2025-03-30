@@ -59,7 +59,7 @@ namespace SecureURL
                 string sasToken = sasObject.ToString();
                 string accessURL = $"{blobClient.Uri}?{sasToken}";
 
-                return new OkObjectResult(accessURL);
+                return new RedirectResult(accessURL, false);
             } catch (Exception ex) {
                 _logger.LogError($"Error generating SAS token and/or secure URL: {ex.Message}.");
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
