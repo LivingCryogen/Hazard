@@ -25,7 +25,7 @@ namespace SecureURL
             string? accountName = Environment.GetEnvironmentVariable("StorageAccountName");
             string? containerName = Environment.GetEnvironmentVariable("ContainerName");
             string? blobName = Environment.GetEnvironmentVariable("BlobName");
-            string? connectionString = Environment.GetEnvironmentVariable("StorageConnectionString");
+            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__JAMStorageConnectionString");
             string? storageKey = Environment.GetEnvironmentVariable("StorageKey");
 
             if (string.IsNullOrEmpty(accountName) ||
@@ -47,12 +47,9 @@ namespace SecureURL
                     BlobContainerName = containerName,
                     BlobName = blobName,
                     Resource = "b", // b means blob (here, an individual file)
-                    ExpiresOn = DateTimeOffset.UtcNow.AddSeconds(10) // Token valid for 10 seconds
+                    ExpiresOn = DateTimeOffset.UtcNow.AddSeconds(20) // Token valid for 20 seconds
                 };
                 sasBuilder.SetPermissions(BlobSasPermissions.Read);
-
-                if (string.IsNullOrEmpty(storageKey))
-                    return new BadRequestObjectResult("Invalid storage account key.");
 
                 StorageSharedKeyCredential storageCredential = new(accountName, storageKey);
                 var sasObject = sasBuilder.ToSasQueryParameters(storageCredential);
