@@ -2,20 +2,33 @@ trigger: none
 
 variables:
   solution: '**/Hazard.sln'
-  buildPlatform: 'x64'
   buildConfiguration: 'Release'
   storageAccount: 'jm84storage'
   containerName: 'hazard'
   blobPath: '.'
-  publishPath: '$(Build.ArtifactStagingDirectory)\publish\'
-  msixOutputPath: '$(Build.ArtifactStagingDirectory)\msix\'
 
 jobs:
-  - job: Build
+  - job: BuildAndPublish
+    displayName: 'Build and Publish MSIX'
     pool:
       vmImage: 'windows-latest'
+    strategy:
+      matrix:
+        x64:
+          buildPlatform: 'x64'
+          runtimeId: 'win-x64'
+          publishPath: '$(Build.ArtifactStagingDirectory)/publish/x64/'
+          msixOutputPath: '$(Build.ArtifactStagingDirectory)/msix/x64/'
+          archPath: 'x64'
+        ARM64:
+          buildPlatform: 'ARM64'
+          runtimeId: 'win-arm64'
+          publishPath: '$(Build.ArtifactStagingDirectory)/publish/arm64/'
+          msixOutputPath: '$(Build.ArtifactStagingDirectory)/msix/arm64/'
+          archPath: 'arm64'
+    
     steps:
-    # Set up .NET SDK (skipped if cache is available)
+    # Set up .NET SDK
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
@@ -30,17 +43,17 @@ jobs:
         custom: 'workload'
         arguments: 'install wasm-tools'
         
-    # Global restore with runtime identifier - with proper path handling
+    # Global restore with runtime identifier
     - task: PowerShell@2
-      displayName: 'Global Runtime Pack Restore'
+      displayName: 'Global Runtime Pack Restore ($(buildPlatform))'
       inputs:
         targetType: 'inline'
         script: |
-          Write-Host "Performing global restore with runtime identifier..."
+          Write-Host "Performing global restore with runtime identifier $(runtimeId)..."
           # Find solution files and restore them with runtime
           Get-ChildItem -Path "$(Build.SourcesDirectory)" -Filter "*.sln" -Recurse | ForEach-Object {
             Write-Host "Restoring solution: $($_.FullName)"
-            dotnet restore "$($_.FullName)" --runtime win-x64 -v normal
+            dotnet restore "$($_.FullName)" --runtime $(runtimeId) -v normal
           }
     
     # NuGet installation and restore
@@ -48,30 +61,30 @@ jobs:
       displayName: 'Install NuGet'
 
     - task: NuGetCommand@2
-      displayName: 'Restore NuGet Packages'
+      displayName: 'Restore NuGet Packages ($(buildPlatform))'
       inputs:
         command: 'restore'
         restoreSolution: '$(solution)'
 
     # Standard restore
     - task: DotNetCoreCLI@2
-      displayName: 'Restore Solution'
+      displayName: 'Restore Solution ($(buildPlatform))'
       inputs:
         command: 'restore'
         projects: '$(solution)'
-        arguments: '--runtime win-x64'
+        arguments: '--runtime $(runtimeId)'
 
     # Build with explicit framework references and dependencies
     - task: VSBuild@1
-      displayName: 'Build Self-Contained MSIX'
+      displayName: 'Build Self-Contained MSIX ($(buildPlatform))'
       inputs:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        msbuildArgs: '/p:RuntimeIdentifier=win-x64 /p:AppxPackageDir=$(msixOutputPath) /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms=$(buildPlatform) /p:AppxBundle=Always /p:GenerateAppInstallerFile=False /p:AppxPackageSigningEnabled=False /p:SelfContained=true /p:WindowsAppSDKSelfContained=true /p:AppxAutoIncrementPackageRevision=True /p:GenerateTestArtifacts=True /p:AppxPackageTestDir=$(msixOutputPath)'
+        msbuildArgs: '/p:RuntimeIdentifier=$(runtimeId) /p:AppxPackageDir=$(msixOutputPath) /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxBundlePlatforms=$(buildPlatform) /p:AppxBundle=Always /p:GenerateAppInstallerFile=False /p:AppxPackageSigningEnabled=False /p:SelfContained=true /p:WindowsAppSDKSelfContained=true /p:AppxAutoIncrementPackageRevision=True /p:GenerateTestArtifacts=True /p:AppxPackageTestDir=$(msixOutputPath) /p:AppxPackageFileName=HazardGame_$(buildPlatform)'
 
     - task: CopyFiles@2
-      displayName: 'Copy MSIX bundle to publish directory'
+      displayName: 'Copy MSIX bundle to publish directory ($(buildPlatform))'
       inputs:
         SourceFolder: '$(msixOutputPath)'
         Contents: |
@@ -83,7 +96,7 @@ jobs:
 
     # Azure CLI setup
     - task: AzureCLI@2
-      displayName: 'Azure CLI'
+      displayName: 'Azure CLI Setup ($(buildPlatform))'
       inputs:
         azureSubscription: 'JoshMcKnight Azure TopLevel'
         scriptType: 'bash'
@@ -97,11 +110,11 @@ jobs:
     # Azure login
     - bash: |
         az login --service-principal -u $(ARM_CLIENT_ID) --tenant $(ARM_TENANT_ID) --allow-no-subscriptions --federated-token $(ARM_ID_TOKEN)
-      displayName: 'Azure Login'
+      displayName: 'Azure Login ($(buildPlatform))'
 
     # Sign the package
     - task: TrustedSigning@0
-      displayName: 'Sign with Trusted Signing'
+      displayName: 'Sign with Trusted Signing ($(buildPlatform))'
       inputs:
         Endpoint: 'https://eus.codesigning.azure.net/'
         TrustedSigningAccountName: 'joshmcknightsigning'
@@ -121,24 +134,29 @@ jobs:
         ExcludeInteractiveBrowserCredential: true
 
     - task: AzureCLI@2
-      displayName: 'Copy to Blob Storage and Set Content Types'
+      displayName: 'Copy to Blob Storage and Set Content Types ($(buildPlatform))'
       inputs:
         azureSubscription: 'JoshMcKnight Azure TopLevel'
         scriptType: 'pscore'
         scriptLocation: 'inlineScript'
         inlineScript: |
+          # Define blob destination path with architecture
+          $archSpecificPath = "$(blobPath)/$(archPath)"
+          
           # Upload using the service principal auth with overwrite
           az storage blob upload-batch `
             --source "$(publishPath)" `
             --destination "$(containerName)" `
-            --destination-path "$(blobPath)" `
+            --destination-path "$archSpecificPath" `
             --account-name "$(storageAccount)" `
             --auth-mode login `
             --overwrite $true
+            
           # Get uploaded files to verify names
-          $uploadedFiles = az storage blob list --container-name "$(containerName)" --prefix "$(blobPath)" --account-name "$(storageAccount)" --auth-mode login --query "[].name" -o tsv
-          Write-Host "Uploaded files:"
+          $uploadedFiles = az storage blob list --container-name "$(containerName)" --prefix "$archSpecificPath" --account-name "$(storageAccount)" --auth-mode login --query "[].name" -o tsv
+          Write-Host "Uploaded files for $(buildPlatform):"
           $uploadedFiles | ForEach-Object { Write-Host "  $_" }
+          
           # Find the msix/msixbundle file
           $msixFile = $uploadedFiles | Where-Object { $_ -like "*.msix*" } | Select-Object -First 1
           
