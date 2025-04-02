@@ -1,5 +1,4 @@
 ﻿<!DOCTYPE html>
-
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
@@ -7,26 +6,34 @@
     <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
-    <h1>
-        Hazard!
-    </h1>
-    <h3>
-        Nothing ventured, nothing gained.
-    </h3>
-    <h5>
-        A WPF development demo by Josh McKnight.
-    </h5>
-    <br />
-        <a class="autodetect-download-button">Download!</>
+    <div class="content-wrapper">
+        <h1>
+            Hazard!
+        </h1>
+        <h3>
+            Nothing ventured, nothing gained.
+        </h3>
+        <h5>
+            A WPF development demo by Josh McKnight.
+        </h5>
+        <br />
+        <div class="download-container">
+            <a class="download-button" href="https://hazardgameproxy-d4caecgsapakcwh0.centralus-01.azurewebsites.net/secure-url?arch=x64">Download (x64)</a>
+            <a class="download-button" href="https://hazardgameproxy-d4caecgsapakcwh0.centralus-01.azurewebsites.net/secure-url?arch=ARM">Download (ARM)</a>
+        </div>
+    </div>
     <br />
     <nav>
-        <div>
+        <div class="nav-container">
             <a href="#" data-content="Download.html" class="dynamic-link">Download</a>
             <a href="#" data-content="About.html" class="dynamic-link">About</a>
             <a href="#" data-content="Features.html" class="dynamic-link">Features</a>
             <a href="#" data-content="Tour.html" class="dynamic-link">Tour</a>
             <a href="#" data-content="Background.html" class="dynamic-link">Background</a>
-            <a href="https://github.com/LivingCryogen/Hazard">Repo</a>
+            <a href="https://github.com/LivingCryogen/Hazard" class="external-link">
+                <span>Repo</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
             <a href="#" data-content="Copyright.html" class="dynamic-link">Copyright</a>
         </div>
     </nav>

@@ -1,21 +1,24 @@
 // JavaScript source code
+console.log("nav.js loaded");
+
 document.addEventListener('DOMContentLoaded', async () => {
     await setDynamicLinkDefaultContent();
     setupDynamicLinks();
-    await setupDownloadButton();
+    setupDownloadTooltips();
 });
 
-// set default content for dynamic link content area to Download.html
+// Set default content for dynamic link content area to Download.html
 async function setDynamicLinkDefaultContent() {
     try {
         const defaultSource = await fetch('Download.html');
-        const defaultInnerHTML = await(defaultSource.text());
+        const defaultInnerHTML = await (defaultSource.text());
         document.getElementById('content-area').innerHTML = defaultInnerHTML;
     } catch (error) {
         console.error('Error loading default content:', error);
     }
 }
 
+// Set up the dynamic link behavior
 function setupDynamicLinks() {
     document.querySelectorAll('.dynamic-link').forEach(link => {
         link.addEventListener('click', async (e) => {
@@ -32,45 +35,16 @@ function setupDynamicLinks() {
     });
 }
 
-async function setupDownloadButton() {
-    const downloadButton = document.getElementById('autodetect-download-button');
-    if (!downloadButton)
-        return;
-    downloadButton.textContent = "Detecting Architecture...";
-    var architecture = await getArchitecture();
-    if (architecture == "undetected") {
-        architecture = "Undetected(x64?)";
-    }
-    else if (architecture == "x86") {
-        downloadButton.textContent = "CPU Not Supported";
-        downloadButton.disabled = true;
-        return;
-    }
-    else {
-        downloadButton.textContent = `Download! (${architecture})`
+// Add tooltips to download buttons
+function setupDownloadTooltips() {
+    const x64Button = document.querySelector('.download-button[href*="x64"]');
+    const armButton = document.querySelector('.download-button[href*="ARM"]');
+
+    if (x64Button) {
+        x64Button.setAttribute('title', 'For most Windows, Mac, and Linux computers with Intel or AMD processors');
     }
 
-    downloadButton.href = `https://hazardgameproxy-d4caecgsapakcwh0.centralus-01.azurewebsites.net/secure-url?arch=${architecture}`;
-}
-
-async function getArchitecture() {
-    if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
-        const highEntropyValues = await navigator.userAgentData.getHighEntropyValues(["architecture"]);
-        return highEntropyValues.architecture;
-    }
-    else {
-        const userAgent = navigator.userAgent.toLowerCase();
-        if (userAgent.includes("arm") || userAgent.includes("aarch64")) {
-            return "ARM";
-        }
-        else if (userAgent.includes("x86_64") || userAgent.includes("amd64") || userAgent.includes("win64")) {
-            return "x64"
-        }
-        else if (userAgent.includes("x86") || userAgent.includes("i386") || userAgent.includes("i686")) {
-            return "x86"
-        }
-        else return "undetected";
+    if (armButton) {
+        armButton.setAttribute('title', 'For newer Macs with Apple Silicon (M1/M2/M3), Windows on ARM devices, and many mobile devices');
     }
 }
-
-
