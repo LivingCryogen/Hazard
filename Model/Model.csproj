@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	<Configurations>Debug;Release</Configurations>
+	<Configurations>Debug;Release;Pages</Configurations>
 	<Platforms>x64;ARM64;AnyCPU</Platforms>
   </PropertyGroup>
 	

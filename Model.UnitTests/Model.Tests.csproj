@@ -7,7 +7,7 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <Configurations>Debug;Release;Release_FrameworkDependent;Release_SelfContained</Configurations>
+    <Configurations>Debug;Release;Release_FrameworkDependent;Release_SelfContained;Pages</Configurations>
     <Platforms>x64;AnyCPU</Platforms>
   </PropertyGroup>
 

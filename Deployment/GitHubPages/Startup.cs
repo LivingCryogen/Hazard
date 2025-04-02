@@ -6,6 +6,7 @@ public class Startup
     {
         if (env.IsDevelopment()) 
             app.UseDeveloperExceptionPage();
+        app.UseDefaultFiles();
         app.UseStaticFiles();
     }
 }

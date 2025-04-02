@@ -9,7 +9,7 @@
 		<UseWPF>True</UseWPF>
 		<SelfContained>true</SelfContained>
 		<GenerateDocumentationFile>False</GenerateDocumentationFile>
-		<Configurations>Debug;Release</Configurations>
+		<Configurations>Debug;Release;Pages</Configurations>
 		<InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.Extensions.Configuration.Binder.SourceGeneration</InterceptorsNamespaces>
 		<InterceptorsPreviewNamespaces>$(InterceptorsPreviewNamespaces);Microsoft.Extensions.Configuration.Binder.SourceGeneration</InterceptorsPreviewNamespaces>
       </PropertyGroup>

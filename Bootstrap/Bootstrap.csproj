@@ -10,6 +10,7 @@
     <Nullable>enable</Nullable>
 	<StartupObject>Bootstrap.Program</StartupObject>
 	<AssemblyName>Hazard</AssemblyName>
+	<Configurations>Debug;Release;Pages</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

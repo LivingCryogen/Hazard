@@ -1,21 +1,24 @@
 // JavaScript source code
+console.log("nav.js loaded");
+
 document.addEventListener('DOMContentLoaded', async () => {
     await setDynamicLinkDefaultContent();
     setupDynamicLinks();
-    await setupDownloadButton();
+    setupDownloadTooltips();
 });
 
-// set default content for dynamic link content area to Download.html
+// Set default content for dynamic link content area to Download.html
 async function setDynamicLinkDefaultContent() {
     try {
         const defaultSource = await fetch('Download.html');
-        const defaultInnerHTML = await(defaultSource.text());
+        const defaultInnerHTML = await (defaultSource.text());
         document.getElementById('content-area').innerHTML = defaultInnerHTML;
     } catch (error) {
         console.error('Error loading default content:', error);
     }
 }
 
+// Set up the dynamic link behavior
 function setupDynamicLinks() {
     document.querySelectorAll('.dynamic-link').forEach(link => {
         link.addEventListener('click', async (e) => {
@@ -32,31 +35,16 @@ function setupDynamicLinks() {
     });
 }
 
-async function setupDownloadButton() {
-    const downloadButton = document.getElementById('download-button');
-    if (!downloadButton)
-        return;
-    downloadButton.textContent = "Fetching Token...";
-    const secureLink = await getSecureLink();
-    if (!secureLink || !secureLink.URL || !secureLink.SAS) {
-        downloadButton.textContent = "Fetch Failed!";
-        return;
-    }
-    downloadButton.href = secureLink.URL;
-    downloadButton.textContent = "Download!";
-}
+// Add tooltips to download buttons
+function setupDownloadTooltips() {
+    const x64Button = document.querySelector('.download-button[href*="x64"]');
+    const armButton = document.querySelector('.download-button[href*="ARM"]');
 
-// get secure URL (with SASToken) for download from Azure Blob Storage
-async function getSecureLink() {
-    try {
-        const azFuncResponse = await fetch('');
-        if (!azFuncResponse.ok)
-            throw new Error(`Failed to fetch SAS token: ${azFuncResponse.status} ${azFuncResponse.statusText}`);
-        return await azFuncResponse.json();
+    if (x64Button) {
+        x64Button.setAttribute('title', 'For most Windows, Mac, and Linux computers with Intel or AMD processors');
     }
-    catch (error) {
-        console.error('Error when fetching SAS token:', error);
-        return null;
+
+    if (armButton) {
+        armButton.setAttribute('title', 'For newer Macs with Apple Silicon (M1/M2/M3), Windows on ARM devices, and many mobile devices');
     }
 }
-

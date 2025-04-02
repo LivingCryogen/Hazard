@@ -8,6 +8,26 @@
       <Configuration>Debug</Configuration>
       <Platform>x86</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Pages|AnyCPU">
+      <Configuration>Pages</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Pages|ARM">
+      <Configuration>Pages</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Pages|ARM64">
+      <Configuration>Pages</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Pages|x64">
+      <Configuration>Pages</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Pages|x86">
+      <Configuration>Pages</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x86">
       <Configuration>Release</Configuration>
       <Platform>x86</Platform>
@@ -56,7 +76,7 @@
     <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
-	<AppxPackageName>InstallHazardGame</AppxPackageName>
+    <AppxPackageName>InstallHazardGame</AppxPackageName>
     <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
     <!-- Compatibality warnings with dependencies like VCRTForwarders.140 that can be ignored safely here -->
     <NoWarn>$(NoWarn);NU1701</NoWarn>
@@ -110,21 +130,21 @@
     <Content Include="Images\LockScreenLogo.scale-200.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
-	<Content Include="Images\Square150x150Logo.scale-100.png">
-		<CopyToOutputDirectory>Never</CopyToOutputDirectory>
-	</Content>
+    <Content Include="Images\Square150x150Logo.scale-100.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\Square150x150Logo.scale-200.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
-	<Content Include="Images\Square44x44Logo.scale-100.png">
-		<CopyToOutputDirectory>Never</CopyToOutputDirectory>
-	</Content>
+    <Content Include="Images\Square44x44Logo.scale-100.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\Square44x44Logo.scale-200.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
-	<Content Include="Images\Square44x44Logo.targetsize-24.png">
-		<CopyToOutputDirectory>Never</CopyToOutputDirectory>
-	</Content>
+    <Content Include="Images\Square44x44Logo.targetsize-24.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\Square44x44Logo.targetsize-24_altform-unplated.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
