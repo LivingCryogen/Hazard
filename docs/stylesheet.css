@@ -1,55 +1,212 @@
-﻿nav {
-    padding: 1rem 1rem;
+﻿.header-wrapper {
+    /* These styles have been replaced with the new approach */
+}
+
+.header-text {
+    /* These styles have been replaced with the new approach */
+}
+
+.logo-container {
+    /* These styles have been replaced with the new approach */
+}
+
+.logo-image {
+    /* These styles have been replaced with the new approach */
+}
+
+nav {
+    padding: 1.2rem 2rem;
     text-align: center;
     background-color: #2b4252;
-    border-radius: 3px 3px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    margin: 0 auto;
+    max-width: 90%;
 }
+
 a {
     font-size: 1.75rem;
     color: #31c1cc;
     text-decoration-color: #31c1cc;
 }
+
     a:hover {
         color: #FFF5F5DC;
         text-decoration-color: #FFF5F5DC;
     }
+
+.nav-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+
+.external-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    margin: 0 0.3rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+    .external-link:hover {
+        background-color: rgba(49, 193, 204, 0.2);
+        transform: translateY(-2px);
+    }
+
+.external-icon {
+    margin-left: 6px;
+    opacity: 0.8;
+    transition: transform 0.3s ease;
+}
+
+.external-link:hover .external-icon {
+    transform: translateX(2px) translateY(-2px);
+    opacity: 1;
+}
+
 h1 {
     font-size: 2.5em;
     padding: 0 0;
     margin: 0 0 0 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
+
 h3 {
     padding: 0 0;
     margin: 0 0 0 0;
 }
+
 h5 {
     padding: 2px 2px;
     margin: 0 0 0 0;
+    color: #31c1cc;
 }
+
 p {
     font-size: 1em;
 }
+
 .sub-p {
     font-size: .65em;
     line-height: 0;
 }
+
 .indented-p {
     text-indent: 2rem;
     font-size: 1.5rem;
 }
-.dynamic-link {
+
+.dynamic-link, nav a {
     text-decoration: none;
+    padding: 0.5rem 1rem;
+    margin: 0 0.3rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
 }
+
+    .dynamic-link:hover, nav a:hover {
+        background-color: rgba(49, 193, 204, 0.2);
+        transform: translateY(-2px);
+    }
+
 .dynamic-content-area {
     font-size: 1.5rem;
     text-align: left;
     padding: 2.5rem;
 }
+
+.download-container {
+    margin: 0.5rem 0;
+}
+
+.download-text {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+}
+
+/* Download button styling */
+.download-button {
+    display: inline-block;
+    margin: 0.3rem;
+    padding: 0.5rem 1.2rem;
+    background-color: #31c1cc;
+    color: #2a3141;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    font-size: 1.4rem;
+}
+
+    .download-button:hover {
+        background-color: #FFF5F5DC;
+        color: #2b4252;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+/* Tooltip styling */
+.download-button {
+    position: relative;
+}
+
+    .download-button:hover::before {
+        content: attr(title);
+        position: absolute;
+        bottom: 120%;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0.5rem 1rem;
+        background-color: #2b4252;
+        color: #FFF5F5DC;
+        border: 1px solid #31c1cc;
+        border-radius: 4px;
+        font-size: 1rem;
+        white-space: normal;
+        width: 300px;
+        min-width: 100%;
+        text-align: center;
+        z-index: 1;
+        opacity: 0;
+        animation: fadeIn 0.3s forwards;
+    }
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
 body {
     background-color: #2a3141;
     color: #FFF5F5DC;
     text-align: center;
     font-family: 'Courier New';
     font-size: 2rem;
+    position: relative;
 }
 
+    body::before {
+        content: '';
+        position: fixed;
+        background-image: url('cavalryEllipse.png');
+        background-repeat: no-repeat;
+        background-size: 450px auto;
+        background-position: calc(85%) -5vh;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        pointer-events: none;
+    }
+
+.content-wrapper {
+    position: relative;
+    z-index: 1;
+}
