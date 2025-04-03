@@ -1,9 +1,6 @@
 ﻿using Azure;
 using Azure.Data.Tables;
-using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
-using System.Diagnostics.Eventing.Reader;
-using System.Net;
 
 namespace AzProxy;
 
