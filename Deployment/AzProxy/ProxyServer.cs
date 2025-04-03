@@ -103,7 +103,7 @@ namespace AzProxy
             builder.Services.AddCors(options => {
                 options.AddPolicy("FromGitHubPages", policy =>
                 {
-                    policy.WithOrigins("https://livingcryogen.github.io/Hazard")
+                    policy.WithOrigins("https://livingcryogen.github.io")
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
