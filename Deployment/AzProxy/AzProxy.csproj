@@ -5,8 +5,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <Configurations>Debug;Release;Pages</Configurations>
-	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	<RuntimeIdentifier>win-x86</RuntimeIdentifier>
 	<SelfContained>true</SelfContained>
+	<Platform>x86</Platform>
   </PropertyGroup>
 
   <ItemGroup>
