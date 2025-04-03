@@ -12,7 +12,7 @@ public interface IBanCache
     public bool Initialized { get; }
 }
 
-public class BanListCache(ILogger logger) : IBanCache
+public class BanListCache(ILogger<BanListCache> logger) : IBanCache
 {
     private readonly ILogger _logger = logger;
     private readonly ConcurrentDictionary<string, Ban> _bans = [];

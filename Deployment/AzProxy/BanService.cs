@@ -2,7 +2,7 @@
 
 namespace AzProxy;
 
-public class BanService(ILogger logger, IConfiguration config, IBanCache cache)
+public class BanService(ILogger<BanService> logger, IConfiguration config, IBanCache cache)
 {
     private readonly ILogger _logger = logger;
     private readonly IBanCache _cache = cache;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AzProxy;
 
-public class RequestHandler(ILogger logger, IConfiguration config, BanService banService)
+public class RequestHandler(ILogger<RequestHandler> logger, IConfiguration config, BanService banService)
 {
     private readonly ILogger _logger = logger;
     private readonly BanService _banService = banService;

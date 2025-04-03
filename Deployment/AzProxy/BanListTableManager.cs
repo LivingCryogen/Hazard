@@ -16,7 +16,7 @@ public class BanListTableManager : IHostedService
     private readonly ConcurrentDictionary<string, ETag> _tagCache = new(); // needed for easy updates
     private readonly SemaphoreSlim _tableSemaphore = new(1, 1);
 
-    public BanListTableManager(IConfiguration config, IHostApplicationLifetime appLife, ILogger logger, IBanCache cache)
+    public BanListTableManager(IConfiguration config, IHostApplicationLifetime appLife, ILogger<BanListTableManager> logger, IBanCache cache)
     {
         _appLife = appLife;
         _logger = logger;
