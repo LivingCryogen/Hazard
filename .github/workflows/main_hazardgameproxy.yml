@@ -24,10 +24,10 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build src/Deployment/AzProxy/AzProxy.csproj --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+        run: dotnet publish src/Deployment/AzProxy/AzProxy.csproj -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -57,12 +57,11 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_4A4B57093FE045B1B21FAF884DDB568A }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_CA96C9EFD6A349A290BAAFE574F7F029 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_8659F543EED443168F981EC594FE42D0 }}
-
+          
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'hazardgameproxy'
           slot-name: 'Production'
-          package: .
-          
+          package: "${{env.DOTNET_ROOT}}/myapp"
