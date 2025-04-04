@@ -48,10 +48,17 @@ namespace AzProxy
                         return;
                     }
 
-                    
-                    var accessToken = await GetCredentialToken(azFuncScope, logger);
-                    
-
+                    AccessToken accessToken;
+                    try {
+                        accessToken = await GetCredentialToken(azFuncScope, logger);
+                        logger.LogInformation("Acquired valid access token!");
+                    } 
+                    catch (Exception ex) {
+                        logger.LogError(ex, "Failed to acquire access token. See previous logs for details.");
+                        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                        await context.Response.WriteAsync("Authentication error. See server logs for details.");
+                        return;
+                    }
 
                     // forward to az function
                     try {
