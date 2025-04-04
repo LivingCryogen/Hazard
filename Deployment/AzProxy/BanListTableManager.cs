@@ -1,4 +1,5 @@
 ﻿using Azure;
+using Azure.Core;
 using Azure.Data.Tables;
 using System.Collections.Concurrent;
 
@@ -16,14 +17,23 @@ public class BanListTableManager : IHostedService
     private readonly ConcurrentDictionary<string, ETag> _tagCache = new(); // needed for easy updates
     private readonly SemaphoreSlim _tableSemaphore = new(1, 1);
 
-    public BanListTableManager(IConfiguration config, IHostApplicationLifetime appLife, ILogger<BanListTableManager> logger, IBanCache cache)
+    public BanListTableManager(IConfiguration config, IHostApplicationLifetime appLife, ILogger<BanListTableManager> logger, TokenCredential azCredential, IBanCache cache)
     {
         _appLife = appLife;
         _logger = logger;
         _cache = cache;
 
         try {
-            _tableClient = new TableServiceClient(config["StorageConnectionString"] ?? string.Empty).GetTableClient(config["TableName"] ?? string.Empty);
+            string? tableEndpoint = config["StorageTableEndpoint"];
+            if (string.IsNullOrEmpty(tableEndpoint))
+                throw new ArgumentException("StorageTableEndpoint was null or empty. Check configuration (App settings).");
+            var tableUri = new Uri(tableEndpoint);
+            TableServiceClient serviceClient = new(tableUri, azCredential);
+
+            string? tableName = config["TableName"];
+            if (string.IsNullOrEmpty(tableName))
+                throw new ArgumentException("TableName was null or empty. Check configuration (App settings).");
+            _tableClient = serviceClient.GetTableClient(tableName);
         }
         catch (Exception ex) {
             _logger.LogError(ex, "Failed to construct TableClient due to an error: {message}", ex.Message);

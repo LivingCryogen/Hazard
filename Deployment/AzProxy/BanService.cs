@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Azure.Core;
+using System.Net;
 
 namespace AzProxy;
 
