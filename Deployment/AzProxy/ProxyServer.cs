@@ -47,7 +47,11 @@ namespace AzProxy
                         await context.Response.WriteAsync("Server configuration error.");
                         return;
                     }
-                    var accessToken = await GetCredentialToken(azFuncScope);
+
+                    
+                    var accessToken = await GetCredentialToken(azFuncScope, logger);
+                    
+
 
                     // forward to az function
                     try {
@@ -89,11 +93,30 @@ namespace AzProxy
             app.Run();
         }
 
-        private static async Task<AccessToken> GetCredentialToken(string azureScope)
+        private static async Task<AccessToken> GetCredentialToken(string azureScope, ILogger logger)
         {
             var credential = new DefaultAzureCredential();
-            var tokenContext = new TokenRequestContext([azureScope]);
-            return await credential.GetTokenAsync(tokenContext);
+            TokenRequestContext tokenContext;
+            try {
+                tokenContext = new TokenRequestContext([azureScope]);
+            } catch (Exception ex) {
+                logger.LogError(ex, "There was an error establishing TokenRequestContext with scope value {scope}:" +
+                        "{message} Source: {src} Inner Exception: {inner} Data: {data} StackTrace: {trace}"
+                    , azureScope, ex.Message, ex.Source, ex.InnerException, ex.Data, ex.StackTrace);
+                throw;
+            }
+
+            AccessToken token;
+            try {
+                token = await credential.GetTokenAsync(tokenContext);
+            } catch (Exception ex) {
+                logger.LogError(ex, "There was an error fetching the Access Token under request context {context}:" +
+                        "{message} Source: {src} Inner Exception: {inner} Data: {data} StackTrace: {trace}"
+                    , tokenContext, ex.Message, ex.Source, ex.InnerException, ex.Data, ex.StackTrace);
+                throw;
+            }
+
+            return token;
         }
 
         private static WebApplication GetBuiltApp(string[] args)
