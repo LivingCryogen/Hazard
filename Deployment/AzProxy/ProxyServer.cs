@@ -98,6 +98,7 @@ namespace AzProxy
             var credential = new DefaultAzureCredential();
             TokenRequestContext tokenContext;
             try {
+                logger.LogInformation("Attempting to acquire token context with scope: {scope}...", azureScope);
                 tokenContext = new TokenRequestContext([azureScope]);
             } catch (Exception ex) {
                 logger.LogError(ex, "There was an error establishing TokenRequestContext with scope value {scope}:" +
@@ -108,6 +109,7 @@ namespace AzProxy
 
             AccessToken token;
             try {
+                logger.LogInformation("Attempting to acquire token with context {context}...", tokenContext);
                 token = await credential.GetTokenAsync(tokenContext);
             } catch (Exception ex) {
                 logger.LogError(ex, "There was an error fetching the Access Token under request context {context}:" +
