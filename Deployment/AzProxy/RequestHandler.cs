@@ -19,7 +19,7 @@ public class RequestHandler(ILogger<RequestHandler> logger, IConfiguration confi
     public bool ValidateRequest(string iPaddress)
     {
         if (!_banService.CacheInitialized) {
-            int timeOut = 3000;
+            int timeOut = 10000;
             int checkInterval = 100;
             int timeSpent = 0;
 
