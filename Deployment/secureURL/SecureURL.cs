@@ -8,14 +8,9 @@ using Microsoft.Extensions.Logging;
 
 namespace SecureURL
 {
-    public class SecureURL
+    public class SecureURL(ILogger<SecureURL> logger)
     {
-        private readonly ILogger<SecureURL> _logger;
-
-        public SecureURL(ILogger<SecureURL> logger)
-        {
-            _logger = logger;
-        }
+        private readonly ILogger<SecureURL> _logger = logger;
 
         [Function("hazardgamesecurelink")]
         public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req)
