@@ -4,18 +4,16 @@ using Azure.Storage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
+using Azure.Core;
 
 namespace SecureURL
 {
-    public class SecureURL(ILogger<SecureURL> logger)
+    public class SecureURL(ILogger<SecureURL> logger, TokenCredential credential)
     {
-        private readonly ILogger<SecureURL> _logger = logger;
-
         [Function("hazardgamesecurelink")]
         public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
+            logger.LogInformation("C# HTTP trigger function processed a request.");
 
             string architecture = req.QueryString.Value switch {
                 string value when value.Contains("x64") => "x64/",
@@ -23,16 +21,16 @@ namespace SecureURL
                 _ => string.Empty
             };
 
-            string? accountName = Environment.GetEnvironmentVariable("StorageAccountName");
+            string? storageString = Environment.GetEnvironmentVariable("StorageUri");
+            string? accountName = Environment.GetEnvironmentVariable("AccountName");
             string? containerName = Environment.GetEnvironmentVariable("ContainerName");
-            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__JAMStorageConnectionString");
             string? storageKey = Environment.GetEnvironmentVariable("StorageKey");
             string? blobPrefix = Environment.GetEnvironmentVariable("BlobPrefix");
             string? blobExtension = Environment.GetEnvironmentVariable("BlobExtension");
 
-            if (string.IsNullOrEmpty(accountName) ||
+            if (string.IsNullOrEmpty(storageString) ||
+                string.IsNullOrEmpty(accountName) ||
                 string.IsNullOrEmpty(containerName) ||
-                string.IsNullOrEmpty(connectionString) ||
                 string.IsNullOrEmpty(storageKey) ||
                 string.IsNullOrEmpty(blobPrefix) ||
                 string.IsNullOrEmpty(blobExtension) ||
@@ -40,11 +38,23 @@ namespace SecureURL
                 return new UnprocessableEntityResult();
             }
 
+            Uri storageUri = new(storageString);
             string blobName = $"{architecture.ToLower()}{blobPrefix}{architecture}{blobExtension}";
 
             try {
+                // Create options for Blob Client
+                var options = new BlobClientOptions() {
+                    Retry = {
+                        MaxRetries = 3,
+                        Mode = RetryMode.Exponential,
+                    },
+                    Diagnostics = {
+                        IsLoggingEnabled = true,
+                    }
+                };
+
                 // Create Blob Client
-                BlobServiceClient blobServiceClient = new(connectionString);
+                BlobServiceClient blobServiceClient = new(storageUri, credential, options);
                 BlobContainerClient blobContainerClient = blobServiceClient.GetBlobContainerClient(containerName);
                 BlobClient blobClient = blobContainerClient.GetBlobClient(blobName);
 
@@ -64,7 +74,7 @@ namespace SecureURL
 
                 return new RedirectResult(accessURL, false);
             } catch (Exception ex) {
-                _logger.LogError($"Error generating SAS token and/or secure URL: {ex.Message}.");
+                logger.LogError(ex, "Error generating SAS token and/or secure URL: {message}.", ex.Message);
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
         }
