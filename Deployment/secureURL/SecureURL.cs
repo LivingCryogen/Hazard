@@ -5,16 +5,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Azure.Core;
-using Azure.Storage.Blobs.Models;
-using System.Threading.Tasks;
-using Azure.Identity;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SecureURL
 {
-    public class SecureURL(ILogger<SecureURL> logger, TokenCredential credential)
+    public class SecureURL(ILogger<SecureURL> logger)
     {
         [Function("hazardgamesecurelink")]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req)
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
         {
             logger.LogInformation("C# HTTP trigger function processed a request.");
 
@@ -25,12 +23,14 @@ namespace SecureURL
             };
 
             string? storageString = Environment.GetEnvironmentVariable("StorageUri");
+            string? storageKey = Environment.GetEnvironmentVariable("StorageKey");
             string? accountName = Environment.GetEnvironmentVariable("AccountName");
             string? containerName = Environment.GetEnvironmentVariable("ContainerName");
             string? blobPrefix = Environment.GetEnvironmentVariable("BlobPrefix");
             string? blobExtension = Environment.GetEnvironmentVariable("BlobExtension");
 
             if (string.IsNullOrEmpty(storageString) ||
+                string.IsNullOrEmpty(storageKey) ||
                 string.IsNullOrEmpty(accountName) ||
                 string.IsNullOrEmpty(containerName) ||
                 string.IsNullOrEmpty(blobPrefix) ||
@@ -54,10 +54,19 @@ namespace SecureURL
                     }
                 };
 
+                // Generate SharedKeyCredential
+                StorageSharedKeyCredential credential;
+                try {
+                    credential = new StorageSharedKeyCredential(accountName, storageKey);
+                } catch (Exception ex) {
+                    logger.LogError(ex, "Azure Function failed to authenticate with Storage account {name}.", accountName);
+                    return new StatusCodeResult(StatusCodes.Status401Unauthorized);
+                }
+
                 // Create Blob Client
                 BlobServiceClient blobServiceClient;
                 try {
-                    blobServiceClient = new(storageUri, credential, options);
+                    blobServiceClient = new(storageUri, credential);
                 }
                 catch (Exception ex) {
                     logger.LogError(ex, "Blob service client failed to instantiate with uri {uri}.", storageUri);
@@ -90,28 +99,22 @@ namespace SecureURL
                     return new UnprocessableEntityResult();
                 }
 
-                if (!blobContainerClient.CanGenerateSasUri) {
-                    string failReason = await FindAuthFailReason(blobContainerClient, credential);
-                    logger.LogError("Blob container client could not authenticate for SAS Uri generation. Reason: {reason}", failReason);
+                // Generate SAS Token
+                BlobSasBuilder sasBuilder;
+                try {
+                    sasBuilder = new() {
+                        BlobContainerName = containerName,
+                        BlobName = blobName,
+                        Resource = "b", // b means blob (here, an individual file)
+                        ExpiresOn = DateTimeOffset.UtcNow.AddSeconds(300) // Token valid for 5 minutes
+                    };
+                    sasBuilder.SetPermissions(BlobSasPermissions.Read);
+                } catch (Exception ex) {
+                    logger.LogError(ex, "There was an error instantiating SAS Builder: {message}", ex.Message);
                     return new StatusCodeResult(StatusCodes.Status403Forbidden);
                 }
 
-                // Generate SAS Token
-                BlobSasBuilder sasBuilder = new() {
-                    BlobContainerName = containerName,
-                    BlobName = blobName,
-                    Resource = "b", // b means blob (here, an individual file)
-                    ExpiresOn = DateTimeOffset.UtcNow.AddSeconds(20) // Token valid for 20 seconds
-                };
-                sasBuilder.SetPermissions(BlobSasPermissions.Read);
-
-                // Get Delegate Key
-                UserDelegationKey delegationKey = await blobServiceClient.GetUserDelegationKeyAsync(
-                    DateTimeOffset.UtcNow, 
-                    DateTimeOffset.UtcNow.AddMinutes(5));
-
-
-                string sasToken = sasBuilder.ToSasQueryParameters(delegationKey, accountName).ToString();
+                var sasToken = sasBuilder.ToSasQueryParameters(credential).ToString();
                 string accessURL = $"{blobClient.Uri}?{sasToken}";
 
                 return new RedirectResult(accessURL, false);
@@ -119,35 +122,6 @@ namespace SecureURL
                 logger.LogError(ex, "Error generating SAS token and/or secure URL: {message}.", ex.Message);
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
-        }
-
-        private async static Task<string> FindAuthFailReason(BlobContainerClient containerClient, TokenCredential credential)
-        {
-            string reason = "Unknown.";
-            if (credential is DefaultAzureCredential) {
-                try {
-                    // Try to get a token to test the credential
-                    var token = await credential.GetTokenAsync(
-                        new TokenRequestContext(new[] { "https://storage.azure.com/.default" }),
-                        CancellationToken.None);
-
-                    if (string.IsNullOrEmpty(token.Token)) {
-                        reason = "Managed identity returned empty token";
-                    }
-                    else {
-                        // If we got a token but still can't generate SAS,
-                        // it's likely a permissions issue
-                        reason = "Managed identity has insufficient permissions to generate SAS";
-                    }
-                } catch (Exception credEx) {
-                    reason = $"Managed identity authentication failed: {credEx.Message}";
-                }
-            }
-            else if (credential == null) {
-                reason = "No provided credential (was null).";
-            }
-
-            return reason;
         }
     }
 }

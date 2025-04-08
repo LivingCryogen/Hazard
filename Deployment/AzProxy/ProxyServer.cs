@@ -18,8 +18,7 @@ namespace AzProxy
                     RequestHandler requestHandler,
                     IHttpClientFactory httpClientFactory,
                     IConfiguration config,
-                    ILogger<ProxyServer> logger,
-                    TokenCredential azCredential) =>
+                    ILogger<ProxyServer> logger) =>
                 {
                     try {
                         // get client IP
@@ -35,47 +34,29 @@ namespace AzProxy
                         if (!requestHandler.ValidateRequest(clientIP)) {
                             logger.LogInformation("Request from address {clientIP} was rejected due to ban or rate restriction.", clientIP);
                             context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                            await context.Response.WriteAsync("Request denied.");
+                            await context.Response.WriteAsync("Request denied. This has been rate restricted or banned.");
                             return;
                         }
 
-                        // get az credential token
+                        // get az function key
                         var azFuncURL = config["AzureFunctionURL"];
-                        var azFuncScope = config["AzureFunctionScope"];
-                        if (string.IsNullOrEmpty(azFuncURL) ||
-                            string.IsNullOrEmpty(azFuncScope)) {
-                            logger.LogInformation("Azure forwarding incorrectly configured. Request failed.");
+                        var azFuncKey = config["AzureFunctionKey"];
+
+                        if (string.IsNullOrEmpty(azFuncURL) || string.IsNullOrEmpty(azFuncKey)) { 
+                            logger.LogInformation("Azure function forwarding incorrectly configured. Request failed.");
                             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                             await context.Response.WriteAsync("Server configuration error.");
                             return;
                         }
 
-                        AccessToken accessToken;
-                        try {
-                            accessToken = await GetCredentialToken(azCredential, azFuncScope, logger, context.RequestAborted);
-                            logger.LogInformation("Acquired valid access token!");
-                        } catch (Exception ex) {
-                            logger.LogError(ex, "Failed to acquire access token. See previous logs for details.");
-                            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                            await context.Response.WriteAsync("Authentication error. See server logs for details.");
-                            return;
-                        }
-
                         // forward to az function
                         try {
-                            if (string.IsNullOrEmpty(azFuncURL)) {
-                                logger.LogError("Azure Function URL was not configured.");
-                                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                                await context.Response.WriteAsync("Server configuration error.");
-                                return;
-                            }
-
                             // use Query string 
                             string clientQuery = context.Request.QueryString.Value ?? string.Empty;
                             string azTarget = $"{azFuncURL}{clientQuery}";
 
                             using var azClient = httpClientFactory.CreateClient();
-                            azClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken.Token);
+                            azClient.DefaultRequestHeaders.Add("x-functions-key", azFuncKey);
 
                             var azResponse = await azClient.GetAsync(azTarget);
 
@@ -92,9 +73,9 @@ namespace AzProxy
                             var azBody = await azResponse.Content.ReadAsByteArrayAsync();
                             await context.Response.Body.WriteAsync(azBody);
                         } catch (Exception ex) {
-                            logger.LogError(ex, "There was an error while forwarding request to Azure: {message}.", ex.Message);
+                            logger.LogError(ex, "There was an error while forwarding request to Azure function: {message}.", ex.Message);
                             context.Response.StatusCode = StatusCodes.Status502BadGateway;
-                            await context.Response.WriteAsync("Error processing request.");
+                            await context.Response.WriteAsync("Error processing request while trying to fetch an SAS token for secure connection to storage.");
                         }
                     }
                     catch (OperationCanceledException) {
@@ -117,33 +98,6 @@ namespace AzProxy
             app.Run();
         }
 
-        private static async Task<AccessToken> GetCredentialToken(TokenCredential azCredential, string azureScope, ILogger logger, CancellationToken cancel)
-        {
-            TokenRequestContext tokenContext;
-            try {
-                logger.LogInformation("Attempting to acquire token context with scope: {scope}...", azureScope);
-                tokenContext = new TokenRequestContext([azureScope]);
-            } catch (Exception ex) {
-                logger.LogError(ex, "There was an error establishing TokenRequestContext with scope value {scope}:" +
-                        "{message} Source: {src} Inner Exception: {inner} Data: {data} StackTrace: {trace}"
-                    , azureScope, ex.Message, ex.Source, ex.InnerException, ex.Data, ex.StackTrace);
-                throw;
-            }
-
-            AccessToken token;
-            try {
-                logger.LogInformation("Attempting to acquire token with context {context}...", tokenContext);
-                token = await azCredential.GetTokenAsync(tokenContext, cancel);
-            } catch (Exception ex) {
-                logger.LogError(ex, "There was an error fetching the Access Token under request context {context}:" +
-                        "{message} Source: {src} Inner Exception: {inner} Data: {data} StackTrace: {trace}"
-                    , tokenContext, ex.Message, ex.Source, ex.InnerException, ex.Data, ex.StackTrace);
-                throw;
-            }
-
-            return token;
-        }
-
         private static WebApplication GetBuiltApp(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -157,7 +111,6 @@ namespace AzProxy
                 });
             });
             builder.Services.AddHttpClient();
-            builder.Services.AddSingleton<TokenCredential, DefaultAzureCredential>();
             builder.Services.AddSingleton<IBanCache, BanListCache>();
             builder.Services.AddHostedService<BanListTableManager>();
             builder.Services.AddSingleton<BanService>();

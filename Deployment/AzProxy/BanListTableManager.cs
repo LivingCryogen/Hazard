@@ -1,6 +1,8 @@
 ﻿using Azure;
 using Azure.Core;
 using Azure.Data.Tables;
+using Azure.Storage;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Concurrent;
 
 namespace AzProxy;
@@ -17,18 +19,21 @@ public class BanListTableManager : IHostedService
     private readonly ConcurrentDictionary<string, ETag> _tagCache = new(); // needed for easy updates
     private readonly SemaphoreSlim _tableSemaphore = new(1, 1);
 
-    public BanListTableManager(IConfiguration config, IHostApplicationLifetime appLife, ILogger<BanListTableManager> logger, TokenCredential azCredential, IBanCache cache)
+    public BanListTableManager(IConfiguration config, IHostApplicationLifetime appLife, ILogger<BanListTableManager> logger, IBanCache cache)
     {
         _appLife = appLife;
         _logger = logger;
         _cache = cache;
 
+        string? storageConnection = config["StorageConnectionString"];
+
+        if (string.IsNullOrEmpty(storageConnection)) {
+            logger.LogError("Storage access configuration incorrect.");
+            throw new NullReferenceException();
+        }
+
         try {
-            string? tableEndpoint = config["StorageTableEndpoint"];
-            if (string.IsNullOrEmpty(tableEndpoint))
-                throw new ArgumentException("StorageTableEndpoint was null or empty. Check configuration (App settings).");
-            var tableUri = new Uri(tableEndpoint);
-            TableServiceClient serviceClient = new(tableUri, azCredential);
+            TableServiceClient serviceClient = new(storageConnection);
 
             string? tableName = config["TableName"];
             if (string.IsNullOrEmpty(tableName))
