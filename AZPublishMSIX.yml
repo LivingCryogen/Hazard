@@ -20,12 +20,14 @@ jobs:
           publishPath: '$(Build.ArtifactStagingDirectory)/publish/x64/'
           msixOutputPath: '$(Build.ArtifactStagingDirectory)/msix/x64/'
           archPath: 'x64'
+          fileName: 'InstallHazardGame_x64.msixbundle'
         ARM64:
           buildPlatform: 'ARM64'
           runtimeId: 'win-arm64'
           publishPath: '$(Build.ArtifactStagingDirectory)/publish/arm64/'
           msixOutputPath: '$(Build.ArtifactStagingDirectory)/msix/arm64/'
           archPath: 'arm64'
+          fileName: 'InstallHazardGame_ARM64.msixbundle'
     
     steps:
     # Set up .NET SDK
@@ -141,10 +143,11 @@ jobs:
         scriptLocation: 'inlineScript'
         inlineScript: |
           # Upload using the service principal auth with overwrite
-          az storage blob upload-batch `
+          az storage blob upload `
             --source "$(publishPath)" `
             --destination "$(containerName)" `
             --account-name "$(storageAccount)" `
             --content-type "application/vnd.ms-appx" `
+            --content-disposition "attachment; filename=$(fileName)" `
             --auth-mode login `
             --overwrite $true
