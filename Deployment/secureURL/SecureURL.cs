@@ -41,7 +41,7 @@ namespace SecureURL
             }
 
             Uri storageUri = new(storageString);
-            string blobName = $"{architecture.ToLower()}/{blobPrefix}{architecture}{blobExtension}";
+            string blobName = $"{blobPrefix}{architecture}{blobExtension}";
 
             try {
                 // Create options for Blob Client
