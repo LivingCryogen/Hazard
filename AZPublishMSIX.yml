@@ -143,7 +143,7 @@ jobs:
         scriptLocation: 'inlineScript'
         inlineScript: |
           # Upload using the service principal auth with overwrite
-          az storage blob upload `
+          az storage blob upload-batch `
             --source "$(publishPath)" `
             --destination "$(containerName)" `
             --account-name "$(storageAccount)" `
