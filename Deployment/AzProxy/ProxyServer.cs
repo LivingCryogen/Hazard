@@ -1,11 +1,19 @@
 using Azure.Core;
 using Azure.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace AzProxy
 {
     public class ProxyServer
     {
+        private class FunctionResponse
+        {
+            public string Uri { get; init; } = string.Empty;
+            public string SasToken { get; init; } = string.Empty;
+        }
+
         public static void Main(string[] args)
         {
             var app = GetBuiltApp(args);
@@ -14,11 +22,11 @@ namespace AzProxy
 
             app.MapGet("/", () => "Proxy is up.");
             app.MapGet("/secure-link",
-                async (HttpContext context,
-                    RequestHandler requestHandler,
-                    IHttpClientFactory httpClientFactory,
-                    IConfiguration config,
-                    ILogger<ProxyServer> logger) =>
+                async (HttpContext context, 
+                        RequestHandler requestHandler,
+                        IHttpClientFactory httpClientFactory,
+                        IConfiguration config,
+                        ILogger<ProxyServer> logger) =>
                 {
                     try {
                         // get client IP
@@ -60,14 +68,27 @@ namespace AzProxy
 
                             var azResponse = await azClient.GetAsync(azTarget);
 
-                            // Forward request info to azClient
-                            context.Response.StatusCode = (int)azResponse.StatusCode;
-                            foreach (var header in azResponse.Headers)
-                                if (!header.Key.Equals("Transfer-Encoding", StringComparison.OrdinalIgnoreCase))
-                                    context.Response.Headers[header.Key] = header.Value.ToArray();
+                            if (!azResponse.IsSuccessStatusCode) {
+                                logger.LogError("Azure Function returned an error: {StatusCode}", azResponse.StatusCode);
+                                context.Response.StatusCode = (int)azResponse.StatusCode;
+                                await context.Response.WriteAsync("External dependency failed.");
+                                return;
+                            }
 
-                            if (azResponse.Content.Headers.ContentType != null)
-                                context.Response.ContentType = azResponse.Content.Headers.ContentType.ToString();
+                            var funcContent = await azResponse.Content.ReadAsStringAsync();
+                            var funcJson = JsonConvert.DeserializeObject<FunctionResponse>(funcContent);
+                            if (funcJson == null) {
+                                logger.LogError("Azure Function did not return a valid response.");
+                                context.Response.StatusCode = StatusCodes.Status417ExpectationFailed;
+                                await context.Response.WriteAsync("External dependency failed.");
+                                return;
+                            }
+
+                            string redirectURL = $"{funcJson.Uri}?{funcJson.SasToken}";
+                            context.Response.StatusCode = 302;
+                            context.Response.Headers.Append("Location", redirectURL);
+                            await context.Response.CompleteAsync();
+
                         } catch (Exception ex) {
                             logger.LogError(ex, "There was an error while forwarding request to Azure function: {message}.", ex.Message);
                             context.Response.StatusCode = StatusCodes.Status502BadGateway;

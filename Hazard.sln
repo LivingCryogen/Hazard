@@ -34,7 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packaging", "Packaging", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzProxy", "Deployment\AzProxy\AzProxy.csproj", "{C9BE722C-EE67-44E9-9D09-68D72A2D1DB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureURL", "Deployment\secureURL\SecureURL.csproj", "{F17BC08C-91D4-D71A-362B-AD71E5A6F0D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sasgen", "Deployment\secureURL\Sasgen.csproj", "{F17BC08C-91D4-D71A-362B-AD71E5A6F0D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

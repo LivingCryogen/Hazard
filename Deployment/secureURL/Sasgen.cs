@@ -7,9 +7,9 @@ using Microsoft.Azure.Functions.Worker;
 using Azure.Core;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace SecureURL
+namespace Sasgen
 {
-    public class SecureURL(ILogger<SecureURL> logger)
+    public class Sasgen(ILogger<Sasgen> logger)
     {
         [Function("hazardgamesecurelink")]
         public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
@@ -36,8 +36,8 @@ namespace SecureURL
                 string.IsNullOrEmpty(blobPrefix) ||
                 string.IsNullOrEmpty(blobExtension) ||
                 string.IsNullOrEmpty(architecture)) {
-                logger.LogError("An application setting was invalid.");
-                return new UnprocessableEntityResult();
+                logger.LogError("Application settings invalid.");
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
 
             Uri storageUri = new(storageString);
@@ -79,12 +79,12 @@ namespace SecureURL
                     blobContainerClient = blobServiceClient.GetBlobContainerClient(containerName);
                 } catch (Exception ex) {
                     logger.LogError(ex, "Blob container client failed to instantiate with container name {name}.", containerName);
-                    return new UnprocessableEntityResult();
+                    return new StatusCodeResult(StatusCodes.Status404NotFound);
                 }
                 bool containerExists = await blobContainerClient.ExistsAsync();
                 if (!containerExists) {
                     logger.LogError("Blob container named {name} did not exist.", containerName);
-                    return new UnprocessableEntityResult();
+                    return new StatusCodeResult(StatusCodes.Status404NotFound);
                 }
 
                 BlobClient blobClient;
@@ -97,7 +97,7 @@ namespace SecureURL
                 bool blobExists = await blobClient.ExistsAsync();
                 if (!blobExists) {
                     logger.LogError("Blob named {name} did not exist.", blobName);
-                    return new UnprocessableEntityResult();
+                    return new StatusCodeResult(StatusCodes.Status404NotFound);
                 }
 
                 // Generate SAS Token
@@ -115,10 +115,10 @@ namespace SecureURL
                     return new StatusCodeResult(StatusCodes.Status403Forbidden);
                 }
 
-                var sasToken = sasBuilder.ToSasQueryParameters(credential).ToString();
-                string accessURL = $"{blobClient.Uri}?{sasToken}";
+                // Serialize the SAS to JSON and return
+                var token = sasBuilder.ToSasQueryParameters(credential).ToString();
+                return new JsonResult(new { Uri = blobClient.Uri.ToString(), SasToken = token });
 
-                return new RedirectResult(accessURL, false);
             } catch (Exception ex) {
                 logger.LogError(ex, "Error generating SAS token and/or secure URL: {message}.", ex.Message);
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
