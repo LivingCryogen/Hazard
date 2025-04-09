@@ -18,11 +18,11 @@ namespace SecureURL
 
             string architecture = req.QueryString.Value switch {
                 string value when value.Contains("x64") => "x64/",
-                string value when value.Contains("arm64") => "ARM64/",
+                string value when value.Contains("ARM") => "ARM64/",
                 _ => string.Empty
             };
 
-            string? storageString = Environment.GetEnvironmentVariable("StorageUri");
+            string? storageString = Environment.GetEnvironmentVariable("StorageString");
             string? storageKey = Environment.GetEnvironmentVariable("StorageKey");
             string? accountName = Environment.GetEnvironmentVariable("AccountName");
             string? containerName = Environment.GetEnvironmentVariable("ContainerName");
