@@ -144,7 +144,7 @@ jobs:
         inlineScript: |
           # Upload using the service principal auth with overwrite
           az storage blob upload `
-            --source "$(publishPath)/$(fileName)" `
+            --source "$(publishPath)" `
             --destination "$(containerName)" `
             --account-name "$(storageAccount)" `
             --content-type "application/vnd.ms-appx" `
