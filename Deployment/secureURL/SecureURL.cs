@@ -36,6 +36,7 @@ namespace SecureURL
                 string.IsNullOrEmpty(blobPrefix) ||
                 string.IsNullOrEmpty(blobExtension) ||
                 string.IsNullOrEmpty(architecture)) {
+                logger.LogError("An application setting was invalid.");
                 return new UnprocessableEntityResult();
             }
 
