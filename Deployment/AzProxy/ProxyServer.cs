@@ -68,10 +68,6 @@ namespace AzProxy
 
                             if (azResponse.Content.Headers.ContentType != null)
                                 context.Response.ContentType = azResponse.Content.Headers.ContentType.ToString();
-
-                            // Forward response body
-                            var azBody = await azResponse.Content.ReadAsByteArrayAsync();
-                            await context.Response.Body.WriteAsync(azBody);
                         } catch (Exception ex) {
                             logger.LogError(ex, "There was an error while forwarding request to Azure function: {message}.", ex.Message);
                             context.Response.StatusCode = StatusCodes.Status502BadGateway;
