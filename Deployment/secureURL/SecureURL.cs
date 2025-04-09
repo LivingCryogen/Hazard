@@ -17,8 +17,8 @@ namespace SecureURL
             logger.LogInformation("C# HTTP trigger function processed a request.");
 
             string architecture = req.QueryString.Value switch {
-                string value when value.Contains("x64") => "x64/",
-                string value when value.Contains("ARM") => "ARM64/",
+                string value when value.Contains("x64") => "x64",
+                string value when value.Contains("ARM") => "ARM64",
                 _ => string.Empty
             };
 
@@ -41,7 +41,7 @@ namespace SecureURL
             }
 
             Uri storageUri = new(storageString);
-            string blobName = $"{architecture.ToLower()}{blobPrefix}{architecture}{blobExtension}";
+            string blobName = $"{architecture.ToLower()}/{blobPrefix}{architecture}{blobExtension}";
 
             try {
                 // Create options for Blob Client
