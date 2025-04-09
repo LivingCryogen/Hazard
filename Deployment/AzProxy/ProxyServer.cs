@@ -13,7 +13,7 @@ namespace AzProxy
             app.UseCors("FromGitHubPages");
 
             app.MapGet("/", () => "Proxy is up.");
-            app.MapGet("/secure-url",
+            app.MapGet("/hazardgamesetup.msixbundle",
                 async (HttpContext context,
                     RequestHandler requestHandler,
                     IHttpClientFactory httpClientFactory,
