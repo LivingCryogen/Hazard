@@ -5,10 +5,31 @@
     <title>Download</title>
     <link rel="stylesheet" href="stylesheet.css">
 </head>
-<body>
-    <h3>Why ClickOnce?</h3>
+<body class="dynamic-content-body">
+    
+    <h3>Download Details</h3>
+    
     <p class="indented-p">
-
+        Hazard! deploys via an MSIX packager. Your download should be a single .msixbundle file. On opening, you should see: 
     </p>
+    
+    <img class="download-pic" src="Images/InstallPic.jpg" alt="What the installation window should look like." />
+    
+    <p class="indented-p">
+        Note the publisher name (should be "Joshua McKnight") and the source ("livingcryogen.github.io").
+    </p>
+    
+    <p class="indented-p">
+        Installation may require access to the download source, <i>which is time-limited</i>. If too much time has passed, try 
+        redownloading and installing immediately. Take care: <b>excessive requests may result in rate-limiting or IP bans.</b>
+    </p>
+    
+    <p class="indented-p">The files are signed by me, "Joshua McKnight," via Microsoft's Azure Trusted Signing. To verify, and you may right-click
+        the installation bundle, select "Properties" -> "Digital Signatures."
+    </p>
+    
+    <div class="download_flexbox">
+        <img class="download-pic" />
+    </div>
 </body>
 </html>
