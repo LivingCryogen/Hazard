@@ -1,18 +1,26 @@
-﻿.header-wrapper {
-    /* These styles have been replaced with the new approach */
+﻿body {
+    background-color: #2a3141;
+    color: #E5E5CC;
+    text-align: center;
+    font-family: 'Courier New';
+    font-size: 2rem;
+    position: relative;
 }
 
-.header-text {
-    /* These styles have been replaced with the new approach */
-}
-
-.logo-container {
-    /* These styles have been replaced with the new approach */
-}
-
-.logo-image {
-    /* These styles have been replaced with the new approach */
-}
+    body::before {
+        content: '';
+        position: fixed;
+        background-image: url('cavalryEllipse.png');
+        background-repeat: no-repeat;
+        background-size: 450px auto;
+        background-position: calc(85%) -5vh;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        pointer-events: none;
+    }
 
 nav {
     padding: 1.2rem 2rem;
@@ -74,11 +82,18 @@ h1 {
     padding: 0 0;
     margin: 0 0 0 0;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    color: beige;
+}
+
+h2 {
+    text-align: left;
+    margin: .4em 0 0 .8em;
 }
 
 h3 {
     padding: 0 0;
     margin: 0 0 0 0;
+    color: beige;
 }
 
 h5 {
@@ -97,8 +112,13 @@ p {
 }
 
 .indented-p {
+    text-align: left;
     text-indent: 2rem;
     font-size: 1.5rem;
+}
+
+centered-p {
+    text-align: center;
 }
 
 .dynamic-link, nav a {
@@ -116,8 +136,16 @@ p {
 
 .dynamic-content-area {
     font-size: 1.5rem;
-    text-align: left;
-    padding: 2.5rem;
+    padding-left: 2em;
+    padding-right: 2em;
+    border: groove;
+    border-color: #2b4252;
+    background-color: #2b4252;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    margin: 0 auto;
+    max-width: 85%;
+    display: flow-root;
 }
 
 .download-container {
@@ -182,31 +210,30 @@ p {
     }
 }
 
-body {
-    background-color: #2a3141;
-    color: #FFF5F5DC;
-    text-align: center;
-    font-family: 'Courier New';
-    font-size: 2rem;
-    position: relative;
-}
-
-    body::before {
-        content: '';
-        position: fixed;
-        background-image: url('cavalryEllipse.png');
-        background-repeat: no-repeat;
-        background-size: 450px auto;
-        background-position: calc(85%) -5vh;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        z-index: -1;
-        pointer-events: none;
-    }
-
 .content-wrapper {
     position: relative;
     z-index: 1;
+}
+
+.inline-pic {
+    width: 100%;
+    height: auto; 
+    display: block; 
+    border-radius: 2px;
+    margin: 0 0 0 1em;
+    box-shadow: 0 6px 18px rgba(0,0,0, 0.5);
+}
+
+.image-with-text {
+    display: grid;
+    grid-template-columns: minmax(0, 45%) 1fr;
+    gap: .1em;
+    align-items: center;
+}
+
+.image-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
 }
