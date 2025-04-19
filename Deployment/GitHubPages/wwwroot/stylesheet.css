@@ -87,7 +87,7 @@ h1 {
 
 h2 {
     text-align: left;
-    margin: .4em 0 0 .8em;
+    margin: 0 0 0 .8em;
 }
 
 h3 {
@@ -224,11 +224,47 @@ centered-p {
     box-shadow: 0 6px 18px rgba(0,0,0, 0.5);
 }
 
+.horizontal-flexbox {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 0.5em;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+}
+
+.horizontal-flexbox img {
+    min-width: 200px;
+    width: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.horizontal-flexbox::-webkit-scrollbar {
+    height: 6px;
+}
+
+.horizontal-flexbox::-webkit-scrollbar-track {
+    background: #2a3141;
+    border-radius: 3px;
+}
+.horizontal-flexbox::-webkit-scrollbar-thumb {
+    background: #31c1cc;
+    border-radius: 3px;
+}
+.horizontal-flexbox::-webkit-scrollbar-thumb:hover {
+    background: #FFF5F5DC;
+}
+
 .image-with-text {
     display: grid;
     grid-template-columns: minmax(0, 45%) 1fr;
-    gap: .1em;
+    gap: 1em;
     align-items: center;
+    margin-bottom: 2em;
 }
 
 .image-text {
@@ -236,4 +272,16 @@ centered-p {
     flex-direction: column;
     justify-content: center;
     height: 100%;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .image-with-text {
+        grid-template-columns: 1fr; /* Stack vertically on smaller screens */
+    }
+
+    .image-text {
+        padding-left: 0; /* Remove left padding when stacked */
+        margin-top: 1em; /* Add top margin when stacked */
+    }
 }
