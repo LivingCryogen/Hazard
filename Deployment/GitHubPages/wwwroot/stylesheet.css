@@ -106,15 +106,9 @@ p {
     font-size: 1em;
 }
 
-.sub-p {
-    font-size: .65em;
-    line-height: 0;
-}
-
 .indented-p {
     text-align: left;
     text-indent: 2rem;
-    font-size: 1.5rem;
 }
 
 centered-p {
@@ -274,6 +268,13 @@ centered-p {
     height: 100%;
 }
 
+.presentation-box {
+    text-align: center;
+    padding: 1em;
+    border-radius: 2px;
+    margin: 2em 2em 2em 2em;
+    box-shadow: 0 3px 9px rgba(0,0,0, 0.5);
+}
 /* Media query for smaller screens */
 @media (max-width: 768px) {
     .image-with-text {
