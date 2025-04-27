@@ -211,14 +211,24 @@ centered-p {
 
 .inline-pic {
     width: 100%;
-    height: auto; 
-    display: block; 
+    height: auto;
+    display: block;
     border-radius: 2px;
     margin: 0 0 0 1em;
     box-shadow: 0 6px 18px rgba(0,0,0, 0.5);
 }
 
 .horizontal-flexbox {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 0.2em;
+    width: contain;
+    overflow-x: visible;
+    padding-bottom: 10px;
+}
+
+.horizontal-flexbox-scroll {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -230,56 +240,149 @@ centered-p {
     -webkit-overflow-scrolling: touch;
 }
 
-.horizontal-flexbox img {
-    min-width: 200px;
-    width: auto;
-    object-fit: contain;
-    flex-shrink: 0;
+    .horizontal-flexbox-scroll img {
+        min-width: 200px;
+        width: auto;
+        object-fit: contain;
+        flex-shrink: 0;
+    }
+
+    .horizontal-flexbox-scroll::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .horizontal-flexbox-scroll::-webkit-scrollbar-track {
+        background: #2a3141;
+        border-radius: 3px;
+    }
+
+    .horizontal-flexbox-scroll::-webkit-scrollbar-thumb {
+        background: #31c1cc;
+        border-radius: 3px;
+    }
+
+        .horizontal-flexbox-scroll::-webkit-scrollbar-thumb:hover {
+            background: #FFF5F5DC;
+        }
+
+/* Layout container with balanced code and text using the shortest element for height */
+.image-with-text {
+    display: grid;
+    grid-template-columns: minmax(0, 45%) minmax(250px, 1fr); /* Ensure text column has min width */
+    gap: 1em;
+    margin-bottom: 2em;
+    align-items: start; /* Start at the top */
+    position: relative; /* For JS height calculation reference */
 }
 
-.horizontal-flexbox::-webkit-scrollbar {
-    height: 6px;
+/* Code snippet styling with scroll for overflow */
+.code-snippet, pre {
+    text-align: left;
+    font-size: 0.9rem;
+    background: #2b4252;
+    color: #31c1cc;
+    padding: 1.2em;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    border: 1px solid #31c1cc;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    line-height: 1.4;
+    overflow: auto; /* Add scroll when content exceeds height */
 }
 
-.horizontal-flexbox::-webkit-scrollbar-track {
+/* Style for the text column */
+.image-text {
+    padding: 1em;
+    background: #2b4252;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: left;
+    overflow: auto; /* Enable scrolling */
+}
+
+/* JS will inject a class called 'height-balanced' to these elements */
+.image-with-text .height-balanced {
+    overflow: auto;
+}
+
+
+
+/* Styling for scrollbars to match theme */
+.image-with-text .code-snippet::-webkit-scrollbar,
+.image-with-text pre::-webkit-scrollbar,
+.image-with-text .image-text::-webkit-scrollbar {
+    width: 6px;
+}
+
+.image-with-text .code-snippet::-webkit-scrollbar-track,
+.image-with-text pre::-webkit-scrollbar-track,
+.image-with-text .image-text::-webkit-scrollbar-track {
     background: #2a3141;
     border-radius: 3px;
 }
-.horizontal-flexbox::-webkit-scrollbar-thumb {
+
+.image-with-text .code-snippet::-webkit-scrollbar-thumb,
+.image-with-text pre::-webkit-scrollbar-thumb,
+.image-with-text .image-text::-webkit-scrollbar-thumb {
     background: #31c1cc;
     border-radius: 3px;
 }
-.horizontal-flexbox::-webkit-scrollbar-thumb:hover {
-    background: #FFF5F5DC;
-}
 
-.image-with-text {
-    display: grid;
-    grid-template-columns: minmax(0, 45%) 1fr;
-    gap: 1em;
-    align-items: center;
-    margin-bottom: 2em;
-}
+    .image-with-text .code-snippet::-webkit-scrollbar-thumb:hover,
+    .image-with-text pre::-webkit-scrollbar-thumb:hover,
+    .image-with-text .image-text::-webkit-scrollbar-thumb:hover {
+        background: #FFF5F5DC;
+    }
 
-.image-text {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-}
-
+/* Presentation box (separate style grouping) */
 .presentation-box {
     text-align: center;
-    padding: 1em;
-    border-radius: 2px;
-    margin: 2em 2em 2em 2em;
-    box-shadow: 0 3px 9px rgba(0,0,0, 0.5);
+    padding: 1.5em;
+    border-radius: 8px;
+    margin: 2em 1em;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    background-color: #2b4252;
+    border: 1px solid #31c1cc;
 }
+
+/* Skill list styling */
+.skills-list {
+    text-align: left;
+    margin-left: 2em;
+    columns: 2;
+    column-gap: 3em;
+    list-style-type: circle;
+}
+
+    .skills-list li {
+        margin-bottom: 0.5em;
+    }
+
+.call-to-action {
+    text-align: center;
+    margin-top: 3em;
+    padding: 2em;
+}
+
+.button-container {
+    margin-top: 2em;
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+}
+
 /* Media query for smaller screens */
 @media (max-width: 768px) {
     .image-with-text {
         grid-template-columns: 1fr; /* Stack vertically on smaller screens */
     }
+
+        .image-with-text .code-snippet,
+        .image-with-text pre,
+        .image-with-text .image-text {
+            height: auto; /* Auto height on mobile */
+            max-height: 250px; /* But limit maximum height */
+        }
 
     .image-text {
         padding-left: 0; /* Remove left padding when stacked */

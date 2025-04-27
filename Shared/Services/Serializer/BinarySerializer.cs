@@ -255,17 +255,23 @@ public static class BinarySerializer
             }
 
             foreach (SerializedData saveDatum in saveData) {
-                if (saveDatum.MemberType is not null) {
-                    if (saveDatum.Tag != null)
+
+                switch (saveDatum) {
+                    case { MemberType: not null, Tag: not null }: // Tagged Collection
                         WriteTaggedConvertibles(writer, saveDatum.MemberType, saveDatum.SerialValues, saveDatum.Tag);
-                    else
+                        break;
+
+                    case { MemberType: not null, Tag: null }: // Untagged Collection
                         WriteConvertibles(writer, saveDatum.MemberType, saveDatum.SerialValues);
-                }
-                else {
-                    if (saveDatum.Tag != null)
+                        break;
+
+                    case { MemberType: null, Tag: not null }: // Tagged Instance
                         WriteTaggedConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0], saveDatum.Tag);
-                    else
+                        break;
+
+                    case { MemberType: null, Tag: null }: // Untagged Instance
                         WriteConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0]);
+                        break;
                 }
             }
         } catch (Exception ex) {
