@@ -5,6 +5,7 @@ using Shared.Geography;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Services.Serializer;
+using System.Reflection.PortableExecutable;
 
 namespace Model.Core;
 
@@ -38,13 +39,14 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         _prevActionCount = _actionsCounter;
         switch (_machine.CurrentPhase) {
             case GamePhase.Place:
+                // Update number of allowed player actions (based on armies available to place)
                 CurrentActionsLimit = _actionsCounter;
                 _currentGame.Players[_machine.PlayerTurn].ArmyPool += _currentGame.Players[_machine.PlayerTurn].ArmyBonus;
                 CurrentActionsLimit += _currentGame.Players[_machine.PlayerTurn].ArmyPool;
 
+                // Check for trade-in and whether it must be forced (cards in hand limit reached)
                 if (!_currentGame.Players[_machine.PlayerTurn].HasCardSet)
                     break;
-
                 bool force = false;
                 if (_currentGame.Players[_machine.PlayerTurn].Hand.Count >= 5)
                     force = true;
@@ -63,10 +65,14 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     private void IncrementAction()
     {
         _actionsCounter++;
+        bool endFirstStageSetup = _machine.CurrentPhase == GamePhase.DefaultSetup &&
+                                  !_machine.PhaseStageTwo &&
+                                  ActionsExceedTerritoryCount();
+        bool endFirstStageMove = _machine.CurrentPhase == GamePhase.Move && !_machine.PhaseStageTwo;
 
-        if (_machine.CurrentPhase == GamePhase.DefaultSetup && ActionsExceedTerritoryCount() && !_machine.PhaseStageTwo)
+        if (endFirstStageSetup)
             _machine.PhaseStageTwo = true;
-        else if (_machine.CurrentPhase == GamePhase.Move && !_machine.PhaseStageTwo)
+        else if (endFirstStageMove)
             _machine.PhaseStageTwo = true;
 
         if (_actionsCounter >= CurrentActionsLimit)

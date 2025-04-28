@@ -35,9 +35,9 @@
 
     <div class="image-with-text">
         <div class="image-text">
-            <h3>State-Driven Architecture with Event System</h3>
-            <p>I implemented a sophisticated state machine that manages the game's complex flow between different phases (Setup, Place, Attack, Move) with proper state transitions and validation.</p>
-            <p>Rather than using tight coupling, components communicate through a robust event system that ensures changes propagate correctly while maintaining separation of concerns:</p>
+            <h3>State-Driven Event System</h3>
+            <p>At <i>Hazard!</i>'s core is a state machine that manages the game's complex flow between phases (Setup, Place, Attack, Move), with proper state transitions and validation.</p>
+            <p>Rather than tight coupling, components communicate through a robust event system that ensures changes propagate correctly while maintaining separation of concerns:</p>
             <ul style="text-align: left; margin-left: 2em;">
                 <li>Each state change triggers appropriate events</li>
                 <li>Subscribers respond to state changes without direct dependencies</li>
@@ -45,7 +45,7 @@
                 <li>Multi-stage actions within phases are elegantly handled</li>
                 <li>Player turns and round progression are automatically managed</li>
             </ul>
-            <p><i>Key File: StateMachine.cs</i></p>
+            <p><i>Key Files: StateMachine.cs, Regulator.cs</i></p>
         </div>
         <div>
             <pre class="code-snippet">
