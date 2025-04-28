@@ -19,6 +19,11 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     private int _actionsCounter = 0;
     private int _prevActionCount = 0;
 
+    // State Check Properties
+    private int PlayerTurn => _machine.PlayerTurn;
+    private GamePhase CurrentPhase => _machine.CurrentPhase;
+    private bool InSetupPhase => _machine.CurrentPhase == GamePhase.DefaultSetup || _machine.CurrentPhase == GamePhase.TwoPlayerSetup;
+
     /// <inheritdoc cref="IRegulator.CurrentActionsLimit"/>
     public int CurrentActionsLimit { get; set; }
     /// <inheritdoc cref="IRegulator.PhaseActions"/>
@@ -31,26 +36,43 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     /// <inheritdoc cref="IRegulator.PromptTradeIn"/>
     public event EventHandler<IPromptTradeEventArgs>? PromptTradeIn;
 
+    private bool IsInSecondStage()
+    {
+        return _machine.PhaseStageTwo;
+    }
+    private void SetSecondStage(bool newState)
+    {
+        _machine.PhaseStageTwo = newState;
+    }
+    private bool ReachedSecondStage()
+    {
+        bool exceededTerritoryLimit = ActionsExceedTerritoryCount();
+        return (CurrentPhase, IsInSecondStage(), exceededTerritoryLimit) switch {
+            (GamePhase.DefaultSetup, false, true) => true,
+            (GamePhase.Move, false, _) => true,
+            _ => false
+        };
+    }
     private void HandleStateChanged(object? sender, string propName)
     {
         if (propName != "CurrentPhase")
             return;
-
+        var phase = CurrentPhase;
         _prevActionCount = _actionsCounter;
-        switch (_machine.CurrentPhase) {
+        switch (phase) {
             case GamePhase.Place:
                 // Update number of allowed player actions (based on armies available to place)
                 CurrentActionsLimit = _actionsCounter;
-                _currentGame.Players[_machine.PlayerTurn].ArmyPool += _currentGame.Players[_machine.PlayerTurn].ArmyBonus;
-                CurrentActionsLimit += _currentGame.Players[_machine.PlayerTurn].ArmyPool;
+                _currentGame.Players[PlayerTurn].ArmyPool += _currentGame.Players[PlayerTurn].ArmyBonus;
+                CurrentActionsLimit += _currentGame.Players[PlayerTurn].ArmyPool;
 
                 // Check for trade-in and whether it must be forced (cards in hand limit reached)
-                if (!_currentGame.Players[_machine.PlayerTurn].HasCardSet)
+                if (!_currentGame.Players[PlayerTurn].HasCardSet)
                     break;
                 bool force = false;
-                if (_currentGame.Players[_machine.PlayerTurn].Hand.Count >= 5)
+                if (_currentGame.Players[PlayerTurn].Hand.Count >= 5)
                     force = true;
-                PromptTradeIn?.Invoke(this, new PromptTradeEventArgs(_machine.PlayerTurn, force));
+                PromptTradeIn?.Invoke(this, new PromptTradeEventArgs(PlayerTurn, force));
                 break;
 
             case GamePhase.Attack:
@@ -65,15 +87,9 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     private void IncrementAction()
     {
         _actionsCounter++;
-        bool endFirstStageSetup = _machine.CurrentPhase == GamePhase.DefaultSetup &&
-                                  !_machine.PhaseStageTwo &&
-                                  ActionsExceedTerritoryCount();
-        bool endFirstStageMove = _machine.CurrentPhase == GamePhase.Move && !_machine.PhaseStageTwo;
 
-        if (endFirstStageSetup)
-            _machine.PhaseStageTwo = true;
-        else if (endFirstStageMove)
-            _machine.PhaseStageTwo = true;
+        if (ReachedSecondStage())
+            SetSecondStage(true);
 
         if (_actionsCounter >= CurrentActionsLimit)
             ActionLimitHit();
@@ -84,16 +100,14 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     }
     private void ActionLimitHit()
     {
-        if (_machine!.CurrentPhase == GamePhase.DefaultSetup || _machine!.CurrentPhase == GamePhase.TwoPlayerSetup)
+        if (InSetupPhase)
             _machine.IncrementRound();
         else
             _machine.IncrementPhase();
     }
     private void ForceDiscard(Player player, int[] handIndices)
     {
-        Array.Sort(handIndices);
-        Array.Reverse(handIndices); // If the indices remain in ascending order, .RemoveAt() will improperly affect the list in subsequent iterations
-        foreach (int discardIndex in handIndices) {
+        foreach (int discardIndex in handIndices.OrderByDescending(i => i)) { // If the indices remain in ascending order, .RemoveAt() will improperly affect the list in subsequent iterations
             _currentGame.Cards.GameDeck.Discard(player.Hand[discardIndex]);
             player.RemoveCard(discardIndex);
         }
@@ -118,7 +132,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         if (_actionsCounter == 0 && _currentGame.Values.SetupActionsPerPlayers.TryGetValue(_numPlayers, out int actions))
             CurrentActionsLimit = actions;
 
-        if (_machine.CurrentPhase == GamePhase.TwoPlayerSetup) {
+        if (CurrentPhase == GamePhase.TwoPlayerSetup) {
             _prevActionCount = _actionsCounter;
             if (_currentGame is Game game)
                 game.TwoPlayerAutoSetup();
@@ -129,20 +143,20 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     /// <inheritdoc cref="IRegulator.ClaimOrReinforce(TerrID)"/>
     public void ClaimOrReinforce(TerrID territory)
     {
-        switch (_machine.CurrentPhase) {
+        switch (CurrentPhase) {
             case GamePhase.DefaultSetup:
-                _currentGame.Players[_machine.PlayerTurn].ArmyPool--;
+                _currentGame.Players[PlayerTurn].ArmyPool--;
 
-                if (!_machine.PhaseStageTwo) {
-                    _currentGame.Board.Claims(_machine.PlayerTurn, territory);
-                    _currentGame.Players[_machine.PlayerTurn].AddTerritory(territory);
+                if (!IsInSecondStage()) {
+                    _currentGame.Board.Claims(PlayerTurn, territory);
+                    _currentGame.Players[PlayerTurn].AddTerritory(territory);
                 }
                 else
                     _currentGame.Board.Reinforce(territory);
 
                 IncrementAction();
 
-                if (_machine.CurrentPhase == GamePhase.DefaultSetup)
+                if (CurrentPhase == GamePhase.DefaultSetup)
                     _machine.IncrementPlayerTurn();
 
                 break;
@@ -150,18 +164,20 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
                 _currentGame.Board.Reinforce(territory);
                 IncrementAction();
 
+                // Rules for 2-player setup (with passive NPC player) dictate each player places twice on their territory, once on NPC territory.
+                // The following determines which step we're at by tracking the difference in action count (actDiff), which resets at 3.
                 int actDiff = _actionsCounter - _prevActionCount;
                 switch (actDiff) {
                     case 1:
-                        _currentGame.Players[_machine.PlayerTurn].ArmyPool--;
+                        _currentGame.Players[PlayerTurn].ArmyPool--;
                         break;
                     case 2:
-                        _currentGame.Players[_machine.PlayerTurn].ArmyPool--;
-                        _machine.PhaseStageTwo = true;
+                        _currentGame.Players[PlayerTurn].ArmyPool--;
+                        SetSecondStage(true);
                         break;
                     case 3:
-                        if (_machine.CurrentPhase == GamePhase.TwoPlayerSetup) {
-                            _machine.PhaseStageTwo = false;
+                        if (CurrentPhase == GamePhase.TwoPlayerSetup) {
+                            SetSecondStage(false);
                             _machine.IncrementPlayerTurn();
                             _prevActionCount = _actionsCounter;
                         }
@@ -169,7 +185,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
                 }
                 break;
             case GamePhase.Place:
-                _currentGame.Players[_machine.PlayerTurn].ArmyPool--;
+                _currentGame.Players[PlayerTurn].ArmyPool--;
                 _currentGame.Board.Reinforce(territory);
                 IncrementAction();
                 break;
@@ -181,7 +197,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         _currentGame.Board.Reinforce(source, -armies);
         _currentGame.Board.Reinforce(target, armies);
 
-        if (_currentGame.State.CurrentPhase == GamePhase.Move)
+        if (CurrentPhase == GamePhase.Move)
             IncrementAction();
     }
     /// <inheritdoc cref="IRegulator.Battle(TerrID, TerrID, ValueTuple{int, int}[])"/>
@@ -216,7 +232,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     /// <inheritdoc cref="IRegulator.CanTradeInCards(int, int[])"/>
     public bool CanTradeInCards(int playerNum, int[] handIndices)
     {
-        if (playerNum != _machine.PlayerTurn)
+        if (playerNum != PlayerTurn)
             return false;
         if (handIndices.Length < 3)
             return false;
@@ -279,7 +295,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         if (Reward == null)
             return;
 
-        _currentGame.Players[_machine.PlayerTurn].AddCard(Reward);
+        _currentGame.Players[PlayerTurn].AddCard(Reward);
         Reward = null;
     }
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
