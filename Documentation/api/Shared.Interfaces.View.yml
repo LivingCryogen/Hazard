@@ -1,0 +1,37 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Interfaces.View
+  commentId: N:Shared.Interfaces.View
+  id: Shared.Interfaces.View
+  children:
+  - Shared.Interfaces.View.IBootStrapperService
+  - Shared.Interfaces.View.IDialogState
+  - Shared.Interfaces.View.IDispatcherTimer
+  langs:
+  - csharp
+  - vb
+  name: Shared.Interfaces.View
+  nameWithType: Shared.Interfaces.View
+  fullName: Shared.Interfaces.View
+  type: Namespace
+  assemblies:
+  - Model
+references:
+- uid: Shared.Interfaces.View.IBootStrapperService
+  commentId: T:Shared.Interfaces.View.IBootStrapperService
+  href: Shared.Interfaces.View.IBootStrapperService.html
+  name: IBootStrapperService
+  nameWithType: IBootStrapperService
+  fullName: Shared.Interfaces.View.IBootStrapperService
+- uid: Shared.Interfaces.View.IDialogState
+  commentId: T:Shared.Interfaces.View.IDialogState
+  href: Shared.Interfaces.View.IDialogState.html
+  name: IDialogState
+  nameWithType: IDialogState
+  fullName: Shared.Interfaces.View.IDialogState
+- uid: Shared.Interfaces.View.IDispatcherTimer
+  commentId: T:Shared.Interfaces.View.IDispatcherTimer
+  href: Shared.Interfaces.View.IDispatcherTimer.html
+  name: IDispatcherTimer
+  nameWithType: IDispatcherTimer
+  fullName: Shared.Interfaces.View.IDispatcherTimer

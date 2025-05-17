@@ -1,0 +1,611 @@
+### YamlMime:ManagedReference
+items:
+- uid: Model.Entities.Cards.CardFactory
+  commentId: T:Model.Entities.Cards.CardFactory
+  id: CardFactory
+  parent: Model.Entities.Cards
+  children:
+  - Model.Entities.Cards.CardFactory.#ctor(Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations},Microsoft.Extensions.Logging.ILoggerFactory)
+  - Model.Entities.Cards.CardFactory.BuildCard(System.String)
+  langs:
+  - csharp
+  - vb
+  name: CardFactory
+  nameWithType: CardFactory
+  fullName: Model.Entities.Cards.CardFactory
+  type: Class
+  source:
+    remote:
+      path: Model/Entities/Cards/CardFactory.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: CardFactory
+    path: ../Model/Entities/Cards/CardFactory.cs
+    startLine: 13
+  assemblies:
+  - Model
+  namespace: Model.Entities.Cards
+  summary: Activates <xref href="Shared.Interfaces.Model.ICard?text=card" data-throw-if-not-resolved="false"></xref> instances based on registry data.
+  remarks: Useful for objects who need to create them from save file data.
+  example: []
+  syntax:
+    content: public class CardFactory
+    content.vb: Public Class CardFactory
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Model.Entities.Cards.CardFactory.#ctor(Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations},Microsoft.Extensions.Logging.ILoggerFactory)
+  commentId: M:Model.Entities.Cards.CardFactory.#ctor(Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations},Microsoft.Extensions.Logging.ILoggerFactory)
+  id: '#ctor(Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations},Microsoft.Extensions.Logging.ILoggerFactory)'
+  parent: Model.Entities.Cards.CardFactory
+  langs:
+  - csharp
+  - vb
+  name: CardFactory(ITypeRegister<ITypeRelations>, ILoggerFactory)
+  nameWithType: CardFactory.CardFactory(ITypeRegister<ITypeRelations>, ILoggerFactory)
+  fullName: Model.Entities.Cards.CardFactory.CardFactory(Shared.Services.Registry.ITypeRegister<Shared.Services.Registry.ITypeRelations>, Microsoft.Extensions.Logging.ILoggerFactory)
+  type: Constructor
+  source:
+    remote:
+      path: Model/Entities/Cards/CardFactory.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Model/Entities/Cards/CardFactory.cs
+    startLine: 13
+  assemblies:
+  - Model
+  namespace: Model.Entities.Cards
+  summary: Activates <xref href="Shared.Interfaces.Model.ICard?text=card" data-throw-if-not-resolved="false"></xref> instances based on registry data.
+  remarks: Useful for objects who need to create them from save file data.
+  example: []
+  syntax:
+    content: public CardFactory(ITypeRegister<ITypeRelations> typeRegister, ILoggerFactory loggerFactory)
+    parameters:
+    - id: typeRegister
+      type: Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations}
+      description: The application's type registry, which must have valid entries for the factory to function.
+    - id: loggerFactory
+      type: Microsoft.Extensions.Logging.ILoggerFactory
+      description: The factory for providing loggers to the <xref href="Shared.Interfaces.Model.ICard?text=card" data-throw-if-not-resolved="false"></xref> instances.
+    content.vb: Public Sub New(typeRegister As ITypeRegister(Of ITypeRelations), loggerFactory As ILoggerFactory)
+  overload: Model.Entities.Cards.CardFactory.#ctor*
+  nameWithType.vb: CardFactory.New(ITypeRegister(Of ITypeRelations), ILoggerFactory)
+  fullName.vb: Model.Entities.Cards.CardFactory.New(Shared.Services.Registry.ITypeRegister(Of Shared.Services.Registry.ITypeRelations), Microsoft.Extensions.Logging.ILoggerFactory)
+  name.vb: New(ITypeRegister(Of ITypeRelations), ILoggerFactory)
+- uid: Model.Entities.Cards.CardFactory.BuildCard(System.String)
+  commentId: M:Model.Entities.Cards.CardFactory.BuildCard(System.String)
+  id: BuildCard(System.String)
+  parent: Model.Entities.Cards.CardFactory
+  langs:
+  - csharp
+  - vb
+  name: BuildCard(string)
+  nameWithType: CardFactory.BuildCard(string)
+  fullName: Model.Entities.Cards.CardFactory.BuildCard(string)
+  type: Method
+  source:
+    remote:
+      path: Model/Entities/Cards/CardFactory.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: BuildCard
+    path: ../Model/Entities/Cards/CardFactory.cs
+    startLine: 24
+  assemblies:
+  - Model
+  namespace: Model.Entities.Cards
+  summary: Activates a <xref href="Shared.Interfaces.Model.ICard?text=card" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public ICard BuildCard(string typeName)
+    parameters:
+    - id: typeName
+      type: System.String
+      description: The name of the card's type as registered in <xref href="Shared.Services.Registry.ITypeRegister%601" data-throw-if-not-resolved="false"></xref>.
+    return:
+      type: Shared.Interfaces.Model.ICard
+      description: The activated <xref href="Shared.Interfaces.Model.ICard?text=card" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Function BuildCard(typeName As String) As ICard
+  overload: Model.Entities.Cards.CardFactory.BuildCard*
+  exceptions:
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: Thrown if <code class="paramref">typeName</code> is not registered.
+  - type: System.InvalidOperationException
+    commentId: T:System.InvalidOperationException
+    description: Thrown if activation of the <xref href="System.Type" data-throw-if-not-resolved="false"></xref> provided by the registry fails.
+  nameWithType.vb: CardFactory.BuildCard(String)
+  fullName.vb: Model.Entities.Cards.CardFactory.BuildCard(String)
+  name.vb: BuildCard(String)
+references:
+- uid: Shared.Interfaces.Model.ICard
+  commentId: T:Shared.Interfaces.Model.ICard
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.ICard.html
+  name: ICard
+  nameWithType: ICard
+  fullName: Shared.Interfaces.Model.ICard
+- uid: Model.Entities.Cards
+  commentId: N:Model.Entities.Cards
+  href: Model.html
+  name: Model.Entities.Cards
+  nameWithType: Model.Entities.Cards
+  fullName: Model.Entities.Cards
+  spec.csharp:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.Entities
+    name: Entities
+    href: Model.Entities.html
+  - name: .
+  - uid: Model.Entities.Cards
+    name: Cards
+    href: Model.Entities.Cards.html
+  spec.vb:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.Entities
+    name: Entities
+    href: Model.Entities.html
+  - name: .
+  - uid: Model.Entities.Cards
+    name: Cards
+    href: Model.Entities.Cards.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: Shared.Interfaces.Model
+  commentId: N:Shared.Interfaces.Model
+  href: Shared.html
+  name: Shared.Interfaces.Model
+  nameWithType: Shared.Interfaces.Model
+  fullName: Shared.Interfaces.Model
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Model.Entities.Cards.CardFactory.#ctor*
+  commentId: Overload:Model.Entities.Cards.CardFactory.#ctor
+  href: Model.Entities.Cards.CardFactory.html#Model_Entities_Cards_CardFactory__ctor_Shared_Services_Registry_ITypeRegister_Shared_Services_Registry_ITypeRelations__Microsoft_Extensions_Logging_ILoggerFactory_
+  name: CardFactory
+  nameWithType: CardFactory.CardFactory
+  fullName: Model.Entities.Cards.CardFactory.CardFactory
+  nameWithType.vb: CardFactory.New
+  fullName.vb: Model.Entities.Cards.CardFactory.New
+  name.vb: New
+- uid: Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations}
+  commentId: T:Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations}
+  parent: Shared.Services.Registry
+  definition: Shared.Services.Registry.ITypeRegister`1
+  href: Shared.Services.Registry.ITypeRegister-1.html
+  name: ITypeRegister<ITypeRelations>
+  nameWithType: ITypeRegister<ITypeRelations>
+  fullName: Shared.Services.Registry.ITypeRegister<Shared.Services.Registry.ITypeRelations>
+  nameWithType.vb: ITypeRegister(Of ITypeRelations)
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of Shared.Services.Registry.ITypeRelations)
+  name.vb: ITypeRegister(Of ITypeRelations)
+  spec.csharp:
+  - uid: Shared.Services.Registry.ITypeRegister`1
+    name: ITypeRegister
+    href: Shared.Services.Registry.ITypeRegister-1.html
+  - name: <
+  - uid: Shared.Services.Registry.ITypeRelations
+    name: ITypeRelations
+    href: Shared.Services.Registry.ITypeRelations.html
+  - name: '>'
+  spec.vb:
+  - uid: Shared.Services.Registry.ITypeRegister`1
+    name: ITypeRegister
+    href: Shared.Services.Registry.ITypeRegister-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Services.Registry.ITypeRelations
+    name: ITypeRelations
+    href: Shared.Services.Registry.ITypeRelations.html
+  - name: )
+- uid: Microsoft.Extensions.Logging.ILoggerFactory
+  commentId: T:Microsoft.Extensions.Logging.ILoggerFactory
+  parent: Microsoft.Extensions.Logging
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.iloggerfactory
+  name: ILoggerFactory
+  nameWithType: ILoggerFactory
+  fullName: Microsoft.Extensions.Logging.ILoggerFactory
+- uid: Shared.Services.Registry.ITypeRegister`1
+  commentId: T:Shared.Services.Registry.ITypeRegister`1
+  href: Shared.Services.Registry.ITypeRegister-1.html
+  name: ITypeRegister<T>
+  nameWithType: ITypeRegister<T>
+  fullName: Shared.Services.Registry.ITypeRegister<T>
+  nameWithType.vb: ITypeRegister(Of T)
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T)
+  name.vb: ITypeRegister(Of T)
+  spec.csharp:
+  - uid: Shared.Services.Registry.ITypeRegister`1
+    name: ITypeRegister
+    href: Shared.Services.Registry.ITypeRegister-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Shared.Services.Registry.ITypeRegister`1
+    name: ITypeRegister
+    href: Shared.Services.Registry.ITypeRegister-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Shared.Services.Registry
+  commentId: N:Shared.Services.Registry
+  href: Shared.html
+  name: Shared.Services.Registry
+  nameWithType: Shared.Services.Registry
+  fullName: Shared.Services.Registry
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Services
+    name: Services
+    href: Shared.Services.html
+  - name: .
+  - uid: Shared.Services.Registry
+    name: Registry
+    href: Shared.Services.Registry.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Services
+    name: Services
+    href: Shared.Services.html
+  - name: .
+  - uid: Shared.Services.Registry
+    name: Registry
+    href: Shared.Services.Registry.html
+- uid: Microsoft.Extensions.Logging
+  commentId: N:Microsoft.Extensions.Logging
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.Extensions.Logging
+  nameWithType: Microsoft.Extensions.Logging
+  fullName: Microsoft.Extensions.Logging
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Logging
+    name: Logging
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Logging
+    name: Logging
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging
+- uid: System.Type
+  commentId: T:System.Type
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.type
+  name: Type
+  nameWithType: Type
+  fullName: System.Type
+- uid: System.ArgumentException
+  commentId: T:System.ArgumentException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.argumentexception
+  name: ArgumentException
+  nameWithType: ArgumentException
+  fullName: System.ArgumentException
+- uid: System.InvalidOperationException
+  commentId: T:System.InvalidOperationException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.invalidoperationexception
+  name: InvalidOperationException
+  nameWithType: InvalidOperationException
+  fullName: System.InvalidOperationException
+- uid: Model.Entities.Cards.CardFactory.BuildCard*
+  commentId: Overload:Model.Entities.Cards.CardFactory.BuildCard
+  href: Model.Entities.Cards.CardFactory.html#Model_Entities_Cards_CardFactory_BuildCard_System_String_
+  name: BuildCard
+  nameWithType: CardFactory.BuildCard
+  fullName: Model.Entities.Cards.CardFactory.BuildCard
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String

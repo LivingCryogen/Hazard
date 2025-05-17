@@ -1,0 +1,44 @@
+### YamlMime:ManagedReference
+items:
+- uid: Model.DataAccess
+  commentId: N:Model.DataAccess
+  id: Model.DataAccess
+  children:
+  - Model.DataAccess.AssetFactory
+  - Model.DataAccess.AssetFetcher
+  - Model.DataAccess.DataProvider
+  - Model.DataAccess.GeographyJConverter
+  langs:
+  - csharp
+  - vb
+  name: Model.DataAccess
+  nameWithType: Model.DataAccess
+  fullName: Model.DataAccess
+  type: Namespace
+  assemblies:
+  - Model
+references:
+- uid: Model.DataAccess.AssetFactory
+  commentId: T:Model.DataAccess.AssetFactory
+  href: Model.DataAccess.AssetFactory.html
+  name: AssetFactory
+  nameWithType: AssetFactory
+  fullName: Model.DataAccess.AssetFactory
+- uid: Model.DataAccess.AssetFetcher
+  commentId: T:Model.DataAccess.AssetFetcher
+  href: Model.DataAccess.AssetFetcher.html
+  name: AssetFetcher
+  nameWithType: AssetFetcher
+  fullName: Model.DataAccess.AssetFetcher
+- uid: Model.DataAccess.DataProvider
+  commentId: T:Model.DataAccess.DataProvider
+  href: Model.DataAccess.DataProvider.html
+  name: DataProvider
+  nameWithType: DataProvider
+  fullName: Model.DataAccess.DataProvider
+- uid: Model.DataAccess.GeographyJConverter
+  commentId: T:Model.DataAccess.GeographyJConverter
+  href: Model.DataAccess.GeographyJConverter.html
+  name: GeographyJConverter
+  nameWithType: GeographyJConverter
+  fullName: Model.DataAccess.GeographyJConverter

@@ -1,0 +1,266 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Enums.GamePhase
+  commentId: T:Shared.Enums.GamePhase
+  id: GamePhase
+  parent: Shared.Enums
+  children:
+  - Shared.Enums.GamePhase.Attack
+  - Shared.Enums.GamePhase.DefaultSetup
+  - Shared.Enums.GamePhase.GameOver
+  - Shared.Enums.GamePhase.Move
+  - Shared.Enums.GamePhase.Null
+  - Shared.Enums.GamePhase.Place
+  - Shared.Enums.GamePhase.TwoPlayerSetup
+  langs:
+  - csharp
+  - vb
+  name: GamePhase
+  nameWithType: GamePhase
+  fullName: Shared.Enums.GamePhase
+  type: Enum
+  source:
+    remote:
+      path: Shared/Enums/GamePhase.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: GamePhase
+    path: ../Shared/Enums/GamePhase.cs
+    startLine: 7
+  assemblies:
+  - Model
+  namespace: Shared.Enums
+  summary: Categorizes the phases of the game state.
+  remarks: >-
+    Rules stipulate that, after setup, a Player's Turn consists of, in order: Place, Attack, and Move.
+        Note: This is a bit clunky -- especially with the new addition of "TwoPlayerSetup" -- but is workable for now.
+  example: []
+  syntax:
+    content: public enum GamePhase
+    content.vb: Public Enum GamePhase
+- uid: Shared.Enums.GamePhase.Null
+  commentId: F:Shared.Enums.GamePhase.Null
+  id: "Null"
+  parent: Shared.Enums.GamePhase
+  langs:
+  - csharp
+  - vb
+  name: "Null"
+  nameWithType: GamePhase.Null
+  fullName: Shared.Enums.GamePhase.Null
+  type: Field
+  source:
+    remote:
+      path: Shared/Enums/GamePhase.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: "Null"
+    path: ../Shared/Enums/GamePhase.cs
+    startLine: 12
+  assemblies:
+  - Model
+  namespace: Shared.Enums
+  summary: The game is in a null state; e.g. uninitialized
+  example: []
+  syntax:
+    content: Null = -2
+    return:
+      type: Shared.Enums.GamePhase
+- uid: Shared.Enums.GamePhase.TwoPlayerSetup
+  commentId: F:Shared.Enums.GamePhase.TwoPlayerSetup
+  id: TwoPlayerSetup
+  parent: Shared.Enums.GamePhase
+  langs:
+  - csharp
+  - vb
+  name: TwoPlayerSetup
+  nameWithType: GamePhase.TwoPlayerSetup
+  fullName: Shared.Enums.GamePhase.TwoPlayerSetup
+  type: Field
+  source:
+    remote:
+      path: Shared/Enums/GamePhase.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: TwoPlayerSetup
+    path: ../Shared/Enums/GamePhase.cs
+    startLine: 16
+  assemblies:
+  - Model
+  namespace: Shared.Enums
+  summary: The game is in two-player setup.
+  example: []
+  syntax:
+    content: TwoPlayerSetup = -1
+    return:
+      type: Shared.Enums.GamePhase
+- uid: Shared.Enums.GamePhase.DefaultSetup
+  commentId: F:Shared.Enums.GamePhase.DefaultSetup
+  id: DefaultSetup
+  parent: Shared.Enums.GamePhase
+  langs:
+  - csharp
+  - vb
+  name: DefaultSetup
+  nameWithType: GamePhase.DefaultSetup
+  fullName: Shared.Enums.GamePhase.DefaultSetup
+  type: Field
+  source:
+    remote:
+      path: Shared/Enums/GamePhase.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: DefaultSetup
+    path: ../Shared/Enums/GamePhase.cs
+    startLine: 20
+  assemblies:
+  - Model
+  namespace: Shared.Enums
+  summary: The game is in the default multiplayer setup.
+  example: []
+  syntax:
+    content: DefaultSetup = 0
+    return:
+      type: Shared.Enums.GamePhase
+- uid: Shared.Enums.GamePhase.Place
+  commentId: F:Shared.Enums.GamePhase.Place
+  id: Place
+  parent: Shared.Enums.GamePhase
+  langs:
+  - csharp
+  - vb
+  name: Place
+  nameWithType: GamePhase.Place
+  fullName: Shared.Enums.GamePhase.Place
+  type: Field
+  source:
+    remote:
+      path: Shared/Enums/GamePhase.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Place
+    path: ../Shared/Enums/GamePhase.cs
+    startLine: 24
+  assemblies:
+  - Model
+  namespace: Shared.Enums
+  summary: The game is recording placement of Player armies.
+  example: []
+  syntax:
+    content: Place = 1
+    return:
+      type: Shared.Enums.GamePhase
+- uid: Shared.Enums.GamePhase.Attack
+  commentId: F:Shared.Enums.GamePhase.Attack
+  id: Attack
+  parent: Shared.Enums.GamePhase
+  langs:
+  - csharp
+  - vb
+  name: Attack
+  nameWithType: GamePhase.Attack
+  fullName: Shared.Enums.GamePhase.Attack
+  type: Field
+  source:
+    remote:
+      path: Shared/Enums/GamePhase.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Attack
+    path: ../Shared/Enums/GamePhase.cs
+    startLine: 28
+  assemblies:
+  - Model
+  namespace: Shared.Enums
+  summary: The game is simulating and recording Player attacks.
+  example: []
+  syntax:
+    content: Attack = 2
+    return:
+      type: Shared.Enums.GamePhase
+- uid: Shared.Enums.GamePhase.Move
+  commentId: F:Shared.Enums.GamePhase.Move
+  id: Move
+  parent: Shared.Enums.GamePhase
+  langs:
+  - csharp
+  - vb
+  name: Move
+  nameWithType: GamePhase.Move
+  fullName: Shared.Enums.GamePhase.Move
+  type: Field
+  source:
+    remote:
+      path: Shared/Enums/GamePhase.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Move
+    path: ../Shared/Enums/GamePhase.cs
+    startLine: 32
+  assemblies:
+  - Model
+  namespace: Shared.Enums
+  summary: The game is recording Player troop movements.
+  example: []
+  syntax:
+    content: Move = 3
+    return:
+      type: Shared.Enums.GamePhase
+- uid: Shared.Enums.GamePhase.GameOver
+  commentId: F:Shared.Enums.GamePhase.GameOver
+  id: GameOver
+  parent: Shared.Enums.GamePhase
+  langs:
+  - csharp
+  - vb
+  name: GameOver
+  nameWithType: GamePhase.GameOver
+  fullName: Shared.Enums.GamePhase.GameOver
+  type: Field
+  source:
+    remote:
+      path: Shared/Enums/GamePhase.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: GameOver
+    path: ../Shared/Enums/GamePhase.cs
+    startLine: 36
+  assemblies:
+  - Model
+  namespace: Shared.Enums
+  summary: The game has completed.
+  example: []
+  syntax:
+    content: GameOver = 4
+    return:
+      type: Shared.Enums.GamePhase
+references:
+- uid: Shared.Enums
+  commentId: N:Shared.Enums
+  href: Shared.html
+  name: Shared.Enums
+  nameWithType: Shared.Enums
+  fullName: Shared.Enums
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Enums
+    name: Enums
+    href: Shared.Enums.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Enums
+    name: Enums
+    href: Shared.Enums.html
+- uid: Shared.Enums.GamePhase
+  commentId: T:Shared.Enums.GamePhase
+  parent: Shared.Enums
+  href: Shared.Enums.GamePhase.html
+  name: GamePhase
+  nameWithType: GamePhase
+  fullName: Shared.Enums.GamePhase

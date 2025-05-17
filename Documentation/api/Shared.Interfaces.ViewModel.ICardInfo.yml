@@ -1,0 +1,379 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Interfaces.ViewModel.ICardInfo
+  commentId: T:Shared.Interfaces.ViewModel.ICardInfo
+  id: ICardInfo
+  parent: Shared.Interfaces.ViewModel
+  children:
+  - Shared.Interfaces.ViewModel.ICardInfo.Owner
+  - Shared.Interfaces.ViewModel.ICardInfo.OwnerHandIndex
+  - Shared.Interfaces.ViewModel.ICardInfo.TargetContinent
+  - Shared.Interfaces.ViewModel.ICardInfo.TargetTerritory
+  langs:
+  - csharp
+  - vb
+  name: ICardInfo
+  nameWithType: ICardInfo
+  fullName: Shared.Interfaces.ViewModel.ICardInfo
+  type: Interface
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ICardInfo.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ICardInfo
+    path: ../Shared/Interfaces/ViewModel/ICardInfo.cs
+    startLine: 6
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Defines public data for ViewModel structs representing <xref href="Shared.Interfaces.Model.ICard" data-throw-if-not-resolved="false"></xref>s.
+  example: []
+  syntax:
+    content: public interface ICardInfo
+    content.vb: Public Interface ICardInfo
+- uid: Shared.Interfaces.ViewModel.ICardInfo.Owner
+  commentId: P:Shared.Interfaces.ViewModel.ICardInfo.Owner
+  id: Owner
+  parent: Shared.Interfaces.ViewModel.ICardInfo
+  langs:
+  - csharp
+  - vb
+  name: Owner
+  nameWithType: ICardInfo.Owner
+  fullName: Shared.Interfaces.ViewModel.ICardInfo.Owner
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ICardInfo.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Owner
+    path: ../Shared/Interfaces/ViewModel/ICardInfo.cs
+    startLine: 15
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets the owner of the card.
+  example: []
+  syntax:
+    content: int? Owner { get; }
+    parameters: []
+    return:
+      type: System.Nullable{System.Int32}
+      description: >-
+        The <xref href="Shared.Interfaces.Model.IPlayer.Number" data-throw-if-not-resolved="false"></xref> who owns the card. <br />
+
+        If it doesn't have one, or a dependent object is uninitialized, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+    content.vb: ReadOnly Property Owner As Integer?
+  overload: Shared.Interfaces.ViewModel.ICardInfo.Owner*
+- uid: Shared.Interfaces.ViewModel.ICardInfo.OwnerHandIndex
+  commentId: P:Shared.Interfaces.ViewModel.ICardInfo.OwnerHandIndex
+  id: OwnerHandIndex
+  parent: Shared.Interfaces.ViewModel.ICardInfo
+  langs:
+  - csharp
+  - vb
+  name: OwnerHandIndex
+  nameWithType: ICardInfo.OwnerHandIndex
+  fullName: Shared.Interfaces.ViewModel.ICardInfo.OwnerHandIndex
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ICardInfo.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: OwnerHandIndex
+    path: ../Shared/Interfaces/ViewModel/ICardInfo.cs
+    startLine: 23
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets the index of the card's place in its owner's <xref href="Shared.Interfaces.Model.IPlayer.Hand" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: int? OwnerHandIndex { get; }
+    parameters: []
+    return:
+      type: System.Nullable{System.Int32}
+      description: >-
+        The index of <xref href="Shared.Interfaces.Model.IPlayer.Hand" data-throw-if-not-resolved="false"></xref> containing the card. <br />
+
+        If there isn't one, or a dependent object is uninitialized, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+    content.vb: ReadOnly Property OwnerHandIndex As Integer?
+  overload: Shared.Interfaces.ViewModel.ICardInfo.OwnerHandIndex*
+- uid: Shared.Interfaces.ViewModel.ICardInfo.TargetTerritory
+  commentId: P:Shared.Interfaces.ViewModel.ICardInfo.TargetTerritory
+  id: TargetTerritory
+  parent: Shared.Interfaces.ViewModel.ICardInfo
+  langs:
+  - csharp
+  - vb
+  name: TargetTerritory
+  nameWithType: ICardInfo.TargetTerritory
+  fullName: Shared.Interfaces.ViewModel.ICardInfo.TargetTerritory
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ICardInfo.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: TargetTerritory
+    path: ../Shared/Interfaces/ViewModel/ICardInfo.cs
+    startLine: 27
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets the territories targeted by the card.
+  example: []
+  syntax:
+    content: TerrID[] TargetTerritory { get; }
+    parameters: []
+    return:
+      type: Shared.Geography.Enums.TerrID[]
+    content.vb: ReadOnly Property TargetTerritory As TerrID()
+  overload: Shared.Interfaces.ViewModel.ICardInfo.TargetTerritory*
+- uid: Shared.Interfaces.ViewModel.ICardInfo.TargetContinent
+  commentId: P:Shared.Interfaces.ViewModel.ICardInfo.TargetContinent
+  id: TargetContinent
+  parent: Shared.Interfaces.ViewModel.ICardInfo
+  langs:
+  - csharp
+  - vb
+  name: TargetContinent
+  nameWithType: ICardInfo.TargetContinent
+  fullName: Shared.Interfaces.ViewModel.ICardInfo.TargetContinent
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ICardInfo.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: TargetContinent
+    path: ../Shared/Interfaces/ViewModel/ICardInfo.cs
+    startLine: 31
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets the continents targeted by the card.
+  example: []
+  syntax:
+    content: ContID[] TargetContinent { get; }
+    parameters: []
+    return:
+      type: Shared.Geography.Enums.ContID[]
+    content.vb: ReadOnly Property TargetContinent As ContID()
+  overload: Shared.Interfaces.ViewModel.ICardInfo.TargetContinent*
+references:
+- uid: Shared.Interfaces.Model.ICard
+  commentId: T:Shared.Interfaces.Model.ICard
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.ICard.html
+  name: ICard
+  nameWithType: ICard
+  fullName: Shared.Interfaces.Model.ICard
+- uid: Shared.Interfaces.ViewModel
+  commentId: N:Shared.Interfaces.ViewModel
+  href: Shared.html
+  name: Shared.Interfaces.ViewModel
+  nameWithType: Shared.Interfaces.ViewModel
+  fullName: Shared.Interfaces.ViewModel
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.ViewModel
+    name: ViewModel
+    href: Shared.Interfaces.ViewModel.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.ViewModel
+    name: ViewModel
+    href: Shared.Interfaces.ViewModel.html
+- uid: Shared.Interfaces.Model
+  commentId: N:Shared.Interfaces.Model
+  href: Shared.html
+  name: Shared.Interfaces.Model
+  nameWithType: Shared.Interfaces.Model
+  fullName: Shared.Interfaces.Model
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+- uid: Shared.Interfaces.Model.IPlayer.Number
+  commentId: P:Shared.Interfaces.Model.IPlayer.Number
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Number
+  name: Number
+  nameWithType: IPlayer.Number
+  fullName: Shared.Interfaces.Model.IPlayer.Number
+- uid: Shared.Interfaces.ViewModel.ICardInfo.Owner*
+  commentId: Overload:Shared.Interfaces.ViewModel.ICardInfo.Owner
+  href: Shared.Interfaces.ViewModel.ICardInfo.html#Shared_Interfaces_ViewModel_ICardInfo_Owner
+  name: Owner
+  nameWithType: ICardInfo.Owner
+  fullName: Shared.Interfaces.ViewModel.ICardInfo.Owner
+- uid: System.Nullable{System.Int32}
+  commentId: T:System.Nullable{System.Int32}
+  parent: System
+  definition: System.Nullable`1
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int?
+  nameWithType: int?
+  fullName: int?
+  nameWithType.vb: Integer?
+  fullName.vb: Integer?
+  name.vb: Integer?
+  spec.csharp:
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  spec.vb:
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+- uid: Shared.Interfaces.Model.IPlayer
+  commentId: T:Shared.Interfaces.Model.IPlayer
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IPlayer.html
+  name: IPlayer
+  nameWithType: IPlayer
+  fullName: Shared.Interfaces.Model.IPlayer
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Shared.Interfaces.Model.IPlayer.Hand
+  commentId: P:Shared.Interfaces.Model.IPlayer.Hand
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Hand
+  name: Hand
+  nameWithType: IPlayer.Hand
+  fullName: Shared.Interfaces.Model.IPlayer.Hand
+- uid: Shared.Interfaces.ViewModel.ICardInfo.OwnerHandIndex*
+  commentId: Overload:Shared.Interfaces.ViewModel.ICardInfo.OwnerHandIndex
+  href: Shared.Interfaces.ViewModel.ICardInfo.html#Shared_Interfaces_ViewModel_ICardInfo_OwnerHandIndex
+  name: OwnerHandIndex
+  nameWithType: ICardInfo.OwnerHandIndex
+  fullName: Shared.Interfaces.ViewModel.ICardInfo.OwnerHandIndex
+- uid: Shared.Interfaces.ViewModel.ICardInfo.TargetTerritory*
+  commentId: Overload:Shared.Interfaces.ViewModel.ICardInfo.TargetTerritory
+  href: Shared.Interfaces.ViewModel.ICardInfo.html#Shared_Interfaces_ViewModel_ICardInfo_TargetTerritory
+  name: TargetTerritory
+  nameWithType: ICardInfo.TargetTerritory
+  fullName: Shared.Interfaces.ViewModel.ICardInfo.TargetTerritory
+- uid: Shared.Geography.Enums.TerrID[]
+  isExternal: true
+  href: Shared.Geography.Enums.TerrID.html
+  name: TerrID[]
+  nameWithType: TerrID[]
+  fullName: Shared.Geography.Enums.TerrID[]
+  nameWithType.vb: TerrID()
+  fullName.vb: Shared.Geography.Enums.TerrID()
+  name.vb: TerrID()
+  spec.csharp:
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: (
+  - name: )
+- uid: Shared.Interfaces.ViewModel.ICardInfo.TargetContinent*
+  commentId: Overload:Shared.Interfaces.ViewModel.ICardInfo.TargetContinent
+  href: Shared.Interfaces.ViewModel.ICardInfo.html#Shared_Interfaces_ViewModel_ICardInfo_TargetContinent
+  name: TargetContinent
+  nameWithType: ICardInfo.TargetContinent
+  fullName: Shared.Interfaces.ViewModel.ICardInfo.TargetContinent
+- uid: Shared.Geography.Enums.ContID[]
+  isExternal: true
+  href: Shared.Geography.Enums.ContID.html
+  name: ContID[]
+  nameWithType: ContID[]
+  fullName: Shared.Geography.Enums.ContID[]
+  nameWithType.vb: ContID()
+  fullName.vb: Shared.Geography.Enums.ContID()
+  name.vb: ContID()
+  spec.csharp:
+  - uid: Shared.Geography.Enums.ContID
+    name: ContID
+    href: Shared.Geography.Enums.ContID.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: Shared.Geography.Enums.ContID
+    name: ContID
+    href: Shared.Geography.Enums.ContID.html
+  - name: (
+  - name: )

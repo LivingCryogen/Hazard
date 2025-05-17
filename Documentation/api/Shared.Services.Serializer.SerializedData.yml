@@ -1,0 +1,966 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Services.Serializer.SerializedData
+  commentId: T:Shared.Services.Serializer.SerializedData
+  id: SerializedData
+  parent: Shared.Services.Serializer
+  children:
+  - Shared.Services.Serializer.SerializedData.#ctor(System.Type,System.IConvertible)
+  - Shared.Services.Serializer.SerializedData.#ctor(System.Type,System.IConvertible,System.String)
+  - Shared.Services.Serializer.SerializedData.#ctor(System.Type,System.IConvertible[])
+  - Shared.Services.Serializer.SerializedData.#ctor(System.Type,System.IConvertible[],System.String)
+  - Shared.Services.Serializer.SerializedData.MemberType
+  - Shared.Services.Serializer.SerializedData.SerialType
+  - Shared.Services.Serializer.SerializedData.SerialValues
+  - Shared.Services.Serializer.SerializedData.Tag
+  langs:
+  - csharp
+  - vb
+  name: SerializedData
+  nameWithType: SerializedData
+  fullName: Shared.Services.Serializer.SerializedData
+  type: Struct
+  source:
+    remote:
+      path: Shared/Services/Serializer/SerializedData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: SerializedData
+    path: ../Shared/Services/Serializer/SerializedData.cs
+    startLine: 9
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: A collection of serialized data and metadata gathered from an <xref href="Shared.Interfaces.Model.IBinarySerializable" data-throw-if-not-resolved="false"></xref>.
+  remarks: Used by <xref href="Shared.Services.Serializer.BinarySerializer" data-throw-if-not-resolved="false"></xref> via <xref href="Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public readonly struct SerializedData
+    content.vb: Public Structure SerializedData
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+- uid: Shared.Services.Serializer.SerializedData.#ctor(System.Type,System.IConvertible)
+  commentId: M:Shared.Services.Serializer.SerializedData.#ctor(System.Type,System.IConvertible)
+  id: '#ctor(System.Type,System.IConvertible)'
+  parent: Shared.Services.Serializer.SerializedData
+  langs:
+  - csharp
+  - vb
+  name: SerializedData(Type, IConvertible)
+  nameWithType: SerializedData.SerializedData(Type, IConvertible)
+  fullName: Shared.Services.Serializer.SerializedData.SerializedData(System.Type, System.IConvertible)
+  type: Constructor
+  source:
+    remote:
+      path: Shared/Services/Serializer/SerializedData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Shared/Services/Serializer/SerializedData.cs
+    startLine: 16
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Constructs SerializedData for a single, untagged value.
+  example: []
+  syntax:
+    content: public SerializedData(Type serialType, IConvertible value)
+    parameters:
+    - id: serialType
+      type: System.Type
+      description: The type of the value in <code class="paramref">value</code>.
+    - id: value
+      type: System.IConvertible
+      description: The serializable value.
+    content.vb: Public Sub New(serialType As Type, value As IConvertible)
+  overload: Shared.Services.Serializer.SerializedData.#ctor*
+  nameWithType.vb: SerializedData.New(Type, IConvertible)
+  fullName.vb: Shared.Services.Serializer.SerializedData.New(System.Type, System.IConvertible)
+  name.vb: New(Type, IConvertible)
+- uid: Shared.Services.Serializer.SerializedData.#ctor(System.Type,System.IConvertible,System.String)
+  commentId: M:Shared.Services.Serializer.SerializedData.#ctor(System.Type,System.IConvertible,System.String)
+  id: '#ctor(System.Type,System.IConvertible,System.String)'
+  parent: Shared.Services.Serializer.SerializedData
+  langs:
+  - csharp
+  - vb
+  name: SerializedData(Type, IConvertible, string)
+  nameWithType: SerializedData.SerializedData(Type, IConvertible, string)
+  fullName: Shared.Services.Serializer.SerializedData.SerializedData(System.Type, System.IConvertible, string)
+  type: Constructor
+  source:
+    remote:
+      path: Shared/Services/Serializer/SerializedData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Shared/Services/Serializer/SerializedData.cs
+    startLine: 27
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Constructs SerializedData for a single, tagged value.
+  example: []
+  syntax:
+    content: public SerializedData(Type serialType, IConvertible value, string tag)
+    parameters:
+    - id: serialType
+      type: System.Type
+      description: The type of the value in <code class="paramref">value</code>.
+    - id: value
+      type: System.IConvertible
+      description: The serializable value.
+    - id: tag
+      type: System.String
+      description: A tag (will precede the type and value when written via <xref href="Shared.Services.Serializer.BinarySerializer" data-throw-if-not-resolved="false"></xref>).
+    content.vb: Public Sub New(serialType As Type, value As IConvertible, tag As String)
+  overload: Shared.Services.Serializer.SerializedData.#ctor*
+  nameWithType.vb: SerializedData.New(Type, IConvertible, String)
+  fullName.vb: Shared.Services.Serializer.SerializedData.New(System.Type, System.IConvertible, String)
+  name.vb: New(Type, IConvertible, String)
+- uid: Shared.Services.Serializer.SerializedData.#ctor(System.Type,System.IConvertible[],System.String)
+  commentId: M:Shared.Services.Serializer.SerializedData.#ctor(System.Type,System.IConvertible[],System.String)
+  id: '#ctor(System.Type,System.IConvertible[],System.String)'
+  parent: Shared.Services.Serializer.SerializedData
+  langs:
+  - csharp
+  - vb
+  name: SerializedData(Type, IConvertible[], string)
+  nameWithType: SerializedData.SerializedData(Type, IConvertible[], string)
+  fullName: Shared.Services.Serializer.SerializedData.SerializedData(System.Type, System.IConvertible[], string)
+  type: Constructor
+  source:
+    remote:
+      path: Shared/Services/Serializer/SerializedData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Shared/Services/Serializer/SerializedData.cs
+    startLine: 39
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Constructs SerializedData for a set of <xref href="System.IConvertible" data-throw-if-not-resolved="false"></xref>values with a tag when they may be part of an IConvertible collection.
+  example: []
+  syntax:
+    content: public SerializedData(Type serialType, IConvertible[] serialValues, string tag)
+    parameters:
+    - id: serialType
+      type: System.Type
+      description: The type of the values which are now stored in <code class="paramref">serialValues</code>.
+    - id: serialValues
+      type: System.IConvertible[]
+      description: <xref href="System.IConvertible" data-throw-if-not-resolved="false"></xref>s storing (potentially converted) values for type <code class="paramref">serialType</code>.
+    - id: tag
+      type: System.String
+      description: A metadata tag for the values.
+    content.vb: Public Sub New(serialType As Type, serialValues As IConvertible(), tag As String)
+  overload: Shared.Services.Serializer.SerializedData.#ctor*
+  nameWithType.vb: SerializedData.New(Type, IConvertible(), String)
+  fullName.vb: Shared.Services.Serializer.SerializedData.New(System.Type, System.IConvertible(), String)
+  name.vb: New(Type, IConvertible(), String)
+- uid: Shared.Services.Serializer.SerializedData.#ctor(System.Type,System.IConvertible[])
+  commentId: M:Shared.Services.Serializer.SerializedData.#ctor(System.Type,System.IConvertible[])
+  id: '#ctor(System.Type,System.IConvertible[])'
+  parent: Shared.Services.Serializer.SerializedData
+  langs:
+  - csharp
+  - vb
+  name: SerializedData(Type, IConvertible[])
+  nameWithType: SerializedData.SerializedData(Type, IConvertible[])
+  fullName: Shared.Services.Serializer.SerializedData.SerializedData(System.Type, System.IConvertible[])
+  type: Constructor
+  source:
+    remote:
+      path: Shared/Services/Serializer/SerializedData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Shared/Services/Serializer/SerializedData.cs
+    startLine: 51
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Constructs SerializedData for a set of <xref href="System.IConvertible" data-throw-if-not-resolved="false"></xref> values when they may be part of an IConvertible collection.
+  example: []
+  syntax:
+    content: public SerializedData(Type serialType, IConvertible[] serialValues)
+    parameters:
+    - id: serialType
+      type: System.Type
+      description: The type of the values which are now stored in <code class="paramref">serialValues</code>.
+    - id: serialValues
+      type: System.IConvertible[]
+      description: <xref href="System.IConvertible" data-throw-if-not-resolved="false"></xref>s storing (potentially converted) values for type <code class="paramref">serialType</code>.
+    content.vb: Public Sub New(serialType As Type, serialValues As IConvertible())
+  overload: Shared.Services.Serializer.SerializedData.#ctor*
+  nameWithType.vb: SerializedData.New(Type, IConvertible())
+  fullName.vb: Shared.Services.Serializer.SerializedData.New(System.Type, System.IConvertible())
+  name.vb: New(Type, IConvertible())
+- uid: Shared.Services.Serializer.SerializedData.MemberType
+  commentId: P:Shared.Services.Serializer.SerializedData.MemberType
+  id: MemberType
+  parent: Shared.Services.Serializer.SerializedData
+  langs:
+  - csharp
+  - vb
+  name: MemberType
+  nameWithType: SerializedData.MemberType
+  fullName: Shared.Services.Serializer.SerializedData.MemberType
+  type: Property
+  source:
+    remote:
+      path: Shared/Services/Serializer/SerializedData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: MemberType
+    path: ../Shared/Services/Serializer/SerializedData.cs
+    startLine: 64
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Gets or inits the Type of the members of <xref href="Shared.Services.Serializer.SerializedData.SerialType" data-throw-if-not-resolved="false"></xref>, if any.
+  example: []
+  syntax:
+    content: public Type? MemberType { get; init; }
+    parameters: []
+    return:
+      type: System.Type
+      description: If <xref href="Shared.Services.Serializer.SerializedData.SerialType" data-throw-if-not-resolved="false"></xref> is a serializable collection type, the type of its members; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+    content.vb: Public Property MemberType As Type
+  overload: Shared.Services.Serializer.SerializedData.MemberType*
+- uid: Shared.Services.Serializer.SerializedData.SerialType
+  commentId: P:Shared.Services.Serializer.SerializedData.SerialType
+  id: SerialType
+  parent: Shared.Services.Serializer.SerializedData
+  langs:
+  - csharp
+  - vb
+  name: SerialType
+  nameWithType: SerializedData.SerialType
+  fullName: Shared.Services.Serializer.SerializedData.SerialType
+  type: Property
+  source:
+    remote:
+      path: Shared/Services/Serializer/SerializedData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: SerialType
+    path: ../Shared/Services/Serializer/SerializedData.cs
+    startLine: 71
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Gets or inits the type associated with the <xref href="Shared.Services.Serializer.SerializedData.SerialValues" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public Type SerialType { get; init; }
+    parameters: []
+    return:
+      type: System.Type
+      description: To be compatible with <xref href="Shared.Services.Serializer.BinarySerializer" data-throw-if-not-resolved="false"></xref>, this should be a type of <xref href="System.Byte" data-throw-if-not-resolved="false"></xref> or <xref href="System.IConvertible" data-throw-if-not-resolved="false"></xref>, or an <xref href="System.Collections.IEnumerable" data-throw-if-not-resolved="false"></xref> of them.<br />
+    content.vb: Public Property SerialType As Type
+  overload: Shared.Services.Serializer.SerializedData.SerialType*
+- uid: Shared.Services.Serializer.SerializedData.SerialValues
+  commentId: P:Shared.Services.Serializer.SerializedData.SerialValues
+  id: SerialValues
+  parent: Shared.Services.Serializer.SerializedData
+  langs:
+  - csharp
+  - vb
+  name: SerialValues
+  nameWithType: SerializedData.SerialValues
+  fullName: Shared.Services.Serializer.SerializedData.SerialValues
+  type: Property
+  source:
+    remote:
+      path: Shared/Services/Serializer/SerializedData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: SerialValues
+    path: ../Shared/Services/Serializer/SerializedData.cs
+    startLine: 81
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Gets or inits the values to be serialized.
+  remarks: Will be encoded and written by <xref href="Shared.Services.Serializer.BinarySerializer" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public IConvertible[] SerialValues { get; init; }
+    parameters: []
+    return:
+      type: System.IConvertible[]
+      description: An array of <xref href="System.IConvertible" data-throw-if-not-resolved="false"></xref> values provided by an <xref href="Shared.Interfaces.Model.IBinarySerializable" data-throw-if-not-resolved="false"></xref> object and cast (or converted) to <xref href="System.IConvertible" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Property SerialValues As IConvertible()
+  overload: Shared.Services.Serializer.SerializedData.SerialValues*
+- uid: Shared.Services.Serializer.SerializedData.Tag
+  commentId: P:Shared.Services.Serializer.SerializedData.Tag
+  id: Tag
+  parent: Shared.Services.Serializer.SerializedData
+  langs:
+  - csharp
+  - vb
+  name: Tag
+  nameWithType: SerializedData.Tag
+  fullName: Shared.Services.Serializer.SerializedData.Tag
+  type: Property
+  source:
+    remote:
+      path: Shared/Services/Serializer/SerializedData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Tag
+    path: ../Shared/Services/Serializer/SerializedData.cs
+    startLine: 92
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Gets or inits a metadata tag.
+  remarks: >-
+    To properly read tagged data with <xref href="Shared.Services.Serializer.BinarySerializer" data-throw-if-not-resolved="false"></xref>, <xref href="System.IO.BinaryReader.ReadString" data-throw-if-not-resolved="false"></xref> must be called before the requisite <xref href="Shared.Services.Serializer.BinarySerializer.ReadConvertible(System.IO.BinaryReader%2cSystem.Type)" data-throw-if-not-resolved="false"></xref><br />
+
+    or <xref href="Shared.Services.Serializer.BinarySerializer.ReadConvertibles(System.IO.BinaryReader%2cSystem.Type%2cSystem.Int32)" data-throw-if-not-resolved="false"></xref>. <xref href="Shared.Services.Serializer.BinarySerializer.WriteTaggedConvertible(System.IO.BinaryWriter%2cSystem.Type%2cSystem.IConvertible%2cSystem.String)" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public string? Tag { get; init; }
+    parameters: []
+    return:
+      type: System.String
+      description: A tag to precede <xref href="Shared.Services.Serializer.SerializedData.SerialValues" data-throw-if-not-resolved="false"></xref> when written to a file with <xref href="Shared.Services.Serializer.BinarySerializer" data-throw-if-not-resolved="false"></xref>; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+    content.vb: Public Property Tag As String
+  overload: Shared.Services.Serializer.SerializedData.Tag*
+references:
+- uid: Shared.Interfaces.Model.IBinarySerializable
+  commentId: T:Shared.Interfaces.Model.IBinarySerializable
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IBinarySerializable.html
+  name: IBinarySerializable
+  nameWithType: IBinarySerializable
+  fullName: Shared.Interfaces.Model.IBinarySerializable
+- uid: Shared.Services.Serializer.BinarySerializer
+  commentId: T:Shared.Services.Serializer.BinarySerializer
+  href: Shared.Services.Serializer.BinarySerializer.html
+  name: BinarySerializer
+  nameWithType: BinarySerializer
+  fullName: Shared.Services.Serializer.BinarySerializer
+- uid: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+  commentId: M:Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+  parent: Shared.Interfaces.Model.IBinarySerializable
+  href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials
+  name: GetBinarySerials()
+  nameWithType: IBinarySerializable.GetBinarySerials()
+  fullName: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials()
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+    name: GetBinarySerials
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+    name: GetBinarySerials
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials
+  - name: (
+  - name: )
+- uid: Shared.Services.Serializer
+  commentId: N:Shared.Services.Serializer
+  href: Shared.html
+  name: Shared.Services.Serializer
+  nameWithType: Shared.Services.Serializer
+  fullName: Shared.Services.Serializer
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Services
+    name: Services
+    href: Shared.Services.html
+  - name: .
+  - uid: Shared.Services.Serializer
+    name: Serializer
+    href: Shared.Services.Serializer.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Services
+    name: Services
+    href: Shared.Services.html
+  - name: .
+  - uid: Shared.Services.Serializer
+    name: Serializer
+    href: Shared.Services.Serializer.html
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: Shared.Interfaces.Model
+  commentId: N:Shared.Interfaces.Model
+  href: Shared.html
+  name: Shared.Interfaces.Model
+  nameWithType: Shared.Interfaces.Model
+  fullName: Shared.Interfaces.Model
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Shared.Services.Serializer.SerializedData.#ctor*
+  commentId: Overload:Shared.Services.Serializer.SerializedData.#ctor
+  href: Shared.Services.Serializer.SerializedData.html#Shared_Services_Serializer_SerializedData__ctor_System_Type_System_IConvertible_
+  name: SerializedData
+  nameWithType: SerializedData.SerializedData
+  fullName: Shared.Services.Serializer.SerializedData.SerializedData
+  nameWithType.vb: SerializedData.New
+  fullName.vb: Shared.Services.Serializer.SerializedData.New
+  name.vb: New
+- uid: System.Type
+  commentId: T:System.Type
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.type
+  name: Type
+  nameWithType: Type
+  fullName: System.Type
+- uid: System.IConvertible
+  commentId: T:System.IConvertible
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iconvertible
+  name: IConvertible
+  nameWithType: IConvertible
+  fullName: System.IConvertible
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.IConvertible[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iconvertible
+  name: IConvertible[]
+  nameWithType: IConvertible[]
+  fullName: System.IConvertible[]
+  nameWithType.vb: IConvertible()
+  fullName.vb: System.IConvertible()
+  name.vb: IConvertible()
+  spec.csharp:
+  - uid: System.IConvertible
+    name: IConvertible
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iconvertible
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.IConvertible
+    name: IConvertible
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iconvertible
+  - name: (
+  - name: )
+- uid: Shared.Services.Serializer.SerializedData.SerialType
+  commentId: P:Shared.Services.Serializer.SerializedData.SerialType
+  href: Shared.Services.Serializer.SerializedData.html#Shared_Services_Serializer_SerializedData_SerialType
+  name: SerialType
+  nameWithType: SerializedData.SerialType
+  fullName: Shared.Services.Serializer.SerializedData.SerialType
+- uid: Shared.Services.Serializer.SerializedData.MemberType*
+  commentId: Overload:Shared.Services.Serializer.SerializedData.MemberType
+  href: Shared.Services.Serializer.SerializedData.html#Shared_Services_Serializer_SerializedData_MemberType
+  name: MemberType
+  nameWithType: SerializedData.MemberType
+  fullName: Shared.Services.Serializer.SerializedData.MemberType
+- uid: Shared.Services.Serializer.SerializedData.SerialValues
+  commentId: P:Shared.Services.Serializer.SerializedData.SerialValues
+  href: Shared.Services.Serializer.SerializedData.html#Shared_Services_Serializer_SerializedData_SerialValues
+  name: SerialValues
+  nameWithType: SerializedData.SerialValues
+  fullName: Shared.Services.Serializer.SerializedData.SerialValues
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte
+  nameWithType: byte
+  fullName: byte
+  nameWithType.vb: Byte
+  fullName.vb: Byte
+  name.vb: Byte
+- uid: System.Collections.IEnumerable
+  commentId: T:System.Collections.IEnumerable
+  parent: System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerable
+  name: IEnumerable
+  nameWithType: IEnumerable
+  fullName: System.Collections.IEnumerable
+- uid: Shared.Services.Serializer.SerializedData.SerialType*
+  commentId: Overload:Shared.Services.Serializer.SerializedData.SerialType
+  href: Shared.Services.Serializer.SerializedData.html#Shared_Services_Serializer_SerializedData_SerialType
+  name: SerialType
+  nameWithType: SerializedData.SerialType
+  fullName: Shared.Services.Serializer.SerializedData.SerialType
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+- uid: Shared.Services.Serializer.SerializedData.SerialValues*
+  commentId: Overload:Shared.Services.Serializer.SerializedData.SerialValues
+  href: Shared.Services.Serializer.SerializedData.html#Shared_Services_Serializer_SerializedData_SerialValues
+  name: SerialValues
+  nameWithType: SerializedData.SerialValues
+  fullName: Shared.Services.Serializer.SerializedData.SerialValues
+- uid: System.IO.BinaryReader.ReadString
+  commentId: M:System.IO.BinaryReader.ReadString
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader.readstring
+  name: ReadString()
+  nameWithType: BinaryReader.ReadString()
+  fullName: System.IO.BinaryReader.ReadString()
+  spec.csharp:
+  - uid: System.IO.BinaryReader.ReadString
+    name: ReadString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader.readstring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IO.BinaryReader.ReadString
+    name: ReadString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader.readstring
+  - name: (
+  - name: )
+- uid: Shared.Services.Serializer.BinarySerializer.ReadConvertible(System.IO.BinaryReader,System.Type)
+  commentId: M:Shared.Services.Serializer.BinarySerializer.ReadConvertible(System.IO.BinaryReader,System.Type)
+  isExternal: true
+  href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_ReadConvertible_System_IO_BinaryReader_System_Type_
+  name: ReadConvertible(BinaryReader, Type)
+  nameWithType: BinarySerializer.ReadConvertible(BinaryReader, Type)
+  fullName: Shared.Services.Serializer.BinarySerializer.ReadConvertible(System.IO.BinaryReader, System.Type)
+  spec.csharp:
+  - uid: Shared.Services.Serializer.BinarySerializer.ReadConvertible(System.IO.BinaryReader,System.Type)
+    name: ReadConvertible
+    href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_ReadConvertible_System_IO_BinaryReader_System_Type_
+  - name: (
+  - uid: System.IO.BinaryReader
+    name: BinaryReader
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  - name: ','
+  - name: " "
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: )
+  spec.vb:
+  - uid: Shared.Services.Serializer.BinarySerializer.ReadConvertible(System.IO.BinaryReader,System.Type)
+    name: ReadConvertible
+    href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_ReadConvertible_System_IO_BinaryReader_System_Type_
+  - name: (
+  - uid: System.IO.BinaryReader
+    name: BinaryReader
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  - name: ','
+  - name: " "
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: )
+- uid: Shared.Services.Serializer.BinarySerializer.ReadConvertibles(System.IO.BinaryReader,System.Type,System.Int32)
+  commentId: M:Shared.Services.Serializer.BinarySerializer.ReadConvertibles(System.IO.BinaryReader,System.Type,System.Int32)
+  isExternal: true
+  href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_ReadConvertibles_System_IO_BinaryReader_System_Type_System_Int32_
+  name: ReadConvertibles(BinaryReader, Type, int)
+  nameWithType: BinarySerializer.ReadConvertibles(BinaryReader, Type, int)
+  fullName: Shared.Services.Serializer.BinarySerializer.ReadConvertibles(System.IO.BinaryReader, System.Type, int)
+  nameWithType.vb: BinarySerializer.ReadConvertibles(BinaryReader, Type, Integer)
+  fullName.vb: Shared.Services.Serializer.BinarySerializer.ReadConvertibles(System.IO.BinaryReader, System.Type, Integer)
+  name.vb: ReadConvertibles(BinaryReader, Type, Integer)
+  spec.csharp:
+  - uid: Shared.Services.Serializer.BinarySerializer.ReadConvertibles(System.IO.BinaryReader,System.Type,System.Int32)
+    name: ReadConvertibles
+    href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_ReadConvertibles_System_IO_BinaryReader_System_Type_System_Int32_
+  - name: (
+  - uid: System.IO.BinaryReader
+    name: BinaryReader
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  - name: ','
+  - name: " "
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Shared.Services.Serializer.BinarySerializer.ReadConvertibles(System.IO.BinaryReader,System.Type,System.Int32)
+    name: ReadConvertibles
+    href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_ReadConvertibles_System_IO_BinaryReader_System_Type_System_Int32_
+  - name: (
+  - uid: System.IO.BinaryReader
+    name: BinaryReader
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  - name: ','
+  - name: " "
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Shared.Services.Serializer.BinarySerializer.WriteTaggedConvertible(System.IO.BinaryWriter,System.Type,System.IConvertible,System.String)
+  commentId: M:Shared.Services.Serializer.BinarySerializer.WriteTaggedConvertible(System.IO.BinaryWriter,System.Type,System.IConvertible,System.String)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.io.binarywriter
+  name: WriteTaggedConvertible(BinaryWriter, Type, IConvertible, string)
+  nameWithType: BinarySerializer.WriteTaggedConvertible(BinaryWriter, Type, IConvertible, string)
+  fullName: Shared.Services.Serializer.BinarySerializer.WriteTaggedConvertible(System.IO.BinaryWriter, System.Type, System.IConvertible, string)
+  nameWithType.vb: BinarySerializer.WriteTaggedConvertible(BinaryWriter, Type, IConvertible, String)
+  fullName.vb: Shared.Services.Serializer.BinarySerializer.WriteTaggedConvertible(System.IO.BinaryWriter, System.Type, System.IConvertible, String)
+  name.vb: WriteTaggedConvertible(BinaryWriter, Type, IConvertible, String)
+  spec.csharp:
+  - uid: Shared.Services.Serializer.BinarySerializer.WriteTaggedConvertible(System.IO.BinaryWriter,System.Type,System.IConvertible,System.String)
+    name: WriteTaggedConvertible
+  - name: (
+  - uid: System.IO.BinaryWriter
+    name: BinaryWriter
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binarywriter
+  - name: ','
+  - name: " "
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: ','
+  - name: " "
+  - uid: System.IConvertible
+    name: IConvertible
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iconvertible
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: Shared.Services.Serializer.BinarySerializer.WriteTaggedConvertible(System.IO.BinaryWriter,System.Type,System.IConvertible,System.String)
+    name: WriteTaggedConvertible
+  - name: (
+  - uid: System.IO.BinaryWriter
+    name: BinaryWriter
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binarywriter
+  - name: ','
+  - name: " "
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: ','
+  - name: " "
+  - uid: System.IConvertible
+    name: IConvertible
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iconvertible
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: Shared.Services.Serializer.SerializedData.Tag*
+  commentId: Overload:Shared.Services.Serializer.SerializedData.Tag
+  href: Shared.Services.Serializer.SerializedData.html#Shared_Services_Serializer_SerializedData_Tag
+  name: Tag
+  nameWithType: SerializedData.Tag
+  fullName: Shared.Services.Serializer.SerializedData.Tag

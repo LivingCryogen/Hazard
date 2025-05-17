@@ -1,0 +1,2075 @@
+### YamlMime:ManagedReference
+items:
+- uid: Model.Entities.EarthBoard
+  commentId: T:Model.Entities.EarthBoard
+  id: EarthBoard
+  parent: Model.Entities
+  children:
+  - Model.Entities.EarthBoard.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Logging.ILogger{Model.Entities.EarthBoard})
+  - Model.Entities.EarthBoard.Armies
+  - Model.Entities.EarthBoard.CheckContinentFlip(Shared.Geography.Enums.TerrID,System.Int32)
+  - Model.Entities.EarthBoard.Claims(System.Int32,Shared.Geography.Enums.TerrID)
+  - Model.Entities.EarthBoard.Claims(System.Int32,Shared.Geography.Enums.TerrID,System.Int32)
+  - Model.Entities.EarthBoard.Conquer(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.Int32)
+  - Model.Entities.EarthBoard.ContinentOwner
+  - Model.Entities.EarthBoard.ContinentOwnerChanged
+  - Model.Entities.EarthBoard.GetBinarySerials
+  - Model.Entities.EarthBoard.Item(System.Int32,System.String)
+  - Model.Entities.EarthBoard.LoadFromBinary(System.IO.BinaryReader)
+  - Model.Entities.EarthBoard.Reinforce(Shared.Geography.Enums.TerrID)
+  - Model.Entities.EarthBoard.Reinforce(Shared.Geography.Enums.TerrID,System.Int32)
+  - Model.Entities.EarthBoard.TerritoryChanged
+  - Model.Entities.EarthBoard.TerritoryOwner
+  langs:
+  - csharp
+  - vb
+  name: EarthBoard
+  nameWithType: EarthBoard
+  fullName: Model.Entities.EarthBoard
+  type: Class
+  source:
+    remote:
+      path: Model/Entities/EarthBoard.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: EarthBoard
+    path: ../Model/Entities/EarthBoard.cs
+    startLine: 12
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Encapsulates Data and Actions that directly affect the armies, territories, and continents on the game board.
+  remarks: The default board of the base game is based on Earth circa 1800.
+  example: []
+  syntax:
+    content: 'public class EarthBoard : IBoard, IBinarySerializable'
+    content.vb: Public Class EarthBoard Implements IBoard, IBinarySerializable
+  inheritance:
+  - System.Object
+  implements:
+  - Shared.Interfaces.Model.IBoard
+  - Shared.Interfaces.Model.IBinarySerializable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Model.Entities.EarthBoard.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Logging.ILogger{Model.Entities.EarthBoard})
+  commentId: M:Model.Entities.EarthBoard.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Logging.ILogger{Model.Entities.EarthBoard})
+  id: '#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Logging.ILogger{Model.Entities.EarthBoard})'
+  parent: Model.Entities.EarthBoard
+  langs:
+  - csharp
+  - vb
+  name: EarthBoard(IConfiguration, ILogger<EarthBoard>)
+  nameWithType: EarthBoard.EarthBoard(IConfiguration, ILogger<EarthBoard>)
+  fullName: Model.Entities.EarthBoard.EarthBoard(Microsoft.Extensions.Configuration.IConfiguration, Microsoft.Extensions.Logging.ILogger<Model.Entities.EarthBoard>)
+  type: Constructor
+  source:
+    remote:
+      path: Model/Entities/EarthBoard.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Model/Entities/EarthBoard.cs
+    startLine: 20
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Builds an Earth board using configuration '.json' values.
+  example: []
+  syntax:
+    content: public EarthBoard(IConfiguration config, ILogger<EarthBoard> logger)
+    parameters:
+    - id: config
+      type: Microsoft.Extensions.Configuration.IConfiguration
+      description: An <xref href="Microsoft.Extensions.Configuration.IConfiguration" data-throw-if-not-resolved="false"></xref>. Typically injected by the DI system.
+    - id: logger
+      type: Microsoft.Extensions.Logging.ILogger{Model.Entities.EarthBoard}
+      description: A logger for debug information and errors.
+    content.vb: Public Sub New(config As IConfiguration, logger As ILogger(Of EarthBoard))
+  overload: Model.Entities.EarthBoard.#ctor*
+  nameWithType.vb: EarthBoard.New(IConfiguration, ILogger(Of EarthBoard))
+  fullName.vb: Model.Entities.EarthBoard.New(Microsoft.Extensions.Configuration.IConfiguration, Microsoft.Extensions.Logging.ILogger(Of Model.Entities.EarthBoard))
+  name.vb: New(IConfiguration, ILogger(Of EarthBoard))
+- uid: Model.Entities.EarthBoard.TerritoryChanged
+  commentId: E:Model.Entities.EarthBoard.TerritoryChanged
+  id: TerritoryChanged
+  parent: Model.Entities.EarthBoard
+  langs:
+  - csharp
+  - vb
+  name: TerritoryChanged
+  nameWithType: EarthBoard.TerritoryChanged
+  fullName: Model.Entities.EarthBoard.TerritoryChanged
+  type: Event
+  source:
+    remote:
+      path: Model/Entities/EarthBoard.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: TerritoryChanged
+    path: ../Model/Entities/EarthBoard.cs
+    startLine: 38
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Gives notice that a territory has changed.
+  remarks: Manually fired when a territory is changed (owner or armies) in an <xref href="Model.Entities.EarthBoard" data-throw-if-not-resolved="false"></xref> method.
+  example: []
+  syntax:
+    content: public event EventHandler<ITerritoryChangedEventArgs>? TerritoryChanged
+    return:
+      type: System.EventHandler{Shared.Interfaces.Model.ITerritoryChangedEventArgs}
+    content.vb: Public Event TerritoryChanged As EventHandler(Of ITerritoryChangedEventArgs)
+  implements:
+  - Shared.Interfaces.Model.IBoard.TerritoryChanged
+- uid: Model.Entities.EarthBoard.ContinentOwnerChanged
+  commentId: E:Model.Entities.EarthBoard.ContinentOwnerChanged
+  id: ContinentOwnerChanged
+  parent: Model.Entities.EarthBoard
+  langs:
+  - csharp
+  - vb
+  name: ContinentOwnerChanged
+  nameWithType: EarthBoard.ContinentOwnerChanged
+  fullName: Model.Entities.EarthBoard.ContinentOwnerChanged
+  type: Event
+  source:
+    remote:
+      path: Model/Entities/EarthBoard.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ContinentOwnerChanged
+    path: ../Model/Entities/EarthBoard.cs
+    startLine: 43
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Gives notice that a continent has changed.
+  remarks: Manually fired when a continent is changed (owner) in an <xref href="Model.Entities.EarthBoard" data-throw-if-not-resolved="false"></xref> method.
+  example: []
+  syntax:
+    content: public event EventHandler<IContinentOwnerChangedEventArgs>? ContinentOwnerChanged
+    return:
+      type: System.EventHandler{Shared.Interfaces.IContinentOwnerChangedEventArgs}
+    content.vb: Public Event ContinentOwnerChanged As EventHandler(Of IContinentOwnerChangedEventArgs)
+  implements:
+  - Shared.Interfaces.Model.IBoard.ContinentOwnerChanged
+- uid: Model.Entities.EarthBoard.Armies
+  commentId: P:Model.Entities.EarthBoard.Armies
+  id: Armies
+  parent: Model.Entities.EarthBoard
+  langs:
+  - csharp
+  - vb
+  name: Armies
+  nameWithType: EarthBoard.Armies
+  fullName: Model.Entities.EarthBoard.Armies
+  type: Property
+  source:
+    remote:
+      path: Model/Entities/EarthBoard.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Armies
+    path: ../Model/Entities/EarthBoard.cs
+    startLine: 49
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Gets or inits the territory to armies map.
+  example: []
+  syntax:
+    content: public Dictionary<TerrID, int> Armies { get; init; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.Dictionary{Shared.Geography.Enums.TerrID,System.Int32}
+    content.vb: Public Property Armies As Dictionary(Of TerrID, Integer)
+  overload: Model.Entities.EarthBoard.Armies*
+  implements:
+  - Shared.Interfaces.Model.IBoard.Armies
+- uid: Model.Entities.EarthBoard.TerritoryOwner
+  commentId: P:Model.Entities.EarthBoard.TerritoryOwner
+  id: TerritoryOwner
+  parent: Model.Entities.EarthBoard
+  langs:
+  - csharp
+  - vb
+  name: TerritoryOwner
+  nameWithType: EarthBoard.TerritoryOwner
+  fullName: Model.Entities.EarthBoard.TerritoryOwner
+  type: Property
+  source:
+    remote:
+      path: Model/Entities/EarthBoard.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: TerritoryOwner
+    path: ../Model/Entities/EarthBoard.cs
+    startLine: 53
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Gets or inits the territory to owner (player number) map.
+  example: []
+  syntax:
+    content: public Dictionary<TerrID, int> TerritoryOwner { get; init; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.Dictionary{Shared.Geography.Enums.TerrID,System.Int32}
+    content.vb: Public Property TerritoryOwner As Dictionary(Of TerrID, Integer)
+  overload: Model.Entities.EarthBoard.TerritoryOwner*
+  implements:
+  - Shared.Interfaces.Model.IBoard.TerritoryOwner
+- uid: Model.Entities.EarthBoard.ContinentOwner
+  commentId: P:Model.Entities.EarthBoard.ContinentOwner
+  id: ContinentOwner
+  parent: Model.Entities.EarthBoard
+  langs:
+  - csharp
+  - vb
+  name: ContinentOwner
+  nameWithType: EarthBoard.ContinentOwner
+  fullName: Model.Entities.EarthBoard.ContinentOwner
+  type: Property
+  source:
+    remote:
+      path: Model/Entities/EarthBoard.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ContinentOwner
+    path: ../Model/Entities/EarthBoard.cs
+    startLine: 57
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Gets or inits the continent to owner (player number) map.
+  example: []
+  syntax:
+    content: public Dictionary<ContID, int> ContinentOwner { get; init; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.Dictionary{Shared.Geography.Enums.ContID,System.Int32}
+    content.vb: Public Property ContinentOwner As Dictionary(Of ContID, Integer)
+  overload: Model.Entities.EarthBoard.ContinentOwner*
+  implements:
+  - Shared.Interfaces.Model.IBoard.ContinentOwner
+- uid: Model.Entities.EarthBoard.Item(System.Int32,System.String)
+  commentId: P:Model.Entities.EarthBoard.Item(System.Int32,System.String)
+  id: Item(System.Int32,System.String)
+  parent: Model.Entities.EarthBoard
+  langs:
+  - csharp
+  - vb
+  name: this[int, string]
+  nameWithType: EarthBoard.this[int, string]
+  fullName: Model.Entities.EarthBoard.this[int, string]
+  type: Property
+  source:
+    remote:
+      path: Model/Entities/EarthBoard.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: this[]
+    path: ../Model/Entities/EarthBoard.cs
+    startLine: 65
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Gets a list of territories or continents owned by a player.
+  example: []
+  syntax:
+    content: public List<object> this[int playerNumber, string enumName] { get; }
+    parameters:
+    - id: playerNumber
+      type: System.Int32
+      description: The <xref href="System.Int32?text=number" data-throw-if-not-resolved="false"></xref> of the <xref href="Shared.Interfaces.Model.IPlayer" data-throw-if-not-resolved="false"></xref> who owns the territories or continents.
+    - id: enumName
+      type: System.String
+      description: The name of <xref href="Shared.Geography.Enums.TerrID" data-throw-if-not-resolved="false"></xref> or of <xref href="Shared.Geography.Enums.ContID" data-throw-if-not-resolved="false"></xref>, for territory and continent, respectively.
+    return:
+      type: System.Collections.Generic.List{System.Object}
+      description: A <xref href="System.Collections.Generic.List%601" data-throw-if-not-resolved="false"></xref> of either <xref href="Shared.Geography.Enums.TerrID" data-throw-if-not-resolved="false"></xref> or <xref href="Shared.Geography.Enums.ContID" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public ReadOnly Default Property this[](playerNumber As Integer, enumName As String) As List(Of Object)
+  overload: Model.Entities.EarthBoard.Item*
+  implements:
+  - Shared.Interfaces.Model.IBoard.Item(System.Int32,System.String)
+  nameWithType.vb: EarthBoard.this[](Integer, String)
+  fullName.vb: Model.Entities.EarthBoard.this[](Integer, String)
+  name.vb: this[](Integer, String)
+- uid: Model.Entities.EarthBoard.Claims(System.Int32,Shared.Geography.Enums.TerrID)
+  commentId: M:Model.Entities.EarthBoard.Claims(System.Int32,Shared.Geography.Enums.TerrID)
+  id: Claims(System.Int32,Shared.Geography.Enums.TerrID)
+  parent: Model.Entities.EarthBoard
+  langs:
+  - csharp
+  - vb
+  name: Claims(int, TerrID)
+  nameWithType: EarthBoard.Claims(int, TerrID)
+  fullName: Model.Entities.EarthBoard.Claims(int, Shared.Geography.Enums.TerrID)
+  type: Method
+  source:
+    remote:
+      path: Model/Entities/EarthBoard.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Claims
+    path: ../Model/Entities/EarthBoard.cs
+    startLine: 86
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Updates the board state when a player claims a territory for the first time.
+  remarks: This change should also fire <xref href="Shared.Interfaces.Model.IBoard.TerritoryChanged" data-throw-if-not-resolved="false"></xref> and subsequent events.
+  example: []
+  syntax:
+    content: public void Claims(int newPlayer, TerrID territory)
+    parameters:
+    - id: newPlayer
+      type: System.Int32
+      description: The number of the player that takes the territory.<code class="paramref">newPlayer</code>
+    - id: territory
+      type: Shared.Geography.Enums.TerrID
+      description: The ID of the territory taken control of by <code class="paramref">newPlayer</code>.
+    content.vb: Public Sub Claims(newPlayer As Integer, territory As TerrID)
+  overload: Model.Entities.EarthBoard.Claims*
+  implements:
+  - Shared.Interfaces.Model.IBoard.Claims(System.Int32,Shared.Geography.Enums.TerrID)
+  nameWithType.vb: EarthBoard.Claims(Integer, TerrID)
+  fullName.vb: Model.Entities.EarthBoard.Claims(Integer, Shared.Geography.Enums.TerrID)
+  name.vb: Claims(Integer, TerrID)
+- uid: Model.Entities.EarthBoard.Claims(System.Int32,Shared.Geography.Enums.TerrID,System.Int32)
+  commentId: M:Model.Entities.EarthBoard.Claims(System.Int32,Shared.Geography.Enums.TerrID,System.Int32)
+  id: Claims(System.Int32,Shared.Geography.Enums.TerrID,System.Int32)
+  parent: Model.Entities.EarthBoard
+  langs:
+  - csharp
+  - vb
+  name: Claims(int, TerrID, int)
+  nameWithType: EarthBoard.Claims(int, TerrID, int)
+  fullName: Model.Entities.EarthBoard.Claims(int, Shared.Geography.Enums.TerrID, int)
+  type: Method
+  source:
+    remote:
+      path: Model/Entities/EarthBoard.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Claims
+    path: ../Model/Entities/EarthBoard.cs
+    startLine: 95
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Updates the board state when a player claims a territory for the first time.
+  remarks: This is a variation on <xref href="Shared.Interfaces.Model.IBoard.Claims(System.Int32%2cShared.Geography.Enums.TerrID)" data-throw-if-not-resolved="false"></xref> meant to enable overriding the default one army per claim.
+  example: []
+  syntax:
+    content: public void Claims(int newPlayer, TerrID territory, int armies)
+    parameters:
+    - id: newPlayer
+      type: System.Int32
+      description: The number of the player that takes the territory.<code class="paramref">newPlayer</code>
+    - id: territory
+      type: Shared.Geography.Enums.TerrID
+      description: The ID of the territory taken control of by <code class="paramref">newPlayer</code>.
+    - id: armies
+      type: System.Int32
+      description: The number of armies the new owner controls in the territory.
+    content.vb: Public Sub Claims(newPlayer As Integer, territory As TerrID, armies As Integer)
+  overload: Model.Entities.EarthBoard.Claims*
+  implements:
+  - Shared.Interfaces.Model.IBoard.Claims(System.Int32,Shared.Geography.Enums.TerrID,System.Int32)
+  nameWithType.vb: EarthBoard.Claims(Integer, TerrID, Integer)
+  fullName.vb: Model.Entities.EarthBoard.Claims(Integer, Shared.Geography.Enums.TerrID, Integer)
+  name.vb: Claims(Integer, TerrID, Integer)
+- uid: Model.Entities.EarthBoard.Reinforce(Shared.Geography.Enums.TerrID)
+  commentId: M:Model.Entities.EarthBoard.Reinforce(Shared.Geography.Enums.TerrID)
+  id: Reinforce(Shared.Geography.Enums.TerrID)
+  parent: Model.Entities.EarthBoard
+  langs:
+  - csharp
+  - vb
+  name: Reinforce(TerrID)
+  nameWithType: EarthBoard.Reinforce(TerrID)
+  fullName: Model.Entities.EarthBoard.Reinforce(Shared.Geography.Enums.TerrID)
+  type: Method
+  source:
+    remote:
+      path: Model/Entities/EarthBoard.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Reinforce
+    path: ../Model/Entities/EarthBoard.cs
+    startLine: 104
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Increments the armies present within a territory.
+  example: []
+  syntax:
+    content: public void Reinforce(TerrID territory)
+    parameters:
+    - id: territory
+      type: Shared.Geography.Enums.TerrID
+      description: The ID of the territory in <xref href="Shared.Interfaces.Model.IBoard.Armies" data-throw-if-not-resolved="false"></xref> to increment.
+    content.vb: Public Sub Reinforce(territory As TerrID)
+  overload: Model.Entities.EarthBoard.Reinforce*
+  implements:
+  - Shared.Interfaces.Model.IBoard.Reinforce(Shared.Geography.Enums.TerrID)
+- uid: Model.Entities.EarthBoard.Reinforce(Shared.Geography.Enums.TerrID,System.Int32)
+  commentId: M:Model.Entities.EarthBoard.Reinforce(Shared.Geography.Enums.TerrID,System.Int32)
+  id: Reinforce(Shared.Geography.Enums.TerrID,System.Int32)
+  parent: Model.Entities.EarthBoard
+  langs:
+  - csharp
+  - vb
+  name: Reinforce(TerrID, int)
+  nameWithType: EarthBoard.Reinforce(TerrID, int)
+  fullName: Model.Entities.EarthBoard.Reinforce(Shared.Geography.Enums.TerrID, int)
+  type: Method
+  source:
+    remote:
+      path: Model/Entities/EarthBoard.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Reinforce
+    path: ../Model/Entities/EarthBoard.cs
+    startLine: 110
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Increases the armies present within a territory by a specified amount.
+  example: []
+  syntax:
+    content: public void Reinforce(TerrID territory, int armies)
+    parameters:
+    - id: territory
+      type: Shared.Geography.Enums.TerrID
+      description: The ID of the territory in <xref href="Shared.Interfaces.Model.IBoard.Armies" data-throw-if-not-resolved="false"></xref> to increase.
+    - id: armies
+      type: System.Int32
+      description: The value of the increase of armies in the <code class="paramref">territory</code>.
+    content.vb: Public Sub Reinforce(territory As TerrID, armies As Integer)
+  overload: Model.Entities.EarthBoard.Reinforce*
+  implements:
+  - Shared.Interfaces.Model.IBoard.Reinforce(Shared.Geography.Enums.TerrID,System.Int32)
+  nameWithType.vb: EarthBoard.Reinforce(TerrID, Integer)
+  fullName.vb: Model.Entities.EarthBoard.Reinforce(Shared.Geography.Enums.TerrID, Integer)
+  name.vb: Reinforce(TerrID, Integer)
+- uid: Model.Entities.EarthBoard.Conquer(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.Int32)
+  commentId: M:Model.Entities.EarthBoard.Conquer(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.Int32)
+  id: Conquer(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.Int32)
+  parent: Model.Entities.EarthBoard
+  langs:
+  - csharp
+  - vb
+  name: Conquer(TerrID, TerrID, int)
+  nameWithType: EarthBoard.Conquer(TerrID, TerrID, int)
+  fullName: Model.Entities.EarthBoard.Conquer(Shared.Geography.Enums.TerrID, Shared.Geography.Enums.TerrID, int)
+  type: Method
+  source:
+    remote:
+      path: Model/Entities/EarthBoard.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Conquer
+    path: ../Model/Entities/EarthBoard.cs
+    startLine: 116
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Changes ownership of a territory after a successful attack.
+  example: []
+  syntax:
+    content: public void Conquer(TerrID source, TerrID target, int newOwner)
+    parameters:
+    - id: source
+      type: Shared.Geography.Enums.TerrID
+      description: The territory from which the attack originated.
+    - id: target
+      type: Shared.Geography.Enums.TerrID
+      description: The territory that was attacked and is being conquered.
+    - id: newOwner
+      type: System.Int32
+      description: The <xref href="Shared.Interfaces.Model.IPlayer.Number" data-throw-if-not-resolved="false"></xref> of the owner after the attack is completed.
+    content.vb: Public Sub Conquer(source As TerrID, target As TerrID, newOwner As Integer)
+  overload: Model.Entities.EarthBoard.Conquer*
+  implements:
+  - Shared.Interfaces.Model.IBoard.Conquer(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.Int32)
+  nameWithType.vb: EarthBoard.Conquer(TerrID, TerrID, Integer)
+  fullName.vb: Model.Entities.EarthBoard.Conquer(Shared.Geography.Enums.TerrID, Shared.Geography.Enums.TerrID, Integer)
+  name.vb: Conquer(TerrID, TerrID, Integer)
+- uid: Model.Entities.EarthBoard.CheckContinentFlip(Shared.Geography.Enums.TerrID,System.Int32)
+  commentId: M:Model.Entities.EarthBoard.CheckContinentFlip(Shared.Geography.Enums.TerrID,System.Int32)
+  id: CheckContinentFlip(Shared.Geography.Enums.TerrID,System.Int32)
+  parent: Model.Entities.EarthBoard
+  langs:
+  - csharp
+  - vb
+  name: CheckContinentFlip(TerrID, int)
+  nameWithType: EarthBoard.CheckContinentFlip(TerrID, int)
+  fullName: Model.Entities.EarthBoard.CheckContinentFlip(Shared.Geography.Enums.TerrID, int)
+  type: Method
+  source:
+    remote:
+      path: Model/Entities/EarthBoard.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: CheckContinentFlip
+    path: ../Model/Entities/EarthBoard.cs
+    startLine: 124
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Determines whether a continent has changed ownership after a change in territory ownership.
+  remarks: The new owner is not needed here so long as <xref href="Shared.Interfaces.Model.IBoard.TerritoryOwner" data-throw-if-not-resolved="false"></xref> is changed properly before this method is called.
+  example: []
+  syntax:
+    content: public void CheckContinentFlip(TerrID changed, int previousOwner)
+    parameters:
+    - id: changed
+      type: Shared.Geography.Enums.TerrID
+      description: The territory that changed hands.
+    - id: previousOwner
+      type: System.Int32
+      description: The <xref href="Shared.Interfaces.Model.IPlayer.Number" data-throw-if-not-resolved="false"></xref> of the territory's owner before the change.
+    content.vb: Public Sub CheckContinentFlip(changed As TerrID, previousOwner As Integer)
+  overload: Model.Entities.EarthBoard.CheckContinentFlip*
+  implements:
+  - Shared.Interfaces.Model.IBoard.CheckContinentFlip(Shared.Geography.Enums.TerrID,System.Int32)
+  nameWithType.vb: EarthBoard.CheckContinentFlip(TerrID, Integer)
+  fullName.vb: Model.Entities.EarthBoard.CheckContinentFlip(Shared.Geography.Enums.TerrID, Integer)
+  name.vb: CheckContinentFlip(TerrID, Integer)
+- uid: Model.Entities.EarthBoard.GetBinarySerials
+  commentId: M:Model.Entities.EarthBoard.GetBinarySerials
+  id: GetBinarySerials
+  parent: Model.Entities.EarthBoard
+  langs:
+  - csharp
+  - vb
+  name: GetBinarySerials()
+  nameWithType: EarthBoard.GetBinarySerials()
+  fullName: Model.Entities.EarthBoard.GetBinarySerials()
+  type: Method
+  source:
+    remote:
+      path: Model/Entities/EarthBoard.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: GetBinarySerials
+    path: ../Model/Entities/EarthBoard.cs
+    startLine: 148
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Asynchronously serializes the <xref href="Shared.Interfaces.Model.IBinarySerializable" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public Task<SerializedData[]> GetBinarySerials()
+    return:
+      type: System.Threading.Tasks.Task{Shared.Services.Serializer.SerializedData[]}
+      description: A task whose result contains serialized object data.
+    content.vb: Public Function GetBinarySerials() As Task(Of SerializedData())
+  overload: Model.Entities.EarthBoard.GetBinarySerials*
+  implements:
+  - Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+- uid: Model.Entities.EarthBoard.LoadFromBinary(System.IO.BinaryReader)
+  commentId: M:Model.Entities.EarthBoard.LoadFromBinary(System.IO.BinaryReader)
+  id: LoadFromBinary(System.IO.BinaryReader)
+  parent: Model.Entities.EarthBoard
+  langs:
+  - csharp
+  - vb
+  name: LoadFromBinary(BinaryReader)
+  nameWithType: EarthBoard.LoadFromBinary(BinaryReader)
+  fullName: Model.Entities.EarthBoard.LoadFromBinary(System.IO.BinaryReader)
+  type: Method
+  source:
+    remote:
+      path: Model/Entities/EarthBoard.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: LoadFromBinary
+    path: ../Model/Entities/EarthBoard.cs
+    startLine: 174
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Loads the <xref href="Shared.Interfaces.Model.IBinarySerializable" data-throw-if-not-resolved="false"></xref> with binary values read from a file.
+  example: []
+  syntax:
+    content: public bool LoadFromBinary(BinaryReader reader)
+    parameters:
+    - id: reader
+      type: System.IO.BinaryReader
+      description: A reader whose <xref href="System.IO.BinaryReader.BaseStream" data-throw-if-not-resolved="false"></xref> was previously written to using <xref href="Shared.Services.Serializer.BinarySerializer" data-throw-if-not-resolved="false"></xref> and <xref href="Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials" data-throw-if-not-resolved="false"></xref>.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the load succeeded without exceptions; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Function LoadFromBinary(reader As BinaryReader) As Boolean
+  overload: Model.Entities.EarthBoard.LoadFromBinary*
+  implements:
+  - Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+references:
+- uid: Model.Entities
+  commentId: N:Model.Entities
+  href: Model.html
+  name: Model.Entities
+  nameWithType: Model.Entities
+  fullName: Model.Entities
+  spec.csharp:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.Entities
+    name: Entities
+    href: Model.Entities.html
+  spec.vb:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.Entities
+    name: Entities
+    href: Model.Entities.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Shared.Interfaces.Model.IBoard
+  commentId: T:Shared.Interfaces.Model.IBoard
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IBoard.html
+  name: IBoard
+  nameWithType: IBoard
+  fullName: Shared.Interfaces.Model.IBoard
+- uid: Shared.Interfaces.Model.IBinarySerializable
+  commentId: T:Shared.Interfaces.Model.IBinarySerializable
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IBinarySerializable.html
+  name: IBinarySerializable
+  nameWithType: IBinarySerializable
+  fullName: Shared.Interfaces.Model.IBinarySerializable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Shared.Interfaces.Model
+  commentId: N:Shared.Interfaces.Model
+  href: Shared.html
+  name: Shared.Interfaces.Model
+  nameWithType: Shared.Interfaces.Model
+  fullName: Shared.Interfaces.Model
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+- uid: Microsoft.Extensions.Configuration.IConfiguration
+  commentId: T:Microsoft.Extensions.Configuration.IConfiguration
+  parent: Microsoft.Extensions.Configuration
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.configuration.iconfiguration
+  name: IConfiguration
+  nameWithType: IConfiguration
+  fullName: Microsoft.Extensions.Configuration.IConfiguration
+- uid: Model.Entities.EarthBoard.#ctor*
+  commentId: Overload:Model.Entities.EarthBoard.#ctor
+  href: Model.Entities.EarthBoard.html#Model_Entities_EarthBoard__ctor_Microsoft_Extensions_Configuration_IConfiguration_Microsoft_Extensions_Logging_ILogger_Model_Entities_EarthBoard__
+  name: EarthBoard
+  nameWithType: EarthBoard.EarthBoard
+  fullName: Model.Entities.EarthBoard.EarthBoard
+  nameWithType.vb: EarthBoard.New
+  fullName.vb: Model.Entities.EarthBoard.New
+  name.vb: New
+- uid: Microsoft.Extensions.Logging.ILogger{Model.Entities.EarthBoard}
+  commentId: T:Microsoft.Extensions.Logging.ILogger{Model.Entities.EarthBoard}
+  parent: Microsoft.Extensions.Logging
+  definition: Microsoft.Extensions.Logging.ILogger`1
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger-1
+  name: ILogger<EarthBoard>
+  nameWithType: ILogger<EarthBoard>
+  fullName: Microsoft.Extensions.Logging.ILogger<Model.Entities.EarthBoard>
+  nameWithType.vb: ILogger(Of EarthBoard)
+  fullName.vb: Microsoft.Extensions.Logging.ILogger(Of Model.Entities.EarthBoard)
+  name.vb: ILogger(Of EarthBoard)
+  spec.csharp:
+  - uid: Microsoft.Extensions.Logging.ILogger`1
+    name: ILogger
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger-1
+  - name: <
+  - uid: Model.Entities.EarthBoard
+    name: EarthBoard
+    href: Model.Entities.EarthBoard.html
+  - name: '>'
+  spec.vb:
+  - uid: Microsoft.Extensions.Logging.ILogger`1
+    name: ILogger
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Model.Entities.EarthBoard
+    name: EarthBoard
+    href: Model.Entities.EarthBoard.html
+  - name: )
+- uid: Microsoft.Extensions.Configuration
+  commentId: N:Microsoft.Extensions.Configuration
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.Extensions.Configuration
+  nameWithType: Microsoft.Extensions.Configuration
+  fullName: Microsoft.Extensions.Configuration
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Configuration
+    name: Configuration
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.configuration
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Configuration
+    name: Configuration
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.configuration
+- uid: Microsoft.Extensions.Logging.ILogger`1
+  commentId: T:Microsoft.Extensions.Logging.ILogger`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger-1
+  name: ILogger<TCategoryName>
+  nameWithType: ILogger<TCategoryName>
+  fullName: Microsoft.Extensions.Logging.ILogger<TCategoryName>
+  nameWithType.vb: ILogger(Of TCategoryName)
+  fullName.vb: Microsoft.Extensions.Logging.ILogger(Of TCategoryName)
+  name.vb: ILogger(Of TCategoryName)
+  spec.csharp:
+  - uid: Microsoft.Extensions.Logging.ILogger`1
+    name: ILogger
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger-1
+  - name: <
+  - name: TCategoryName
+  - name: '>'
+  spec.vb:
+  - uid: Microsoft.Extensions.Logging.ILogger`1
+    name: ILogger
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TCategoryName
+  - name: )
+- uid: Microsoft.Extensions.Logging
+  commentId: N:Microsoft.Extensions.Logging
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.Extensions.Logging
+  nameWithType: Microsoft.Extensions.Logging
+  fullName: Microsoft.Extensions.Logging
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Logging
+    name: Logging
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Logging
+    name: Logging
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging
+- uid: Model.Entities.EarthBoard
+  commentId: T:Model.Entities.EarthBoard
+  href: Model.Entities.EarthBoard.html
+  name: EarthBoard
+  nameWithType: EarthBoard
+  fullName: Model.Entities.EarthBoard
+- uid: Shared.Interfaces.Model.IBoard.TerritoryChanged
+  commentId: E:Shared.Interfaces.Model.IBoard.TerritoryChanged
+  parent: Shared.Interfaces.Model.IBoard
+  href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_TerritoryChanged
+  name: TerritoryChanged
+  nameWithType: IBoard.TerritoryChanged
+  fullName: Shared.Interfaces.Model.IBoard.TerritoryChanged
+- uid: System.EventHandler{Shared.Interfaces.Model.ITerritoryChangedEventArgs}
+  commentId: T:System.EventHandler{Shared.Interfaces.Model.ITerritoryChangedEventArgs}
+  parent: System
+  definition: System.EventHandler`1
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  name: EventHandler<ITerritoryChangedEventArgs>
+  nameWithType: EventHandler<ITerritoryChangedEventArgs>
+  fullName: System.EventHandler<Shared.Interfaces.Model.ITerritoryChangedEventArgs>
+  nameWithType.vb: EventHandler(Of ITerritoryChangedEventArgs)
+  fullName.vb: System.EventHandler(Of Shared.Interfaces.Model.ITerritoryChangedEventArgs)
+  name.vb: EventHandler(Of ITerritoryChangedEventArgs)
+  spec.csharp:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: <
+  - uid: Shared.Interfaces.Model.ITerritoryChangedEventArgs
+    name: ITerritoryChangedEventArgs
+    href: Shared.Interfaces.Model.ITerritoryChangedEventArgs.html
+  - name: '>'
+  spec.vb:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Interfaces.Model.ITerritoryChangedEventArgs
+    name: ITerritoryChangedEventArgs
+    href: Shared.Interfaces.Model.ITerritoryChangedEventArgs.html
+  - name: )
+- uid: System.EventHandler`1
+  commentId: T:System.EventHandler`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  name: EventHandler<TEventArgs>
+  nameWithType: EventHandler<TEventArgs>
+  fullName: System.EventHandler<TEventArgs>
+  nameWithType.vb: EventHandler(Of TEventArgs)
+  fullName.vb: System.EventHandler(Of TEventArgs)
+  name.vb: EventHandler(Of TEventArgs)
+  spec.csharp:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: <
+  - name: TEventArgs
+  - name: '>'
+  spec.vb:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TEventArgs
+  - name: )
+- uid: Shared.Interfaces.Model.IBoard.ContinentOwnerChanged
+  commentId: E:Shared.Interfaces.Model.IBoard.ContinentOwnerChanged
+  parent: Shared.Interfaces.Model.IBoard
+  href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_ContinentOwnerChanged
+  name: ContinentOwnerChanged
+  nameWithType: IBoard.ContinentOwnerChanged
+  fullName: Shared.Interfaces.Model.IBoard.ContinentOwnerChanged
+- uid: System.EventHandler{Shared.Interfaces.IContinentOwnerChangedEventArgs}
+  commentId: T:System.EventHandler{Shared.Interfaces.IContinentOwnerChangedEventArgs}
+  parent: System
+  definition: System.EventHandler`1
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  name: EventHandler<IContinentOwnerChangedEventArgs>
+  nameWithType: EventHandler<IContinentOwnerChangedEventArgs>
+  fullName: System.EventHandler<Shared.Interfaces.IContinentOwnerChangedEventArgs>
+  nameWithType.vb: EventHandler(Of IContinentOwnerChangedEventArgs)
+  fullName.vb: System.EventHandler(Of Shared.Interfaces.IContinentOwnerChangedEventArgs)
+  name.vb: EventHandler(Of IContinentOwnerChangedEventArgs)
+  spec.csharp:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: <
+  - uid: Shared.Interfaces.IContinentOwnerChangedEventArgs
+    name: IContinentOwnerChangedEventArgs
+    href: Shared.Interfaces.IContinentOwnerChangedEventArgs.html
+  - name: '>'
+  spec.vb:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Interfaces.IContinentOwnerChangedEventArgs
+    name: IContinentOwnerChangedEventArgs
+    href: Shared.Interfaces.IContinentOwnerChangedEventArgs.html
+  - name: )
+- uid: Model.Entities.EarthBoard.Armies*
+  commentId: Overload:Model.Entities.EarthBoard.Armies
+  href: Model.Entities.EarthBoard.html#Model_Entities_EarthBoard_Armies
+  name: Armies
+  nameWithType: EarthBoard.Armies
+  fullName: Model.Entities.EarthBoard.Armies
+- uid: Shared.Interfaces.Model.IBoard.Armies
+  commentId: P:Shared.Interfaces.Model.IBoard.Armies
+  parent: Shared.Interfaces.Model.IBoard
+  href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Armies
+  name: Armies
+  nameWithType: IBoard.Armies
+  fullName: Shared.Interfaces.Model.IBoard.Armies
+- uid: System.Collections.Generic.Dictionary{Shared.Geography.Enums.TerrID,System.Int32}
+  commentId: T:System.Collections.Generic.Dictionary{Shared.Geography.Enums.TerrID,System.Int32}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<TerrID, int>
+  nameWithType: Dictionary<TerrID, int>
+  fullName: System.Collections.Generic.Dictionary<Shared.Geography.Enums.TerrID, int>
+  nameWithType.vb: Dictionary(Of TerrID, Integer)
+  fullName.vb: System.Collections.Generic.Dictionary(Of Shared.Geography.Enums.TerrID, Integer)
+  name.vb: Dictionary(Of TerrID, Integer)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: Model.Entities.EarthBoard.TerritoryOwner*
+  commentId: Overload:Model.Entities.EarthBoard.TerritoryOwner
+  href: Model.Entities.EarthBoard.html#Model_Entities_EarthBoard_TerritoryOwner
+  name: TerritoryOwner
+  nameWithType: EarthBoard.TerritoryOwner
+  fullName: Model.Entities.EarthBoard.TerritoryOwner
+- uid: Shared.Interfaces.Model.IBoard.TerritoryOwner
+  commentId: P:Shared.Interfaces.Model.IBoard.TerritoryOwner
+  parent: Shared.Interfaces.Model.IBoard
+  href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_TerritoryOwner
+  name: TerritoryOwner
+  nameWithType: IBoard.TerritoryOwner
+  fullName: Shared.Interfaces.Model.IBoard.TerritoryOwner
+- uid: Model.Entities.EarthBoard.ContinentOwner*
+  commentId: Overload:Model.Entities.EarthBoard.ContinentOwner
+  href: Model.Entities.EarthBoard.html#Model_Entities_EarthBoard_ContinentOwner
+  name: ContinentOwner
+  nameWithType: EarthBoard.ContinentOwner
+  fullName: Model.Entities.EarthBoard.ContinentOwner
+- uid: Shared.Interfaces.Model.IBoard.ContinentOwner
+  commentId: P:Shared.Interfaces.Model.IBoard.ContinentOwner
+  parent: Shared.Interfaces.Model.IBoard
+  href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_ContinentOwner
+  name: ContinentOwner
+  nameWithType: IBoard.ContinentOwner
+  fullName: Shared.Interfaces.Model.IBoard.ContinentOwner
+- uid: System.Collections.Generic.Dictionary{Shared.Geography.Enums.ContID,System.Int32}
+  commentId: T:System.Collections.Generic.Dictionary{Shared.Geography.Enums.ContID,System.Int32}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<ContID, int>
+  nameWithType: Dictionary<ContID, int>
+  fullName: System.Collections.Generic.Dictionary<Shared.Geography.Enums.ContID, int>
+  nameWithType.vb: Dictionary(Of ContID, Integer)
+  fullName.vb: System.Collections.Generic.Dictionary(Of Shared.Geography.Enums.ContID, Integer)
+  name.vb: Dictionary(Of ContID, Integer)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: Shared.Geography.Enums.ContID
+    name: ContID
+    href: Shared.Geography.Enums.ContID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Geography.Enums.ContID
+    name: ContID
+    href: Shared.Geography.Enums.ContID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Shared.Interfaces.Model.IPlayer
+  commentId: T:Shared.Interfaces.Model.IPlayer
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IPlayer.html
+  name: IPlayer
+  nameWithType: IPlayer
+  fullName: Shared.Interfaces.Model.IPlayer
+- uid: Shared.Geography.Enums.TerrID
+  commentId: T:Shared.Geography.Enums.TerrID
+  parent: Shared.Geography.Enums
+  href: Shared.Geography.Enums.TerrID.html
+  name: TerrID
+  nameWithType: TerrID
+  fullName: Shared.Geography.Enums.TerrID
+- uid: Shared.Geography.Enums.ContID
+  commentId: T:Shared.Geography.Enums.ContID
+  parent: Shared.Geography.Enums
+  href: Shared.Geography.Enums.ContID.html
+  name: ContID
+  nameWithType: ContID
+  fullName: Shared.Geography.Enums.ContID
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Model.Entities.EarthBoard.Item*
+  commentId: Overload:Model.Entities.EarthBoard.Item
+  href: Model.Entities.EarthBoard.html#Model_Entities_EarthBoard_Item_System_Int32_System_String_
+  name: this
+  nameWithType: EarthBoard.this
+  fullName: Model.Entities.EarthBoard.this
+  nameWithType.vb: EarthBoard.this[]
+  fullName.vb: Model.Entities.EarthBoard.this[]
+  name.vb: this[]
+- uid: Shared.Interfaces.Model.IBoard.Item(System.Int32,System.String)
+  commentId: P:Shared.Interfaces.Model.IBoard.Item(System.Int32,System.String)
+  parent: Shared.Interfaces.Model.IBoard
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: this[int, string]
+  nameWithType: IBoard.this[int, string]
+  fullName: Shared.Interfaces.Model.IBoard.this[int, string]
+  nameWithType.vb: IBoard.this[](Integer, String)
+  fullName.vb: Shared.Interfaces.Model.IBoard.this[](Integer, String)
+  name.vb: this[](Integer, String)
+  spec.csharp:
+  - name: this
+  - name: '['
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ']'
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IBoard.Item(System.Int32,System.String)
+    name: this[]
+    href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Item_System_Int32_System_String_
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Collections.Generic.List{System.Object}
+  commentId: T:System.Collections.Generic.List{System.Object}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<object>
+  nameWithType: List<object>
+  fullName: System.Collections.Generic.List<object>
+  nameWithType.vb: List(Of Object)
+  fullName.vb: System.Collections.Generic.List(Of Object)
+  name.vb: List(Of Object)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: Shared.Geography.Enums
+  commentId: N:Shared.Geography.Enums
+  href: Shared.html
+  name: Shared.Geography.Enums
+  nameWithType: Shared.Geography.Enums
+  fullName: Shared.Geography.Enums
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+- uid: Model.Entities.EarthBoard.Claims*
+  commentId: Overload:Model.Entities.EarthBoard.Claims
+  href: Model.Entities.EarthBoard.html#Model_Entities_EarthBoard_Claims_System_Int32_Shared_Geography_Enums_TerrID_
+  name: Claims
+  nameWithType: EarthBoard.Claims
+  fullName: Model.Entities.EarthBoard.Claims
+- uid: Shared.Interfaces.Model.IBoard.Claims(System.Int32,Shared.Geography.Enums.TerrID)
+  commentId: M:Shared.Interfaces.Model.IBoard.Claims(System.Int32,Shared.Geography.Enums.TerrID)
+  parent: Shared.Interfaces.Model.IBoard
+  isExternal: true
+  href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Claims_System_Int32_Shared_Geography_Enums_TerrID_
+  name: Claims(int, TerrID)
+  nameWithType: IBoard.Claims(int, TerrID)
+  fullName: Shared.Interfaces.Model.IBoard.Claims(int, Shared.Geography.Enums.TerrID)
+  nameWithType.vb: IBoard.Claims(Integer, TerrID)
+  fullName.vb: Shared.Interfaces.Model.IBoard.Claims(Integer, Shared.Geography.Enums.TerrID)
+  name.vb: Claims(Integer, TerrID)
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IBoard.Claims(System.Int32,Shared.Geography.Enums.TerrID)
+    name: Claims
+    href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Claims_System_Int32_Shared_Geography_Enums_TerrID_
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IBoard.Claims(System.Int32,Shared.Geography.Enums.TerrID)
+    name: Claims
+    href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Claims_System_Int32_Shared_Geography_Enums_TerrID_
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: )
+- uid: Shared.Interfaces.Model.IBoard.Claims(System.Int32,Shared.Geography.Enums.TerrID,System.Int32)
+  commentId: M:Shared.Interfaces.Model.IBoard.Claims(System.Int32,Shared.Geography.Enums.TerrID,System.Int32)
+  parent: Shared.Interfaces.Model.IBoard
+  isExternal: true
+  href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Claims_System_Int32_Shared_Geography_Enums_TerrID_System_Int32_
+  name: Claims(int, TerrID, int)
+  nameWithType: IBoard.Claims(int, TerrID, int)
+  fullName: Shared.Interfaces.Model.IBoard.Claims(int, Shared.Geography.Enums.TerrID, int)
+  nameWithType.vb: IBoard.Claims(Integer, TerrID, Integer)
+  fullName.vb: Shared.Interfaces.Model.IBoard.Claims(Integer, Shared.Geography.Enums.TerrID, Integer)
+  name.vb: Claims(Integer, TerrID, Integer)
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IBoard.Claims(System.Int32,Shared.Geography.Enums.TerrID,System.Int32)
+    name: Claims
+    href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Claims_System_Int32_Shared_Geography_Enums_TerrID_System_Int32_
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IBoard.Claims(System.Int32,Shared.Geography.Enums.TerrID,System.Int32)
+    name: Claims
+    href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Claims_System_Int32_Shared_Geography_Enums_TerrID_System_Int32_
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Model.Entities.EarthBoard.Reinforce*
+  commentId: Overload:Model.Entities.EarthBoard.Reinforce
+  href: Model.Entities.EarthBoard.html#Model_Entities_EarthBoard_Reinforce_Shared_Geography_Enums_TerrID_
+  name: Reinforce
+  nameWithType: EarthBoard.Reinforce
+  fullName: Model.Entities.EarthBoard.Reinforce
+- uid: Shared.Interfaces.Model.IBoard.Reinforce(Shared.Geography.Enums.TerrID)
+  commentId: M:Shared.Interfaces.Model.IBoard.Reinforce(Shared.Geography.Enums.TerrID)
+  parent: Shared.Interfaces.Model.IBoard
+  href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Reinforce_Shared_Geography_Enums_TerrID_
+  name: Reinforce(TerrID)
+  nameWithType: IBoard.Reinforce(TerrID)
+  fullName: Shared.Interfaces.Model.IBoard.Reinforce(Shared.Geography.Enums.TerrID)
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IBoard.Reinforce(Shared.Geography.Enums.TerrID)
+    name: Reinforce
+    href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Reinforce_Shared_Geography_Enums_TerrID_
+  - name: (
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IBoard.Reinforce(Shared.Geography.Enums.TerrID)
+    name: Reinforce
+    href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Reinforce_Shared_Geography_Enums_TerrID_
+  - name: (
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: )
+- uid: Shared.Interfaces.Model.IBoard.Reinforce(Shared.Geography.Enums.TerrID,System.Int32)
+  commentId: M:Shared.Interfaces.Model.IBoard.Reinforce(Shared.Geography.Enums.TerrID,System.Int32)
+  parent: Shared.Interfaces.Model.IBoard
+  isExternal: true
+  href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Reinforce_Shared_Geography_Enums_TerrID_System_Int32_
+  name: Reinforce(TerrID, int)
+  nameWithType: IBoard.Reinforce(TerrID, int)
+  fullName: Shared.Interfaces.Model.IBoard.Reinforce(Shared.Geography.Enums.TerrID, int)
+  nameWithType.vb: IBoard.Reinforce(TerrID, Integer)
+  fullName.vb: Shared.Interfaces.Model.IBoard.Reinforce(Shared.Geography.Enums.TerrID, Integer)
+  name.vb: Reinforce(TerrID, Integer)
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IBoard.Reinforce(Shared.Geography.Enums.TerrID,System.Int32)
+    name: Reinforce
+    href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Reinforce_Shared_Geography_Enums_TerrID_System_Int32_
+  - name: (
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IBoard.Reinforce(Shared.Geography.Enums.TerrID,System.Int32)
+    name: Reinforce
+    href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Reinforce_Shared_Geography_Enums_TerrID_System_Int32_
+  - name: (
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Shared.Interfaces.Model.IPlayer.Number
+  commentId: P:Shared.Interfaces.Model.IPlayer.Number
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Number
+  name: Number
+  nameWithType: IPlayer.Number
+  fullName: Shared.Interfaces.Model.IPlayer.Number
+- uid: Model.Entities.EarthBoard.Conquer*
+  commentId: Overload:Model.Entities.EarthBoard.Conquer
+  href: Model.Entities.EarthBoard.html#Model_Entities_EarthBoard_Conquer_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_System_Int32_
+  name: Conquer
+  nameWithType: EarthBoard.Conquer
+  fullName: Model.Entities.EarthBoard.Conquer
+- uid: Shared.Interfaces.Model.IBoard.Conquer(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.Int32)
+  commentId: M:Shared.Interfaces.Model.IBoard.Conquer(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.Int32)
+  parent: Shared.Interfaces.Model.IBoard
+  isExternal: true
+  href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Conquer_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_System_Int32_
+  name: Conquer(TerrID, TerrID, int)
+  nameWithType: IBoard.Conquer(TerrID, TerrID, int)
+  fullName: Shared.Interfaces.Model.IBoard.Conquer(Shared.Geography.Enums.TerrID, Shared.Geography.Enums.TerrID, int)
+  nameWithType.vb: IBoard.Conquer(TerrID, TerrID, Integer)
+  fullName.vb: Shared.Interfaces.Model.IBoard.Conquer(Shared.Geography.Enums.TerrID, Shared.Geography.Enums.TerrID, Integer)
+  name.vb: Conquer(TerrID, TerrID, Integer)
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IBoard.Conquer(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.Int32)
+    name: Conquer
+    href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Conquer_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_System_Int32_
+  - name: (
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: ','
+  - name: " "
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IBoard.Conquer(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.Int32)
+    name: Conquer
+    href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Conquer_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_System_Int32_
+  - name: (
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: ','
+  - name: " "
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Model.Entities.EarthBoard.CheckContinentFlip*
+  commentId: Overload:Model.Entities.EarthBoard.CheckContinentFlip
+  href: Model.Entities.EarthBoard.html#Model_Entities_EarthBoard_CheckContinentFlip_Shared_Geography_Enums_TerrID_System_Int32_
+  name: CheckContinentFlip
+  nameWithType: EarthBoard.CheckContinentFlip
+  fullName: Model.Entities.EarthBoard.CheckContinentFlip
+- uid: Shared.Interfaces.Model.IBoard.CheckContinentFlip(Shared.Geography.Enums.TerrID,System.Int32)
+  commentId: M:Shared.Interfaces.Model.IBoard.CheckContinentFlip(Shared.Geography.Enums.TerrID,System.Int32)
+  parent: Shared.Interfaces.Model.IBoard
+  isExternal: true
+  href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_CheckContinentFlip_Shared_Geography_Enums_TerrID_System_Int32_
+  name: CheckContinentFlip(TerrID, int)
+  nameWithType: IBoard.CheckContinentFlip(TerrID, int)
+  fullName: Shared.Interfaces.Model.IBoard.CheckContinentFlip(Shared.Geography.Enums.TerrID, int)
+  nameWithType.vb: IBoard.CheckContinentFlip(TerrID, Integer)
+  fullName.vb: Shared.Interfaces.Model.IBoard.CheckContinentFlip(Shared.Geography.Enums.TerrID, Integer)
+  name.vb: CheckContinentFlip(TerrID, Integer)
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IBoard.CheckContinentFlip(Shared.Geography.Enums.TerrID,System.Int32)
+    name: CheckContinentFlip
+    href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_CheckContinentFlip_Shared_Geography_Enums_TerrID_System_Int32_
+  - name: (
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IBoard.CheckContinentFlip(Shared.Geography.Enums.TerrID,System.Int32)
+    name: CheckContinentFlip
+    href: Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_CheckContinentFlip_Shared_Geography_Enums_TerrID_System_Int32_
+  - name: (
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Model.Entities.EarthBoard.GetBinarySerials*
+  commentId: Overload:Model.Entities.EarthBoard.GetBinarySerials
+  href: Model.Entities.EarthBoard.html#Model_Entities_EarthBoard_GetBinarySerials
+  name: GetBinarySerials
+  nameWithType: EarthBoard.GetBinarySerials
+  fullName: Model.Entities.EarthBoard.GetBinarySerials
+- uid: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+  commentId: M:Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+  parent: Shared.Interfaces.Model.IBinarySerializable
+  href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials
+  name: GetBinarySerials()
+  nameWithType: IBinarySerializable.GetBinarySerials()
+  fullName: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials()
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+    name: GetBinarySerials
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+    name: GetBinarySerials
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials
+  - name: (
+  - name: )
+- uid: System.Threading.Tasks.Task{Shared.Services.Serializer.SerializedData[]}
+  commentId: T:System.Threading.Tasks.Task{Shared.Services.Serializer.SerializedData[]}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<SerializedData[]>
+  nameWithType: Task<SerializedData[]>
+  fullName: System.Threading.Tasks.Task<Shared.Services.Serializer.SerializedData[]>
+  nameWithType.vb: Task(Of SerializedData())
+  fullName.vb: System.Threading.Tasks.Task(Of Shared.Services.Serializer.SerializedData())
+  name.vb: Task(Of SerializedData())
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: Shared.Services.Serializer.SerializedData
+    name: SerializedData
+    href: Shared.Services.Serializer.SerializedData.html
+  - name: '['
+  - name: ']'
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Services.Serializer.SerializedData
+    name: SerializedData
+    href: Shared.Services.Serializer.SerializedData.html
+  - name: (
+  - name: )
+  - name: )
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: System.IO.BinaryReader.BaseStream
+  commentId: P:System.IO.BinaryReader.BaseStream
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader.basestream
+  name: BaseStream
+  nameWithType: BinaryReader.BaseStream
+  fullName: System.IO.BinaryReader.BaseStream
+- uid: Shared.Services.Serializer.BinarySerializer
+  commentId: T:Shared.Services.Serializer.BinarySerializer
+  href: Shared.Services.Serializer.BinarySerializer.html
+  name: BinarySerializer
+  nameWithType: BinarySerializer
+  fullName: Shared.Services.Serializer.BinarySerializer
+- uid: Model.Entities.EarthBoard.LoadFromBinary*
+  commentId: Overload:Model.Entities.EarthBoard.LoadFromBinary
+  href: Model.Entities.EarthBoard.html#Model_Entities_EarthBoard_LoadFromBinary_System_IO_BinaryReader_
+  name: LoadFromBinary
+  nameWithType: EarthBoard.LoadFromBinary
+  fullName: Model.Entities.EarthBoard.LoadFromBinary
+- uid: Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+  commentId: M:Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+  parent: Shared.Interfaces.Model.IBinarySerializable
+  isExternal: true
+  href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_LoadFromBinary_System_IO_BinaryReader_
+  name: LoadFromBinary(BinaryReader)
+  nameWithType: IBinarySerializable.LoadFromBinary(BinaryReader)
+  fullName: Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+    name: LoadFromBinary
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_LoadFromBinary_System_IO_BinaryReader_
+  - name: (
+  - uid: System.IO.BinaryReader
+    name: BinaryReader
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+    name: LoadFromBinary
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_LoadFromBinary_System_IO_BinaryReader_
+  - name: (
+  - uid: System.IO.BinaryReader
+    name: BinaryReader
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  - name: )
+- uid: System.IO.BinaryReader
+  commentId: T:System.IO.BinaryReader
+  parent: System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  name: BinaryReader
+  nameWithType: BinaryReader
+  fullName: System.IO.BinaryReader
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.IO
+  commentId: N:System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.IO
+  nameWithType: System.IO
+  fullName: System.IO
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io

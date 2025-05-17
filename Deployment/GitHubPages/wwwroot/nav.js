@@ -59,7 +59,7 @@ function setupDownloadTooltips() {
 // Function to balance heights for code snippets and text
 function balanceHeights() {
     // Find all image-with-text containers in the dynamic content area
-    const containers = document.querySelectorAll('#content-area .image-with-text');
+    const containers = document.querySelectorAll('#content-area .code-with-text');
 
     containers.forEach(container => {
         // Find the code snippet and text elements

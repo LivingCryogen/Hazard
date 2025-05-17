@@ -5,9 +5,6 @@ using System.Collections.ObjectModel;
 
 namespace Model.Assets;
 
-/// <remarks>
-/// This implementation is hard-coded and could readily be replaced by '.json' file(s) with converters, a la <see cref="ITroopCard"/>.
-/// </remarks>
 /// <inheritdoc cref="IRuleValues"/>.
 public class RuleValues(IConfiguration config) : IRuleValues
 {

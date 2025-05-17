@@ -1,0 +1,968 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Interfaces.Model.IRegulator
+  commentId: T:Shared.Interfaces.Model.IRegulator
+  id: IRegulator
+  parent: Shared.Interfaces.Model
+  children:
+  - Shared.Interfaces.Model.IRegulator.AwardTradeInBonus(Shared.Geography.Enums.TerrID)
+  - Shared.Interfaces.Model.IRegulator.Battle(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.ValueTuple{System.Int32,System.Int32}[])
+  - Shared.Interfaces.Model.IRegulator.CanTradeInCards(System.Int32,System.Int32[])
+  - Shared.Interfaces.Model.IRegulator.ClaimOrReinforce(Shared.Geography.Enums.TerrID)
+  - Shared.Interfaces.Model.IRegulator.CurrentActionsLimit
+  - Shared.Interfaces.Model.IRegulator.DeliverCardReward
+  - Shared.Interfaces.Model.IRegulator.Initialize
+  - Shared.Interfaces.Model.IRegulator.MoveArmies(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.Int32)
+  - Shared.Interfaces.Model.IRegulator.PhaseActions
+  - Shared.Interfaces.Model.IRegulator.PromptBonusChoice
+  - Shared.Interfaces.Model.IRegulator.PromptTradeIn
+  - Shared.Interfaces.Model.IRegulator.Reward
+  - Shared.Interfaces.Model.IRegulator.TradeInCards(System.Int32,System.Int32[])
+  langs:
+  - csharp
+  - vb
+  name: IRegulator
+  nameWithType: IRegulator
+  fullName: Shared.Interfaces.Model.IRegulator
+  type: Interface
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRegulator.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: IRegulator
+    path: ../Shared/Interfaces/Model/IRegulator.cs
+    startLine: 10
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Facade for the Model's user interactions.
+  remarks: >-
+    Enforces the game rules -- "regulates" player actions; that is, after the ViewModel interprets player actions based on game state, this enforces <br />
+
+    game rule logic in response, updating the state and readying the model for the next input.
+  example: []
+  syntax:
+    content: 'public interface IRegulator : IBinarySerializable'
+    content.vb: Public Interface IRegulator Inherits IBinarySerializable
+  inheritedMembers:
+  - Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+  - Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+- uid: Shared.Interfaces.Model.IRegulator.CurrentActionsLimit
+  commentId: P:Shared.Interfaces.Model.IRegulator.CurrentActionsLimit
+  id: CurrentActionsLimit
+  parent: Shared.Interfaces.Model.IRegulator
+  langs:
+  - csharp
+  - vb
+  name: CurrentActionsLimit
+  nameWithType: IRegulator.CurrentActionsLimit
+  fullName: Shared.Interfaces.Model.IRegulator.CurrentActionsLimit
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRegulator.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: CurrentActionsLimit
+    path: ../Shared/Interfaces/Model/IRegulator.cs
+    startLine: 15
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Gets or sets the limit on player actions during this <xref href="Shared.Enums.GamePhase" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: int CurrentActionsLimit { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Property CurrentActionsLimit As Integer
+  overload: Shared.Interfaces.Model.IRegulator.CurrentActionsLimit*
+- uid: Shared.Interfaces.Model.IRegulator.PhaseActions
+  commentId: P:Shared.Interfaces.Model.IRegulator.PhaseActions
+  id: PhaseActions
+  parent: Shared.Interfaces.Model.IRegulator
+  langs:
+  - csharp
+  - vb
+  name: PhaseActions
+  nameWithType: IRegulator.PhaseActions
+  fullName: Shared.Interfaces.Model.IRegulator.PhaseActions
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRegulator.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: PhaseActions
+    path: ../Shared/Interfaces/Model/IRegulator.cs
+    startLine: 19
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Gets the number of player actions taken during this <xref href="Shared.Enums.GamePhase" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: int PhaseActions { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: ReadOnly Property PhaseActions As Integer
+  overload: Shared.Interfaces.Model.IRegulator.PhaseActions*
+- uid: Shared.Interfaces.Model.IRegulator.Reward
+  commentId: P:Shared.Interfaces.Model.IRegulator.Reward
+  id: Reward
+  parent: Shared.Interfaces.Model.IRegulator
+  langs:
+  - csharp
+  - vb
+  name: Reward
+  nameWithType: IRegulator.Reward
+  fullName: Shared.Interfaces.Model.IRegulator.Reward
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRegulator.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Reward
+    path: ../Shared/Interfaces/Model/IRegulator.cs
+    startLine: 24
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Gets or sets a card rewarded to a player for a successful attack.
+  example: []
+  syntax:
+    content: ICard? Reward { get; set; }
+    parameters: []
+    return:
+      type: Shared.Interfaces.Model.ICard
+      description: If the current player made a successful attack, an <xref href="Shared.Interfaces.Model.ICard" data-throw-if-not-resolved="false"></xref>. Otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+    content.vb: Property Reward As ICard
+  overload: Shared.Interfaces.Model.IRegulator.Reward*
+- uid: Shared.Interfaces.Model.IRegulator.PromptBonusChoice
+  commentId: E:Shared.Interfaces.Model.IRegulator.PromptBonusChoice
+  id: PromptBonusChoice
+  parent: Shared.Interfaces.Model.IRegulator
+  langs:
+  - csharp
+  - vb
+  name: PromptBonusChoice
+  nameWithType: IRegulator.PromptBonusChoice
+  fullName: Shared.Interfaces.Model.IRegulator.PromptBonusChoice
+  type: Event
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRegulator.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: PromptBonusChoice
+    path: ../Shared/Interfaces/Model/IRegulator.cs
+    startLine: 28
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Fires when a player must choose between two or more territories they control to receive a bonus upon card trade-in.
+  example: []
+  syntax:
+    content: event EventHandler<TerrID[]>? PromptBonusChoice
+    return:
+      type: System.EventHandler{Shared.Geography.Enums.TerrID[]}
+    content.vb: Event PromptBonusChoice As EventHandler(Of TerrID())
+- uid: Shared.Interfaces.Model.IRegulator.PromptTradeIn
+  commentId: E:Shared.Interfaces.Model.IRegulator.PromptTradeIn
+  id: PromptTradeIn
+  parent: Shared.Interfaces.Model.IRegulator
+  langs:
+  - csharp
+  - vb
+  name: PromptTradeIn
+  nameWithType: IRegulator.PromptTradeIn
+  fullName: Shared.Interfaces.Model.IRegulator.PromptTradeIn
+  type: Event
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRegulator.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: PromptTradeIn
+    path: ../Shared/Interfaces/Model/IRegulator.cs
+    startLine: 32
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Fires when a player should be prompted to trade in cards at the start of their turn; may or may not be forced.
+  example: []
+  syntax:
+    content: event EventHandler<IPromptTradeEventArgs>? PromptTradeIn
+    return:
+      type: System.EventHandler{Shared.Interfaces.Model.IPromptTradeEventArgs}
+    content.vb: Event PromptTradeIn As EventHandler(Of IPromptTradeEventArgs)
+- uid: Shared.Interfaces.Model.IRegulator.ClaimOrReinforce(Shared.Geography.Enums.TerrID)
+  commentId: M:Shared.Interfaces.Model.IRegulator.ClaimOrReinforce(Shared.Geography.Enums.TerrID)
+  id: ClaimOrReinforce(Shared.Geography.Enums.TerrID)
+  parent: Shared.Interfaces.Model.IRegulator
+  langs:
+  - csharp
+  - vb
+  name: ClaimOrReinforce(TerrID)
+  nameWithType: IRegulator.ClaimOrReinforce(TerrID)
+  fullName: Shared.Interfaces.Model.IRegulator.ClaimOrReinforce(Shared.Geography.Enums.TerrID)
+  type: Method
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRegulator.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ClaimOrReinforce
+    path: ../Shared/Interfaces/Model/IRegulator.cs
+    startLine: 37
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Updates game state in response to a territory being selected during Setup or Place phases (see <xref href="Shared.Enums.GamePhase" data-throw-if-not-resolved="false"></xref>).
+  example: []
+  syntax:
+    content: void ClaimOrReinforce(TerrID territory)
+    parameters:
+    - id: territory
+      type: Shared.Geography.Enums.TerrID
+      description: The territory selected.
+    content.vb: Sub ClaimOrReinforce(territory As TerrID)
+  overload: Shared.Interfaces.Model.IRegulator.ClaimOrReinforce*
+- uid: Shared.Interfaces.Model.IRegulator.MoveArmies(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.Int32)
+  commentId: M:Shared.Interfaces.Model.IRegulator.MoveArmies(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.Int32)
+  id: MoveArmies(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.Int32)
+  parent: Shared.Interfaces.Model.IRegulator
+  langs:
+  - csharp
+  - vb
+  name: MoveArmies(TerrID, TerrID, int)
+  nameWithType: IRegulator.MoveArmies(TerrID, TerrID, int)
+  fullName: Shared.Interfaces.Model.IRegulator.MoveArmies(Shared.Geography.Enums.TerrID, Shared.Geography.Enums.TerrID, int)
+  type: Method
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRegulator.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: MoveArmies
+    path: ../Shared/Interfaces/Model/IRegulator.cs
+    startLine: 44
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Updates the game state in response to the 'Move' action, in which a player moves a number of armies from one controlled territory to another during <xref href="Shared.Enums.GamePhase.Move" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: void MoveArmies(TerrID source, TerrID target, int armies)
+    parameters:
+    - id: source
+      type: Shared.Geography.Enums.TerrID
+      description: The source of the moving armies.
+    - id: target
+      type: Shared.Geography.Enums.TerrID
+      description: The target of the move.
+    - id: armies
+      type: System.Int32
+      description: The number of armies to move.
+    content.vb: Sub MoveArmies(source As TerrID, target As TerrID, armies As Integer)
+  overload: Shared.Interfaces.Model.IRegulator.MoveArmies*
+  nameWithType.vb: IRegulator.MoveArmies(TerrID, TerrID, Integer)
+  fullName.vb: Shared.Interfaces.Model.IRegulator.MoveArmies(Shared.Geography.Enums.TerrID, Shared.Geography.Enums.TerrID, Integer)
+  name.vb: MoveArmies(TerrID, TerrID, Integer)
+- uid: Shared.Interfaces.Model.IRegulator.CanTradeInCards(System.Int32,System.Int32[])
+  commentId: M:Shared.Interfaces.Model.IRegulator.CanTradeInCards(System.Int32,System.Int32[])
+  id: CanTradeInCards(System.Int32,System.Int32[])
+  parent: Shared.Interfaces.Model.IRegulator
+  langs:
+  - csharp
+  - vb
+  name: CanTradeInCards(int, int[])
+  nameWithType: IRegulator.CanTradeInCards(int, int[])
+  fullName: Shared.Interfaces.Model.IRegulator.CanTradeInCards(int, int[])
+  type: Method
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRegulator.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: CanTradeInCards
+    path: ../Shared/Interfaces/Model/IRegulator.cs
+    startLine: 52
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Determines whether a subset of a player's hand can be traded in.
+  remarks: Typically, relevant factors include the <xref href="Shared.Interfaces.Model.ICard" data-throw-if-not-resolved="false"></xref> values, their <xref href="Shared.Interfaces.Model.ICardSet" data-throw-if-not-resolved="false"></xref> trading functions, and the current <xref href="Shared.Enums.GamePhase" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: bool CanTradeInCards(int player, int[] handIndices)
+    parameters:
+    - id: player
+      type: System.Int32
+      description: The number of the player whose hand contains the cards to be traded.
+    - id: handIndices
+      type: System.Int32[]
+      description: The indices of the <xref href="Shared.Interfaces.Model.ICard" data-throw-if-not-resolved="false"></xref>s within <xref href="Shared.Interfaces.Model.IPlayer.Hand" data-throw-if-not-resolved="false"></xref> that are to be traded.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if circumstances allow the trade; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>. <br />
+    content.vb: Function CanTradeInCards(player As Integer, handIndices As Integer()) As Boolean
+  overload: Shared.Interfaces.Model.IRegulator.CanTradeInCards*
+  nameWithType.vb: IRegulator.CanTradeInCards(Integer, Integer())
+  fullName.vb: Shared.Interfaces.Model.IRegulator.CanTradeInCards(Integer, Integer())
+  name.vb: CanTradeInCards(Integer, Integer())
+- uid: Shared.Interfaces.Model.IRegulator.TradeInCards(System.Int32,System.Int32[])
+  commentId: M:Shared.Interfaces.Model.IRegulator.TradeInCards(System.Int32,System.Int32[])
+  id: TradeInCards(System.Int32,System.Int32[])
+  parent: Shared.Interfaces.Model.IRegulator
+  langs:
+  - csharp
+  - vb
+  name: TradeInCards(int, int[])
+  nameWithType: IRegulator.TradeInCards(int, int[])
+  fullName: Shared.Interfaces.Model.IRegulator.TradeInCards(int, int[])
+  type: Method
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRegulator.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: TradeInCards
+    path: ../Shared/Interfaces/Model/IRegulator.cs
+    startLine: 58
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Executes game-rule logic for trading in cards from a player.
+  example: []
+  syntax:
+    content: void TradeInCards(int player, int[] handIndices)
+    parameters:
+    - id: player
+      type: System.Int32
+      description: The <xref href="System.Int32?text=number" data-throw-if-not-resolved="false"></xref> of the player trading their cards.
+    - id: handIndices
+      type: System.Int32[]
+      description: An array representing the indices of <xref href="Shared.Interfaces.Model.IPlayer.Hand" data-throw-if-not-resolved="false"></xref> which were traded.
+    content.vb: Sub TradeInCards(player As Integer, handIndices As Integer())
+  overload: Shared.Interfaces.Model.IRegulator.TradeInCards*
+  nameWithType.vb: IRegulator.TradeInCards(Integer, Integer())
+  fullName.vb: Shared.Interfaces.Model.IRegulator.TradeInCards(Integer, Integer())
+  name.vb: TradeInCards(Integer, Integer())
+- uid: Shared.Interfaces.Model.IRegulator.Battle(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.ValueTuple{System.Int32,System.Int32}[])
+  commentId: M:Shared.Interfaces.Model.IRegulator.Battle(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.ValueTuple{System.Int32,System.Int32}[])
+  id: Battle(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.ValueTuple{System.Int32,System.Int32}[])
+  parent: Shared.Interfaces.Model.IRegulator
+  langs:
+  - csharp
+  - vb
+  name: Battle(TerrID, TerrID, (int AttackRoll, int DefenseRoll)[])
+  nameWithType: IRegulator.Battle(TerrID, TerrID, (int AttackRoll, int DefenseRoll)[])
+  fullName: Shared.Interfaces.Model.IRegulator.Battle(Shared.Geography.Enums.TerrID, Shared.Geography.Enums.TerrID, (int AttackRoll, int DefenseRoll)[])
+  type: Method
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRegulator.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Battle
+    path: ../Shared/Interfaces/Model/IRegulator.cs
+    startLine: 68
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Executes game-rule logic when given the results of a battle between the armies of two territories.
+  remarks: By default, rolls for attacker and defender should be put in descending order, then paired (unpaired remainders are ignored).
+  example: []
+  syntax:
+    content: void Battle(TerrID source, TerrID target, (int AttackRoll, int DefenseRoll)[] diceRolls)
+    parameters:
+    - id: source
+      type: Shared.Geography.Enums.TerrID
+      description: The source of the attack (attacker).
+    - id: target
+      type: Shared.Geography.Enums.TerrID
+      description: The target of the attack (defender).
+    - id: diceRolls
+      type: System.ValueTuple{System.Int32,System.Int32}[]
+      description: Dice rolls paired together according to game rules.
+    content.vb: Sub Battle(source As TerrID, target As TerrID, diceRolls As (AttackRoll As Integer, DefenseRoll As Integer)())
+  overload: Shared.Interfaces.Model.IRegulator.Battle*
+  nameWithType.vb: IRegulator.Battle(TerrID, TerrID, (AttackRoll As Integer, DefenseRoll As Integer)())
+  fullName.vb: Shared.Interfaces.Model.IRegulator.Battle(Shared.Geography.Enums.TerrID, Shared.Geography.Enums.TerrID, (AttackRoll As Integer, DefenseRoll As Integer)())
+  name.vb: Battle(TerrID, TerrID, (AttackRoll As Integer, DefenseRoll As Integer)())
+- uid: Shared.Interfaces.Model.IRegulator.AwardTradeInBonus(Shared.Geography.Enums.TerrID)
+  commentId: M:Shared.Interfaces.Model.IRegulator.AwardTradeInBonus(Shared.Geography.Enums.TerrID)
+  id: AwardTradeInBonus(Shared.Geography.Enums.TerrID)
+  parent: Shared.Interfaces.Model.IRegulator
+  langs:
+  - csharp
+  - vb
+  name: AwardTradeInBonus(TerrID)
+  nameWithType: IRegulator.AwardTradeInBonus(TerrID)
+  fullName: Shared.Interfaces.Model.IRegulator.AwardTradeInBonus(Shared.Geography.Enums.TerrID)
+  type: Method
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRegulator.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: AwardTradeInBonus
+    path: ../Shared/Interfaces/Model/IRegulator.cs
+    startLine: 76
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Executes game-rule logic for awarding bonus armies to a territory due to card trade-in.
+  remarks: Used when a player controls one or more territories of the <xref href="Shared.Interfaces.Model.ICard.Target" data-throw-if-not-resolved="false"></xref>s upon trade-in.
+  example: []
+  syntax:
+    content: void AwardTradeInBonus(TerrID territory)
+    parameters:
+    - id: territory
+      type: Shared.Geography.Enums.TerrID
+      description: The territory awarded the bonus armies.
+    content.vb: Sub AwardTradeInBonus(territory As TerrID)
+  overload: Shared.Interfaces.Model.IRegulator.AwardTradeInBonus*
+- uid: Shared.Interfaces.Model.IRegulator.DeliverCardReward
+  commentId: M:Shared.Interfaces.Model.IRegulator.DeliverCardReward
+  id: DeliverCardReward
+  parent: Shared.Interfaces.Model.IRegulator
+  langs:
+  - csharp
+  - vb
+  name: DeliverCardReward()
+  nameWithType: IRegulator.DeliverCardReward()
+  fullName: Shared.Interfaces.Model.IRegulator.DeliverCardReward()
+  type: Method
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRegulator.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: DeliverCardReward
+    path: ../Shared/Interfaces/Model/IRegulator.cs
+    startLine: 80
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Delivers the <xref href="Shared.Interfaces.Model.ICard" data-throw-if-not-resolved="false"></xref> held in <xref href="Shared.Interfaces.Model.IRegulator.Reward" data-throw-if-not-resolved="false"></xref>, if any, to the appropriate <xref href="Shared.Interfaces.Model.IPlayer" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: void DeliverCardReward()
+    content.vb: Sub DeliverCardReward()
+  overload: Shared.Interfaces.Model.IRegulator.DeliverCardReward*
+- uid: Shared.Interfaces.Model.IRegulator.Initialize
+  commentId: M:Shared.Interfaces.Model.IRegulator.Initialize
+  id: Initialize
+  parent: Shared.Interfaces.Model.IRegulator
+  langs:
+  - csharp
+  - vb
+  name: Initialize()
+  nameWithType: IRegulator.Initialize()
+  fullName: Shared.Interfaces.Model.IRegulator.Initialize()
+  type: Method
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRegulator.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Initialize
+    path: ../Shared/Interfaces/Model/IRegulator.cs
+    startLine: 87
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Initializes this <xref href="Shared.Interfaces.Model.IRegulator" data-throw-if-not-resolved="false"></xref>.
+  remarks: This post-construction initialization step is needed to accomodate loading from save files.
+  example: []
+  syntax:
+    content: void Initialize()
+    content.vb: Sub Initialize()
+  overload: Shared.Interfaces.Model.IRegulator.Initialize*
+references:
+- uid: Shared.Interfaces.Model
+  commentId: N:Shared.Interfaces.Model
+  href: Shared.html
+  name: Shared.Interfaces.Model
+  nameWithType: Shared.Interfaces.Model
+  fullName: Shared.Interfaces.Model
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+- uid: Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+  commentId: M:Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+  parent: Shared.Interfaces.Model.IBinarySerializable
+  isExternal: true
+  href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_LoadFromBinary_System_IO_BinaryReader_
+  name: LoadFromBinary(BinaryReader)
+  nameWithType: IBinarySerializable.LoadFromBinary(BinaryReader)
+  fullName: Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+    name: LoadFromBinary
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_LoadFromBinary_System_IO_BinaryReader_
+  - name: (
+  - uid: System.IO.BinaryReader
+    name: BinaryReader
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+    name: LoadFromBinary
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_LoadFromBinary_System_IO_BinaryReader_
+  - name: (
+  - uid: System.IO.BinaryReader
+    name: BinaryReader
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  - name: )
+- uid: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+  commentId: M:Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+  parent: Shared.Interfaces.Model.IBinarySerializable
+  href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials
+  name: GetBinarySerials()
+  nameWithType: IBinarySerializable.GetBinarySerials()
+  fullName: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials()
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+    name: GetBinarySerials
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+    name: GetBinarySerials
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials
+  - name: (
+  - name: )
+- uid: Shared.Interfaces.Model.IBinarySerializable
+  commentId: T:Shared.Interfaces.Model.IBinarySerializable
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IBinarySerializable.html
+  name: IBinarySerializable
+  nameWithType: IBinarySerializable
+  fullName: Shared.Interfaces.Model.IBinarySerializable
+- uid: Shared.Enums.GamePhase
+  commentId: T:Shared.Enums.GamePhase
+  parent: Shared.Enums
+  href: Shared.Enums.GamePhase.html
+  name: GamePhase
+  nameWithType: GamePhase
+  fullName: Shared.Enums.GamePhase
+- uid: Shared.Interfaces.Model.IRegulator.CurrentActionsLimit*
+  commentId: Overload:Shared.Interfaces.Model.IRegulator.CurrentActionsLimit
+  href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_CurrentActionsLimit
+  name: CurrentActionsLimit
+  nameWithType: IRegulator.CurrentActionsLimit
+  fullName: Shared.Interfaces.Model.IRegulator.CurrentActionsLimit
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Shared.Enums
+  commentId: N:Shared.Enums
+  href: Shared.html
+  name: Shared.Enums
+  nameWithType: Shared.Enums
+  fullName: Shared.Enums
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Enums
+    name: Enums
+    href: Shared.Enums.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Enums
+    name: Enums
+    href: Shared.Enums.html
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Shared.Interfaces.Model.IRegulator.PhaseActions*
+  commentId: Overload:Shared.Interfaces.Model.IRegulator.PhaseActions
+  href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_PhaseActions
+  name: PhaseActions
+  nameWithType: IRegulator.PhaseActions
+  fullName: Shared.Interfaces.Model.IRegulator.PhaseActions
+- uid: Shared.Interfaces.Model.ICard
+  commentId: T:Shared.Interfaces.Model.ICard
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.ICard.html
+  name: ICard
+  nameWithType: ICard
+  fullName: Shared.Interfaces.Model.ICard
+- uid: Shared.Interfaces.Model.IRegulator.Reward*
+  commentId: Overload:Shared.Interfaces.Model.IRegulator.Reward
+  href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_Reward
+  name: Reward
+  nameWithType: IRegulator.Reward
+  fullName: Shared.Interfaces.Model.IRegulator.Reward
+- uid: System.EventHandler{Shared.Geography.Enums.TerrID[]}
+  commentId: T:System.EventHandler{Shared.Geography.Enums.TerrID[]}
+  parent: System
+  definition: System.EventHandler`1
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  name: EventHandler<TerrID[]>
+  nameWithType: EventHandler<TerrID[]>
+  fullName: System.EventHandler<Shared.Geography.Enums.TerrID[]>
+  nameWithType.vb: EventHandler(Of TerrID())
+  fullName.vb: System.EventHandler(Of Shared.Geography.Enums.TerrID())
+  name.vb: EventHandler(Of TerrID())
+  spec.csharp:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: <
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: '['
+  - name: ']'
+  - name: '>'
+  spec.vb:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: (
+  - name: )
+  - name: )
+- uid: System.EventHandler`1
+  commentId: T:System.EventHandler`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  name: EventHandler<TEventArgs>
+  nameWithType: EventHandler<TEventArgs>
+  fullName: System.EventHandler<TEventArgs>
+  nameWithType.vb: EventHandler(Of TEventArgs)
+  fullName.vb: System.EventHandler(Of TEventArgs)
+  name.vb: EventHandler(Of TEventArgs)
+  spec.csharp:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: <
+  - name: TEventArgs
+  - name: '>'
+  spec.vb:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TEventArgs
+  - name: )
+- uid: System.EventHandler{Shared.Interfaces.Model.IPromptTradeEventArgs}
+  commentId: T:System.EventHandler{Shared.Interfaces.Model.IPromptTradeEventArgs}
+  parent: System
+  definition: System.EventHandler`1
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  name: EventHandler<IPromptTradeEventArgs>
+  nameWithType: EventHandler<IPromptTradeEventArgs>
+  fullName: System.EventHandler<Shared.Interfaces.Model.IPromptTradeEventArgs>
+  nameWithType.vb: EventHandler(Of IPromptTradeEventArgs)
+  fullName.vb: System.EventHandler(Of Shared.Interfaces.Model.IPromptTradeEventArgs)
+  name.vb: EventHandler(Of IPromptTradeEventArgs)
+  spec.csharp:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: <
+  - uid: Shared.Interfaces.Model.IPromptTradeEventArgs
+    name: IPromptTradeEventArgs
+    href: Shared.Interfaces.Model.IPromptTradeEventArgs.html
+  - name: '>'
+  spec.vb:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Interfaces.Model.IPromptTradeEventArgs
+    name: IPromptTradeEventArgs
+    href: Shared.Interfaces.Model.IPromptTradeEventArgs.html
+  - name: )
+- uid: Shared.Interfaces.Model.IRegulator.ClaimOrReinforce*
+  commentId: Overload:Shared.Interfaces.Model.IRegulator.ClaimOrReinforce
+  href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_ClaimOrReinforce_Shared_Geography_Enums_TerrID_
+  name: ClaimOrReinforce
+  nameWithType: IRegulator.ClaimOrReinforce
+  fullName: Shared.Interfaces.Model.IRegulator.ClaimOrReinforce
+- uid: Shared.Geography.Enums.TerrID
+  commentId: T:Shared.Geography.Enums.TerrID
+  parent: Shared.Geography.Enums
+  href: Shared.Geography.Enums.TerrID.html
+  name: TerrID
+  nameWithType: TerrID
+  fullName: Shared.Geography.Enums.TerrID
+- uid: Shared.Geography.Enums
+  commentId: N:Shared.Geography.Enums
+  href: Shared.html
+  name: Shared.Geography.Enums
+  nameWithType: Shared.Geography.Enums
+  fullName: Shared.Geography.Enums
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+- uid: Shared.Enums.GamePhase.Move
+  commentId: F:Shared.Enums.GamePhase.Move
+  href: Shared.Enums.GamePhase.html#Shared_Enums_GamePhase_Move
+  name: Move
+  nameWithType: GamePhase.Move
+  fullName: Shared.Enums.GamePhase.Move
+- uid: Shared.Interfaces.Model.IRegulator.MoveArmies*
+  commentId: Overload:Shared.Interfaces.Model.IRegulator.MoveArmies
+  href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_MoveArmies_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_System_Int32_
+  name: MoveArmies
+  nameWithType: IRegulator.MoveArmies
+  fullName: Shared.Interfaces.Model.IRegulator.MoveArmies
+- uid: Shared.Interfaces.Model.IPlayer.Hand
+  commentId: P:Shared.Interfaces.Model.IPlayer.Hand
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Hand
+  name: Hand
+  nameWithType: IPlayer.Hand
+  fullName: Shared.Interfaces.Model.IPlayer.Hand
+- uid: Shared.Interfaces.Model.ICardSet
+  commentId: T:Shared.Interfaces.Model.ICardSet
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.ICardSet.html
+  name: ICardSet
+  nameWithType: ICardSet
+  fullName: Shared.Interfaces.Model.ICardSet
+- uid: Shared.Interfaces.Model.IRegulator.CanTradeInCards*
+  commentId: Overload:Shared.Interfaces.Model.IRegulator.CanTradeInCards
+  href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_CanTradeInCards_System_Int32_System_Int32___
+  name: CanTradeInCards
+  nameWithType: IRegulator.CanTradeInCards
+  fullName: Shared.Interfaces.Model.IRegulator.CanTradeInCards
+- uid: System.Int32[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int[]
+  nameWithType: int[]
+  fullName: int[]
+  nameWithType.vb: Integer()
+  fullName.vb: Integer()
+  name.vb: Integer()
+  spec.csharp:
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: (
+  - name: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Shared.Interfaces.Model.IPlayer
+  commentId: T:Shared.Interfaces.Model.IPlayer
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IPlayer.html
+  name: IPlayer
+  nameWithType: IPlayer
+  fullName: Shared.Interfaces.Model.IPlayer
+- uid: Shared.Interfaces.Model.IRegulator.TradeInCards*
+  commentId: Overload:Shared.Interfaces.Model.IRegulator.TradeInCards
+  href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_TradeInCards_System_Int32_System_Int32___
+  name: TradeInCards
+  nameWithType: IRegulator.TradeInCards
+  fullName: Shared.Interfaces.Model.IRegulator.TradeInCards
+- uid: Shared.Interfaces.Model.IRegulator.Battle*
+  commentId: Overload:Shared.Interfaces.Model.IRegulator.Battle
+  href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_Battle_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_System_ValueTuple_System_Int32_System_Int32____
+  name: Battle
+  nameWithType: IRegulator.Battle
+  fullName: Shared.Interfaces.Model.IRegulator.Battle
+- uid: System.ValueTuple{System.Int32,System.Int32}[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: (int AttackRoll, int DefenseRoll)[]
+  nameWithType: (int AttackRoll, int DefenseRoll)[]
+  fullName: (int AttackRoll, int DefenseRoll)[]
+  nameWithType.vb: (AttackRoll As Integer, DefenseRoll As Integer)()
+  fullName.vb: (AttackRoll As Integer, DefenseRoll As Integer)()
+  name.vb: (AttackRoll As Integer, DefenseRoll As Integer)()
+  spec.csharp:
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: " "
+  - uid: System.ValueTuple{System.Int32,System.Int32}.AttackRoll
+    name: AttackRoll
+    href: https://learn.microsoft.com/dotnet/api/system.valuetuple-system.int32,system.int32-.attackroll
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: " "
+  - uid: System.ValueTuple{System.Int32,System.Int32}.DefenseRoll
+    name: DefenseRoll
+    href: https://learn.microsoft.com/dotnet/api/system.valuetuple-system.int32,system.int32-.defenseroll
+  - name: )
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - name: (
+  - uid: System.ValueTuple{System.Int32,System.Int32}.AttackRoll
+    name: AttackRoll
+    href: https://learn.microsoft.com/dotnet/api/system.valuetuple-system.int32,system.int32-.attackroll
+  - name: " "
+  - name: As
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.ValueTuple{System.Int32,System.Int32}.DefenseRoll
+    name: DefenseRoll
+    href: https://learn.microsoft.com/dotnet/api/system.valuetuple-system.int32,system.int32-.defenseroll
+  - name: " "
+  - name: As
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  - name: (
+  - name: )
+- uid: Shared.Interfaces.Model.ICard.Target
+  commentId: P:Shared.Interfaces.Model.ICard.Target
+  parent: Shared.Interfaces.Model.ICard
+  href: Shared.Interfaces.Model.ICard.html#Shared_Interfaces_Model_ICard_Target
+  name: Target
+  nameWithType: ICard.Target
+  fullName: Shared.Interfaces.Model.ICard.Target
+- uid: Shared.Interfaces.Model.IRegulator.AwardTradeInBonus*
+  commentId: Overload:Shared.Interfaces.Model.IRegulator.AwardTradeInBonus
+  href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_AwardTradeInBonus_Shared_Geography_Enums_TerrID_
+  name: AwardTradeInBonus
+  nameWithType: IRegulator.AwardTradeInBonus
+  fullName: Shared.Interfaces.Model.IRegulator.AwardTradeInBonus
+- uid: Shared.Interfaces.Model.IRegulator.Reward
+  commentId: P:Shared.Interfaces.Model.IRegulator.Reward
+  parent: Shared.Interfaces.Model.IRegulator
+  href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_Reward
+  name: Reward
+  nameWithType: IRegulator.Reward
+  fullName: Shared.Interfaces.Model.IRegulator.Reward
+- uid: Shared.Interfaces.Model.IRegulator.DeliverCardReward*
+  commentId: Overload:Shared.Interfaces.Model.IRegulator.DeliverCardReward
+  href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_DeliverCardReward
+  name: DeliverCardReward
+  nameWithType: IRegulator.DeliverCardReward
+  fullName: Shared.Interfaces.Model.IRegulator.DeliverCardReward
+- uid: Shared.Interfaces.Model.IRegulator
+  commentId: T:Shared.Interfaces.Model.IRegulator
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IRegulator.html
+  name: IRegulator
+  nameWithType: IRegulator
+  fullName: Shared.Interfaces.Model.IRegulator
+- uid: Shared.Interfaces.Model.IRegulator.Initialize*
+  commentId: Overload:Shared.Interfaces.Model.IRegulator.Initialize
+  href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_Initialize
+  name: Initialize
+  nameWithType: IRegulator.Initialize
+  fullName: Shared.Interfaces.Model.IRegulator.Initialize

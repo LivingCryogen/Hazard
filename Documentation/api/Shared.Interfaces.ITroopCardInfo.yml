@@ -1,0 +1,309 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Interfaces.ITroopCardInfo
+  commentId: T:Shared.Interfaces.ITroopCardInfo
+  id: ITroopCardInfo
+  parent: Shared.Interfaces
+  children:
+  - Shared.Interfaces.ITroopCardInfo.DisplayName
+  - Shared.Interfaces.ITroopCardInfo.InsigniaName
+  - Shared.Interfaces.ITroopCardInfo.InsigniaValue
+  langs:
+  - csharp
+  - vb
+  name: ITroopCardInfo
+  nameWithType: ITroopCardInfo
+  fullName: Shared.Interfaces.ITroopCardInfo
+  type: Interface
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ITroopCardInfo.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ITroopCardInfo
+    path: ../Shared/Interfaces/ViewModel/ITroopCardInfo.cs
+    startLine: 6
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces
+  summary: Defines public data for ViewModel structs representing <xref href="Shared.Interfaces.Model.ITroopCard" data-throw-if-not-resolved="false"></xref>s.
+  example: []
+  syntax:
+    content: 'public interface ITroopCardInfo : ICardInfo'
+    content.vb: Public Interface ITroopCardInfo Inherits ICardInfo
+  inheritedMembers:
+  - Shared.Interfaces.ViewModel.ICardInfo.Owner
+  - Shared.Interfaces.ViewModel.ICardInfo.OwnerHandIndex
+  - Shared.Interfaces.ViewModel.ICardInfo.TargetTerritory
+  - Shared.Interfaces.ViewModel.ICardInfo.TargetContinent
+- uid: Shared.Interfaces.ITroopCardInfo.DisplayName
+  commentId: P:Shared.Interfaces.ITroopCardInfo.DisplayName
+  id: DisplayName
+  parent: Shared.Interfaces.ITroopCardInfo
+  langs:
+  - csharp
+  - vb
+  name: DisplayName
+  nameWithType: ITroopCardInfo.DisplayName
+  fullName: Shared.Interfaces.ITroopCardInfo.DisplayName
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ITroopCardInfo.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: DisplayName
+    path: ../Shared/Interfaces/ViewModel/ITroopCardInfo.cs
+    startLine: 11
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces
+  summary: Gets or inits the name to display in the UI for the corresponding <xref href="Shared.Interfaces.Model.ITroopCard" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: string DisplayName { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Property DisplayName As String
+  overload: Shared.Interfaces.ITroopCardInfo.DisplayName*
+- uid: Shared.Interfaces.ITroopCardInfo.InsigniaName
+  commentId: P:Shared.Interfaces.ITroopCardInfo.InsigniaName
+  id: InsigniaName
+  parent: Shared.Interfaces.ITroopCardInfo
+  langs:
+  - csharp
+  - vb
+  name: InsigniaName
+  nameWithType: ITroopCardInfo.InsigniaName
+  fullName: Shared.Interfaces.ITroopCardInfo.InsigniaName
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ITroopCardInfo.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: InsigniaName
+    path: ../Shared/Interfaces/ViewModel/ITroopCardInfo.cs
+    startLine: 15
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces
+  summary: Gets or sets the name of the corresponding <xref href="Shared.Interfaces.Model.ITroopCard.Insigne" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: string InsigniaName { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Property InsigniaName As String
+  overload: Shared.Interfaces.ITroopCardInfo.InsigniaName*
+- uid: Shared.Interfaces.ITroopCardInfo.InsigniaValue
+  commentId: P:Shared.Interfaces.ITroopCardInfo.InsigniaValue
+  id: InsigniaValue
+  parent: Shared.Interfaces.ITroopCardInfo
+  langs:
+  - csharp
+  - vb
+  name: InsigniaValue
+  nameWithType: ITroopCardInfo.InsigniaValue
+  fullName: Shared.Interfaces.ITroopCardInfo.InsigniaValue
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ITroopCardInfo.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: InsigniaValue
+    path: ../Shared/Interfaces/ViewModel/ITroopCardInfo.cs
+    startLine: 19
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces
+  summary: Gets or sets the integer value of the corresponding <xref href="Shared.Interfaces.Model.ITroopCard.Insigne" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: int InsigniaValue { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Property InsigniaValue As Integer
+  overload: Shared.Interfaces.ITroopCardInfo.InsigniaValue*
+references:
+- uid: Shared.Interfaces.Model.ITroopCard
+  commentId: T:Shared.Interfaces.Model.ITroopCard
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.ITroopCard.html
+  name: ITroopCard
+  nameWithType: ITroopCard
+  fullName: Shared.Interfaces.Model.ITroopCard
+- uid: Shared.Interfaces
+  commentId: N:Shared.Interfaces
+  href: Shared.html
+  name: Shared.Interfaces
+  nameWithType: Shared.Interfaces
+  fullName: Shared.Interfaces
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+- uid: Shared.Interfaces.ViewModel.ICardInfo.Owner
+  commentId: P:Shared.Interfaces.ViewModel.ICardInfo.Owner
+  parent: Shared.Interfaces.ViewModel.ICardInfo
+  href: Shared.Interfaces.ViewModel.ICardInfo.html#Shared_Interfaces_ViewModel_ICardInfo_Owner
+  name: Owner
+  nameWithType: ICardInfo.Owner
+  fullName: Shared.Interfaces.ViewModel.ICardInfo.Owner
+- uid: Shared.Interfaces.ViewModel.ICardInfo.OwnerHandIndex
+  commentId: P:Shared.Interfaces.ViewModel.ICardInfo.OwnerHandIndex
+  parent: Shared.Interfaces.ViewModel.ICardInfo
+  href: Shared.Interfaces.ViewModel.ICardInfo.html#Shared_Interfaces_ViewModel_ICardInfo_OwnerHandIndex
+  name: OwnerHandIndex
+  nameWithType: ICardInfo.OwnerHandIndex
+  fullName: Shared.Interfaces.ViewModel.ICardInfo.OwnerHandIndex
+- uid: Shared.Interfaces.ViewModel.ICardInfo.TargetTerritory
+  commentId: P:Shared.Interfaces.ViewModel.ICardInfo.TargetTerritory
+  parent: Shared.Interfaces.ViewModel.ICardInfo
+  href: Shared.Interfaces.ViewModel.ICardInfo.html#Shared_Interfaces_ViewModel_ICardInfo_TargetTerritory
+  name: TargetTerritory
+  nameWithType: ICardInfo.TargetTerritory
+  fullName: Shared.Interfaces.ViewModel.ICardInfo.TargetTerritory
+- uid: Shared.Interfaces.ViewModel.ICardInfo.TargetContinent
+  commentId: P:Shared.Interfaces.ViewModel.ICardInfo.TargetContinent
+  parent: Shared.Interfaces.ViewModel.ICardInfo
+  href: Shared.Interfaces.ViewModel.ICardInfo.html#Shared_Interfaces_ViewModel_ICardInfo_TargetContinent
+  name: TargetContinent
+  nameWithType: ICardInfo.TargetContinent
+  fullName: Shared.Interfaces.ViewModel.ICardInfo.TargetContinent
+- uid: Shared.Interfaces.Model
+  commentId: N:Shared.Interfaces.Model
+  href: Shared.html
+  name: Shared.Interfaces.Model
+  nameWithType: Shared.Interfaces.Model
+  fullName: Shared.Interfaces.Model
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+- uid: Shared.Interfaces.ViewModel.ICardInfo
+  commentId: T:Shared.Interfaces.ViewModel.ICardInfo
+  parent: Shared.Interfaces.ViewModel
+  href: Shared.Interfaces.ViewModel.ICardInfo.html
+  name: ICardInfo
+  nameWithType: ICardInfo
+  fullName: Shared.Interfaces.ViewModel.ICardInfo
+- uid: Shared.Interfaces.ViewModel
+  commentId: N:Shared.Interfaces.ViewModel
+  href: Shared.html
+  name: Shared.Interfaces.ViewModel
+  nameWithType: Shared.Interfaces.ViewModel
+  fullName: Shared.Interfaces.ViewModel
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.ViewModel
+    name: ViewModel
+    href: Shared.Interfaces.ViewModel.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.ViewModel
+    name: ViewModel
+    href: Shared.Interfaces.ViewModel.html
+- uid: Shared.Interfaces.ITroopCardInfo.DisplayName*
+  commentId: Overload:Shared.Interfaces.ITroopCardInfo.DisplayName
+  href: Shared.Interfaces.ITroopCardInfo.html#Shared_Interfaces_ITroopCardInfo_DisplayName
+  name: DisplayName
+  nameWithType: ITroopCardInfo.DisplayName
+  fullName: Shared.Interfaces.ITroopCardInfo.DisplayName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Shared.Interfaces.Model.ITroopCard.Insigne
+  commentId: P:Shared.Interfaces.Model.ITroopCard.Insigne
+  href: Shared.Interfaces.Model.ITroopCard.html#Shared_Interfaces_Model_ITroopCard_Insigne
+  name: Insigne
+  nameWithType: ITroopCard.Insigne
+  fullName: Shared.Interfaces.Model.ITroopCard.Insigne
+- uid: Shared.Interfaces.ITroopCardInfo.InsigniaName*
+  commentId: Overload:Shared.Interfaces.ITroopCardInfo.InsigniaName
+  href: Shared.Interfaces.ITroopCardInfo.html#Shared_Interfaces_ITroopCardInfo_InsigniaName
+  name: InsigniaName
+  nameWithType: ITroopCardInfo.InsigniaName
+  fullName: Shared.Interfaces.ITroopCardInfo.InsigniaName
+- uid: Shared.Interfaces.ITroopCardInfo.InsigniaValue*
+  commentId: Overload:Shared.Interfaces.ITroopCardInfo.InsigniaValue
+  href: Shared.Interfaces.ITroopCardInfo.html#Shared_Interfaces_ITroopCardInfo_InsigniaValue
+  name: InsigniaValue
+  nameWithType: ITroopCardInfo.InsigniaValue
+  fullName: Shared.Interfaces.ITroopCardInfo.InsigniaValue
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer

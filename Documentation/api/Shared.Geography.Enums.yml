@@ -1,0 +1,62 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Geography.Enums
+  commentId: N:Shared.Geography.Enums
+  id: Shared.Geography.Enums
+  children:
+  - Shared.Geography.Enums.ContID
+  - Shared.Geography.Enums.TerrID
+  langs:
+  - csharp
+  - vb
+  name: Shared.Geography.Enums
+  nameWithType: Shared.Geography.Enums
+  fullName: Shared.Geography.Enums
+  type: Namespace
+  assemblies:
+  - Model
+references:
+- uid: Shared.Geography.Enums.ContID
+  commentId: T:Shared.Geography.Enums.ContID
+  parent: Shared.Geography.Enums
+  href: Shared.Geography.Enums.ContID.html
+  name: ContID
+  nameWithType: ContID
+  fullName: Shared.Geography.Enums.ContID
+- uid: Shared.Geography.Enums.TerrID
+  commentId: T:Shared.Geography.Enums.TerrID
+  parent: Shared.Geography.Enums
+  href: Shared.Geography.Enums.TerrID.html
+  name: TerrID
+  nameWithType: TerrID
+  fullName: Shared.Geography.Enums.TerrID
+- uid: Shared.Geography.Enums
+  commentId: N:Shared.Geography.Enums
+  href: Shared.html
+  name: Shared.Geography.Enums
+  nameWithType: Shared.Geography.Enums
+  fullName: Shared.Geography.Enums
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html

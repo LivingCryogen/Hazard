@@ -1,0 +1,745 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Interfaces.ViewModel.IPlayerData
+  commentId: T:Shared.Interfaces.ViewModel.IPlayerData
+  id: IPlayerData
+  parent: Shared.Interfaces.ViewModel
+  children:
+  - Shared.Interfaces.ViewModel.IPlayerData.ArmyBonus
+  - Shared.Interfaces.ViewModel.IPlayerData.ArmyPool
+  - Shared.Interfaces.ViewModel.IPlayerData.ColorName
+  - Shared.Interfaces.ViewModel.IPlayerData.ContinentNames
+  - Shared.Interfaces.ViewModel.IPlayerData.Continents
+  - Shared.Interfaces.ViewModel.IPlayerData.Hand
+  - Shared.Interfaces.ViewModel.IPlayerData.Name
+  - Shared.Interfaces.ViewModel.IPlayerData.NumArmies
+  - Shared.Interfaces.ViewModel.IPlayerData.NumTerritories
+  - Shared.Interfaces.ViewModel.IPlayerData.Number
+  - Shared.Interfaces.ViewModel.IPlayerData.Realm
+  langs:
+  - csharp
+  - vb
+  name: IPlayerData
+  nameWithType: IPlayerData
+  fullName: Shared.Interfaces.ViewModel.IPlayerData
+  type: Interface
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/IPlayerData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: IPlayerData
+    path: ../Shared/Interfaces/ViewModel/IPlayerData.cs
+    startLine: 7
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Defines public data for ViewModels that present <xref href="Shared.Interfaces.Model.IPlayer" data-throw-if-not-resolved="false"></xref> data.
+  example: []
+  syntax:
+    content: public interface IPlayerData
+    content.vb: Public Interface IPlayerData
+- uid: Shared.Interfaces.ViewModel.IPlayerData.Name
+  commentId: P:Shared.Interfaces.ViewModel.IPlayerData.Name
+  id: Name
+  parent: Shared.Interfaces.ViewModel.IPlayerData
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: IPlayerData.Name
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.Name
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/IPlayerData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Name
+    path: ../Shared/Interfaces/ViewModel/IPlayerData.cs
+    startLine: 12
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or sets the player's name.
+  example: []
+  syntax:
+    content: string Name { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Property Name As String
+  overload: Shared.Interfaces.ViewModel.IPlayerData.Name*
+- uid: Shared.Interfaces.ViewModel.IPlayerData.ColorName
+  commentId: P:Shared.Interfaces.ViewModel.IPlayerData.ColorName
+  id: ColorName
+  parent: Shared.Interfaces.ViewModel.IPlayerData
+  langs:
+  - csharp
+  - vb
+  name: ColorName
+  nameWithType: IPlayerData.ColorName
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.ColorName
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/IPlayerData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ColorName
+    path: ../Shared/Interfaces/ViewModel/IPlayerData.cs
+    startLine: 19
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or sets the name of the player's color.
+  example: []
+  syntax:
+    content: string ColorName { get; set; }
+    parameters: []
+    return:
+      type: System.String
+      description: The color code for the player (from the View).
+    content.vb: Property ColorName As String
+  overload: Shared.Interfaces.ViewModel.IPlayerData.ColorName*
+- uid: Shared.Interfaces.ViewModel.IPlayerData.Number
+  commentId: P:Shared.Interfaces.ViewModel.IPlayerData.Number
+  id: Number
+  parent: Shared.Interfaces.ViewModel.IPlayerData
+  langs:
+  - csharp
+  - vb
+  name: Number
+  nameWithType: IPlayerData.Number
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.Number
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/IPlayerData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Number
+    path: ../Shared/Interfaces/ViewModel/IPlayerData.cs
+    startLine: 23
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or sets the number of the player.
+  example: []
+  syntax:
+    content: int Number { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Property Number As Integer
+  overload: Shared.Interfaces.ViewModel.IPlayerData.Number*
+- uid: Shared.Interfaces.ViewModel.IPlayerData.ArmyBonus
+  commentId: P:Shared.Interfaces.ViewModel.IPlayerData.ArmyBonus
+  id: ArmyBonus
+  parent: Shared.Interfaces.ViewModel.IPlayerData
+  langs:
+  - csharp
+  - vb
+  name: ArmyBonus
+  nameWithType: IPlayerData.ArmyBonus
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.ArmyBonus
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/IPlayerData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ArmyBonus
+    path: ../Shared/Interfaces/ViewModel/IPlayerData.cs
+    startLine: 27
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or sets the number of bonus armies for the player.
+  example: []
+  syntax:
+    content: int ArmyBonus { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Property ArmyBonus As Integer
+  overload: Shared.Interfaces.ViewModel.IPlayerData.ArmyBonus*
+- uid: Shared.Interfaces.ViewModel.IPlayerData.ArmyPool
+  commentId: P:Shared.Interfaces.ViewModel.IPlayerData.ArmyPool
+  id: ArmyPool
+  parent: Shared.Interfaces.ViewModel.IPlayerData
+  langs:
+  - csharp
+  - vb
+  name: ArmyPool
+  nameWithType: IPlayerData.ArmyPool
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.ArmyPool
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/IPlayerData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ArmyPool
+    path: ../Shared/Interfaces/ViewModel/IPlayerData.cs
+    startLine: 31
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or sets the number of armies in the pool for the player.
+  example: []
+  syntax:
+    content: int ArmyPool { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Property ArmyPool As Integer
+  overload: Shared.Interfaces.ViewModel.IPlayerData.ArmyPool*
+- uid: Shared.Interfaces.ViewModel.IPlayerData.NumArmies
+  commentId: P:Shared.Interfaces.ViewModel.IPlayerData.NumArmies
+  id: NumArmies
+  parent: Shared.Interfaces.ViewModel.IPlayerData
+  langs:
+  - csharp
+  - vb
+  name: NumArmies
+  nameWithType: IPlayerData.NumArmies
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.NumArmies
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/IPlayerData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: NumArmies
+    path: ../Shared/Interfaces/ViewModel/IPlayerData.cs
+    startLine: 35
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or sets the number of armies owned by the player.
+  example: []
+  syntax:
+    content: int NumArmies { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Property NumArmies As Integer
+  overload: Shared.Interfaces.ViewModel.IPlayerData.NumArmies*
+- uid: Shared.Interfaces.ViewModel.IPlayerData.NumTerritories
+  commentId: P:Shared.Interfaces.ViewModel.IPlayerData.NumTerritories
+  id: NumTerritories
+  parent: Shared.Interfaces.ViewModel.IPlayerData
+  langs:
+  - csharp
+  - vb
+  name: NumTerritories
+  nameWithType: IPlayerData.NumTerritories
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.NumTerritories
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/IPlayerData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: NumTerritories
+    path: ../Shared/Interfaces/ViewModel/IPlayerData.cs
+    startLine: 39
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or sets the number of territories controlled by the player.
+  example: []
+  syntax:
+    content: int NumTerritories { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Property NumTerritories As Integer
+  overload: Shared.Interfaces.ViewModel.IPlayerData.NumTerritories*
+- uid: Shared.Interfaces.ViewModel.IPlayerData.Realm
+  commentId: P:Shared.Interfaces.ViewModel.IPlayerData.Realm
+  id: Realm
+  parent: Shared.Interfaces.ViewModel.IPlayerData
+  langs:
+  - csharp
+  - vb
+  name: Realm
+  nameWithType: IPlayerData.Realm
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.Realm
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/IPlayerData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Realm
+    path: ../Shared/Interfaces/ViewModel/IPlayerData.cs
+    startLine: 43
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or sets the territories controlled by the player.
+  example: []
+  syntax:
+    content: ObservableCollection<TerrID> Realm { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.ObjectModel.ObservableCollection{Shared.Geography.Enums.TerrID}
+    content.vb: Property Realm As ObservableCollection(Of TerrID)
+  overload: Shared.Interfaces.ViewModel.IPlayerData.Realm*
+- uid: Shared.Interfaces.ViewModel.IPlayerData.Continents
+  commentId: P:Shared.Interfaces.ViewModel.IPlayerData.Continents
+  id: Continents
+  parent: Shared.Interfaces.ViewModel.IPlayerData
+  langs:
+  - csharp
+  - vb
+  name: Continents
+  nameWithType: IPlayerData.Continents
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.Continents
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/IPlayerData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Continents
+    path: ../Shared/Interfaces/ViewModel/IPlayerData.cs
+    startLine: 47
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or sets the continents controlled by the player.
+  example: []
+  syntax:
+    content: ObservableCollection<ContID> Continents { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.ObjectModel.ObservableCollection{Shared.Geography.Enums.ContID}
+    content.vb: Property Continents As ObservableCollection(Of ContID)
+  overload: Shared.Interfaces.ViewModel.IPlayerData.Continents*
+- uid: Shared.Interfaces.ViewModel.IPlayerData.ContinentNames
+  commentId: P:Shared.Interfaces.ViewModel.IPlayerData.ContinentNames
+  id: ContinentNames
+  parent: Shared.Interfaces.ViewModel.IPlayerData
+  langs:
+  - csharp
+  - vb
+  name: ContinentNames
+  nameWithType: IPlayerData.ContinentNames
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.ContinentNames
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/IPlayerData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ContinentNames
+    path: ../Shared/Interfaces/ViewModel/IPlayerData.cs
+    startLine: 51
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or sets the names of the continents controlled by the player.
+  example: []
+  syntax:
+    content: ObservableCollection<string> ContinentNames { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.ObjectModel.ObservableCollection{System.String}
+    content.vb: Property ContinentNames As ObservableCollection(Of String)
+  overload: Shared.Interfaces.ViewModel.IPlayerData.ContinentNames*
+- uid: Shared.Interfaces.ViewModel.IPlayerData.Hand
+  commentId: P:Shared.Interfaces.ViewModel.IPlayerData.Hand
+  id: Hand
+  parent: Shared.Interfaces.ViewModel.IPlayerData
+  langs:
+  - csharp
+  - vb
+  name: Hand
+  nameWithType: IPlayerData.Hand
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.Hand
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/IPlayerData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Hand
+    path: ../Shared/Interfaces/ViewModel/IPlayerData.cs
+    startLine: 55
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or sets the cards held by the player.
+  example: []
+  syntax:
+    content: ObservableCollection<ICardInfo> Hand { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.ObjectModel.ObservableCollection{Shared.Interfaces.ViewModel.ICardInfo}
+    content.vb: Property Hand As ObservableCollection(Of ICardInfo)
+  overload: Shared.Interfaces.ViewModel.IPlayerData.Hand*
+references:
+- uid: Shared.Interfaces.Model.IPlayer
+  commentId: T:Shared.Interfaces.Model.IPlayer
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IPlayer.html
+  name: IPlayer
+  nameWithType: IPlayer
+  fullName: Shared.Interfaces.Model.IPlayer
+- uid: Shared.Interfaces.ViewModel
+  commentId: N:Shared.Interfaces.ViewModel
+  href: Shared.html
+  name: Shared.Interfaces.ViewModel
+  nameWithType: Shared.Interfaces.ViewModel
+  fullName: Shared.Interfaces.ViewModel
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.ViewModel
+    name: ViewModel
+    href: Shared.Interfaces.ViewModel.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.ViewModel
+    name: ViewModel
+    href: Shared.Interfaces.ViewModel.html
+- uid: Shared.Interfaces.Model
+  commentId: N:Shared.Interfaces.Model
+  href: Shared.html
+  name: Shared.Interfaces.Model
+  nameWithType: Shared.Interfaces.Model
+  fullName: Shared.Interfaces.Model
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+- uid: Shared.Interfaces.ViewModel.IPlayerData.Name*
+  commentId: Overload:Shared.Interfaces.ViewModel.IPlayerData.Name
+  href: Shared.Interfaces.ViewModel.IPlayerData.html#Shared_Interfaces_ViewModel_IPlayerData_Name
+  name: Name
+  nameWithType: IPlayerData.Name
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.Name
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Shared.Interfaces.ViewModel.IPlayerData.ColorName*
+  commentId: Overload:Shared.Interfaces.ViewModel.IPlayerData.ColorName
+  href: Shared.Interfaces.ViewModel.IPlayerData.html#Shared_Interfaces_ViewModel_IPlayerData_ColorName
+  name: ColorName
+  nameWithType: IPlayerData.ColorName
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.ColorName
+- uid: Shared.Interfaces.ViewModel.IPlayerData.Number*
+  commentId: Overload:Shared.Interfaces.ViewModel.IPlayerData.Number
+  href: Shared.Interfaces.ViewModel.IPlayerData.html#Shared_Interfaces_ViewModel_IPlayerData_Number
+  name: Number
+  nameWithType: IPlayerData.Number
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.Number
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Shared.Interfaces.ViewModel.IPlayerData.ArmyBonus*
+  commentId: Overload:Shared.Interfaces.ViewModel.IPlayerData.ArmyBonus
+  href: Shared.Interfaces.ViewModel.IPlayerData.html#Shared_Interfaces_ViewModel_IPlayerData_ArmyBonus
+  name: ArmyBonus
+  nameWithType: IPlayerData.ArmyBonus
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.ArmyBonus
+- uid: Shared.Interfaces.ViewModel.IPlayerData.ArmyPool*
+  commentId: Overload:Shared.Interfaces.ViewModel.IPlayerData.ArmyPool
+  href: Shared.Interfaces.ViewModel.IPlayerData.html#Shared_Interfaces_ViewModel_IPlayerData_ArmyPool
+  name: ArmyPool
+  nameWithType: IPlayerData.ArmyPool
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.ArmyPool
+- uid: Shared.Interfaces.ViewModel.IPlayerData.NumArmies*
+  commentId: Overload:Shared.Interfaces.ViewModel.IPlayerData.NumArmies
+  href: Shared.Interfaces.ViewModel.IPlayerData.html#Shared_Interfaces_ViewModel_IPlayerData_NumArmies
+  name: NumArmies
+  nameWithType: IPlayerData.NumArmies
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.NumArmies
+- uid: Shared.Interfaces.ViewModel.IPlayerData.NumTerritories*
+  commentId: Overload:Shared.Interfaces.ViewModel.IPlayerData.NumTerritories
+  href: Shared.Interfaces.ViewModel.IPlayerData.html#Shared_Interfaces_ViewModel_IPlayerData_NumTerritories
+  name: NumTerritories
+  nameWithType: IPlayerData.NumTerritories
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.NumTerritories
+- uid: Shared.Interfaces.ViewModel.IPlayerData.Realm*
+  commentId: Overload:Shared.Interfaces.ViewModel.IPlayerData.Realm
+  href: Shared.Interfaces.ViewModel.IPlayerData.html#Shared_Interfaces_ViewModel_IPlayerData_Realm
+  name: Realm
+  nameWithType: IPlayerData.Realm
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.Realm
+- uid: System.Collections.ObjectModel.ObservableCollection{Shared.Geography.Enums.TerrID}
+  commentId: T:System.Collections.ObjectModel.ObservableCollection{Shared.Geography.Enums.TerrID}
+  parent: System.Collections.ObjectModel
+  definition: System.Collections.ObjectModel.ObservableCollection`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1
+  name: ObservableCollection<TerrID>
+  nameWithType: ObservableCollection<TerrID>
+  fullName: System.Collections.ObjectModel.ObservableCollection<Shared.Geography.Enums.TerrID>
+  nameWithType.vb: ObservableCollection(Of TerrID)
+  fullName.vb: System.Collections.ObjectModel.ObservableCollection(Of Shared.Geography.Enums.TerrID)
+  name.vb: ObservableCollection(Of TerrID)
+  spec.csharp:
+  - uid: System.Collections.ObjectModel.ObservableCollection`1
+    name: ObservableCollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1
+  - name: <
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.ObjectModel.ObservableCollection`1
+    name: ObservableCollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: )
+- uid: System.Collections.ObjectModel.ObservableCollection`1
+  commentId: T:System.Collections.ObjectModel.ObservableCollection`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1
+  name: ObservableCollection<T>
+  nameWithType: ObservableCollection<T>
+  fullName: System.Collections.ObjectModel.ObservableCollection<T>
+  nameWithType.vb: ObservableCollection(Of T)
+  fullName.vb: System.Collections.ObjectModel.ObservableCollection(Of T)
+  name.vb: ObservableCollection(Of T)
+  spec.csharp:
+  - uid: System.Collections.ObjectModel.ObservableCollection`1
+    name: ObservableCollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.ObjectModel.ObservableCollection`1
+    name: ObservableCollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.ObjectModel
+  commentId: N:System.Collections.ObjectModel
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.ObjectModel
+  nameWithType: System.Collections.ObjectModel
+  fullName: System.Collections.ObjectModel
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.ObjectModel
+    name: ObjectModel
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.ObjectModel
+    name: ObjectModel
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel
+- uid: Shared.Interfaces.ViewModel.IPlayerData.Continents*
+  commentId: Overload:Shared.Interfaces.ViewModel.IPlayerData.Continents
+  href: Shared.Interfaces.ViewModel.IPlayerData.html#Shared_Interfaces_ViewModel_IPlayerData_Continents
+  name: Continents
+  nameWithType: IPlayerData.Continents
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.Continents
+- uid: System.Collections.ObjectModel.ObservableCollection{Shared.Geography.Enums.ContID}
+  commentId: T:System.Collections.ObjectModel.ObservableCollection{Shared.Geography.Enums.ContID}
+  parent: System.Collections.ObjectModel
+  definition: System.Collections.ObjectModel.ObservableCollection`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1
+  name: ObservableCollection<ContID>
+  nameWithType: ObservableCollection<ContID>
+  fullName: System.Collections.ObjectModel.ObservableCollection<Shared.Geography.Enums.ContID>
+  nameWithType.vb: ObservableCollection(Of ContID)
+  fullName.vb: System.Collections.ObjectModel.ObservableCollection(Of Shared.Geography.Enums.ContID)
+  name.vb: ObservableCollection(Of ContID)
+  spec.csharp:
+  - uid: System.Collections.ObjectModel.ObservableCollection`1
+    name: ObservableCollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1
+  - name: <
+  - uid: Shared.Geography.Enums.ContID
+    name: ContID
+    href: Shared.Geography.Enums.ContID.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.ObjectModel.ObservableCollection`1
+    name: ObservableCollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Geography.Enums.ContID
+    name: ContID
+    href: Shared.Geography.Enums.ContID.html
+  - name: )
+- uid: Shared.Interfaces.ViewModel.IPlayerData.ContinentNames*
+  commentId: Overload:Shared.Interfaces.ViewModel.IPlayerData.ContinentNames
+  href: Shared.Interfaces.ViewModel.IPlayerData.html#Shared_Interfaces_ViewModel_IPlayerData_ContinentNames
+  name: ContinentNames
+  nameWithType: IPlayerData.ContinentNames
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.ContinentNames
+- uid: System.Collections.ObjectModel.ObservableCollection{System.String}
+  commentId: T:System.Collections.ObjectModel.ObservableCollection{System.String}
+  parent: System.Collections.ObjectModel
+  definition: System.Collections.ObjectModel.ObservableCollection`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1
+  name: ObservableCollection<string>
+  nameWithType: ObservableCollection<string>
+  fullName: System.Collections.ObjectModel.ObservableCollection<string>
+  nameWithType.vb: ObservableCollection(Of String)
+  fullName.vb: System.Collections.ObjectModel.ObservableCollection(Of String)
+  name.vb: ObservableCollection(Of String)
+  spec.csharp:
+  - uid: System.Collections.ObjectModel.ObservableCollection`1
+    name: ObservableCollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.ObjectModel.ObservableCollection`1
+    name: ObservableCollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: Shared.Interfaces.ViewModel.IPlayerData.Hand*
+  commentId: Overload:Shared.Interfaces.ViewModel.IPlayerData.Hand
+  href: Shared.Interfaces.ViewModel.IPlayerData.html#Shared_Interfaces_ViewModel_IPlayerData_Hand
+  name: Hand
+  nameWithType: IPlayerData.Hand
+  fullName: Shared.Interfaces.ViewModel.IPlayerData.Hand
+- uid: System.Collections.ObjectModel.ObservableCollection{Shared.Interfaces.ViewModel.ICardInfo}
+  commentId: T:System.Collections.ObjectModel.ObservableCollection{Shared.Interfaces.ViewModel.ICardInfo}
+  parent: System.Collections.ObjectModel
+  definition: System.Collections.ObjectModel.ObservableCollection`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1
+  name: ObservableCollection<ICardInfo>
+  nameWithType: ObservableCollection<ICardInfo>
+  fullName: System.Collections.ObjectModel.ObservableCollection<Shared.Interfaces.ViewModel.ICardInfo>
+  nameWithType.vb: ObservableCollection(Of ICardInfo)
+  fullName.vb: System.Collections.ObjectModel.ObservableCollection(Of Shared.Interfaces.ViewModel.ICardInfo)
+  name.vb: ObservableCollection(Of ICardInfo)
+  spec.csharp:
+  - uid: System.Collections.ObjectModel.ObservableCollection`1
+    name: ObservableCollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1
+  - name: <
+  - uid: Shared.Interfaces.ViewModel.ICardInfo
+    name: ICardInfo
+    href: Shared.Interfaces.ViewModel.ICardInfo.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.ObjectModel.ObservableCollection`1
+    name: ObservableCollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Interfaces.ViewModel.ICardInfo
+    name: ICardInfo
+    href: Shared.Interfaces.ViewModel.ICardInfo.html
+  - name: )

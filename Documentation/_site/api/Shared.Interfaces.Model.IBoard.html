@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Interface IBoard | Hazard!_Docs </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Interface IBoard | Hazard!_Docs ">
+    
+    <meta name="description" content="Encapsulates Data and Actions that directly affect the armies, territories, and continents on the game board.">
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="Hazard!_Docs">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first=First data-prev=Previous data-next=Next data-last=Last></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Shared.Interfaces.Model.IBoard">
+
+
+
+  <h1 id="Shared_Interfaces_Model_IBoard" data-uid="Shared.Interfaces.Model.IBoard" class="text-break">Interface IBoard</h1>
+  <div class="markdown level0 summary"><p>Encapsulates Data and Actions that directly affect the armies, territories, and continents on the game board.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_LoadFromBinary_System_IO_BinaryReader_">IBinarySerializable.LoadFromBinary(BinaryReader)</a>
+    </div>
+    <div>
+      <a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials">IBinarySerializable.GetBinarySerials()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Shared.html">Shared</a>.<a class="xref" href="Shared.Interfaces.html">Interfaces</a>.<a class="xref" href="Shared.Interfaces.Model.html">Model</a></h6>
+  <h6><strong>Assembly</strong>: Model.dll</h6>
+  <h5 id="Shared_Interfaces_Model_IBoard_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface IBoard : IBinarySerializable</code></pre>
+  </div>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IBoard_Armies.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IBoard.Armies%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IBoard.cs/#L28">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IBoard_Armies_" data-uid="Shared.Interfaces.Model.IBoard.Armies*"></a>
+  <h4 id="Shared_Interfaces_Model_IBoard_Armies" data-uid="Shared.Interfaces.Model.IBoard.Armies">Armies</h4>
+  <div class="markdown level1 summary"><p>Contains the number of armies in each territory.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Dictionary&lt;TerrID, int&gt; Armies { get; init; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IBoard_ContinentOwner.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IBoard.ContinentOwner%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IBoard.cs/#L36">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IBoard_ContinentOwner_" data-uid="Shared.Interfaces.Model.IBoard.ContinentOwner*"></a>
+  <h4 id="Shared_Interfaces_Model_IBoard_ContinentOwner" data-uid="Shared.Interfaces.Model.IBoard.ContinentOwner">ContinentOwner</h4>
+  <div class="markdown level1 summary"><p>Contains the player number of the owner of each continent.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Dictionary&lt;ContID, int&gt; ContinentOwner { get; init; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="Shared.Geography.Enums.ContID.html">ContID</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IBoard_Item_System_Int32_System_String_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IBoard.Item(System.Int32%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IBoard.cs/#L43">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IBoard_Item_" data-uid="Shared.Interfaces.Model.IBoard.Item*"></a>
+  <h4 id="Shared_Interfaces_Model_IBoard_Item_System_Int32_System_String_" data-uid="Shared.Interfaces.Model.IBoard.Item(System.Int32,System.String)">this[int, string]</h4>
+  <div class="markdown level1 summary"><p>Gets a list of territories or of continents on the board owned by a specfied player.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">List&lt;object&gt; this[int playerNumber, string enumName] { get; }</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">playerNumber</span></td>
+        <td><p>The number of the specified player.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">enumName</span></td>
+        <td><p>The name of either <a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a> or <a class="xref" href="Shared.Geography.Enums.ContID.html">ContID</a>, for territories owner or continents owned, respectively.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a>&gt;</td>
+        <td><p>A list of all territories OR a list of all continents owned by player <code class="paramref">playerNumber</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IBoard_TerritoryOwner.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IBoard.TerritoryOwner%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IBoard.cs/#L32">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IBoard_TerritoryOwner_" data-uid="Shared.Interfaces.Model.IBoard.TerritoryOwner*"></a>
+  <h4 id="Shared_Interfaces_Model_IBoard_TerritoryOwner" data-uid="Shared.Interfaces.Model.IBoard.TerritoryOwner">TerritoryOwner</h4>
+  <div class="markdown level1 summary"><p>Contains the player number of the owner of each territory.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Dictionary&lt;TerrID, int&gt; TerritoryOwner { get; init; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IBoard_CheckContinentFlip_Shared_Geography_Enums_TerrID_System_Int32_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IBoard.CheckContinentFlip(Shared.Geography.Enums.TerrID%2CSystem.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IBoard.cs/#L83">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IBoard_CheckContinentFlip_" data-uid="Shared.Interfaces.Model.IBoard.CheckContinentFlip*"></a>
+  <h4 id="Shared_Interfaces_Model_IBoard_CheckContinentFlip_Shared_Geography_Enums_TerrID_System_Int32_" data-uid="Shared.Interfaces.Model.IBoard.CheckContinentFlip(Shared.Geography.Enums.TerrID,System.Int32)">CheckContinentFlip(TerrID, int)</h4>
+  <div class="markdown level1 summary"><p>Determines whether a continent has changed ownership after a change in territory ownership.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void CheckContinentFlip(TerrID changed, int previousOwner)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">changed</span></td>
+        <td><p>The territory that changed hands.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">previousOwner</span></td>
+        <td><p>The <a class="xref" href="Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Number">Number</a> of the territory's owner before the change.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Shared_Interfaces_Model_IBoard_CheckContinentFlip_Shared_Geography_Enums_TerrID_System_Int32__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The new owner is not needed here so long as <a class="xref" href="Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_TerritoryOwner">TerritoryOwner</a> is changed properly before this method is called.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IBoard_Claims_System_Int32_Shared_Geography_Enums_TerrID_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IBoard.Claims(System.Int32%2CShared.Geography.Enums.TerrID)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IBoard.cs/#L52">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IBoard_Claims_" data-uid="Shared.Interfaces.Model.IBoard.Claims*"></a>
+  <h4 id="Shared_Interfaces_Model_IBoard_Claims_System_Int32_Shared_Geography_Enums_TerrID_" data-uid="Shared.Interfaces.Model.IBoard.Claims(System.Int32,Shared.Geography.Enums.TerrID)">Claims(int, TerrID)</h4>
+  <div class="markdown level1 summary"><p>Updates the board state when a player claims a territory for the first time.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Claims(int newPlayer, TerrID territory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">newPlayer</span></td>
+        <td><p>The number of the player that takes the territory.<code class="paramref">newPlayer</code></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">territory</span></td>
+        <td><p>The ID of the territory taken control of by <code class="paramref">newPlayer</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Shared_Interfaces_Model_IBoard_Claims_System_Int32_Shared_Geography_Enums_TerrID__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This change should also fire <a class="xref" href="Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_TerritoryChanged">TerritoryChanged</a> and subsequent events.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IBoard_Claims_System_Int32_Shared_Geography_Enums_TerrID_System_Int32_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IBoard.Claims(System.Int32%2CShared.Geography.Enums.TerrID%2CSystem.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IBoard.cs/#L58">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IBoard_Claims_" data-uid="Shared.Interfaces.Model.IBoard.Claims*"></a>
+  <h4 id="Shared_Interfaces_Model_IBoard_Claims_System_Int32_Shared_Geography_Enums_TerrID_System_Int32_" data-uid="Shared.Interfaces.Model.IBoard.Claims(System.Int32,Shared.Geography.Enums.TerrID,System.Int32)">Claims(int, TerrID, int)</h4>
+  <div class="markdown level1 summary"><p>Updates the board state when a player claims a territory for the first time.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Claims(int newPlayer, TerrID territory, int armies)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">newPlayer</span></td>
+        <td><p>The number of the player that takes the territory.<code class="paramref">newPlayer</code></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">territory</span></td>
+        <td><p>The ID of the territory taken control of by <code class="paramref">newPlayer</code>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">armies</span></td>
+        <td><p>The number of armies the new owner controls in the territory.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Shared_Interfaces_Model_IBoard_Claims_System_Int32_Shared_Geography_Enums_TerrID_System_Int32__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This is a variation on <a class="xref" href="Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Claims_System_Int32_Shared_Geography_Enums_TerrID_">Claims(int, TerrID)</a> meant to enable overriding the default one army per claim.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IBoard_Conquer_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_System_Int32_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IBoard.Conquer(Shared.Geography.Enums.TerrID%2CShared.Geography.Enums.TerrID%2CSystem.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IBoard.cs/#L76">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IBoard_Conquer_" data-uid="Shared.Interfaces.Model.IBoard.Conquer*"></a>
+  <h4 id="Shared_Interfaces_Model_IBoard_Conquer_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_System_Int32_" data-uid="Shared.Interfaces.Model.IBoard.Conquer(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.Int32)">Conquer(TerrID, TerrID, int)</h4>
+  <div class="markdown level1 summary"><p>Changes ownership of a territory after a successful attack.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Conquer(TerrID source, TerrID target, int newOwner)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">source</span></td>
+        <td><p>The territory from which the attack originated.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">target</span></td>
+        <td><p>The territory that was attacked and is being conquered.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">newOwner</span></td>
+        <td><p>The <a class="xref" href="Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Number">Number</a> of the owner after the attack is completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IBoard_Reinforce_Shared_Geography_Enums_TerrID_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IBoard.Reinforce(Shared.Geography.Enums.TerrID)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IBoard.cs/#L63">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IBoard_Reinforce_" data-uid="Shared.Interfaces.Model.IBoard.Reinforce*"></a>
+  <h4 id="Shared_Interfaces_Model_IBoard_Reinforce_Shared_Geography_Enums_TerrID_" data-uid="Shared.Interfaces.Model.IBoard.Reinforce(Shared.Geography.Enums.TerrID)">Reinforce(TerrID)</h4>
+  <div class="markdown level1 summary"><p>Increments the armies present within a territory.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Reinforce(TerrID territory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">territory</span></td>
+        <td><p>The ID of the territory in <a class="xref" href="Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Armies">Armies</a> to increment.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IBoard_Reinforce_Shared_Geography_Enums_TerrID_System_Int32_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IBoard.Reinforce(Shared.Geography.Enums.TerrID%2CSystem.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IBoard.cs/#L69">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IBoard_Reinforce_" data-uid="Shared.Interfaces.Model.IBoard.Reinforce*"></a>
+  <h4 id="Shared_Interfaces_Model_IBoard_Reinforce_Shared_Geography_Enums_TerrID_System_Int32_" data-uid="Shared.Interfaces.Model.IBoard.Reinforce(Shared.Geography.Enums.TerrID,System.Int32)">Reinforce(TerrID, int)</h4>
+  <div class="markdown level1 summary"><p>Increases the armies present within a territory by a specified amount.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Reinforce(TerrID territory, int armies)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">territory</span></td>
+        <td><p>The ID of the territory in <a class="xref" href="Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Armies">Armies</a> to increase.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">armies</span></td>
+        <td><p>The value of the increase of armies in the <code class="paramref">territory</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="events">Events
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IBoard_ContinentOwnerChanged.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IBoard.ContinentOwnerChanged%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IBoard.cs/#L23">View Source</a>
+  </span>
+  <h4 id="Shared_Interfaces_Model_IBoard_ContinentOwnerChanged" data-uid="Shared.Interfaces.Model.IBoard.ContinentOwnerChanged">ContinentOwnerChanged</h4>
+  <div class="markdown level1 summary"><p>Notifies <a class="xref" href="Shared.Interfaces.ViewModel.IMainVM.html">IMainVM</a> that a continent's owner has changed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event EventHandler&lt;IContinentOwnerChangedEventArgs&gt;? ContinentOwnerChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="Shared.Interfaces.IContinentOwnerChangedEventArgs.html">IContinentOwnerChangedEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Shared_Interfaces_Model_IBoard_ContinentOwnerChanged_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Should be invoked manually when affecting changes on <a class="xref" href="Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_ContinentOwner">ContinentOwner</a>.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IBoard_TerritoryChanged.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IBoard.TerritoryChanged%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IBoard.cs/#L16">View Source</a>
+  </span>
+  <h4 id="Shared_Interfaces_Model_IBoard_TerritoryChanged" data-uid="Shared.Interfaces.Model.IBoard.TerritoryChanged">TerritoryChanged</h4>
+  <div class="markdown level1 summary"><p>Notifies <a class="xref" href="Shared.Interfaces.ViewModel.IMainVM.html">IMainVM</a> that a territory's owner or armies have changed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event EventHandler&lt;ITerritoryChangedEventArgs&gt; TerritoryChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="Shared.Interfaces.Model.ITerritoryChangedEventArgs.html">ITerritoryChangedEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Shared_Interfaces_Model_IBoard_TerritoryChanged_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Should be invoked manually when affecting changes on <a class="xref" href="Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_Armies">Armies</a> or <a class="xref" href="Shared.Interfaces.Model.IBoard.html#Shared_Interfaces_Model_IBoard_TerritoryOwner">TerritoryOwner</a>.</p>
+</div>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IBoard.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IBoard%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IBoard.cs/#L8" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,235 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Interfaces.Model.ITroopCard
+  commentId: T:Shared.Interfaces.Model.ITroopCard
+  id: ITroopCard
+  parent: Shared.Interfaces.Model
+  children:
+  - Shared.Interfaces.Model.ITroopCard.Insigne
+  langs:
+  - csharp
+  - vb
+  name: ITroopCard
+  nameWithType: ITroopCard
+  fullName: Shared.Interfaces.Model.ITroopCard
+  type: Interface
+  source:
+    remote:
+      path: Shared/Interfaces/Model/ITroopCard.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ITroopCard
+    path: ../Shared/Interfaces/Model/ITroopCard.cs
+    startLine: 3
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: <xref href="Shared.Interfaces.Model.ICard" data-throw-if-not-resolved="false"></xref> extension for the default card type included in the base game.
+  remarks: Default serialization methods provided use reflection and should be overridden if there are performance concerns.
+  example: []
+  syntax:
+    content: 'public interface ITroopCard : ICard, IBinarySerializable'
+    content.vb: Public Interface ITroopCard Inherits ICard, IBinarySerializable
+  inheritedMembers:
+  - Shared.Interfaces.Model.ICard.Logger
+  - Shared.Interfaces.Model.ICard.SerializablePropertyNames
+  - Shared.Interfaces.Model.ICard.TypeName
+  - Shared.Interfaces.Model.ICard.ParentTypeName
+  - Shared.Interfaces.Model.ICard.CardSet
+  - Shared.Interfaces.Model.ICard.Target
+  - Shared.Interfaces.Model.ICard.IsTradeable
+  - Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+  - Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+- uid: Shared.Interfaces.Model.ITroopCard.Insigne
+  commentId: P:Shared.Interfaces.Model.ITroopCard.Insigne
+  id: Insigne
+  parent: Shared.Interfaces.Model.ITroopCard
+  langs:
+  - csharp
+  - vb
+  name: Insigne
+  nameWithType: ITroopCard.Insigne
+  fullName: Shared.Interfaces.Model.ITroopCard.Insigne
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/Model/ITroopCard.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Insigne
+    path: ../Shared/Interfaces/Model/ITroopCard.cs
+    startLine: 8
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Gets or sets an insignia value for the card.
+  example: []
+  syntax:
+    content: Enum Insigne { get; set; }
+    parameters: []
+    return:
+      type: System.Enum
+    content.vb: Property Insigne As [Enum]
+  overload: Shared.Interfaces.Model.ITroopCard.Insigne*
+references:
+- uid: Shared.Interfaces.Model.ICard
+  commentId: T:Shared.Interfaces.Model.ICard
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.ICard.html
+  name: ICard
+  nameWithType: ICard
+  fullName: Shared.Interfaces.Model.ICard
+- uid: Shared.Interfaces.Model
+  commentId: N:Shared.Interfaces.Model
+  href: Shared.html
+  name: Shared.Interfaces.Model
+  nameWithType: Shared.Interfaces.Model
+  fullName: Shared.Interfaces.Model
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+- uid: Shared.Interfaces.Model.ICard.Logger
+  commentId: P:Shared.Interfaces.Model.ICard.Logger
+  parent: Shared.Interfaces.Model.ICard
+  href: Shared.Interfaces.Model.ICard.html#Shared_Interfaces_Model_ICard_Logger
+  name: Logger
+  nameWithType: ICard.Logger
+  fullName: Shared.Interfaces.Model.ICard.Logger
+- uid: Shared.Interfaces.Model.ICard.SerializablePropertyNames
+  commentId: P:Shared.Interfaces.Model.ICard.SerializablePropertyNames
+  parent: Shared.Interfaces.Model.ICard
+  href: Shared.Interfaces.Model.ICard.html#Shared_Interfaces_Model_ICard_SerializablePropertyNames
+  name: SerializablePropertyNames
+  nameWithType: ICard.SerializablePropertyNames
+  fullName: Shared.Interfaces.Model.ICard.SerializablePropertyNames
+- uid: Shared.Interfaces.Model.ICard.TypeName
+  commentId: P:Shared.Interfaces.Model.ICard.TypeName
+  parent: Shared.Interfaces.Model.ICard
+  href: Shared.Interfaces.Model.ICard.html#Shared_Interfaces_Model_ICard_TypeName
+  name: TypeName
+  nameWithType: ICard.TypeName
+  fullName: Shared.Interfaces.Model.ICard.TypeName
+- uid: Shared.Interfaces.Model.ICard.ParentTypeName
+  commentId: P:Shared.Interfaces.Model.ICard.ParentTypeName
+  parent: Shared.Interfaces.Model.ICard
+  href: Shared.Interfaces.Model.ICard.html#Shared_Interfaces_Model_ICard_ParentTypeName
+  name: ParentTypeName
+  nameWithType: ICard.ParentTypeName
+  fullName: Shared.Interfaces.Model.ICard.ParentTypeName
+- uid: Shared.Interfaces.Model.ICard.CardSet
+  commentId: P:Shared.Interfaces.Model.ICard.CardSet
+  parent: Shared.Interfaces.Model.ICard
+  href: Shared.Interfaces.Model.ICard.html#Shared_Interfaces_Model_ICard_CardSet
+  name: CardSet
+  nameWithType: ICard.CardSet
+  fullName: Shared.Interfaces.Model.ICard.CardSet
+- uid: Shared.Interfaces.Model.ICard.Target
+  commentId: P:Shared.Interfaces.Model.ICard.Target
+  parent: Shared.Interfaces.Model.ICard
+  href: Shared.Interfaces.Model.ICard.html#Shared_Interfaces_Model_ICard_Target
+  name: Target
+  nameWithType: ICard.Target
+  fullName: Shared.Interfaces.Model.ICard.Target
+- uid: Shared.Interfaces.Model.ICard.IsTradeable
+  commentId: P:Shared.Interfaces.Model.ICard.IsTradeable
+  parent: Shared.Interfaces.Model.ICard
+  href: Shared.Interfaces.Model.ICard.html#Shared_Interfaces_Model_ICard_IsTradeable
+  name: IsTradeable
+  nameWithType: ICard.IsTradeable
+  fullName: Shared.Interfaces.Model.ICard.IsTradeable
+- uid: Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+  commentId: M:Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+  parent: Shared.Interfaces.Model.IBinarySerializable
+  isExternal: true
+  href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_LoadFromBinary_System_IO_BinaryReader_
+  name: LoadFromBinary(BinaryReader)
+  nameWithType: IBinarySerializable.LoadFromBinary(BinaryReader)
+  fullName: Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+    name: LoadFromBinary
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_LoadFromBinary_System_IO_BinaryReader_
+  - name: (
+  - uid: System.IO.BinaryReader
+    name: BinaryReader
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+    name: LoadFromBinary
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_LoadFromBinary_System_IO_BinaryReader_
+  - name: (
+  - uid: System.IO.BinaryReader
+    name: BinaryReader
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  - name: )
+- uid: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+  commentId: M:Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+  parent: Shared.Interfaces.Model.IBinarySerializable
+  href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials
+  name: GetBinarySerials()
+  nameWithType: IBinarySerializable.GetBinarySerials()
+  fullName: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials()
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+    name: GetBinarySerials
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+    name: GetBinarySerials
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials
+  - name: (
+  - name: )
+- uid: Shared.Interfaces.Model.IBinarySerializable
+  commentId: T:Shared.Interfaces.Model.IBinarySerializable
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IBinarySerializable.html
+  name: IBinarySerializable
+  nameWithType: IBinarySerializable
+  fullName: Shared.Interfaces.Model.IBinarySerializable
+- uid: Shared.Interfaces.Model.ITroopCard.Insigne*
+  commentId: Overload:Shared.Interfaces.Model.ITroopCard.Insigne
+  href: Shared.Interfaces.Model.ITroopCard.html#Shared_Interfaces_Model_ITroopCard_Insigne
+  name: Insigne
+  nameWithType: ITroopCard.Insigne
+  fullName: Shared.Interfaces.Model.ITroopCard.Insigne
+- uid: System.Enum
+  commentId: T:System.Enum
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.enum
+  name: Enum
+  nameWithType: Enum
+  fullName: System.Enum
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System

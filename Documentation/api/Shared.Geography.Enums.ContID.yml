@@ -1,0 +1,271 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Geography.Enums.ContID
+  commentId: T:Shared.Geography.Enums.ContID
+  id: ContID
+  parent: Shared.Geography.Enums
+  children:
+  - Shared.Geography.Enums.ContID.Africa
+  - Shared.Geography.Enums.ContID.Asia
+  - Shared.Geography.Enums.ContID.Europe
+  - Shared.Geography.Enums.ContID.NorthAmerica
+  - Shared.Geography.Enums.ContID.Null
+  - Shared.Geography.Enums.ContID.Oceania
+  - Shared.Geography.Enums.ContID.SouthAmerica
+  langs:
+  - csharp
+  - vb
+  name: ContID
+  nameWithType: ContID
+  fullName: Shared.Geography.Enums.ContID
+  type: Enum
+  source:
+    remote:
+      path: Shared/Geography/Enums/ContID.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ContID
+    path: ../Shared/Geography/Enums/ContID.cs
+    startLine: 4
+  assemblies:
+  - Model
+  namespace: Shared.Geography.Enums
+  summary: Simple ID values for the Continents on the game board.
+  example: []
+  syntax:
+    content: public enum ContID
+    content.vb: Public Enum ContID
+- uid: Shared.Geography.Enums.ContID.Null
+  commentId: F:Shared.Geography.Enums.ContID.Null
+  id: "Null"
+  parent: Shared.Geography.Enums.ContID
+  langs:
+  - csharp
+  - vb
+  name: "Null"
+  nameWithType: ContID.Null
+  fullName: Shared.Geography.Enums.ContID.Null
+  type: Field
+  source:
+    remote:
+      path: Shared/Geography/Enums/ContID.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: "Null"
+    path: ../Shared/Geography/Enums/ContID.cs
+    startLine: 9
+  assemblies:
+  - Model
+  namespace: Shared.Geography.Enums
+  summary: No continent / null value.
+  example: []
+  syntax:
+    content: Null = -1
+    return:
+      type: Shared.Geography.Enums.ContID
+- uid: Shared.Geography.Enums.ContID.NorthAmerica
+  commentId: F:Shared.Geography.Enums.ContID.NorthAmerica
+  id: NorthAmerica
+  parent: Shared.Geography.Enums.ContID
+  langs:
+  - csharp
+  - vb
+  name: NorthAmerica
+  nameWithType: ContID.NorthAmerica
+  fullName: Shared.Geography.Enums.ContID.NorthAmerica
+  type: Field
+  source:
+    remote:
+      path: Shared/Geography/Enums/ContID.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: NorthAmerica
+    path: ../Shared/Geography/Enums/ContID.cs
+    startLine: 13
+  assemblies:
+  - Model
+  namespace: Shared.Geography.Enums
+  summary: ID for the continent of North America.
+  example: []
+  syntax:
+    content: NorthAmerica = 0
+    return:
+      type: Shared.Geography.Enums.ContID
+- uid: Shared.Geography.Enums.ContID.SouthAmerica
+  commentId: F:Shared.Geography.Enums.ContID.SouthAmerica
+  id: SouthAmerica
+  parent: Shared.Geography.Enums.ContID
+  langs:
+  - csharp
+  - vb
+  name: SouthAmerica
+  nameWithType: ContID.SouthAmerica
+  fullName: Shared.Geography.Enums.ContID.SouthAmerica
+  type: Field
+  source:
+    remote:
+      path: Shared/Geography/Enums/ContID.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: SouthAmerica
+    path: ../Shared/Geography/Enums/ContID.cs
+    startLine: 17
+  assemblies:
+  - Model
+  namespace: Shared.Geography.Enums
+  summary: ID for the continent of South America.
+  example: []
+  syntax:
+    content: SouthAmerica = 1
+    return:
+      type: Shared.Geography.Enums.ContID
+- uid: Shared.Geography.Enums.ContID.Europe
+  commentId: F:Shared.Geography.Enums.ContID.Europe
+  id: Europe
+  parent: Shared.Geography.Enums.ContID
+  langs:
+  - csharp
+  - vb
+  name: Europe
+  nameWithType: ContID.Europe
+  fullName: Shared.Geography.Enums.ContID.Europe
+  type: Field
+  source:
+    remote:
+      path: Shared/Geography/Enums/ContID.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Europe
+    path: ../Shared/Geography/Enums/ContID.cs
+    startLine: 21
+  assemblies:
+  - Model
+  namespace: Shared.Geography.Enums
+  summary: ID for the continent of Europe.
+  example: []
+  syntax:
+    content: Europe = 2
+    return:
+      type: Shared.Geography.Enums.ContID
+- uid: Shared.Geography.Enums.ContID.Africa
+  commentId: F:Shared.Geography.Enums.ContID.Africa
+  id: Africa
+  parent: Shared.Geography.Enums.ContID
+  langs:
+  - csharp
+  - vb
+  name: Africa
+  nameWithType: ContID.Africa
+  fullName: Shared.Geography.Enums.ContID.Africa
+  type: Field
+  source:
+    remote:
+      path: Shared/Geography/Enums/ContID.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Africa
+    path: ../Shared/Geography/Enums/ContID.cs
+    startLine: 25
+  assemblies:
+  - Model
+  namespace: Shared.Geography.Enums
+  summary: ID for the continent of Africa.
+  example: []
+  syntax:
+    content: Africa = 3
+    return:
+      type: Shared.Geography.Enums.ContID
+- uid: Shared.Geography.Enums.ContID.Asia
+  commentId: F:Shared.Geography.Enums.ContID.Asia
+  id: Asia
+  parent: Shared.Geography.Enums.ContID
+  langs:
+  - csharp
+  - vb
+  name: Asia
+  nameWithType: ContID.Asia
+  fullName: Shared.Geography.Enums.ContID.Asia
+  type: Field
+  source:
+    remote:
+      path: Shared/Geography/Enums/ContID.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Asia
+    path: ../Shared/Geography/Enums/ContID.cs
+    startLine: 29
+  assemblies:
+  - Model
+  namespace: Shared.Geography.Enums
+  summary: ID for the continent of Asia.
+  example: []
+  syntax:
+    content: Asia = 4
+    return:
+      type: Shared.Geography.Enums.ContID
+- uid: Shared.Geography.Enums.ContID.Oceania
+  commentId: F:Shared.Geography.Enums.ContID.Oceania
+  id: Oceania
+  parent: Shared.Geography.Enums.ContID
+  langs:
+  - csharp
+  - vb
+  name: Oceania
+  nameWithType: ContID.Oceania
+  fullName: Shared.Geography.Enums.ContID.Oceania
+  type: Field
+  source:
+    remote:
+      path: Shared/Geography/Enums/ContID.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Oceania
+    path: ../Shared/Geography/Enums/ContID.cs
+    startLine: 33
+  assemblies:
+  - Model
+  namespace: Shared.Geography.Enums
+  summary: ID for the continent of Oceania.
+  example: []
+  syntax:
+    content: Oceania = 5
+    return:
+      type: Shared.Geography.Enums.ContID
+references:
+- uid: Shared.Geography.Enums
+  commentId: N:Shared.Geography.Enums
+  href: Shared.html
+  name: Shared.Geography.Enums
+  nameWithType: Shared.Geography.Enums
+  fullName: Shared.Geography.Enums
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+- uid: Shared.Geography.Enums.ContID
+  commentId: T:Shared.Geography.Enums.ContID
+  parent: Shared.Geography.Enums
+  href: Shared.Geography.Enums.ContID.html
+  name: ContID
+  nameWithType: ContID
+  fullName: Shared.Geography.Enums.ContID

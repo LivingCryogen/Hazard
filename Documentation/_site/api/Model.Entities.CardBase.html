@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class CardBase | Hazard!_Docs </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Class CardBase | Hazard!_Docs ">
+    
+    <meta name="description" content="Encapsulates all objects primarily using s.">
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="Hazard!_Docs">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first=First data-prev=Previous data-next=Next data-last=Last></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Model.Entities.CardBase">
+
+
+
+  <h1 id="Model_Entities_CardBase" data-uid="Model.Entities.CardBase" class="text-break">Class CardBase</h1>
+  <div class="markdown level0 summary"><p>Encapsulates all objects primarily using <a class="xref" href="Shared.Interfaces.Model.ICard.html">ICard</a>s.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+    <div class="level1"><span class="xref">CardBase</span></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html">IBinarySerializable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Model.html">Model</a>.<a class="xref" href="Model.Entities.html">Entities</a></h6>
+  <h6><strong>Assembly</strong>: Model.dll</h6>
+  <h5 id="Model_Entities_CardBase_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class CardBase : IBinarySerializable</code></pre>
+  </div>
+  <h5 id="Model_Entities_CardBase_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>E.g. <a class="xref" href="Model.Entities.CardBase.html#Model_Entities_CardBase_GameDeck">GameDeck</a> and <a class="xref" href="Shared.Interfaces.Model.ICardSet.html">ICardSet</a>s.</p>
+</div>
+  <h3 id="constructors">Constructors
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Entities_CardBase__ctor_Microsoft_Extensions_Logging_ILoggerFactory_Shared_Services_Registry_ITypeRegister_Shared_Services_Registry_ITypeRelations__.md&amp;value=---%0Auid%3A%20Model.Entities.CardBase.%23ctor(Microsoft.Extensions.Logging.ILoggerFactory%2CShared.Services.Registry.ITypeRegister%7BShared.Services.Registry.ITypeRelations%7D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Entities/CardBase.cs/#L16">View Source</a>
+  </span>
+  <a id="Model_Entities_CardBase__ctor_" data-uid="Model.Entities.CardBase.#ctor*"></a>
+  <h4 id="Model_Entities_CardBase__ctor_Microsoft_Extensions_Logging_ILoggerFactory_Shared_Services_Registry_ITypeRegister_Shared_Services_Registry_ITypeRelations__" data-uid="Model.Entities.CardBase.#ctor(Microsoft.Extensions.Logging.ILoggerFactory,Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations})">CardBase(ILoggerFactory, ITypeRegister&lt;ITypeRelations&gt;)</h4>
+  <div class="markdown level1 summary"><p>Encapsulates all objects primarily using <a class="xref" href="Shared.Interfaces.Model.ICard.html">ICard</a>s.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CardBase(ILoggerFactory loggerFactory, ITypeRegister&lt;ITypeRelations&gt; registry)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.iloggerfactory">ILoggerFactory</a></td>
+        <td><span class="parametername">loggerFactory</span></td>
+        <td><p>Instantiates loggers for logging debug information and errors.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Shared.Services.Registry.ITypeRegister-1.html">ITypeRegister</a>&lt;<a class="xref" href="Shared.Services.Registry.ITypeRelations.html">ITypeRelations</a>&gt;</td>
+        <td><span class="parametername">registry</span></td>
+        <td><p>The application's type registry.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Model_Entities_CardBase__ctor_Microsoft_Extensions_Logging_ILoggerFactory_Shared_Services_Registry_ITypeRegister_Shared_Services_Registry_ITypeRelations___remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>E.g. <a class="xref" href="Model.Entities.CardBase.html#Model_Entities_CardBase_GameDeck">GameDeck</a> and <a class="xref" href="Shared.Interfaces.Model.ICardSet.html">ICardSet</a>s.</p>
+</div>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Entities_CardBase_CardFactory.md&amp;value=---%0Auid%3A%20Model.Entities.CardBase.CardFactory%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Entities/CardBase.cs/#L26">View Source</a>
+  </span>
+  <a id="Model_Entities_CardBase_CardFactory_" data-uid="Model.Entities.CardBase.CardFactory*"></a>
+  <h4 id="Model_Entities_CardBase_CardFactory" data-uid="Model.Entities.CardBase.CardFactory">CardFactory</h4>
+  <div class="markdown level1 summary"><p>Gets a factory for making <a class="xref" href="Shared.Interfaces.Model.ICard.html">ICard</a>s.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CardFactory CardFactory { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Model.Entities.Cards.CardFactory.html">CardFactory</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Model_Entities_CardBase_CardFactory_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Used when loading from a save file; see <a class="xref" href="Model.Entities.CardBase.html#Model_Entities_CardBase_LoadFromBinary_System_IO_BinaryReader_">LoadFromBinary(BinaryReader)</a>.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Entities_CardBase_GameDeck.md&amp;value=---%0Auid%3A%20Model.Entities.CardBase.GameDeck%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Entities/CardBase.cs/#L34">View Source</a>
+  </span>
+  <a id="Model_Entities_CardBase_GameDeck_" data-uid="Model.Entities.CardBase.GameDeck*"></a>
+  <h4 id="Model_Entities_CardBase_GameDeck" data-uid="Model.Entities.CardBase.GameDeck">GameDeck</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the deck of cards to be used for this game.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Deck GameDeck { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Model.Entities.Deck.html">Deck</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Entities_CardBase_Sets.md&amp;value=---%0Auid%3A%20Model.Entities.CardBase.Sets%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Entities/CardBase.cs/#L30">View Source</a>
+  </span>
+  <a id="Model_Entities_CardBase_Sets_" data-uid="Model.Entities.CardBase.Sets*"></a>
+  <h4 id="Model_Entities_CardBase_Sets" data-uid="Model.Entities.CardBase.Sets">Sets</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a list of card sets.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;ICardSet&gt; Sets { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="Shared.Interfaces.Model.ICardSet.html">ICardSet</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Entities_CardBase_GetBinarySerials.md&amp;value=---%0Auid%3A%20Model.Entities.CardBase.GetBinarySerials%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Entities/CardBase.cs/#L143">View Source</a>
+  </span>
+  <a id="Model_Entities_CardBase_GetBinarySerials_" data-uid="Model.Entities.CardBase.GetBinarySerials*"></a>
+  <h4 id="Model_Entities_CardBase_GetBinarySerials" data-uid="Model.Entities.CardBase.GetBinarySerials">GetBinarySerials()</h4>
+  <div class="markdown level1 summary"><p>Asynchronously serializes the <a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html">IBinarySerializable</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;SerializedData[]&gt; GetBinarySerials()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Shared.Services.Serializer.SerializedData.html">SerializedData</a>[]&gt;</td>
+        <td><p>A task whose result contains serialized object data.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Entities_CardBase_InitializeDiscardPile_Shared_Interfaces_Model_ICard___.md&amp;value=---%0Auid%3A%20Model.Entities.CardBase.InitializeDiscardPile(Shared.Interfaces.Model.ICard%5B%5D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Entities/CardBase.cs/#L83">View Source</a>
+  </span>
+  <a id="Model_Entities_CardBase_InitializeDiscardPile_" data-uid="Model.Entities.CardBase.InitializeDiscardPile*"></a>
+  <h4 id="Model_Entities_CardBase_InitializeDiscardPile_Shared_Interfaces_Model_ICard___" data-uid="Model.Entities.CardBase.InitializeDiscardPile(Shared.Interfaces.Model.ICard[])">InitializeDiscardPile(ICard[])</h4>
+  <div class="markdown level1 summary"><p>Initializes a discard pile when loading the game from a save file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void InitializeDiscardPile(ICard[] cards)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Interfaces.Model.ICard.html">ICard</a>[]</td>
+        <td><span class="parametername">cards</span></td>
+        <td><p>The discard pile's cards built during <a class="xref" href="Model.Entities.CardBase.html#Model_Entities_CardBase_LoadFromBinary_System_IO_BinaryReader_">LoadFromBinary(BinaryReader)</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Entities_CardBase_InitializeFromAssets_Shared_Interfaces_Model_IAssetFetcher_System_Boolean_.md&amp;value=---%0Auid%3A%20Model.Entities.CardBase.InitializeFromAssets(Shared.Interfaces.Model.IAssetFetcher%2CSystem.Boolean)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Entities/CardBase.cs/#L45">View Source</a>
+  </span>
+  <a id="Model_Entities_CardBase_InitializeFromAssets_" data-uid="Model.Entities.CardBase.InitializeFromAssets*"></a>
+  <h4 id="Model_Entities_CardBase_InitializeFromAssets_Shared_Interfaces_Model_IAssetFetcher_System_Boolean_" data-uid="Model.Entities.CardBase.InitializeFromAssets(Shared.Interfaces.Model.IAssetFetcher,System.Boolean)">InitializeFromAssets(IAssetFetcher, bool)</h4>
+  <div class="markdown level1 summary"><p>Initializes a cardbase with assets provided by <a class="xref" href="Shared.Interfaces.Model.IAssetFetcher.html">IAssetFetcher</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void InitializeFromAssets(IAssetFetcher assetFetcher, bool defaultMode)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Interfaces.Model.IAssetFetcher.html">IAssetFetcher</a></td>
+        <td><span class="parametername">assetFetcher</span></td>
+        <td><p>Gets initialized assets (objects loaded from data files) for specific Model properties.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><span class="parametername">defaultMode</span></td>
+        <td><p>A <see langwod="boolean"></see> flag to indicate whether the <a class="xref" href="Shared.Interfaces.Model.IGame.html">IGame</a> is in default card mode.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Model_Entities_CardBase_InitializeFromAssets_Shared_Interfaces_Model_IAssetFetcher_System_Boolean__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>When a new game is started, the <a class="xref" href="Model.Entities.CardBase.html">CardBase</a> will include all <a class="xref" href="Shared.Interfaces.Model.ICard.html">ICard</a>s that can be found and converted from 'CardSet.json' files <br>
+(see <a class="xref" href="Shared.Interfaces.Model.IAssetFetcher.html#Shared_Interfaces_Model_IAssetFetcher_FetchCardSets">FetchCardSets()</a>, and <a class="xref" href="Shared.Interfaces.Model.IAssetFactory.html#Shared_Interfaces_Model_IAssetFactory_GetAsset_System_String_">GetAsset(string)</a>).
+<br> Then, if <code class="paramref">defaultMode</code> is set to true, only <a class="xref" href="Shared.Interfaces.Model.ITroopCard.html">ITroopCard</a>s will be retained.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Entities_CardBase_InitializeLibrary_Shared_Interfaces_Model_ICard___.md&amp;value=---%0Auid%3A%20Model.Entities.CardBase.InitializeLibrary(Shared.Interfaces.Model.ICard%5B%5D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Entities/CardBase.cs/#L74">View Source</a>
+  </span>
+  <a id="Model_Entities_CardBase_InitializeLibrary_" data-uid="Model.Entities.CardBase.InitializeLibrary*"></a>
+  <h4 id="Model_Entities_CardBase_InitializeLibrary_Shared_Interfaces_Model_ICard___" data-uid="Model.Entities.CardBase.InitializeLibrary(Shared.Interfaces.Model.ICard[])">InitializeLibrary(ICard[])</h4>
+  <div class="markdown level1 summary"><p>Initializes a library when loading the game from a save file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void InitializeLibrary(ICard[] cards)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Interfaces.Model.ICard.html">ICard</a>[]</td>
+        <td><span class="parametername">cards</span></td>
+        <td><p>The library's cards built during <a class="xref" href="Model.Entities.CardBase.html#Model_Entities_CardBase_LoadFromBinary_System_IO_BinaryReader_">LoadFromBinary(BinaryReader)</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Entities_CardBase_LoadFromBinary_System_IO_BinaryReader_.md&amp;value=---%0Auid%3A%20Model.Entities.CardBase.LoadFromBinary(System.IO.BinaryReader)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Entities/CardBase.cs/#L167">View Source</a>
+  </span>
+  <a id="Model_Entities_CardBase_LoadFromBinary_" data-uid="Model.Entities.CardBase.LoadFromBinary*"></a>
+  <h4 id="Model_Entities_CardBase_LoadFromBinary_System_IO_BinaryReader_" data-uid="Model.Entities.CardBase.LoadFromBinary(System.IO.BinaryReader)">LoadFromBinary(BinaryReader)</h4>
+  <div class="markdown level1 summary"><p>Loads the <a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html">IBinarySerializable</a> with binary values read from a file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool LoadFromBinary(BinaryReader reader)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.io.binaryreader">BinaryReader</a></td>
+        <td><span class="parametername">reader</span></td>
+        <td><p>A reader whose <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.io.binaryreader.basestream">BaseStream</a> was previously written to using <a class="xref" href="Shared.Services.Serializer.BinarySerializer.html">BinarySerializer</a> and <a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials">GetBinarySerials()</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the load succeeded without exceptions; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Entities_CardBase_MapCardsToSets_Shared_Interfaces_Model_ICard___.md&amp;value=---%0Auid%3A%20Model.Entities.CardBase.MapCardsToSets(Shared.Interfaces.Model.ICard%5B%5D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Entities/CardBase.cs/#L95">View Source</a>
+  </span>
+  <a id="Model_Entities_CardBase_MapCardsToSets_" data-uid="Model.Entities.CardBase.MapCardsToSets*"></a>
+  <h4 id="Model_Entities_CardBase_MapCardsToSets_Shared_Interfaces_Model_ICard___" data-uid="Model.Entities.CardBase.MapCardsToSets(Shared.Interfaces.Model.ICard[])">MapCardsToSets(ICard[])</h4>
+  <div class="markdown level1 summary"><p>Ensures cards and card sets are properly mapped.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void MapCardsToSets(ICard[] cards)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Interfaces.Model.ICard.html">ICard</a>[]</td>
+        <td><span class="parametername">cards</span></td>
+        <td><p>The cards whose sets must be discovered and mapped to.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Model_Entities_CardBase_MapCardsToSets_Shared_Interfaces_Model_ICard____remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Necessary since application and/or game logic may depend on <a class="xref" href="Shared.Interfaces.Model.ICard.html#Shared_Interfaces_Model_ICard_CardSet">CardSet</a> (e.g. <a class="xref" href="Shared.Interfaces.Model.ICardSet.html#Shared_Interfaces_Model_ICardSet_IsValidTrade_Shared_Interfaces_Model_ICard___">IsValidTrade(ICard[])</a>).</p>
+</div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html">IBinarySerializable</a>
+  </div>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Entities_CardBase.md&amp;value=---%0Auid%3A%20Model.Entities.CardBase%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Entities/CardBase.cs/#L16" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

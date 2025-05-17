@@ -35,18 +35,16 @@ public class StateMachine : IBinarySerializable
         NumPlayers = numPlayers;
         _logger = logger;
 
-        if (NumPlayers == 2)
-            CurrentPhase = GamePhase.TwoPlayerSetup;
-        else if (NumPlayers > 2 && NumPlayers < 7)
-            CurrentPhase = GamePhase.DefaultSetup;
-        else
-            CurrentPhase = GamePhase.Null;
+        CurrentPhase = NumPlayers switch {
+            2 => GamePhase.TwoPlayerSetup,
+            int n when n > 2 && n < 7 => GamePhase.DefaultSetup,
+            _ => GamePhase.Null,
+        };
 
         IsActivePlayer = new(NumPlayers);
         IsActivePlayer.SetAll(true);
     }
 
-    #region Properties
     /// <summary>
     /// Gets or sets the <see cref="int">number</see> of <see cref="IPlayer"/> in the parent <see cref="Game"/>.
     /// </summary>
@@ -142,9 +140,7 @@ public class StateMachine : IBinarySerializable
     /// An integer from 0-5.
     /// </value>
     public int Winner { get; set; }
-    #endregion
 
-    #region Methods
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
     public async Task<SerializedData[]> GetBinarySerials()
     {
@@ -205,7 +201,7 @@ public class StateMachine : IBinarySerializable
     /// <exception cref="InvalidOperationException">Thrown if there is an attempt to calculate the next active player when all players are inactive.</exception>
     public void IncrementPlayerTurn()
     {
-        if (CurrentPhase.Equals(GamePhase.DefaultSetup) || CurrentPhase.Equals(GamePhase.TwoPlayerSetup)) {
+        if (CurrentPhase == GamePhase.DefaultSetup || CurrentPhase == GamePhase.TwoPlayerSetup) {
             if (PlayerTurn >= NumPlayers)
                 PlayerTurn = 0;
             else {
@@ -274,11 +270,13 @@ public class StateMachine : IBinarySerializable
     private int NextActivePlayer() // begins checking at PlayerTurn + 1, looping to beginning if at the end of the Player list
     {
         int start;
+        // If we're at the last player, start at the beginning. Otherwise, start at the next player.
         if (PlayerTurn == NumPlayers - 1)
             start = 0;
         else
             start = PlayerTurn + 1;
 
+        // Loop until we find an active player or we've checked all of them.
         int index = start;
         do {
             if (IsActivePlayer[index])
@@ -336,5 +334,4 @@ public class StateMachine : IBinarySerializable
             return converted[0];
         }
     }
-    #endregion
 }

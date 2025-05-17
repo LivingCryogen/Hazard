@@ -33,11 +33,11 @@
         Below are some of the key technical highlights.
     </p>
 
-    <div class="image-with-text">
+    <div class="code-with-text">
         <div class="image-text">
             <h3>State-Driven Event System</h3>
-            <p>At <i>Hazard!</i>'s core is a state machine that manages the game's complex flow between phases (Setup, Place, Attack, Move), with proper state transitions and validation.</p>
-            <p>Rather than tight coupling, components communicate through a robust event system that ensures changes propagate correctly while maintaining separation of concerns:</p>
+            <p class="indented-p">At <i>Hazard!</i>'s core is a regulated state machine that manages the game's complex flow between phases (Setup, Place, Attack, Move), with proper state transitions and validation.</p>
+            <p class="indented-p">Rather than tight coupling, components communicate through a robust event system that ensures changes propagate correctly while maintaining separation of concerns:</p>
             <ul style="text-align: left; margin-left: 2em;">
                 <li>Each state change triggers appropriate events</li>
                 <li>Subscribers respond to state changes without direct dependencies</li>
@@ -45,7 +45,7 @@
                 <li>Multi-stage actions within phases are elegantly handled</li>
                 <li>Player turns and round progression are automatically managed</li>
             </ul>
-            <p><i>Key Files: StateMachine.cs, Regulator.cs</i></p>
+            <p><center><i>Key Files: StateMachine.cs, Regulator.cs, et al.</i></center></p>
         </div>
         <div>
             <pre class="code-snippet">
@@ -59,17 +59,16 @@ public class StateMachine : IBinarySerializable
 
     public event EventHandler&lt;string&gt;? StateChanged;
 
-    public StateMachine(int numPlayers, ILogger&lt;StateMachine&gt; logger)
+    public StateMachine(int numPlayers, ILogger<StateMachine> logger)
     {
         NumPlayers = numPlayers;
         _logger = logger;
 
-        if (NumPlayers == 2)
-            CurrentPhase = GamePhase.TwoPlayerSetup;
-        else if (NumPlayers > 2 && NumPlayers < 7)
-            CurrentPhase = GamePhase.DefaultSetup;
-        else
-            CurrentPhase = GamePhase.Null;
+        CurrentPhase = NumPlayers switch {
+            2 => GamePhase.TwoPlayerSetup,
+            int n when n > 2 && n < 7 => GamePhase.DefaultSetup,
+            _ => GamePhase.Null,
+        };
 
         IsActivePlayer = new(NumPlayers);
         IsActivePlayer.SetAll(true);
@@ -88,50 +87,299 @@ public class StateMachine : IBinarySerializable
         }
     }
     
-    public bool PhaseStageTwo {
-        get { return _phaseStageTwo; }
-        set {
-            if (!value.Equals(_phaseStageTwo)) {
-                _phaseStageTwo = value;
-                StateChanged?.Invoke(this, new(nameof(PhaseStageTwo)));
-            }
-        }
-    }
-    
-    public int PlayerTurn {
-        get { return _playerTurn; }
-        set {
-            if (!value.Equals(_playerTurn)) {
-                _playerTurn = value;
-                StateChanged?.Invoke(this, new(nameof(PlayerTurn)));
-            }
-        }
-    }
-    
-    public void IncrementPhase()
+    public bool PhaseStageTwo .... 
+
+public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulator
+{
+    private readonly IGame _currentGame = currentGame;
+    private readonly StateMachine _machine = currentGame.State;
+    private readonly ILogger _logger = logger;
+    private readonly int _numPlayers = currentGame.State.NumPlayers;
+    private int _actionsCounter = 0;
+    private int _prevActionCount = 0;
+
+    // State Check Properties
+    private int PlayerTurn => _machine.PlayerTurn;
+    private GamePhase CurrentPhase => _machine.CurrentPhase;
+    private bool InSetupPhase => _machine.CurrentPhase == GamePhase.DefaultSetup || _machine.CurrentPhase == GamePhase.TwoPlayerSetup;
+
+
+    public int CurrentActionsLimit { get; set; }
+    public int PhaseActions => _actionsCounter - _prevActionCount;
+    public ICard? Reward { get; set; } = null;
+
+
+    public event EventHandler<TerrID[]>? PromptBonusChoice;
+    public event EventHandler<IPromptTradeEventArgs>? PromptTradeIn;
+
+    private bool IsInSecondStage()
     {
-        PhaseStageTwo = false;
-        int intPhase = (int)CurrentPhase;
-        if (intPhase > -1 && intPhase < 3) // DefaultSetup (0), Place (1), Attack (2), Move (3)
-        {
-            intPhase++;
-            CurrentPhase = (GamePhase)intPhase;
-        }
-        else if (intPhase == 3) {
-            IncrementPlayerTurn();
-        }
-        else if (intPhase == -1) // TwoPlayerSetup (-1)
-        {
-            intPhase += 2;
-            CurrentPhase = (GamePhase)intPhase;
+        return _machine.PhaseStageTwo;
+    }
+    private void SetSecondStage(bool newState)
+    {
+        _machine.PhaseStageTwo = newState;
+    }
+    private bool ReachedSecondStage()
+    {
+        bool exceededTerritoryLimit = ActionsExceedTerritoryCount();
+        return (CurrentPhase, IsInSecondStage(), exceededTerritoryLimit) switch {
+            (GamePhase.DefaultSetup, false, true) => true,
+            (GamePhase.Move, false, _) => true,
+            _ => false
+        };
+    }
+    private void HandleStateChanged(object? sender, string propName)
+    {
+        if (propName != "CurrentPhase")
+            return;
+        var phase = CurrentPhase;
+        _prevActionCount = _actionsCounter;
+        switch (phase) {
+            case GamePhase.Place:
+                // Update number of allowed player actions (based on armies available to place)
+                CurrentActionsLimit = _actionsCounter;
+                _currentGame.Players[PlayerTurn].ArmyPool += _currentGame.Players[PlayerTurn].ArmyBonus;
+                CurrentActionsLimit += _currentGame.Players[PlayerTurn].ArmyPool;
+
+                // Check for trade-in and whether it must be forced (cards in hand limit reached)
+                if (!_currentGame.Players[PlayerTurn].HasCardSet)
+                    break;
+                bool force = false;
+                if (_currentGame.Players[PlayerTurn].Hand.Count >= 5)
+                    force = true;
+                PromptTradeIn?.Invoke(this, new PromptTradeEventArgs(PlayerTurn, force));
+                break;
+
+            case GamePhase.Attack:
+                _currentGame.State.PhaseStageTwo = false;
+                break;
+
+            case GamePhase.Move:
+                CurrentActionsLimit = _actionsCounter + 1;
+                break;
         }
     }
-}
+    private void IncrementAction()
+    {
+        _actionsCounter++;
+
+        if (ReachedSecondStage())
+            SetSecondStage(true);
+
+        if (_actionsCounter >= CurrentActionsLimit)
+            ActionLimitHit();
+    }
+    private bool ActionsExceedTerritoryCount()
+    {
+        return _actionsCounter >= BoardGeography.NumTerritories;
+    }
+    private void ActionLimitHit()
+    {
+        if (InSetupPhase)
+            _machine.IncrementRound();
+        else
+            _machine.IncrementPhase();
+    }
+    private void ForceDiscard(Player player, int[] handIndices)
+    {
+        foreach (int discardIndex in handIndices.OrderByDescending(i => i)) {
+            _currentGame.Cards.GameDeck.Discard(player.Hand[discardIndex]);
+            player.RemoveCard(discardIndex);
+        }
+    }
+    private ICard[] GetCardsFromHand(int playerNum, int[] handIndices)
+    {
+        var player = _currentGame.Players[playerNum];
+        List<ICard> selectedCards = [];
+        if (handIndices.Length > player.Hand.Count)
+            throw new IndexOutOfRangeException($"An attempt was made to get {handIndices.Length} cards from {player}'s hand, but they only had {player.Hand.Count}.");
+
+        foreach (int index in handIndices) {
+            var indCard = _currentGame.Players[playerNum].Hand[index];
+            selectedCards.Add(indCard);
+        }
+
+        return [.. selectedCards];
+    }
+
+    public void Initialize()
+    {
+        if (_actionsCounter == 0 && _currentGame.Values.SetupActionsPerPlayers.TryGetValue(_numPlayers, out int actions))
+            CurrentActionsLimit = actions;
+
+        if (CurrentPhase == GamePhase.TwoPlayerSetup) {
+            _prevActionCount = _actionsCounter;
+            if (_currentGame is Game game)
+                game.TwoPlayerAutoSetup();
+        }
+
+        _machine.StateChanged += HandleStateChanged;
+    }
+
+    public void ClaimOrReinforce(TerrID territory)
+    {
+        switch (CurrentPhase) {
+            case GamePhase.DefaultSetup:
+                _currentGame.Players[PlayerTurn].ArmyPool--;
+
+                if (!IsInSecondStage()) {
+                    _currentGame.Board.Claims(PlayerTurn, territory);
+                    _currentGame.Players[PlayerTurn].AddTerritory(territory);
+                }
+                else
+                    _currentGame.Board.Reinforce(territory);
+
+                IncrementAction();
+
+                if (CurrentPhase == GamePhase.DefaultSetup)
+                    _machine.IncrementPlayerTurn();
+
+                break;
+            case GamePhase.TwoPlayerSetup:
+                _currentGame.Board.Reinforce(territory);
+                IncrementAction();
+
+                // Rules for 2-player setup (with passive NPC player) dictate each player places twice on their territory, once on NPC territory.
+                // The following determines which step we're at by tracking the difference in action count (actDiff), which resets at 3.
+                int actDiff = _actionsCounter - _prevActionCount;
+                switch (actDiff) {
+                    case 1:
+                        _currentGame.Players[PlayerTurn].ArmyPool--;
+                        break;
+                    case 2:
+                        _currentGame.Players[PlayerTurn].ArmyPool--;
+                        SetSecondStage(true);
+                        break;
+                    case 3:
+                        if (CurrentPhase == GamePhase.TwoPlayerSetup) {
+                            SetSecondStage(false);
+                            _machine.IncrementPlayerTurn();
+                            _prevActionCount = _actionsCounter;
+                        }
+                        break;
+                }
+                break;
+            case GamePhase.Place:
+                _currentGame.Players[PlayerTurn].ArmyPool--;
+                _currentGame.Board.Reinforce(territory);
+                IncrementAction();
+                break;
+        }
+    }
+
+    public void MoveArmies(TerrID source, TerrID target, int armies)
+    {
+        _currentGame.Board.Reinforce(source, -armies);
+        _currentGame.Board.Reinforce(target, armies);
+
+        if (CurrentPhase == GamePhase.Move)
+            IncrementAction();
+    }
+
+    public void Battle(TerrID source, TerrID target, (int AttackRoll, int DefenseRoll)[] diceRolls)
+    {
+        _actionsCounter++;
+
+        int sourceLoss = 0;
+        int targetLoss = 0;
+        foreach (var (AttackRoll, DefenseRoll) in diceRolls)
+            if (AttackRoll > DefenseRoll)
+                targetLoss++;
+            else
+                sourceLoss++;
+
+        if (targetLoss >= _currentGame.Board.Armies[target]) {
+            int conqueredOwner = _currentGame.Board.TerritoryOwner[target];
+            int newOwner = _currentGame.Board.TerritoryOwner[source];
+            if (conqueredOwner > -1)
+                _currentGame.Players[conqueredOwner].RemoveTerritory(target);
+            _currentGame.Players[newOwner].AddTerritory(target);
+
+            _currentGame.Board.Conquer(source, target, _currentGame.Board.TerritoryOwner[source]);
+
+            Reward ??= _currentGame.Cards.GameDeck.DrawCard();
+        }
+        if (sourceLoss > 0)
+            _currentGame.Board.Reinforce(source, -sourceLoss);
+        if (targetLoss > 0)
+            _currentGame.Board.Reinforce(target, -targetLoss);
+    }
+
+    public bool CanTradeInCards(int playerNum, int[] handIndices)
+    {
+        if (playerNum != PlayerTurn)
+            return false;
+        if (handIndices.Length < 3)
+            return false;
+        var selectedCards = GetCardsFromHand(playerNum, handIndices);
+        if (selectedCards == null || selectedCards.Length == 0)
+            return false;
+
+        List<ICardSet> tradedSets = [];
+        foreach (var card in selectedCards) {
+            if (card.IsTradeable == false)
+                return false;
+
+            if (card.CardSet == null) {
+                _logger.LogError("{Card} did not have a CardSet specified on Trade-In check.", card);
+                return false;
+            }
+            else if (!tradedSets.Contains(card.CardSet))
+                tradedSets.Add(card.CardSet);
+        }
+
+        if (tradedSets.Count == 0)
+            return false;
+
+        foreach (var set in tradedSets) {
+            if (!set.IsValidTrade([.. selectedCards]))
+                return false;
+        }
+
+        return true;
+    }
+
+    public void TradeInCards(int playerNum, int[] handIndices)
+    {
+        var selectedCards = GetCardsFromHand(playerNum, handIndices);
+        if (selectedCards == null || selectedCards.Length == 0)
+            return;
+
+        var currentPlayer = _currentGame.Players[playerNum];
+        _machine.IncrementNumTrades(1);
+        int tradebonus = _currentGame.Values.CalculateBaseTradeInBonus(_machine.NumTrades);
+        currentPlayer.GetsTradeBonus(tradebonus);
+        CurrentActionsLimit += tradebonus;
+        ForceDiscard((Player)currentPlayer, handIndices);
+
+        var tradedTargets = selectedCards.SelectMany(item => item.Target);
+        var controlledTargets = currentPlayer.GetControlledTargets(tradedTargets.ToArray());
+        if (controlledTargets.Length == 1)
+            _currentGame.Board.Reinforce(controlledTargets[0], _currentGame.Values.TerritoryTradeInBonus);
+        else if (controlledTargets.Length > 1)
+            PromptBonusChoice?.Invoke(this, [.. controlledTargets]);
+    }
+
+    public void AwardTradeInBonus(TerrID territory)
+    {
+        _currentGame.Board.Reinforce(territory, _currentGame.Values.TerritoryTradeInBonus);
+    }
+
+    public void DeliverCardReward()
+    {
+        if (Reward == null)
+            return;
+
+        _currentGame.Players[PlayerTurn].AddCard(Reward);
+        Reward = null;
+    }
+
             </pre>
         </div>
     </div>
 
-    <div class="image-with-text">
+    <div class="code-with-text">
         <div>
             <pre class="code-snippet">
 public class TypeRegister : ITypeRegister&lt;ITypeRelations&gt;
@@ -213,11 +461,11 @@ public class TypeRegister : ITypeRegister&lt;ITypeRelations&gt;
                 <li>Integration with data loading and serialization systems</li>
             </ul>
             <p>This registry system provides a foundation for extensible components and reduces coupling between different parts of the application.</p>
-            <p><i>Key Files: TypeRegister.cs, TypeRelations.cs</i></p>
+            <p><center><i>Key Files: TypeRegister.cs, TypeRelations.cs</i></center></p>
         </div>
     </div>
 
-    <div class="image-with-text">
+    <div class="code-with-text">
         <div class="image-text">
             <h3>Custom Binary Serialization Framework</h3>
             <p>I implemented a robust binary serialization system that enables efficient game state persistence with full control over the serialization process:</p>
@@ -228,7 +476,7 @@ public class TypeRegister : ITypeRegister&lt;ITypeRelations&gt;
                 <li>Complete game state persistence with minimal overhead</li>
             </ul>
             <p>This system demonstrates understanding of low-level data structures, I/O operations, and efficient state management techniques.</p>
-            <p><i>Key Files: BinarySerializer.cs, SerializedData.cs</i></p>
+            <p><center><i>Key Files: BinarySerializer.cs, SerializedData.cs</i></center></p>
         </div>
         <div>
             <pre class="code-snippet">
@@ -329,7 +577,7 @@ public static class BinarySerializer
         </div>
     </div>
 
-    <div class="image-with-text">
+    <div class="code-with-text">
         <div>
             <pre class="code-snippet">
 public class Regulator : IRegulator
@@ -442,11 +690,11 @@ public class Regulator : IRegulator
                 <li>Turn-based progression with appropriate state transitions</li>
             </ul>
             <p>This system demonstrates the ability to translate abstract game rules into concrete code logic, a skill directly applicable to implementing business rules in enterprise applications.</p>
-            <p><i>Key Files: Regulator.cs, RuleValues.cs</i></p>
+            <p><center><i>Key Files: Regulator.cs, RuleValues.cs</i></center></p>
         </div>
     </div>
 
-    <div class="image-with-text">
+    <div class="code-with-text">
         <div class="image-text">
             <h3>Geography Modeling System</h3>
             <p>I designed an elegant system for modeling complex geographical relationships between territories and continents:</p>
@@ -459,7 +707,7 @@ public class Regulator : IRegulator
                 <li>Support for complex queries like "does a player control an entire continent?"</li>
             </ul>
             <p>This demonstrates skills in transforming complex real-world relationships into clean domain models, a fundamental aspect of domain-driven design.</p>
-            <p><i>Key Files: BoardGeography.cs, GeographyInitializer.cs</i></p>
+            <p><center><i>Key Files: BoardGeography.cs, GeographyInitializer.cs</i></center></p>
         </div>
         <div>
             <pre class="code-snippet">

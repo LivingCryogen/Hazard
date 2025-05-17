@@ -1,0 +1,718 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Services.Registry.RegistryInitializer
+  commentId: T:Shared.Services.Registry.RegistryInitializer
+  id: RegistryInitializer
+  parent: Shared.Services.Registry
+  children:
+  - Shared.Services.Registry.RegistryInitializer.#ctor(Microsoft.Extensions.Options.IOptions{Shared.Services.Options.AppConfig})
+  - Shared.Services.Registry.RegistryInitializer.PopulateRegistry(Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations})
+  langs:
+  - csharp
+  - vb
+  name: RegistryInitializer
+  nameWithType: RegistryInitializer
+  fullName: Shared.Services.Registry.RegistryInitializer
+  type: Class
+  source:
+    remote:
+      path: Shared/Services/Registry/RegistryInitializer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: RegistryInitializer
+    path: ../Shared/Services/Registry/RegistryInitializer.cs
+    startLine: 14
+  assemblies:
+  - Model
+  namespace: Shared.Services.Registry
+  summary: Provides default values to <xref href="Shared.Services.Registry.ITypeRegister%601" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: 'public class RegistryInitializer : IRegistryInitializer'
+    content.vb: Public Class RegistryInitializer Implements IRegistryInitializer
+  inheritance:
+  - System.Object
+  implements:
+  - Shared.Services.Registry.IRegistryInitializer
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Shared.Services.Registry.RegistryInitializer.#ctor(Microsoft.Extensions.Options.IOptions{Shared.Services.Options.AppConfig})
+  commentId: M:Shared.Services.Registry.RegistryInitializer.#ctor(Microsoft.Extensions.Options.IOptions{Shared.Services.Options.AppConfig})
+  id: '#ctor(Microsoft.Extensions.Options.IOptions{Shared.Services.Options.AppConfig})'
+  parent: Shared.Services.Registry.RegistryInitializer
+  langs:
+  - csharp
+  - vb
+  name: RegistryInitializer(IOptions<AppConfig>)
+  nameWithType: RegistryInitializer.RegistryInitializer(IOptions<AppConfig>)
+  fullName: Shared.Services.Registry.RegistryInitializer.RegistryInitializer(Microsoft.Extensions.Options.IOptions<Shared.Services.Options.AppConfig>)
+  type: Constructor
+  source:
+    remote:
+      path: Shared/Services/Registry/RegistryInitializer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Shared/Services/Registry/RegistryInitializer.cs
+    startLine: 14
+  assemblies:
+  - Model
+  namespace: Shared.Services.Registry
+  summary: Provides default values to <xref href="Shared.Services.Registry.ITypeRegister%601" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public RegistryInitializer(IOptions<AppConfig> options)
+    parameters:
+    - id: options
+      type: Microsoft.Extensions.Options.IOptions{Shared.Services.Options.AppConfig}
+    content.vb: Public Sub New(options As IOptions(Of AppConfig))
+  overload: Shared.Services.Registry.RegistryInitializer.#ctor*
+  nameWithType.vb: RegistryInitializer.New(IOptions(Of AppConfig))
+  fullName.vb: Shared.Services.Registry.RegistryInitializer.New(Microsoft.Extensions.Options.IOptions(Of Shared.Services.Options.AppConfig))
+  name.vb: New(IOptions(Of AppConfig))
+- uid: Shared.Services.Registry.RegistryInitializer.PopulateRegistry(Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations})
+  commentId: M:Shared.Services.Registry.RegistryInitializer.PopulateRegistry(Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations})
+  id: PopulateRegistry(Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations})
+  parent: Shared.Services.Registry.RegistryInitializer
+  langs:
+  - csharp
+  - vb
+  name: PopulateRegistry(ITypeRegister<ITypeRelations>)
+  nameWithType: RegistryInitializer.PopulateRegistry(ITypeRegister<ITypeRelations>)
+  fullName: Shared.Services.Registry.RegistryInitializer.PopulateRegistry(Shared.Services.Registry.ITypeRegister<Shared.Services.Registry.ITypeRelations>)
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Registry/RegistryInitializer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: PopulateRegistry
+    path: ../Shared/Services/Registry/RegistryInitializer.cs
+    startLine: 61
+  assemblies:
+  - Model
+  namespace: Shared.Services.Registry
+  summary: Provides default values to <xref href="Shared.Services.Registry.ITypeRegister%601" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public void PopulateRegistry(ITypeRegister<ITypeRelations> registry)
+    parameters:
+    - id: registry
+      type: Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations}
+    content.vb: Public Sub PopulateRegistry(registry As ITypeRegister(Of ITypeRelations))
+  overload: Shared.Services.Registry.RegistryInitializer.PopulateRegistry*
+  implements:
+  - Shared.Services.Registry.IRegistryInitializer.PopulateRegistry(Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations})
+  nameWithType.vb: RegistryInitializer.PopulateRegistry(ITypeRegister(Of ITypeRelations))
+  fullName.vb: Shared.Services.Registry.RegistryInitializer.PopulateRegistry(Shared.Services.Registry.ITypeRegister(Of Shared.Services.Registry.ITypeRelations))
+  name.vb: PopulateRegistry(ITypeRegister(Of ITypeRelations))
+references:
+- uid: Shared.Services.Registry.ITypeRegister`1
+  commentId: T:Shared.Services.Registry.ITypeRegister`1
+  href: Shared.Services.Registry.ITypeRegister-1.html
+  name: ITypeRegister<T>
+  nameWithType: ITypeRegister<T>
+  fullName: Shared.Services.Registry.ITypeRegister<T>
+  nameWithType.vb: ITypeRegister(Of T)
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T)
+  name.vb: ITypeRegister(Of T)
+  spec.csharp:
+  - uid: Shared.Services.Registry.ITypeRegister`1
+    name: ITypeRegister
+    href: Shared.Services.Registry.ITypeRegister-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Shared.Services.Registry.ITypeRegister`1
+    name: ITypeRegister
+    href: Shared.Services.Registry.ITypeRegister-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Shared.Services.Registry.RegistryInitializer.CardRegistryRecord
+  commentId: T:Shared.Services.Registry.RegistryInitializer.CardRegistryRecord
+  href: Shared.Services.Registry.RegistryInitializer.html
+  name: RegistryInitializer.CardRegistryRecord
+  nameWithType: RegistryInitializer.CardRegistryRecord
+  fullName: Shared.Services.Registry.RegistryInitializer.CardRegistryRecord
+  spec.csharp:
+  - uid: Shared.Services.Registry.RegistryInitializer
+    name: RegistryInitializer
+    href: Shared.Services.Registry.RegistryInitializer.html
+  - name: .
+  - uid: Shared.Services.Registry.RegistryInitializer.CardRegistryRecord
+    name: CardRegistryRecord
+  spec.vb:
+  - uid: Shared.Services.Registry.RegistryInitializer
+    name: RegistryInitializer
+    href: Shared.Services.Registry.RegistryInitializer.html
+  - name: .
+  - uid: Shared.Services.Registry.RegistryInitializer.CardRegistryRecord
+    name: CardRegistryRecord
+- uid: Shared.Services.Registry.RegistryInitializer.CardSetRegistryRecord
+  commentId: T:Shared.Services.Registry.RegistryInitializer.CardSetRegistryRecord
+  href: Shared.Services.Registry.RegistryInitializer.html
+  name: RegistryInitializer.CardSetRegistryRecord
+  nameWithType: RegistryInitializer.CardSetRegistryRecord
+  fullName: Shared.Services.Registry.RegistryInitializer.CardSetRegistryRecord
+  spec.csharp:
+  - uid: Shared.Services.Registry.RegistryInitializer
+    name: RegistryInitializer
+    href: Shared.Services.Registry.RegistryInitializer.html
+  - name: .
+  - uid: Shared.Services.Registry.RegistryInitializer.CardSetRegistryRecord
+    name: CardSetRegistryRecord
+  spec.vb:
+  - uid: Shared.Services.Registry.RegistryInitializer
+    name: RegistryInitializer
+    href: Shared.Services.Registry.RegistryInitializer.html
+  - name: .
+  - uid: Shared.Services.Registry.RegistryInitializer.CardSetRegistryRecord
+    name: CardSetRegistryRecord
+- uid: Shared.Interfaces.Model.ICard
+  commentId: T:Shared.Interfaces.Model.ICard
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.ICard.html
+  name: ICard
+  nameWithType: ICard
+  fullName: Shared.Interfaces.Model.ICard
+- uid: Model.Entities.Cards.TroopCard
+  commentId: T:Model.Entities.Cards.TroopCard
+  href: Model.Entities.Cards.TroopCard.html
+  name: TroopCard
+  nameWithType: TroopCard
+  fullName: Model.Entities.Cards.TroopCard
+- uid: Model.Entities.Cards.TroopCardSet
+  commentId: T:Model.Entities.Cards.TroopCardSet
+  parent: Model.Entities.Cards
+  href: Model.Entities.Cards.TroopCardSet.html
+  name: TroopCardSet
+  nameWithType: TroopCardSet
+  fullName: Model.Entities.Cards.TroopCardSet
+- uid: Shared.Services.Registry
+  commentId: N:Shared.Services.Registry
+  href: Shared.html
+  name: Shared.Services.Registry
+  nameWithType: Shared.Services.Registry
+  fullName: Shared.Services.Registry
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Services
+    name: Services
+    href: Shared.Services.html
+  - name: .
+  - uid: Shared.Services.Registry
+    name: Registry
+    href: Shared.Services.Registry.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Services
+    name: Services
+    href: Shared.Services.html
+  - name: .
+  - uid: Shared.Services.Registry
+    name: Registry
+    href: Shared.Services.Registry.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Shared.Services.Registry.IRegistryInitializer
+  commentId: T:Shared.Services.Registry.IRegistryInitializer
+  parent: Shared.Services.Registry
+  href: Shared.Services.Registry.IRegistryInitializer.html
+  name: IRegistryInitializer
+  nameWithType: IRegistryInitializer
+  fullName: Shared.Services.Registry.IRegistryInitializer
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: Shared.Interfaces.Model
+  commentId: N:Shared.Interfaces.Model
+  href: Shared.html
+  name: Shared.Interfaces.Model
+  nameWithType: Shared.Interfaces.Model
+  fullName: Shared.Interfaces.Model
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+- uid: Model.Entities.Cards
+  commentId: N:Model.Entities.Cards
+  href: Model.html
+  name: Model.Entities.Cards
+  nameWithType: Model.Entities.Cards
+  fullName: Model.Entities.Cards
+  spec.csharp:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.Entities
+    name: Entities
+    href: Model.Entities.html
+  - name: .
+  - uid: Model.Entities.Cards
+    name: Cards
+    href: Model.Entities.Cards.html
+  spec.vb:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.Entities
+    name: Entities
+    href: Model.Entities.html
+  - name: .
+  - uid: Model.Entities.Cards
+    name: Cards
+    href: Model.Entities.Cards.html
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Shared.Services.Registry.RegistryInitializer.#ctor*
+  commentId: Overload:Shared.Services.Registry.RegistryInitializer.#ctor
+  href: Shared.Services.Registry.RegistryInitializer.html#Shared_Services_Registry_RegistryInitializer__ctor_Microsoft_Extensions_Options_IOptions_Shared_Services_Options_AppConfig__
+  name: RegistryInitializer
+  nameWithType: RegistryInitializer.RegistryInitializer
+  fullName: Shared.Services.Registry.RegistryInitializer.RegistryInitializer
+  nameWithType.vb: RegistryInitializer.New
+  fullName.vb: Shared.Services.Registry.RegistryInitializer.New
+  name.vb: New
+- uid: Microsoft.Extensions.Options.IOptions{Shared.Services.Options.AppConfig}
+  commentId: T:Microsoft.Extensions.Options.IOptions{Shared.Services.Options.AppConfig}
+  parent: Microsoft.Extensions.Options
+  definition: Microsoft.Extensions.Options.IOptions`1
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1
+  name: IOptions<AppConfig>
+  nameWithType: IOptions<AppConfig>
+  fullName: Microsoft.Extensions.Options.IOptions<Shared.Services.Options.AppConfig>
+  nameWithType.vb: IOptions(Of AppConfig)
+  fullName.vb: Microsoft.Extensions.Options.IOptions(Of Shared.Services.Options.AppConfig)
+  name.vb: IOptions(Of AppConfig)
+  spec.csharp:
+  - uid: Microsoft.Extensions.Options.IOptions`1
+    name: IOptions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1
+  - name: <
+  - uid: Shared.Services.Options.AppConfig
+    name: AppConfig
+    href: Shared.Services.Options.AppConfig.html
+  - name: '>'
+  spec.vb:
+  - uid: Microsoft.Extensions.Options.IOptions`1
+    name: IOptions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Services.Options.AppConfig
+    name: AppConfig
+    href: Shared.Services.Options.AppConfig.html
+  - name: )
+- uid: Microsoft.Extensions.Options.IOptions`1
+  commentId: T:Microsoft.Extensions.Options.IOptions`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1
+  name: IOptions<TOptions>
+  nameWithType: IOptions<TOptions>
+  fullName: Microsoft.Extensions.Options.IOptions<TOptions>
+  nameWithType.vb: IOptions(Of TOptions)
+  fullName.vb: Microsoft.Extensions.Options.IOptions(Of TOptions)
+  name.vb: IOptions(Of TOptions)
+  spec.csharp:
+  - uid: Microsoft.Extensions.Options.IOptions`1
+    name: IOptions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1
+  - name: <
+  - name: TOptions
+  - name: '>'
+  spec.vb:
+  - uid: Microsoft.Extensions.Options.IOptions`1
+    name: IOptions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TOptions
+  - name: )
+- uid: Microsoft.Extensions.Options
+  commentId: N:Microsoft.Extensions.Options
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.Extensions.Options
+  nameWithType: Microsoft.Extensions.Options
+  fullName: Microsoft.Extensions.Options
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Options
+    name: Options
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Options
+    name: Options
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options
+- uid: Shared.Services.Registry.RegistryInitializer.PopulateRegistry*
+  commentId: Overload:Shared.Services.Registry.RegistryInitializer.PopulateRegistry
+  href: Shared.Services.Registry.RegistryInitializer.html#Shared_Services_Registry_RegistryInitializer_PopulateRegistry_Shared_Services_Registry_ITypeRegister_Shared_Services_Registry_ITypeRelations__
+  name: PopulateRegistry
+  nameWithType: RegistryInitializer.PopulateRegistry
+  fullName: Shared.Services.Registry.RegistryInitializer.PopulateRegistry
+- uid: Shared.Services.Registry.IRegistryInitializer.PopulateRegistry(Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations})
+  commentId: M:Shared.Services.Registry.IRegistryInitializer.PopulateRegistry(Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations})
+  parent: Shared.Services.Registry.IRegistryInitializer
+  href: Shared.Services.Registry.IRegistryInitializer.html#Shared_Services_Registry_IRegistryInitializer_PopulateRegistry_Shared_Services_Registry_ITypeRegister_Shared_Services_Registry_ITypeRelations__
+  name: PopulateRegistry(ITypeRegister<ITypeRelations>)
+  nameWithType: IRegistryInitializer.PopulateRegistry(ITypeRegister<ITypeRelations>)
+  fullName: Shared.Services.Registry.IRegistryInitializer.PopulateRegistry(Shared.Services.Registry.ITypeRegister<Shared.Services.Registry.ITypeRelations>)
+  nameWithType.vb: IRegistryInitializer.PopulateRegistry(ITypeRegister(Of ITypeRelations))
+  fullName.vb: Shared.Services.Registry.IRegistryInitializer.PopulateRegistry(Shared.Services.Registry.ITypeRegister(Of Shared.Services.Registry.ITypeRelations))
+  name.vb: PopulateRegistry(ITypeRegister(Of ITypeRelations))
+  spec.csharp:
+  - uid: Shared.Services.Registry.IRegistryInitializer.PopulateRegistry(Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations})
+    name: PopulateRegistry
+    href: Shared.Services.Registry.IRegistryInitializer.html#Shared_Services_Registry_IRegistryInitializer_PopulateRegistry_Shared_Services_Registry_ITypeRegister_Shared_Services_Registry_ITypeRelations__
+  - name: (
+  - uid: Shared.Services.Registry.ITypeRegister`1
+    name: ITypeRegister
+    href: Shared.Services.Registry.ITypeRegister-1.html
+  - name: <
+  - uid: Shared.Services.Registry.ITypeRelations
+    name: ITypeRelations
+    href: Shared.Services.Registry.ITypeRelations.html
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Shared.Services.Registry.IRegistryInitializer.PopulateRegistry(Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations})
+    name: PopulateRegistry
+    href: Shared.Services.Registry.IRegistryInitializer.html#Shared_Services_Registry_IRegistryInitializer_PopulateRegistry_Shared_Services_Registry_ITypeRegister_Shared_Services_Registry_ITypeRelations__
+  - name: (
+  - uid: Shared.Services.Registry.ITypeRegister`1
+    name: ITypeRegister
+    href: Shared.Services.Registry.ITypeRegister-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Services.Registry.ITypeRelations
+    name: ITypeRelations
+    href: Shared.Services.Registry.ITypeRelations.html
+  - name: )
+  - name: )
+- uid: Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations}
+  commentId: T:Shared.Services.Registry.ITypeRegister{Shared.Services.Registry.ITypeRelations}
+  parent: Shared.Services.Registry
+  definition: Shared.Services.Registry.ITypeRegister`1
+  href: Shared.Services.Registry.ITypeRegister-1.html
+  name: ITypeRegister<ITypeRelations>
+  nameWithType: ITypeRegister<ITypeRelations>
+  fullName: Shared.Services.Registry.ITypeRegister<Shared.Services.Registry.ITypeRelations>
+  nameWithType.vb: ITypeRegister(Of ITypeRelations)
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of Shared.Services.Registry.ITypeRelations)
+  name.vb: ITypeRegister(Of ITypeRelations)
+  spec.csharp:
+  - uid: Shared.Services.Registry.ITypeRegister`1
+    name: ITypeRegister
+    href: Shared.Services.Registry.ITypeRegister-1.html
+  - name: <
+  - uid: Shared.Services.Registry.ITypeRelations
+    name: ITypeRelations
+    href: Shared.Services.Registry.ITypeRelations.html
+  - name: '>'
+  spec.vb:
+  - uid: Shared.Services.Registry.ITypeRegister`1
+    name: ITypeRegister
+    href: Shared.Services.Registry.ITypeRegister-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Services.Registry.ITypeRelations
+    name: ITypeRelations
+    href: Shared.Services.Registry.ITypeRelations.html
+  - name: )

@@ -1,0 +1,773 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Geography.BoardGeography
+  commentId: T:Shared.Geography.BoardGeography
+  id: BoardGeography
+  parent: Shared.Geography
+  children:
+  - Shared.Geography.BoardGeography.GetContinentMembers(Shared.Geography.Enums.ContID)
+  - Shared.Geography.BoardGeography.GetNeighbors(Shared.Geography.Enums.TerrID)
+  - Shared.Geography.BoardGeography.IncludesContinent(System.Collections.Generic.HashSet{Shared.Geography.Enums.TerrID},Shared.Geography.Enums.ContID)
+  - Shared.Geography.BoardGeography.Initialize(Shared.Geography.GeographyInitializer)
+  - Shared.Geography.BoardGeography.NumContinents
+  - Shared.Geography.BoardGeography.NumTerritories
+  - Shared.Geography.BoardGeography.TerritoryToContinent(Shared.Geography.Enums.TerrID)
+  langs:
+  - csharp
+  - vb
+  name: BoardGeography
+  nameWithType: BoardGeography
+  fullName: Shared.Geography.BoardGeography
+  type: Class
+  source:
+    remote:
+      path: Shared/Geography/BoardGeography.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: BoardGeography
+    path: ../Shared/Geography/BoardGeography.cs
+    startLine: 7
+  assemblies:
+  - Model
+  namespace: Shared.Geography
+  summary: Encapsulates maps and methods for board Geography.
+  example: []
+  syntax:
+    content: public static class BoardGeography
+    content.vb: Public Module BoardGeography
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Shared.Geography.BoardGeography.NumTerritories
+  commentId: P:Shared.Geography.BoardGeography.NumTerritories
+  id: NumTerritories
+  parent: Shared.Geography.BoardGeography
+  langs:
+  - csharp
+  - vb
+  name: NumTerritories
+  nameWithType: BoardGeography.NumTerritories
+  fullName: Shared.Geography.BoardGeography.NumTerritories
+  type: Property
+  source:
+    remote:
+      path: Shared/Geography/BoardGeography.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: NumTerritories
+    path: ../Shared/Geography/BoardGeography.cs
+    startLine: 15
+  assemblies:
+  - Model
+  namespace: Shared.Geography
+  summary: Gets the number of territories on the board.
+  example: []
+  syntax:
+    content: public static int NumTerritories { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Shared Property NumTerritories As Integer
+  overload: Shared.Geography.BoardGeography.NumTerritories*
+- uid: Shared.Geography.BoardGeography.NumContinents
+  commentId: P:Shared.Geography.BoardGeography.NumContinents
+  id: NumContinents
+  parent: Shared.Geography.BoardGeography
+  langs:
+  - csharp
+  - vb
+  name: NumContinents
+  nameWithType: BoardGeography.NumContinents
+  fullName: Shared.Geography.BoardGeography.NumContinents
+  type: Property
+  source:
+    remote:
+      path: Shared/Geography/BoardGeography.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: NumContinents
+    path: ../Shared/Geography/BoardGeography.cs
+    startLine: 19
+  assemblies:
+  - Model
+  namespace: Shared.Geography
+  summary: Gets the number of continents on the board.
+  example: []
+  syntax:
+    content: public static int NumContinents { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Shared Property NumContinents As Integer
+  overload: Shared.Geography.BoardGeography.NumContinents*
+- uid: Shared.Geography.BoardGeography.Initialize(Shared.Geography.GeographyInitializer)
+  commentId: M:Shared.Geography.BoardGeography.Initialize(Shared.Geography.GeographyInitializer)
+  id: Initialize(Shared.Geography.GeographyInitializer)
+  parent: Shared.Geography.BoardGeography
+  langs:
+  - csharp
+  - vb
+  name: Initialize(GeographyInitializer)
+  nameWithType: BoardGeography.Initialize(GeographyInitializer)
+  fullName: Shared.Geography.BoardGeography.Initialize(Shared.Geography.GeographyInitializer)
+  type: Method
+  source:
+    remote:
+      path: Shared/Geography/BoardGeography.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Initialize
+    path: ../Shared/Geography/BoardGeography.cs
+    startLine: 24
+  assemblies:
+  - Model
+  namespace: Shared.Geography
+  summary: Initializes this <xref href="Shared.Geography.BoardGeography" data-throw-if-not-resolved="false"></xref> with values from a 'BoardGeography.json' via the DAL.
+  example: []
+  syntax:
+    content: public static void Initialize(GeographyInitializer initializer)
+    parameters:
+    - id: initializer
+      type: Shared.Geography.GeographyInitializer
+      description: The initializer provided by the DAL. Must be registered as <xref href="Shared.Services.Registry.RegistryRelation.ConvertedDataType" data-throw-if-not-resolved="false"></xref> for <xref href="Shared.Geography.BoardGeography" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Shared Sub Initialize(initializer As GeographyInitializer)
+  overload: Shared.Geography.BoardGeography.Initialize*
+- uid: Shared.Geography.BoardGeography.TerritoryToContinent(Shared.Geography.Enums.TerrID)
+  commentId: M:Shared.Geography.BoardGeography.TerritoryToContinent(Shared.Geography.Enums.TerrID)
+  id: TerritoryToContinent(Shared.Geography.Enums.TerrID)
+  parent: Shared.Geography.BoardGeography
+  langs:
+  - csharp
+  - vb
+  name: TerritoryToContinent(TerrID)
+  nameWithType: BoardGeography.TerritoryToContinent(TerrID)
+  fullName: Shared.Geography.BoardGeography.TerritoryToContinent(Shared.Geography.Enums.TerrID)
+  type: Method
+  source:
+    remote:
+      path: Shared/Geography/BoardGeography.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: TerritoryToContinent
+    path: ../Shared/Geography/BoardGeography.cs
+    startLine: 66
+  assemblies:
+  - Model
+  namespace: Shared.Geography
+  summary: Gets the continent containing a given territory.
+  example: []
+  syntax:
+    content: public static ContID TerritoryToContinent(TerrID terrID)
+    parameters:
+    - id: terrID
+      type: Shared.Geography.Enums.TerrID
+      description: The territory contained.
+    return:
+      type: Shared.Geography.Enums.ContID
+      description: The continent containing <code class="paramref">terrID</code>.
+    content.vb: Public Shared Function TerritoryToContinent(terrID As TerrID) As ContID
+  overload: Shared.Geography.BoardGeography.TerritoryToContinent*
+- uid: Shared.Geography.BoardGeography.GetContinentMembers(Shared.Geography.Enums.ContID)
+  commentId: M:Shared.Geography.BoardGeography.GetContinentMembers(Shared.Geography.Enums.ContID)
+  id: GetContinentMembers(Shared.Geography.Enums.ContID)
+  parent: Shared.Geography.BoardGeography
+  langs:
+  - csharp
+  - vb
+  name: GetContinentMembers(ContID)
+  nameWithType: BoardGeography.GetContinentMembers(ContID)
+  fullName: Shared.Geography.BoardGeography.GetContinentMembers(Shared.Geography.Enums.ContID)
+  type: Method
+  source:
+    remote:
+      path: Shared/Geography/BoardGeography.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: GetContinentMembers
+    path: ../Shared/Geography/BoardGeography.cs
+    startLine: 79
+  assemblies:
+  - Model
+  namespace: Shared.Geography
+  summary: Gets the full group of territories within a given continent.
+  example: []
+  syntax:
+    content: public static HashSet<TerrID> GetContinentMembers(ContID continent)
+    parameters:
+    - id: continent
+      type: Shared.Geography.Enums.ContID
+      description: The continent whose member territories should be returned.
+    return:
+      type: System.Collections.Generic.HashSet{Shared.Geography.Enums.TerrID}
+      description: The territories that are within <code class="paramref">continent</code>.
+    content.vb: Public Shared Function GetContinentMembers(continent As ContID) As HashSet(Of TerrID)
+  overload: Shared.Geography.BoardGeography.GetContinentMembers*
+- uid: Shared.Geography.BoardGeography.IncludesContinent(System.Collections.Generic.HashSet{Shared.Geography.Enums.TerrID},Shared.Geography.Enums.ContID)
+  commentId: M:Shared.Geography.BoardGeography.IncludesContinent(System.Collections.Generic.HashSet{Shared.Geography.Enums.TerrID},Shared.Geography.Enums.ContID)
+  id: IncludesContinent(System.Collections.Generic.HashSet{Shared.Geography.Enums.TerrID},Shared.Geography.Enums.ContID)
+  parent: Shared.Geography.BoardGeography
+  langs:
+  - csharp
+  - vb
+  name: IncludesContinent(HashSet<TerrID>, ContID)
+  nameWithType: BoardGeography.IncludesContinent(HashSet<TerrID>, ContID)
+  fullName: Shared.Geography.BoardGeography.IncludesContinent(System.Collections.Generic.HashSet<Shared.Geography.Enums.TerrID>, Shared.Geography.Enums.ContID)
+  type: Method
+  source:
+    remote:
+      path: Shared/Geography/BoardGeography.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: IncludesContinent
+    path: ../Shared/Geography/BoardGeography.cs
+    startLine: 93
+  assemblies:
+  - Model
+  namespace: Shared.Geography
+  summary: Determines whether a group of territories includes the entirety of a given continent.
+  example: []
+  syntax:
+    content: public static bool IncludesContinent(HashSet<TerrID> territoryList, ContID continent)
+    parameters:
+    - id: territoryList
+      type: System.Collections.Generic.HashSet{Shared.Geography.Enums.TerrID}
+      description: The group of territories that may contain <code class="paramref">continent</code>.
+    - id: continent
+      type: Shared.Geography.Enums.ContID
+      description: The continent that may or may not be contained by <code class="paramref">territoryList</code>.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if <code class="paramref">continent</code> is entirely covered by the territories iin <code class="paramref">territoryList</code>; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Shared Function IncludesContinent(territoryList As HashSet(Of TerrID), continent As ContID) As Boolean
+  overload: Shared.Geography.BoardGeography.IncludesContinent*
+  nameWithType.vb: BoardGeography.IncludesContinent(HashSet(Of TerrID), ContID)
+  fullName.vb: Shared.Geography.BoardGeography.IncludesContinent(System.Collections.Generic.HashSet(Of Shared.Geography.Enums.TerrID), Shared.Geography.Enums.ContID)
+  name.vb: IncludesContinent(HashSet(Of TerrID), ContID)
+- uid: Shared.Geography.BoardGeography.GetNeighbors(Shared.Geography.Enums.TerrID)
+  commentId: M:Shared.Geography.BoardGeography.GetNeighbors(Shared.Geography.Enums.TerrID)
+  id: GetNeighbors(Shared.Geography.Enums.TerrID)
+  parent: Shared.Geography.BoardGeography
+  langs:
+  - csharp
+  - vb
+  name: GetNeighbors(TerrID)
+  nameWithType: BoardGeography.GetNeighbors(TerrID)
+  fullName: Shared.Geography.BoardGeography.GetNeighbors(Shared.Geography.Enums.TerrID)
+  type: Method
+  source:
+    remote:
+      path: Shared/Geography/BoardGeography.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: GetNeighbors
+    path: ../Shared/Geography/BoardGeography.cs
+    startLine: 113
+  assemblies:
+  - Model
+  namespace: Shared.Geography
+  summary: Gets the territory neighbors of a given territory.
+  remarks: A "neighbor" is a territory directly adjacent to another.
+  example: []
+  syntax:
+    content: public static HashSet<TerrID> GetNeighbors(TerrID territory)
+    parameters:
+    - id: territory
+      type: Shared.Geography.Enums.TerrID
+      description: The territory whose neighbors should be returned.
+    return:
+      type: System.Collections.Generic.HashSet{Shared.Geography.Enums.TerrID}
+      description: The neighbors of <code class="paramref">territory</code>.
+    content.vb: Public Shared Function GetNeighbors(territory As TerrID) As HashSet(Of TerrID)
+  overload: Shared.Geography.BoardGeography.GetNeighbors*
+references:
+- uid: Shared.Geography
+  commentId: N:Shared.Geography
+  href: Shared.html
+  name: Shared.Geography
+  nameWithType: Shared.Geography
+  fullName: Shared.Geography
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Shared.Geography.BoardGeography.NumTerritories*
+  commentId: Overload:Shared.Geography.BoardGeography.NumTerritories
+  href: Shared.Geography.BoardGeography.html#Shared_Geography_BoardGeography_NumTerritories
+  name: NumTerritories
+  nameWithType: BoardGeography.NumTerritories
+  fullName: Shared.Geography.BoardGeography.NumTerritories
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Shared.Geography.BoardGeography.NumContinents*
+  commentId: Overload:Shared.Geography.BoardGeography.NumContinents
+  href: Shared.Geography.BoardGeography.html#Shared_Geography_BoardGeography_NumContinents
+  name: NumContinents
+  nameWithType: BoardGeography.NumContinents
+  fullName: Shared.Geography.BoardGeography.NumContinents
+- uid: Shared.Geography.BoardGeography
+  commentId: T:Shared.Geography.BoardGeography
+  href: Shared.Geography.BoardGeography.html
+  name: BoardGeography
+  nameWithType: BoardGeography
+  fullName: Shared.Geography.BoardGeography
+- uid: Shared.Services.Registry.RegistryRelation.ConvertedDataType
+  commentId: F:Shared.Services.Registry.RegistryRelation.ConvertedDataType
+  href: Shared.Services.Registry.RegistryRelation.html#Shared_Services_Registry_RegistryRelation_ConvertedDataType
+  name: ConvertedDataType
+  nameWithType: RegistryRelation.ConvertedDataType
+  fullName: Shared.Services.Registry.RegistryRelation.ConvertedDataType
+- uid: Shared.Geography.BoardGeography.Initialize*
+  commentId: Overload:Shared.Geography.BoardGeography.Initialize
+  href: Shared.Geography.BoardGeography.html#Shared_Geography_BoardGeography_Initialize_Shared_Geography_GeographyInitializer_
+  name: Initialize
+  nameWithType: BoardGeography.Initialize
+  fullName: Shared.Geography.BoardGeography.Initialize
+- uid: Shared.Geography.GeographyInitializer
+  commentId: T:Shared.Geography.GeographyInitializer
+  parent: Shared.Geography
+  href: Shared.Geography.GeographyInitializer.html
+  name: GeographyInitializer
+  nameWithType: GeographyInitializer
+  fullName: Shared.Geography.GeographyInitializer
+- uid: Shared.Geography.BoardGeography.TerritoryToContinent*
+  commentId: Overload:Shared.Geography.BoardGeography.TerritoryToContinent
+  href: Shared.Geography.BoardGeography.html#Shared_Geography_BoardGeography_TerritoryToContinent_Shared_Geography_Enums_TerrID_
+  name: TerritoryToContinent
+  nameWithType: BoardGeography.TerritoryToContinent
+  fullName: Shared.Geography.BoardGeography.TerritoryToContinent
+- uid: Shared.Geography.Enums.TerrID
+  commentId: T:Shared.Geography.Enums.TerrID
+  parent: Shared.Geography.Enums
+  href: Shared.Geography.Enums.TerrID.html
+  name: TerrID
+  nameWithType: TerrID
+  fullName: Shared.Geography.Enums.TerrID
+- uid: Shared.Geography.Enums.ContID
+  commentId: T:Shared.Geography.Enums.ContID
+  parent: Shared.Geography.Enums
+  href: Shared.Geography.Enums.ContID.html
+  name: ContID
+  nameWithType: ContID
+  fullName: Shared.Geography.Enums.ContID
+- uid: Shared.Geography.Enums
+  commentId: N:Shared.Geography.Enums
+  href: Shared.html
+  name: Shared.Geography.Enums
+  nameWithType: Shared.Geography.Enums
+  fullName: Shared.Geography.Enums
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+- uid: Shared.Geography.BoardGeography.GetContinentMembers*
+  commentId: Overload:Shared.Geography.BoardGeography.GetContinentMembers
+  href: Shared.Geography.BoardGeography.html#Shared_Geography_BoardGeography_GetContinentMembers_Shared_Geography_Enums_ContID_
+  name: GetContinentMembers
+  nameWithType: BoardGeography.GetContinentMembers
+  fullName: Shared.Geography.BoardGeography.GetContinentMembers
+- uid: System.Collections.Generic.HashSet{Shared.Geography.Enums.TerrID}
+  commentId: T:System.Collections.Generic.HashSet{Shared.Geography.Enums.TerrID}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.HashSet`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  name: HashSet<TerrID>
+  nameWithType: HashSet<TerrID>
+  fullName: System.Collections.Generic.HashSet<Shared.Geography.Enums.TerrID>
+  nameWithType.vb: HashSet(Of TerrID)
+  fullName.vb: System.Collections.Generic.HashSet(Of Shared.Geography.Enums.TerrID)
+  name.vb: HashSet(Of TerrID)
+  spec.csharp:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: <
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: )
+- uid: System.Collections.Generic.HashSet`1
+  commentId: T:System.Collections.Generic.HashSet`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  name: HashSet<T>
+  nameWithType: HashSet<T>
+  fullName: System.Collections.Generic.HashSet<T>
+  nameWithType.vb: HashSet(Of T)
+  fullName.vb: System.Collections.Generic.HashSet(Of T)
+  name.vb: HashSet(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: Shared.Geography.BoardGeography.IncludesContinent*
+  commentId: Overload:Shared.Geography.BoardGeography.IncludesContinent
+  href: Shared.Geography.BoardGeography.html#Shared_Geography_BoardGeography_IncludesContinent_System_Collections_Generic_HashSet_Shared_Geography_Enums_TerrID__Shared_Geography_Enums_ContID_
+  name: IncludesContinent
+  nameWithType: BoardGeography.IncludesContinent
+  fullName: Shared.Geography.BoardGeography.IncludesContinent
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Shared.Geography.BoardGeography.GetNeighbors*
+  commentId: Overload:Shared.Geography.BoardGeography.GetNeighbors
+  href: Shared.Geography.BoardGeography.html#Shared_Geography_BoardGeography_GetNeighbors_Shared_Geography_Enums_TerrID_
+  name: GetNeighbors
+  nameWithType: BoardGeography.GetNeighbors
+  fullName: Shared.Geography.BoardGeography.GetNeighbors
