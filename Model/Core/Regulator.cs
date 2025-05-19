@@ -194,7 +194,55 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
             return true;
         return false;
     }
+    public (TerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(TerrID selected, TerrID priorSelected)
+    {
+        var board = _currentGame.Board;
+        if (board == null)
+            return (TerrID.Null, false, null);
 
+        bool havePriorSelection = priorSelected != TerrID.Null;
+        TerrID postSelection = TerrID.Null;
+        bool requestInput = false;
+        int? maxValue = null;
+        var phase = _machine.CurrentPhase;
+
+        switch (phase) {
+            case GamePhase.Attack when !IsInSecondStage():
+                postSelection = selected;
+                _machine.PhaseStageTwo = true;
+                break;
+            case GamePhase.Attack when IsInSecondStage():
+                if (!havePriorSelection) {
+                    _logger.LogError("A second selection was attempted during Attack phase, but no prior selection was provided.");
+                    throw new ArgumentNullException(nameof(priorSelected));
+                }
+                postSelection = selected;
+                requestInput = true;
+                _machine.PhaseStageTwo = false;
+                break;
+
+            case GamePhase.Move when !IsInSecondStage():
+                postSelection = selected;
+                _machine.PhaseStageTwo = true;
+                break;
+            case GamePhase.Move when IsInSecondStage():
+                if (!havePriorSelection) {
+                    _logger.LogError("A second selection was attempted during Move phase, but no prior selection was provided.");
+                    throw new ArgumentNullException(nameof(priorSelected));
+                }
+                postSelection = TerrID.Null;
+                requestInput = true;
+                maxValue = _currentGame.Board.Armies[priorSelected] - 1;
+                _machine.PhaseStageTwo = false;
+                break;
+            default:
+                ClaimOrReinforce(selected);
+                postSelection = TerrID.Null;
+            break;
+        }
+
+        return (postSelection, requestInput, maxValue);
+    }
     /// <inheritdoc cref="IRegulator.ClaimOrReinforce(TerrID)"/>
     public void ClaimOrReinforce(TerrID territory)
     {

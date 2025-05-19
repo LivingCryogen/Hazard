@@ -119,6 +119,11 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
         throw new NotImplementedException();
     }
 
+    public (TerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(TerrID selected, TerrID priorSelected)
+    {
+        throw new NotImplementedException();
+    }
+
     public void ClaimOrReinforce(TerrID territory)
     {
         throw new NotImplementedException();

@@ -1,4 +1,6 @@
-﻿namespace Shared.Interfaces.ViewModel;
+﻿using Shared.Geography.Enums;
+
+namespace Shared.Interfaces.ViewModel;
 
 /// <summary>
 /// Contract for EventArgs used by <see cref="IMainVM.AdvanceRequest"/>.
@@ -27,11 +29,11 @@ public interface ITroopsAdvanceEventArgs
     /// </value>
     int Min { get; init; }
     /// <summary>
-    /// Gets or inits the underlying value of the source territory's Enum ID.
+    /// Gets or inits the source territory's Enum ID.
     /// </summary>
-    int Source { get; init; }
+    TerrID Source { get; init; }
     /// <summary>
-    /// Gets or inits the underlying value of the target territory's Enum ID.
+    /// Gets or inits the target territory's Enum ID.
     /// </summary>
-    int Target { get; init; }
+    TerrID Target { get; init; }
 }

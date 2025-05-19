@@ -10,12 +10,11 @@ namespace Shared.Interfaces.ViewModel;
 /// </summary>
 public interface IMainVM : IBinarySerializable
 {
-    #region Properties
     /// <summary>
     /// Gets or sets the current Game.
     /// </summary>
     /// <value>
-    /// The current <see cref="IGame"/> instance if both it and the <see cref="IMainVM"/> have been initialized; otherwise <see langword="null"/>. <br/>
+    /// The current <see cref="IGame"/> instance if both it and the <see cref="IMainVM"/> have been initialized; otherwise <see langword="null"/>.
     /// </value>
     IGame? CurrentGame { get; set; }
     /// <summary>
@@ -103,9 +102,7 @@ public interface IMainVM : IBinarySerializable
     /// Gets the choose territory bonus command.
     /// </summary>
     ICommand ChooseTerritoryBonus_Command { get; }
-    #endregion
 
-    #region Events
     /// <summary>
     /// Fires if the turn is changing control between players.
     /// </summary>
@@ -136,7 +133,7 @@ public interface IMainVM : IBinarySerializable
     /// is given in the ViewModel, which then passes those results on to the Model for it to execute logic with them. This might need <br/>
     /// to be changed in the future, but would require rethinking how to give a player a "real" view of the "roll."
     /// </remarks>
-    event EventHandler<int>? AttackRequest;
+    event EventHandler<TerrID>? AttackRequest;
     /// <summary>
     /// Fires when user input is needed to determine how many armies will move after a successful attack.
     /// </summary>
@@ -153,7 +150,7 @@ public interface IMainVM : IBinarySerializable
     /// Fires when a player wins.
     /// </summary>
     event EventHandler<int>? PlayerWon;
-    #endregion
+
     /// <summary>
     /// Initializes the MainViewModel using either newly input values or the name of a save file.
     /// </summary>

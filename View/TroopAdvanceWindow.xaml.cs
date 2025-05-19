@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Shared.Geography.Enums;
+using System.Windows;
 using System.Windows.Input;
 
 namespace View;
@@ -8,8 +9,8 @@ namespace View;
 /// </summary>
 public partial class TroopAdvanceWindow : Window
 {
-    private readonly int _source = 0;
-    private readonly int _target = 0;
+    private readonly TerrID _source;
+    private readonly TerrID _target;
     private readonly int _minAdvance = 0;
     private readonly MainWindow? _parent;
 
@@ -17,7 +18,7 @@ public partial class TroopAdvanceWindow : Window
     {
         InitializeComponent();
     }
-    public TroopAdvanceWindow(int source, int target, int min, int max, string message, MainWindow parentWindow)
+    public TroopAdvanceWindow(TerrID source, TerrID target, int min, int max, string message, MainWindow parentWindow)
     {
         InitializeComponent();
         _parent = parentWindow;
@@ -38,7 +39,7 @@ public partial class TroopAdvanceWindow : Window
     {
         int numAdvance = NumAdvanceBox.SelectedIndex + _minAdvance;
         if (_parent != null)
-            _parent.AdvanceParams = [_source, _target, numAdvance];
+            _parent.AdvanceParams = (_source, _target, numAdvance);
     }
     private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
     {

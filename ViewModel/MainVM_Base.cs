@@ -127,7 +127,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// <inheritdoc cref="IMainVM.ForceTradeIn"/>
     public event EventHandler<int>? ForceTradeIn;
     /// <inheritdoc cref="IMainVM.AttackRequest"/>
-    public event EventHandler<int>? AttackRequest;
+    public event EventHandler<TerrID>? AttackRequest;
     /// <inheritdoc cref="IMainVM.AdvanceRequest"/>
     public event EventHandler<ITroopsAdvanceEventArgs>? AdvanceRequest;
     /// <inheritdoc cref="IMainVM.DiceThrown"/>
@@ -240,7 +240,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// Invokes <see cref="AttackRequest"/>.
     /// </summary>
     /// <param name="sourceTerritory">The ubnderlying int value of the source territory's <see cref="TerrID">ID</see>.</param>
-    public void RaiseAttackRequest(int sourceTerritory)
+    public void RaiseAttackRequest(TerrID sourceTerritory)
     {
         AttackRequest?.Invoke(this, sourceTerritory);
     }
@@ -261,7 +261,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// <param name="min">The minimum number of armies that may be advanced (moved after attack).</param>
     /// <param name="max">The maximum number of armies that may be advanced (moved after attack).</param>
     /// <param name="conquered">A flag indicating whether the result of the attack is a successful conequest of the territory by <paramref name="source"/>.</param>
-    public void RaiseAdvanceRequest(int source, int target, int min, int max, bool conquered)
+    public void RaiseAdvanceRequest(TerrID source, TerrID target, int min, int max, bool conquered)
     {
         AdvanceRequest?.Invoke(this, new TroopsAdvanceEventArgs(source, target, min, max, conquered));
     }
@@ -357,7 +357,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// "CanExecute" logic for the <see cref="AdvanceCommand"/>.
     /// </summary>
     /// <param name="advanceParams">The number of armies to advance chosen by the player.</param>
-    public bool CanAdvance(int[] advanceParams)
+    public bool CanAdvance((TerrID Source, TerrID Target, int NumAdvance) advanceParams)
     {
         if (CurrentPhase == GamePhase.Attack || CurrentPhase == GamePhase.Move)
             return true;
@@ -368,13 +368,9 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// </summary>
     /// <param name="advanceParams">Identify [0] the source territory, [1] the target territory, and [2] the number of armies to advance.</param>
     [RelayCommand(CanExecute = nameof(CanAdvance))]
-    public void Advance(int[] advanceParams)
+    public void Advance((TerrID Source, TerrID Target, int NumAdvance) advanceParams)
     {
-        TerrID source = (TerrID)advanceParams[0];
-        TerrID target = (TerrID)advanceParams[1];
-        int numAdvance = advanceParams[2];
-
-        Regulator?.MoveArmies(source, target, numAdvance);
+        Regulator?.MoveArmies(advanceParams.Source, advanceParams.Target, advanceParams.NumAdvance);
     }
     /// <summary>
     /// CanExecute logic for the <see cref="TradeInCommand"/>.

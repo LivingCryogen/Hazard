@@ -86,60 +86,47 @@ public partial class MainVM(IGameService gameService,
     /// <inheritdoc cref="MainVM_Base.TerritorySelect(int)"/>
     public override void TerritorySelect(int selected)
     {
-        var territory = (TerrID)selected;
-        if (territory == TerrID.Null)
+        var newSelect = (TerrID)selected;
+        var oldSelect = TerritorySelected;
+        if (newSelect == TerrID.Null || Regulator == null)
             return;
 
-        switch (CurrentPhase) {
-            case GamePhase.DefaultSetup:
-                Regulator?.ClaimOrReinforce(territory);
-                break;
-            case GamePhase.TwoPlayerSetup:
-                Regulator?.ClaimOrReinforce(territory);
-                break;
-            case GamePhase.Place:
-                Regulator?.ClaimOrReinforce(territory);
-                break;
+        var (Selection, RequestInput, MaxValue) = Regulator.SelectTerritory(newSelect, TerritorySelected);
+        TerritorySelected = Selection;
 
-            case GamePhase.Attack:
-                if (TerritorySelected == TerrID.Null) {
-                    TerritorySelected = territory;
-                    Territories[selected].IsSelected = true;
-                }
-                else {
-                    var sourceTerritory = (int)TerritorySelected;
-                    Territories[sourceTerritory].IsSelected = false;
-                    Territories[selected].IsSelected = true;
-                    TerritorySelected = territory;
-                    AttackEnabled = true;
-                    base.RaiseAttackRequest(sourceTerritory);
-                }
-                break;
-            case GamePhase.Move:
-                if (TerritorySelected == TerrID.Null) {
-                    TerritorySelected = territory;
-                    Territories[selected].IsSelected = true;
-                    PhaseStageTwo = true;
-                }
-                else {
-                    var moveSource = (int)TerritorySelected;
-                    Territories[moveSource].IsSelected = false;
-                    TerritorySelected = TerrID.Null;
-                    PhaseStageTwo = false;
-                    int maxMoving = Territories[moveSource].Armies - 1;
+        // set Selection Status of Territory Element
+        if (TerritorySelected == TerrID.Null && oldSelect != TerrID.Null)
+            Territories[(int)oldSelect].IsSelected = false;
+        else if (TerritorySelected != TerrID.Null)
+            Territories[(int)TerritorySelected].IsSelected = true;
 
-                    if (maxMoving > 1)
-                        base.RaiseAdvanceRequest(moveSource, selected, 1, maxMoving, false);
-                    else if (maxMoving == 1) {
-                        int[] advanceParams = [moveSource, selected, 1];
-                        if (base.CanAdvance(advanceParams))
-                            base.AdvanceCommand.Execute(advanceParams);
-                    }
-                }
-                break;
+
+        // determine if request for Attack or Move are made, then invoke them
+        if (!RequestInput) {
+            // For whatever reason the CommandManager auto-detection does not always function
+            // manual Notification is sometimes needed
+            TerritorySelectCommand.NotifyCanExecuteChanged();
+            return;
+        }
+        if (MaxValue != null) {
+            Territories[(int)oldSelect].IsSelected = false;
+            if (MaxValue > 1)
+                base.RaiseAdvanceRequest(oldSelect, newSelect, 1, (int)MaxValue, false);
+            else if (MaxValue == 1) {
+                (TerrID Source, TerrID Target, int NumAdvance) advanceParams = (oldSelect, newSelect, 1);
+                if (base.CanAdvance(advanceParams))
+                    base.AdvanceCommand.Execute(advanceParams);
+            }
+
+            TerritorySelectCommand.NotifyCanExecuteChanged();
+            return;
         }
 
-        TerritorySelectCommand.NotifyCanExecuteChanged(); // For whatever reason the CommandManager auto-detection does not always function -- manual Notification is sometimes needed (exactly why/when ?)
+        Territories[(int)oldSelect].IsSelected = false;
+        Territories[(int)TerritorySelected].IsSelected = true;
+        AttackEnabled = true;
+        base.RaiseAttackRequest(oldSelect);
+        TerritorySelectCommand.NotifyCanExecuteChanged();
     }
     /// <summary>
     /// CanExecute logic for the <see cref="AttackCommand"/>.
@@ -218,7 +205,7 @@ public partial class MainVM(IGameService gameService,
         RaiseDiceThrown(attackDice, defenseDice);
 
         if (Territories[target].Armies < 1)
-            RaiseAdvanceRequest(source, target, numAttackDice, Territories[source].Armies - 1, true);
+            RaiseAdvanceRequest((TerrID)source, (TerrID)target, numAttackDice, Territories[source].Armies - 1, true);
     }
 
     private void DisableAttack_Tick(object? sender, System.EventArgs e)

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Win32;
 using Shared.Enums;
+using Shared.Geography.Enums;
 using Shared.Interfaces.ViewModel;
 using Shared.Services.Options;
 using System.Collections.ObjectModel;
@@ -44,7 +45,7 @@ public partial class MainWindow : Window
     }
 
     public required IOptions<AppConfig> AppOptions { get; init; }
-    public int[]? AdvanceParams { get; set; } = null;
+    public (TerrID Source, TerrID Target, int NumAdvance)? AdvanceParams { get; set; } = null;
 
     #region DependencyProperties
     public ObservableCollection<SolidColorBrush> PlayerColors {
@@ -264,18 +265,18 @@ public partial class MainWindow : Window
         pickTerritory.ShowDialog();
         CommandManager.InvalidateRequerySuggested();
     }
-    private void OnAttackRequest(object? sender, int sourceTerritory)
+    private void OnAttackRequest(object? sender, TerrID sourceTerritory)
     {
         if (_territoryButtons == null) throw new NullReferenceException($"{_territoryButtons} was null when an attack was requested.");
         Debug.Assert(_vM != null, "ViewModel should never be null here since this method handles an event from it.");
         int targetTerritory = (int)((MainVM_Base)_vM!).TerritorySelected;
-        SolidColorBrush sourceColor = _territoryButtons[sourceTerritory].Color;
+        SolidColorBrush sourceColor = _territoryButtons[(int)sourceTerritory].Color;
         SolidColorBrush targetColor = _territoryButtons[targetTerritory].Color;
 
         AttackWindow newAttackWindow = new() { 
             SoundFileMap = _soundFileMap,
         };
-        newAttackWindow.Initialize(sourceTerritory, targetTerritory, sourceColor, targetColor, (IMainVM)DataContext);
+        newAttackWindow.Initialize((int)sourceTerritory, targetTerritory, sourceColor, targetColor, (IMainVM)DataContext);
         newAttackWindow.ShowDialog();
         CommandManager.InvalidateRequerySuggested();
     }
@@ -285,7 +286,7 @@ public partial class MainWindow : Window
         var context = this.DataContext;
         Debug.Assert(_vM != null, "ViewModel should never be null here since this method handles an event from it.");
         if (e.Conquered)
-            message = string.Format("{0} is ours!", _vM!.Territories[e.Target].DisplayName);
+            message = string.Format("{0} is ours!", _vM!.Territories[(int)e.Target].DisplayName);
         else
             message = "How many Armies should relocate?";
 
