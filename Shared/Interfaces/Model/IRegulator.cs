@@ -32,6 +32,13 @@ public interface IRegulator : IBinarySerializable
     /// </summary>
     event EventHandler<IPromptTradeEventArgs>? PromptTradeIn;
     /// <summary>
+    /// Determines whether a given territory is a valid selection according to rules and game state.
+    /// </summary>
+    /// <param name="newSelected">The territory being selected.</param>
+    /// <param name="oldSelected">The territory already selected, if any.</param>
+    /// <returns><see langword="true"/> if the territory is a valid selection; otherwise, <see langword="false"/>.</returns>
+    bool CanSelectTerritory(TerrID newSelected, TerrID oldSelected);
+    /// <summary>
     /// Updates game state in response to a territory being selected during Setup or Place phases (see <see cref="Enums.GamePhase"/>).
     /// </summary>
     /// <param name="territory">The territory selected.</param>

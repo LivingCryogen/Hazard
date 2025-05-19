@@ -27,7 +27,6 @@ public partial class MainVM(IGameService gameService,
     private readonly IGameService _gameService = gameService;
     private readonly IDialogState _dialogService = dialogService;
     private readonly IDispatcherTimer _dispatcherTimer = wpfTimer;
-    private HashSet<TerrID> _moveTargets = [];
 
     /// <inheritdoc cref="MainVM_Base.HandleStateChanged(object?, string)"/>.
     public override void HandleStateChanged(object? sender, string propName)
@@ -39,8 +38,6 @@ public partial class MainVM(IGameService gameService,
             case "CurrentPhase":
                 CurrentPhase = stateMachine.CurrentPhase;
                 TerritorySelected = TerrID.Null;
-                if (CurrentPhase.Equals(GamePhase.Move))
-                    _moveTargets = [];
                 TerritorySelectCommand.NotifyCanExecuteChanged();
                 break;
             case "PlayerTurn":
@@ -84,30 +81,7 @@ public partial class MainVM(IGameService gameService,
         if (territory == TerrID.Null)
             return false;
 
-        int owner = Territories[(int)territory].PlayerOwner;
-
-        return CurrentPhase switch {
-            GamePhase.DefaultSetup =>
-                stateMachine.PhaseStageTwo switch {
-                    false when owner == -1 => true, // claiming unowned territory
-                    true when owner == stateMachine.PlayerTurn => true, // reinforcing owned territory
-                    _ => false
-                },
-            GamePhase.TwoPlayerSetup =>
-                stateMachine.PhaseStageTwo switch {
-                    false when owner == stateMachine.PlayerTurn => true, // reinforcing auto-assigned territory
-                    true when owner == -1 => true, // reinforcing AI territory
-                    _ => false
-                },
-            GamePhase.Place => owner == stateMachine.PlayerTurn, // place an army on an owned territory
-            GamePhase.Attack => TerritorySelected == TerrID.Null ?
-                (owner == stateMachine.PlayerTurn && Territories[selected].Armies >= 2) // select valid Attack source
-                : (owner != stateMachine.PlayerTurn && BoardGeography.GetNeighbors(TerritorySelected).Contains(territory)), // select valid Attack target
-            GamePhase.Move => TerritorySelected == TerrID.Null ?
-                (Territories[selected].Armies >= 2) // select valid Move source
-                : (TerritorySelected != territory && _moveTargets.Contains(territory)), // select valid Move target
-            _ => false
-        };
+        return Regulator.CanSelectTerritory(territory, TerritorySelected);
     }
     /// <inheritdoc cref="MainVM_Base.TerritorySelect(int)"/>
     public override void TerritorySelect(int selected)
@@ -145,14 +119,12 @@ public partial class MainVM(IGameService gameService,
                 if (TerritorySelected == TerrID.Null) {
                     TerritorySelected = territory;
                     Territories[selected].IsSelected = true;
-                    _moveTargets = GetMoveTargets(TerritorySelected, Territories[selected].PlayerOwner);
                     PhaseStageTwo = true;
                 }
                 else {
                     var moveSource = (int)TerritorySelected;
                     Territories[moveSource].IsSelected = false;
                     TerritorySelected = TerrID.Null;
-                    _moveTargets = [];
                     PhaseStageTwo = false;
                     int maxMoving = Territories[moveSource].Armies - 1;
 
@@ -329,13 +301,4 @@ public partial class MainVM(IGameService gameService,
         CurrentGame?.State.IncrementPlayerTurn();
     }
 
-    private HashSet<TerrID> GetMoveTargets(TerrID territory, int playerOwner)
-    {
-        var neighbors = BoardGeography.GetNeighbors(territory);
-        if (neighbors.Count <= 0)
-            return [];
-        return neighbors
-            .Where(neighbor => Territories[(int)neighbor].PlayerOwner == playerOwner)
-            .ToHashSet();
-    }
 }

@@ -114,6 +114,11 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
         throw new NotImplementedException();
     }
 
+    public bool CanSelectTerritory(TerrID newSelected, TerrID oldSelected)
+    {
+        throw new NotImplementedException();
+    }
+
     public void ClaimOrReinforce(TerrID territory)
     {
         throw new NotImplementedException();

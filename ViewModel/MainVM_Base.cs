@@ -43,7 +43,6 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         ContNameMap = MakeContIDDisplayNameMap();
     }
 
-    #region Properties
     public required string AppPath { get; set; }
     public IGame? CurrentGame { get; set; }
     public IRegulator? Regulator { get; set; }
@@ -118,9 +117,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     public ICommand DeliverAttackReward_Command { get => DeliverAttackRewardCommand; }
     public ICommand UndoConfirmInput_Command { get => UndoConfirmInputCommand; }
     public ICommand ChooseTerritoryBonus_Command { get => ChooseTerritoryBonusCommand; }
-    #endregion
 
-    #region Events
     /// <inheritdoc cref="IMainVM.PlayerTurnChanging"/>
     public event EventHandler<int>? PlayerTurnChanging;
     /// <inheritdoc cref="IMainVM.TerritoryChoiceRequest"/>
@@ -140,9 +137,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// <inheritdoc cref="IMainVM.PlayerWon"/>
     public event EventHandler<int>? PlayerWon;
     /// <inheritdoc cref="IMainVM.CurrentGame"/>
-    #endregion
 
-    #region Methods
     private static ReadOnlyDictionary<ContID, string> MakeContIDDisplayNameMap()
     {
         var contIDValues = Enum.GetValues(typeof(ContID));
@@ -535,5 +530,4 @@ public partial class MainVM_Base : ObservableObject, IMainVM
             return saveData;
         });
     }
-    #endregion
 }

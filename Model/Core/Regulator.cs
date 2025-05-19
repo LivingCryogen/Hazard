@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Model.Core;
 using Model.EventArgs;
 using Shared.Enums;
 using Shared.Geography;
@@ -140,6 +141,60 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
 
         _machine.StateChanged += HandleStateChanged;
     }
+
+    /// <inheritdoc cref="IRegulator.CanSelectTerritory(TerrID, TerrID)"/>
+    public bool CanSelectTerritory(TerrID newSelected, TerrID oldSelected)
+    {
+        bool priorSelection = oldSelected switch {
+            TerrID.Null => false,
+            _ => true
+        };
+
+        int owner = _currentGame.Board.TerritoryOwner[newSelected];
+        int territoryArmies = _currentGame.Board.Armies[newSelected];
+
+        return CurrentPhase switch {
+            GamePhase.DefaultSetup =>
+                _machine.PhaseStageTwo switch {
+                    false when owner == -1 => true, // claiming unowned territory
+                    true when owner == _machine.PlayerTurn => true, // reinforcing owned territory
+                    _ => false
+                },
+
+            GamePhase.TwoPlayerSetup =>
+                _machine.PhaseStageTwo switch {
+                    false when owner == _machine.PlayerTurn => true, // reinforcing auto-assigned territory
+                    true when owner == -1 => true, // reinforcing AI territory
+                    _ => false
+                },
+
+            GamePhase.Place => owner == _machine.PlayerTurn, // place an army on an owned territory
+
+            // Attack and Move have two selection steps, so we differentiate based on whether there was a prior selection
+            GamePhase.Attack when !priorSelection => owner == _machine.PlayerTurn && territoryArmies >= 2,
+
+            GamePhase.Attack when priorSelection => owner != _machine.PlayerTurn && BoardGeography.GetNeighbors(oldSelected).Contains(newSelected),
+
+            GamePhase.Move when !priorSelection => owner == _machine.PlayerTurn && territoryArmies >= 2,
+
+            GamePhase.Move when priorSelection => 
+                owner == _machine.PlayerTurn && 
+                oldSelected != newSelected && 
+                IsMoveDestination(owner, newSelected, oldSelected),
+            _ => false
+        };
+    }
+    private bool IsMoveDestination(int playerOwner, TerrID target, TerrID source)
+    {
+        var ownedNeighbors = BoardGeography.GetNeighbors(source)
+            .Where(neighbor => _currentGame.Board.TerritoryOwner[neighbor] == playerOwner);
+        if (!ownedNeighbors.Any())
+            return false;
+        if (ownedNeighbors.Contains(target))
+            return true;
+        return false;
+    }
+
     /// <inheritdoc cref="IRegulator.ClaimOrReinforce(TerrID)"/>
     public void ClaimOrReinforce(TerrID territory)
     {
@@ -191,6 +246,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
                 break;
         }
     }
+    
     /// <inheritdoc cref="IRegulator.MoveArmies(TerrID, TerrID, int)"/>
     public void MoveArmies(TerrID source, TerrID target, int armies)
     {
