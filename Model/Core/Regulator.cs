@@ -194,6 +194,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
             return true;
         return false;
     }
+    /// <inheritdoc cref=""/>
     public (TerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(TerrID selected, TerrID priorSelected)
     {
         var board = _currentGame.Board;

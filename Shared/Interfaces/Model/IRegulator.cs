@@ -39,11 +39,13 @@ public interface IRegulator : IBinarySerializable
     /// <returns><see langword="true"/> if the territory is a valid selection; otherwise, <see langword="false"/>.</returns>
     bool CanSelectTerritory(TerrID newSelected, TerrID oldSelected);
     /// <summary>
-    /// 
+    /// Receives a territory ID selection as Player input and determines course of game logic.
     /// </summary>
-    /// <param name="selected"></param>
-    /// <param name="priorSelected"></param>
-    /// <returns></returns>
+    /// <param name="selected">The Territory selected by the player.</param>
+    /// <param name="priorSelected">The previous selection.</param>
+    /// <returns>A tuple containing the updated selection and a flag for requesting further player input (needed in Attack and Move phases). 
+    /// If MaxValue is not null, the request is for Move/Advance.
+    /// </returns>
     public (TerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(TerrID selected, TerrID priorSelected);
     /// <summary>
     /// Updates game state in response to a territory being selected during Setup or Place phases (see <see cref="Enums.GamePhase"/>).
