@@ -437,14 +437,19 @@ centered-p {
     position: relative;
     width: 90%;
     max-width: 800px;
+    height: 450px;
     margin: 2rem auto;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 6px 18px rgba(0,0,0, 0.5);
+    background-color: #2a3141;
 }
 
 .gallery-img {
     width: 100%;
+    height: 450px;
+    object-fit: contain;
+    background-color: #2a3141;
     display: none;
     border-radius: 8px;
 }
@@ -608,6 +613,10 @@ centered-p {
     .cta-button {
         width: 80%;
         justify-content: center;
+    }
+
+    .screenshot-gallery, .gallery-img {
+        height: 300px;
     }
 }
 
