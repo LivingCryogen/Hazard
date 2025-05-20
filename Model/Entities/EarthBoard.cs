@@ -82,7 +82,6 @@ public class EarthBoard : IBoard, IBinarySerializable
         }
     }
 
-    #region Methods
     /// <inheritdoc cref="IBoard.Claims(int, TerrID)"/>
     public void Claims(int newPlayer, TerrID territory)
     {
@@ -193,6 +192,5 @@ public class EarthBoard : IBoard, IBinarySerializable
         }
         return loadComplete;
     }
-    #endregion
 }
 

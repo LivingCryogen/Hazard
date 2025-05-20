@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<Configurations>Debug;Release;Pages</Configurations>
-	<Platforms>x64;ARM64;AnyCPU;x86</Platforms>
+	<Platforms>x64;ARM64;x86</Platforms>
   </PropertyGroup>
 	
   <ItemGroup>

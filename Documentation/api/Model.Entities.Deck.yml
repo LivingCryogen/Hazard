@@ -134,11 +134,10 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: .ctor
     path: ../Model/Entities/Deck.cs
-    startLine: 33
+    startLine: 32
   assemblies:
   - Model
   namespace: Model.Entities
-  summary: Constructs a deck from a group of cards, placing them all in the <xref href="Model.Entities.Deck.Library" data-throw-if-not-resolved="false"></xref>.
   remarks: This constructor is useful when a <xref href="Model.Entities.Deck" data-throw-if-not-resolved="false"></xref> is to be built from multiple <xref href="Shared.Interfaces.Model.ICardSet.Cards" data-throw-if-not-resolved="false"></xref> values.
   example: []
   syntax:
@@ -146,7 +145,6 @@ items:
     parameters:
     - id: cards
       type: Shared.Interfaces.Model.ICard[][]
-      description: A staggered array of cards that will constitute the deck.
     content.vb: Public Sub New(cards As ICard()())
   overload: Model.Entities.Deck.#ctor*
   nameWithType.vb: Deck.New(ICard()())
@@ -170,7 +168,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: .ctor
     path: ../Model/Entities/Deck.cs
-    startLine: 40
+    startLine: 39
   assemblies:
   - Model
   namespace: Model.Entities
@@ -205,7 +203,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: .ctor
     path: ../Model/Entities/Deck.cs
-    startLine: 47
+    startLine: 46
   assemblies:
   - Model
   namespace: Model.Entities
@@ -240,7 +238,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Library
     path: ../Model/Entities/Deck.cs
-    startLine: 64
+    startLine: 63
   assemblies:
   - Model
   namespace: Model.Entities
@@ -272,7 +270,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: DiscardPile
     path: ../Model/Entities/Deck.cs
-    startLine: 71
+    startLine: 70
   assemblies:
   - Model
   namespace: Model.Entities
@@ -304,7 +302,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: DrawCard
     path: ../Model/Entities/Deck.cs
-    startLine: 79
+    startLine: 78
   assemblies:
   - Model
   namespace: Model.Entities
@@ -336,7 +334,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Discard
     path: ../Model/Entities/Deck.cs
-    startLine: 94
+    startLine: 93
   assemblies:
   - Model
   namespace: Model.Entities
@@ -368,7 +366,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Discard
     path: ../Model/Entities/Deck.cs
-    startLine: 102
+    startLine: 101
   assemblies:
   - Model
   namespace: Model.Entities
@@ -403,7 +401,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Shuffle
     path: ../Model/Entities/Deck.cs
-    startLine: 112
+    startLine: 111
   assemblies:
   - Model
   namespace: Model.Entities

@@ -86,7 +86,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: CurrentGame
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 19
+    startLine: 18
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -97,7 +97,7 @@ items:
     parameters: []
     return:
       type: Shared.Interfaces.Model.IGame
-      description: The current <xref href="Shared.Interfaces.Model.IGame" data-throw-if-not-resolved="false"></xref> instance if both it and the <xref href="Shared.Interfaces.ViewModel.IMainVM" data-throw-if-not-resolved="false"></xref> have been initialized; otherwise <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>. <br />
+      description: The current <xref href="Shared.Interfaces.Model.IGame" data-throw-if-not-resolved="false"></xref> instance if both it and the <xref href="Shared.Interfaces.ViewModel.IMainVM" data-throw-if-not-resolved="false"></xref> have been initialized; otherwise <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
     content.vb: Property CurrentGame As IGame
   overload: Shared.Interfaces.ViewModel.IMainVM.CurrentGame*
 - uid: Shared.Interfaces.ViewModel.IMainVM.CurrentPhase
@@ -118,7 +118,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: CurrentPhase
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 23
+    startLine: 22
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -149,7 +149,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: TerritorySelected
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 27
+    startLine: 26
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -180,7 +180,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Territories
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 31
+    startLine: 30
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -211,7 +211,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: PlayerDetails
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 35
+    startLine: 34
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -242,7 +242,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: ContNameMap
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 42
+    startLine: 41
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -274,7 +274,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: AppPath
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 49
+    startLine: 48
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -306,7 +306,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: AttackEnabled
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 56
+    startLine: 55
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -338,7 +338,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: PlayerTurn
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 63
+    startLine: 62
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -370,7 +370,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: NextTradeBonus
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 67
+    startLine: 66
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -401,7 +401,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: NewGame_Command
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 72
+    startLine: 71
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -432,7 +432,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: SaveGame_Command
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 76
+    startLine: 75
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -463,7 +463,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: LoadGame_Command
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 80
+    startLine: 79
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -494,7 +494,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: TerritorySelect_Command
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 84
+    startLine: 83
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -525,7 +525,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: TradeIn_Command
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 88
+    startLine: 87
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -556,7 +556,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Advance_Command
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 92
+    startLine: 91
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -587,7 +587,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: DeliverAttackReward_Command
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 96
+    startLine: 95
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -618,7 +618,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: UndoConfirmInput_Command
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 100
+    startLine: 99
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -649,7 +649,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: ChooseTerritoryBonus_Command
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 104
+    startLine: 103
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -680,7 +680,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: PlayerTurnChanging
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 114
+    startLine: 111
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -710,7 +710,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: TerritoryChoiceRequest
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 121
+    startLine: 118
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -740,7 +740,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: RequestTradeIn
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 125
+    startLine: 122
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -769,7 +769,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: ForceTradeIn
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 129
+    startLine: 126
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -798,7 +798,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: AttackRequest
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 138
+    startLine: 135
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -811,10 +811,10 @@ items:
     to be changed in the future, but would require rethinking how to give a player a "real" view of the "roll."
   example: []
   syntax:
-    content: event EventHandler<int>? AttackRequest
+    content: event EventHandler<TerrID>? AttackRequest
     return:
-      type: System.EventHandler{System.Int32}
-    content.vb: Event AttackRequest As EventHandler(Of Integer)
+      type: System.EventHandler{Shared.Geography.Enums.TerrID}
+    content.vb: Event AttackRequest As EventHandler(Of TerrID)
 - uid: Shared.Interfaces.ViewModel.IMainVM.AdvanceRequest
   commentId: E:Shared.Interfaces.ViewModel.IMainVM.AdvanceRequest
   id: AdvanceRequest
@@ -833,7 +833,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: AdvanceRequest
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 142
+    startLine: 139
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -862,7 +862,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: DiceThrown
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 146
+    startLine: 143
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -891,7 +891,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: PlayerLost
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 150
+    startLine: 147
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -920,7 +920,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: PlayerWon
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 154
+    startLine: 151
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -949,7 +949,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Initialize
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 162
+    startLine: 159
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -990,7 +990,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: NewGame
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 167
+    startLine: 164
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -1025,7 +1025,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: SaveGame
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 172
+    startLine: 169
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -1062,7 +1062,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: LoadGame
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 177
+    startLine: 174
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -1097,7 +1097,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: TerritorySelect
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 182
+    startLine: 179
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -1132,7 +1132,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: ChooseTerritoryBonus
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 187
+    startLine: 184
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -1167,7 +1167,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: SumArmies
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 193
+    startLine: 190
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -1205,7 +1205,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: SumTerritories
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 199
+    startLine: 196
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -1243,7 +1243,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: MakeDisplayName
     path: ../Shared/Interfaces/ViewModel/IMainVM.cs
-    startLine: 205
+    startLine: 202
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -2064,6 +2064,39 @@ references:
   name: IRegulator
   nameWithType: IRegulator
   fullName: Shared.Interfaces.Model.IRegulator
+- uid: System.EventHandler{Shared.Geography.Enums.TerrID}
+  commentId: T:System.EventHandler{Shared.Geography.Enums.TerrID}
+  parent: System
+  definition: System.EventHandler`1
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  name: EventHandler<TerrID>
+  nameWithType: EventHandler<TerrID>
+  fullName: System.EventHandler<Shared.Geography.Enums.TerrID>
+  nameWithType.vb: EventHandler(Of TerrID)
+  fullName.vb: System.EventHandler(Of Shared.Geography.Enums.TerrID)
+  name.vb: EventHandler(Of TerrID)
+  spec.csharp:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: <
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: '>'
+  spec.vb:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: )
 - uid: System.EventHandler{Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs}
   commentId: T:System.EventHandler{Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs}
   parent: System

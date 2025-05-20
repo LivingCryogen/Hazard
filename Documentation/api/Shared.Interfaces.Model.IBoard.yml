@@ -298,7 +298,6 @@ items:
   assemblies:
   - Model
   namespace: Shared.Interfaces.Model
-  summary: Updates the board state when a player claims a territory for the first time.
   remarks: This is a variation on <xref href="Shared.Interfaces.Model.IBoard.Claims(System.Int32%2cShared.Geography.Enums.TerrID)" data-throw-if-not-resolved="false"></xref> meant to enable overriding the default one army per claim.
   example: []
   syntax:
@@ -306,10 +305,10 @@ items:
     parameters:
     - id: newPlayer
       type: System.Int32
-      description: The number of the player that takes the territory.<code class="paramref">newPlayer</code>
+      description: ''
     - id: territory
       type: Shared.Geography.Enums.TerrID
-      description: The ID of the territory taken control of by <code class="paramref">newPlayer</code>.
+      description: ''
     - id: armies
       type: System.Int32
       description: The number of armies the new owner controls in the territory.

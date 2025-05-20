@@ -24,7 +24,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: ITroopsAdvanceEventArgs
     path: ../Shared/Interfaces/ViewModel/ITroopsAdvanceEventArgs.cs
-    startLine: 5
+    startLine: 7
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -51,7 +51,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Conquered
     path: ../Shared/Interfaces/ViewModel/ITroopsAdvanceEventArgs.cs
-    startLine: 13
+    startLine: 15
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -83,7 +83,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Max
     path: ../Shared/Interfaces/ViewModel/ITroopsAdvanceEventArgs.cs
-    startLine: 20
+    startLine: 22
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -115,7 +115,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Min
     path: ../Shared/Interfaces/ViewModel/ITroopsAdvanceEventArgs.cs
-    startLine: 27
+    startLine: 29
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
@@ -147,18 +147,18 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Source
     path: ../Shared/Interfaces/ViewModel/ITroopsAdvanceEventArgs.cs
-    startLine: 31
+    startLine: 33
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
-  summary: Gets or inits the underlying value of the source territory's Enum ID.
+  summary: Gets or inits the source territory's Enum ID.
   example: []
   syntax:
-    content: int Source { get; init; }
+    content: TerrID Source { get; init; }
     parameters: []
     return:
-      type: System.Int32
-    content.vb: Property Source As Integer
+      type: Shared.Geography.Enums.TerrID
+    content.vb: Property Source As TerrID
   overload: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Source*
 - uid: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Target
   commentId: P:Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Target
@@ -178,18 +178,18 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Target
     path: ../Shared/Interfaces/ViewModel/ITroopsAdvanceEventArgs.cs
-    startLine: 35
+    startLine: 37
   assemblies:
   - Model
   namespace: Shared.Interfaces.ViewModel
-  summary: Gets or inits the underlying value of the target territory's Enum ID.
+  summary: Gets or inits the target territory's Enum ID.
   example: []
   syntax:
-    content: int Target { get; init; }
+    content: TerrID Target { get; init; }
     parameters: []
     return:
-      type: System.Int32
-    content.vb: Property Target As Integer
+      type: Shared.Geography.Enums.TerrID
+    content.vb: Property Target As TerrID
   overload: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Target*
 references:
 - uid: Shared.Interfaces.ViewModel.IMainVM.AdvanceRequest
@@ -287,6 +287,43 @@ references:
   name: Source
   nameWithType: ITroopsAdvanceEventArgs.Source
   fullName: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Source
+- uid: Shared.Geography.Enums.TerrID
+  commentId: T:Shared.Geography.Enums.TerrID
+  parent: Shared.Geography.Enums
+  href: Shared.Geography.Enums.TerrID.html
+  name: TerrID
+  nameWithType: TerrID
+  fullName: Shared.Geography.Enums.TerrID
+- uid: Shared.Geography.Enums
+  commentId: N:Shared.Geography.Enums
+  href: Shared.html
+  name: Shared.Geography.Enums
+  nameWithType: Shared.Geography.Enums
+  fullName: Shared.Geography.Enums
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
 - uid: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Target*
   commentId: Overload:Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Target
   href: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.html#Shared_Interfaces_ViewModel_ITroopsAdvanceEventArgs_Target

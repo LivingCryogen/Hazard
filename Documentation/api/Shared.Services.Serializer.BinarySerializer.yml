@@ -411,17 +411,16 @@ items:
   assemblies:
   - Model
   namespace: Shared.Services.Serializer
-  summary: Loads <xref href="Shared.Interfaces.Model.IBinarySerializable" data-throw-if-not-resolved="false"></xref> objects with deserialized values previously written by <xref href="Shared.Services.Serializer.BinarySerializer" data-throw-if-not-resolved="false"></xref>.
   example: []
   syntax:
     content: public static bool Load(IBinarySerializable[] serializableObjects, string fileName, long startStreamPosition, out long endStreamPosition)
     parameters:
     - id: serializableObjects
       type: Shared.Interfaces.Model.IBinarySerializable[]
-      description: The objects to load.
+      description: ''
     - id: fileName
       type: System.String
-      description: The name of the file to read.
+      description: ''
     - id: startStreamPosition
       type: System.Int64
       description: The position of the <xref href="System.IO.FileStream" data-throw-if-not-resolved="false"></xref> at which to begin reading the file.
@@ -430,7 +429,6 @@ items:
       description: The position of the <xref href="System.IO.FileStream" data-throw-if-not-resolved="false"></xref> after loading is complete.
     return:
       type: System.Boolean
-      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if deserialization and loading completed without exceptions; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
     content.vb: Public Shared Function Load(serializableObjects As IBinarySerializable(), fileName As String, startStreamPosition As Long, endStreamPosition As Long) As Boolean
   overload: Shared.Services.Serializer.BinarySerializer.Load*
   nameWithType.vb: BinarySerializer.Load(IBinarySerializable(), String, Long, Long)

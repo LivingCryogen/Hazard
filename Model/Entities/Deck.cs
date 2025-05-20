@@ -26,11 +26,10 @@ public class Deck
         Library = [.. cards];
         DiscardPile = [];
     }
+    /// <inheritdoc />
     /// <remarks>
     /// This constructor is useful when a <see cref="Deck"/> is to be built from multiple <see cref="ICardSet.Cards"/> values.
     /// </remarks>
-    /// <param name="cards">A staggered array of cards that will constitute the deck.</param>
-    /// <inheritdoc cref="Deck(ICard[])"/>
     public Deck(ICard[][] cards)
     {
         Library = [.. cards.SelectMany(set => set.Select(card => card))];

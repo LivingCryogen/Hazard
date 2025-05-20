@@ -50,11 +50,11 @@ public interface IBoard : IBinarySerializable
     /// <param name="newPlayer">The number of the player that takes the territory.<paramref name="newPlayer"/></param>
     /// <param name="territory">The ID of the territory taken control of by <paramref name="newPlayer"/>.</param>
     void Claims(int newPlayer, TerrID territory);
-    /// <remarks>This is a variation on <see cref="Claims(int, TerrID)"/> meant to enable overriding the default one army per claim.</remarks>
-    /// <param name="newPlayer">The number of the player that takes the territory.<paramref name="newPlayer"/></param>
-    /// <param name="territory">The ID of the territory taken control of by <paramref name="newPlayer"/>.</param>
+    /// <inheritdoc />
+    /// <param name="newPlayer"></param>
+    /// <param name="territory"></param>
     /// <param name="armies">The number of armies the new owner controls in the territory.</param>
-    /// <inheritdoc cref="Claims(int, TerrID)"/>
+    /// <remarks>This is a variation on <see cref="Claims(int, TerrID)"/> meant to enable overriding the default one army per claim.</remarks>
     void Claims(int newPlayer, TerrID territory, int armies);
     /// <summary>
     /// Increments the armies present within a territory.

@@ -206,7 +206,7 @@ game rule logic in response, updating the state and readying the model for the n
     <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IRegulator_AwardTradeInBonus_Shared_Geography_Enums_TerrID_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IRegulator.AwardTradeInBonus(Shared.Geography.Enums.TerrID)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IRegulator.cs/#L77">View Source</a>
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IRegulator.cs/#L93">View Source</a>
   </span>
   <a id="Shared_Interfaces_Model_IRegulator_AwardTradeInBonus_" data-uid="Shared.Interfaces.Model.IRegulator.AwardTradeInBonus*"></a>
   <h4 id="Shared_Interfaces_Model_IRegulator_AwardTradeInBonus_Shared_Geography_Enums_TerrID_" data-uid="Shared.Interfaces.Model.IRegulator.AwardTradeInBonus(Shared.Geography.Enums.TerrID)">AwardTradeInBonus(TerrID)</h4>
@@ -243,7 +243,7 @@ game rule logic in response, updating the state and readying the model for the n
     <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IRegulator_Battle_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_System_ValueTuple_System_Int32_System_Int32____.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IRegulator.Battle(Shared.Geography.Enums.TerrID%2CShared.Geography.Enums.TerrID%2CSystem.ValueTuple%7BSystem.Int32%2CSystem.Int32%7D%5B%5D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IRegulator.cs/#L69">View Source</a>
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IRegulator.cs/#L85">View Source</a>
   </span>
   <a id="Shared_Interfaces_Model_IRegulator_Battle_" data-uid="Shared.Interfaces.Model.IRegulator.Battle*"></a>
   <h4 id="Shared_Interfaces_Model_IRegulator_Battle_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_System_ValueTuple_System_Int32_System_Int32____" data-uid="Shared.Interfaces.Model.IRegulator.Battle(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.ValueTuple{System.Int32,System.Int32}[])">Battle(TerrID, TerrID, (int AttackRoll, int DefenseRoll)[])</h4>
@@ -289,10 +289,66 @@ game rule logic in response, updating the state and readying the model for the n
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IRegulator_CanSelectTerritory_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IRegulator.CanSelectTerritory(Shared.Geography.Enums.TerrID%2CShared.Geography.Enums.TerrID)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IRegulator.cs/#L40">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IRegulator_CanSelectTerritory_" data-uid="Shared.Interfaces.Model.IRegulator.CanSelectTerritory*"></a>
+  <h4 id="Shared_Interfaces_Model_IRegulator_CanSelectTerritory_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_" data-uid="Shared.Interfaces.Model.IRegulator.CanSelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)">CanSelectTerritory(TerrID, TerrID)</h4>
+  <div class="markdown level1 summary"><p>Determines whether a given territory is a valid selection according to rules and game state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool CanSelectTerritory(TerrID newSelected, TerrID oldSelected)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">newSelected</span></td>
+        <td><p>The territory being selected.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">oldSelected</span></td>
+        <td><p>The territory already selected, if any.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the territory is a valid selection; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IRegulator_CanTradeInCards_System_Int32_System_Int32___.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IRegulator.CanTradeInCards(System.Int32%2CSystem.Int32%5B%5D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IRegulator.cs/#L53">View Source</a>
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IRegulator.cs/#L69">View Source</a>
   </span>
   <a id="Shared_Interfaces_Model_IRegulator_CanTradeInCards_" data-uid="Shared.Interfaces.Model.IRegulator.CanTradeInCards*"></a>
   <h4 id="Shared_Interfaces_Model_IRegulator_CanTradeInCards_System_Int32_System_Int32___" data-uid="Shared.Interfaces.Model.IRegulator.CanTradeInCards(System.Int32,System.Int32[])">CanTradeInCards(int, int[])</h4>
@@ -351,7 +407,7 @@ game rule logic in response, updating the state and readying the model for the n
     <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IRegulator_ClaimOrReinforce_Shared_Geography_Enums_TerrID_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IRegulator.ClaimOrReinforce(Shared.Geography.Enums.TerrID)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IRegulator.cs/#L38">View Source</a>
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IRegulator.cs/#L54">View Source</a>
   </span>
   <a id="Shared_Interfaces_Model_IRegulator_ClaimOrReinforce_" data-uid="Shared.Interfaces.Model.IRegulator.ClaimOrReinforce*"></a>
   <h4 id="Shared_Interfaces_Model_IRegulator_ClaimOrReinforce_Shared_Geography_Enums_TerrID_" data-uid="Shared.Interfaces.Model.IRegulator.ClaimOrReinforce(Shared.Geography.Enums.TerrID)">ClaimOrReinforce(TerrID)</h4>
@@ -385,7 +441,7 @@ game rule logic in response, updating the state and readying the model for the n
     <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IRegulator_DeliverCardReward.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IRegulator.DeliverCardReward%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IRegulator.cs/#L81">View Source</a>
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IRegulator.cs/#L97">View Source</a>
   </span>
   <a id="Shared_Interfaces_Model_IRegulator_DeliverCardReward_" data-uid="Shared.Interfaces.Model.IRegulator.DeliverCardReward*"></a>
   <h4 id="Shared_Interfaces_Model_IRegulator_DeliverCardReward" data-uid="Shared.Interfaces.Model.IRegulator.DeliverCardReward">DeliverCardReward()</h4>
@@ -401,7 +457,7 @@ game rule logic in response, updating the state and readying the model for the n
     <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IRegulator_Initialize.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IRegulator.Initialize%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IRegulator.cs/#L88">View Source</a>
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IRegulator.cs/#L104">View Source</a>
   </span>
   <a id="Shared_Interfaces_Model_IRegulator_Initialize_" data-uid="Shared.Interfaces.Model.IRegulator.Initialize*"></a>
   <h4 id="Shared_Interfaces_Model_IRegulator_Initialize" data-uid="Shared.Interfaces.Model.IRegulator.Initialize">Initialize()</h4>
@@ -420,7 +476,7 @@ game rule logic in response, updating the state and readying the model for the n
     <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IRegulator_MoveArmies_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_System_Int32_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IRegulator.MoveArmies(Shared.Geography.Enums.TerrID%2CShared.Geography.Enums.TerrID%2CSystem.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IRegulator.cs/#L45">View Source</a>
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IRegulator.cs/#L61">View Source</a>
   </span>
   <a id="Shared_Interfaces_Model_IRegulator_MoveArmies_" data-uid="Shared.Interfaces.Model.IRegulator.MoveArmies*"></a>
   <h4 id="Shared_Interfaces_Model_IRegulator_MoveArmies_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_System_Int32_" data-uid="Shared.Interfaces.Model.IRegulator.MoveArmies(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.Int32)">MoveArmies(TerrID, TerrID, int)</h4>
@@ -463,10 +519,67 @@ game rule logic in response, updating the state and readying the model for the n
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IRegulator_SelectTerritory_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IRegulator.SelectTerritory(Shared.Geography.Enums.TerrID%2CShared.Geography.Enums.TerrID)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IRegulator.cs/#L49">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IRegulator_SelectTerritory_" data-uid="Shared.Interfaces.Model.IRegulator.SelectTerritory*"></a>
+  <h4 id="Shared_Interfaces_Model_IRegulator_SelectTerritory_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_" data-uid="Shared.Interfaces.Model.IRegulator.SelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)">SelectTerritory(TerrID, TerrID)</h4>
+  <div class="markdown level1 summary"><p>Receives a territory ID selection as Player input and determines course of game logic.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">(TerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(TerrID selected, TerrID priorSelected)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">selected</span></td>
+        <td><p>The Territory selected by the player.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">priorSelected</span></td>
+        <td><p>The previous selection.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>(<a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-shared.geography.enums.terrid,system.boolean,system.nullable-system.int32--.selection">Selection</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-shared.geography.enums.terrid,system.boolean,system.nullable-system.int32--.requestinput">RequestInput</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>? <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-shared.geography.enums.terrid,system.boolean,system.nullable-system.int32--.maxvalue">MaxValue</a>)</td>
+        <td><p>A tuple containing the updated selection and a flag for requesting further player input (needed in Attack and Move phases).
+If MaxValue is not null, the request is for Move/Advance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IRegulator_TradeInCards_System_Int32_System_Int32___.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IRegulator.TradeInCards(System.Int32%2CSystem.Int32%5B%5D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IRegulator.cs/#L59">View Source</a>
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IRegulator.cs/#L75">View Source</a>
   </span>
   <a id="Shared_Interfaces_Model_IRegulator_TradeInCards_" data-uid="Shared.Interfaces.Model.IRegulator.TradeInCards*"></a>
   <h4 id="Shared_Interfaces_Model_IRegulator_TradeInCards_System_Int32_System_Int32___" data-uid="Shared.Interfaces.Model.IRegulator.TradeInCards(System.Int32,System.Int32[])">TradeInCards(int, int[])</h4>

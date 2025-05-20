@@ -319,7 +319,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Claims
     path: ../Model/Entities/EarthBoard.cs
-    startLine: 86
+    startLine: 85
   assemblies:
   - Model
   namespace: Model.Entities
@@ -360,11 +360,10 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Claims
     path: ../Model/Entities/EarthBoard.cs
-    startLine: 95
+    startLine: 94
   assemblies:
   - Model
   namespace: Model.Entities
-  summary: Updates the board state when a player claims a territory for the first time.
   remarks: This is a variation on <xref href="Shared.Interfaces.Model.IBoard.Claims(System.Int32%2cShared.Geography.Enums.TerrID)" data-throw-if-not-resolved="false"></xref> meant to enable overriding the default one army per claim.
   example: []
   syntax:
@@ -372,10 +371,10 @@ items:
     parameters:
     - id: newPlayer
       type: System.Int32
-      description: The number of the player that takes the territory.<code class="paramref">newPlayer</code>
+      description: ''
     - id: territory
       type: Shared.Geography.Enums.TerrID
-      description: The ID of the territory taken control of by <code class="paramref">newPlayer</code>.
+      description: ''
     - id: armies
       type: System.Int32
       description: The number of armies the new owner controls in the territory.
@@ -404,7 +403,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Reinforce
     path: ../Model/Entities/EarthBoard.cs
-    startLine: 104
+    startLine: 103
   assemblies:
   - Model
   namespace: Model.Entities
@@ -438,7 +437,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Reinforce
     path: ../Model/Entities/EarthBoard.cs
-    startLine: 110
+    startLine: 109
   assemblies:
   - Model
   namespace: Model.Entities
@@ -478,7 +477,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Conquer
     path: ../Model/Entities/EarthBoard.cs
-    startLine: 116
+    startLine: 115
   assemblies:
   - Model
   namespace: Model.Entities
@@ -521,7 +520,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: CheckContinentFlip
     path: ../Model/Entities/EarthBoard.cs
-    startLine: 124
+    startLine: 123
   assemblies:
   - Model
   namespace: Model.Entities
@@ -562,7 +561,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: GetBinarySerials
     path: ../Model/Entities/EarthBoard.cs
-    startLine: 148
+    startLine: 147
   assemblies:
   - Model
   namespace: Model.Entities
@@ -595,7 +594,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: LoadFromBinary
     path: ../Model/Entities/EarthBoard.cs
-    startLine: 174
+    startLine: 173
   assemblies:
   - Model
   namespace: Model.Entities

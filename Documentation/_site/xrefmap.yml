@@ -732,6 +732,19 @@ references:
   isSpec: "True"
   fullName: Model.Core.Regulator.Battle
   nameWithType: Regulator.Battle
+- uid: Model.Core.Regulator.CanSelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)
+  name: CanSelectTerritory(TerrID, TerrID)
+  href: api/Model.Core.Regulator.html#Model_Core_Regulator_CanSelectTerritory_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_
+  commentId: M:Model.Core.Regulator.CanSelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)
+  fullName: Model.Core.Regulator.CanSelectTerritory(Shared.Geography.Enums.TerrID, Shared.Geography.Enums.TerrID)
+  nameWithType: Regulator.CanSelectTerritory(TerrID, TerrID)
+- uid: Model.Core.Regulator.CanSelectTerritory*
+  name: CanSelectTerritory
+  href: api/Model.Core.Regulator.html#Model_Core_Regulator_CanSelectTerritory_
+  commentId: Overload:Model.Core.Regulator.CanSelectTerritory
+  isSpec: "True"
+  fullName: Model.Core.Regulator.CanSelectTerritory
+  nameWithType: Regulator.CanSelectTerritory
 - uid: Model.Core.Regulator.CanTradeInCards(System.Int32,System.Int32[])
   name: CanTradeInCards(int, int[])
   href: api/Model.Core.Regulator.html#Model_Core_Regulator_CanTradeInCards_System_Int32_System_Int32___
@@ -880,6 +893,19 @@ references:
   isSpec: "True"
   fullName: Model.Core.Regulator.Reward
   nameWithType: Regulator.Reward
+- uid: Model.Core.Regulator.SelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)
+  name: SelectTerritory(TerrID, TerrID)
+  href: api/Model.Core.Regulator.html#Model_Core_Regulator_SelectTerritory_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_
+  commentId: M:Model.Core.Regulator.SelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)
+  fullName: Model.Core.Regulator.SelectTerritory(Shared.Geography.Enums.TerrID, Shared.Geography.Enums.TerrID)
+  nameWithType: Regulator.SelectTerritory(TerrID, TerrID)
+- uid: Model.Core.Regulator.SelectTerritory*
+  name: SelectTerritory
+  href: api/Model.Core.Regulator.html#Model_Core_Regulator_SelectTerritory_
+  commentId: Overload:Model.Core.Regulator.SelectTerritory
+  isSpec: "True"
+  fullName: Model.Core.Regulator.SelectTerritory
+  nameWithType: Regulator.SelectTerritory
 - uid: Model.Core.Regulator.TradeInCards(System.Int32,System.Int32[])
   name: TradeInCards(int, int[])
   href: api/Model.Core.Regulator.html#Model_Core_Regulator_TradeInCards_System_Int32_System_Int32___
@@ -4225,6 +4251,19 @@ references:
   isSpec: "True"
   fullName: Shared.Interfaces.Model.IRegulator.Battle
   nameWithType: IRegulator.Battle
+- uid: Shared.Interfaces.Model.IRegulator.CanSelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)
+  name: CanSelectTerritory(TerrID, TerrID)
+  href: api/Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_CanSelectTerritory_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_
+  commentId: M:Shared.Interfaces.Model.IRegulator.CanSelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)
+  fullName: Shared.Interfaces.Model.IRegulator.CanSelectTerritory(Shared.Geography.Enums.TerrID, Shared.Geography.Enums.TerrID)
+  nameWithType: IRegulator.CanSelectTerritory(TerrID, TerrID)
+- uid: Shared.Interfaces.Model.IRegulator.CanSelectTerritory*
+  name: CanSelectTerritory
+  href: api/Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_CanSelectTerritory_
+  commentId: Overload:Shared.Interfaces.Model.IRegulator.CanSelectTerritory
+  isSpec: "True"
+  fullName: Shared.Interfaces.Model.IRegulator.CanSelectTerritory
+  nameWithType: IRegulator.CanSelectTerritory
 - uid: Shared.Interfaces.Model.IRegulator.CanTradeInCards(System.Int32,System.Int32[])
   name: CanTradeInCards(int, int[])
   href: api/Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_CanTradeInCards_System_Int32_System_Int32___
@@ -4347,6 +4386,19 @@ references:
   isSpec: "True"
   fullName: Shared.Interfaces.Model.IRegulator.Reward
   nameWithType: IRegulator.Reward
+- uid: Shared.Interfaces.Model.IRegulator.SelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)
+  name: SelectTerritory(TerrID, TerrID)
+  href: api/Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_SelectTerritory_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_
+  commentId: M:Shared.Interfaces.Model.IRegulator.SelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)
+  fullName: Shared.Interfaces.Model.IRegulator.SelectTerritory(Shared.Geography.Enums.TerrID, Shared.Geography.Enums.TerrID)
+  nameWithType: IRegulator.SelectTerritory(TerrID, TerrID)
+- uid: Shared.Interfaces.Model.IRegulator.SelectTerritory*
+  name: SelectTerritory
+  href: api/Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_SelectTerritory_
+  commentId: Overload:Shared.Interfaces.Model.IRegulator.SelectTerritory
+  isSpec: "True"
+  fullName: Shared.Interfaces.Model.IRegulator.SelectTerritory
+  nameWithType: IRegulator.SelectTerritory
 - uid: Shared.Interfaces.Model.IRegulator.TradeInCards(System.Int32,System.Int32[])
   name: TradeInCards(int, int[])
   href: api/Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_TradeInCards_System_Int32_System_Int32___

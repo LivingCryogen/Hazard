@@ -7,6 +7,7 @@ items:
   children:
   - Shared.Interfaces.Model.IRegulator.AwardTradeInBonus(Shared.Geography.Enums.TerrID)
   - Shared.Interfaces.Model.IRegulator.Battle(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.ValueTuple{System.Int32,System.Int32}[])
+  - Shared.Interfaces.Model.IRegulator.CanSelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)
   - Shared.Interfaces.Model.IRegulator.CanTradeInCards(System.Int32,System.Int32[])
   - Shared.Interfaces.Model.IRegulator.ClaimOrReinforce(Shared.Geography.Enums.TerrID)
   - Shared.Interfaces.Model.IRegulator.CurrentActionsLimit
@@ -17,6 +18,7 @@ items:
   - Shared.Interfaces.Model.IRegulator.PromptBonusChoice
   - Shared.Interfaces.Model.IRegulator.PromptTradeIn
   - Shared.Interfaces.Model.IRegulator.Reward
+  - Shared.Interfaces.Model.IRegulator.SelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)
   - Shared.Interfaces.Model.IRegulator.TradeInCards(System.Int32,System.Int32[])
   langs:
   - csharp
@@ -200,6 +202,84 @@ items:
     return:
       type: System.EventHandler{Shared.Interfaces.Model.IPromptTradeEventArgs}
     content.vb: Event PromptTradeIn As EventHandler(Of IPromptTradeEventArgs)
+- uid: Shared.Interfaces.Model.IRegulator.CanSelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)
+  commentId: M:Shared.Interfaces.Model.IRegulator.CanSelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)
+  id: CanSelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)
+  parent: Shared.Interfaces.Model.IRegulator
+  langs:
+  - csharp
+  - vb
+  name: CanSelectTerritory(TerrID, TerrID)
+  nameWithType: IRegulator.CanSelectTerritory(TerrID, TerrID)
+  fullName: Shared.Interfaces.Model.IRegulator.CanSelectTerritory(Shared.Geography.Enums.TerrID, Shared.Geography.Enums.TerrID)
+  type: Method
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRegulator.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: CanSelectTerritory
+    path: ../Shared/Interfaces/Model/IRegulator.cs
+    startLine: 39
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Determines whether a given territory is a valid selection according to rules and game state.
+  example: []
+  syntax:
+    content: bool CanSelectTerritory(TerrID newSelected, TerrID oldSelected)
+    parameters:
+    - id: newSelected
+      type: Shared.Geography.Enums.TerrID
+      description: The territory being selected.
+    - id: oldSelected
+      type: Shared.Geography.Enums.TerrID
+      description: The territory already selected, if any.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the territory is a valid selection; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Function CanSelectTerritory(newSelected As TerrID, oldSelected As TerrID) As Boolean
+  overload: Shared.Interfaces.Model.IRegulator.CanSelectTerritory*
+- uid: Shared.Interfaces.Model.IRegulator.SelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)
+  commentId: M:Shared.Interfaces.Model.IRegulator.SelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)
+  id: SelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)
+  parent: Shared.Interfaces.Model.IRegulator
+  langs:
+  - csharp
+  - vb
+  name: SelectTerritory(TerrID, TerrID)
+  nameWithType: IRegulator.SelectTerritory(TerrID, TerrID)
+  fullName: Shared.Interfaces.Model.IRegulator.SelectTerritory(Shared.Geography.Enums.TerrID, Shared.Geography.Enums.TerrID)
+  type: Method
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRegulator.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: SelectTerritory
+    path: ../Shared/Interfaces/Model/IRegulator.cs
+    startLine: 48
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Receives a territory ID selection as Player input and determines course of game logic.
+  example: []
+  syntax:
+    content: (TerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(TerrID selected, TerrID priorSelected)
+    parameters:
+    - id: selected
+      type: Shared.Geography.Enums.TerrID
+      description: The Territory selected by the player.
+    - id: priorSelected
+      type: Shared.Geography.Enums.TerrID
+      description: The previous selection.
+    return:
+      type: System.ValueTuple{Shared.Geography.Enums.TerrID,System.Boolean,System.Nullable{System.Int32}}
+      description: >-
+        A tuple containing the updated selection and a flag for requesting further player input (needed in Attack and Move phases). 
+            If MaxValue is not null, the request is for Move/Advance.
+    content.vb: Function SelectTerritory(selected As TerrID, priorSelected As TerrID) As (Selection As TerrID, RequestInput As Boolean, MaxValue As Integer?)
+  overload: Shared.Interfaces.Model.IRegulator.SelectTerritory*
 - uid: Shared.Interfaces.Model.IRegulator.ClaimOrReinforce(Shared.Geography.Enums.TerrID)
   commentId: M:Shared.Interfaces.Model.IRegulator.ClaimOrReinforce(Shared.Geography.Enums.TerrID)
   id: ClaimOrReinforce(Shared.Geography.Enums.TerrID)
@@ -218,7 +298,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: ClaimOrReinforce
     path: ../Shared/Interfaces/Model/IRegulator.cs
-    startLine: 37
+    startLine: 53
   assemblies:
   - Model
   namespace: Shared.Interfaces.Model
@@ -250,7 +330,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: MoveArmies
     path: ../Shared/Interfaces/Model/IRegulator.cs
-    startLine: 44
+    startLine: 60
   assemblies:
   - Model
   namespace: Shared.Interfaces.Model
@@ -291,7 +371,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: CanTradeInCards
     path: ../Shared/Interfaces/Model/IRegulator.cs
-    startLine: 52
+    startLine: 68
   assemblies:
   - Model
   namespace: Shared.Interfaces.Model
@@ -333,7 +413,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: TradeInCards
     path: ../Shared/Interfaces/Model/IRegulator.cs
-    startLine: 58
+    startLine: 74
   assemblies:
   - Model
   namespace: Shared.Interfaces.Model
@@ -371,7 +451,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Battle
     path: ../Shared/Interfaces/Model/IRegulator.cs
-    startLine: 68
+    startLine: 84
   assemblies:
   - Model
   namespace: Shared.Interfaces.Model
@@ -413,7 +493,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: AwardTradeInBonus
     path: ../Shared/Interfaces/Model/IRegulator.cs
-    startLine: 76
+    startLine: 92
   assemblies:
   - Model
   namespace: Shared.Interfaces.Model
@@ -446,7 +526,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: DeliverCardReward
     path: ../Shared/Interfaces/Model/IRegulator.cs
-    startLine: 80
+    startLine: 96
   assemblies:
   - Model
   namespace: Shared.Interfaces.Model
@@ -474,7 +554,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: Initialize
     path: ../Shared/Interfaces/Model/IRegulator.cs
-    startLine: 87
+    startLine: 103
   assemblies:
   - Model
   namespace: Shared.Interfaces.Model
@@ -740,12 +820,12 @@ references:
     name: IPromptTradeEventArgs
     href: Shared.Interfaces.Model.IPromptTradeEventArgs.html
   - name: )
-- uid: Shared.Interfaces.Model.IRegulator.ClaimOrReinforce*
-  commentId: Overload:Shared.Interfaces.Model.IRegulator.ClaimOrReinforce
-  href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_ClaimOrReinforce_Shared_Geography_Enums_TerrID_
-  name: ClaimOrReinforce
-  nameWithType: IRegulator.ClaimOrReinforce
-  fullName: Shared.Interfaces.Model.IRegulator.ClaimOrReinforce
+- uid: Shared.Interfaces.Model.IRegulator.CanSelectTerritory*
+  commentId: Overload:Shared.Interfaces.Model.IRegulator.CanSelectTerritory
+  href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_CanSelectTerritory_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_
+  name: CanSelectTerritory
+  nameWithType: IRegulator.CanSelectTerritory
+  fullName: Shared.Interfaces.Model.IRegulator.CanSelectTerritory
 - uid: Shared.Geography.Enums.TerrID
   commentId: T:Shared.Geography.Enums.TerrID
   parent: Shared.Geography.Enums
@@ -753,6 +833,17 @@ references:
   name: TerrID
   nameWithType: TerrID
   fullName: Shared.Geography.Enums.TerrID
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
 - uid: Shared.Geography.Enums
   commentId: N:Shared.Geography.Enums
   href: Shared.html
@@ -783,6 +874,122 @@ references:
   - uid: Shared.Geography.Enums
     name: Enums
     href: Shared.Geography.Enums.html
+- uid: Shared.Interfaces.Model.IRegulator.SelectTerritory*
+  commentId: Overload:Shared.Interfaces.Model.IRegulator.SelectTerritory
+  href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_SelectTerritory_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_
+  name: SelectTerritory
+  nameWithType: IRegulator.SelectTerritory
+  fullName: Shared.Interfaces.Model.IRegulator.SelectTerritory
+- uid: System.ValueTuple{Shared.Geography.Enums.TerrID,System.Boolean,System.Nullable{System.Int32}}
+  commentId: T:System.ValueTuple{Shared.Geography.Enums.TerrID,System.Boolean,System.Nullable{System.Int32}}
+  parent: System
+  definition: System.ValueTuple`3
+  href: Shared.Geography.Enums.TerrID.html
+  name: (TerrID Selection, bool RequestInput, int? MaxValue)
+  nameWithType: (TerrID Selection, bool RequestInput, int? MaxValue)
+  fullName: (Shared.Geography.Enums.TerrID Selection, bool RequestInput, int? MaxValue)
+  nameWithType.vb: (Selection As TerrID, RequestInput As Boolean, MaxValue As Integer?)
+  fullName.vb: (Selection As Shared.Geography.Enums.TerrID, RequestInput As Boolean, MaxValue As Integer?)
+  name.vb: (Selection As TerrID, RequestInput As Boolean, MaxValue As Integer?)
+  spec.csharp:
+  - name: (
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: " "
+  - uid: System.ValueTuple{Shared.Geography.Enums.TerrID,System.Boolean,System.Nullable{System.Int32}}.Selection
+    name: Selection
+    href: https://learn.microsoft.com/dotnet/api/system.valuetuple-shared.geography.enums.terrid,system.boolean,system.nullable-system.int32--.selection
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: " "
+  - uid: System.ValueTuple{Shared.Geography.Enums.TerrID,System.Boolean,System.Nullable{System.Int32}}.RequestInput
+    name: RequestInput
+    href: https://learn.microsoft.com/dotnet/api/system.valuetuple-shared.geography.enums.terrid,system.boolean,system.nullable-system.int32--.requestinput
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  - name: " "
+  - uid: System.ValueTuple{Shared.Geography.Enums.TerrID,System.Boolean,System.Nullable{System.Int32}}.MaxValue
+    name: MaxValue
+    href: https://learn.microsoft.com/dotnet/api/system.valuetuple-shared.geography.enums.terrid,system.boolean,system.nullable-system.int32--.maxvalue
+  - name: )
+  spec.vb:
+  - name: (
+  - uid: System.ValueTuple{Shared.Geography.Enums.TerrID,System.Boolean,System.Nullable{System.Int32}}.Selection
+    name: Selection
+    href: https://learn.microsoft.com/dotnet/api/system.valuetuple-shared.geography.enums.terrid,system.boolean,system.nullable-system.int32--.selection
+  - name: " "
+  - name: As
+  - name: " "
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: ','
+  - name: " "
+  - uid: System.ValueTuple{Shared.Geography.Enums.TerrID,System.Boolean,System.Nullable{System.Int32}}.RequestInput
+    name: RequestInput
+    href: https://learn.microsoft.com/dotnet/api/system.valuetuple-shared.geography.enums.terrid,system.boolean,system.nullable-system.int32--.requestinput
+  - name: " "
+  - name: As
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.ValueTuple{Shared.Geography.Enums.TerrID,System.Boolean,System.Nullable{System.Int32}}.MaxValue
+    name: MaxValue
+    href: https://learn.microsoft.com/dotnet/api/system.valuetuple-shared.geography.enums.terrid,system.boolean,system.nullable-system.int32--.maxvalue
+  - name: " "
+  - name: As
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  - name: )
+- uid: System.ValueTuple`3
+  commentId: T:System.ValueTuple`3
+  name: (T1, T2, T3)
+  nameWithType: (T1, T2, T3)
+  fullName: (T1, T2, T3)
+  spec.csharp:
+  - name: (
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: ','
+  - name: " "
+  - name: T3
+  - name: )
+  spec.vb:
+  - name: (
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: ','
+  - name: " "
+  - name: T3
+  - name: )
+- uid: Shared.Interfaces.Model.IRegulator.ClaimOrReinforce*
+  commentId: Overload:Shared.Interfaces.Model.IRegulator.ClaimOrReinforce
+  href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_ClaimOrReinforce_Shared_Geography_Enums_TerrID_
+  name: ClaimOrReinforce
+  nameWithType: IRegulator.ClaimOrReinforce
+  fullName: Shared.Interfaces.Model.IRegulator.ClaimOrReinforce
 - uid: Shared.Enums.GamePhase.Move
   commentId: F:Shared.Enums.GamePhase.Move
   href: Shared.Enums.GamePhase.html#Shared_Enums_GamePhase_Move
@@ -838,17 +1045,6 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.int32
   - name: (
   - name: )
-- uid: System.Boolean
-  commentId: T:System.Boolean
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.boolean
-  name: bool
-  nameWithType: bool
-  fullName: bool
-  nameWithType.vb: Boolean
-  fullName.vb: Boolean
-  name.vb: Boolean
 - uid: Shared.Interfaces.Model.IPlayer
   commentId: T:Shared.Interfaces.Model.IPlayer
   parent: Shared.Interfaces.Model

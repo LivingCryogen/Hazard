@@ -30,12 +30,11 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: RuleValues
     path: ../Model/Assets/RuleValues.cs
-    startLine: 11
+    startLine: 8
   assemblies:
   - Model
   namespace: Model.Assets
   summary: Provides constants and equations derived from game rules.
-  remarks: This implementation is hard-coded and could readily be replaced by '.json' file(s) with converters, a la <xref href="Shared.Interfaces.Model.ITroopCard" data-throw-if-not-resolved="false"></xref>.
   example: []
   syntax:
     content: 'public class RuleValues : IRuleValues'
@@ -70,12 +69,11 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: .ctor
     path: ../Model/Assets/RuleValues.cs
-    startLine: 11
+    startLine: 8
   assemblies:
   - Model
   namespace: Model.Assets
   summary: Provides constants and equations derived from game rules.
-  remarks: This implementation is hard-coded and could readily be replaced by '.json' file(s) with converters, a la <xref href="Shared.Interfaces.Model.ITroopCard" data-throw-if-not-resolved="false"></xref>.
   example: []
   syntax:
     content: public RuleValues(IConfiguration config)
@@ -105,7 +103,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: MinimumArmyBonus
     path: ../Model/Assets/RuleValues.cs
-    startLine: 14
+    startLine: 11
   assemblies:
   - Model
   namespace: Model.Assets
@@ -138,7 +136,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: TerritoryTradeInBonus
     path: ../Model/Assets/RuleValues.cs
-    startLine: 16
+    startLine: 13
   assemblies:
   - Model
   namespace: Model.Assets
@@ -171,7 +169,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: AttackersLimit
     path: ../Model/Assets/RuleValues.cs
-    startLine: 18
+    startLine: 15
   assemblies:
   - Model
   namespace: Model.Assets
@@ -204,7 +202,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: DefendersLimit
     path: ../Model/Assets/RuleValues.cs
-    startLine: 20
+    startLine: 17
   assemblies:
   - Model
   namespace: Model.Assets
@@ -237,7 +235,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: ContinentBonus
     path: ../Model/Assets/RuleValues.cs
-    startLine: 22
+    startLine: 19
   assemblies:
   - Model
   namespace: Model.Assets
@@ -270,7 +268,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: SetupActionsPerPlayers
     path: ../Model/Assets/RuleValues.cs
-    startLine: 34
+    startLine: 31
   assemblies:
   - Model
   namespace: Model.Assets
@@ -303,7 +301,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: SetupStartingPool
     path: ../Model/Assets/RuleValues.cs
-    startLine: 44
+    startLine: 41
   assemblies:
   - Model
   namespace: Model.Assets
@@ -336,7 +334,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: CalculateTerritoryBonus
     path: ../Model/Assets/RuleValues.cs
-    startLine: 54
+    startLine: 51
   assemblies:
   - Model
   namespace: Model.Assets
@@ -376,7 +374,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: CalculateArmyBonus
     path: ../Model/Assets/RuleValues.cs
-    startLine: 63
+    startLine: 60
   assemblies:
   - Model
   namespace: Model.Assets
@@ -419,7 +417,7 @@ items:
       repo: https://github.com/LivingCryogen/Hazard.git
     id: CalculateBaseTradeInBonus
     path: ../Model/Assets/RuleValues.cs
-    startLine: 75
+    startLine: 72
   assemblies:
   - Model
   namespace: Model.Assets
@@ -442,13 +440,6 @@ items:
   fullName.vb: Model.Assets.RuleValues.CalculateBaseTradeInBonus(Integer)
   name.vb: CalculateBaseTradeInBonus(Integer)
 references:
-- uid: Shared.Interfaces.Model.ITroopCard
-  commentId: T:Shared.Interfaces.Model.ITroopCard
-  parent: Shared.Interfaces.Model
-  href: Shared.Interfaces.Model.ITroopCard.html
-  name: ITroopCard
-  nameWithType: ITroopCard
-  fullName: Shared.Interfaces.Model.ITroopCard
 - uid: Model.Assets
   commentId: N:Model.Assets
   href: Model.html
@@ -708,6 +699,13 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.object.tostring
   - name: (
   - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
 - uid: Shared.Interfaces.Model
   commentId: N:Shared.Interfaces.Model
   href: Shared.html
@@ -738,13 +736,6 @@ references:
   - uid: Shared.Interfaces.Model
     name: Model
     href: Shared.Interfaces.Model.html
-- uid: System
-  commentId: N:System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system
-  name: System
-  nameWithType: System
-  fullName: System
 - uid: Model.Assets.RuleValues.#ctor*
   commentId: Overload:Model.Assets.RuleValues.#ctor
   href: Model.Assets.RuleValues.html#Model_Assets_RuleValues__ctor_Microsoft_Extensions_Configuration_IConfiguration_
