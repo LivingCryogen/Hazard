@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Interface IGame | Hazard!_Docs </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Interface IGame | Hazard!_Docs ">
+    
+    <meta name="description" content="Encapsulates the current game for injection into .">
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="Hazard!_Docs">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first=First data-prev=Previous data-next=Next data-last=Last></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Shared.Interfaces.Model.IGame">
+
+
+
+  <h1 id="Shared_Interfaces_Model_IGame" data-uid="Shared.Interfaces.Model.IGame" class="text-break">Interface IGame</h1>
+  <div class="markdown level0 summary"><p>Encapsulates the current game for injection into <a class="xref" href="Shared.Interfaces.ViewModel.IMainVM.html">IMainVM</a>.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_LoadFromBinary_System_IO_BinaryReader_">IBinarySerializable.LoadFromBinary(BinaryReader)</a>
+    </div>
+    <div>
+      <a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials">IBinarySerializable.GetBinarySerials()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Shared.html">Shared</a>.<a class="xref" href="Shared.Interfaces.html">Interfaces</a>.<a class="xref" href="Shared.Interfaces.Model.html">Model</a></h6>
+  <h6><strong>Assembly</strong>: Model.dll</h6>
+  <h5 id="Shared_Interfaces_Model_IGame_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface IGame : IBinarySerializable</code></pre>
+  </div>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IGame_AssetFetcher.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IGame.AssetFetcher%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IGame.cs/#L24">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IGame_AssetFetcher_" data-uid="Shared.Interfaces.Model.IGame.AssetFetcher*"></a>
+  <h4 id="Shared_Interfaces_Model_IGame_AssetFetcher" data-uid="Shared.Interfaces.Model.IGame.AssetFetcher">AssetFetcher</h4>
+  <div class="markdown level1 summary"><p>Gets the facade of the DAL.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IAssetFetcher AssetFetcher { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Interfaces.Model.IAssetFetcher.html">IAssetFetcher</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IGame_Board.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IGame.Board%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IGame.cs/#L43">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IGame_Board_" data-uid="Shared.Interfaces.Model.IGame.Board*"></a>
+  <h4 id="Shared_Interfaces_Model_IGame_Board" data-uid="Shared.Interfaces.Model.IGame.Board">Board</h4>
+  <div class="markdown level1 summary"><p>Gets an instance describing the Game board; stores both data and relations between Board objects.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IBoard Board { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Interfaces.Model.IBoard.html">IBoard</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IGame_Cards.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IGame.Cards%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IGame.cs/#L51">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IGame_Cards_" data-uid="Shared.Interfaces.Model.IGame.Cards*"></a>
+  <h4 id="Shared_Interfaces_Model_IGame_Cards" data-uid="Shared.Interfaces.Model.IGame.Cards">Cards</h4>
+  <div class="markdown level1 summary"><p>Gets the &quot;card base&quot;, containing all <a class="xref" href="Shared.Interfaces.Model.ICard.html">ICard</a>s, <a class="xref" href="Shared.Interfaces.Model.ICardSet.html">ICardSet</a>s, and <a class="xref" href="Model.Entities.Deck.html">Deck</a>s.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">CardBase Cards { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Model.Entities.CardBase.html">CardBase</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IGame_DefaultCardMode.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IGame.DefaultCardMode%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IGame.cs/#L35">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IGame_DefaultCardMode_" data-uid="Shared.Interfaces.Model.IGame.DefaultCardMode*"></a>
+  <h4 id="Shared_Interfaces_Model_IGame_DefaultCardMode" data-uid="Shared.Interfaces.Model.IGame.DefaultCardMode">DefaultCardMode</h4>
+  <div class="markdown level1 summary"><p>Gets a flag indicating whether the game is set to default card mode.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool DefaultCardMode { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the <a class="xref" href="Shared.Interfaces.Model.IGame.html">IGame</a> has been set to allow only the default cards. Otherwise, if others are added (e.g. Mission Cards), <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IGame_ID.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IGame.ID%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IGame.cs/#L28">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IGame_ID_" data-uid="Shared.Interfaces.Model.IGame.ID*"></a>
+  <h4 id="Shared_Interfaces_Model_IGame_ID" data-uid="Shared.Interfaces.Model.IGame.ID">ID</h4>
+  <div class="markdown level1 summary"><p>Gets the unique ID of the game.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Guid ID { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IGame_Players.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IGame.Players%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IGame.cs/#L58">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IGame_Players_" data-uid="Shared.Interfaces.Model.IGame.Players*"></a>
+  <h4 id="Shared_Interfaces_Model_IGame_Players" data-uid="Shared.Interfaces.Model.IGame.Players">Players</h4>
+  <div class="markdown level1 summary"><p>Gets the list of players in the game.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">List&lt;IPlayer&gt; Players { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="Shared.Interfaces.Model.IPlayer.html">IPlayer</a>&gt;</td>
+        <td><p>After initialization and/or loading, should have a count of 2-6.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IGame_State.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IGame.State%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IGame.cs/#L47">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IGame_State_" data-uid="Shared.Interfaces.Model.IGame.State*"></a>
+  <h4 id="Shared_Interfaces_Model_IGame_State" data-uid="Shared.Interfaces.Model.IGame.State">State</h4>
+  <div class="markdown level1 summary"><p>Gets the game's state machine, which tracks player count and status, turns, etc.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">StateMachine State { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Model.Core.StateMachine.html">StateMachine</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IGame_Values.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IGame.Values%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IGame.cs/#L39">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IGame_Values_" data-uid="Shared.Interfaces.Model.IGame.Values*"></a>
+  <h4 id="Shared_Interfaces_Model_IGame_Values" data-uid="Shared.Interfaces.Model.IGame.Values">Values</h4>
+  <div class="markdown level1 summary"><p>Gets a data object containing game-specific rules values, like continent bonuses or equations for bonus armies.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IRuleValues Values { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Interfaces.Model.IRuleValues.html">IRuleValues</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IGame_Save_System_Boolean_System_String_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IGame.Save(System.Boolean%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IGame.cs/#L74">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IGame_Save_" data-uid="Shared.Interfaces.Model.IGame.Save*"></a>
+  <h4 id="Shared_Interfaces_Model_IGame_Save_System_Boolean_System_String_" data-uid="Shared.Interfaces.Model.IGame.Save(System.Boolean,System.String)">Save(bool, string)</h4>
+  <div class="markdown level1 summary"><p>Save to a file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task Save(bool isNewFile, string fileName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><span class="parametername">isNewFile</span></td>
+        <td><p>Indicates whether the save file is new.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">fileName</span></td>
+        <td><p>The name of the save file.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IGame_UpdatePlayerNames_System_String___.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IGame.UpdatePlayerNames(System.String%5B%5D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IGame.cs/#L68">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_IGame_UpdatePlayerNames_" data-uid="Shared.Interfaces.Model.IGame.UpdatePlayerNames*"></a>
+  <h4 id="Shared_Interfaces_Model_IGame_UpdatePlayerNames_System_String___" data-uid="Shared.Interfaces.Model.IGame.UpdatePlayerNames(System.String[])">UpdatePlayerNames(string[])</h4>
+  <div class="markdown level1 summary"><p>Updates player names.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void UpdatePlayerNames(string[] names)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</td>
+        <td><span class="parametername">names</span></td>
+        <td><p>Player names in ascending player number order.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Shared_Interfaces_Model_IGame_UpdatePlayerNames_System_String____remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Useful after loading a game from a file.</p>
+</div>
+  <h3 id="events">Events
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IGame_PlayerLost.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IGame.PlayerLost%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IGame.cs/#L14">View Source</a>
+  </span>
+  <h4 id="Shared_Interfaces_Model_IGame_PlayerLost" data-uid="Shared.Interfaces.Model.IGame.PlayerLost">PlayerLost</h4>
+  <div class="markdown level1 summary"><p>Fires when a player loses, carrying their <a class="xref" href="Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Number">Number</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event EventHandler&lt;int&gt;? PlayerLost</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IGame_PlayerWon.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IGame.PlayerWon%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IGame.cs/#L18">View Source</a>
+  </span>
+  <h4 id="Shared_Interfaces_Model_IGame_PlayerWon" data-uid="Shared.Interfaces.Model.IGame.PlayerWon">PlayerWon</h4>
+  <div class="markdown level1 summary"><p>Fires when a player wins, carrying their <a class="xref" href="Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Number">Number</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event EventHandler&lt;int&gt;? PlayerWon</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_IGame.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.IGame%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/IGame.cs/#L9" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
