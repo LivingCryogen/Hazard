@@ -1,0 +1,1255 @@
+{
+  "source_base_path": "C:/Users/joshu/source/repos/HazardPublic/Documentation",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      }
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.Assets.RuleValues.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.Assets.RuleValues.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.Assets.RuleValues",
+      "Summary": "<p sourcefile=\"api/Model.Assets.RuleValues.yml\" sourcestartlinenumber=\"1\">Provides constants and equations derived from game rules.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.Assets.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.Assets.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.Assets",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.Core.Game.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.Core.Game.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.Core.Game",
+      "Summary": "<p sourcefile=\"api/Model.Core.Game.yml\" sourcestartlinenumber=\"1\">The top-level class for an individual Game.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.Core.Player.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.Core.Player.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.Core.Player",
+      "Summary": "<p sourcefile=\"api/Model.Core.Player.yml\" sourcestartlinenumber=\"1\">Represents a player in the game.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.Core.Regulator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.Core.Regulator.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.Core.Regulator",
+      "Summary": "<p sourcefile=\"api/Model.Core.Regulator.yml\" sourcestartlinenumber=\"1\">Facade for the Model's user interactions.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.Core.StateMachine.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.Core.StateMachine.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.Core.StateMachine",
+      "Summary": "<p sourcefile=\"api/Model.Core.StateMachine.yml\" sourcestartlinenumber=\"1\">The game's state machine.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.Core.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.Core.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.Core",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.DataAccess.AssetFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.DataAccess.AssetFactory.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.DataAccess.AssetFactory",
+      "Summary": "<p sourcefile=\"api/Model.DataAccess.AssetFactory.yml\" sourcestartlinenumber=\"1\">Instantiates classes for registered types at run-time.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.DataAccess.AssetFetcher.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.DataAccess.AssetFetcher.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.DataAccess.AssetFetcher",
+      "Summary": "<p sourcefile=\"api/Model.DataAccess.AssetFetcher.yml\" sourcestartlinenumber=\"1\">Exposes the Data Access 'Layer' to the Model, providing bespoke methods for retrieving Game Assets at run-time.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.DataAccess.Cards.ICardSetDataJConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.DataAccess.Cards.ICardSetDataJConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.DataAccess.Cards.ICardSetDataJConverter",
+      "Summary": "<p sourcefile=\"api/Model.DataAccess.Cards.ICardSetDataJConverter.yml\" sourcestartlinenumber=\"1\">Converts '.json' data of a CardSet file to <xref href=\"Shared.Interfaces.Model.ICardSet\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.DataAccess.Cards.TroopCardSetDataJConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.DataAccess.Cards.TroopCardSetDataJConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.DataAccess.Cards.TroopCardSetDataJConverter",
+      "Summary": "<p sourcefile=\"api/Model.DataAccess.Cards.TroopCardSetDataJConverter.yml\" sourcestartlinenumber=\"1\">The base card set '.json' converter.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.DataAccess.Cards.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.DataAccess.Cards.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.DataAccess.Cards",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.DataAccess.DataProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.DataAccess.DataProvider.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.DataAccess.DataProvider",
+      "Summary": "<p sourcefile=\"api/Model.DataAccess.DataProvider.yml\" sourcestartlinenumber=\"1\">Reads and converts data from data files.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.DataAccess.GeographyJConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.DataAccess.GeographyJConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.DataAccess.GeographyJConverter",
+      "Summary": "<p sourcefile=\"api/Model.DataAccess.GeographyJConverter.yml\" sourcestartlinenumber=\"1\">The '.json' converter for geography data files.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.DataAccess.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.DataAccess.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.DataAccess",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.Entities.CardBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.Entities.CardBase.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.Entities.CardBase",
+      "Summary": "<p sourcefile=\"api/Model.Entities.CardBase.yml\" sourcestartlinenumber=\"1\">Encapsulates all objects primarily using <xref href=\"Shared.Interfaces.Model.ICard\" data-throw-if-not-resolved=\"false\"></xref>s.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.Entities.Cards.CardFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.Entities.Cards.CardFactory.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.Entities.Cards.CardFactory",
+      "Summary": "<p sourcefile=\"api/Model.Entities.Cards.CardFactory.yml\" sourcestartlinenumber=\"1\">Activates <xref href=\"Shared.Interfaces.Model.ICard?text=card\" data-throw-if-not-resolved=\"false\"></xref> instances based on registry data.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.Entities.Cards.ITroopCardSetData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.Entities.Cards.ITroopCardSetData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.Entities.Cards.ITroopCardSetData",
+      "Summary": "<p sourcefile=\"api/Model.Entities.Cards.ITroopCardSetData.yml\" sourcestartlinenumber=\"1\">A '.json' conversion data holder for <xref href=\"Model.Entities.Cards.TroopCardSet\" data-throw-if-not-resolved=\"false\"></xref></p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.Entities.Cards.TroopCard.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.Entities.Cards.TroopCard.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.Entities.Cards.TroopCard",
+      "Summary": "<p sourcefile=\"api/Model.Entities.Cards.TroopCard.yml\" sourcestartlinenumber=\"1\">Default card type implementation for the base game.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.Entities.Cards.TroopCardSet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.Entities.Cards.TroopCardSet.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.Entities.Cards.TroopCardSet",
+      "Summary": "<p sourcefile=\"api/Model.Entities.Cards.TroopCardSet.yml\" sourcestartlinenumber=\"1\">The card set for the game's default card type, <xref href=\"Model.Entities.Cards.TroopCard\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.Entities.Cards.TroopCardSetData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.Entities.Cards.TroopCardSetData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.Entities.Cards.TroopCardSetData",
+      "Summary": "<p sourcefile=\"api/Model.Entities.Cards.TroopCardSetData.yml\" sourcestartlinenumber=\"1\">A '.json' conversion data holder for <xref href=\"Model.Entities.Cards.TroopCardSet\" data-throw-if-not-resolved=\"false\"></xref></p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.Entities.Cards.TroopInsignia.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.Entities.Cards.TroopInsignia.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.Entities.Cards.TroopInsignia",
+      "Summary": "<p sourcefile=\"api/Model.Entities.Cards.TroopInsignia.yml\" sourcestartlinenumber=\"1\">Insignia type for the default cards of the base game.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.Entities.Cards.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.Entities.Cards.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.Entities.Cards",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.Entities.Deck.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.Entities.Deck.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.Entities.Deck",
+      "Summary": "<p sourcefile=\"api/Model.Entities.Deck.yml\" sourcestartlinenumber=\"1\">A deck of cards.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.Entities.EarthBoard.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.Entities.EarthBoard.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.Entities.EarthBoard",
+      "Summary": "<p sourcefile=\"api/Model.Entities.EarthBoard.yml\" sourcestartlinenumber=\"1\">Encapsulates Data and Actions that directly affect the armies, territories, and continents on the game board.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.Entities.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.Entities.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.Entities",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.EventArgs.ContinentOwnerChangedEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.EventArgs.ContinentOwnerChangedEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.EventArgs.ContinentOwnerChangedEventArgs",
+      "Summary": "<p sourcefile=\"api/Model.EventArgs.ContinentOwnerChangedEventArgs.yml\" sourcestartlinenumber=\"1\">Packages identification data for <xref href=\"Model.Entities.EarthBoard.ContinentOwnerChanged\" data-throw-if-not-resolved=\"false\"></xref> and its handlers.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.EventArgs.PlayerChangedEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.EventArgs.PlayerChangedEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.EventArgs.PlayerChangedEventArgs",
+      "Summary": "<p sourcefile=\"api/Model.EventArgs.PlayerChangedEventArgs.yml\" sourcestartlinenumber=\"1\">Contract for EventArgs used by <xref href=\"Shared.Interfaces.Model.IPlayer.PlayerChanged\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.EventArgs.TerritoryChangedEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.EventArgs.TerritoryChangedEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.EventArgs.TerritoryChangedEventArgs",
+      "Summary": "<p sourcefile=\"api/Model.EventArgs.TerritoryChangedEventArgs.yml\" sourcestartlinenumber=\"1\">A contract for EventArgs used by <xref href=\"Shared.Interfaces.Model.IBoard.TerritoryChanged\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Model.EventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Model.EventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Model.EventArgs",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Enums.GamePhase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Enums.GamePhase.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Enums.GamePhase",
+      "Summary": "<p sourcefile=\"api/Shared.Enums.GamePhase.yml\" sourcestartlinenumber=\"1\">Categorizes the phases of the game state.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Enums.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Enums.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Enums",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Geography.BoardGeography.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Geography.BoardGeography.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Geography.BoardGeography",
+      "Summary": "<p sourcefile=\"api/Shared.Geography.BoardGeography.yml\" sourcestartlinenumber=\"1\">Encapsulates maps and methods for board Geography.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Geography.Enums.ContID.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Geography.Enums.ContID.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Geography.Enums.ContID",
+      "Summary": "<p sourcefile=\"api/Shared.Geography.Enums.ContID.yml\" sourcestartlinenumber=\"1\">Simple ID values for the Continents on the game board.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Geography.Enums.TerrID.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Geography.Enums.TerrID.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Geography.Enums.TerrID",
+      "Summary": "<p sourcefile=\"api/Shared.Geography.Enums.TerrID.yml\" sourcestartlinenumber=\"1\">Simple ID values for the Territories of the game board.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Geography.Enums.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Geography.Enums.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Geography.Enums",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Geography.GeographyInitializer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Geography.GeographyInitializer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Geography.GeographyInitializer",
+      "Summary": "<p sourcefile=\"api/Shared.Geography.GeographyInitializer.yml\" sourcestartlinenumber=\"1\">Initializes <xref href=\"Shared.Geography.BoardGeography\" data-throw-if-not-resolved=\"false\"></xref> with data provided by the DAL.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Geography.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Geography.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Geography",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.IContinentOwnerChangedEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.IContinentOwnerChangedEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.IContinentOwnerChangedEventArgs",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.IContinentOwnerChangedEventArgs.yml\" sourcestartlinenumber=\"1\">EventArgs contract as used by <xref href=\"Shared.Interfaces.Model.IBoard.ContinentOwnerChanged\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.ITroopCardInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.ITroopCardInfo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.ITroopCardInfo",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.ITroopCardInfo.yml\" sourcestartlinenumber=\"1\">Defines public data for ViewModel structs representing <xref href=\"Shared.Interfaces.Model.ITroopCard\" data-throw-if-not-resolved=\"false\"></xref>s.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.Model.IAssetFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.Model.IAssetFactory.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.Model.IAssetFactory",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.Model.IAssetFactory.yml\" sourcestartlinenumber=\"1\">Instantiates classes for registered types at run-time.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.Model.IAssetFetcher.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.Model.IAssetFetcher.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.Model.IAssetFetcher",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.Model.IAssetFetcher.yml\" sourcestartlinenumber=\"1\">Exposes the Data Access 'Layer' to the Model, providing bespoke methods for retrieving Game Assets at run-time.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.Model.IBinarySerializable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.Model.IBinarySerializable.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.Model.IBinarySerializable",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.Model.IBinarySerializable.yml\" sourcestartlinenumber=\"1\">Stipulates an object is serializable using <xref href=\"Shared.Services.Serializer.BinarySerializer\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.Model.IBoard.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.Model.IBoard.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.Model.IBoard",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.Model.IBoard.yml\" sourcestartlinenumber=\"1\">Encapsulates Data and Actions that directly affect the armies, territories, and continents on the game board.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.Model.ICard.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.Model.ICard.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.Model.ICard",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.Model.ICard.yml\" sourcestartlinenumber=\"1\">Base interface for all cards. Provides default properties and methods allowing for run-time serialization.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.Model.ICardSet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.Model.ICardSet.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.Model.ICardSet",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.Model.ICardSet.yml\" sourcestartlinenumber=\"1\">Data and methods for a collection of Cards.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.Model.ICardSetData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.Model.ICardSetData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.Model.ICardSetData",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.Model.ICardSetData.yml\" sourcestartlinenumber=\"1\">A base interface for '.json' conversion classes for <xref href=\"Shared.Interfaces.Model.ICardSet\" data-throw-if-not-resolved=\"false\"></xref>s.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.Model.IDataProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.Model.IDataProvider.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.Model.IDataProvider",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.Model.IDataProvider.yml\" sourcestartlinenumber=\"1\">Reads and converts data from data files.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.Model.IGame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.Model.IGame.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.Model.IGame",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.Model.IGame.yml\" sourcestartlinenumber=\"1\">Encapsulates the current game for injection into <xref href=\"Shared.Interfaces.ViewModel.IMainVM\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.Model.IPlayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.Model.IPlayer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.Model.IPlayer",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.Model.IPlayer.yml\" sourcestartlinenumber=\"1\">Represents a player in the game.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.Model.IPlayerChangedEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.Model.IPlayerChangedEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.Model.IPlayerChangedEventArgs",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.Model.IPlayerChangedEventArgs.yml\" sourcestartlinenumber=\"1\">Contract for EventArgs used by <xref href=\"Shared.Interfaces.Model.IPlayer.PlayerChanged\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.Model.IPromptTradeEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.Model.IPromptTradeEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.Model.IPromptTradeEventArgs",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.Model.IPromptTradeEventArgs.yml\" sourcestartlinenumber=\"1\">A contract for EventArgs used by <xref href=\"Shared.Interfaces.Model.IRegulator.PromptTradeIn\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.Model.IRegulator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.Model.IRegulator.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.Model.IRegulator",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.Model.IRegulator.yml\" sourcestartlinenumber=\"1\">Facade for the Model's user interactions.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.Model.IRuleValues.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.Model.IRuleValues.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.Model.IRuleValues",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.Model.IRuleValues.yml\" sourcestartlinenumber=\"1\">Provides constants and equations derived from game rules.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.Model.ITerritoryChangedEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.Model.ITerritoryChangedEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.Model.ITerritoryChangedEventArgs",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.Model.ITerritoryChangedEventArgs.yml\" sourcestartlinenumber=\"1\">A contract for EventArgs used by <xref href=\"Shared.Interfaces.Model.IBoard.TerritoryChanged\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.Model.ITroopCard.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.Model.ITroopCard.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.Model.ITroopCard",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.Model.ITroopCard.yml\" sourcestartlinenumber=\"1\"><xref href=\"Shared.Interfaces.Model.ICard\" data-throw-if-not-resolved=\"false\"></xref> extension for the default card type included in the base game.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.Model.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.Model.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.Model",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.View.IBootStrapperService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.View.IBootStrapperService.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.View.IBootStrapperService",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.View.IBootStrapperService.yml\" sourcestartlinenumber=\"1\">Provides methods for booting up the application.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.View.IDialogState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.View.IDialogState.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.View.IDialogState",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.View.IDialogState.yml\" sourcestartlinenumber=\"1\">Lets the ViewModel know if a dialog window is open.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.View.IDispatcherTimer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.View.IDispatcherTimer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.View.IDispatcherTimer",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.View.IDispatcherTimer.yml\" sourcestartlinenumber=\"1\">A service porting/exposing a Timer from the View/WPF level to the ViewModel.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.View.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.View.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.View",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.ViewModel.ICardInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.ViewModel.ICardInfo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.ViewModel.ICardInfo",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.ViewModel.ICardInfo.yml\" sourcestartlinenumber=\"1\">Defines public data for ViewModel structs representing <xref href=\"Shared.Interfaces.Model.ICard\" data-throw-if-not-resolved=\"false\"></xref>s.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.ViewModel.IDiceThrownEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.ViewModel.IDiceThrownEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.ViewModel.IDiceThrownEventArgs",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.ViewModel.IDiceThrownEventArgs.yml\" sourcestartlinenumber=\"1\">Contract for EventArgs used by <xref href=\"Shared.Interfaces.ViewModel.IMainVM.DiceThrown\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.ViewModel.IGameService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.ViewModel.IGameService.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.ViewModel.IGameService",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.ViewModel.IGameService.yml\" sourcestartlinenumber=\"1\">A service for injecting necessary Model objects into the ViewModel.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.ViewModel.IMainVM.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.ViewModel.IMainVM.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.ViewModel.IMainVM",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.ViewModel.IMainVM.yml\" sourcestartlinenumber=\"1\">Defines public exposures of the main ViewModel. Enables decoupled DI injection into the primary View.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.ViewModel.IPlayerData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.ViewModel.IPlayerData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.ViewModel.IPlayerData",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.ViewModel.IPlayerData.yml\" sourcestartlinenumber=\"1\">Defines public data for ViewModels that present <xref href=\"Shared.Interfaces.Model.IPlayer\" data-throw-if-not-resolved=\"false\"></xref> data.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.ViewModel.ITerritoryInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.ViewModel.ITerritoryInfo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.ViewModel.ITerritoryInfo",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.ViewModel.ITerritoryInfo.yml\" sourcestartlinenumber=\"1\">Encapsulates data that should be public and updated for ViewModel/View bindings.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs",
+      "Summary": "<p sourcefile=\"api/Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.yml\" sourcestartlinenumber=\"1\">Contract for EventArgs used by <xref href=\"Shared.Interfaces.ViewModel.IMainVM.AdvanceRequest\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.ViewModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.ViewModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces.ViewModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Interfaces.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Interfaces.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Interfaces",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Services.Helpers.DataFileFinder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Services.Helpers.DataFileFinder.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Services.Helpers.DataFileFinder",
+      "Summary": "<p sourcefile=\"api/Shared.Services.Helpers.DataFileFinder.yml\" sourcestartlinenumber=\"1\">Static helper for bootstrap configuration of DAL.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Services.Helpers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Services.Helpers.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Services.Helpers",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Services.Options.AppConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Services.Options.AppConfig.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Services.Options.AppConfig",
+      "Summary": "<p sourcefile=\"api/Shared.Services.Options.AppConfig.yml\" sourcestartlinenumber=\"1\">Contains values needed for run-time Options to be set and configured by the DI system.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Services.Options.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Services.Options.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Services.Options",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Services.Registry.IRegistryInitializer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Services.Registry.IRegistryInitializer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Services.Registry.IRegistryInitializer",
+      "Summary": "<p sourcefile=\"api/Shared.Services.Registry.IRegistryInitializer.yml\" sourcestartlinenumber=\"1\">Provides default values to <xref href=\"Shared.Services.Registry.ITypeRegister%601\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Services.Registry.ITypeRegister-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Services.Registry.ITypeRegister-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Services.Registry.ITypeRegister<T>",
+      "Summary": "<p sourcefile=\"api/Shared.Services.Registry.ITypeRegister-1.yml\" sourcestartlinenumber=\"1\">Registers Types with objects by <xref href=\"Shared.Services.Registry.RegistryRelation\" data-throw-if-not-resolved=\"false\"></xref>, enabling look-up at runtime.</p>\n<p><example>\nE.g. the <xref href=\"System.Type\" data-throw-if-not-resolved=\"false\"></xref> : <code>typeof(<xref href=\"Model.Entities.Cards.TroopCard\" data-throw-if-not-resolved=\"false\"></xref>)</code>, if registered with <code>\"TroopCard\"</code>,\ncan be retreived by:<pre><code class=\"lang-csharp\">Type troopCardType = Registry[\"TroopCard\"];</code></pre> where <code>Registry</code> is an instance of <code>TypeRegister</code>.</example></p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Services.Registry.ITypeRelations.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Services.Registry.ITypeRelations.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Services.Registry.ITypeRelations",
+      "Summary": "<p sourcefile=\"api/Shared.Services.Registry.ITypeRelations.yml\" sourcestartlinenumber=\"1\">Encapsulates objects under specific relations as values for a <xref href=\"Shared.Services.Registry.TypeRegister\" data-throw-if-not-resolved=\"false\"></xref> entry.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Services.Registry.RegistryInitializer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Services.Registry.RegistryInitializer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Services.Registry.RegistryInitializer",
+      "Summary": "<p sourcefile=\"api/Shared.Services.Registry.RegistryInitializer.yml\" sourcestartlinenumber=\"1\">Provides default values to <xref href=\"Shared.Services.Registry.ITypeRegister%601\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Services.Registry.RegistryRelation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Services.Registry.RegistryRelation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Services.Registry.RegistryRelation",
+      "Summary": "<p sourcefile=\"api/Shared.Services.Registry.RegistryRelation.yml\" sourcestartlinenumber=\"1\">Qualifies the relation between an <xref href=\"System.Object\" data-throw-if-not-resolved=\"false\"></xref> and a keyed <xref href=\"System.Type\" data-throw-if-not-resolved=\"false\"></xref> in a <xref href=\"Shared.Services.Registry.ITypeRegister%601\" data-throw-if-not-resolved=\"false\"></xref> registry.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Services.Registry.TypeRegister.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Services.Registry.TypeRegister.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Services.Registry.TypeRegister",
+      "Summary": "<p sourcefile=\"api/Shared.Services.Registry.TypeRegister.yml\" sourcestartlinenumber=\"1\">Registers Types with objects by <xref href=\"Shared.Services.Registry.RegistryRelation\" data-throw-if-not-resolved=\"false\"></xref>, enabling look-up at runtime.</p>\n<p><example>\nE.g. the <xref href=\"System.Type\" data-throw-if-not-resolved=\"false\"></xref> : <code>typeof(<xref href=\"Model.Entities.Cards.TroopCard\" data-throw-if-not-resolved=\"false\"></xref>)</code>, if registered with <code>\"TroopCard\"</code>,\ncan be retreived by:<pre><code class=\"lang-csharp\">Type troopCardType = Registry[\"TroopCard\"];</code></pre> where <code>Registry</code> is an instance of <code>TypeRegister</code>.</example></p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Services.Registry.TypeRelations.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Services.Registry.TypeRelations.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Services.Registry.TypeRelations",
+      "Summary": "<p sourcefile=\"api/Shared.Services.Registry.TypeRelations.yml\" sourcestartlinenumber=\"1\">Encapsulates objects under specific relations as values for a <xref href=\"Shared.Services.Registry.TypeRegister\" data-throw-if-not-resolved=\"false\"></xref> entry.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Services.Registry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Services.Registry.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Services.Registry",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Services.Serializer.BinarySerializer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Services.Serializer.BinarySerializer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Services.Serializer.BinarySerializer",
+      "Summary": "<p sourcefile=\"api/Shared.Services.Serializer.BinarySerializer.yml\" sourcestartlinenumber=\"1\">A binary serializer for <xref href=\"Shared.Interfaces.Model.IBinarySerializable\" data-throw-if-not-resolved=\"false\"></xref> objects.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Services.Serializer.SerializedData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Services.Serializer.SerializedData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Services.Serializer.SerializedData",
+      "Summary": "<p sourcefile=\"api/Shared.Services.Serializer.SerializedData.yml\" sourcestartlinenumber=\"1\">A collection of serialized data and metadata gathered from an <xref href=\"Shared.Interfaces.Model.IBinarySerializable\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Shared.Services.Serializer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Shared.Services.Serializer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Shared.Services.Serializer",
+      "Summary": null
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
