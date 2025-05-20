@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class Regulator | Hazard!_Docs </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Class Regulator | Hazard!_Docs ">
+    
+    <meta name="description" content="Facade for the Model&#39;s user interactions.">
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="Hazard!_Docs">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first=First data-prev=Previous data-next=Next data-last=Last></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Model.Core.Regulator">
+
+
+
+  <h1 id="Model_Core_Regulator" data-uid="Model.Core.Regulator" class="text-break">Class Regulator</h1>
+  <div class="markdown level0 summary"><p>Facade for the Model's user interactions.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+    <div class="level1"><span class="xref">Regulator</span></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Shared.Interfaces.Model.IRegulator.html">IRegulator</a></div>
+    <div><a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html">IBinarySerializable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Model.html">Model</a>.<a class="xref" href="Model.Core.html">Core</a></h6>
+  <h6><strong>Assembly</strong>: Model.dll</h6>
+  <h5 id="Model_Core_Regulator_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class Regulator : IRegulator, IBinarySerializable</code></pre>
+  </div>
+  <h5 id="Model_Core_Regulator_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>Enforces the game rules -- &quot;regulates&quot; player actions; that is, after the ViewModel interprets player actions based on game state, this enforces <br>
+game rule logic in response, updating the state and readying the model for the next input.</p>
+</div>
+  <h3 id="constructors">Constructors
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator__ctor_Microsoft_Extensions_Logging_ILogger_Model_Core_Regulator__Shared_Interfaces_Model_IGame_.md&amp;value=---%0Auid%3A%20Model.Core.Regulator.%23ctor(Microsoft.Extensions.Logging.ILogger%7BModel.Core.Regulator%7D%2CShared.Interfaces.Model.IGame)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L14">View Source</a>
+  </span>
+  <a id="Model_Core_Regulator__ctor_" data-uid="Model.Core.Regulator.#ctor*"></a>
+  <h4 id="Model_Core_Regulator__ctor_Microsoft_Extensions_Logging_ILogger_Model_Core_Regulator__Shared_Interfaces_Model_IGame_" data-uid="Model.Core.Regulator.#ctor(Microsoft.Extensions.Logging.ILogger{Model.Core.Regulator},Shared.Interfaces.Model.IGame)">Regulator(ILogger&lt;Regulator&gt;, IGame)</h4>
+  <div class="markdown level1 summary"><p>Facade for the Model's user interactions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Regulator(ILogger&lt;Regulator&gt; logger, IGame currentGame)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger-1">ILogger</a>&lt;<a class="xref" href="Model.Core.Regulator.html">Regulator</a>&gt;</td>
+        <td><span class="parametername">logger</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Shared.Interfaces.Model.IGame.html">IGame</a></td>
+        <td><span class="parametername">currentGame</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Model_Core_Regulator__ctor_Microsoft_Extensions_Logging_ILogger_Model_Core_Regulator__Shared_Interfaces_Model_IGame__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Enforces the game rules -- &quot;regulates&quot; player actions; that is, after the ViewModel interprets player actions based on game state, this enforces <br>
+game rule logic in response, updating the state and readying the model for the next input.</p>
+</div>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator_CurrentActionsLimit.md&amp;value=---%0Auid%3A%20Model.Core.Regulator.CurrentActionsLimit%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L29">View Source</a>
+  </span>
+  <a id="Model_Core_Regulator_CurrentActionsLimit_" data-uid="Model.Core.Regulator.CurrentActionsLimit*"></a>
+  <h4 id="Model_Core_Regulator_CurrentActionsLimit" data-uid="Model.Core.Regulator.CurrentActionsLimit">CurrentActionsLimit</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the limit on player actions during this <a class="xref" href="Shared.Enums.GamePhase.html">GamePhase</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int CurrentActionsLimit { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator_PhaseActions.md&amp;value=---%0Auid%3A%20Model.Core.Regulator.PhaseActions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L31">View Source</a>
+  </span>
+  <a id="Model_Core_Regulator_PhaseActions_" data-uid="Model.Core.Regulator.PhaseActions*"></a>
+  <h4 id="Model_Core_Regulator_PhaseActions" data-uid="Model.Core.Regulator.PhaseActions">PhaseActions</h4>
+  <div class="markdown level1 summary"><p>Gets the number of player actions taken during this <a class="xref" href="Shared.Enums.GamePhase.html">GamePhase</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int PhaseActions { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator_Reward.md&amp;value=---%0Auid%3A%20Model.Core.Regulator.Reward%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L33">View Source</a>
+  </span>
+  <a id="Model_Core_Regulator_Reward_" data-uid="Model.Core.Regulator.Reward*"></a>
+  <h4 id="Model_Core_Regulator_Reward" data-uid="Model.Core.Regulator.Reward">Reward</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a card rewarded to a player for a successful attack.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ICard? Reward { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Interfaces.Model.ICard.html">ICard</a></td>
+        <td><p>If the current player made a successful attack, an <a class="xref" href="Shared.Interfaces.Model.ICard.html">ICard</a>. Otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator_AwardTradeInBonus_Shared_Geography_Enums_TerrID_.md&amp;value=---%0Auid%3A%20Model.Core.Regulator.AwardTradeInBonus(Shared.Geography.Enums.TerrID)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L393">View Source</a>
+  </span>
+  <a id="Model_Core_Regulator_AwardTradeInBonus_" data-uid="Model.Core.Regulator.AwardTradeInBonus*"></a>
+  <h4 id="Model_Core_Regulator_AwardTradeInBonus_Shared_Geography_Enums_TerrID_" data-uid="Model.Core.Regulator.AwardTradeInBonus(Shared.Geography.Enums.TerrID)">AwardTradeInBonus(TerrID)</h4>
+  <div class="markdown level1 summary"><p>Executes game-rule logic for awarding bonus armies to a territory due to card trade-in.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AwardTradeInBonus(TerrID territory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">territory</span></td>
+        <td><p>The territory awarded the bonus armies.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Model_Core_Regulator_AwardTradeInBonus_Shared_Geography_Enums_TerrID__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Used when a player controls one or more territories of the <a class="xref" href="Shared.Interfaces.Model.ICard.html#Shared_Interfaces_Model_ICard_Target">Target</a>s upon trade-in.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator_Battle_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_System_ValueTuple_System_Int32_System_Int32____.md&amp;value=---%0Auid%3A%20Model.Core.Regulator.Battle(Shared.Geography.Enums.TerrID%2CShared.Geography.Enums.TerrID%2CSystem.ValueTuple%7BSystem.Int32%2CSystem.Int32%7D%5B%5D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L309">View Source</a>
+  </span>
+  <a id="Model_Core_Regulator_Battle_" data-uid="Model.Core.Regulator.Battle*"></a>
+  <h4 id="Model_Core_Regulator_Battle_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_System_ValueTuple_System_Int32_System_Int32____" data-uid="Model.Core.Regulator.Battle(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.ValueTuple{System.Int32,System.Int32}[])">Battle(TerrID, TerrID, (int AttackRoll, int DefenseRoll)[])</h4>
+  <div class="markdown level1 summary"><p>Executes game-rule logic when given the results of a battle between the armies of two territories.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Battle(TerrID source, TerrID target, (int AttackRoll, int DefenseRoll)[] diceRolls)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">source</span></td>
+        <td><p>The source of the attack (attacker).</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">target</span></td>
+        <td><p>The target of the attack (defender).</p>
+</td>
+      </tr>
+      <tr>
+        <td>(<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.int32,system.int32-.attackroll">AttackRoll</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.int32,system.int32-.defenseroll">DefenseRoll</a>)[]</td>
+        <td><span class="parametername">diceRolls</span></td>
+        <td><p>Dice rolls paired together according to game rules.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Model_Core_Regulator_Battle_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_System_ValueTuple_System_Int32_System_Int32_____remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>By default, rolls for attacker and defender should be put in descending order, then paired (unpaired remainders are ignored).</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator_CanSelectTerritory_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_.md&amp;value=---%0Auid%3A%20Model.Core.Regulator.CanSelectTerritory(Shared.Geography.Enums.TerrID%2CShared.Geography.Enums.TerrID)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L146">View Source</a>
+  </span>
+  <a id="Model_Core_Regulator_CanSelectTerritory_" data-uid="Model.Core.Regulator.CanSelectTerritory*"></a>
+  <h4 id="Model_Core_Regulator_CanSelectTerritory_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_" data-uid="Model.Core.Regulator.CanSelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)">CanSelectTerritory(TerrID, TerrID)</h4>
+  <div class="markdown level1 summary"><p>Determines whether a given territory is a valid selection according to rules and game state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool CanSelectTerritory(TerrID newSelected, TerrID oldSelected)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">newSelected</span></td>
+        <td><p>The territory being selected.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">oldSelected</span></td>
+        <td><p>The territory already selected, if any.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the territory is a valid selection; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator_CanTradeInCards_System_Int32_System_Int32___.md&amp;value=---%0Auid%3A%20Model.Core.Regulator.CanTradeInCards(System.Int32%2CSystem.Int32%5B%5D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L338">View Source</a>
+  </span>
+  <a id="Model_Core_Regulator_CanTradeInCards_" data-uid="Model.Core.Regulator.CanTradeInCards*"></a>
+  <h4 id="Model_Core_Regulator_CanTradeInCards_System_Int32_System_Int32___" data-uid="Model.Core.Regulator.CanTradeInCards(System.Int32,System.Int32[])">CanTradeInCards(int, int[])</h4>
+  <div class="markdown level1 summary"><p>Determines whether a subset of a player's hand can be traded in.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool CanTradeInCards(int playerNum, int[] handIndices)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">playerNum</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</td>
+        <td><span class="parametername">handIndices</span></td>
+        <td><p>The indices of the <a class="xref" href="Shared.Interfaces.Model.ICard.html">ICard</a>s within <a class="xref" href="Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Hand">Hand</a> that are to be traded.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if circumstances allow the trade; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>. <br></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Model_Core_Regulator_CanTradeInCards_System_Int32_System_Int32____remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Typically, relevant factors include the <a class="xref" href="Shared.Interfaces.Model.ICard.html">ICard</a> values, their <a class="xref" href="Shared.Interfaces.Model.ICardSet.html">ICardSet</a> trading functions, and the current <a class="xref" href="Shared.Enums.GamePhase.html">GamePhase</a>.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator_ClaimOrReinforce_Shared_Geography_Enums_TerrID_.md&amp;value=---%0Auid%3A%20Model.Core.Regulator.ClaimOrReinforce(Shared.Geography.Enums.TerrID)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L248">View Source</a>
+  </span>
+  <a id="Model_Core_Regulator_ClaimOrReinforce_" data-uid="Model.Core.Regulator.ClaimOrReinforce*"></a>
+  <h4 id="Model_Core_Regulator_ClaimOrReinforce_Shared_Geography_Enums_TerrID_" data-uid="Model.Core.Regulator.ClaimOrReinforce(Shared.Geography.Enums.TerrID)">ClaimOrReinforce(TerrID)</h4>
+  <div class="markdown level1 summary"><p>Updates game state in response to a territory being selected during Setup or Place phases (see <a class="xref" href="Shared.Enums.GamePhase.html">GamePhase</a>).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void ClaimOrReinforce(TerrID territory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">territory</span></td>
+        <td><p>The territory selected.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator_DeliverCardReward.md&amp;value=---%0Auid%3A%20Model.Core.Regulator.DeliverCardReward%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L398">View Source</a>
+  </span>
+  <a id="Model_Core_Regulator_DeliverCardReward_" data-uid="Model.Core.Regulator.DeliverCardReward*"></a>
+  <h4 id="Model_Core_Regulator_DeliverCardReward" data-uid="Model.Core.Regulator.DeliverCardReward">DeliverCardReward()</h4>
+  <div class="markdown level1 summary"><p>Delivers the <a class="xref" href="Shared.Interfaces.Model.ICard.html">ICard</a> held in <a class="xref" href="Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_Reward">Reward</a>, if any, to the appropriate <a class="xref" href="Shared.Interfaces.Model.IPlayer.html">IPlayer</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void DeliverCardReward()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator_GetBinarySerials.md&amp;value=---%0Auid%3A%20Model.Core.Regulator.GetBinarySerials%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L407">View Source</a>
+  </span>
+  <a id="Model_Core_Regulator_GetBinarySerials_" data-uid="Model.Core.Regulator.GetBinarySerials*"></a>
+  <h4 id="Model_Core_Regulator_GetBinarySerials" data-uid="Model.Core.Regulator.GetBinarySerials">GetBinarySerials()</h4>
+  <div class="markdown level1 summary"><p>Asynchronously serializes the <a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html">IBinarySerializable</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;SerializedData[]&gt; GetBinarySerials()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Shared.Services.Serializer.SerializedData.html">SerializedData</a>[]&gt;</td>
+        <td><p>A task whose result contains serialized object data.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator_Initialize.md&amp;value=---%0Auid%3A%20Model.Core.Regulator.Initialize%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L131">View Source</a>
+  </span>
+  <a id="Model_Core_Regulator_Initialize_" data-uid="Model.Core.Regulator.Initialize*"></a>
+  <h4 id="Model_Core_Regulator_Initialize" data-uid="Model.Core.Regulator.Initialize">Initialize()</h4>
+  <div class="markdown level1 summary"><p>Initializes this <a class="xref" href="Shared.Interfaces.Model.IRegulator.html">IRegulator</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Initialize()</code></pre>
+  </div>
+  <h5 id="Model_Core_Regulator_Initialize_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This post-construction initialization step is needed to accomodate loading from save files.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator_LoadFromBinary_System_IO_BinaryReader_.md&amp;value=---%0Auid%3A%20Model.Core.Regulator.LoadFromBinary(System.IO.BinaryReader)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L428">View Source</a>
+  </span>
+  <a id="Model_Core_Regulator_LoadFromBinary_" data-uid="Model.Core.Regulator.LoadFromBinary*"></a>
+  <h4 id="Model_Core_Regulator_LoadFromBinary_System_IO_BinaryReader_" data-uid="Model.Core.Regulator.LoadFromBinary(System.IO.BinaryReader)">LoadFromBinary(BinaryReader)</h4>
+  <div class="markdown level1 summary"><p>Loads the <a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html">IBinarySerializable</a> with binary values read from a file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool LoadFromBinary(BinaryReader reader)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.io.binaryreader">BinaryReader</a></td>
+        <td><span class="parametername">reader</span></td>
+        <td><p>A reader whose <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.io.binaryreader.basestream">BaseStream</a> was previously written to using <a class="xref" href="Shared.Services.Serializer.BinarySerializer.html">BinarySerializer</a> and <a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials">GetBinarySerials()</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the load succeeded without exceptions; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator_MoveArmies_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_System_Int32_.md&amp;value=---%0Auid%3A%20Model.Core.Regulator.MoveArmies(Shared.Geography.Enums.TerrID%2CShared.Geography.Enums.TerrID%2CSystem.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L300">View Source</a>
+  </span>
+  <a id="Model_Core_Regulator_MoveArmies_" data-uid="Model.Core.Regulator.MoveArmies*"></a>
+  <h4 id="Model_Core_Regulator_MoveArmies_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_System_Int32_" data-uid="Model.Core.Regulator.MoveArmies(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID,System.Int32)">MoveArmies(TerrID, TerrID, int)</h4>
+  <div class="markdown level1 summary"><p>Updates the game state in response to the 'Move' action, in which a player moves a number of armies from one controlled territory to another during <a class="xref" href="Shared.Enums.GamePhase.html#Shared_Enums_GamePhase_Move">Move</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void MoveArmies(TerrID source, TerrID target, int armies)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">source</span></td>
+        <td><p>The source of the moving armies.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">target</span></td>
+        <td><p>The target of the move.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">armies</span></td>
+        <td><p>The number of armies to move.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator_SelectTerritory_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_.md&amp;value=---%0Auid%3A%20Model.Core.Regulator.SelectTerritory(Shared.Geography.Enums.TerrID%2CShared.Geography.Enums.TerrID)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L198">View Source</a>
+  </span>
+  <a id="Model_Core_Regulator_SelectTerritory_" data-uid="Model.Core.Regulator.SelectTerritory*"></a>
+  <h4 id="Model_Core_Regulator_SelectTerritory_Shared_Geography_Enums_TerrID_Shared_Geography_Enums_TerrID_" data-uid="Model.Core.Regulator.SelectTerritory(Shared.Geography.Enums.TerrID,Shared.Geography.Enums.TerrID)">SelectTerritory(TerrID, TerrID)</h4>
+  <div class="markdown level1 summary"><p>Receives a territory ID selection as Player input and determines course of game logic.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public (TerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(TerrID selected, TerrID priorSelected)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">selected</span></td>
+        <td><p>The Territory selected by the player.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td><span class="parametername">priorSelected</span></td>
+        <td><p>The previous selection.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>(<a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-shared.geography.enums.terrid,system.boolean,system.nullable-system.int32--.selection">Selection</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-shared.geography.enums.terrid,system.boolean,system.nullable-system.int32--.requestinput">RequestInput</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>? <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-shared.geography.enums.terrid,system.boolean,system.nullable-system.int32--.maxvalue">MaxValue</a>)</td>
+        <td><p>A tuple containing the updated selection and a flag for requesting further player input (needed in Attack and Move phases).
+If MaxValue is not null, the request is for Move/Advance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator_TradeInCards_System_Int32_System_Int32___.md&amp;value=---%0Auid%3A%20Model.Core.Regulator.TradeInCards(System.Int32%2CSystem.Int32%5B%5D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L372">View Source</a>
+  </span>
+  <a id="Model_Core_Regulator_TradeInCards_" data-uid="Model.Core.Regulator.TradeInCards*"></a>
+  <h4 id="Model_Core_Regulator_TradeInCards_System_Int32_System_Int32___" data-uid="Model.Core.Regulator.TradeInCards(System.Int32,System.Int32[])">TradeInCards(int, int[])</h4>
+  <div class="markdown level1 summary"><p>Executes game-rule logic for trading in cards from a player.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void TradeInCards(int playerNum, int[] handIndices)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">playerNum</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</td>
+        <td><span class="parametername">handIndices</span></td>
+        <td><p>An array representing the indices of <a class="xref" href="Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Hand">Hand</a> which were traded.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="events">Events
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator_PromptBonusChoice.md&amp;value=---%0Auid%3A%20Model.Core.Regulator.PromptBonusChoice%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L36">View Source</a>
+  </span>
+  <h4 id="Model_Core_Regulator_PromptBonusChoice" data-uid="Model.Core.Regulator.PromptBonusChoice">PromptBonusChoice</h4>
+  <div class="markdown level1 summary"><p>Fires when a player must choose between two or more territories they control to receive a bonus upon card trade-in.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler&lt;TerrID[]&gt;? PromptBonusChoice</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a>[]&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator_PromptTradeIn.md&amp;value=---%0Auid%3A%20Model.Core.Regulator.PromptTradeIn%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L38">View Source</a>
+  </span>
+  <h4 id="Model_Core_Regulator_PromptTradeIn" data-uid="Model.Core.Regulator.PromptTradeIn">PromptTradeIn</h4>
+  <div class="markdown level1 summary"><p>Fires when a player should be prompted to trade in cards at the start of their turn; may or may not be forced.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler&lt;IPromptTradeEventArgs&gt;? PromptTradeIn</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="Shared.Interfaces.Model.IPromptTradeEventArgs.html">IPromptTradeEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Shared.Interfaces.Model.IRegulator.html">IRegulator</a>
+  </div>
+  <div>
+      <a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html">IBinarySerializable</a>
+  </div>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Model_Core_Regulator.md&amp;value=---%0Auid%3A%20Model.Core.Regulator%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Model/Core/Regulator.cs/#L14" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

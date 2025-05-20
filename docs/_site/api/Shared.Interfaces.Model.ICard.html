@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Interface ICard | Hazard!_Docs </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Interface ICard | Hazard!_Docs ">
+    
+    <meta name="description" content="Base interface for all cards. Provides default properties and methods allowing for run-time serialization.">
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="Hazard!_Docs">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first=First data-prev=Previous data-next=Next data-last=Last></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Shared.Interfaces.Model.ICard">
+
+
+
+  <h1 id="Shared_Interfaces_Model_ICard" data-uid="Shared.Interfaces.Model.ICard" class="text-break">Interface ICard</h1>
+  <div class="markdown level0 summary"><p>Base interface for all cards. Provides default properties and methods allowing for run-time serialization.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_LoadFromBinary_System_IO_BinaryReader_">IBinarySerializable.LoadFromBinary(BinaryReader)</a>
+    </div>
+    <div>
+      <a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials">IBinarySerializable.GetBinarySerials()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Shared.html">Shared</a>.<a class="xref" href="Shared.Interfaces.html">Interfaces</a>.<a class="xref" href="Shared.Interfaces.Model.html">Model</a></h6>
+  <h6><strong>Assembly</strong>: Model.dll</h6>
+  <h5 id="Shared_Interfaces_Model_ICard_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface ICard : IBinarySerializable</code></pre>
+  </div>
+  <h5 id="Shared_Interfaces_Model_ICard_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>Default serialization methods provided use reflection and should be overridden if there are performance concerns.</p>
+</div>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_ICard_CardSet.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.ICard.CardSet%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/ICard.cs/#L50">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_ICard_CardSet_" data-uid="Shared.Interfaces.Model.ICard.CardSet*"></a>
+  <h4 id="Shared_Interfaces_Model_ICard_CardSet" data-uid="Shared.Interfaces.Model.ICard.CardSet">CardSet</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a reference to a parent <a class="xref" href="Shared.Interfaces.Model.ICardSet.html">ICardSet</a> containing this card.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ICardSet? CardSet { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Interfaces.Model.ICardSet.html">ICardSet</a></td>
+        <td><p>The <a class="xref" href="Shared.Interfaces.Model.ICardSet.html">ICardSet</a> containing this <a class="xref" href="Shared.Interfaces.Model.ICard.html">ICard</a>, if both have been initialized and mapped. Otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_ICard_IsTradeable.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.ICard.IsTradeable%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/ICard.cs/#L61">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_ICard_IsTradeable_" data-uid="Shared.Interfaces.Model.ICard.IsTradeable*"></a>
+  <h4 id="Shared_Interfaces_Model_ICard_IsTradeable" data-uid="Shared.Interfaces.Model.ICard.IsTradeable">IsTradeable</h4>
+  <div class="markdown level1 summary"><p>Gets a flag indicating this card can be traded in for additional armies.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool IsTradeable { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if this card can be traded in. Otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_ICard_Logger.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.ICard.Logger%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/ICard.cs/#L22">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_ICard_Logger_" data-uid="Shared.Interfaces.Model.ICard.Logger*"></a>
+  <h4 id="Shared_Interfaces_Model_ICard_Logger" data-uid="Shared.Interfaces.Model.ICard.Logger">Logger</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the logger.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ILogger Logger { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger">ILogger</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_ICard_ParentTypeName.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.ICard.ParentTypeName%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/ICard.cs/#L43">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_ICard_ParentTypeName_" data-uid="Shared.Interfaces.Model.ICard.ParentTypeName*"></a>
+  <h4 id="Shared_Interfaces_Model_ICard_ParentTypeName" data-uid="Shared.Interfaces.Model.ICard.ParentTypeName">ParentTypeName</h4>
+  <div class="markdown level1 summary"><p>Gets the name of the parent type of this card.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string ParentTypeName { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Shared_Interfaces_Model_ICard_ParentTypeName_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Should be set by default to the <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/operators/nameof">nameof</a> the type of the <a class="xref" href="Shared.Interfaces.Model.ICardSet.html">ICardSet</a> implementation containing this card (its &quot;parent&quot;).</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_ICard_SerializablePropertyNames.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.ICard.SerializablePropertyNames%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/ICard.cs/#L29">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_ICard_SerializablePropertyNames_" data-uid="Shared.Interfaces.Model.ICard.SerializablePropertyNames*"></a>
+  <h4 id="Shared_Interfaces_Model_ICard_SerializablePropertyNames" data-uid="Shared.Interfaces.Model.ICard.SerializablePropertyNames">SerializablePropertyNames</h4>
+  <div class="markdown level1 summary"><p>Contains the name of each property that should be serialized via <a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials">GetBinarySerials()</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">HashSet&lt;string&gt; SerializablePropertyNames { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1">HashSet</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</td>
+        <td><p>Names should match 'nameof(Property)', and the property must be an IConvertible or IEnumberable{IConvertible} for work with <a class="xref" href="Shared.Services.Serializer.BinarySerializer.html">BinarySerializer</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_ICard_Target.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.ICard.Target%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/ICard.cs/#L54">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_ICard_Target_" data-uid="Shared.Interfaces.Model.ICard.Target*"></a>
+  <h4 id="Shared_Interfaces_Model_ICard_Target" data-uid="Shared.Interfaces.Model.ICard.Target">Target</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a list of this card's territory 'targets'.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">TerrID[] Target { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_ICard_TypeName.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.ICard.TypeName%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/ICard.cs/#L36">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_Model_ICard_TypeName_" data-uid="Shared.Interfaces.Model.ICard.TypeName*"></a>
+  <h4 id="Shared_Interfaces_Model_ICard_TypeName" data-uid="Shared.Interfaces.Model.ICard.TypeName">TypeName</h4>
+  <div class="markdown level1 summary"><p>The name of this card's type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string TypeName { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Shared_Interfaces_Model_ICard_TypeName_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Serves as a cached value that allows us to avoid multiple reflection method calls.</p>
+</div>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_Model_ICard.md&amp;value=---%0Auid%3A%20Shared.Interfaces.Model.ICard%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/Model/ICard.cs/#L16" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

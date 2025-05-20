@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: Model.Assets
+  commentId: N:Model.Assets
+  id: Model.Assets
+  children:
+  - Model.Assets.RuleValues
+  langs:
+  - csharp
+  - vb
+  name: Model.Assets
+  nameWithType: Model.Assets
+  fullName: Model.Assets
+  type: Namespace
+  assemblies:
+  - Model
+references:
+- uid: Model.Assets.RuleValues
+  commentId: T:Model.Assets.RuleValues
+  href: Model.Assets.RuleValues.html
+  name: RuleValues
+  nameWithType: RuleValues
+  fullName: Model.Assets.RuleValues

@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Interface IMainVM | Hazard!_Docs </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Interface IMainVM | Hazard!_Docs ">
+    
+    <meta name="description" content="Defines public exposures of the main ViewModel. Enables decoupled DI injection into the primary View.">
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="Hazard!_Docs">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first=First data-prev=Previous data-next=Next data-last=Last></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Shared.Interfaces.ViewModel.IMainVM">
+
+
+
+  <h1 id="Shared_Interfaces_ViewModel_IMainVM" data-uid="Shared.Interfaces.ViewModel.IMainVM" class="text-break">Interface IMainVM</h1>
+  <div class="markdown level0 summary"><p>Defines public exposures of the main ViewModel. Enables decoupled DI injection into the primary View.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_LoadFromBinary_System_IO_BinaryReader_">IBinarySerializable.LoadFromBinary(BinaryReader)</a>
+    </div>
+    <div>
+      <a class="xref" href="Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials">IBinarySerializable.GetBinarySerials()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Shared.html">Shared</a>.<a class="xref" href="Shared.Interfaces.html">Interfaces</a>.<a class="xref" href="Shared.Interfaces.ViewModel.html">ViewModel</a></h6>
+  <h6><strong>Assembly</strong>: Model.dll</h6>
+  <h5 id="Shared_Interfaces_ViewModel_IMainVM_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface IMainVM : IBinarySerializable</code></pre>
+  </div>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_Advance_Command.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.Advance_Command%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L92">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_Advance_Command_" data-uid="Shared.Interfaces.ViewModel.IMainVM.Advance_Command*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_Advance_Command" data-uid="Shared.Interfaces.ViewModel.IMainVM.Advance_Command">Advance_Command</h4>
+  <div class="markdown level1 summary"><p>Gets the troop advance command.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ICommand Advance_Command { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.windows.input.icommand">ICommand</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_AppPath.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.AppPath%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L49">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_AppPath_" data-uid="Shared.Interfaces.ViewModel.IMainVM.AppPath*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_AppPath" data-uid="Shared.Interfaces.ViewModel.IMainVM.AppPath">AppPath</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the Path to the directory of the Application.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string AppPath { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Shared_Interfaces_ViewModel_IMainVM_AppPath_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Provided by the Dependency Injection system via <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft">Microsoft.Extensions.Options</a>.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_AttackEnabled.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.AttackEnabled%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L56">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_AttackEnabled_" data-uid="Shared.Interfaces.ViewModel.IMainVM.AttackEnabled*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_AttackEnabled" data-uid="Shared.Interfaces.ViewModel.IMainVM.AttackEnabled">AttackEnabled</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a flag indicating whether the attack command should be enabled.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool AttackEnabled { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the application is ready to accept another attack input; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_ChooseTerritoryBonus_Command.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.ChooseTerritoryBonus_Command%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L104">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_ChooseTerritoryBonus_Command_" data-uid="Shared.Interfaces.ViewModel.IMainVM.ChooseTerritoryBonus_Command*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_ChooseTerritoryBonus_Command" data-uid="Shared.Interfaces.ViewModel.IMainVM.ChooseTerritoryBonus_Command">ChooseTerritoryBonus_Command</h4>
+  <div class="markdown level1 summary"><p>Gets the choose territory bonus command.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ICommand ChooseTerritoryBonus_Command { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.windows.input.icommand">ICommand</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_ContNameMap.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.ContNameMap%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L42">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_ContNameMap_" data-uid="Shared.Interfaces.ViewModel.IMainVM.ContNameMap*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_ContNameMap" data-uid="Shared.Interfaces.ViewModel.IMainVM.ContNameMap">ContNameMap</h4>
+  <div class="markdown level1 summary"><p>Gets a map of <a class="xref" href="Shared.Geography.Enums.ContID.html">ContID</a> to their names.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ReadOnlyDictionary&lt;ContID, string&gt; ContNameMap { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlydictionary-2">ReadOnlyDictionary</a>&lt;<a class="xref" href="Shared.Geography.Enums.ContID.html">ContID</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Shared_Interfaces_ViewModel_IMainVM_ContNameMap_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>A cache that helps avoid multiple <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.enum">Enum</a> method calls.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_CurrentGame.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.CurrentGame%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L19">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_CurrentGame_" data-uid="Shared.Interfaces.ViewModel.IMainVM.CurrentGame*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_CurrentGame" data-uid="Shared.Interfaces.ViewModel.IMainVM.CurrentGame">CurrentGame</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the current Game.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IGame? CurrentGame { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Interfaces.Model.IGame.html">IGame</a></td>
+        <td><p>The current <a class="xref" href="Shared.Interfaces.Model.IGame.html">IGame</a> instance if both it and the <a class="xref" href="Shared.Interfaces.ViewModel.IMainVM.html">IMainVM</a> have been initialized; otherwise <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_CurrentPhase.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.CurrentPhase%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L23">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_CurrentPhase_" data-uid="Shared.Interfaces.ViewModel.IMainVM.CurrentPhase*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_CurrentPhase" data-uid="Shared.Interfaces.ViewModel.IMainVM.CurrentPhase">CurrentPhase</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the current game phase.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">GamePhase CurrentPhase { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Enums.GamePhase.html">GamePhase</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_DeliverAttackReward_Command.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.DeliverAttackReward_Command%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L96">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_DeliverAttackReward_Command_" data-uid="Shared.Interfaces.ViewModel.IMainVM.DeliverAttackReward_Command*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_DeliverAttackReward_Command" data-uid="Shared.Interfaces.ViewModel.IMainVM.DeliverAttackReward_Command">DeliverAttackReward_Command</h4>
+  <div class="markdown level1 summary"><p>Gets the deliver reward command.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ICommand DeliverAttackReward_Command { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.windows.input.icommand">ICommand</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_LoadGame_Command.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.LoadGame_Command%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L80">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_LoadGame_Command_" data-uid="Shared.Interfaces.ViewModel.IMainVM.LoadGame_Command*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_LoadGame_Command" data-uid="Shared.Interfaces.ViewModel.IMainVM.LoadGame_Command">LoadGame_Command</h4>
+  <div class="markdown level1 summary"><p>Gets the load game command.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ICommand LoadGame_Command { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.windows.input.icommand">ICommand</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_NewGame_Command.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.NewGame_Command%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L72">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_NewGame_Command_" data-uid="Shared.Interfaces.ViewModel.IMainVM.NewGame_Command*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_NewGame_Command" data-uid="Shared.Interfaces.ViewModel.IMainVM.NewGame_Command">NewGame_Command</h4>
+  <div class="markdown level1 summary"><p>Gets the new game command.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ICommand NewGame_Command { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.windows.input.icommand">ICommand</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_NextTradeBonus.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.NextTradeBonus%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L67">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_NextTradeBonus_" data-uid="Shared.Interfaces.ViewModel.IMainVM.NextTradeBonus*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_NextTradeBonus" data-uid="Shared.Interfaces.ViewModel.IMainVM.NextTradeBonus">NextTradeBonus</h4>
+  <div class="markdown level1 summary"><p>Gets the number of bonus armies that will be awarded on the next card trade-in.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int NextTradeBonus { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_PlayerDetails.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.PlayerDetails%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L35">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_PlayerDetails_" data-uid="Shared.Interfaces.ViewModel.IMainVM.PlayerDetails*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_PlayerDetails" data-uid="Shared.Interfaces.ViewModel.IMainVM.PlayerDetails">PlayerDetails</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a collection of player information for display.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ObservableCollection&lt;IPlayerData&gt; PlayerDetails { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1">ObservableCollection</a>&lt;<a class="xref" href="Shared.Interfaces.ViewModel.IPlayerData.html">IPlayerData</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_PlayerTurn.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.PlayerTurn%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L63">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_PlayerTurn_" data-uid="Shared.Interfaces.ViewModel.IMainVM.PlayerTurn*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_PlayerTurn" data-uid="Shared.Interfaces.ViewModel.IMainVM.PlayerTurn">PlayerTurn</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whose turn it is.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int PlayerTurn { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><p>The <a class="xref" href="Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Number">Number</a> whose turn it is. <br></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_SaveGame_Command.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.SaveGame_Command%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L76">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_SaveGame_Command_" data-uid="Shared.Interfaces.ViewModel.IMainVM.SaveGame_Command*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_SaveGame_Command" data-uid="Shared.Interfaces.ViewModel.IMainVM.SaveGame_Command">SaveGame_Command</h4>
+  <div class="markdown level1 summary"><p>Gets the save game command.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ICommand SaveGame_Command { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.windows.input.icommand">ICommand</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_Territories.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.Territories%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L31">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_Territories_" data-uid="Shared.Interfaces.ViewModel.IMainVM.Territories*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_Territories" data-uid="Shared.Interfaces.ViewModel.IMainVM.Territories">Territories</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a collection of territory information for display.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ObservableCollection&lt;ITerritoryInfo&gt; Territories { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1">ObservableCollection</a>&lt;<a class="xref" href="Shared.Interfaces.ViewModel.ITerritoryInfo.html">ITerritoryInfo</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_TerritorySelect_Command.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.TerritorySelect_Command%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L84">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_TerritorySelect_Command_" data-uid="Shared.Interfaces.ViewModel.IMainVM.TerritorySelect_Command*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_TerritorySelect_Command" data-uid="Shared.Interfaces.ViewModel.IMainVM.TerritorySelect_Command">TerritorySelect_Command</h4>
+  <div class="markdown level1 summary"><p>Gets the territory select command.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ICommand TerritorySelect_Command { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.windows.input.icommand">ICommand</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_TerritorySelected.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.TerritorySelected%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L27">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_TerritorySelected_" data-uid="Shared.Interfaces.ViewModel.IMainVM.TerritorySelected*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_TerritorySelected" data-uid="Shared.Interfaces.ViewModel.IMainVM.TerritorySelected">TerritorySelected</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the currently selected territory.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">TerrID TerritorySelected { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_TradeIn_Command.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.TradeIn_Command%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L88">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_TradeIn_Command_" data-uid="Shared.Interfaces.ViewModel.IMainVM.TradeIn_Command*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_TradeIn_Command" data-uid="Shared.Interfaces.ViewModel.IMainVM.TradeIn_Command">TradeIn_Command</h4>
+  <div class="markdown level1 summary"><p>Gets the trade-in command.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ICommand TradeIn_Command { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.windows.input.icommand">ICommand</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_UndoConfirmInput_Command.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.UndoConfirmInput_Command%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L100">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_UndoConfirmInput_Command_" data-uid="Shared.Interfaces.ViewModel.IMainVM.UndoConfirmInput_Command*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_UndoConfirmInput_Command" data-uid="Shared.Interfaces.ViewModel.IMainVM.UndoConfirmInput_Command">UndoConfirmInput_Command</h4>
+  <div class="markdown level1 summary"><p>Gets the undo confirm input command.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ICommand UndoConfirmInput_Command { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.windows.input.icommand">ICommand</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_ChooseTerritoryBonus_System_Int32_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.ChooseTerritoryBonus(System.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L185">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_ChooseTerritoryBonus_" data-uid="Shared.Interfaces.ViewModel.IMainVM.ChooseTerritoryBonus*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_ChooseTerritoryBonus_System_Int32_" data-uid="Shared.Interfaces.ViewModel.IMainVM.ChooseTerritoryBonus(System.Int32)">ChooseTerritoryBonus(int)</h4>
+  <div class="markdown level1 summary"><p>Executes logic of the <a class="xref" href="Shared.Interfaces.ViewModel.IMainVM.html#Shared_Interfaces_ViewModel_IMainVM_ChooseTerritoryBonus_Command">ChooseTerritoryBonus_Command</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void ChooseTerritoryBonus(int target)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">target</span></td>
+        <td><p>The underlying value of the target territory's <a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_Initialize_System_String___System_String___System_String_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.Initialize(System.String%5B%5D%2CSystem.String%5B%5D%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L160">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_Initialize_" data-uid="Shared.Interfaces.ViewModel.IMainVM.Initialize*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_Initialize_System_String___System_String___System_String_" data-uid="Shared.Interfaces.ViewModel.IMainVM.Initialize(System.String[],System.String[],System.String)">Initialize(string[], string[], string?)</h4>
+  <div class="markdown level1 summary"><p>Initializes the MainViewModel using either newly input values or the name of a save file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Initialize(string[] players, string[] colors, string? fileName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</td>
+        <td><span class="parametername">players</span></td>
+        <td><p>The players in the new game.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</td>
+        <td><span class="parametername">colors</span></td>
+        <td><p>The color names for the players in the new game.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">fileName</span></td>
+        <td><p>The name of the save file to use, if any; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_LoadGame_System_String_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.LoadGame(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L175">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_LoadGame_" data-uid="Shared.Interfaces.ViewModel.IMainVM.LoadGame*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_LoadGame_System_String_" data-uid="Shared.Interfaces.ViewModel.IMainVM.LoadGame(System.String)">LoadGame(string)</h4>
+  <div class="markdown level1 summary"><p>Executes logic of the <a class="xref" href="Shared.Interfaces.ViewModel.IMainVM.html#Shared_Interfaces_ViewModel_IMainVM_LoadGame_Command">LoadGame_Command</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void LoadGame(string fileName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">fileName</span></td>
+        <td><p>The name of the file from which to load.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_MakeDisplayName_System_String_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.MakeDisplayName(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L203">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_MakeDisplayName_" data-uid="Shared.Interfaces.ViewModel.IMainVM.MakeDisplayName*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_MakeDisplayName_System_String_" data-uid="Shared.Interfaces.ViewModel.IMainVM.MakeDisplayName(System.String)">MakeDisplayName(string)</h4>
+  <div class="markdown level1 summary"><p>Makes names suitable for display in the UI.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string MakeDisplayName(string name)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The name to be amended.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><p>The name, edited for display.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_NewGame_System_ValueTuple_System_String_System_String____.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.NewGame(System.ValueTuple%7BSystem.String%2CSystem.String%7D%5B%5D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L165">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_NewGame_" data-uid="Shared.Interfaces.ViewModel.IMainVM.NewGame*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_NewGame_System_ValueTuple_System_String_System_String____" data-uid="Shared.Interfaces.ViewModel.IMainVM.NewGame(System.ValueTuple{System.String,System.String}[])">NewGame((string, string)[])</h4>
+  <div class="markdown level1 summary"><p>Executes logic of the <a class="xref" href="Shared.Interfaces.ViewModel.IMainVM.html#Shared_Interfaces_ViewModel_IMainVM_NewGame_Command">NewGame_Command</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void NewGame((string, string)[] namesAndColors)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>(<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>)[]</td>
+        <td><span class="parametername">namesAndColors</span></td>
+        <td><p>The names and colors of the new players.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_SaveGame_System_ValueTuple_System_String_System_Boolean__.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.SaveGame(System.ValueTuple%7BSystem.String%2CSystem.Boolean%7D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L170">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_SaveGame_" data-uid="Shared.Interfaces.ViewModel.IMainVM.SaveGame*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_SaveGame_System_ValueTuple_System_String_System_Boolean__" data-uid="Shared.Interfaces.ViewModel.IMainVM.SaveGame(System.ValueTuple{System.String,System.Boolean})">SaveGame((string FileName, bool NewFile))</h4>
+  <div class="markdown level1 summary"><p>Executes logic of the <a class="xref" href="Shared.Interfaces.ViewModel.IMainVM.html#Shared_Interfaces_ViewModel_IMainVM_SaveGame_Command">SaveGame_Command</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task SaveGame((string FileName, bool NewFile) saveParams)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>(<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.string,system.boolean-.filename">FileName</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.string,system.boolean-.newfile">NewFile</a>)</td>
+        <td><span class="parametername">saveParams</span></td>
+        <td><p>The file name to save to, and a flag indicating whether it is a new file.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_SumArmies_System_Int32_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.SumArmies(System.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L191">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_SumArmies_" data-uid="Shared.Interfaces.ViewModel.IMainVM.SumArmies*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_SumArmies_System_Int32_" data-uid="Shared.Interfaces.ViewModel.IMainVM.SumArmies(System.Int32)">SumArmies(int)</h4>
+  <div class="markdown level1 summary"><p>Sums the total number of armies owned by a player.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int SumArmies(int player)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">player</span></td>
+        <td><p>The <a class="xref" href="Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Number">Number</a> of the player whose armies will be summed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><p>A positive <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_SumTerritories_System_Int32_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.SumTerritories(System.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L197">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_SumTerritories_" data-uid="Shared.Interfaces.ViewModel.IMainVM.SumTerritories*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_SumTerritories_System_Int32_" data-uid="Shared.Interfaces.ViewModel.IMainVM.SumTerritories(System.Int32)">SumTerritories(int)</h4>
+  <div class="markdown level1 summary"><p>Sums the total number of territories controlled by a player.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int SumTerritories(int player)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">player</span></td>
+        <td><p>The <a class="xref" href="Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Number">Number</a> of the player whose territories will be counted.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><p>A positive <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_TerritorySelect_System_Int32_.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.TerritorySelect(System.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L180">View Source</a>
+  </span>
+  <a id="Shared_Interfaces_ViewModel_IMainVM_TerritorySelect_" data-uid="Shared.Interfaces.ViewModel.IMainVM.TerritorySelect*"></a>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_TerritorySelect_System_Int32_" data-uid="Shared.Interfaces.ViewModel.IMainVM.TerritorySelect(System.Int32)">TerritorySelect(int)</h4>
+  <div class="markdown level1 summary"><p>Executes logic of the <a class="xref" href="Shared.Interfaces.ViewModel.IMainVM.html#Shared_Interfaces_ViewModel_IMainVM_TerritorySelect_Command">TerritorySelect_Command</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void TerritorySelect(int territory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">territory</span></td>
+        <td><p>The ID of the territory selected.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="events">Events
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_AdvanceRequest.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.AdvanceRequest%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L140">View Source</a>
+  </span>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_AdvanceRequest" data-uid="Shared.Interfaces.ViewModel.IMainVM.AdvanceRequest">AdvanceRequest</h4>
+  <div class="markdown level1 summary"><p>Fires when user input is needed to determine how many armies will move after a successful attack.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event EventHandler&lt;ITroopsAdvanceEventArgs&gt;? AdvanceRequest</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.html">ITroopsAdvanceEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_AttackRequest.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.AttackRequest%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L136">View Source</a>
+  </span>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_AttackRequest" data-uid="Shared.Interfaces.ViewModel.IMainVM.AttackRequest">AttackRequest</h4>
+  <div class="markdown level1 summary"><p>Fires when the Model layer asks for an attack to be performed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event EventHandler&lt;TerrID&gt;? AttackRequest</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="Shared.Geography.Enums.TerrID.html">TerrID</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Shared_Interfaces_ViewModel_IMainVM_AttackRequest_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Currently, due to the way dice rolling, results, and animations are tied together, the actual result of random number generation <br>
+is given in the ViewModel, which then passes those results on to the Model for it to execute logic with them. This might need <br>
+to be changed in the future, but would require rethinking how to give a player a &quot;real&quot; view of the &quot;roll.&quot;</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_DiceThrown.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.DiceThrown%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L144">View Source</a>
+  </span>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_DiceThrown" data-uid="Shared.Interfaces.ViewModel.IMainVM.DiceThrown">DiceThrown</h4>
+  <div class="markdown level1 summary"><p>Fires when the &quot;dice rolling&quot; process has concluded.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event EventHandler&lt;IDiceThrownEventArgs&gt;? DiceThrown</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="Shared.Interfaces.ViewModel.IDiceThrownEventArgs.html">IDiceThrownEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_ForceTradeIn.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.ForceTradeIn%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L127">View Source</a>
+  </span>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_ForceTradeIn" data-uid="Shared.Interfaces.ViewModel.IMainVM.ForceTradeIn">ForceTradeIn</h4>
+  <div class="markdown level1 summary"><p>Fires when the application should force a player to turn in a matching set of cards before continuing.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event EventHandler&lt;int&gt;? ForceTradeIn</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_PlayerLost.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.PlayerLost%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L148">View Source</a>
+  </span>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_PlayerLost" data-uid="Shared.Interfaces.ViewModel.IMainVM.PlayerLost">PlayerLost</h4>
+  <div class="markdown level1 summary"><p>Fires when a player is defeated.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event EventHandler&lt;int&gt;? PlayerLost</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_PlayerTurnChanging.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.PlayerTurnChanging%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L112">View Source</a>
+  </span>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_PlayerTurnChanging" data-uid="Shared.Interfaces.ViewModel.IMainVM.PlayerTurnChanging">PlayerTurnChanging</h4>
+  <div class="markdown level1 summary"><p>Fires if the turn is changing control between players.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event EventHandler&lt;int&gt;? PlayerTurnChanging</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Shared_Interfaces_ViewModel_IMainVM_PlayerTurnChanging_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Warns the View that the Player Turn will soon change; this is needed in a single-seat multiplayer game so that players can keep information hidden.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_PlayerWon.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.PlayerWon%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L152">View Source</a>
+  </span>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_PlayerWon" data-uid="Shared.Interfaces.ViewModel.IMainVM.PlayerWon">PlayerWon</h4>
+  <div class="markdown level1 summary"><p>Fires when a player wins.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event EventHandler&lt;int&gt;? PlayerWon</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_RequestTradeIn.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.RequestTradeIn%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L123">View Source</a>
+  </span>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_RequestTradeIn" data-uid="Shared.Interfaces.ViewModel.IMainVM.RequestTradeIn">RequestTradeIn</h4>
+  <div class="markdown level1 summary"><p>Fires when the application should deliver a prompt allowing a player to trade in their cards.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event EventHandler&lt;int&gt;? RequestTradeIn</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM_TerritoryChoiceRequest.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM.TerritoryChoiceRequest%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L119">View Source</a>
+  </span>
+  <h4 id="Shared_Interfaces_ViewModel_IMainVM_TerritoryChoiceRequest" data-uid="Shared.Interfaces.ViewModel.IMainVM.TerritoryChoiceRequest">TerritoryChoiceRequest</h4>
+  <div class="markdown level1 summary"><p>Fires when a player input is needed to choose between territories.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event EventHandler&lt;(int, string)[]&gt; TerritoryChoiceRequest</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;(<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>)[]&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Shared_Interfaces_ViewModel_IMainVM_TerritoryChoiceRequest_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>See <a class="xref" href="Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_PromptBonusChoice">PromptBonusChoice</a>.</p>
+</div>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Interfaces_ViewModel_IMainVM.md&amp;value=---%0Auid%3A%20Shared.Interfaces.ViewModel.IMainVM%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Interfaces/ViewModel/IMainVM.cs/#L11" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

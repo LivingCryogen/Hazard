@@ -1,0 +1,781 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Interfaces.Model.IRuleValues
+  commentId: T:Shared.Interfaces.Model.IRuleValues
+  id: IRuleValues
+  parent: Shared.Interfaces.Model
+  children:
+  - Shared.Interfaces.Model.IRuleValues.AttackersLimit
+  - Shared.Interfaces.Model.IRuleValues.CalculateArmyBonus(System.Int32,System.Collections.Generic.List{Shared.Geography.Enums.ContID})
+  - Shared.Interfaces.Model.IRuleValues.CalculateBaseTradeInBonus(System.Int32)
+  - Shared.Interfaces.Model.IRuleValues.CalculateTerritoryBonus(System.Int32)
+  - Shared.Interfaces.Model.IRuleValues.ContinentBonus
+  - Shared.Interfaces.Model.IRuleValues.DefendersLimit
+  - Shared.Interfaces.Model.IRuleValues.MinimumArmyBonus
+  - Shared.Interfaces.Model.IRuleValues.SetupActionsPerPlayers
+  - Shared.Interfaces.Model.IRuleValues.SetupStartingPool
+  - Shared.Interfaces.Model.IRuleValues.TerritoryTradeInBonus
+  langs:
+  - csharp
+  - vb
+  name: IRuleValues
+  nameWithType: IRuleValues
+  fullName: Shared.Interfaces.Model.IRuleValues
+  type: Interface
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRuleValues.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: IRuleValues
+    path: ../Shared/Interfaces/Model/IRuleValues.cs
+    startLine: 8
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Provides constants and equations derived from game rules.
+  example: []
+  syntax:
+    content: public interface IRuleValues
+    content.vb: Public Interface IRuleValues
+- uid: Shared.Interfaces.Model.IRuleValues.MinimumArmyBonus
+  commentId: P:Shared.Interfaces.Model.IRuleValues.MinimumArmyBonus
+  id: MinimumArmyBonus
+  parent: Shared.Interfaces.Model.IRuleValues
+  langs:
+  - csharp
+  - vb
+  name: MinimumArmyBonus
+  nameWithType: IRuleValues.MinimumArmyBonus
+  fullName: Shared.Interfaces.Model.IRuleValues.MinimumArmyBonus
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRuleValues.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: MinimumArmyBonus
+    path: ../Shared/Interfaces/Model/IRuleValues.cs
+    startLine: 13
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Gets the minimum number to add to a player's army count on their turn.
+  example: []
+  syntax:
+    content: int MinimumArmyBonus { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: ReadOnly Property MinimumArmyBonus As Integer
+  overload: Shared.Interfaces.Model.IRuleValues.MinimumArmyBonus*
+- uid: Shared.Interfaces.Model.IRuleValues.TerritoryTradeInBonus
+  commentId: P:Shared.Interfaces.Model.IRuleValues.TerritoryTradeInBonus
+  id: TerritoryTradeInBonus
+  parent: Shared.Interfaces.Model.IRuleValues
+  langs:
+  - csharp
+  - vb
+  name: TerritoryTradeInBonus
+  nameWithType: IRuleValues.TerritoryTradeInBonus
+  fullName: Shared.Interfaces.Model.IRuleValues.TerritoryTradeInBonus
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRuleValues.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: TerritoryTradeInBonus
+    path: ../Shared/Interfaces/Model/IRuleValues.cs
+    startLine: 17
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Gets the number of armies to add to a player's army count if they trade in a set of cards.
+  example: []
+  syntax:
+    content: int TerritoryTradeInBonus { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: ReadOnly Property TerritoryTradeInBonus As Integer
+  overload: Shared.Interfaces.Model.IRuleValues.TerritoryTradeInBonus*
+- uid: Shared.Interfaces.Model.IRuleValues.AttackersLimit
+  commentId: P:Shared.Interfaces.Model.IRuleValues.AttackersLimit
+  id: AttackersLimit
+  parent: Shared.Interfaces.Model.IRuleValues
+  langs:
+  - csharp
+  - vb
+  name: AttackersLimit
+  nameWithType: IRuleValues.AttackersLimit
+  fullName: Shared.Interfaces.Model.IRuleValues.AttackersLimit
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRuleValues.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: AttackersLimit
+    path: ../Shared/Interfaces/Model/IRuleValues.cs
+    startLine: 21
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Gets the maximum number of dice allowed an attacking player.
+  example: []
+  syntax:
+    content: int AttackersLimit { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: ReadOnly Property AttackersLimit As Integer
+  overload: Shared.Interfaces.Model.IRuleValues.AttackersLimit*
+- uid: Shared.Interfaces.Model.IRuleValues.DefendersLimit
+  commentId: P:Shared.Interfaces.Model.IRuleValues.DefendersLimit
+  id: DefendersLimit
+  parent: Shared.Interfaces.Model.IRuleValues
+  langs:
+  - csharp
+  - vb
+  name: DefendersLimit
+  nameWithType: IRuleValues.DefendersLimit
+  fullName: Shared.Interfaces.Model.IRuleValues.DefendersLimit
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRuleValues.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: DefendersLimit
+    path: ../Shared/Interfaces/Model/IRuleValues.cs
+    startLine: 25
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Gets the maximum number of dice allowed a defending player.
+  example: []
+  syntax:
+    content: int DefendersLimit { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: ReadOnly Property DefendersLimit As Integer
+  overload: Shared.Interfaces.Model.IRuleValues.DefendersLimit*
+- uid: Shared.Interfaces.Model.IRuleValues.ContinentBonus
+  commentId: P:Shared.Interfaces.Model.IRuleValues.ContinentBonus
+  id: ContinentBonus
+  parent: Shared.Interfaces.Model.IRuleValues
+  langs:
+  - csharp
+  - vb
+  name: ContinentBonus
+  nameWithType: IRuleValues.ContinentBonus
+  fullName: Shared.Interfaces.Model.IRuleValues.ContinentBonus
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRuleValues.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ContinentBonus
+    path: ../Shared/Interfaces/Model/IRuleValues.cs
+    startLine: 29
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Gets map of the number of bonus armies granted for controlling a given continent (see <xref href="Shared.Geography.Enums.ContID" data-throw-if-not-resolved="false"></xref>).
+  example: []
+  syntax:
+    content: ReadOnlyDictionary<ContID, int> ContinentBonus { get; }
+    parameters: []
+    return:
+      type: System.Collections.ObjectModel.ReadOnlyDictionary{Shared.Geography.Enums.ContID,System.Int32}
+    content.vb: ReadOnly Property ContinentBonus As ReadOnlyDictionary(Of ContID, Integer)
+  overload: Shared.Interfaces.Model.IRuleValues.ContinentBonus*
+- uid: Shared.Interfaces.Model.IRuleValues.SetupActionsPerPlayers
+  commentId: P:Shared.Interfaces.Model.IRuleValues.SetupActionsPerPlayers
+  id: SetupActionsPerPlayers
+  parent: Shared.Interfaces.Model.IRuleValues
+  langs:
+  - csharp
+  - vb
+  name: SetupActionsPerPlayers
+  nameWithType: IRuleValues.SetupActionsPerPlayers
+  fullName: Shared.Interfaces.Model.IRuleValues.SetupActionsPerPlayers
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRuleValues.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: SetupActionsPerPlayers
+    path: ../Shared/Interfaces/Model/IRuleValues.cs
+    startLine: 33
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Gets a map of the number of actions allowed a player in the Setup phase given the total number of players.
+  example: []
+  syntax:
+    content: ReadOnlyDictionary<int, int> SetupActionsPerPlayers { get; }
+    parameters: []
+    return:
+      type: System.Collections.ObjectModel.ReadOnlyDictionary{System.Int32,System.Int32}
+    content.vb: ReadOnly Property SetupActionsPerPlayers As ReadOnlyDictionary(Of Integer, Integer)
+  overload: Shared.Interfaces.Model.IRuleValues.SetupActionsPerPlayers*
+- uid: Shared.Interfaces.Model.IRuleValues.SetupStartingPool
+  commentId: P:Shared.Interfaces.Model.IRuleValues.SetupStartingPool
+  id: SetupStartingPool
+  parent: Shared.Interfaces.Model.IRuleValues
+  langs:
+  - csharp
+  - vb
+  name: SetupStartingPool
+  nameWithType: IRuleValues.SetupStartingPool
+  fullName: Shared.Interfaces.Model.IRuleValues.SetupStartingPool
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRuleValues.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: SetupStartingPool
+    path: ../Shared/Interfaces/Model/IRuleValues.cs
+    startLine: 37
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Gets a map of the number of armies distributed to a player during setup given the total number of players.
+  example: []
+  syntax:
+    content: ReadOnlyDictionary<int, int> SetupStartingPool { get; }
+    parameters: []
+    return:
+      type: System.Collections.ObjectModel.ReadOnlyDictionary{System.Int32,System.Int32}
+    content.vb: ReadOnly Property SetupStartingPool As ReadOnlyDictionary(Of Integer, Integer)
+  overload: Shared.Interfaces.Model.IRuleValues.SetupStartingPool*
+- uid: Shared.Interfaces.Model.IRuleValues.CalculateTerritoryBonus(System.Int32)
+  commentId: M:Shared.Interfaces.Model.IRuleValues.CalculateTerritoryBonus(System.Int32)
+  id: CalculateTerritoryBonus(System.Int32)
+  parent: Shared.Interfaces.Model.IRuleValues
+  langs:
+  - csharp
+  - vb
+  name: CalculateTerritoryBonus(int)
+  nameWithType: IRuleValues.CalculateTerritoryBonus(int)
+  fullName: Shared.Interfaces.Model.IRuleValues.CalculateTerritoryBonus(int)
+  type: Method
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRuleValues.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: CalculateTerritoryBonus
+    path: ../Shared/Interfaces/Model/IRuleValues.cs
+    startLine: 43
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Calculates how many additional armies to grant a player based upon the number of territories they control.
+  example: []
+  syntax:
+    content: int CalculateTerritoryBonus(int numTerritories)
+    parameters:
+    - id: numTerritories
+      type: System.Int32
+      description: The number of territories under control of a player.
+    return:
+      type: System.Int32
+      description: The total number of armies granted.
+    content.vb: Function CalculateTerritoryBonus(numTerritories As Integer) As Integer
+  overload: Shared.Interfaces.Model.IRuleValues.CalculateTerritoryBonus*
+  nameWithType.vb: IRuleValues.CalculateTerritoryBonus(Integer)
+  fullName.vb: Shared.Interfaces.Model.IRuleValues.CalculateTerritoryBonus(Integer)
+  name.vb: CalculateTerritoryBonus(Integer)
+- uid: Shared.Interfaces.Model.IRuleValues.CalculateBaseTradeInBonus(System.Int32)
+  commentId: M:Shared.Interfaces.Model.IRuleValues.CalculateBaseTradeInBonus(System.Int32)
+  id: CalculateBaseTradeInBonus(System.Int32)
+  parent: Shared.Interfaces.Model.IRuleValues
+  langs:
+  - csharp
+  - vb
+  name: CalculateBaseTradeInBonus(int)
+  nameWithType: IRuleValues.CalculateBaseTradeInBonus(int)
+  fullName: Shared.Interfaces.Model.IRuleValues.CalculateBaseTradeInBonus(int)
+  type: Method
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRuleValues.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: CalculateBaseTradeInBonus
+    path: ../Shared/Interfaces/Model/IRuleValues.cs
+    startLine: 49
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Calculates how many additional armies to grant a player when they trade in set of cards on their turn.
+  example: []
+  syntax:
+    content: int CalculateBaseTradeInBonus(int numTrades)
+    parameters:
+    - id: numTrades
+      type: System.Int32
+      description: The number of trades performed so far.
+    return:
+      type: System.Int32
+      description: The number of additional armies granted.
+    content.vb: Function CalculateBaseTradeInBonus(numTrades As Integer) As Integer
+  overload: Shared.Interfaces.Model.IRuleValues.CalculateBaseTradeInBonus*
+  nameWithType.vb: IRuleValues.CalculateBaseTradeInBonus(Integer)
+  fullName.vb: Shared.Interfaces.Model.IRuleValues.CalculateBaseTradeInBonus(Integer)
+  name.vb: CalculateBaseTradeInBonus(Integer)
+- uid: Shared.Interfaces.Model.IRuleValues.CalculateArmyBonus(System.Int32,System.Collections.Generic.List{Shared.Geography.Enums.ContID})
+  commentId: M:Shared.Interfaces.Model.IRuleValues.CalculateArmyBonus(System.Int32,System.Collections.Generic.List{Shared.Geography.Enums.ContID})
+  id: CalculateArmyBonus(System.Int32,System.Collections.Generic.List{Shared.Geography.Enums.ContID})
+  parent: Shared.Interfaces.Model.IRuleValues
+  langs:
+  - csharp
+  - vb
+  name: CalculateArmyBonus(int, List<ContID>)
+  nameWithType: IRuleValues.CalculateArmyBonus(int, List<ContID>)
+  fullName: Shared.Interfaces.Model.IRuleValues.CalculateArmyBonus(int, System.Collections.Generic.List<Shared.Geography.Enums.ContID>)
+  type: Method
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IRuleValues.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: CalculateArmyBonus
+    path: ../Shared/Interfaces/Model/IRuleValues.cs
+    startLine: 56
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Calculates how many armies to grant a player at the beginning of their turn.
+  example: []
+  syntax:
+    content: int CalculateArmyBonus(int numTerritories, List<ContID> continents)
+    parameters:
+    - id: numTerritories
+      type: System.Int32
+      description: The number of territories controlled by a player.
+    - id: continents
+      type: System.Collections.Generic.List{Shared.Geography.Enums.ContID}
+      description: A list of continents controlled by a player.
+    return:
+      type: System.Int32
+      description: The number of armies granted.
+    content.vb: Function CalculateArmyBonus(numTerritories As Integer, continents As List(Of ContID)) As Integer
+  overload: Shared.Interfaces.Model.IRuleValues.CalculateArmyBonus*
+  nameWithType.vb: IRuleValues.CalculateArmyBonus(Integer, List(Of ContID))
+  fullName.vb: Shared.Interfaces.Model.IRuleValues.CalculateArmyBonus(Integer, System.Collections.Generic.List(Of Shared.Geography.Enums.ContID))
+  name.vb: CalculateArmyBonus(Integer, List(Of ContID))
+references:
+- uid: Shared.Interfaces.Model
+  commentId: N:Shared.Interfaces.Model
+  href: Shared.html
+  name: Shared.Interfaces.Model
+  nameWithType: Shared.Interfaces.Model
+  fullName: Shared.Interfaces.Model
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+- uid: Shared.Interfaces.Model.IRuleValues.MinimumArmyBonus*
+  commentId: Overload:Shared.Interfaces.Model.IRuleValues.MinimumArmyBonus
+  href: Shared.Interfaces.Model.IRuleValues.html#Shared_Interfaces_Model_IRuleValues_MinimumArmyBonus
+  name: MinimumArmyBonus
+  nameWithType: IRuleValues.MinimumArmyBonus
+  fullName: Shared.Interfaces.Model.IRuleValues.MinimumArmyBonus
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Shared.Interfaces.Model.IRuleValues.TerritoryTradeInBonus*
+  commentId: Overload:Shared.Interfaces.Model.IRuleValues.TerritoryTradeInBonus
+  href: Shared.Interfaces.Model.IRuleValues.html#Shared_Interfaces_Model_IRuleValues_TerritoryTradeInBonus
+  name: TerritoryTradeInBonus
+  nameWithType: IRuleValues.TerritoryTradeInBonus
+  fullName: Shared.Interfaces.Model.IRuleValues.TerritoryTradeInBonus
+- uid: Shared.Interfaces.Model.IRuleValues.AttackersLimit*
+  commentId: Overload:Shared.Interfaces.Model.IRuleValues.AttackersLimit
+  href: Shared.Interfaces.Model.IRuleValues.html#Shared_Interfaces_Model_IRuleValues_AttackersLimit
+  name: AttackersLimit
+  nameWithType: IRuleValues.AttackersLimit
+  fullName: Shared.Interfaces.Model.IRuleValues.AttackersLimit
+- uid: Shared.Interfaces.Model.IRuleValues.DefendersLimit*
+  commentId: Overload:Shared.Interfaces.Model.IRuleValues.DefendersLimit
+  href: Shared.Interfaces.Model.IRuleValues.html#Shared_Interfaces_Model_IRuleValues_DefendersLimit
+  name: DefendersLimit
+  nameWithType: IRuleValues.DefendersLimit
+  fullName: Shared.Interfaces.Model.IRuleValues.DefendersLimit
+- uid: Shared.Geography.Enums.ContID
+  commentId: T:Shared.Geography.Enums.ContID
+  parent: Shared.Geography.Enums
+  href: Shared.Geography.Enums.ContID.html
+  name: ContID
+  nameWithType: ContID
+  fullName: Shared.Geography.Enums.ContID
+- uid: Shared.Interfaces.Model.IRuleValues.ContinentBonus*
+  commentId: Overload:Shared.Interfaces.Model.IRuleValues.ContinentBonus
+  href: Shared.Interfaces.Model.IRuleValues.html#Shared_Interfaces_Model_IRuleValues_ContinentBonus
+  name: ContinentBonus
+  nameWithType: IRuleValues.ContinentBonus
+  fullName: Shared.Interfaces.Model.IRuleValues.ContinentBonus
+- uid: System.Collections.ObjectModel.ReadOnlyDictionary{Shared.Geography.Enums.ContID,System.Int32}
+  commentId: T:System.Collections.ObjectModel.ReadOnlyDictionary{Shared.Geography.Enums.ContID,System.Int32}
+  parent: System.Collections.ObjectModel
+  definition: System.Collections.ObjectModel.ReadOnlyDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlydictionary-2
+  name: ReadOnlyDictionary<ContID, int>
+  nameWithType: ReadOnlyDictionary<ContID, int>
+  fullName: System.Collections.ObjectModel.ReadOnlyDictionary<Shared.Geography.Enums.ContID, int>
+  nameWithType.vb: ReadOnlyDictionary(Of ContID, Integer)
+  fullName.vb: System.Collections.ObjectModel.ReadOnlyDictionary(Of Shared.Geography.Enums.ContID, Integer)
+  name.vb: ReadOnlyDictionary(Of ContID, Integer)
+  spec.csharp:
+  - uid: System.Collections.ObjectModel.ReadOnlyDictionary`2
+    name: ReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlydictionary-2
+  - name: <
+  - uid: Shared.Geography.Enums.ContID
+    name: ContID
+    href: Shared.Geography.Enums.ContID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.ObjectModel.ReadOnlyDictionary`2
+    name: ReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlydictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Geography.Enums.ContID
+    name: ContID
+    href: Shared.Geography.Enums.ContID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Shared.Geography.Enums
+  commentId: N:Shared.Geography.Enums
+  href: Shared.html
+  name: Shared.Geography.Enums
+  nameWithType: Shared.Geography.Enums
+  fullName: Shared.Geography.Enums
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+- uid: System.Collections.ObjectModel.ReadOnlyDictionary`2
+  commentId: T:System.Collections.ObjectModel.ReadOnlyDictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlydictionary-2
+  name: ReadOnlyDictionary<TKey, TValue>
+  nameWithType: ReadOnlyDictionary<TKey, TValue>
+  fullName: System.Collections.ObjectModel.ReadOnlyDictionary<TKey, TValue>
+  nameWithType.vb: ReadOnlyDictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.ObjectModel.ReadOnlyDictionary(Of TKey, TValue)
+  name.vb: ReadOnlyDictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.ObjectModel.ReadOnlyDictionary`2
+    name: ReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlydictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.ObjectModel.ReadOnlyDictionary`2
+    name: ReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlydictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.ObjectModel
+  commentId: N:System.Collections.ObjectModel
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.ObjectModel
+  nameWithType: System.Collections.ObjectModel
+  fullName: System.Collections.ObjectModel
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.ObjectModel
+    name: ObjectModel
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.ObjectModel
+    name: ObjectModel
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel
+- uid: Shared.Interfaces.Model.IRuleValues.SetupActionsPerPlayers*
+  commentId: Overload:Shared.Interfaces.Model.IRuleValues.SetupActionsPerPlayers
+  href: Shared.Interfaces.Model.IRuleValues.html#Shared_Interfaces_Model_IRuleValues_SetupActionsPerPlayers
+  name: SetupActionsPerPlayers
+  nameWithType: IRuleValues.SetupActionsPerPlayers
+  fullName: Shared.Interfaces.Model.IRuleValues.SetupActionsPerPlayers
+- uid: System.Collections.ObjectModel.ReadOnlyDictionary{System.Int32,System.Int32}
+  commentId: T:System.Collections.ObjectModel.ReadOnlyDictionary{System.Int32,System.Int32}
+  parent: System.Collections.ObjectModel
+  definition: System.Collections.ObjectModel.ReadOnlyDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlydictionary-2
+  name: ReadOnlyDictionary<int, int>
+  nameWithType: ReadOnlyDictionary<int, int>
+  fullName: System.Collections.ObjectModel.ReadOnlyDictionary<int, int>
+  nameWithType.vb: ReadOnlyDictionary(Of Integer, Integer)
+  fullName.vb: System.Collections.ObjectModel.ReadOnlyDictionary(Of Integer, Integer)
+  name.vb: ReadOnlyDictionary(Of Integer, Integer)
+  spec.csharp:
+  - uid: System.Collections.ObjectModel.ReadOnlyDictionary`2
+    name: ReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlydictionary-2
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.ObjectModel.ReadOnlyDictionary`2
+    name: ReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlydictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Shared.Interfaces.Model.IRuleValues.SetupStartingPool*
+  commentId: Overload:Shared.Interfaces.Model.IRuleValues.SetupStartingPool
+  href: Shared.Interfaces.Model.IRuleValues.html#Shared_Interfaces_Model_IRuleValues_SetupStartingPool
+  name: SetupStartingPool
+  nameWithType: IRuleValues.SetupStartingPool
+  fullName: Shared.Interfaces.Model.IRuleValues.SetupStartingPool
+- uid: Shared.Interfaces.Model.IRuleValues.CalculateTerritoryBonus*
+  commentId: Overload:Shared.Interfaces.Model.IRuleValues.CalculateTerritoryBonus
+  href: Shared.Interfaces.Model.IRuleValues.html#Shared_Interfaces_Model_IRuleValues_CalculateTerritoryBonus_System_Int32_
+  name: CalculateTerritoryBonus
+  nameWithType: IRuleValues.CalculateTerritoryBonus
+  fullName: Shared.Interfaces.Model.IRuleValues.CalculateTerritoryBonus
+- uid: Shared.Interfaces.Model.IRuleValues.CalculateBaseTradeInBonus*
+  commentId: Overload:Shared.Interfaces.Model.IRuleValues.CalculateBaseTradeInBonus
+  href: Shared.Interfaces.Model.IRuleValues.html#Shared_Interfaces_Model_IRuleValues_CalculateBaseTradeInBonus_System_Int32_
+  name: CalculateBaseTradeInBonus
+  nameWithType: IRuleValues.CalculateBaseTradeInBonus
+  fullName: Shared.Interfaces.Model.IRuleValues.CalculateBaseTradeInBonus
+- uid: Shared.Interfaces.Model.IRuleValues.CalculateArmyBonus*
+  commentId: Overload:Shared.Interfaces.Model.IRuleValues.CalculateArmyBonus
+  href: Shared.Interfaces.Model.IRuleValues.html#Shared_Interfaces_Model_IRuleValues_CalculateArmyBonus_System_Int32_System_Collections_Generic_List_Shared_Geography_Enums_ContID__
+  name: CalculateArmyBonus
+  nameWithType: IRuleValues.CalculateArmyBonus
+  fullName: Shared.Interfaces.Model.IRuleValues.CalculateArmyBonus
+- uid: System.Collections.Generic.List{Shared.Geography.Enums.ContID}
+  commentId: T:System.Collections.Generic.List{Shared.Geography.Enums.ContID}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<ContID>
+  nameWithType: List<ContID>
+  fullName: System.Collections.Generic.List<Shared.Geography.Enums.ContID>
+  nameWithType.vb: List(Of ContID)
+  fullName.vb: System.Collections.Generic.List(Of Shared.Geography.Enums.ContID)
+  name.vb: List(Of ContID)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Shared.Geography.Enums.ContID
+    name: ContID
+    href: Shared.Geography.Enums.ContID.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Geography.Enums.ContID
+    name: ContID
+    href: Shared.Geography.Enums.ContID.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic

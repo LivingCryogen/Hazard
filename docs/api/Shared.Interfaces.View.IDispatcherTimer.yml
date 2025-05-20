@@ -1,0 +1,276 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Interfaces.View.IDispatcherTimer
+  commentId: T:Shared.Interfaces.View.IDispatcherTimer
+  id: IDispatcherTimer
+  parent: Shared.Interfaces.View
+  children:
+  - Shared.Interfaces.View.IDispatcherTimer.Interval
+  - Shared.Interfaces.View.IDispatcherTimer.IsEnabled
+  - Shared.Interfaces.View.IDispatcherTimer.Start
+  - Shared.Interfaces.View.IDispatcherTimer.Stop
+  - Shared.Interfaces.View.IDispatcherTimer.Tick
+  langs:
+  - csharp
+  - vb
+  name: IDispatcherTimer
+  nameWithType: IDispatcherTimer
+  fullName: Shared.Interfaces.View.IDispatcherTimer
+  type: Interface
+  source:
+    remote:
+      path: Shared/Interfaces/View/IDispatcherTimer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: IDispatcherTimer
+    path: ../Shared/Interfaces/View/IDispatcherTimer.cs
+    startLine: 8
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.View
+  summary: A service porting/exposing a Timer from the View/WPF level to the ViewModel.
+  remarks: >-
+    Currently, attacks are limited by a command disable with a WPF timer. This feels like a kludge, <br />
+
+    but it may or may not be worth changing in the future.
+  example: []
+  syntax:
+    content: public interface IDispatcherTimer
+    content.vb: Public Interface IDispatcherTimer
+- uid: Shared.Interfaces.View.IDispatcherTimer.Interval
+  commentId: P:Shared.Interfaces.View.IDispatcherTimer.Interval
+  id: Interval
+  parent: Shared.Interfaces.View.IDispatcherTimer
+  langs:
+  - csharp
+  - vb
+  name: Interval
+  nameWithType: IDispatcherTimer.Interval
+  fullName: Shared.Interfaces.View.IDispatcherTimer.Interval
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/View/IDispatcherTimer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Interval
+    path: ../Shared/Interfaces/View/IDispatcherTimer.cs
+    startLine: 13
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.View
+  summary: Gets or sets the interval that the timer will run.
+  example: []
+  syntax:
+    content: TimeSpan Interval { get; set; }
+    parameters: []
+    return:
+      type: System.TimeSpan
+    content.vb: Property Interval As TimeSpan
+  overload: Shared.Interfaces.View.IDispatcherTimer.Interval*
+- uid: Shared.Interfaces.View.IDispatcherTimer.IsEnabled
+  commentId: P:Shared.Interfaces.View.IDispatcherTimer.IsEnabled
+  id: IsEnabled
+  parent: Shared.Interfaces.View.IDispatcherTimer
+  langs:
+  - csharp
+  - vb
+  name: IsEnabled
+  nameWithType: IDispatcherTimer.IsEnabled
+  fullName: Shared.Interfaces.View.IDispatcherTimer.IsEnabled
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/View/IDispatcherTimer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: IsEnabled
+    path: ../Shared/Interfaces/View/IDispatcherTimer.cs
+    startLine: 20
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.View
+  summary: Gets or sets a flag indicating whether the timer is enabled.
+  example: []
+  syntax:
+    content: bool IsEnabled { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the timer is enabled; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Property IsEnabled As Boolean
+  overload: Shared.Interfaces.View.IDispatcherTimer.IsEnabled*
+- uid: Shared.Interfaces.View.IDispatcherTimer.Tick
+  commentId: E:Shared.Interfaces.View.IDispatcherTimer.Tick
+  id: Tick
+  parent: Shared.Interfaces.View.IDispatcherTimer
+  langs:
+  - csharp
+  - vb
+  name: Tick
+  nameWithType: IDispatcherTimer.Tick
+  fullName: Shared.Interfaces.View.IDispatcherTimer.Tick
+  type: Event
+  source:
+    remote:
+      path: Shared/Interfaces/View/IDispatcherTimer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Tick
+    path: ../Shared/Interfaces/View/IDispatcherTimer.cs
+    startLine: 24
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.View
+  summary: Fires when the timing interval has completed.
+  example: []
+  syntax:
+    content: event EventHandler Tick
+    return:
+      type: System.EventHandler
+    content.vb: Event Tick As EventHandler
+- uid: Shared.Interfaces.View.IDispatcherTimer.Start
+  commentId: M:Shared.Interfaces.View.IDispatcherTimer.Start
+  id: Start
+  parent: Shared.Interfaces.View.IDispatcherTimer
+  langs:
+  - csharp
+  - vb
+  name: Start()
+  nameWithType: IDispatcherTimer.Start()
+  fullName: Shared.Interfaces.View.IDispatcherTimer.Start()
+  type: Method
+  source:
+    remote:
+      path: Shared/Interfaces/View/IDispatcherTimer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Start
+    path: ../Shared/Interfaces/View/IDispatcherTimer.cs
+    startLine: 28
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.View
+  summary: Starts the timer.
+  example: []
+  syntax:
+    content: void Start()
+    content.vb: Sub Start()
+  overload: Shared.Interfaces.View.IDispatcherTimer.Start*
+- uid: Shared.Interfaces.View.IDispatcherTimer.Stop
+  commentId: M:Shared.Interfaces.View.IDispatcherTimer.Stop
+  id: Stop
+  parent: Shared.Interfaces.View.IDispatcherTimer
+  langs:
+  - csharp
+  - vb
+  name: Stop()
+  nameWithType: IDispatcherTimer.Stop()
+  fullName: Shared.Interfaces.View.IDispatcherTimer.Stop()
+  type: Method
+  source:
+    remote:
+      path: Shared/Interfaces/View/IDispatcherTimer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Stop
+    path: ../Shared/Interfaces/View/IDispatcherTimer.cs
+    startLine: 32
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.View
+  summary: Stops the timer.
+  example: []
+  syntax:
+    content: void Stop()
+    content.vb: Sub [Stop]()
+  overload: Shared.Interfaces.View.IDispatcherTimer.Stop*
+references:
+- uid: Shared.Interfaces.View
+  commentId: N:Shared.Interfaces.View
+  href: Shared.html
+  name: Shared.Interfaces.View
+  nameWithType: Shared.Interfaces.View
+  fullName: Shared.Interfaces.View
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.View
+    name: View
+    href: Shared.Interfaces.View.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.View
+    name: View
+    href: Shared.Interfaces.View.html
+- uid: Shared.Interfaces.View.IDispatcherTimer.Interval*
+  commentId: Overload:Shared.Interfaces.View.IDispatcherTimer.Interval
+  href: Shared.Interfaces.View.IDispatcherTimer.html#Shared_Interfaces_View_IDispatcherTimer_Interval
+  name: Interval
+  nameWithType: IDispatcherTimer.Interval
+  fullName: Shared.Interfaces.View.IDispatcherTimer.Interval
+- uid: System.TimeSpan
+  commentId: T:System.TimeSpan
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.timespan
+  name: TimeSpan
+  nameWithType: TimeSpan
+  fullName: System.TimeSpan
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Shared.Interfaces.View.IDispatcherTimer.IsEnabled*
+  commentId: Overload:Shared.Interfaces.View.IDispatcherTimer.IsEnabled
+  href: Shared.Interfaces.View.IDispatcherTimer.html#Shared_Interfaces_View_IDispatcherTimer_IsEnabled
+  name: IsEnabled
+  nameWithType: IDispatcherTimer.IsEnabled
+  fullName: Shared.Interfaces.View.IDispatcherTimer.IsEnabled
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.EventHandler
+  commentId: T:System.EventHandler
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler
+  name: EventHandler
+  nameWithType: EventHandler
+  fullName: System.EventHandler
+- uid: Shared.Interfaces.View.IDispatcherTimer.Start*
+  commentId: Overload:Shared.Interfaces.View.IDispatcherTimer.Start
+  href: Shared.Interfaces.View.IDispatcherTimer.html#Shared_Interfaces_View_IDispatcherTimer_Start
+  name: Start
+  nameWithType: IDispatcherTimer.Start
+  fullName: Shared.Interfaces.View.IDispatcherTimer.Start
+- uid: Shared.Interfaces.View.IDispatcherTimer.Stop*
+  commentId: Overload:Shared.Interfaces.View.IDispatcherTimer.Stop
+  href: Shared.Interfaces.View.IDispatcherTimer.html#Shared_Interfaces_View_IDispatcherTimer_Stop
+  name: Stop
+  nameWithType: IDispatcherTimer.Stop
+  fullName: Shared.Interfaces.View.IDispatcherTimer.Stop

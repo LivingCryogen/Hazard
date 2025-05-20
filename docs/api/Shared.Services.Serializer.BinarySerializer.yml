@@ -1,0 +1,1383 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Services.Serializer.BinarySerializer
+  commentId: T:Shared.Services.Serializer.BinarySerializer
+  id: BinarySerializer
+  parent: Shared.Services.Serializer
+  children:
+  - Shared.Services.Serializer.BinarySerializer.InitializeLogger(Microsoft.Extensions.Logging.ILogger)
+  - Shared.Services.Serializer.BinarySerializer.InitializeLogger(Microsoft.Extensions.Logging.ILoggerFactory)
+  - Shared.Services.Serializer.BinarySerializer.IsIConvertibleCollection(System.Type,System.Type@)
+  - Shared.Services.Serializer.BinarySerializer.IsSerializable(System.Type)
+  - Shared.Services.Serializer.BinarySerializer.Load(Shared.Interfaces.Model.IBinarySerializable[],System.String)
+  - Shared.Services.Serializer.BinarySerializer.Load(Shared.Interfaces.Model.IBinarySerializable[],System.String,System.Int64,System.Int64@)
+  - Shared.Services.Serializer.BinarySerializer.ReadConvertible(System.IO.BinaryReader,System.Type)
+  - Shared.Services.Serializer.BinarySerializer.ReadConvertibles(System.IO.BinaryReader,System.Type,System.Int32)
+  - Shared.Services.Serializer.BinarySerializer.ReadEnums(System.IO.BinaryReader,System.Type,System.Int32)
+  - Shared.Services.Serializer.BinarySerializer.ReadStrings(System.IO.BinaryReader,System.Int32)
+  - Shared.Services.Serializer.BinarySerializer.Save(Shared.Interfaces.Model.IBinarySerializable[],System.String,System.Boolean)
+  - Shared.Services.Serializer.BinarySerializer.ToIConvertibleCollection(System.Collections.IEnumerable)
+  langs:
+  - csharp
+  - vb
+  name: BinarySerializer
+  nameWithType: BinarySerializer
+  fullName: Shared.Services.Serializer.BinarySerializer
+  type: Class
+  source:
+    remote:
+      path: Shared/Services/Serializer/BinarySerializer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: BinarySerializer
+    path: ../Shared/Services/Serializer/BinarySerializer.cs
+    startLine: 20
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: A binary serializer for <xref href="Shared.Interfaces.Model.IBinarySerializable" data-throw-if-not-resolved="false"></xref> objects.
+  remarks: >-
+    <p><xref href="Shared.Services.Serializer.BinarySerializer" data-throw-if-not-resolved="false"></xref> and <xref href="Shared.Interfaces.Model.IBinarySerializable" data-throw-if-not-resolved="false"></xref> work with <xref href="Shared.Services.Serializer.SerializedData" data-throw-if-not-resolved="false"></xref>, which requires <xref href="System.IConvertible" data-throw-if-not-resolved="false"></xref> values.<br />
+
+    It encodes <xref href="System.IConvertible" data-throw-if-not-resolved="false"></xref> values with optional un-encoded <xref href="System.String?text=tags" data-throw-if-not-resolved="false"></xref>.</p>
+
+    <p>To read back tagged values, (assuming BinaryReader reader):
+
+    <example>
+             <pre><code class="lang-csharp">var readTag = reader.readString();
+                 var readValue = (T)BinarySerializer.ReadConvertible(reader, typeof(T));</code></pre><br />
+    While reading back untagged values requires only:
+
+    <pre><code class="lang-csharp">var readValue = (T)BinarySerializer.ReadConvertible(reader, typeof(T));</code></pre></example></p>
+  example: []
+  syntax:
+    content: public static class BinarySerializer
+    content.vb: Public Module BinarySerializer
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Shared.Services.Serializer.BinarySerializer.InitializeLogger(Microsoft.Extensions.Logging.ILoggerFactory)
+  commentId: M:Shared.Services.Serializer.BinarySerializer.InitializeLogger(Microsoft.Extensions.Logging.ILoggerFactory)
+  id: InitializeLogger(Microsoft.Extensions.Logging.ILoggerFactory)
+  parent: Shared.Services.Serializer.BinarySerializer
+  langs:
+  - csharp
+  - vb
+  name: InitializeLogger(ILoggerFactory)
+  nameWithType: BinarySerializer.InitializeLogger(ILoggerFactory)
+  fullName: Shared.Services.Serializer.BinarySerializer.InitializeLogger(Microsoft.Extensions.Logging.ILoggerFactory)
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Serializer/BinarySerializer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: InitializeLogger
+    path: ../Shared/Services/Serializer/BinarySerializer.cs
+    startLine: 27
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Initializes the logger using a factory.
+  example: []
+  syntax:
+    content: public static void InitializeLogger(ILoggerFactory loggerFactory)
+    parameters:
+    - id: loggerFactory
+      type: Microsoft.Extensions.Logging.ILoggerFactory
+      description: A logger factory configured to create the appropriate <xref href="Microsoft.Extensions.Logging.ILogger" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Shared Sub InitializeLogger(loggerFactory As ILoggerFactory)
+  overload: Shared.Services.Serializer.BinarySerializer.InitializeLogger*
+- uid: Shared.Services.Serializer.BinarySerializer.InitializeLogger(Microsoft.Extensions.Logging.ILogger)
+  commentId: M:Shared.Services.Serializer.BinarySerializer.InitializeLogger(Microsoft.Extensions.Logging.ILogger)
+  id: InitializeLogger(Microsoft.Extensions.Logging.ILogger)
+  parent: Shared.Services.Serializer.BinarySerializer
+  langs:
+  - csharp
+  - vb
+  name: InitializeLogger(ILogger)
+  nameWithType: BinarySerializer.InitializeLogger(ILogger)
+  fullName: Shared.Services.Serializer.BinarySerializer.InitializeLogger(Microsoft.Extensions.Logging.ILogger)
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Serializer/BinarySerializer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: InitializeLogger
+    path: ../Shared/Services/Serializer/BinarySerializer.cs
+    startLine: 35
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Initializes the logger.
+  example: []
+  syntax:
+    content: public static void InitializeLogger(ILogger logger)
+    parameters:
+    - id: logger
+      type: Microsoft.Extensions.Logging.ILogger
+      description: The logger.
+    content.vb: Public Shared Sub InitializeLogger(logger As ILogger)
+  overload: Shared.Services.Serializer.BinarySerializer.InitializeLogger*
+- uid: Shared.Services.Serializer.BinarySerializer.ReadConvertible(System.IO.BinaryReader,System.Type)
+  commentId: M:Shared.Services.Serializer.BinarySerializer.ReadConvertible(System.IO.BinaryReader,System.Type)
+  id: ReadConvertible(System.IO.BinaryReader,System.Type)
+  parent: Shared.Services.Serializer.BinarySerializer
+  langs:
+  - csharp
+  - vb
+  name: ReadConvertible(BinaryReader, Type)
+  nameWithType: BinarySerializer.ReadConvertible(BinaryReader, Type)
+  fullName: Shared.Services.Serializer.BinarySerializer.ReadConvertible(System.IO.BinaryReader, System.Type)
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Serializer/BinarySerializer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ReadConvertible
+    path: ../Shared/Services/Serializer/BinarySerializer.cs
+    startLine: 87
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Reads a value previously written as an IConvertible using <xref href="Shared.Services.Serializer.BinarySerializer" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public static IConvertible ReadConvertible(BinaryReader reader, Type type)
+    parameters:
+    - id: reader
+      type: System.IO.BinaryReader
+      description: A reader whose <xref href="System.IO.BinaryReader.BaseStream" data-throw-if-not-resolved="false"></xref> was previously written to.
+    - id: type
+      type: System.Type
+      description: The final type expected. Must implement IConvertible.
+    return:
+      type: System.IConvertible
+      description: An IConvertible of type <code class="paramref">type</code>.
+    content.vb: Public Shared Function ReadConvertible(reader As BinaryReader, type As Type) As IConvertible
+  overload: Shared.Services.Serializer.BinarySerializer.ReadConvertible*
+- uid: Shared.Services.Serializer.BinarySerializer.ReadConvertibles(System.IO.BinaryReader,System.Type,System.Int32)
+  commentId: M:Shared.Services.Serializer.BinarySerializer.ReadConvertibles(System.IO.BinaryReader,System.Type,System.Int32)
+  id: ReadConvertibles(System.IO.BinaryReader,System.Type,System.Int32)
+  parent: Shared.Services.Serializer.BinarySerializer
+  langs:
+  - csharp
+  - vb
+  name: ReadConvertibles(BinaryReader, Type, int)
+  nameWithType: BinarySerializer.ReadConvertibles(BinaryReader, Type, int)
+  fullName: Shared.Services.Serializer.BinarySerializer.ReadConvertibles(System.IO.BinaryReader, System.Type, int)
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Serializer/BinarySerializer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ReadConvertibles
+    path: ../Shared/Services/Serializer/BinarySerializer.cs
+    startLine: 110
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Reads an array of values previously written as <xref href="System.IConvertible" data-throw-if-not-resolved="false"></xref>s using <xref href="Shared.Services.Serializer.BinarySerializer" data-throw-if-not-resolved="false"></xref>.
+  remarks: <xref href="System.Array" data-throw-if-not-resolved="false"></xref>s of type <xref href="System.String" data-throw-if-not-resolved="false"></xref> and <xref href="System.Enum" data-throw-if-not-resolved="false"></xref> require <xref href="Shared.Services.Serializer.BinarySerializer.ReadStrings(System.IO.BinaryReader%2cSystem.Int32)" data-throw-if-not-resolved="false"></xref> and <xref href="Shared.Services.Serializer.BinarySerializer.ReadEnums(System.IO.BinaryReader%2cSystem.Type%2cSystem.Int32)" data-throw-if-not-resolved="false"></xref>, respectively.
+  example: []
+  syntax:
+    content: public static Array ReadConvertibles(BinaryReader reader, Type type, int numValues)
+    parameters:
+    - id: reader
+      type: System.IO.BinaryReader
+      description: A reader whose <xref href="System.IO.BinaryReader.BaseStream" data-throw-if-not-resolved="false"></xref> was previously written to.
+    - id: type
+      type: System.Type
+      description: The underlying type of the expected array. Must implement <xref href="System.IConvertible" data-throw-if-not-resolved="false"></xref>, excluding <xref href="System.String" data-throw-if-not-resolved="false"></xref> and <xref href="System.Enum" data-throw-if-not-resolved="false"></xref>.
+    - id: numValues
+      type: System.Int32
+      description: The number of values expected.
+    return:
+      type: System.Array
+      description: <xref href="System.IConvertible" data-throw-if-not-resolved="false"></xref>s of type <code class="paramref">type</code>, excluding <xref href="System.String" data-throw-if-not-resolved="false"></xref> and <xref href="System.Enum" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Shared Function ReadConvertibles(reader As BinaryReader, type As Type, numValues As Integer) As Array
+  overload: Shared.Services.Serializer.BinarySerializer.ReadConvertibles*
+  exceptions:
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: .
+  nameWithType.vb: BinarySerializer.ReadConvertibles(BinaryReader, Type, Integer)
+  fullName.vb: Shared.Services.Serializer.BinarySerializer.ReadConvertibles(System.IO.BinaryReader, System.Type, Integer)
+  name.vb: ReadConvertibles(BinaryReader, Type, Integer)
+- uid: Shared.Services.Serializer.BinarySerializer.ReadStrings(System.IO.BinaryReader,System.Int32)
+  commentId: M:Shared.Services.Serializer.BinarySerializer.ReadStrings(System.IO.BinaryReader,System.Int32)
+  id: ReadStrings(System.IO.BinaryReader,System.Int32)
+  parent: Shared.Services.Serializer.BinarySerializer
+  langs:
+  - csharp
+  - vb
+  name: ReadStrings(BinaryReader, int)
+  nameWithType: BinarySerializer.ReadStrings(BinaryReader, int)
+  fullName: Shared.Services.Serializer.BinarySerializer.ReadStrings(System.IO.BinaryReader, int)
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Serializer/BinarySerializer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ReadStrings
+    path: ../Shared/Services/Serializer/BinarySerializer.cs
+    startLine: 126
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Reads an array of string values previously written using <xref href="Shared.Services.Serializer.BinarySerializer" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public static Array ReadStrings(BinaryReader reader, int numValues)
+    parameters:
+    - id: reader
+      type: System.IO.BinaryReader
+      description: A reader whose <xref href="System.IO.BinaryReader.BaseStream" data-throw-if-not-resolved="false"></xref> was previously written to.
+    - id: numValues
+      type: System.Int32
+      description: 'The number of values in the array (ie: length).'
+    return:
+      type: System.Array
+      description: An <xref href="System.Array" data-throw-if-not-resolved="false"></xref> of <xref href="System.String" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Shared Function ReadStrings(reader As BinaryReader, numValues As Integer) As Array
+  overload: Shared.Services.Serializer.BinarySerializer.ReadStrings*
+  nameWithType.vb: BinarySerializer.ReadStrings(BinaryReader, Integer)
+  fullName.vb: Shared.Services.Serializer.BinarySerializer.ReadStrings(System.IO.BinaryReader, Integer)
+  name.vb: ReadStrings(BinaryReader, Integer)
+- uid: Shared.Services.Serializer.BinarySerializer.ReadEnums(System.IO.BinaryReader,System.Type,System.Int32)
+  commentId: M:Shared.Services.Serializer.BinarySerializer.ReadEnums(System.IO.BinaryReader,System.Type,System.Int32)
+  id: ReadEnums(System.IO.BinaryReader,System.Type,System.Int32)
+  parent: Shared.Services.Serializer.BinarySerializer
+  langs:
+  - csharp
+  - vb
+  name: ReadEnums(BinaryReader, Type, int)
+  nameWithType: BinarySerializer.ReadEnums(BinaryReader, Type, int)
+  fullName: Shared.Services.Serializer.BinarySerializer.ReadEnums(System.IO.BinaryReader, System.Type, int)
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Serializer/BinarySerializer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ReadEnums
+    path: ../Shared/Services/Serializer/BinarySerializer.cs
+    startLine: 141
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Reads an array of Enum values which were previously written using <xref href="Shared.Services.Serializer.BinarySerializer" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public static Array ReadEnums(BinaryReader reader, Type type, int numValues)
+    parameters:
+    - id: reader
+      type: System.IO.BinaryReader
+      description: A reader whose <xref href="System.IO.BinaryReader.BaseStream" data-throw-if-not-resolved="false"></xref> was previously written to.
+    - id: type
+      type: System.Type
+      description: The type of Enum to be read. Should be the same as was previously written.
+    - id: numValues
+      type: System.Int32
+      description: 'The number of values in the array (ie: length).'
+    return:
+      type: System.Array
+      description: An <xref href="System.Array" data-throw-if-not-resolved="false"></xref> of <xref href="System.Enum" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Shared Function ReadEnums(reader As BinaryReader, type As Type, numValues As Integer) As Array
+  overload: Shared.Services.Serializer.BinarySerializer.ReadEnums*
+  exceptions:
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: Thrown if <code class="paramref">type</code> is not an <xref href="System.Enum" data-throw-if-not-resolved="false"></xref>.
+  nameWithType.vb: BinarySerializer.ReadEnums(BinaryReader, Type, Integer)
+  fullName.vb: Shared.Services.Serializer.BinarySerializer.ReadEnums(System.IO.BinaryReader, System.Type, Integer)
+  name.vb: ReadEnums(BinaryReader, Type, Integer)
+- uid: Shared.Services.Serializer.BinarySerializer.Save(Shared.Interfaces.Model.IBinarySerializable[],System.String,System.Boolean)
+  commentId: M:Shared.Services.Serializer.BinarySerializer.Save(Shared.Interfaces.Model.IBinarySerializable[],System.String,System.Boolean)
+  id: Save(Shared.Interfaces.Model.IBinarySerializable[],System.String,System.Boolean)
+  parent: Shared.Services.Serializer.BinarySerializer
+  langs:
+  - csharp
+  - vb
+  name: Save(IBinarySerializable[], string, bool)
+  nameWithType: BinarySerializer.Save(IBinarySerializable[], string, bool)
+  fullName: Shared.Services.Serializer.BinarySerializer.Save(Shared.Interfaces.Model.IBinarySerializable[], string, bool)
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Serializer/BinarySerializer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Save
+    path: ../Shared/Services/Serializer/BinarySerializer.cs
+    startLine: 173
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Serializes <xref href="Shared.Interfaces.Model.IBinarySerializable" data-throw-if-not-resolved="false"></xref> objects and writes them to a file.
+  remarks: See <xref href="Shared.Services.Serializer.BinarySerializer.WriteSerializableObject(Shared.Interfaces.Model.IBinarySerializable%2cSystem.IO.BinaryWriter)" data-throw-if-not-resolved="false"></xref> and <xref href="Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public static Task Save(IBinarySerializable[] serializableObjects, string fileName, bool newFile)
+    parameters:
+    - id: serializableObjects
+      type: Shared.Interfaces.Model.IBinarySerializable[]
+      description: The objects to serialize and save.
+    - id: fileName
+      type: System.String
+      description: The name of the save file.
+    - id: newFile
+      type: System.Boolean
+      description: A flag indicating whether the file is a new file.
+    return:
+      type: System.Threading.Tasks.Task
+      description: A <xref href="System.Threading.Tasks.Task" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Shared Function Save(serializableObjects As IBinarySerializable(), fileName As String, newFile As Boolean) As Task
+  overload: Shared.Services.Serializer.BinarySerializer.Save*
+  nameWithType.vb: BinarySerializer.Save(IBinarySerializable(), String, Boolean)
+  fullName.vb: Shared.Services.Serializer.BinarySerializer.Save(Shared.Interfaces.Model.IBinarySerializable(), String, Boolean)
+  name.vb: Save(IBinarySerializable(), String, Boolean)
+- uid: Shared.Services.Serializer.BinarySerializer.Load(Shared.Interfaces.Model.IBinarySerializable[],System.String)
+  commentId: M:Shared.Services.Serializer.BinarySerializer.Load(Shared.Interfaces.Model.IBinarySerializable[],System.String)
+  id: Load(Shared.Interfaces.Model.IBinarySerializable[],System.String)
+  parent: Shared.Services.Serializer.BinarySerializer
+  langs:
+  - csharp
+  - vb
+  name: Load(IBinarySerializable[], string)
+  nameWithType: BinarySerializer.Load(IBinarySerializable[], string)
+  fullName: Shared.Services.Serializer.BinarySerializer.Load(Shared.Interfaces.Model.IBinarySerializable[], string)
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Serializer/BinarySerializer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Load
+    path: ../Shared/Services/Serializer/BinarySerializer.cs
+    startLine: 209
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Loads <xref href="Shared.Interfaces.Model.IBinarySerializable" data-throw-if-not-resolved="false"></xref> objects with deserialized values previously written by <xref href="Shared.Services.Serializer.BinarySerializer" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public static bool Load(IBinarySerializable[] serializableObjects, string fileName)
+    parameters:
+    - id: serializableObjects
+      type: Shared.Interfaces.Model.IBinarySerializable[]
+      description: The objects to load.
+    - id: fileName
+      type: System.String
+      description: The name of the file to read.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if deserialization and loading completed without exceptions; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Shared Function Load(serializableObjects As IBinarySerializable(), fileName As String) As Boolean
+  overload: Shared.Services.Serializer.BinarySerializer.Load*
+  nameWithType.vb: BinarySerializer.Load(IBinarySerializable(), String)
+  fullName.vb: Shared.Services.Serializer.BinarySerializer.Load(Shared.Interfaces.Model.IBinarySerializable(), String)
+  name.vb: Load(IBinarySerializable(), String)
+- uid: Shared.Services.Serializer.BinarySerializer.Load(Shared.Interfaces.Model.IBinarySerializable[],System.String,System.Int64,System.Int64@)
+  commentId: M:Shared.Services.Serializer.BinarySerializer.Load(Shared.Interfaces.Model.IBinarySerializable[],System.String,System.Int64,System.Int64@)
+  id: Load(Shared.Interfaces.Model.IBinarySerializable[],System.String,System.Int64,System.Int64@)
+  parent: Shared.Services.Serializer.BinarySerializer
+  langs:
+  - csharp
+  - vb
+  name: Load(IBinarySerializable[], string, long, out long)
+  nameWithType: BinarySerializer.Load(IBinarySerializable[], string, long, out long)
+  fullName: Shared.Services.Serializer.BinarySerializer.Load(Shared.Interfaces.Model.IBinarySerializable[], string, long, out long)
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Serializer/BinarySerializer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Load
+    path: ../Shared/Services/Serializer/BinarySerializer.cs
+    startLine: 230
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  example: []
+  syntax:
+    content: public static bool Load(IBinarySerializable[] serializableObjects, string fileName, long startStreamPosition, out long endStreamPosition)
+    parameters:
+    - id: serializableObjects
+      type: Shared.Interfaces.Model.IBinarySerializable[]
+      description: ''
+    - id: fileName
+      type: System.String
+      description: ''
+    - id: startStreamPosition
+      type: System.Int64
+      description: The position of the <xref href="System.IO.FileStream" data-throw-if-not-resolved="false"></xref> at which to begin reading the file.
+    - id: endStreamPosition
+      type: System.Int64
+      description: The position of the <xref href="System.IO.FileStream" data-throw-if-not-resolved="false"></xref> after loading is complete.
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function Load(serializableObjects As IBinarySerializable(), fileName As String, startStreamPosition As Long, endStreamPosition As Long) As Boolean
+  overload: Shared.Services.Serializer.BinarySerializer.Load*
+  nameWithType.vb: BinarySerializer.Load(IBinarySerializable(), String, Long, Long)
+  fullName.vb: Shared.Services.Serializer.BinarySerializer.Load(Shared.Interfaces.Model.IBinarySerializable(), String, Long, Long)
+  name.vb: Load(IBinarySerializable(), String, Long, Long)
+- uid: Shared.Services.Serializer.BinarySerializer.IsSerializable(System.Type)
+  commentId: M:Shared.Services.Serializer.BinarySerializer.IsSerializable(System.Type)
+  id: IsSerializable(System.Type)
+  parent: Shared.Services.Serializer.BinarySerializer
+  langs:
+  - csharp
+  - vb
+  name: IsSerializable(Type)
+  nameWithType: BinarySerializer.IsSerializable(Type)
+  fullName: Shared.Services.Serializer.BinarySerializer.IsSerializable(System.Type)
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Serializer/BinarySerializer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: IsSerializable
+    path: ../Shared/Services/Serializer/BinarySerializer.cs
+    startLine: 287
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Determines whether objects of a given Type are serializable.
+  example: []
+  syntax:
+    content: public static bool IsSerializable(Type type)
+    parameters:
+    - id: type
+      type: System.Type
+      description: The type to test.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if objects of type <code class="paramref">type</code> are serializable by <xref href="Shared.Services.Serializer.BinarySerializer" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Shared Function IsSerializable(type As Type) As Boolean
+  overload: Shared.Services.Serializer.BinarySerializer.IsSerializable*
+- uid: Shared.Services.Serializer.BinarySerializer.IsIConvertibleCollection(System.Type,System.Type@)
+  commentId: M:Shared.Services.Serializer.BinarySerializer.IsIConvertibleCollection(System.Type,System.Type@)
+  id: IsIConvertibleCollection(System.Type,System.Type@)
+  parent: Shared.Services.Serializer.BinarySerializer
+  langs:
+  - csharp
+  - vb
+  name: IsIConvertibleCollection(Type, out Type?)
+  nameWithType: BinarySerializer.IsIConvertibleCollection(Type, out Type?)
+  fullName: Shared.Services.Serializer.BinarySerializer.IsIConvertibleCollection(System.Type, out System.Type?)
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Serializer/BinarySerializer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: IsIConvertibleCollection
+    path: ../Shared/Services/Serializer/BinarySerializer.cs
+    startLine: 303
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Determines whether a Type is a collection type of IConvertibles.
+  example: []
+  syntax:
+    content: public static bool IsIConvertibleCollection(Type type, out Type? memberType)
+    parameters:
+    - id: type
+      type: System.Type
+      description: The type to test.
+    - id: memberType
+      type: System.Type
+      description: If <code class="paramref">type</code> is a collection of IConvertibles, the type of its members; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the collection is a collection of IConvertibles; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Shared Function IsIConvertibleCollection(type As Type, memberType As Type) As Boolean
+  overload: Shared.Services.Serializer.BinarySerializer.IsIConvertibleCollection*
+  nameWithType.vb: BinarySerializer.IsIConvertibleCollection(Type, Type)
+  fullName.vb: Shared.Services.Serializer.BinarySerializer.IsIConvertibleCollection(System.Type, System.Type)
+  name.vb: IsIConvertibleCollection(Type, Type)
+- uid: Shared.Services.Serializer.BinarySerializer.ToIConvertibleCollection(System.Collections.IEnumerable)
+  commentId: M:Shared.Services.Serializer.BinarySerializer.ToIConvertibleCollection(System.Collections.IEnumerable)
+  id: ToIConvertibleCollection(System.Collections.IEnumerable)
+  parent: Shared.Services.Serializer.BinarySerializer
+  langs:
+  - csharp
+  - vb
+  name: ToIConvertibleCollection(IEnumerable)
+  nameWithType: BinarySerializer.ToIConvertibleCollection(IEnumerable)
+  fullName: Shared.Services.Serializer.BinarySerializer.ToIConvertibleCollection(System.Collections.IEnumerable)
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Serializer/BinarySerializer.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ToIConvertibleCollection
+    path: ../Shared/Services/Serializer/BinarySerializer.cs
+    startLine: 360
+  assemblies:
+  - Model
+  namespace: Shared.Services.Serializer
+  summary: Casts a collection into a collection of IConvertibles.
+  example: []
+  syntax:
+    content: public static IConvertible[] ToIConvertibleCollection(IEnumerable collection)
+    parameters:
+    - id: collection
+      type: System.Collections.IEnumerable
+      description: The collection to cast.
+    return:
+      type: System.IConvertible[]
+      description: The cast IConvertibles; if an element could not be successfully cast, it is skipped.
+    content.vb: Public Shared Function ToIConvertibleCollection(collection As IEnumerable) As IConvertible()
+  overload: Shared.Services.Serializer.BinarySerializer.ToIConvertibleCollection*
+references:
+- uid: Shared.Interfaces.Model.IBinarySerializable
+  commentId: T:Shared.Interfaces.Model.IBinarySerializable
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IBinarySerializable.html
+  name: IBinarySerializable
+  nameWithType: IBinarySerializable
+  fullName: Shared.Interfaces.Model.IBinarySerializable
+- uid: Shared.Services.Serializer.BinarySerializer
+  commentId: T:Shared.Services.Serializer.BinarySerializer
+  href: Shared.Services.Serializer.BinarySerializer.html
+  name: BinarySerializer
+  nameWithType: BinarySerializer
+  fullName: Shared.Services.Serializer.BinarySerializer
+- uid: Shared.Services.Serializer.SerializedData
+  commentId: T:Shared.Services.Serializer.SerializedData
+  href: Shared.Services.Serializer.SerializedData.html
+  name: SerializedData
+  nameWithType: SerializedData
+  fullName: Shared.Services.Serializer.SerializedData
+- uid: System.IConvertible
+  commentId: T:System.IConvertible
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iconvertible
+  name: IConvertible
+  nameWithType: IConvertible
+  fullName: System.IConvertible
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Shared.Services.Serializer
+  commentId: N:Shared.Services.Serializer
+  href: Shared.html
+  name: Shared.Services.Serializer
+  nameWithType: Shared.Services.Serializer
+  fullName: Shared.Services.Serializer
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Services
+    name: Services
+    href: Shared.Services.html
+  - name: .
+  - uid: Shared.Services.Serializer
+    name: Serializer
+    href: Shared.Services.Serializer.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Services
+    name: Services
+    href: Shared.Services.html
+  - name: .
+  - uid: Shared.Services.Serializer
+    name: Serializer
+    href: Shared.Services.Serializer.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: Shared.Interfaces.Model
+  commentId: N:Shared.Interfaces.Model
+  href: Shared.html
+  name: Shared.Interfaces.Model
+  nameWithType: Shared.Interfaces.Model
+  fullName: Shared.Interfaces.Model
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Microsoft.Extensions.Logging.ILogger
+  commentId: T:Microsoft.Extensions.Logging.ILogger
+  parent: Microsoft.Extensions.Logging
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger
+  name: ILogger
+  nameWithType: ILogger
+  fullName: Microsoft.Extensions.Logging.ILogger
+- uid: Shared.Services.Serializer.BinarySerializer.InitializeLogger*
+  commentId: Overload:Shared.Services.Serializer.BinarySerializer.InitializeLogger
+  href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_InitializeLogger_Microsoft_Extensions_Logging_ILoggerFactory_
+  name: InitializeLogger
+  nameWithType: BinarySerializer.InitializeLogger
+  fullName: Shared.Services.Serializer.BinarySerializer.InitializeLogger
+- uid: Microsoft.Extensions.Logging.ILoggerFactory
+  commentId: T:Microsoft.Extensions.Logging.ILoggerFactory
+  parent: Microsoft.Extensions.Logging
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.iloggerfactory
+  name: ILoggerFactory
+  nameWithType: ILoggerFactory
+  fullName: Microsoft.Extensions.Logging.ILoggerFactory
+- uid: Microsoft.Extensions.Logging
+  commentId: N:Microsoft.Extensions.Logging
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.Extensions.Logging
+  nameWithType: Microsoft.Extensions.Logging
+  fullName: Microsoft.Extensions.Logging
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Logging
+    name: Logging
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Logging
+    name: Logging
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging
+- uid: System.IO.BinaryReader.BaseStream
+  commentId: P:System.IO.BinaryReader.BaseStream
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader.basestream
+  name: BaseStream
+  nameWithType: BinaryReader.BaseStream
+  fullName: System.IO.BinaryReader.BaseStream
+- uid: Shared.Services.Serializer.BinarySerializer.ReadConvertible*
+  commentId: Overload:Shared.Services.Serializer.BinarySerializer.ReadConvertible
+  href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_ReadConvertible_System_IO_BinaryReader_System_Type_
+  name: ReadConvertible
+  nameWithType: BinarySerializer.ReadConvertible
+  fullName: Shared.Services.Serializer.BinarySerializer.ReadConvertible
+- uid: System.IO.BinaryReader
+  commentId: T:System.IO.BinaryReader
+  parent: System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  name: BinaryReader
+  nameWithType: BinaryReader
+  fullName: System.IO.BinaryReader
+- uid: System.Type
+  commentId: T:System.Type
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.type
+  name: Type
+  nameWithType: Type
+  fullName: System.Type
+- uid: System.IO
+  commentId: N:System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.IO
+  nameWithType: System.IO
+  fullName: System.IO
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+- uid: System.Enum
+  commentId: T:System.Enum
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.enum
+  name: Enum
+  nameWithType: Enum
+  fullName: System.Enum
+- uid: System.Array
+  commentId: T:System.Array
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.array
+  name: Array
+  nameWithType: Array
+  fullName: System.Array
+- uid: Shared.Services.Serializer.BinarySerializer.ReadStrings(System.IO.BinaryReader,System.Int32)
+  commentId: M:Shared.Services.Serializer.BinarySerializer.ReadStrings(System.IO.BinaryReader,System.Int32)
+  isExternal: true
+  href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_ReadStrings_System_IO_BinaryReader_System_Int32_
+  name: ReadStrings(BinaryReader, int)
+  nameWithType: BinarySerializer.ReadStrings(BinaryReader, int)
+  fullName: Shared.Services.Serializer.BinarySerializer.ReadStrings(System.IO.BinaryReader, int)
+  nameWithType.vb: BinarySerializer.ReadStrings(BinaryReader, Integer)
+  fullName.vb: Shared.Services.Serializer.BinarySerializer.ReadStrings(System.IO.BinaryReader, Integer)
+  name.vb: ReadStrings(BinaryReader, Integer)
+  spec.csharp:
+  - uid: Shared.Services.Serializer.BinarySerializer.ReadStrings(System.IO.BinaryReader,System.Int32)
+    name: ReadStrings
+    href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_ReadStrings_System_IO_BinaryReader_System_Int32_
+  - name: (
+  - uid: System.IO.BinaryReader
+    name: BinaryReader
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Shared.Services.Serializer.BinarySerializer.ReadStrings(System.IO.BinaryReader,System.Int32)
+    name: ReadStrings
+    href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_ReadStrings_System_IO_BinaryReader_System_Int32_
+  - name: (
+  - uid: System.IO.BinaryReader
+    name: BinaryReader
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Shared.Services.Serializer.BinarySerializer.ReadEnums(System.IO.BinaryReader,System.Type,System.Int32)
+  commentId: M:Shared.Services.Serializer.BinarySerializer.ReadEnums(System.IO.BinaryReader,System.Type,System.Int32)
+  isExternal: true
+  href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_ReadEnums_System_IO_BinaryReader_System_Type_System_Int32_
+  name: ReadEnums(BinaryReader, Type, int)
+  nameWithType: BinarySerializer.ReadEnums(BinaryReader, Type, int)
+  fullName: Shared.Services.Serializer.BinarySerializer.ReadEnums(System.IO.BinaryReader, System.Type, int)
+  nameWithType.vb: BinarySerializer.ReadEnums(BinaryReader, Type, Integer)
+  fullName.vb: Shared.Services.Serializer.BinarySerializer.ReadEnums(System.IO.BinaryReader, System.Type, Integer)
+  name.vb: ReadEnums(BinaryReader, Type, Integer)
+  spec.csharp:
+  - uid: Shared.Services.Serializer.BinarySerializer.ReadEnums(System.IO.BinaryReader,System.Type,System.Int32)
+    name: ReadEnums
+    href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_ReadEnums_System_IO_BinaryReader_System_Type_System_Int32_
+  - name: (
+  - uid: System.IO.BinaryReader
+    name: BinaryReader
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  - name: ','
+  - name: " "
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Shared.Services.Serializer.BinarySerializer.ReadEnums(System.IO.BinaryReader,System.Type,System.Int32)
+    name: ReadEnums
+    href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_ReadEnums_System_IO_BinaryReader_System_Type_System_Int32_
+  - name: (
+  - uid: System.IO.BinaryReader
+    name: BinaryReader
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  - name: ','
+  - name: " "
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.ArgumentException
+  commentId: T:System.ArgumentException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.argumentexception
+  name: ArgumentException
+  nameWithType: ArgumentException
+  fullName: System.ArgumentException
+- uid: Shared.Services.Serializer.BinarySerializer.ReadConvertibles*
+  commentId: Overload:Shared.Services.Serializer.BinarySerializer.ReadConvertibles
+  href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_ReadConvertibles_System_IO_BinaryReader_System_Type_System_Int32_
+  name: ReadConvertibles
+  nameWithType: BinarySerializer.ReadConvertibles
+  fullName: Shared.Services.Serializer.BinarySerializer.ReadConvertibles
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Shared.Services.Serializer.BinarySerializer.ReadStrings*
+  commentId: Overload:Shared.Services.Serializer.BinarySerializer.ReadStrings
+  href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_ReadStrings_System_IO_BinaryReader_System_Int32_
+  name: ReadStrings
+  nameWithType: BinarySerializer.ReadStrings
+  fullName: Shared.Services.Serializer.BinarySerializer.ReadStrings
+- uid: Shared.Services.Serializer.BinarySerializer.ReadEnums*
+  commentId: Overload:Shared.Services.Serializer.BinarySerializer.ReadEnums
+  href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_ReadEnums_System_IO_BinaryReader_System_Type_System_Int32_
+  name: ReadEnums
+  nameWithType: BinarySerializer.ReadEnums
+  fullName: Shared.Services.Serializer.BinarySerializer.ReadEnums
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: Shared.Services.Serializer.BinarySerializer.WriteSerializableObject(Shared.Interfaces.Model.IBinarySerializable,System.IO.BinaryWriter)
+  commentId: M:Shared.Services.Serializer.BinarySerializer.WriteSerializableObject(Shared.Interfaces.Model.IBinarySerializable,System.IO.BinaryWriter)
+  isExternal: true
+  href: Shared.Interfaces.Model.IBinarySerializable.html
+  name: WriteSerializableObject(IBinarySerializable, BinaryWriter)
+  nameWithType: BinarySerializer.WriteSerializableObject(IBinarySerializable, BinaryWriter)
+  fullName: Shared.Services.Serializer.BinarySerializer.WriteSerializableObject(Shared.Interfaces.Model.IBinarySerializable, System.IO.BinaryWriter)
+  spec.csharp:
+  - uid: Shared.Services.Serializer.BinarySerializer.WriteSerializableObject(Shared.Interfaces.Model.IBinarySerializable,System.IO.BinaryWriter)
+    name: WriteSerializableObject
+  - name: (
+  - uid: Shared.Interfaces.Model.IBinarySerializable
+    name: IBinarySerializable
+    href: Shared.Interfaces.Model.IBinarySerializable.html
+  - name: ','
+  - name: " "
+  - uid: System.IO.BinaryWriter
+    name: BinaryWriter
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binarywriter
+  - name: )
+  spec.vb:
+  - uid: Shared.Services.Serializer.BinarySerializer.WriteSerializableObject(Shared.Interfaces.Model.IBinarySerializable,System.IO.BinaryWriter)
+    name: WriteSerializableObject
+  - name: (
+  - uid: Shared.Interfaces.Model.IBinarySerializable
+    name: IBinarySerializable
+    href: Shared.Interfaces.Model.IBinarySerializable.html
+  - name: ','
+  - name: " "
+  - uid: System.IO.BinaryWriter
+    name: BinaryWriter
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binarywriter
+  - name: )
+- uid: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+  commentId: M:Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+  parent: Shared.Interfaces.Model.IBinarySerializable
+  href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials
+  name: GetBinarySerials()
+  nameWithType: IBinarySerializable.GetBinarySerials()
+  fullName: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials()
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+    name: GetBinarySerials
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+    name: GetBinarySerials
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials
+  - name: (
+  - name: )
+- uid: Shared.Services.Serializer.BinarySerializer.Save*
+  commentId: Overload:Shared.Services.Serializer.BinarySerializer.Save
+  href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_Save_Shared_Interfaces_Model_IBinarySerializable___System_String_System_Boolean_
+  name: Save
+  nameWithType: BinarySerializer.Save
+  fullName: Shared.Services.Serializer.BinarySerializer.Save
+- uid: Shared.Interfaces.Model.IBinarySerializable[]
+  isExternal: true
+  href: Shared.Interfaces.Model.IBinarySerializable.html
+  name: IBinarySerializable[]
+  nameWithType: IBinarySerializable[]
+  fullName: Shared.Interfaces.Model.IBinarySerializable[]
+  nameWithType.vb: IBinarySerializable()
+  fullName.vb: Shared.Interfaces.Model.IBinarySerializable()
+  name.vb: IBinarySerializable()
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IBinarySerializable
+    name: IBinarySerializable
+    href: Shared.Interfaces.Model.IBinarySerializable.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IBinarySerializable
+    name: IBinarySerializable
+    href: Shared.Interfaces.Model.IBinarySerializable.html
+  - name: (
+  - name: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: Shared.Services.Serializer.BinarySerializer.Load*
+  commentId: Overload:Shared.Services.Serializer.BinarySerializer.Load
+  href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_Load_Shared_Interfaces_Model_IBinarySerializable___System_String_
+  name: Load
+  nameWithType: BinarySerializer.Load
+  fullName: Shared.Services.Serializer.BinarySerializer.Load
+- uid: System.IO.FileStream
+  commentId: T:System.IO.FileStream
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.io.filestream
+  name: FileStream
+  nameWithType: FileStream
+  fullName: System.IO.FileStream
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: Shared.Services.Serializer.BinarySerializer.IsSerializable*
+  commentId: Overload:Shared.Services.Serializer.BinarySerializer.IsSerializable
+  href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_IsSerializable_System_Type_
+  name: IsSerializable
+  nameWithType: BinarySerializer.IsSerializable
+  fullName: Shared.Services.Serializer.BinarySerializer.IsSerializable
+- uid: Shared.Services.Serializer.BinarySerializer.IsIConvertibleCollection*
+  commentId: Overload:Shared.Services.Serializer.BinarySerializer.IsIConvertibleCollection
+  href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_IsIConvertibleCollection_System_Type_System_Type__
+  name: IsIConvertibleCollection
+  nameWithType: BinarySerializer.IsIConvertibleCollection
+  fullName: Shared.Services.Serializer.BinarySerializer.IsIConvertibleCollection
+- uid: Shared.Services.Serializer.BinarySerializer.ToIConvertibleCollection*
+  commentId: Overload:Shared.Services.Serializer.BinarySerializer.ToIConvertibleCollection
+  href: Shared.Services.Serializer.BinarySerializer.html#Shared_Services_Serializer_BinarySerializer_ToIConvertibleCollection_System_Collections_IEnumerable_
+  name: ToIConvertibleCollection
+  nameWithType: BinarySerializer.ToIConvertibleCollection
+  fullName: Shared.Services.Serializer.BinarySerializer.ToIConvertibleCollection
+- uid: System.Collections.IEnumerable
+  commentId: T:System.Collections.IEnumerable
+  parent: System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerable
+  name: IEnumerable
+  nameWithType: IEnumerable
+  fullName: System.Collections.IEnumerable
+- uid: System.IConvertible[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iconvertible
+  name: IConvertible[]
+  nameWithType: IConvertible[]
+  fullName: System.IConvertible[]
+  nameWithType.vb: IConvertible()
+  fullName.vb: System.IConvertible()
+  name.vb: IConvertible()
+  spec.csharp:
+  - uid: System.IConvertible
+    name: IConvertible
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iconvertible
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.IConvertible
+    name: IConvertible
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iconvertible
+  - name: (
+  - name: )
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections

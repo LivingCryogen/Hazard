@@ -1,0 +1,259 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Interfaces.Model.ICardSetData
+  commentId: T:Shared.Interfaces.Model.ICardSetData
+  id: ICardSetData
+  parent: Shared.Interfaces.Model
+  children:
+  - Shared.Interfaces.Model.ICardSetData.Targets
+  langs:
+  - csharp
+  - vb
+  name: ICardSetData
+  nameWithType: ICardSetData
+  fullName: Shared.Interfaces.Model.ICardSetData
+  type: Interface
+  source:
+    remote:
+      path: Shared/Interfaces/Model/ICardSetData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ICardSetData
+    path: ../Shared/Interfaces/Model/ICardSetData.cs
+    startLine: 12
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: A base interface for '.json' conversion classes for <xref href="Shared.Interfaces.Model.ICardSet" data-throw-if-not-resolved="false"></xref>s.
+  remarks: >-
+    <xref href="Shared.Interfaces.Model.ICardSet" data-throw-if-not-resolved="false"></xref> intialization requires: (1) '.json' data from <xref href="Shared.Interfaces.Model.IDataProvider" data-throw-if-not-resolved="false"></xref>, and (2) <xref href="Shared.Interfaces.Model.ICard" data-throw-if-not-resolved="false"></xref>s from <xref href="Shared.Interfaces.Model.IAssetFactory" data-throw-if-not-resolved="false"></xref> or <xref href="Model.Entities.Cards.CardFactory" data-throw-if-not-resolved="false"></xref>.<br />
+
+    <xref href="Shared.Interfaces.Model.ICardSetData" data-throw-if-not-resolved="false"></xref> implementations store the data from step (1). See <xref href="Shared.Interfaces.Model.ICardSet.JData" data-throw-if-not-resolved="false"></xref>. <br />
+
+    For an example, see: <xref href="Model.Entities.Cards.TroopCardSetData" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public interface ICardSetData
+    content.vb: Public Interface ICardSetData
+- uid: Shared.Interfaces.Model.ICardSetData.Targets
+  commentId: P:Shared.Interfaces.Model.ICardSetData.Targets
+  id: Targets
+  parent: Shared.Interfaces.Model.ICardSetData
+  langs:
+  - csharp
+  - vb
+  name: Targets
+  nameWithType: ICardSetData.Targets
+  fullName: Shared.Interfaces.Model.ICardSetData.Targets
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/Model/ICardSetData.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Targets
+    path: ../Shared/Interfaces/Model/ICardSetData.cs
+    startLine: 20
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Gets or sets the values for each <xref href="Shared.Interfaces.Model.ICard.Target" data-throw-if-not-resolved="false"></xref> as read from the '.json' for their <xref href="Shared.Interfaces.Model.ICardSet" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: TerrID[][] Targets { get; set; }
+    parameters: []
+    return:
+      type: Shared.Geography.Enums.TerrID[][]
+      description: A staggered array of territory targets; each <xref href="Shared.Interfaces.Model.ICard.Target" data-throw-if-not-resolved="false"></xref> will be set to one <xref href="Shared.Geography.Enums.TerrID" data-throw-if-not-resolved="false"></xref> array.
+    content.vb: Property Targets As TerrID()()
+  overload: Shared.Interfaces.Model.ICardSetData.Targets*
+references:
+- uid: Shared.Interfaces.Model.ICardSet
+  commentId: T:Shared.Interfaces.Model.ICardSet
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.ICardSet.html
+  name: ICardSet
+  nameWithType: ICardSet
+  fullName: Shared.Interfaces.Model.ICardSet
+- uid: Shared.Interfaces.Model.IDataProvider
+  commentId: T:Shared.Interfaces.Model.IDataProvider
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IDataProvider.html
+  name: IDataProvider
+  nameWithType: IDataProvider
+  fullName: Shared.Interfaces.Model.IDataProvider
+- uid: Shared.Interfaces.Model.ICard
+  commentId: T:Shared.Interfaces.Model.ICard
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.ICard.html
+  name: ICard
+  nameWithType: ICard
+  fullName: Shared.Interfaces.Model.ICard
+- uid: Shared.Interfaces.Model.IAssetFactory
+  commentId: T:Shared.Interfaces.Model.IAssetFactory
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IAssetFactory.html
+  name: IAssetFactory
+  nameWithType: IAssetFactory
+  fullName: Shared.Interfaces.Model.IAssetFactory
+- uid: Model.Entities.Cards.CardFactory
+  commentId: T:Model.Entities.Cards.CardFactory
+  parent: Model.Entities.Cards
+  href: Model.Entities.Cards.CardFactory.html
+  name: CardFactory
+  nameWithType: CardFactory
+  fullName: Model.Entities.Cards.CardFactory
+- uid: Shared.Interfaces.Model.ICardSetData
+  commentId: T:Shared.Interfaces.Model.ICardSetData
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.ICardSetData.html
+  name: ICardSetData
+  nameWithType: ICardSetData
+  fullName: Shared.Interfaces.Model.ICardSetData
+- uid: Shared.Interfaces.Model.ICardSet.JData
+  commentId: P:Shared.Interfaces.Model.ICardSet.JData
+  href: Shared.Interfaces.Model.ICardSet.html#Shared_Interfaces_Model_ICardSet_JData
+  name: JData
+  nameWithType: ICardSet.JData
+  fullName: Shared.Interfaces.Model.ICardSet.JData
+- uid: Model.Entities.Cards.TroopCardSetData
+  commentId: T:Model.Entities.Cards.TroopCardSetData
+  href: Model.Entities.Cards.TroopCardSetData.html
+  name: TroopCardSetData
+  nameWithType: TroopCardSetData
+  fullName: Model.Entities.Cards.TroopCardSetData
+- uid: Shared.Interfaces.Model
+  commentId: N:Shared.Interfaces.Model
+  href: Shared.html
+  name: Shared.Interfaces.Model
+  nameWithType: Shared.Interfaces.Model
+  fullName: Shared.Interfaces.Model
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+- uid: Model.Entities.Cards
+  commentId: N:Model.Entities.Cards
+  href: Model.html
+  name: Model.Entities.Cards
+  nameWithType: Model.Entities.Cards
+  fullName: Model.Entities.Cards
+  spec.csharp:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.Entities
+    name: Entities
+    href: Model.Entities.html
+  - name: .
+  - uid: Model.Entities.Cards
+    name: Cards
+    href: Model.Entities.Cards.html
+  spec.vb:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.Entities
+    name: Entities
+    href: Model.Entities.html
+  - name: .
+  - uid: Model.Entities.Cards
+    name: Cards
+    href: Model.Entities.Cards.html
+- uid: Shared.Interfaces.Model.ICard.Target
+  commentId: P:Shared.Interfaces.Model.ICard.Target
+  parent: Shared.Interfaces.Model.ICard
+  href: Shared.Interfaces.Model.ICard.html#Shared_Interfaces_Model_ICard_Target
+  name: Target
+  nameWithType: ICard.Target
+  fullName: Shared.Interfaces.Model.ICard.Target
+- uid: Shared.Geography.Enums.TerrID
+  commentId: T:Shared.Geography.Enums.TerrID
+  parent: Shared.Geography.Enums
+  href: Shared.Geography.Enums.TerrID.html
+  name: TerrID
+  nameWithType: TerrID
+  fullName: Shared.Geography.Enums.TerrID
+- uid: Shared.Interfaces.Model.ICardSetData.Targets*
+  commentId: Overload:Shared.Interfaces.Model.ICardSetData.Targets
+  href: Shared.Interfaces.Model.ICardSetData.html#Shared_Interfaces_Model_ICardSetData_Targets
+  name: Targets
+  nameWithType: ICardSetData.Targets
+  fullName: Shared.Interfaces.Model.ICardSetData.Targets
+- uid: Shared.Geography.Enums.TerrID[][]
+  isExternal: true
+  href: Shared.Geography.Enums.TerrID.html
+  name: TerrID[][]
+  nameWithType: TerrID[][]
+  fullName: Shared.Geography.Enums.TerrID[][]
+  nameWithType.vb: TerrID()()
+  fullName.vb: Shared.Geography.Enums.TerrID()()
+  name.vb: TerrID()()
+  spec.csharp:
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: '['
+  - name: ']'
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: (
+  - name: )
+  - name: (
+  - name: )
+- uid: Shared.Geography.Enums
+  commentId: N:Shared.Geography.Enums
+  href: Shared.html
+  name: Shared.Geography.Enums
+  nameWithType: Shared.Geography.Enums
+  fullName: Shared.Geography.Enums
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html

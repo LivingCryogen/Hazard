@@ -1,0 +1,1063 @@
+### YamlMime:ManagedReference
+items:
+- uid: Model.Entities.Deck
+  commentId: T:Model.Entities.Deck
+  id: Deck
+  parent: Model.Entities
+  children:
+  - Model.Entities.Deck.#ctor
+  - Model.Entities.Deck.#ctor(Shared.Interfaces.Model.ICardSet)
+  - Model.Entities.Deck.#ctor(Shared.Interfaces.Model.ICardSet[])
+  - Model.Entities.Deck.#ctor(Shared.Interfaces.Model.ICard[])
+  - Model.Entities.Deck.#ctor(Shared.Interfaces.Model.ICard[][])
+  - Model.Entities.Deck.Discard(Shared.Interfaces.Model.ICard)
+  - Model.Entities.Deck.Discard(Shared.Interfaces.Model.ICard[])
+  - Model.Entities.Deck.DiscardPile
+  - Model.Entities.Deck.DrawCard
+  - Model.Entities.Deck.Library
+  - Model.Entities.Deck.Shuffle
+  langs:
+  - csharp
+  - vb
+  name: Deck
+  nameWithType: Deck
+  fullName: Model.Entities.Deck
+  type: Class
+  source:
+    remote:
+      path: Model/Entities/Deck.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Deck
+    path: ../Model/Entities/Deck.cs
+    startLine: 9
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: A deck of cards.
+  remarks: 'Each <xref href="Shared.Interfaces.Model.ICard?text=card" data-throw-if-not-resolved="false"></xref> targets at minimum one territory: see <xref href="Shared.Interfaces.Model.ICard.Target" data-throw-if-not-resolved="false"></xref>.'
+  example: []
+  syntax:
+    content: public class Deck
+    content.vb: Public Class Deck
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Model.Entities.Deck.#ctor
+  commentId: M:Model.Entities.Deck.#ctor
+  id: '#ctor'
+  parent: Model.Entities.Deck
+  langs:
+  - csharp
+  - vb
+  name: Deck()
+  nameWithType: Deck.Deck()
+  fullName: Model.Entities.Deck.Deck()
+  type: Constructor
+  source:
+    remote:
+      path: Model/Entities/Deck.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Model/Entities/Deck.cs
+    startLine: 14
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Constructs an empty deck.
+  example: []
+  syntax:
+    content: public Deck()
+    content.vb: Public Sub New()
+  overload: Model.Entities.Deck.#ctor*
+  nameWithType.vb: Deck.New()
+  fullName.vb: Model.Entities.Deck.New()
+  name.vb: New()
+- uid: Model.Entities.Deck.#ctor(Shared.Interfaces.Model.ICard[])
+  commentId: M:Model.Entities.Deck.#ctor(Shared.Interfaces.Model.ICard[])
+  id: '#ctor(Shared.Interfaces.Model.ICard[])'
+  parent: Model.Entities.Deck
+  langs:
+  - csharp
+  - vb
+  name: Deck(ICard[])
+  nameWithType: Deck.Deck(ICard[])
+  fullName: Model.Entities.Deck.Deck(Shared.Interfaces.Model.ICard[])
+  type: Constructor
+  source:
+    remote:
+      path: Model/Entities/Deck.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Model/Entities/Deck.cs
+    startLine: 23
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Constructs a deck from a group of cards, placing them all in the <xref href="Model.Entities.Deck.Library" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public Deck(ICard[] cards)
+    parameters:
+    - id: cards
+      type: Shared.Interfaces.Model.ICard[]
+      description: The cards that will constitute the deck.
+    content.vb: Public Sub New(cards As ICard())
+  overload: Model.Entities.Deck.#ctor*
+  nameWithType.vb: Deck.New(ICard())
+  fullName.vb: Model.Entities.Deck.New(Shared.Interfaces.Model.ICard())
+  name.vb: New(ICard())
+- uid: Model.Entities.Deck.#ctor(Shared.Interfaces.Model.ICard[][])
+  commentId: M:Model.Entities.Deck.#ctor(Shared.Interfaces.Model.ICard[][])
+  id: '#ctor(Shared.Interfaces.Model.ICard[][])'
+  parent: Model.Entities.Deck
+  langs:
+  - csharp
+  - vb
+  name: Deck(ICard[][])
+  nameWithType: Deck.Deck(ICard[][])
+  fullName: Model.Entities.Deck.Deck(Shared.Interfaces.Model.ICard[][])
+  type: Constructor
+  source:
+    remote:
+      path: Model/Entities/Deck.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Model/Entities/Deck.cs
+    startLine: 32
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  remarks: This constructor is useful when a <xref href="Model.Entities.Deck" data-throw-if-not-resolved="false"></xref> is to be built from multiple <xref href="Shared.Interfaces.Model.ICardSet.Cards" data-throw-if-not-resolved="false"></xref> values.
+  example: []
+  syntax:
+    content: public Deck(ICard[][] cards)
+    parameters:
+    - id: cards
+      type: Shared.Interfaces.Model.ICard[][]
+    content.vb: Public Sub New(cards As ICard()())
+  overload: Model.Entities.Deck.#ctor*
+  nameWithType.vb: Deck.New(ICard()())
+  fullName.vb: Model.Entities.Deck.New(Shared.Interfaces.Model.ICard()())
+  name.vb: New(ICard()())
+- uid: Model.Entities.Deck.#ctor(Shared.Interfaces.Model.ICardSet)
+  commentId: M:Model.Entities.Deck.#ctor(Shared.Interfaces.Model.ICardSet)
+  id: '#ctor(Shared.Interfaces.Model.ICardSet)'
+  parent: Model.Entities.Deck
+  langs:
+  - csharp
+  - vb
+  name: Deck(ICardSet)
+  nameWithType: Deck.Deck(ICardSet)
+  fullName: Model.Entities.Deck.Deck(Shared.Interfaces.Model.ICardSet)
+  type: Constructor
+  source:
+    remote:
+      path: Model/Entities/Deck.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Model/Entities/Deck.cs
+    startLine: 39
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Constructs a deck from a group of cards, placing them all in the <xref href="Model.Entities.Deck.Library" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public Deck(ICardSet cardSet)
+    parameters:
+    - id: cardSet
+      type: Shared.Interfaces.Model.ICardSet
+      description: A card set, whose property <xref href="Shared.Interfaces.Model.ICardSet.Cards" data-throw-if-not-resolved="false"></xref> contains the <xref href="Shared.Interfaces.Model.ICard" data-throw-if-not-resolved="false"></xref>s that will constitute the deck.
+    content.vb: Public Sub New(cardSet As ICardSet)
+  overload: Model.Entities.Deck.#ctor*
+  nameWithType.vb: Deck.New(ICardSet)
+  fullName.vb: Model.Entities.Deck.New(Shared.Interfaces.Model.ICardSet)
+  name.vb: New(ICardSet)
+- uid: Model.Entities.Deck.#ctor(Shared.Interfaces.Model.ICardSet[])
+  commentId: M:Model.Entities.Deck.#ctor(Shared.Interfaces.Model.ICardSet[])
+  id: '#ctor(Shared.Interfaces.Model.ICardSet[])'
+  parent: Model.Entities.Deck
+  langs:
+  - csharp
+  - vb
+  name: Deck(ICardSet[])
+  nameWithType: Deck.Deck(ICardSet[])
+  fullName: Model.Entities.Deck.Deck(Shared.Interfaces.Model.ICardSet[])
+  type: Constructor
+  source:
+    remote:
+      path: Model/Entities/Deck.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Model/Entities/Deck.cs
+    startLine: 46
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Constructs a deck from a group of cards, placing them all in the <xref href="Model.Entities.Deck.Library" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public Deck(ICardSet[] cardSets)
+    parameters:
+    - id: cardSets
+      type: Shared.Interfaces.Model.ICardSet[]
+      description: An array of card sets, each of whose property <xref href="Shared.Interfaces.Model.ICardSet.Cards" data-throw-if-not-resolved="false"></xref> contains <xref href="Shared.Interfaces.Model.ICard" data-throw-if-not-resolved="false"></xref>s that will constitute the deck.
+    content.vb: Public Sub New(cardSets As ICardSet())
+  overload: Model.Entities.Deck.#ctor*
+  nameWithType.vb: Deck.New(ICardSet())
+  fullName.vb: Model.Entities.Deck.New(Shared.Interfaces.Model.ICardSet())
+  name.vb: New(ICardSet())
+- uid: Model.Entities.Deck.Library
+  commentId: P:Model.Entities.Deck.Library
+  id: Library
+  parent: Model.Entities.Deck
+  langs:
+  - csharp
+  - vb
+  name: Library
+  nameWithType: Deck.Library
+  fullName: Model.Entities.Deck.Library
+  type: Property
+  source:
+    remote:
+      path: Model/Entities/Deck.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Library
+    path: ../Model/Entities/Deck.cs
+    startLine: 63
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Gets or sets the library.
+  remarks: A library is the collection of cards from which players draw (see <xref href="Model.Entities.Deck.DrawCard" data-throw-if-not-resolved="false"></xref>).
+  example: []
+  syntax:
+    content: public List<ICard> Library { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{Shared.Interfaces.Model.ICard}
+    content.vb: Public Property Library As List(Of ICard)
+  overload: Model.Entities.Deck.Library*
+- uid: Model.Entities.Deck.DiscardPile
+  commentId: P:Model.Entities.Deck.DiscardPile
+  id: DiscardPile
+  parent: Model.Entities.Deck
+  langs:
+  - csharp
+  - vb
+  name: DiscardPile
+  nameWithType: Deck.DiscardPile
+  fullName: Model.Entities.Deck.DiscardPile
+  type: Property
+  source:
+    remote:
+      path: Model/Entities/Deck.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: DiscardPile
+    path: ../Model/Entities/Deck.cs
+    startLine: 70
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Gets or sets the discard pile.
+  remarks: A discard pile is the collection to which cards are discarded when traded in; see <xref href="Model.Entities.Deck.Discard(Shared.Interfaces.Model.ICard)" data-throw-if-not-resolved="false"></xref> and <xref href="Shared.Interfaces.Model.IRegulator.TradeInCards(System.Int32%2cSystem.Int32%5b%5d)" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public List<ICard> DiscardPile { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{Shared.Interfaces.Model.ICard}
+    content.vb: Public Property DiscardPile As List(Of ICard)
+  overload: Model.Entities.Deck.DiscardPile*
+- uid: Model.Entities.Deck.DrawCard
+  commentId: M:Model.Entities.Deck.DrawCard
+  id: DrawCard
+  parent: Model.Entities.Deck
+  langs:
+  - csharp
+  - vb
+  name: DrawCard()
+  nameWithType: Deck.DrawCard()
+  fullName: Model.Entities.Deck.DrawCard()
+  type: Method
+  source:
+    remote:
+      path: Model/Entities/Deck.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: DrawCard
+    path: ../Model/Entities/Deck.cs
+    startLine: 78
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Draws a card from the bottom of the <xref href="Model.Entities.Deck.Library" data-throw-if-not-resolved="false"></xref>.
+  remarks: If <xref href="Model.Entities.Deck.Library" data-throw-if-not-resolved="false"></xref> is empty, <xref href="Model.Entities.Deck.Shuffle" data-throw-if-not-resolved="false"></xref> is called.
+  example: []
+  syntax:
+    content: public ICard DrawCard()
+    return:
+      type: Shared.Interfaces.Model.ICard
+      description: The drawn card.
+    content.vb: Public Function DrawCard() As ICard
+  overload: Model.Entities.Deck.DrawCard*
+- uid: Model.Entities.Deck.Discard(Shared.Interfaces.Model.ICard)
+  commentId: M:Model.Entities.Deck.Discard(Shared.Interfaces.Model.ICard)
+  id: Discard(Shared.Interfaces.Model.ICard)
+  parent: Model.Entities.Deck
+  langs:
+  - csharp
+  - vb
+  name: Discard(ICard)
+  nameWithType: Deck.Discard(ICard)
+  fullName: Model.Entities.Deck.Discard(Shared.Interfaces.Model.ICard)
+  type: Method
+  source:
+    remote:
+      path: Model/Entities/Deck.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Discard
+    path: ../Model/Entities/Deck.cs
+    startLine: 93
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Adds a card to the discard pile.
+  example: []
+  syntax:
+    content: public void Discard(ICard card)
+    parameters:
+    - id: card
+      type: Shared.Interfaces.Model.ICard
+      description: The discarded card.
+    content.vb: Public Sub Discard(card As ICard)
+  overload: Model.Entities.Deck.Discard*
+- uid: Model.Entities.Deck.Discard(Shared.Interfaces.Model.ICard[])
+  commentId: M:Model.Entities.Deck.Discard(Shared.Interfaces.Model.ICard[])
+  id: Discard(Shared.Interfaces.Model.ICard[])
+  parent: Model.Entities.Deck
+  langs:
+  - csharp
+  - vb
+  name: Discard(ICard[])
+  nameWithType: Deck.Discard(ICard[])
+  fullName: Model.Entities.Deck.Discard(Shared.Interfaces.Model.ICard[])
+  type: Method
+  source:
+    remote:
+      path: Model/Entities/Deck.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Discard
+    path: ../Model/Entities/Deck.cs
+    startLine: 101
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Adds a collection of cards to the discard pile.
+  example: []
+  syntax:
+    content: public void Discard(ICard[] cards)
+    parameters:
+    - id: cards
+      type: Shared.Interfaces.Model.ICard[]
+      description: The discarded cards.
+    content.vb: Public Sub Discard(cards As ICard())
+  overload: Model.Entities.Deck.Discard*
+  nameWithType.vb: Deck.Discard(ICard())
+  fullName.vb: Model.Entities.Deck.Discard(Shared.Interfaces.Model.ICard())
+  name.vb: Discard(ICard())
+- uid: Model.Entities.Deck.Shuffle
+  commentId: M:Model.Entities.Deck.Shuffle
+  id: Shuffle
+  parent: Model.Entities.Deck
+  langs:
+  - csharp
+  - vb
+  name: Shuffle()
+  nameWithType: Deck.Shuffle()
+  fullName: Model.Entities.Deck.Shuffle()
+  type: Method
+  source:
+    remote:
+      path: Model/Entities/Deck.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Shuffle
+    path: ../Model/Entities/Deck.cs
+    startLine: 111
+  assemblies:
+  - Model
+  namespace: Model.Entities
+  summary: Shuffles the deck.
+  remarks: Resulting <xref href="Model.Entities.Deck.Library" data-throw-if-not-resolved="false"></xref> order is generated by a Fisher-Yates shuffle algorithm.
+  example: []
+  syntax:
+    content: public void Shuffle()
+    content.vb: Public Sub Shuffle()
+  overload: Model.Entities.Deck.Shuffle*
+references:
+- uid: Shared.Interfaces.Model.ICard
+  commentId: T:Shared.Interfaces.Model.ICard
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.ICard.html
+  name: ICard
+  nameWithType: ICard
+  fullName: Shared.Interfaces.Model.ICard
+- uid: Shared.Interfaces.Model.ICard.Target
+  commentId: P:Shared.Interfaces.Model.ICard.Target
+  parent: Shared.Interfaces.Model.ICard
+  href: Shared.Interfaces.Model.ICard.html#Shared_Interfaces_Model_ICard_Target
+  name: Target
+  nameWithType: ICard.Target
+  fullName: Shared.Interfaces.Model.ICard.Target
+- uid: Model.Entities
+  commentId: N:Model.Entities
+  href: Model.html
+  name: Model.Entities
+  nameWithType: Model.Entities
+  fullName: Model.Entities
+  spec.csharp:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.Entities
+    name: Entities
+    href: Model.Entities.html
+  spec.vb:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.Entities
+    name: Entities
+    href: Model.Entities.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: Shared.Interfaces.Model
+  commentId: N:Shared.Interfaces.Model
+  href: Shared.html
+  name: Shared.Interfaces.Model
+  nameWithType: Shared.Interfaces.Model
+  fullName: Shared.Interfaces.Model
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Model.Entities.Deck.#ctor*
+  commentId: Overload:Model.Entities.Deck.#ctor
+  href: Model.Entities.Deck.html#Model_Entities_Deck__ctor
+  name: Deck
+  nameWithType: Deck.Deck
+  fullName: Model.Entities.Deck.Deck
+  nameWithType.vb: Deck.New
+  fullName.vb: Model.Entities.Deck.New
+  name.vb: New
+- uid: Model.Entities.Deck.Library
+  commentId: P:Model.Entities.Deck.Library
+  href: Model.Entities.Deck.html#Model_Entities_Deck_Library
+  name: Library
+  nameWithType: Deck.Library
+  fullName: Model.Entities.Deck.Library
+- uid: Shared.Interfaces.Model.ICard[]
+  isExternal: true
+  href: Shared.Interfaces.Model.ICard.html
+  name: ICard[]
+  nameWithType: ICard[]
+  fullName: Shared.Interfaces.Model.ICard[]
+  nameWithType.vb: ICard()
+  fullName.vb: Shared.Interfaces.Model.ICard()
+  name.vb: ICard()
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.ICard
+    name: ICard
+    href: Shared.Interfaces.Model.ICard.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: Shared.Interfaces.Model.ICard
+    name: ICard
+    href: Shared.Interfaces.Model.ICard.html
+  - name: (
+  - name: )
+- uid: Model.Entities.Deck
+  commentId: T:Model.Entities.Deck
+  parent: Model.Entities
+  href: Model.Entities.Deck.html
+  name: Deck
+  nameWithType: Deck
+  fullName: Model.Entities.Deck
+- uid: Shared.Interfaces.Model.ICardSet.Cards
+  commentId: P:Shared.Interfaces.Model.ICardSet.Cards
+  parent: Shared.Interfaces.Model.ICardSet
+  href: Shared.Interfaces.Model.ICardSet.html#Shared_Interfaces_Model_ICardSet_Cards
+  name: Cards
+  nameWithType: ICardSet.Cards
+  fullName: Shared.Interfaces.Model.ICardSet.Cards
+- uid: Shared.Interfaces.Model.ICard[][]
+  isExternal: true
+  href: Shared.Interfaces.Model.ICard.html
+  name: ICard[][]
+  nameWithType: ICard[][]
+  fullName: Shared.Interfaces.Model.ICard[][]
+  nameWithType.vb: ICard()()
+  fullName.vb: Shared.Interfaces.Model.ICard()()
+  name.vb: ICard()()
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.ICard
+    name: ICard
+    href: Shared.Interfaces.Model.ICard.html
+  - name: '['
+  - name: ']'
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: Shared.Interfaces.Model.ICard
+    name: ICard
+    href: Shared.Interfaces.Model.ICard.html
+  - name: (
+  - name: )
+  - name: (
+  - name: )
+- uid: Shared.Interfaces.Model.ICardSet
+  commentId: T:Shared.Interfaces.Model.ICardSet
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.ICardSet.html
+  name: ICardSet
+  nameWithType: ICardSet
+  fullName: Shared.Interfaces.Model.ICardSet
+- uid: Shared.Interfaces.Model.ICardSet[]
+  isExternal: true
+  href: Shared.Interfaces.Model.ICardSet.html
+  name: ICardSet[]
+  nameWithType: ICardSet[]
+  fullName: Shared.Interfaces.Model.ICardSet[]
+  nameWithType.vb: ICardSet()
+  fullName.vb: Shared.Interfaces.Model.ICardSet()
+  name.vb: ICardSet()
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.ICardSet
+    name: ICardSet
+    href: Shared.Interfaces.Model.ICardSet.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: Shared.Interfaces.Model.ICardSet
+    name: ICardSet
+    href: Shared.Interfaces.Model.ICardSet.html
+  - name: (
+  - name: )
+- uid: Model.Entities.Deck.DrawCard
+  commentId: M:Model.Entities.Deck.DrawCard
+  href: Model.Entities.Deck.html#Model_Entities_Deck_DrawCard
+  name: DrawCard()
+  nameWithType: Deck.DrawCard()
+  fullName: Model.Entities.Deck.DrawCard()
+  spec.csharp:
+  - uid: Model.Entities.Deck.DrawCard
+    name: DrawCard
+    href: Model.Entities.Deck.html#Model_Entities_Deck_DrawCard
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Model.Entities.Deck.DrawCard
+    name: DrawCard
+    href: Model.Entities.Deck.html#Model_Entities_Deck_DrawCard
+  - name: (
+  - name: )
+- uid: Model.Entities.Deck.Library*
+  commentId: Overload:Model.Entities.Deck.Library
+  href: Model.Entities.Deck.html#Model_Entities_Deck_Library
+  name: Library
+  nameWithType: Deck.Library
+  fullName: Model.Entities.Deck.Library
+- uid: System.Collections.Generic.List{Shared.Interfaces.Model.ICard}
+  commentId: T:System.Collections.Generic.List{Shared.Interfaces.Model.ICard}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<ICard>
+  nameWithType: List<ICard>
+  fullName: System.Collections.Generic.List<Shared.Interfaces.Model.ICard>
+  nameWithType.vb: List(Of ICard)
+  fullName.vb: System.Collections.Generic.List(Of Shared.Interfaces.Model.ICard)
+  name.vb: List(Of ICard)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Shared.Interfaces.Model.ICard
+    name: ICard
+    href: Shared.Interfaces.Model.ICard.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Interfaces.Model.ICard
+    name: ICard
+    href: Shared.Interfaces.Model.ICard.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: Model.Entities.Deck.Discard(Shared.Interfaces.Model.ICard)
+  commentId: M:Model.Entities.Deck.Discard(Shared.Interfaces.Model.ICard)
+  href: Model.Entities.Deck.html#Model_Entities_Deck_Discard_Shared_Interfaces_Model_ICard_
+  name: Discard(ICard)
+  nameWithType: Deck.Discard(ICard)
+  fullName: Model.Entities.Deck.Discard(Shared.Interfaces.Model.ICard)
+  spec.csharp:
+  - uid: Model.Entities.Deck.Discard(Shared.Interfaces.Model.ICard)
+    name: Discard
+    href: Model.Entities.Deck.html#Model_Entities_Deck_Discard_Shared_Interfaces_Model_ICard_
+  - name: (
+  - uid: Shared.Interfaces.Model.ICard
+    name: ICard
+    href: Shared.Interfaces.Model.ICard.html
+  - name: )
+  spec.vb:
+  - uid: Model.Entities.Deck.Discard(Shared.Interfaces.Model.ICard)
+    name: Discard
+    href: Model.Entities.Deck.html#Model_Entities_Deck_Discard_Shared_Interfaces_Model_ICard_
+  - name: (
+  - uid: Shared.Interfaces.Model.ICard
+    name: ICard
+    href: Shared.Interfaces.Model.ICard.html
+  - name: )
+- uid: Shared.Interfaces.Model.IRegulator.TradeInCards(System.Int32,System.Int32[])
+  commentId: M:Shared.Interfaces.Model.IRegulator.TradeInCards(System.Int32,System.Int32[])
+  parent: Shared.Interfaces.Model.IRegulator
+  isExternal: true
+  href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_TradeInCards_System_Int32_System_Int32___
+  name: TradeInCards(int, int[])
+  nameWithType: IRegulator.TradeInCards(int, int[])
+  fullName: Shared.Interfaces.Model.IRegulator.TradeInCards(int, int[])
+  nameWithType.vb: IRegulator.TradeInCards(Integer, Integer())
+  fullName.vb: Shared.Interfaces.Model.IRegulator.TradeInCards(Integer, Integer())
+  name.vb: TradeInCards(Integer, Integer())
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IRegulator.TradeInCards(System.Int32,System.Int32[])
+    name: TradeInCards
+    href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_TradeInCards_System_Int32_System_Int32___
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IRegulator.TradeInCards(System.Int32,System.Int32[])
+    name: TradeInCards
+    href: Shared.Interfaces.Model.IRegulator.html#Shared_Interfaces_Model_IRegulator_TradeInCards_System_Int32_System_Int32___
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: (
+  - name: )
+  - name: )
+- uid: Model.Entities.Deck.DiscardPile*
+  commentId: Overload:Model.Entities.Deck.DiscardPile
+  href: Model.Entities.Deck.html#Model_Entities_Deck_DiscardPile
+  name: DiscardPile
+  nameWithType: Deck.DiscardPile
+  fullName: Model.Entities.Deck.DiscardPile
+- uid: Shared.Interfaces.Model.IRegulator
+  commentId: T:Shared.Interfaces.Model.IRegulator
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IRegulator.html
+  name: IRegulator
+  nameWithType: IRegulator
+  fullName: Shared.Interfaces.Model.IRegulator
+- uid: Model.Entities.Deck.Shuffle
+  commentId: M:Model.Entities.Deck.Shuffle
+  href: Model.Entities.Deck.html#Model_Entities_Deck_Shuffle
+  name: Shuffle()
+  nameWithType: Deck.Shuffle()
+  fullName: Model.Entities.Deck.Shuffle()
+  spec.csharp:
+  - uid: Model.Entities.Deck.Shuffle
+    name: Shuffle
+    href: Model.Entities.Deck.html#Model_Entities_Deck_Shuffle
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Model.Entities.Deck.Shuffle
+    name: Shuffle
+    href: Model.Entities.Deck.html#Model_Entities_Deck_Shuffle
+  - name: (
+  - name: )
+- uid: Model.Entities.Deck.DrawCard*
+  commentId: Overload:Model.Entities.Deck.DrawCard
+  href: Model.Entities.Deck.html#Model_Entities_Deck_DrawCard
+  name: DrawCard
+  nameWithType: Deck.DrawCard
+  fullName: Model.Entities.Deck.DrawCard
+- uid: Model.Entities.Deck.Discard*
+  commentId: Overload:Model.Entities.Deck.Discard
+  href: Model.Entities.Deck.html#Model_Entities_Deck_Discard_Shared_Interfaces_Model_ICard_
+  name: Discard
+  nameWithType: Deck.Discard
+  fullName: Model.Entities.Deck.Discard
+- uid: Model.Entities.Deck.Shuffle*
+  commentId: Overload:Model.Entities.Deck.Shuffle
+  href: Model.Entities.Deck.html#Model_Entities_Deck_Shuffle
+  name: Shuffle
+  nameWithType: Deck.Shuffle
+  fullName: Model.Entities.Deck.Shuffle

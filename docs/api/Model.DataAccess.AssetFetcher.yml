@@ -1,0 +1,833 @@
+### YamlMime:ManagedReference
+items:
+- uid: Model.DataAccess.AssetFetcher
+  commentId: T:Model.DataAccess.AssetFetcher
+  id: AssetFetcher
+  parent: Model.DataAccess
+  children:
+  - Model.DataAccess.AssetFetcher.#ctor(Shared.Interfaces.Model.IAssetFactory,Microsoft.Extensions.Options.IOptions{Shared.Services.Options.AppConfig})
+  - Model.DataAccess.AssetFetcher.FetchCardSets
+  - Model.DataAccess.AssetFetcher.FetchGeography
+  langs:
+  - csharp
+  - vb
+  name: AssetFetcher
+  nameWithType: AssetFetcher
+  fullName: Model.DataAccess.AssetFetcher
+  type: Class
+  source:
+    remote:
+      path: Model/DataAccess/AssetFetcher.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: AssetFetcher
+    path: ../Model/DataAccess/AssetFetcher.cs
+    startLine: 9
+  assemblies:
+  - Model
+  namespace: Model.DataAccess
+  summary: Exposes the Data Access 'Layer' to the Model, providing bespoke methods for retrieving Game Assets at run-time.
+  remarks: Expansion of the DAL to cover other Types requires extension of this interface.
+  example: []
+  syntax:
+    content: 'public class AssetFetcher : IAssetFetcher'
+    content.vb: Public Class AssetFetcher Implements IAssetFetcher
+  inheritance:
+  - System.Object
+  implements:
+  - Shared.Interfaces.Model.IAssetFetcher
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Model.DataAccess.AssetFetcher.#ctor(Shared.Interfaces.Model.IAssetFactory,Microsoft.Extensions.Options.IOptions{Shared.Services.Options.AppConfig})
+  commentId: M:Model.DataAccess.AssetFetcher.#ctor(Shared.Interfaces.Model.IAssetFactory,Microsoft.Extensions.Options.IOptions{Shared.Services.Options.AppConfig})
+  id: '#ctor(Shared.Interfaces.Model.IAssetFactory,Microsoft.Extensions.Options.IOptions{Shared.Services.Options.AppConfig})'
+  parent: Model.DataAccess.AssetFetcher
+  langs:
+  - csharp
+  - vb
+  name: AssetFetcher(IAssetFactory, IOptions<AppConfig>)
+  nameWithType: AssetFetcher.AssetFetcher(IAssetFactory, IOptions<AppConfig>)
+  fullName: Model.DataAccess.AssetFetcher.AssetFetcher(Shared.Interfaces.Model.IAssetFactory, Microsoft.Extensions.Options.IOptions<Shared.Services.Options.AppConfig>)
+  type: Constructor
+  source:
+    remote:
+      path: Model/DataAccess/AssetFetcher.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Model/DataAccess/AssetFetcher.cs
+    startLine: 9
+  assemblies:
+  - Model
+  namespace: Model.DataAccess
+  summary: Exposes the Data Access 'Layer' to the Model, providing bespoke methods for retrieving Game Assets at run-time.
+  remarks: Expansion of the DAL to cover other Types requires extension of this interface.
+  example: []
+  syntax:
+    content: public AssetFetcher(IAssetFactory factory, IOptions<AppConfig> options)
+    parameters:
+    - id: factory
+      type: Shared.Interfaces.Model.IAssetFactory
+    - id: options
+      type: Microsoft.Extensions.Options.IOptions{Shared.Services.Options.AppConfig}
+    content.vb: Public Sub New(factory As IAssetFactory, options As IOptions(Of AppConfig))
+  overload: Model.DataAccess.AssetFetcher.#ctor*
+  nameWithType.vb: AssetFetcher.New(IAssetFactory, IOptions(Of AppConfig))
+  fullName.vb: Model.DataAccess.AssetFetcher.New(Shared.Interfaces.Model.IAssetFactory, Microsoft.Extensions.Options.IOptions(Of Shared.Services.Options.AppConfig))
+  name.vb: New(IAssetFactory, IOptions(Of AppConfig))
+- uid: Model.DataAccess.AssetFetcher.FetchCardSets
+  commentId: M:Model.DataAccess.AssetFetcher.FetchCardSets
+  id: FetchCardSets
+  parent: Model.DataAccess.AssetFetcher
+  langs:
+  - csharp
+  - vb
+  name: FetchCardSets()
+  nameWithType: AssetFetcher.FetchCardSets()
+  fullName: Model.DataAccess.AssetFetcher.FetchCardSets()
+  type: Method
+  source:
+    remote:
+      path: Model/DataAccess/AssetFetcher.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: FetchCardSets
+    path: ../Model/DataAccess/AssetFetcher.cs
+    startLine: 24
+  assemblies:
+  - Model
+  namespace: Model.DataAccess
+  summary: Discovers local data files that contain <xref href="Shared.Interfaces.Model.ICard" data-throw-if-not-resolved="false"></xref>s and hands off their names to <xref href="Model.DataAccess.AssetFactory" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public List<ICardSet> FetchCardSets()
+    return:
+      type: System.Collections.Generic.List{Shared.Interfaces.Model.ICardSet}
+      description: >-
+        A list of <xref href="Shared.Interfaces.Model.ICard" data-throw-if-not-resolved="false"></xref> arrays ("card sets") read from local data files containing "CardSet" in thier names. The files must comport with 
+            <xref href="System.Type" data-throw-if-not-resolved="false"></xref>s, <xref href="Model.DataAccess.Cards.ICardSetDataJConverter" data-throw-if-not-resolved="false"></xref>s, and conversion target types from <xref href="Shared.Services.Registry.TypeRegister" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Function FetchCardSets() As List(Of ICardSet)
+  overload: Model.DataAccess.AssetFetcher.FetchCardSets*
+  implements:
+  - Shared.Interfaces.Model.IAssetFetcher.FetchCardSets
+- uid: Model.DataAccess.AssetFetcher.FetchGeography
+  commentId: M:Model.DataAccess.AssetFetcher.FetchGeography
+  id: FetchGeography
+  parent: Model.DataAccess.AssetFetcher
+  langs:
+  - csharp
+  - vb
+  name: FetchGeography()
+  nameWithType: AssetFetcher.FetchGeography()
+  fullName: Model.DataAccess.AssetFetcher.FetchGeography()
+  type: Method
+  source:
+    remote:
+      path: Model/DataAccess/AssetFetcher.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: FetchGeography
+    path: ../Model/DataAccess/AssetFetcher.cs
+    startLine: 41
+  assemblies:
+  - Model
+  namespace: Model.DataAccess
+  summary: Begins the process of data reading, conversion, and object initialization for <xref href="Shared.Geography.BoardGeography" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public GeographyInitializer FetchGeography()
+    return:
+      type: Shared.Geography.GeographyInitializer
+      description: An initializer object to be used with <xref href="Shared.Geography.BoardGeography.Initialize(Shared.Geography.GeographyInitializer)" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Function FetchGeography() As GeographyInitializer
+  overload: Model.DataAccess.AssetFetcher.FetchGeography*
+  implements:
+  - Shared.Interfaces.Model.IAssetFetcher.FetchGeography
+references:
+- uid: Model.DataAccess
+  commentId: N:Model.DataAccess
+  href: Model.html
+  name: Model.DataAccess
+  nameWithType: Model.DataAccess
+  fullName: Model.DataAccess
+  spec.csharp:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.DataAccess
+    name: DataAccess
+    href: Model.DataAccess.html
+  spec.vb:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.DataAccess
+    name: DataAccess
+    href: Model.DataAccess.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Shared.Interfaces.Model.IAssetFetcher
+  commentId: T:Shared.Interfaces.Model.IAssetFetcher
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IAssetFetcher.html
+  name: IAssetFetcher
+  nameWithType: IAssetFetcher
+  fullName: Shared.Interfaces.Model.IAssetFetcher
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Shared.Interfaces.Model
+  commentId: N:Shared.Interfaces.Model
+  href: Shared.html
+  name: Shared.Interfaces.Model
+  nameWithType: Shared.Interfaces.Model
+  fullName: Shared.Interfaces.Model
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+- uid: Model.DataAccess.AssetFetcher.#ctor*
+  commentId: Overload:Model.DataAccess.AssetFetcher.#ctor
+  href: Model.DataAccess.AssetFetcher.html#Model_DataAccess_AssetFetcher__ctor_Shared_Interfaces_Model_IAssetFactory_Microsoft_Extensions_Options_IOptions_Shared_Services_Options_AppConfig__
+  name: AssetFetcher
+  nameWithType: AssetFetcher.AssetFetcher
+  fullName: Model.DataAccess.AssetFetcher.AssetFetcher
+  nameWithType.vb: AssetFetcher.New
+  fullName.vb: Model.DataAccess.AssetFetcher.New
+  name.vb: New
+- uid: Shared.Interfaces.Model.IAssetFactory
+  commentId: T:Shared.Interfaces.Model.IAssetFactory
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IAssetFactory.html
+  name: IAssetFactory
+  nameWithType: IAssetFactory
+  fullName: Shared.Interfaces.Model.IAssetFactory
+- uid: Microsoft.Extensions.Options.IOptions{Shared.Services.Options.AppConfig}
+  commentId: T:Microsoft.Extensions.Options.IOptions{Shared.Services.Options.AppConfig}
+  parent: Microsoft.Extensions.Options
+  definition: Microsoft.Extensions.Options.IOptions`1
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1
+  name: IOptions<AppConfig>
+  nameWithType: IOptions<AppConfig>
+  fullName: Microsoft.Extensions.Options.IOptions<Shared.Services.Options.AppConfig>
+  nameWithType.vb: IOptions(Of AppConfig)
+  fullName.vb: Microsoft.Extensions.Options.IOptions(Of Shared.Services.Options.AppConfig)
+  name.vb: IOptions(Of AppConfig)
+  spec.csharp:
+  - uid: Microsoft.Extensions.Options.IOptions`1
+    name: IOptions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1
+  - name: <
+  - uid: Shared.Services.Options.AppConfig
+    name: AppConfig
+    href: Shared.Services.Options.AppConfig.html
+  - name: '>'
+  spec.vb:
+  - uid: Microsoft.Extensions.Options.IOptions`1
+    name: IOptions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Services.Options.AppConfig
+    name: AppConfig
+    href: Shared.Services.Options.AppConfig.html
+  - name: )
+- uid: Microsoft.Extensions.Options.IOptions`1
+  commentId: T:Microsoft.Extensions.Options.IOptions`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1
+  name: IOptions<TOptions>
+  nameWithType: IOptions<TOptions>
+  fullName: Microsoft.Extensions.Options.IOptions<TOptions>
+  nameWithType.vb: IOptions(Of TOptions)
+  fullName.vb: Microsoft.Extensions.Options.IOptions(Of TOptions)
+  name.vb: IOptions(Of TOptions)
+  spec.csharp:
+  - uid: Microsoft.Extensions.Options.IOptions`1
+    name: IOptions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1
+  - name: <
+  - name: TOptions
+  - name: '>'
+  spec.vb:
+  - uid: Microsoft.Extensions.Options.IOptions`1
+    name: IOptions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TOptions
+  - name: )
+- uid: Microsoft.Extensions.Options
+  commentId: N:Microsoft.Extensions.Options
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.Extensions.Options
+  nameWithType: Microsoft.Extensions.Options
+  fullName: Microsoft.Extensions.Options
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Options
+    name: Options
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Options
+    name: Options
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.options
+- uid: Shared.Interfaces.Model.ICard
+  commentId: T:Shared.Interfaces.Model.ICard
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.ICard.html
+  name: ICard
+  nameWithType: ICard
+  fullName: Shared.Interfaces.Model.ICard
+- uid: Model.DataAccess.AssetFactory
+  commentId: T:Model.DataAccess.AssetFactory
+  href: Model.DataAccess.AssetFactory.html
+  name: AssetFactory
+  nameWithType: AssetFactory
+  fullName: Model.DataAccess.AssetFactory
+- uid: System.Type
+  commentId: T:System.Type
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.type
+  name: Type
+  nameWithType: Type
+  fullName: System.Type
+- uid: Model.DataAccess.Cards.ICardSetDataJConverter
+  commentId: T:Model.DataAccess.Cards.ICardSetDataJConverter
+  parent: Model.DataAccess.Cards
+  href: Model.DataAccess.Cards.ICardSetDataJConverter.html
+  name: ICardSetDataJConverter
+  nameWithType: ICardSetDataJConverter
+  fullName: Model.DataAccess.Cards.ICardSetDataJConverter
+- uid: Shared.Services.Registry.TypeRegister
+  commentId: T:Shared.Services.Registry.TypeRegister
+  href: Shared.Services.Registry.TypeRegister.html
+  name: TypeRegister
+  nameWithType: TypeRegister
+  fullName: Shared.Services.Registry.TypeRegister
+- uid: Model.DataAccess.AssetFetcher.FetchCardSets*
+  commentId: Overload:Model.DataAccess.AssetFetcher.FetchCardSets
+  href: Model.DataAccess.AssetFetcher.html#Model_DataAccess_AssetFetcher_FetchCardSets
+  name: FetchCardSets
+  nameWithType: AssetFetcher.FetchCardSets
+  fullName: Model.DataAccess.AssetFetcher.FetchCardSets
+- uid: Shared.Interfaces.Model.IAssetFetcher.FetchCardSets
+  commentId: M:Shared.Interfaces.Model.IAssetFetcher.FetchCardSets
+  parent: Shared.Interfaces.Model.IAssetFetcher
+  href: Shared.Interfaces.Model.IAssetFetcher.html#Shared_Interfaces_Model_IAssetFetcher_FetchCardSets
+  name: FetchCardSets()
+  nameWithType: IAssetFetcher.FetchCardSets()
+  fullName: Shared.Interfaces.Model.IAssetFetcher.FetchCardSets()
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IAssetFetcher.FetchCardSets
+    name: FetchCardSets
+    href: Shared.Interfaces.Model.IAssetFetcher.html#Shared_Interfaces_Model_IAssetFetcher_FetchCardSets
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IAssetFetcher.FetchCardSets
+    name: FetchCardSets
+    href: Shared.Interfaces.Model.IAssetFetcher.html#Shared_Interfaces_Model_IAssetFetcher_FetchCardSets
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.List{Shared.Interfaces.Model.ICardSet}
+  commentId: T:System.Collections.Generic.List{Shared.Interfaces.Model.ICardSet}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<ICardSet>
+  nameWithType: List<ICardSet>
+  fullName: System.Collections.Generic.List<Shared.Interfaces.Model.ICardSet>
+  nameWithType.vb: List(Of ICardSet)
+  fullName.vb: System.Collections.Generic.List(Of Shared.Interfaces.Model.ICardSet)
+  name.vb: List(Of ICardSet)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Shared.Interfaces.Model.ICardSet
+    name: ICardSet
+    href: Shared.Interfaces.Model.ICardSet.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Interfaces.Model.ICardSet
+    name: ICardSet
+    href: Shared.Interfaces.Model.ICardSet.html
+  - name: )
+- uid: Model.DataAccess.Cards
+  commentId: N:Model.DataAccess.Cards
+  href: Model.html
+  name: Model.DataAccess.Cards
+  nameWithType: Model.DataAccess.Cards
+  fullName: Model.DataAccess.Cards
+  spec.csharp:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.DataAccess
+    name: DataAccess
+    href: Model.DataAccess.html
+  - name: .
+  - uid: Model.DataAccess.Cards
+    name: Cards
+    href: Model.DataAccess.Cards.html
+  spec.vb:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.DataAccess
+    name: DataAccess
+    href: Model.DataAccess.html
+  - name: .
+  - uid: Model.DataAccess.Cards
+    name: Cards
+    href: Model.DataAccess.Cards.html
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: Shared.Geography.BoardGeography
+  commentId: T:Shared.Geography.BoardGeography
+  href: Shared.Geography.BoardGeography.html
+  name: BoardGeography
+  nameWithType: BoardGeography
+  fullName: Shared.Geography.BoardGeography
+- uid: Shared.Geography.BoardGeography.Initialize(Shared.Geography.GeographyInitializer)
+  commentId: M:Shared.Geography.BoardGeography.Initialize(Shared.Geography.GeographyInitializer)
+  href: Shared.Geography.BoardGeography.html#Shared_Geography_BoardGeography_Initialize_Shared_Geography_GeographyInitializer_
+  name: Initialize(GeographyInitializer)
+  nameWithType: BoardGeography.Initialize(GeographyInitializer)
+  fullName: Shared.Geography.BoardGeography.Initialize(Shared.Geography.GeographyInitializer)
+  spec.csharp:
+  - uid: Shared.Geography.BoardGeography.Initialize(Shared.Geography.GeographyInitializer)
+    name: Initialize
+    href: Shared.Geography.BoardGeography.html#Shared_Geography_BoardGeography_Initialize_Shared_Geography_GeographyInitializer_
+  - name: (
+  - uid: Shared.Geography.GeographyInitializer
+    name: GeographyInitializer
+    href: Shared.Geography.GeographyInitializer.html
+  - name: )
+  spec.vb:
+  - uid: Shared.Geography.BoardGeography.Initialize(Shared.Geography.GeographyInitializer)
+    name: Initialize
+    href: Shared.Geography.BoardGeography.html#Shared_Geography_BoardGeography_Initialize_Shared_Geography_GeographyInitializer_
+  - name: (
+  - uid: Shared.Geography.GeographyInitializer
+    name: GeographyInitializer
+    href: Shared.Geography.GeographyInitializer.html
+  - name: )
+- uid: Model.DataAccess.AssetFetcher.FetchGeography*
+  commentId: Overload:Model.DataAccess.AssetFetcher.FetchGeography
+  href: Model.DataAccess.AssetFetcher.html#Model_DataAccess_AssetFetcher_FetchGeography
+  name: FetchGeography
+  nameWithType: AssetFetcher.FetchGeography
+  fullName: Model.DataAccess.AssetFetcher.FetchGeography
+- uid: Shared.Interfaces.Model.IAssetFetcher.FetchGeography
+  commentId: M:Shared.Interfaces.Model.IAssetFetcher.FetchGeography
+  parent: Shared.Interfaces.Model.IAssetFetcher
+  href: Shared.Interfaces.Model.IAssetFetcher.html#Shared_Interfaces_Model_IAssetFetcher_FetchGeography
+  name: FetchGeography()
+  nameWithType: IAssetFetcher.FetchGeography()
+  fullName: Shared.Interfaces.Model.IAssetFetcher.FetchGeography()
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IAssetFetcher.FetchGeography
+    name: FetchGeography
+    href: Shared.Interfaces.Model.IAssetFetcher.html#Shared_Interfaces_Model_IAssetFetcher_FetchGeography
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IAssetFetcher.FetchGeography
+    name: FetchGeography
+    href: Shared.Interfaces.Model.IAssetFetcher.html#Shared_Interfaces_Model_IAssetFetcher_FetchGeography
+  - name: (
+  - name: )
+- uid: Shared.Geography.GeographyInitializer
+  commentId: T:Shared.Geography.GeographyInitializer
+  parent: Shared.Geography
+  href: Shared.Geography.GeographyInitializer.html
+  name: GeographyInitializer
+  nameWithType: GeographyInitializer
+  fullName: Shared.Geography.GeographyInitializer
+- uid: Shared.Geography
+  commentId: N:Shared.Geography
+  href: Shared.html
+  name: Shared.Geography
+  nameWithType: Shared.Geography
+  fullName: Shared.Geography
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html

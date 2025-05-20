@@ -1,0 +1,166 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Interfaces.ViewModel.IDiceThrownEventArgs
+  commentId: T:Shared.Interfaces.ViewModel.IDiceThrownEventArgs
+  id: IDiceThrownEventArgs
+  parent: Shared.Interfaces.ViewModel
+  children:
+  - Shared.Interfaces.ViewModel.IDiceThrownEventArgs.AttackResults
+  - Shared.Interfaces.ViewModel.IDiceThrownEventArgs.DefenseResults
+  langs:
+  - csharp
+  - vb
+  name: IDiceThrownEventArgs
+  nameWithType: IDiceThrownEventArgs
+  fullName: Shared.Interfaces.ViewModel.IDiceThrownEventArgs
+  type: Interface
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/IDiceThrownEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: IDiceThrownEventArgs
+    path: ../Shared/Interfaces/ViewModel/IDiceThrownEventArgs.cs
+    startLine: 5
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Contract for EventArgs used by <xref href="Shared.Interfaces.ViewModel.IMainVM.DiceThrown" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public interface IDiceThrownEventArgs
+    content.vb: Public Interface IDiceThrownEventArgs
+- uid: Shared.Interfaces.ViewModel.IDiceThrownEventArgs.AttackResults
+  commentId: P:Shared.Interfaces.ViewModel.IDiceThrownEventArgs.AttackResults
+  id: AttackResults
+  parent: Shared.Interfaces.ViewModel.IDiceThrownEventArgs
+  langs:
+  - csharp
+  - vb
+  name: AttackResults
+  nameWithType: IDiceThrownEventArgs.AttackResults
+  fullName: Shared.Interfaces.ViewModel.IDiceThrownEventArgs.AttackResults
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/IDiceThrownEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: AttackResults
+    path: ../Shared/Interfaces/ViewModel/IDiceThrownEventArgs.cs
+    startLine: 10
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or inits the numerical results of the attacker's "dice rolls."
+  example: []
+  syntax:
+    content: int[] AttackResults { get; init; }
+    parameters: []
+    return:
+      type: System.Int32[]
+    content.vb: Property AttackResults As Integer()
+  overload: Shared.Interfaces.ViewModel.IDiceThrownEventArgs.AttackResults*
+- uid: Shared.Interfaces.ViewModel.IDiceThrownEventArgs.DefenseResults
+  commentId: P:Shared.Interfaces.ViewModel.IDiceThrownEventArgs.DefenseResults
+  id: DefenseResults
+  parent: Shared.Interfaces.ViewModel.IDiceThrownEventArgs
+  langs:
+  - csharp
+  - vb
+  name: DefenseResults
+  nameWithType: IDiceThrownEventArgs.DefenseResults
+  fullName: Shared.Interfaces.ViewModel.IDiceThrownEventArgs.DefenseResults
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/IDiceThrownEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: DefenseResults
+    path: ../Shared/Interfaces/ViewModel/IDiceThrownEventArgs.cs
+    startLine: 14
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or inits the numerical results of the defender's "dice rolls."
+  example: []
+  syntax:
+    content: int[] DefenseResults { get; init; }
+    parameters: []
+    return:
+      type: System.Int32[]
+    content.vb: Property DefenseResults As Integer()
+  overload: Shared.Interfaces.ViewModel.IDiceThrownEventArgs.DefenseResults*
+references:
+- uid: Shared.Interfaces.ViewModel.IMainVM.DiceThrown
+  commentId: E:Shared.Interfaces.ViewModel.IMainVM.DiceThrown
+  href: Shared.Interfaces.ViewModel.IMainVM.html#Shared_Interfaces_ViewModel_IMainVM_DiceThrown
+  name: DiceThrown
+  nameWithType: IMainVM.DiceThrown
+  fullName: Shared.Interfaces.ViewModel.IMainVM.DiceThrown
+- uid: Shared.Interfaces.ViewModel
+  commentId: N:Shared.Interfaces.ViewModel
+  href: Shared.html
+  name: Shared.Interfaces.ViewModel
+  nameWithType: Shared.Interfaces.ViewModel
+  fullName: Shared.Interfaces.ViewModel
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.ViewModel
+    name: ViewModel
+    href: Shared.Interfaces.ViewModel.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.ViewModel
+    name: ViewModel
+    href: Shared.Interfaces.ViewModel.html
+- uid: Shared.Interfaces.ViewModel.IDiceThrownEventArgs.AttackResults*
+  commentId: Overload:Shared.Interfaces.ViewModel.IDiceThrownEventArgs.AttackResults
+  href: Shared.Interfaces.ViewModel.IDiceThrownEventArgs.html#Shared_Interfaces_ViewModel_IDiceThrownEventArgs_AttackResults
+  name: AttackResults
+  nameWithType: IDiceThrownEventArgs.AttackResults
+  fullName: Shared.Interfaces.ViewModel.IDiceThrownEventArgs.AttackResults
+- uid: System.Int32[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int[]
+  nameWithType: int[]
+  fullName: int[]
+  nameWithType.vb: Integer()
+  fullName.vb: Integer()
+  name.vb: Integer()
+  spec.csharp:
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: (
+  - name: )
+- uid: Shared.Interfaces.ViewModel.IDiceThrownEventArgs.DefenseResults*
+  commentId: Overload:Shared.Interfaces.ViewModel.IDiceThrownEventArgs.DefenseResults
+  href: Shared.Interfaces.ViewModel.IDiceThrownEventArgs.html#Shared_Interfaces_ViewModel_IDiceThrownEventArgs_DefenseResults
+  name: DefenseResults
+  nameWithType: IDiceThrownEventArgs.DefenseResults
+  fullName: Shared.Interfaces.ViewModel.IDiceThrownEventArgs.DefenseResults

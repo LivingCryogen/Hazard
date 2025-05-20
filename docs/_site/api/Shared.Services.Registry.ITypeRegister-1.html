@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Interface ITypeRegister&lt;T&gt; | Hazard!_Docs </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Interface ITypeRegister&lt;T&gt; | Hazard!_Docs ">
+    
+    <meta name="description" content="Registers Types with objects by , enabling look-up at runtime.  E.g. the  : typeof(), if registered with &quot;TroopCard&quot;, can be retreived by:Type troopCardType = Registry[&quot;TroopCard&quot;]; where Registry is an instance of TypeRegister.">
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="Hazard!_Docs">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first=First data-prev=Previous data-next=Next data-last=Last></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Shared.Services.Registry.ITypeRegister`1">
+
+
+
+  <h1 id="Shared_Services_Registry_ITypeRegister_1" data-uid="Shared.Services.Registry.ITypeRegister`1" class="text-break">Interface ITypeRegister&lt;T&gt;</h1>
+  <div class="markdown level0 summary"><p>Registers Types with objects by <a class="xref" href="Shared.Services.Registry.RegistryRelation.html">RegistryRelation</a>, enabling look-up at runtime.</p>
+<p><example>
+E.g. the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a> : <code>typeof(<a class="xref" href="Model.Entities.Cards.TroopCard.html">TroopCard</a>)</code>, if registered with <code>"TroopCard"</code>,
+can be retreived by:<pre><code class="lang-csharp">Type troopCardType = Registry["TroopCard"];</code></pre> where <code>Registry</code> is an instance of <code>TypeRegister</code>.</example></p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Shared.html">Shared</a>.<a class="xref" href="Shared.Services.html">Services</a>.<a class="xref" href="Shared.Services.Registry.html">Registry</a></h6>
+  <h6><strong>Assembly</strong>: Model.dll</h6>
+  <h5 id="Shared_Services_Registry_ITypeRegister_1_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface ITypeRegister&lt;T&gt; where T : ITypeRelations</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Encapsulates related values for a registry entry.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Services_Registry_ITypeRegister_1_Item_Shared_Services_Registry_RegistryRelation_.md&amp;value=---%0Auid%3A%20Shared.Services.Registry.ITypeRegister%601.Item(Shared.Services.Registry.RegistryRelation)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Services/Registry/ITypeRegister.cs/#L31">View Source</a>
+  </span>
+  <a id="Shared_Services_Registry_ITypeRegister_1_Item_" data-uid="Shared.Services.Registry.ITypeRegister`1.Item*"></a>
+  <h4 id="Shared_Services_Registry_ITypeRegister_1_Item_Shared_Services_Registry_RegistryRelation_" data-uid="Shared.Services.Registry.ITypeRegister`1.Item(Shared.Services.Registry.RegistryRelation)">this[RegistryRelation]</h4>
+  <div class="markdown level1 summary"><p>Get all objects registered under a specific <a class="xref" href="Shared.Services.Registry.RegistryRelation.html">RegistryRelation</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">(Type KeyType, object RelatedObject)[]? this[RegistryRelation relation] { get; }</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Shared.Services.Registry.RegistryRelation.html">RegistryRelation</a></td>
+        <td><span class="parametername">relation</span></td>
+        <td><p>The target <a class="xref" href="Shared.Services.Registry.RegistryRelation.html">RegistryRelation</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>(<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.type,system.object-.keytype">KeyType</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.type,system.object-.relatedobject">RelatedObject</a>)[]</td>
+        <td><p>Each Key/Object related by <code class="paramref">relation</code>; or, if none are found, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Services_Registry_ITypeRegister_1_Item_System_String_.md&amp;value=---%0Auid%3A%20Shared.Services.Registry.ITypeRegister%601.Item(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Services/Registry/ITypeRegister.cs/#L17">View Source</a>
+  </span>
+  <a id="Shared_Services_Registry_ITypeRegister_1_Item_" data-uid="Shared.Services.Registry.ITypeRegister`1.Item*"></a>
+  <h4 id="Shared_Services_Registry_ITypeRegister_1_Item_System_String_" data-uid="Shared.Services.Registry.ITypeRegister`1.Item(System.String)">this[string]</h4>
+  <div class="markdown level1 summary"><p>Type look-up by name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Type? this[string registeredName] { get; }</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">registeredName</span></td>
+        <td><p>The name registered under <a class="xref" href="Shared.Services.Registry.RegistryRelation.html#Shared_Services_Registry_RegistryRelation_Name">Name</a></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><p>The type registered under <code class="paramref">registeredName</code>; if none, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Services_Registry_ITypeRegister_1_Item_System_Type_.md&amp;value=---%0Auid%3A%20Shared.Services.Registry.ITypeRegister%601.Item(System.Type)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Services/Registry/ITypeRegister.cs/#L25">View Source</a>
+  </span>
+  <a id="Shared_Services_Registry_ITypeRegister_1_Item_" data-uid="Shared.Services.Registry.ITypeRegister`1.Item*"></a>
+  <h4 id="Shared_Services_Registry_ITypeRegister_1_Item_System_Type_" data-uid="Shared.Services.Registry.ITypeRegister`1.Item(System.Type)">this[Type]</h4>
+  <div class="markdown level1 summary"><p>Registry entry look-up or set-up by Type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">T? this[Type type] { get; set; }</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><span class="parametername">type</span></td>
+        <td><p>The registered Type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><p>Related objects, or <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> if <code class="paramref">type</code> is unregistered.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown when setting an entry with a null value.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Thrown when setting an entry with a value that does not implement <a class="xref" href="Shared.Services.Registry.ITypeRelations.html">ITypeRelations</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Services_Registry_ITypeRegister_1_AddRelation_System_Type_System_ValueTuple_System_Object_Shared_Services_Registry_RegistryRelation__.md&amp;value=---%0Auid%3A%20Shared.Services.Registry.ITypeRegister%601.AddRelation(System.Type%2CSystem.ValueTuple%7BSystem.Object%2CShared.Services.Registry.RegistryRelation%7D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Services/Registry/ITypeRegister.cs/#L51">View Source</a>
+  </span>
+  <a id="Shared_Services_Registry_ITypeRegister_1_AddRelation_" data-uid="Shared.Services.Registry.ITypeRegister`1.AddRelation*"></a>
+  <h4 id="Shared_Services_Registry_ITypeRegister_1_AddRelation_System_Type_System_ValueTuple_System_Object_Shared_Services_Registry_RegistryRelation__" data-uid="Shared.Services.Registry.ITypeRegister`1.AddRelation(System.Type,System.ValueTuple{System.Object,Shared.Services.Registry.RegistryRelation})">AddRelation(Type, (object, RegistryRelation))</h4>
+  <div class="markdown level1 summary"><p>Add an object relation to a pre-existing registry entry.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void AddRelation(Type type, (object, RegistryRelation) newRelation)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><span class="parametername">type</span></td>
+        <td><p>The registered type.</p>
+</td>
+      </tr>
+      <tr>
+        <td>(<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a>, <a class="xref" href="Shared.Services.Registry.RegistryRelation.html">RegistryRelation</a>)</td>
+        <td><span class="parametername">newRelation</span></td>
+        <td><p>The related object paired with its relation type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Services_Registry_ITypeRegister_1_Clear.md&amp;value=---%0Auid%3A%20Shared.Services.Registry.ITypeRegister%601.Clear%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Services/Registry/ITypeRegister.cs/#L66">View Source</a>
+  </span>
+  <a id="Shared_Services_Registry_ITypeRegister_1_Clear_" data-uid="Shared.Services.Registry.ITypeRegister`1.Clear*"></a>
+  <h4 id="Shared_Services_Registry_ITypeRegister_1_Clear" data-uid="Shared.Services.Registry.ITypeRegister`1.Clear">Clear()</h4>
+  <div class="markdown level1 summary"><p>Empties the registry.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Clear()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Services_Registry_ITypeRegister_1_DeRegister_System_Type_.md&amp;value=---%0Auid%3A%20Shared.Services.Registry.ITypeRegister%601.DeRegister(System.Type)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Services/Registry/ITypeRegister.cs/#L62">View Source</a>
+  </span>
+  <a id="Shared_Services_Registry_ITypeRegister_1_DeRegister_" data-uid="Shared.Services.Registry.ITypeRegister`1.DeRegister*"></a>
+  <h4 id="Shared_Services_Registry_ITypeRegister_1_DeRegister_System_Type_" data-uid="Shared.Services.Registry.ITypeRegister`1.DeRegister(System.Type)">DeRegister(Type)</h4>
+  <div class="markdown level1 summary"><p>Removes a registry entry.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void DeRegister(Type type)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><span class="parametername">type</span></td>
+        <td><p>The type to be deregistered.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Services_Registry_ITypeRegister_1_Register_System_Type_.md&amp;value=---%0Auid%3A%20Shared.Services.Registry.ITypeRegister%601.Register(System.Type)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Services/Registry/ITypeRegister.cs/#L39">View Source</a>
+  </span>
+  <a id="Shared_Services_Registry_ITypeRegister_1_Register_" data-uid="Shared.Services.Registry.ITypeRegister`1.Register*"></a>
+  <h4 id="Shared_Services_Registry_ITypeRegister_1_Register_System_Type_" data-uid="Shared.Services.Registry.ITypeRegister`1.Register(System.Type)">Register(Type)</h4>
+  <div class="markdown level1 summary"><p>Register a Type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Register(Type type)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><span class="parametername">type</span></td>
+        <td><p>The type to register.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Shared_Services_Registry_ITypeRegister_1_Register_System_Type__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This assumes a default registry entry, e.g.: <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type.fullname">FullName</a> or <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/operators/nameof">nameof</a>(<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a>) for <a class="xref" href="Shared.Services.Registry.RegistryRelation.html#Shared_Services_Registry_RegistryRelation_Name">Name</a>.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Services_Registry_ITypeRegister_1_Register_System_Type__0_.md&amp;value=---%0Auid%3A%20Shared.Services.Registry.ITypeRegister%601.Register(System.Type%2C%600)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Services/Registry/ITypeRegister.cs/#L45">View Source</a>
+  </span>
+  <a id="Shared_Services_Registry_ITypeRegister_1_Register_" data-uid="Shared.Services.Registry.ITypeRegister`1.Register*"></a>
+  <h4 id="Shared_Services_Registry_ITypeRegister_1_Register_System_Type__0_" data-uid="Shared.Services.Registry.ITypeRegister`1.Register(System.Type,`0)">Register(Type, T)</h4>
+  <div class="markdown level1 summary"><p>Register a Type with a given set of relations to objects.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Register(Type type, T typeRelations)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><span class="parametername">type</span></td>
+        <td><p>The type to register.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">typeRelations</span></td>
+        <td><p>The relations to register to <code class="paramref">type</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Services_Registry_ITypeRegister_1_RemoveRelation_System_Type_Shared_Services_Registry_RegistryRelation_.md&amp;value=---%0Auid%3A%20Shared.Services.Registry.ITypeRegister%601.RemoveRelation(System.Type%2CShared.Services.Registry.RegistryRelation)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Services/Registry/ITypeRegister.cs/#L57">View Source</a>
+  </span>
+  <a id="Shared_Services_Registry_ITypeRegister_1_RemoveRelation_" data-uid="Shared.Services.Registry.ITypeRegister`1.RemoveRelation*"></a>
+  <h4 id="Shared_Services_Registry_ITypeRegister_1_RemoveRelation_System_Type_Shared_Services_Registry_RegistryRelation_" data-uid="Shared.Services.Registry.ITypeRegister`1.RemoveRelation(System.Type,Shared.Services.Registry.RegistryRelation)">RemoveRelation(Type, RegistryRelation)</h4>
+  <div class="markdown level1 summary"><p>Removes an object relation from a pre-existing registry entry.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void RemoveRelation(Type type, RegistryRelation targetRelation)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><span class="parametername">type</span></td>
+        <td><p>The registered type.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Shared.Services.Registry.RegistryRelation.html">RegistryRelation</a></td>
+        <td><span class="parametername">targetRelation</span></td>
+        <td><p>The relation to remove.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Services_Registry_ITypeRegister_1_TryGetParentType_System_Type_System_Type__.md&amp;value=---%0Auid%3A%20Shared.Services.Registry.ITypeRegister%601.TryGetParentType(System.Type%2CSystem.Type%40)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Services/Registry/ITypeRegister.cs/#L73">View Source</a>
+  </span>
+  <a id="Shared_Services_Registry_ITypeRegister_1_TryGetParentType_" data-uid="Shared.Services.Registry.ITypeRegister`1.TryGetParentType*"></a>
+  <h4 id="Shared_Services_Registry_ITypeRegister_1_TryGetParentType_System_Type_System_Type__" data-uid="Shared.Services.Registry.ITypeRegister`1.TryGetParentType(System.Type,System.Type@)">TryGetParentType(Type, out Type?)</h4>
+  <div class="markdown level1 summary"><p>Checks whether a registered type has a registered parent, and returns it if so.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool TryGetParentType(Type registeredType, out Type? parentType)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><span class="parametername">registeredType</span></td>
+        <td><p>The type already registered.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><span class="parametername">parentType</span></td>
+        <td><p>The type registered as parent of <code class="paramref">registeredType</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if <code class="paramref">registeredType</code> has a registered parent type in the registry; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/LivingCryogen/Hazard/new/main/apiSpec/new?filename=Shared_Services_Registry_ITypeRegister_1.md&amp;value=---%0Auid%3A%20Shared.Services.Registry.ITypeRegister%601%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/LivingCryogen/Hazard/blob/main/Shared/Services/Registry/ITypeRegister.cs/#L10" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

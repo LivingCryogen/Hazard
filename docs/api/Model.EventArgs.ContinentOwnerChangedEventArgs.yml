@@ -1,0 +1,686 @@
+### YamlMime:ManagedReference
+items:
+- uid: Model.EventArgs.ContinentOwnerChangedEventArgs
+  commentId: T:Model.EventArgs.ContinentOwnerChangedEventArgs
+  id: ContinentOwnerChangedEventArgs
+  parent: Model.EventArgs
+  children:
+  - Model.EventArgs.ContinentOwnerChangedEventArgs.#ctor(Shared.Geography.Enums.ContID)
+  - Model.EventArgs.ContinentOwnerChangedEventArgs.#ctor(Shared.Geography.Enums.ContID,System.Int32)
+  - Model.EventArgs.ContinentOwnerChangedEventArgs.Changed
+  - Model.EventArgs.ContinentOwnerChangedEventArgs.OldPlayer
+  langs:
+  - csharp
+  - vb
+  name: ContinentOwnerChangedEventArgs
+  nameWithType: ContinentOwnerChangedEventArgs
+  fullName: Model.EventArgs.ContinentOwnerChangedEventArgs
+  type: Class
+  source:
+    remote:
+      path: Model/EventArgs/ContinentOwnerChangedEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ContinentOwnerChangedEventArgs
+    path: ../Model/EventArgs/ContinentOwnerChangedEventArgs.cs
+    startLine: 8
+  assemblies:
+  - Model
+  namespace: Model.EventArgs
+  summary: Packages identification data for <xref href="Model.Entities.EarthBoard.ContinentOwnerChanged" data-throw-if-not-resolved="false"></xref> and its handlers.
+  example: []
+  syntax:
+    content: 'public class ContinentOwnerChangedEventArgs : EventArgs, IContinentOwnerChangedEventArgs'
+    content.vb: Public Class ContinentOwnerChangedEventArgs Inherits EventArgs Implements IContinentOwnerChangedEventArgs
+  inheritance:
+  - System.Object
+  - System.EventArgs
+  implements:
+  - Shared.Interfaces.IContinentOwnerChangedEventArgs
+  inheritedMembers:
+  - System.EventArgs.Empty
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Model.EventArgs.ContinentOwnerChangedEventArgs.#ctor(Shared.Geography.Enums.ContID)
+  commentId: M:Model.EventArgs.ContinentOwnerChangedEventArgs.#ctor(Shared.Geography.Enums.ContID)
+  id: '#ctor(Shared.Geography.Enums.ContID)'
+  parent: Model.EventArgs.ContinentOwnerChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: ContinentOwnerChangedEventArgs(ContID)
+  nameWithType: ContinentOwnerChangedEventArgs.ContinentOwnerChangedEventArgs(ContID)
+  fullName: Model.EventArgs.ContinentOwnerChangedEventArgs.ContinentOwnerChangedEventArgs(Shared.Geography.Enums.ContID)
+  type: Constructor
+  source:
+    remote:
+      path: Model/EventArgs/ContinentOwnerChangedEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Model/EventArgs/ContinentOwnerChangedEventArgs.cs
+    startLine: 14
+  assemblies:
+  - Model
+  namespace: Model.EventArgs
+  summary: Constructs a new ContinentOwnerChangedEventArgs when only the Continent ID is required.
+  example: []
+  syntax:
+    content: public ContinentOwnerChangedEventArgs(ContID changed)
+    parameters:
+    - id: changed
+      type: Shared.Geography.Enums.ContID
+      description: The ID of the Continent that has changed.
+    content.vb: Public Sub New(changed As ContID)
+  overload: Model.EventArgs.ContinentOwnerChangedEventArgs.#ctor*
+  nameWithType.vb: ContinentOwnerChangedEventArgs.New(ContID)
+  fullName.vb: Model.EventArgs.ContinentOwnerChangedEventArgs.New(Shared.Geography.Enums.ContID)
+  name.vb: New(ContID)
+- uid: Model.EventArgs.ContinentOwnerChangedEventArgs.#ctor(Shared.Geography.Enums.ContID,System.Int32)
+  commentId: M:Model.EventArgs.ContinentOwnerChangedEventArgs.#ctor(Shared.Geography.Enums.ContID,System.Int32)
+  id: '#ctor(Shared.Geography.Enums.ContID,System.Int32)'
+  parent: Model.EventArgs.ContinentOwnerChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: ContinentOwnerChangedEventArgs(ContID, int)
+  nameWithType: ContinentOwnerChangedEventArgs.ContinentOwnerChangedEventArgs(ContID, int)
+  fullName: Model.EventArgs.ContinentOwnerChangedEventArgs.ContinentOwnerChangedEventArgs(Shared.Geography.Enums.ContID, int)
+  type: Constructor
+  source:
+    remote:
+      path: Model/EventArgs/ContinentOwnerChangedEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Model/EventArgs/ContinentOwnerChangedEventArgs.cs
+    startLine: 23
+  assemblies:
+  - Model
+  namespace: Model.EventArgs
+  summary: Constructs a new ContinentOwnerChangedEventArgs when both the Continent ID and the number of its former owner is required.
+  example: []
+  syntax:
+    content: public ContinentOwnerChangedEventArgs(ContID changed, int oldPlayer)
+    parameters:
+    - id: changed
+      type: Shared.Geography.Enums.ContID
+      description: The ID of the Continent that has changed.
+    - id: oldPlayer
+      type: System.Int32
+      description: 'The number of the Player that owned the Continent prior to the change. "None" is represented by -1: see constructor of <xref href="Model.Entities.EarthBoard" data-throw-if-not-resolved="false"></xref>'
+    content.vb: Public Sub New(changed As ContID, oldPlayer As Integer)
+  overload: Model.EventArgs.ContinentOwnerChangedEventArgs.#ctor*
+  nameWithType.vb: ContinentOwnerChangedEventArgs.New(ContID, Integer)
+  fullName.vb: Model.EventArgs.ContinentOwnerChangedEventArgs.New(Shared.Geography.Enums.ContID, Integer)
+  name.vb: New(ContID, Integer)
+- uid: Model.EventArgs.ContinentOwnerChangedEventArgs.Changed
+  commentId: P:Model.EventArgs.ContinentOwnerChangedEventArgs.Changed
+  id: Changed
+  parent: Model.EventArgs.ContinentOwnerChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: Changed
+  nameWithType: ContinentOwnerChangedEventArgs.Changed
+  fullName: Model.EventArgs.ContinentOwnerChangedEventArgs.Changed
+  type: Property
+  source:
+    remote:
+      path: Model/EventArgs/ContinentOwnerChangedEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Changed
+    path: ../Model/EventArgs/ContinentOwnerChangedEventArgs.cs
+    startLine: 29
+  assemblies:
+  - Model
+  namespace: Model.EventArgs
+  summary: Gets or inits a value representing the the Continent that changed.
+  example: []
+  syntax:
+    content: public ContID Changed { get; init; }
+    parameters: []
+    return:
+      type: Shared.Geography.Enums.ContID
+    content.vb: Public Property Changed As ContID
+  overload: Model.EventArgs.ContinentOwnerChangedEventArgs.Changed*
+  implements:
+  - Shared.Interfaces.IContinentOwnerChangedEventArgs.Changed
+- uid: Model.EventArgs.ContinentOwnerChangedEventArgs.OldPlayer
+  commentId: P:Model.EventArgs.ContinentOwnerChangedEventArgs.OldPlayer
+  id: OldPlayer
+  parent: Model.EventArgs.ContinentOwnerChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: OldPlayer
+  nameWithType: ContinentOwnerChangedEventArgs.OldPlayer
+  fullName: Model.EventArgs.ContinentOwnerChangedEventArgs.OldPlayer
+  type: Property
+  source:
+    remote:
+      path: Model/EventArgs/ContinentOwnerChangedEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: OldPlayer
+    path: ../Model/EventArgs/ContinentOwnerChangedEventArgs.cs
+    startLine: 31
+  assemblies:
+  - Model
+  namespace: Model.EventArgs
+  summary: Gets or inits a value representing the Continent's previous owner.
+  example: []
+  syntax:
+    content: public int? OldPlayer { get; init; }
+    parameters: []
+    return:
+      type: System.Nullable{System.Int32}
+      description: >-
+        If <xref href="Shared.Interfaces.IContinentOwnerChangedEventArgs.Changed" data-throw-if-not-resolved="false"></xref> was previously owned by a human player, their <xref href="Shared.Interfaces.Model.IPlayer.Number" data-throw-if-not-resolved="false"></xref>; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.<br />
+
+        If necessary, no prior ownership may be represented by -1.
+    content.vb: Public Property OldPlayer As Integer?
+  overload: Model.EventArgs.ContinentOwnerChangedEventArgs.OldPlayer*
+  implements:
+  - Shared.Interfaces.IContinentOwnerChangedEventArgs.OldPlayer
+references:
+- uid: Model.Entities.EarthBoard.ContinentOwnerChanged
+  commentId: E:Model.Entities.EarthBoard.ContinentOwnerChanged
+  href: Model.Entities.EarthBoard.html#Model_Entities_EarthBoard_ContinentOwnerChanged
+  name: ContinentOwnerChanged
+  nameWithType: EarthBoard.ContinentOwnerChanged
+  fullName: Model.Entities.EarthBoard.ContinentOwnerChanged
+- uid: Model.EventArgs
+  commentId: N:Model.EventArgs
+  href: Model.html
+  name: Model.EventArgs
+  nameWithType: Model.EventArgs
+  fullName: Model.EventArgs
+  spec.csharp:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.EventArgs
+    name: EventArgs
+    href: Model.EventArgs.html
+  spec.vb:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.EventArgs
+    name: EventArgs
+    href: Model.EventArgs.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.EventArgs
+  commentId: T:System.EventArgs
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.eventargs
+  name: EventArgs
+  nameWithType: EventArgs
+  fullName: System.EventArgs
+- uid: Shared.Interfaces.IContinentOwnerChangedEventArgs
+  commentId: T:Shared.Interfaces.IContinentOwnerChangedEventArgs
+  parent: Shared.Interfaces
+  href: Shared.Interfaces.IContinentOwnerChangedEventArgs.html
+  name: IContinentOwnerChangedEventArgs
+  nameWithType: IContinentOwnerChangedEventArgs
+  fullName: Shared.Interfaces.IContinentOwnerChangedEventArgs
+- uid: System.EventArgs.Empty
+  commentId: F:System.EventArgs.Empty
+  parent: System.EventArgs
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.eventargs.empty
+  name: Empty
+  nameWithType: EventArgs.Empty
+  fullName: System.EventArgs.Empty
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Shared.Interfaces
+  commentId: N:Shared.Interfaces
+  href: Shared.html
+  name: Shared.Interfaces
+  nameWithType: Shared.Interfaces
+  fullName: Shared.Interfaces
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+- uid: Model.EventArgs.ContinentOwnerChangedEventArgs.#ctor*
+  commentId: Overload:Model.EventArgs.ContinentOwnerChangedEventArgs.#ctor
+  href: Model.EventArgs.ContinentOwnerChangedEventArgs.html#Model_EventArgs_ContinentOwnerChangedEventArgs__ctor_Shared_Geography_Enums_ContID_
+  name: ContinentOwnerChangedEventArgs
+  nameWithType: ContinentOwnerChangedEventArgs.ContinentOwnerChangedEventArgs
+  fullName: Model.EventArgs.ContinentOwnerChangedEventArgs.ContinentOwnerChangedEventArgs
+  nameWithType.vb: ContinentOwnerChangedEventArgs.New
+  fullName.vb: Model.EventArgs.ContinentOwnerChangedEventArgs.New
+  name.vb: New
+- uid: Shared.Geography.Enums.ContID
+  commentId: T:Shared.Geography.Enums.ContID
+  parent: Shared.Geography.Enums
+  href: Shared.Geography.Enums.ContID.html
+  name: ContID
+  nameWithType: ContID
+  fullName: Shared.Geography.Enums.ContID
+- uid: Shared.Geography.Enums
+  commentId: N:Shared.Geography.Enums
+  href: Shared.html
+  name: Shared.Geography.Enums
+  nameWithType: Shared.Geography.Enums
+  fullName: Shared.Geography.Enums
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+- uid: Model.Entities.EarthBoard
+  commentId: T:Model.Entities.EarthBoard
+  href: Model.Entities.EarthBoard.html
+  name: EarthBoard
+  nameWithType: EarthBoard
+  fullName: Model.Entities.EarthBoard
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Model.EventArgs.ContinentOwnerChangedEventArgs.Changed*
+  commentId: Overload:Model.EventArgs.ContinentOwnerChangedEventArgs.Changed
+  href: Model.EventArgs.ContinentOwnerChangedEventArgs.html#Model_EventArgs_ContinentOwnerChangedEventArgs_Changed
+  name: Changed
+  nameWithType: ContinentOwnerChangedEventArgs.Changed
+  fullName: Model.EventArgs.ContinentOwnerChangedEventArgs.Changed
+- uid: Shared.Interfaces.IContinentOwnerChangedEventArgs.Changed
+  commentId: P:Shared.Interfaces.IContinentOwnerChangedEventArgs.Changed
+  parent: Shared.Interfaces.IContinentOwnerChangedEventArgs
+  href: Shared.Interfaces.IContinentOwnerChangedEventArgs.html#Shared_Interfaces_IContinentOwnerChangedEventArgs_Changed
+  name: Changed
+  nameWithType: IContinentOwnerChangedEventArgs.Changed
+  fullName: Shared.Interfaces.IContinentOwnerChangedEventArgs.Changed
+- uid: Shared.Interfaces.Model.IPlayer.Number
+  commentId: P:Shared.Interfaces.Model.IPlayer.Number
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Number
+  name: Number
+  nameWithType: IPlayer.Number
+  fullName: Shared.Interfaces.Model.IPlayer.Number
+- uid: Model.EventArgs.ContinentOwnerChangedEventArgs.OldPlayer*
+  commentId: Overload:Model.EventArgs.ContinentOwnerChangedEventArgs.OldPlayer
+  href: Model.EventArgs.ContinentOwnerChangedEventArgs.html#Model_EventArgs_ContinentOwnerChangedEventArgs_OldPlayer
+  name: OldPlayer
+  nameWithType: ContinentOwnerChangedEventArgs.OldPlayer
+  fullName: Model.EventArgs.ContinentOwnerChangedEventArgs.OldPlayer
+- uid: Shared.Interfaces.IContinentOwnerChangedEventArgs.OldPlayer
+  commentId: P:Shared.Interfaces.IContinentOwnerChangedEventArgs.OldPlayer
+  parent: Shared.Interfaces.IContinentOwnerChangedEventArgs
+  href: Shared.Interfaces.IContinentOwnerChangedEventArgs.html#Shared_Interfaces_IContinentOwnerChangedEventArgs_OldPlayer
+  name: OldPlayer
+  nameWithType: IContinentOwnerChangedEventArgs.OldPlayer
+  fullName: Shared.Interfaces.IContinentOwnerChangedEventArgs.OldPlayer
+- uid: System.Nullable{System.Int32}
+  commentId: T:System.Nullable{System.Int32}
+  parent: System
+  definition: System.Nullable`1
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int?
+  nameWithType: int?
+  fullName: int?
+  nameWithType.vb: Integer?
+  fullName.vb: Integer?
+  name.vb: Integer?
+  spec.csharp:
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  spec.vb:
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+- uid: Shared.Interfaces.Model.IPlayer
+  commentId: T:Shared.Interfaces.Model.IPlayer
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IPlayer.html
+  name: IPlayer
+  nameWithType: IPlayer
+  fullName: Shared.Interfaces.Model.IPlayer
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Shared.Interfaces.Model
+  commentId: N:Shared.Interfaces.Model
+  href: Shared.html
+  name: Shared.Interfaces.Model
+  nameWithType: Shared.Interfaces.Model
+  fullName: Shared.Interfaces.Model
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html

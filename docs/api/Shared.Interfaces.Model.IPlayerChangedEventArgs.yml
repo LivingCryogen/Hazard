@@ -1,0 +1,335 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Interfaces.Model.IPlayerChangedEventArgs
+  commentId: T:Shared.Interfaces.Model.IPlayerChangedEventArgs
+  id: IPlayerChangedEventArgs
+  parent: Shared.Interfaces.Model
+  children:
+  - Shared.Interfaces.Model.IPlayerChangedEventArgs.HandIndex
+  - Shared.Interfaces.Model.IPlayerChangedEventArgs.NewValue
+  - Shared.Interfaces.Model.IPlayerChangedEventArgs.OldValue
+  - Shared.Interfaces.Model.IPlayerChangedEventArgs.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: IPlayerChangedEventArgs
+  nameWithType: IPlayerChangedEventArgs
+  fullName: Shared.Interfaces.Model.IPlayerChangedEventArgs
+  type: Interface
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IPlayerChangedEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: IPlayerChangedEventArgs
+    path: ../Shared/Interfaces/Model/IPlayerChangedEventArgs.cs
+    startLine: 7
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Contract for EventArgs used by <xref href="Shared.Interfaces.Model.IPlayer.PlayerChanged" data-throw-if-not-resolved="false"></xref>.
+  remarks: Consumed primarily by <xref href="Shared.Interfaces.ViewModel.IPlayerData" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public interface IPlayerChangedEventArgs
+    content.vb: Public Interface IPlayerChangedEventArgs
+- uid: Shared.Interfaces.Model.IPlayerChangedEventArgs.NewValue
+  commentId: P:Shared.Interfaces.Model.IPlayerChangedEventArgs.NewValue
+  id: NewValue
+  parent: Shared.Interfaces.Model.IPlayerChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: NewValue
+  nameWithType: IPlayerChangedEventArgs.NewValue
+  fullName: Shared.Interfaces.Model.IPlayerChangedEventArgs.NewValue
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IPlayerChangedEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: NewValue
+    path: ../Shared/Interfaces/Model/IPlayerChangedEventArgs.cs
+    startLine: 13
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Gets or inits the new value after a change to a property on <xref href="Shared.Interfaces.Model.IPlayer" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: object? NewValue { get; init; }
+    parameters: []
+    return:
+      type: System.Object
+      description: The new value of the property, if any; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+    content.vb: Property NewValue As Object
+  overload: Shared.Interfaces.Model.IPlayerChangedEventArgs.NewValue*
+- uid: Shared.Interfaces.Model.IPlayerChangedEventArgs.OldValue
+  commentId: P:Shared.Interfaces.Model.IPlayerChangedEventArgs.OldValue
+  id: OldValue
+  parent: Shared.Interfaces.Model.IPlayerChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: OldValue
+  nameWithType: IPlayerChangedEventArgs.OldValue
+  fullName: Shared.Interfaces.Model.IPlayerChangedEventArgs.OldValue
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IPlayerChangedEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: OldValue
+    path: ../Shared/Interfaces/Model/IPlayerChangedEventArgs.cs
+    startLine: 18
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Gets or inits the old value after a change to a property on <xref href="Shared.Interfaces.Model.IPlayer" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: object? OldValue { get; init; }
+    parameters: []
+    return:
+      type: System.Object
+      description: The old value of the property, if any; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+    content.vb: Property OldValue As Object
+  overload: Shared.Interfaces.Model.IPlayerChangedEventArgs.OldValue*
+- uid: Shared.Interfaces.Model.IPlayerChangedEventArgs.HandIndex
+  commentId: P:Shared.Interfaces.Model.IPlayerChangedEventArgs.HandIndex
+  id: HandIndex
+  parent: Shared.Interfaces.Model.IPlayerChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: HandIndex
+  nameWithType: IPlayerChangedEventArgs.HandIndex
+  fullName: Shared.Interfaces.Model.IPlayerChangedEventArgs.HandIndex
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IPlayerChangedEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: HandIndex
+    path: ../Shared/Interfaces/Model/IPlayerChangedEventArgs.cs
+    startLine: 23
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Gets or inits the index of the hand collection which changed.
+  example: []
+  syntax:
+    content: int? HandIndex { get; init; }
+    parameters: []
+    return:
+      type: System.Nullable{System.Int32}
+      description: An <xref href="System.Int32?text=index" data-throw-if-not-resolved="false"></xref>, if the <xref href="Shared.Interfaces.Model.IPlayer.Hand" data-throw-if-not-resolved="false"></xref> changed; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+    content.vb: Property HandIndex As Integer?
+  overload: Shared.Interfaces.Model.IPlayerChangedEventArgs.HandIndex*
+- uid: Shared.Interfaces.Model.IPlayerChangedEventArgs.PropertyName
+  commentId: P:Shared.Interfaces.Model.IPlayerChangedEventArgs.PropertyName
+  id: PropertyName
+  parent: Shared.Interfaces.Model.IPlayerChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: PropertyName
+  nameWithType: IPlayerChangedEventArgs.PropertyName
+  fullName: Shared.Interfaces.Model.IPlayerChangedEventArgs.PropertyName
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/Model/IPlayerChangedEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: PropertyName
+    path: ../Shared/Interfaces/Model/IPlayerChangedEventArgs.cs
+    startLine: 27
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.Model
+  summary: Gets or inits the name of the property which changed.
+  example: []
+  syntax:
+    content: string PropertyName { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Property PropertyName As String
+  overload: Shared.Interfaces.Model.IPlayerChangedEventArgs.PropertyName*
+references:
+- uid: Shared.Interfaces.Model.IPlayer.PlayerChanged
+  commentId: E:Shared.Interfaces.Model.IPlayer.PlayerChanged
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_PlayerChanged
+  name: PlayerChanged
+  nameWithType: IPlayer.PlayerChanged
+  fullName: Shared.Interfaces.Model.IPlayer.PlayerChanged
+- uid: Shared.Interfaces.ViewModel.IPlayerData
+  commentId: T:Shared.Interfaces.ViewModel.IPlayerData
+  href: Shared.Interfaces.ViewModel.IPlayerData.html
+  name: IPlayerData
+  nameWithType: IPlayerData
+  fullName: Shared.Interfaces.ViewModel.IPlayerData
+- uid: Shared.Interfaces.Model
+  commentId: N:Shared.Interfaces.Model
+  href: Shared.html
+  name: Shared.Interfaces.Model
+  nameWithType: Shared.Interfaces.Model
+  fullName: Shared.Interfaces.Model
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+- uid: Shared.Interfaces.Model.IPlayer
+  commentId: T:Shared.Interfaces.Model.IPlayer
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IPlayer.html
+  name: IPlayer
+  nameWithType: IPlayer
+  fullName: Shared.Interfaces.Model.IPlayer
+- uid: Shared.Interfaces.Model.IPlayerChangedEventArgs.NewValue*
+  commentId: Overload:Shared.Interfaces.Model.IPlayerChangedEventArgs.NewValue
+  href: Shared.Interfaces.Model.IPlayerChangedEventArgs.html#Shared_Interfaces_Model_IPlayerChangedEventArgs_NewValue
+  name: NewValue
+  nameWithType: IPlayerChangedEventArgs.NewValue
+  fullName: Shared.Interfaces.Model.IPlayerChangedEventArgs.NewValue
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Shared.Interfaces.Model.IPlayerChangedEventArgs.OldValue*
+  commentId: Overload:Shared.Interfaces.Model.IPlayerChangedEventArgs.OldValue
+  href: Shared.Interfaces.Model.IPlayerChangedEventArgs.html#Shared_Interfaces_Model_IPlayerChangedEventArgs_OldValue
+  name: OldValue
+  nameWithType: IPlayerChangedEventArgs.OldValue
+  fullName: Shared.Interfaces.Model.IPlayerChangedEventArgs.OldValue
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Shared.Interfaces.Model.IPlayer.Hand
+  commentId: P:Shared.Interfaces.Model.IPlayer.Hand
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Hand
+  name: Hand
+  nameWithType: IPlayer.Hand
+  fullName: Shared.Interfaces.Model.IPlayer.Hand
+- uid: Shared.Interfaces.Model.IPlayerChangedEventArgs.HandIndex*
+  commentId: Overload:Shared.Interfaces.Model.IPlayerChangedEventArgs.HandIndex
+  href: Shared.Interfaces.Model.IPlayerChangedEventArgs.html#Shared_Interfaces_Model_IPlayerChangedEventArgs_HandIndex
+  name: HandIndex
+  nameWithType: IPlayerChangedEventArgs.HandIndex
+  fullName: Shared.Interfaces.Model.IPlayerChangedEventArgs.HandIndex
+- uid: System.Nullable{System.Int32}
+  commentId: T:System.Nullable{System.Int32}
+  parent: System
+  definition: System.Nullable`1
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int?
+  nameWithType: int?
+  fullName: int?
+  nameWithType.vb: Integer?
+  fullName.vb: Integer?
+  name.vb: Integer?
+  spec.csharp:
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  spec.vb:
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Shared.Interfaces.Model.IPlayerChangedEventArgs.PropertyName*
+  commentId: Overload:Shared.Interfaces.Model.IPlayerChangedEventArgs.PropertyName
+  href: Shared.Interfaces.Model.IPlayerChangedEventArgs.html#Shared_Interfaces_Model_IPlayerChangedEventArgs_PropertyName
+  name: PropertyName
+  nameWithType: IPlayerChangedEventArgs.PropertyName
+  fullName: Shared.Interfaces.Model.IPlayerChangedEventArgs.PropertyName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String

@@ -1,0 +1,276 @@
+### YamlMime:TableOfContent
+items:
+- uid: Model.Assets
+  name: Model.Assets
+  type: Namespace
+  items:
+  - uid: Model.Assets.RuleValues
+    name: RuleValues
+    type: Class
+- uid: Model.Core
+  name: Model.Core
+  type: Namespace
+  items:
+  - uid: Model.Core.Game
+    name: Game
+    type: Class
+  - uid: Model.Core.Player
+    name: Player
+    type: Class
+  - uid: Model.Core.Regulator
+    name: Regulator
+    type: Class
+  - uid: Model.Core.StateMachine
+    name: StateMachine
+    type: Class
+- uid: Model.DataAccess
+  name: Model.DataAccess
+  type: Namespace
+  items:
+  - uid: Model.DataAccess.AssetFactory
+    name: AssetFactory
+    type: Class
+  - uid: Model.DataAccess.AssetFetcher
+    name: AssetFetcher
+    type: Class
+  - uid: Model.DataAccess.DataProvider
+    name: DataProvider
+    type: Class
+  - uid: Model.DataAccess.GeographyJConverter
+    name: GeographyJConverter
+    type: Class
+- uid: Model.DataAccess.Cards
+  name: Model.DataAccess.Cards
+  type: Namespace
+  items:
+  - uid: Model.DataAccess.Cards.ICardSetDataJConverter
+    name: ICardSetDataJConverter
+    type: Interface
+  - uid: Model.DataAccess.Cards.TroopCardSetDataJConverter
+    name: TroopCardSetDataJConverter
+    type: Class
+- uid: Model.Entities
+  name: Model.Entities
+  type: Namespace
+  items:
+  - uid: Model.Entities.CardBase
+    name: CardBase
+    type: Class
+  - uid: Model.Entities.Deck
+    name: Deck
+    type: Class
+  - uid: Model.Entities.EarthBoard
+    name: EarthBoard
+    type: Class
+- uid: Model.Entities.Cards
+  name: Model.Entities.Cards
+  type: Namespace
+  items:
+  - uid: Model.Entities.Cards.CardFactory
+    name: CardFactory
+    type: Class
+  - uid: Model.Entities.Cards.ITroopCardSetData
+    name: ITroopCardSetData
+    type: Interface
+  - uid: Model.Entities.Cards.TroopCard
+    name: TroopCard
+    type: Class
+  - uid: Model.Entities.Cards.TroopCardSet
+    name: TroopCardSet
+    type: Class
+  - uid: Model.Entities.Cards.TroopCardSetData
+    name: TroopCardSetData
+    type: Class
+  - uid: Model.Entities.Cards.TroopInsignia
+    name: TroopInsignia
+    type: Enum
+- uid: Model.EventArgs
+  name: Model.EventArgs
+  type: Namespace
+  items:
+  - uid: Model.EventArgs.ContinentOwnerChangedEventArgs
+    name: ContinentOwnerChangedEventArgs
+    type: Class
+  - uid: Model.EventArgs.PlayerChangedEventArgs
+    name: PlayerChangedEventArgs
+    type: Class
+  - uid: Model.EventArgs.TerritoryChangedEventArgs
+    name: TerritoryChangedEventArgs
+    type: Class
+- uid: Shared.Enums
+  name: Shared.Enums
+  type: Namespace
+  items:
+  - uid: Shared.Enums.GamePhase
+    name: GamePhase
+    type: Enum
+- uid: Shared.Geography
+  name: Shared.Geography
+  type: Namespace
+  items:
+  - uid: Shared.Geography.BoardGeography
+    name: BoardGeography
+    type: Class
+  - uid: Shared.Geography.GeographyInitializer
+    name: GeographyInitializer
+    type: Class
+- uid: Shared.Geography.Enums
+  name: Shared.Geography.Enums
+  type: Namespace
+  items:
+  - uid: Shared.Geography.Enums.ContID
+    name: ContID
+    type: Enum
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    type: Enum
+- uid: Shared.Interfaces
+  name: Shared.Interfaces
+  type: Namespace
+  items:
+  - uid: Shared.Interfaces.IContinentOwnerChangedEventArgs
+    name: IContinentOwnerChangedEventArgs
+    type: Interface
+  - uid: Shared.Interfaces.ITroopCardInfo
+    name: ITroopCardInfo
+    type: Interface
+- uid: Shared.Interfaces.Model
+  name: Shared.Interfaces.Model
+  type: Namespace
+  items:
+  - uid: Shared.Interfaces.Model.IAssetFactory
+    name: IAssetFactory
+    type: Interface
+  - uid: Shared.Interfaces.Model.IAssetFetcher
+    name: IAssetFetcher
+    type: Interface
+  - uid: Shared.Interfaces.Model.IBinarySerializable
+    name: IBinarySerializable
+    type: Interface
+  - uid: Shared.Interfaces.Model.IBoard
+    name: IBoard
+    type: Interface
+  - uid: Shared.Interfaces.Model.ICard
+    name: ICard
+    type: Interface
+  - uid: Shared.Interfaces.Model.ICardSet
+    name: ICardSet
+    type: Interface
+  - uid: Shared.Interfaces.Model.ICardSetData
+    name: ICardSetData
+    type: Interface
+  - uid: Shared.Interfaces.Model.IDataProvider
+    name: IDataProvider
+    type: Interface
+  - uid: Shared.Interfaces.Model.IGame
+    name: IGame
+    type: Interface
+  - uid: Shared.Interfaces.Model.IPlayer
+    name: IPlayer
+    type: Interface
+  - uid: Shared.Interfaces.Model.IPlayerChangedEventArgs
+    name: IPlayerChangedEventArgs
+    type: Interface
+  - uid: Shared.Interfaces.Model.IPromptTradeEventArgs
+    name: IPromptTradeEventArgs
+    type: Interface
+  - uid: Shared.Interfaces.Model.IRegulator
+    name: IRegulator
+    type: Interface
+  - uid: Shared.Interfaces.Model.IRuleValues
+    name: IRuleValues
+    type: Interface
+  - uid: Shared.Interfaces.Model.ITerritoryChangedEventArgs
+    name: ITerritoryChangedEventArgs
+    type: Interface
+  - uid: Shared.Interfaces.Model.ITroopCard
+    name: ITroopCard
+    type: Interface
+- uid: Shared.Interfaces.View
+  name: Shared.Interfaces.View
+  type: Namespace
+  items:
+  - uid: Shared.Interfaces.View.IBootStrapperService
+    name: IBootStrapperService
+    type: Interface
+  - uid: Shared.Interfaces.View.IDialogState
+    name: IDialogState
+    type: Interface
+  - uid: Shared.Interfaces.View.IDispatcherTimer
+    name: IDispatcherTimer
+    type: Interface
+- uid: Shared.Interfaces.ViewModel
+  name: Shared.Interfaces.ViewModel
+  type: Namespace
+  items:
+  - uid: Shared.Interfaces.ViewModel.ICardInfo
+    name: ICardInfo
+    type: Interface
+  - uid: Shared.Interfaces.ViewModel.IDiceThrownEventArgs
+    name: IDiceThrownEventArgs
+    type: Interface
+  - uid: Shared.Interfaces.ViewModel.IGameService
+    name: IGameService
+    type: Interface
+  - uid: Shared.Interfaces.ViewModel.IMainVM
+    name: IMainVM
+    type: Interface
+  - uid: Shared.Interfaces.ViewModel.IPlayerData
+    name: IPlayerData
+    type: Interface
+  - uid: Shared.Interfaces.ViewModel.ITerritoryInfo
+    name: ITerritoryInfo
+    type: Interface
+  - uid: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs
+    name: ITroopsAdvanceEventArgs
+    type: Interface
+- uid: Shared.Services.Helpers
+  name: Shared.Services.Helpers
+  type: Namespace
+  items:
+  - uid: Shared.Services.Helpers.DataFileFinder
+    name: DataFileFinder
+    type: Class
+- uid: Shared.Services.Options
+  name: Shared.Services.Options
+  type: Namespace
+  items:
+  - uid: Shared.Services.Options.AppConfig
+    name: AppConfig
+    type: Class
+- uid: Shared.Services.Registry
+  name: Shared.Services.Registry
+  type: Namespace
+  items:
+  - uid: Shared.Services.Registry.IRegistryInitializer
+    name: IRegistryInitializer
+    type: Interface
+  - uid: Shared.Services.Registry.ITypeRegister`1
+    name: ITypeRegister<T>
+    type: Interface
+  - uid: Shared.Services.Registry.ITypeRelations
+    name: ITypeRelations
+    type: Interface
+  - uid: Shared.Services.Registry.RegistryInitializer
+    name: RegistryInitializer
+    type: Class
+  - uid: Shared.Services.Registry.RegistryRelation
+    name: RegistryRelation
+    type: Enum
+  - uid: Shared.Services.Registry.TypeRegister
+    name: TypeRegister
+    type: Class
+  - uid: Shared.Services.Registry.TypeRelations
+    name: TypeRelations
+    type: Class
+- uid: Shared.Services.Serializer
+  name: Shared.Services.Serializer
+  type: Namespace
+  items:
+  - uid: Shared.Services.Serializer.BinarySerializer
+    name: BinarySerializer
+    type: Class
+  - uid: Shared.Services.Serializer.SerializedData
+    name: SerializedData
+    type: Struct
+memberLayout: SamePage

@@ -1,0 +1,721 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Services.Registry.ITypeRegister`1
+  commentId: T:Shared.Services.Registry.ITypeRegister`1
+  id: ITypeRegister`1
+  parent: Shared.Services.Registry
+  children:
+  - Shared.Services.Registry.ITypeRegister`1.AddRelation(System.Type,System.ValueTuple{System.Object,Shared.Services.Registry.RegistryRelation})
+  - Shared.Services.Registry.ITypeRegister`1.Clear
+  - Shared.Services.Registry.ITypeRegister`1.DeRegister(System.Type)
+  - Shared.Services.Registry.ITypeRegister`1.Item(Shared.Services.Registry.RegistryRelation)
+  - Shared.Services.Registry.ITypeRegister`1.Item(System.String)
+  - Shared.Services.Registry.ITypeRegister`1.Item(System.Type)
+  - Shared.Services.Registry.ITypeRegister`1.Register(System.Type)
+  - Shared.Services.Registry.ITypeRegister`1.Register(System.Type,`0)
+  - Shared.Services.Registry.ITypeRegister`1.RemoveRelation(System.Type,Shared.Services.Registry.RegistryRelation)
+  - Shared.Services.Registry.ITypeRegister`1.TryGetParentType(System.Type,System.Type@)
+  langs:
+  - csharp
+  - vb
+  name: ITypeRegister<T>
+  nameWithType: ITypeRegister<T>
+  fullName: Shared.Services.Registry.ITypeRegister<T>
+  type: Interface
+  source:
+    remote:
+      path: Shared/Services/Registry/ITypeRegister.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ITypeRegister
+    path: ../Shared/Services/Registry/ITypeRegister.cs
+    startLine: 9
+  assemblies:
+  - Model
+  namespace: Shared.Services.Registry
+  summary: >-
+    Registers Types with objects by <xref href="Shared.Services.Registry.RegistryRelation" data-throw-if-not-resolved="false"></xref>, enabling look-up at runtime. 
+
+    <p><example>
+
+    E.g. the <xref href="System.Type" data-throw-if-not-resolved="false"></xref> : <code>typeof(<xref href="Model.Entities.Cards.TroopCard" data-throw-if-not-resolved="false"></xref>)</code>, if registered with <code>"TroopCard"</code>,
+
+    can be retreived by:<pre><code class="lang-csharp">Type troopCardType = Registry["TroopCard"];</code></pre> where <code>Registry</code> is an instance of <code>TypeRegister</code>.</example></p>
+  example: []
+  syntax:
+    content: 'public interface ITypeRegister<T> where T : ITypeRelations'
+    typeParameters:
+    - id: T
+      description: Encapsulates related values for a registry entry.
+    content.vb: Public Interface ITypeRegister(Of T As ITypeRelations)
+  nameWithType.vb: ITypeRegister(Of T)
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T)
+  name.vb: ITypeRegister(Of T)
+- uid: Shared.Services.Registry.ITypeRegister`1.Item(System.String)
+  commentId: P:Shared.Services.Registry.ITypeRegister`1.Item(System.String)
+  id: Item(System.String)
+  parent: Shared.Services.Registry.ITypeRegister`1
+  langs:
+  - csharp
+  - vb
+  name: this[string]
+  nameWithType: ITypeRegister<T>.this[string]
+  fullName: Shared.Services.Registry.ITypeRegister<T>.this[string]
+  type: Property
+  source:
+    remote:
+      path: Shared/Services/Registry/ITypeRegister.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: this[]
+    path: ../Shared/Services/Registry/ITypeRegister.cs
+    startLine: 16
+  assemblies:
+  - Model
+  namespace: Shared.Services.Registry
+  summary: Type look-up by name.
+  example: []
+  syntax:
+    content: Type? this[string registeredName] { get; }
+    parameters:
+    - id: registeredName
+      type: System.String
+      description: The name registered under <xref href="Shared.Services.Registry.RegistryRelation.Name" data-throw-if-not-resolved="false"></xref>
+    return:
+      type: System.Type
+      description: The type registered under <code class="paramref">registeredName</code>; if none, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+    content.vb: ReadOnly Default Property this[](registeredName As String) As Type
+  overload: Shared.Services.Registry.ITypeRegister`1.Item*
+  nameWithType.vb: ITypeRegister(Of T).this[](String)
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T).this[](String)
+  name.vb: this[](String)
+- uid: Shared.Services.Registry.ITypeRegister`1.Item(System.Type)
+  commentId: P:Shared.Services.Registry.ITypeRegister`1.Item(System.Type)
+  id: Item(System.Type)
+  parent: Shared.Services.Registry.ITypeRegister`1
+  langs:
+  - csharp
+  - vb
+  name: this[Type]
+  nameWithType: ITypeRegister<T>.this[Type]
+  fullName: Shared.Services.Registry.ITypeRegister<T>.this[System.Type]
+  type: Property
+  source:
+    remote:
+      path: Shared/Services/Registry/ITypeRegister.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: this[]
+    path: ../Shared/Services/Registry/ITypeRegister.cs
+    startLine: 24
+  assemblies:
+  - Model
+  namespace: Shared.Services.Registry
+  summary: Registry entry look-up or set-up by Type.
+  example: []
+  syntax:
+    content: T? this[Type type] { get; set; }
+    parameters:
+    - id: type
+      type: System.Type
+      description: The registered Type.
+    return:
+      type: '{T}'
+      description: Related objects, or <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> if <code class="paramref">type</code> is unregistered.
+    content.vb: Default Property this[](type As Type) As T
+  overload: Shared.Services.Registry.ITypeRegister`1.Item*
+  exceptions:
+  - type: System.ArgumentNullException
+    commentId: T:System.ArgumentNullException
+    description: Thrown when setting an entry with a null value.
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: Thrown when setting an entry with a value that does not implement <xref href="Shared.Services.Registry.ITypeRelations" data-throw-if-not-resolved="false"></xref>.
+  nameWithType.vb: ITypeRegister(Of T).this[](Type)
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T).this[](System.Type)
+  name.vb: this[](Type)
+- uid: Shared.Services.Registry.ITypeRegister`1.Item(Shared.Services.Registry.RegistryRelation)
+  commentId: P:Shared.Services.Registry.ITypeRegister`1.Item(Shared.Services.Registry.RegistryRelation)
+  id: Item(Shared.Services.Registry.RegistryRelation)
+  parent: Shared.Services.Registry.ITypeRegister`1
+  langs:
+  - csharp
+  - vb
+  name: this[RegistryRelation]
+  nameWithType: ITypeRegister<T>.this[RegistryRelation]
+  fullName: Shared.Services.Registry.ITypeRegister<T>.this[Shared.Services.Registry.RegistryRelation]
+  type: Property
+  source:
+    remote:
+      path: Shared/Services/Registry/ITypeRegister.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: this[]
+    path: ../Shared/Services/Registry/ITypeRegister.cs
+    startLine: 30
+  assemblies:
+  - Model
+  namespace: Shared.Services.Registry
+  summary: Get all objects registered under a specific <xref href="Shared.Services.Registry.RegistryRelation" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: (Type KeyType, object RelatedObject)[]? this[RegistryRelation relation] { get; }
+    parameters:
+    - id: relation
+      type: Shared.Services.Registry.RegistryRelation
+      description: The target <xref href="Shared.Services.Registry.RegistryRelation" data-throw-if-not-resolved="false"></xref>.
+    return:
+      type: System.ValueTuple{System.Type,System.Object}[]
+      description: Each Key/Object related by <code class="paramref">relation</code>; or, if none are found, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+    content.vb: ReadOnly Default Property this[](relation As RegistryRelation) As (KeyType As Type, RelatedObject As Object)()
+  overload: Shared.Services.Registry.ITypeRegister`1.Item*
+  nameWithType.vb: ITypeRegister(Of T).this[](RegistryRelation)
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T).this[](Shared.Services.Registry.RegistryRelation)
+  name.vb: this[](RegistryRelation)
+- uid: Shared.Services.Registry.ITypeRegister`1.Register(System.Type)
+  commentId: M:Shared.Services.Registry.ITypeRegister`1.Register(System.Type)
+  id: Register(System.Type)
+  parent: Shared.Services.Registry.ITypeRegister`1
+  langs:
+  - csharp
+  - vb
+  name: Register(Type)
+  nameWithType: ITypeRegister<T>.Register(Type)
+  fullName: Shared.Services.Registry.ITypeRegister<T>.Register(System.Type)
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Registry/ITypeRegister.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Register
+    path: ../Shared/Services/Registry/ITypeRegister.cs
+    startLine: 38
+  assemblies:
+  - Model
+  namespace: Shared.Services.Registry
+  summary: Register a Type.
+  remarks: 'This assumes a default registry entry, e.g.: <xref href="System.Type.FullName" data-throw-if-not-resolved="false"></xref> or <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/operators/nameof">nameof</a>(<xref href="System.Type" data-throw-if-not-resolved="false"></xref>) for <xref href="Shared.Services.Registry.RegistryRelation.Name" data-throw-if-not-resolved="false"></xref>.'
+  example: []
+  syntax:
+    content: void Register(Type type)
+    parameters:
+    - id: type
+      type: System.Type
+      description: The type to register.
+    content.vb: Sub Register(type As Type)
+  overload: Shared.Services.Registry.ITypeRegister`1.Register*
+  nameWithType.vb: ITypeRegister(Of T).Register(Type)
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T).Register(System.Type)
+- uid: Shared.Services.Registry.ITypeRegister`1.Register(System.Type,`0)
+  commentId: M:Shared.Services.Registry.ITypeRegister`1.Register(System.Type,`0)
+  id: Register(System.Type,`0)
+  parent: Shared.Services.Registry.ITypeRegister`1
+  langs:
+  - csharp
+  - vb
+  name: Register(Type, T)
+  nameWithType: ITypeRegister<T>.Register(Type, T)
+  fullName: Shared.Services.Registry.ITypeRegister<T>.Register(System.Type, T)
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Registry/ITypeRegister.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Register
+    path: ../Shared/Services/Registry/ITypeRegister.cs
+    startLine: 44
+  assemblies:
+  - Model
+  namespace: Shared.Services.Registry
+  summary: Register a Type with a given set of relations to objects.
+  example: []
+  syntax:
+    content: void Register(Type type, T typeRelations)
+    parameters:
+    - id: type
+      type: System.Type
+      description: The type to register.
+    - id: typeRelations
+      type: '{T}'
+      description: The relations to register to <code class="paramref">type</code>.
+    content.vb: Sub Register(type As Type, typeRelations As T)
+  overload: Shared.Services.Registry.ITypeRegister`1.Register*
+  nameWithType.vb: ITypeRegister(Of T).Register(Type, T)
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T).Register(System.Type, T)
+- uid: Shared.Services.Registry.ITypeRegister`1.AddRelation(System.Type,System.ValueTuple{System.Object,Shared.Services.Registry.RegistryRelation})
+  commentId: M:Shared.Services.Registry.ITypeRegister`1.AddRelation(System.Type,System.ValueTuple{System.Object,Shared.Services.Registry.RegistryRelation})
+  id: AddRelation(System.Type,System.ValueTuple{System.Object,Shared.Services.Registry.RegistryRelation})
+  parent: Shared.Services.Registry.ITypeRegister`1
+  langs:
+  - csharp
+  - vb
+  name: AddRelation(Type, (object, RegistryRelation))
+  nameWithType: ITypeRegister<T>.AddRelation(Type, (object, RegistryRelation))
+  fullName: Shared.Services.Registry.ITypeRegister<T>.AddRelation(System.Type, (object, Shared.Services.Registry.RegistryRelation))
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Registry/ITypeRegister.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: AddRelation
+    path: ../Shared/Services/Registry/ITypeRegister.cs
+    startLine: 50
+  assemblies:
+  - Model
+  namespace: Shared.Services.Registry
+  summary: Add an object relation to a pre-existing registry entry.
+  example: []
+  syntax:
+    content: void AddRelation(Type type, (object, RegistryRelation) newRelation)
+    parameters:
+    - id: type
+      type: System.Type
+      description: The registered type.
+    - id: newRelation
+      type: System.ValueTuple{System.Object,Shared.Services.Registry.RegistryRelation}
+      description: The related object paired with its relation type.
+    content.vb: Sub AddRelation(type As Type, newRelation As (Object, RegistryRelation))
+  overload: Shared.Services.Registry.ITypeRegister`1.AddRelation*
+  nameWithType.vb: ITypeRegister(Of T).AddRelation(Type, (Object, RegistryRelation))
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T).AddRelation(System.Type, (Object, Shared.Services.Registry.RegistryRelation))
+  name.vb: AddRelation(Type, (Object, RegistryRelation))
+- uid: Shared.Services.Registry.ITypeRegister`1.RemoveRelation(System.Type,Shared.Services.Registry.RegistryRelation)
+  commentId: M:Shared.Services.Registry.ITypeRegister`1.RemoveRelation(System.Type,Shared.Services.Registry.RegistryRelation)
+  id: RemoveRelation(System.Type,Shared.Services.Registry.RegistryRelation)
+  parent: Shared.Services.Registry.ITypeRegister`1
+  langs:
+  - csharp
+  - vb
+  name: RemoveRelation(Type, RegistryRelation)
+  nameWithType: ITypeRegister<T>.RemoveRelation(Type, RegistryRelation)
+  fullName: Shared.Services.Registry.ITypeRegister<T>.RemoveRelation(System.Type, Shared.Services.Registry.RegistryRelation)
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Registry/ITypeRegister.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: RemoveRelation
+    path: ../Shared/Services/Registry/ITypeRegister.cs
+    startLine: 56
+  assemblies:
+  - Model
+  namespace: Shared.Services.Registry
+  summary: Removes an object relation from a pre-existing registry entry.
+  example: []
+  syntax:
+    content: void RemoveRelation(Type type, RegistryRelation targetRelation)
+    parameters:
+    - id: type
+      type: System.Type
+      description: The registered type.
+    - id: targetRelation
+      type: Shared.Services.Registry.RegistryRelation
+      description: The relation to remove.
+    content.vb: Sub RemoveRelation(type As Type, targetRelation As RegistryRelation)
+  overload: Shared.Services.Registry.ITypeRegister`1.RemoveRelation*
+  nameWithType.vb: ITypeRegister(Of T).RemoveRelation(Type, RegistryRelation)
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T).RemoveRelation(System.Type, Shared.Services.Registry.RegistryRelation)
+- uid: Shared.Services.Registry.ITypeRegister`1.DeRegister(System.Type)
+  commentId: M:Shared.Services.Registry.ITypeRegister`1.DeRegister(System.Type)
+  id: DeRegister(System.Type)
+  parent: Shared.Services.Registry.ITypeRegister`1
+  langs:
+  - csharp
+  - vb
+  name: DeRegister(Type)
+  nameWithType: ITypeRegister<T>.DeRegister(Type)
+  fullName: Shared.Services.Registry.ITypeRegister<T>.DeRegister(System.Type)
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Registry/ITypeRegister.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: DeRegister
+    path: ../Shared/Services/Registry/ITypeRegister.cs
+    startLine: 61
+  assemblies:
+  - Model
+  namespace: Shared.Services.Registry
+  summary: Removes a registry entry.
+  example: []
+  syntax:
+    content: void DeRegister(Type type)
+    parameters:
+    - id: type
+      type: System.Type
+      description: The type to be deregistered.
+    content.vb: Sub DeRegister(type As Type)
+  overload: Shared.Services.Registry.ITypeRegister`1.DeRegister*
+  nameWithType.vb: ITypeRegister(Of T).DeRegister(Type)
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T).DeRegister(System.Type)
+- uid: Shared.Services.Registry.ITypeRegister`1.Clear
+  commentId: M:Shared.Services.Registry.ITypeRegister`1.Clear
+  id: Clear
+  parent: Shared.Services.Registry.ITypeRegister`1
+  langs:
+  - csharp
+  - vb
+  name: Clear()
+  nameWithType: ITypeRegister<T>.Clear()
+  fullName: Shared.Services.Registry.ITypeRegister<T>.Clear()
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Registry/ITypeRegister.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Clear
+    path: ../Shared/Services/Registry/ITypeRegister.cs
+    startLine: 65
+  assemblies:
+  - Model
+  namespace: Shared.Services.Registry
+  summary: Empties the registry.
+  example: []
+  syntax:
+    content: void Clear()
+    content.vb: Sub Clear()
+  overload: Shared.Services.Registry.ITypeRegister`1.Clear*
+  nameWithType.vb: ITypeRegister(Of T).Clear()
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T).Clear()
+- uid: Shared.Services.Registry.ITypeRegister`1.TryGetParentType(System.Type,System.Type@)
+  commentId: M:Shared.Services.Registry.ITypeRegister`1.TryGetParentType(System.Type,System.Type@)
+  id: TryGetParentType(System.Type,System.Type@)
+  parent: Shared.Services.Registry.ITypeRegister`1
+  langs:
+  - csharp
+  - vb
+  name: TryGetParentType(Type, out Type?)
+  nameWithType: ITypeRegister<T>.TryGetParentType(Type, out Type?)
+  fullName: Shared.Services.Registry.ITypeRegister<T>.TryGetParentType(System.Type, out System.Type?)
+  type: Method
+  source:
+    remote:
+      path: Shared/Services/Registry/ITypeRegister.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: TryGetParentType
+    path: ../Shared/Services/Registry/ITypeRegister.cs
+    startLine: 72
+  assemblies:
+  - Model
+  namespace: Shared.Services.Registry
+  summary: Checks whether a registered type has a registered parent, and returns it if so.
+  example: []
+  syntax:
+    content: bool TryGetParentType(Type registeredType, out Type? parentType)
+    parameters:
+    - id: registeredType
+      type: System.Type
+      description: The type already registered.
+    - id: parentType
+      type: System.Type
+      description: The type registered as parent of <code class="paramref">registeredType</code>.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if <code class="paramref">registeredType</code> has a registered parent type in the registry; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Function TryGetParentType(registeredType As Type, parentType As Type) As Boolean
+  overload: Shared.Services.Registry.ITypeRegister`1.TryGetParentType*
+  nameWithType.vb: ITypeRegister(Of T).TryGetParentType(Type, Type)
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T).TryGetParentType(System.Type, System.Type)
+  name.vb: TryGetParentType(Type, Type)
+references:
+- uid: Shared.Services.Registry.RegistryRelation
+  commentId: T:Shared.Services.Registry.RegistryRelation
+  parent: Shared.Services.Registry
+  href: Shared.Services.Registry.RegistryRelation.html
+  name: RegistryRelation
+  nameWithType: RegistryRelation
+  fullName: Shared.Services.Registry.RegistryRelation
+- uid: System.Type
+  commentId: T:System.Type
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.type
+  name: Type
+  nameWithType: Type
+  fullName: System.Type
+- uid: Model.Entities.Cards.TroopCard
+  commentId: T:Model.Entities.Cards.TroopCard
+  href: Model.Entities.Cards.TroopCard.html
+  name: TroopCard
+  nameWithType: TroopCard
+  fullName: Model.Entities.Cards.TroopCard
+- uid: Shared.Services.Registry
+  commentId: N:Shared.Services.Registry
+  href: Shared.html
+  name: Shared.Services.Registry
+  nameWithType: Shared.Services.Registry
+  fullName: Shared.Services.Registry
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Services
+    name: Services
+    href: Shared.Services.html
+  - name: .
+  - uid: Shared.Services.Registry
+    name: Registry
+    href: Shared.Services.Registry.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Services
+    name: Services
+    href: Shared.Services.html
+  - name: .
+  - uid: Shared.Services.Registry
+    name: Registry
+    href: Shared.Services.Registry.html
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Shared.Services.Registry.RegistryRelation.Name
+  commentId: F:Shared.Services.Registry.RegistryRelation.Name
+  href: Shared.Services.Registry.RegistryRelation.html#Shared_Services_Registry_RegistryRelation_Name
+  name: Name
+  nameWithType: RegistryRelation.Name
+  fullName: Shared.Services.Registry.RegistryRelation.Name
+- uid: Shared.Services.Registry.ITypeRegister`1.Item*
+  commentId: Overload:Shared.Services.Registry.ITypeRegister`1.Item
+  href: Shared.Services.Registry.ITypeRegister-1.html#Shared_Services_Registry_ITypeRegister_1_Item_System_String_
+  name: this
+  nameWithType: ITypeRegister<T>.this
+  fullName: Shared.Services.Registry.ITypeRegister<T>.this
+  nameWithType.vb: ITypeRegister(Of T).this[]
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T).this[]
+  name.vb: this[]
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Shared.Services.Registry.ITypeRelations
+  commentId: T:Shared.Services.Registry.ITypeRelations
+  parent: Shared.Services.Registry
+  href: Shared.Services.Registry.ITypeRelations.html
+  name: ITypeRelations
+  nameWithType: ITypeRelations
+  fullName: Shared.Services.Registry.ITypeRelations
+- uid: System.ArgumentNullException
+  commentId: T:System.ArgumentNullException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.argumentnullexception
+  name: ArgumentNullException
+  nameWithType: ArgumentNullException
+  fullName: System.ArgumentNullException
+- uid: System.ArgumentException
+  commentId: T:System.ArgumentException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.argumentexception
+  name: ArgumentException
+  nameWithType: ArgumentException
+  fullName: System.ArgumentException
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: System.ValueTuple{System.Type,System.Object}[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.type
+  name: (Type KeyType, object RelatedObject)[]
+  nameWithType: (Type KeyType, object RelatedObject)[]
+  fullName: (System.Type KeyType, object RelatedObject)[]
+  nameWithType.vb: (KeyType As Type, RelatedObject As Object)()
+  fullName.vb: (KeyType As System.Type, RelatedObject As Object)()
+  name.vb: (KeyType As Type, RelatedObject As Object)()
+  spec.csharp:
+  - name: (
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: " "
+  - uid: System.ValueTuple{System.Type,System.Object}.KeyType
+    name: KeyType
+    href: https://learn.microsoft.com/dotnet/api/system.valuetuple-system.type,system.object-.keytype
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: " "
+  - uid: System.ValueTuple{System.Type,System.Object}.RelatedObject
+    name: RelatedObject
+    href: https://learn.microsoft.com/dotnet/api/system.valuetuple-system.type,system.object-.relatedobject
+  - name: )
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - name: (
+  - uid: System.ValueTuple{System.Type,System.Object}.KeyType
+    name: KeyType
+    href: https://learn.microsoft.com/dotnet/api/system.valuetuple-system.type,system.object-.keytype
+  - name: " "
+  - name: As
+  - name: " "
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: ','
+  - name: " "
+  - uid: System.ValueTuple{System.Type,System.Object}.RelatedObject
+    name: RelatedObject
+    href: https://learn.microsoft.com/dotnet/api/system.valuetuple-system.type,system.object-.relatedobject
+  - name: " "
+  - name: As
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  - name: (
+  - name: )
+- uid: System.Type.FullName
+  commentId: P:System.Type.FullName
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.type.fullname
+  name: FullName
+  nameWithType: Type.FullName
+  fullName: System.Type.FullName
+- uid: Shared.Services.Registry.ITypeRegister`1.Register*
+  commentId: Overload:Shared.Services.Registry.ITypeRegister`1.Register
+  href: Shared.Services.Registry.ITypeRegister-1.html#Shared_Services_Registry_ITypeRegister_1_Register_System_Type_
+  name: Register
+  nameWithType: ITypeRegister<T>.Register
+  fullName: Shared.Services.Registry.ITypeRegister<T>.Register
+  nameWithType.vb: ITypeRegister(Of T).Register
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T).Register
+- uid: Shared.Services.Registry.ITypeRegister`1.AddRelation*
+  commentId: Overload:Shared.Services.Registry.ITypeRegister`1.AddRelation
+  href: Shared.Services.Registry.ITypeRegister-1.html#Shared_Services_Registry_ITypeRegister_1_AddRelation_System_Type_System_ValueTuple_System_Object_Shared_Services_Registry_RegistryRelation__
+  name: AddRelation
+  nameWithType: ITypeRegister<T>.AddRelation
+  fullName: Shared.Services.Registry.ITypeRegister<T>.AddRelation
+  nameWithType.vb: ITypeRegister(Of T).AddRelation
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T).AddRelation
+- uid: System.ValueTuple{System.Object,Shared.Services.Registry.RegistryRelation}
+  commentId: T:System.ValueTuple{System.Object,Shared.Services.Registry.RegistryRelation}
+  parent: System
+  definition: System.ValueTuple`2
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: (object, RegistryRelation)
+  nameWithType: (object, RegistryRelation)
+  fullName: (object, Shared.Services.Registry.RegistryRelation)
+  nameWithType.vb: (Object, RegistryRelation)
+  fullName.vb: (Object, Shared.Services.Registry.RegistryRelation)
+  name.vb: (Object, RegistryRelation)
+  spec.csharp:
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: Shared.Services.Registry.RegistryRelation
+    name: RegistryRelation
+    href: Shared.Services.Registry.RegistryRelation.html
+  - name: )
+  spec.vb:
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: Shared.Services.Registry.RegistryRelation
+    name: RegistryRelation
+    href: Shared.Services.Registry.RegistryRelation.html
+  - name: )
+- uid: System.ValueTuple`2
+  commentId: T:System.ValueTuple`2
+  name: (T1, T2)
+  nameWithType: (T1, T2)
+  fullName: (T1, T2)
+  spec.csharp:
+  - name: (
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: )
+  spec.vb:
+  - name: (
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: )
+- uid: Shared.Services.Registry.ITypeRegister`1.RemoveRelation*
+  commentId: Overload:Shared.Services.Registry.ITypeRegister`1.RemoveRelation
+  href: Shared.Services.Registry.ITypeRegister-1.html#Shared_Services_Registry_ITypeRegister_1_RemoveRelation_System_Type_Shared_Services_Registry_RegistryRelation_
+  name: RemoveRelation
+  nameWithType: ITypeRegister<T>.RemoveRelation
+  fullName: Shared.Services.Registry.ITypeRegister<T>.RemoveRelation
+  nameWithType.vb: ITypeRegister(Of T).RemoveRelation
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T).RemoveRelation
+- uid: Shared.Services.Registry.ITypeRegister`1.DeRegister*
+  commentId: Overload:Shared.Services.Registry.ITypeRegister`1.DeRegister
+  href: Shared.Services.Registry.ITypeRegister-1.html#Shared_Services_Registry_ITypeRegister_1_DeRegister_System_Type_
+  name: DeRegister
+  nameWithType: ITypeRegister<T>.DeRegister
+  fullName: Shared.Services.Registry.ITypeRegister<T>.DeRegister
+  nameWithType.vb: ITypeRegister(Of T).DeRegister
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T).DeRegister
+- uid: Shared.Services.Registry.ITypeRegister`1.Clear*
+  commentId: Overload:Shared.Services.Registry.ITypeRegister`1.Clear
+  href: Shared.Services.Registry.ITypeRegister-1.html#Shared_Services_Registry_ITypeRegister_1_Clear
+  name: Clear
+  nameWithType: ITypeRegister<T>.Clear
+  fullName: Shared.Services.Registry.ITypeRegister<T>.Clear
+  nameWithType.vb: ITypeRegister(Of T).Clear
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T).Clear
+- uid: Shared.Services.Registry.ITypeRegister`1.TryGetParentType*
+  commentId: Overload:Shared.Services.Registry.ITypeRegister`1.TryGetParentType
+  href: Shared.Services.Registry.ITypeRegister-1.html#Shared_Services_Registry_ITypeRegister_1_TryGetParentType_System_Type_System_Type__
+  name: TryGetParentType
+  nameWithType: ITypeRegister<T>.TryGetParentType
+  fullName: Shared.Services.Registry.ITypeRegister<T>.TryGetParentType
+  nameWithType.vb: ITypeRegister(Of T).TryGetParentType
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T).TryGetParentType
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean

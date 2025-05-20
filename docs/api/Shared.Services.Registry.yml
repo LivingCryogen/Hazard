@@ -1,0 +1,117 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Services.Registry
+  commentId: N:Shared.Services.Registry
+  id: Shared.Services.Registry
+  children:
+  - Shared.Services.Registry.IRegistryInitializer
+  - Shared.Services.Registry.ITypeRegister`1
+  - Shared.Services.Registry.ITypeRelations
+  - Shared.Services.Registry.RegistryInitializer
+  - Shared.Services.Registry.RegistryRelation
+  - Shared.Services.Registry.TypeRegister
+  - Shared.Services.Registry.TypeRelations
+  langs:
+  - csharp
+  - vb
+  name: Shared.Services.Registry
+  nameWithType: Shared.Services.Registry
+  fullName: Shared.Services.Registry
+  type: Namespace
+  assemblies:
+  - Model
+references:
+- uid: Shared.Services.Registry.IRegistryInitializer
+  commentId: T:Shared.Services.Registry.IRegistryInitializer
+  parent: Shared.Services.Registry
+  href: Shared.Services.Registry.IRegistryInitializer.html
+  name: IRegistryInitializer
+  nameWithType: IRegistryInitializer
+  fullName: Shared.Services.Registry.IRegistryInitializer
+- uid: Shared.Services.Registry.ITypeRegister`1
+  commentId: T:Shared.Services.Registry.ITypeRegister`1
+  href: Shared.Services.Registry.ITypeRegister-1.html
+  name: ITypeRegister<T>
+  nameWithType: ITypeRegister<T>
+  fullName: Shared.Services.Registry.ITypeRegister<T>
+  nameWithType.vb: ITypeRegister(Of T)
+  fullName.vb: Shared.Services.Registry.ITypeRegister(Of T)
+  name.vb: ITypeRegister(Of T)
+  spec.csharp:
+  - uid: Shared.Services.Registry.ITypeRegister`1
+    name: ITypeRegister
+    href: Shared.Services.Registry.ITypeRegister-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Shared.Services.Registry.ITypeRegister`1
+    name: ITypeRegister
+    href: Shared.Services.Registry.ITypeRegister-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Shared.Services.Registry.ITypeRelations
+  commentId: T:Shared.Services.Registry.ITypeRelations
+  parent: Shared.Services.Registry
+  href: Shared.Services.Registry.ITypeRelations.html
+  name: ITypeRelations
+  nameWithType: ITypeRelations
+  fullName: Shared.Services.Registry.ITypeRelations
+- uid: Shared.Services.Registry.RegistryInitializer
+  commentId: T:Shared.Services.Registry.RegistryInitializer
+  href: Shared.Services.Registry.RegistryInitializer.html
+  name: RegistryInitializer
+  nameWithType: RegistryInitializer
+  fullName: Shared.Services.Registry.RegistryInitializer
+- uid: Shared.Services.Registry.RegistryRelation
+  commentId: T:Shared.Services.Registry.RegistryRelation
+  parent: Shared.Services.Registry
+  href: Shared.Services.Registry.RegistryRelation.html
+  name: RegistryRelation
+  nameWithType: RegistryRelation
+  fullName: Shared.Services.Registry.RegistryRelation
+- uid: Shared.Services.Registry.TypeRegister
+  commentId: T:Shared.Services.Registry.TypeRegister
+  href: Shared.Services.Registry.TypeRegister.html
+  name: TypeRegister
+  nameWithType: TypeRegister
+  fullName: Shared.Services.Registry.TypeRegister
+- uid: Shared.Services.Registry.TypeRelations
+  commentId: T:Shared.Services.Registry.TypeRelations
+  href: Shared.Services.Registry.TypeRelations.html
+  name: TypeRelations
+  nameWithType: TypeRelations
+  fullName: Shared.Services.Registry.TypeRelations
+- uid: Shared.Services.Registry
+  commentId: N:Shared.Services.Registry
+  href: Shared.html
+  name: Shared.Services.Registry
+  nameWithType: Shared.Services.Registry
+  fullName: Shared.Services.Registry
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Services
+    name: Services
+    href: Shared.Services.html
+  - name: .
+  - uid: Shared.Services.Registry
+    name: Registry
+    href: Shared.Services.Registry.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Services
+    name: Services
+    href: Shared.Services.html
+  - name: .
+  - uid: Shared.Services.Registry
+    name: Registry
+    href: Shared.Services.Registry.html

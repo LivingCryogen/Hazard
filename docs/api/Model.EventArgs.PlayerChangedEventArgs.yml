@@ -1,0 +1,781 @@
+### YamlMime:ManagedReference
+items:
+- uid: Model.EventArgs.PlayerChangedEventArgs
+  commentId: T:Model.EventArgs.PlayerChangedEventArgs
+  id: PlayerChangedEventArgs
+  parent: Model.EventArgs
+  children:
+  - Model.EventArgs.PlayerChangedEventArgs.#ctor(System.String)
+  - Model.EventArgs.PlayerChangedEventArgs.#ctor(System.String,System.Object,System.Object)
+  - Model.EventArgs.PlayerChangedEventArgs.#ctor(System.String,System.Object,System.Object,System.Int32)
+  - Model.EventArgs.PlayerChangedEventArgs.HandIndex
+  - Model.EventArgs.PlayerChangedEventArgs.NewValue
+  - Model.EventArgs.PlayerChangedEventArgs.OldValue
+  - Model.EventArgs.PlayerChangedEventArgs.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: PlayerChangedEventArgs
+  nameWithType: PlayerChangedEventArgs
+  fullName: Model.EventArgs.PlayerChangedEventArgs
+  type: Class
+  source:
+    remote:
+      path: Model/EventArgs/PlayerChangedEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: PlayerChangedEventArgs
+    path: ../Model/EventArgs/PlayerChangedEventArgs.cs
+    startLine: 4
+  assemblies:
+  - Model
+  namespace: Model.EventArgs
+  summary: Contract for EventArgs used by <xref href="Shared.Interfaces.Model.IPlayer.PlayerChanged" data-throw-if-not-resolved="false"></xref>.
+  remarks: Consumed primarily by <xref href="Shared.Interfaces.ViewModel.IPlayerData" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: 'public class PlayerChangedEventArgs : EventArgs, IPlayerChangedEventArgs'
+    content.vb: Public Class PlayerChangedEventArgs Inherits EventArgs Implements IPlayerChangedEventArgs
+  inheritance:
+  - System.Object
+  - System.EventArgs
+  implements:
+  - Shared.Interfaces.Model.IPlayerChangedEventArgs
+  inheritedMembers:
+  - System.EventArgs.Empty
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Model.EventArgs.PlayerChangedEventArgs.#ctor(System.String)
+  commentId: M:Model.EventArgs.PlayerChangedEventArgs.#ctor(System.String)
+  id: '#ctor(System.String)'
+  parent: Model.EventArgs.PlayerChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: PlayerChangedEventArgs(string)
+  nameWithType: PlayerChangedEventArgs.PlayerChangedEventArgs(string)
+  fullName: Model.EventArgs.PlayerChangedEventArgs.PlayerChangedEventArgs(string)
+  type: Constructor
+  source:
+    remote:
+      path: Model/EventArgs/PlayerChangedEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Model/EventArgs/PlayerChangedEventArgs.cs
+    startLine: 10
+  assemblies:
+  - Model
+  namespace: Model.EventArgs
+  summary: Constructs a PlayerChangedEventArgs for when an <xref href="Shared.Interfaces.Model.IPlayer" data-throw-if-not-resolved="false"></xref> property changes, but no stored values need to be passed. (Ie, the alert and a property name is sufficient)
+  example: []
+  syntax:
+    content: public PlayerChangedEventArgs(string propName)
+    parameters:
+    - id: propName
+      type: System.String
+      description: The name of the property which changed.
+    content.vb: Public Sub New(propName As String)
+  overload: Model.EventArgs.PlayerChangedEventArgs.#ctor*
+  nameWithType.vb: PlayerChangedEventArgs.New(String)
+  fullName.vb: Model.EventArgs.PlayerChangedEventArgs.New(String)
+  name.vb: New(String)
+- uid: Model.EventArgs.PlayerChangedEventArgs.#ctor(System.String,System.Object,System.Object)
+  commentId: M:Model.EventArgs.PlayerChangedEventArgs.#ctor(System.String,System.Object,System.Object)
+  id: '#ctor(System.String,System.Object,System.Object)'
+  parent: Model.EventArgs.PlayerChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: PlayerChangedEventArgs(string, object?, object?)
+  nameWithType: PlayerChangedEventArgs.PlayerChangedEventArgs(string, object?, object?)
+  fullName: Model.EventArgs.PlayerChangedEventArgs.PlayerChangedEventArgs(string, object?, object?)
+  type: Constructor
+  source:
+    remote:
+      path: Model/EventArgs/PlayerChangedEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Model/EventArgs/PlayerChangedEventArgs.cs
+    startLine: 20
+  assemblies:
+  - Model
+  namespace: Model.EventArgs
+  summary: Constructs a PlayerChangedEventArgs for when any property on <xref href="Shared.Interfaces.Model.IPlayer" data-throw-if-not-resolved="false"></xref> changes apart from tha <xref href="Shared.Interfaces.Model.IPlayer.Hand" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public PlayerChangedEventArgs(string propName, object? oldValue, object? newValue)
+    parameters:
+    - id: propName
+      type: System.String
+      description: The name of the property which changed.
+    - id: oldValue
+      type: System.Object
+      description: The old value, from before the change.
+    - id: newValue
+      type: System.Object
+      description: The new value, from after the change.
+    content.vb: Public Sub New(propName As String, oldValue As Object, newValue As Object)
+  overload: Model.EventArgs.PlayerChangedEventArgs.#ctor*
+  nameWithType.vb: PlayerChangedEventArgs.New(String, Object, Object)
+  fullName.vb: Model.EventArgs.PlayerChangedEventArgs.New(String, Object, Object)
+  name.vb: New(String, Object, Object)
+- uid: Model.EventArgs.PlayerChangedEventArgs.#ctor(System.String,System.Object,System.Object,System.Int32)
+  commentId: M:Model.EventArgs.PlayerChangedEventArgs.#ctor(System.String,System.Object,System.Object,System.Int32)
+  id: '#ctor(System.String,System.Object,System.Object,System.Int32)'
+  parent: Model.EventArgs.PlayerChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: PlayerChangedEventArgs(string, object?, object?, int)
+  nameWithType: PlayerChangedEventArgs.PlayerChangedEventArgs(string, object?, object?, int)
+  fullName: Model.EventArgs.PlayerChangedEventArgs.PlayerChangedEventArgs(string, object?, object?, int)
+  type: Constructor
+  source:
+    remote:
+      path: Model/EventArgs/PlayerChangedEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Model/EventArgs/PlayerChangedEventArgs.cs
+    startLine: 33
+  assemblies:
+  - Model
+  namespace: Model.EventArgs
+  summary: Constructs a PlayerChangedEventArgs for when <xref href="Shared.Interfaces.Model.IPlayer.Hand" data-throw-if-not-resolved="false"></xref> changes.
+  example: []
+  syntax:
+    content: public PlayerChangedEventArgs(string propName, object? oldValue, object? newValue, int handIndex)
+    parameters:
+    - id: propName
+      type: System.String
+      description: The name of the property which changed.
+    - id: oldValue
+      type: System.Object
+      description: The old value, from before the change.
+    - id: newValue
+      type: System.Object
+      description: The new value, from after the change.
+    - id: handIndex
+      type: System.Int32
+      description: The index at which <xref href="Shared.Interfaces.Model.IPlayer.Hand" data-throw-if-not-resolved="false"></xref> changed.
+    content.vb: Public Sub New(propName As String, oldValue As Object, newValue As Object, handIndex As Integer)
+  overload: Model.EventArgs.PlayerChangedEventArgs.#ctor*
+  nameWithType.vb: PlayerChangedEventArgs.New(String, Object, Object, Integer)
+  fullName.vb: Model.EventArgs.PlayerChangedEventArgs.New(String, Object, Object, Integer)
+  name.vb: New(String, Object, Object, Integer)
+- uid: Model.EventArgs.PlayerChangedEventArgs.PropertyName
+  commentId: P:Model.EventArgs.PlayerChangedEventArgs.PropertyName
+  id: PropertyName
+  parent: Model.EventArgs.PlayerChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: PropertyName
+  nameWithType: PlayerChangedEventArgs.PropertyName
+  fullName: Model.EventArgs.PlayerChangedEventArgs.PropertyName
+  type: Property
+  source:
+    remote:
+      path: Model/EventArgs/PlayerChangedEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: PropertyName
+    path: ../Model/EventArgs/PlayerChangedEventArgs.cs
+    startLine: 41
+  assemblies:
+  - Model
+  namespace: Model.EventArgs
+  summary: Gets or inits the name of the property which changed.
+  example: []
+  syntax:
+    content: public string PropertyName { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property PropertyName As String
+  overload: Model.EventArgs.PlayerChangedEventArgs.PropertyName*
+  implements:
+  - Shared.Interfaces.Model.IPlayerChangedEventArgs.PropertyName
+- uid: Model.EventArgs.PlayerChangedEventArgs.OldValue
+  commentId: P:Model.EventArgs.PlayerChangedEventArgs.OldValue
+  id: OldValue
+  parent: Model.EventArgs.PlayerChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: OldValue
+  nameWithType: PlayerChangedEventArgs.OldValue
+  fullName: Model.EventArgs.PlayerChangedEventArgs.OldValue
+  type: Property
+  source:
+    remote:
+      path: Model/EventArgs/PlayerChangedEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: OldValue
+    path: ../Model/EventArgs/PlayerChangedEventArgs.cs
+    startLine: 43
+  assemblies:
+  - Model
+  namespace: Model.EventArgs
+  summary: Gets or inits the old value after a change to a property on <xref href="Shared.Interfaces.Model.IPlayer" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public object? OldValue { get; init; }
+    parameters: []
+    return:
+      type: System.Object
+      description: The old value of the property, if any; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+    content.vb: Public Property OldValue As Object
+  overload: Model.EventArgs.PlayerChangedEventArgs.OldValue*
+  implements:
+  - Shared.Interfaces.Model.IPlayerChangedEventArgs.OldValue
+- uid: Model.EventArgs.PlayerChangedEventArgs.NewValue
+  commentId: P:Model.EventArgs.PlayerChangedEventArgs.NewValue
+  id: NewValue
+  parent: Model.EventArgs.PlayerChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: NewValue
+  nameWithType: PlayerChangedEventArgs.NewValue
+  fullName: Model.EventArgs.PlayerChangedEventArgs.NewValue
+  type: Property
+  source:
+    remote:
+      path: Model/EventArgs/PlayerChangedEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: NewValue
+    path: ../Model/EventArgs/PlayerChangedEventArgs.cs
+    startLine: 45
+  assemblies:
+  - Model
+  namespace: Model.EventArgs
+  summary: Gets or inits the new value after a change to a property on <xref href="Shared.Interfaces.Model.IPlayer" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public object? NewValue { get; init; }
+    parameters: []
+    return:
+      type: System.Object
+      description: The new value of the property, if any; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+    content.vb: Public Property NewValue As Object
+  overload: Model.EventArgs.PlayerChangedEventArgs.NewValue*
+  implements:
+  - Shared.Interfaces.Model.IPlayerChangedEventArgs.NewValue
+- uid: Model.EventArgs.PlayerChangedEventArgs.HandIndex
+  commentId: P:Model.EventArgs.PlayerChangedEventArgs.HandIndex
+  id: HandIndex
+  parent: Model.EventArgs.PlayerChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: HandIndex
+  nameWithType: PlayerChangedEventArgs.HandIndex
+  fullName: Model.EventArgs.PlayerChangedEventArgs.HandIndex
+  type: Property
+  source:
+    remote:
+      path: Model/EventArgs/PlayerChangedEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: HandIndex
+    path: ../Model/EventArgs/PlayerChangedEventArgs.cs
+    startLine: 47
+  assemblies:
+  - Model
+  namespace: Model.EventArgs
+  summary: Gets or inits the index of the hand collection which changed.
+  example: []
+  syntax:
+    content: public int? HandIndex { get; init; }
+    parameters: []
+    return:
+      type: System.Nullable{System.Int32}
+      description: An <xref href="System.Int32?text=index" data-throw-if-not-resolved="false"></xref>, if the <xref href="Shared.Interfaces.Model.IPlayer.Hand" data-throw-if-not-resolved="false"></xref> changed; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+    content.vb: Public Property HandIndex As Integer?
+  overload: Model.EventArgs.PlayerChangedEventArgs.HandIndex*
+  implements:
+  - Shared.Interfaces.Model.IPlayerChangedEventArgs.HandIndex
+references:
+- uid: Shared.Interfaces.Model.IPlayer.PlayerChanged
+  commentId: E:Shared.Interfaces.Model.IPlayer.PlayerChanged
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_PlayerChanged
+  name: PlayerChanged
+  nameWithType: IPlayer.PlayerChanged
+  fullName: Shared.Interfaces.Model.IPlayer.PlayerChanged
+- uid: Shared.Interfaces.ViewModel.IPlayerData
+  commentId: T:Shared.Interfaces.ViewModel.IPlayerData
+  href: Shared.Interfaces.ViewModel.IPlayerData.html
+  name: IPlayerData
+  nameWithType: IPlayerData
+  fullName: Shared.Interfaces.ViewModel.IPlayerData
+- uid: Model.EventArgs
+  commentId: N:Model.EventArgs
+  href: Model.html
+  name: Model.EventArgs
+  nameWithType: Model.EventArgs
+  fullName: Model.EventArgs
+  spec.csharp:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.EventArgs
+    name: EventArgs
+    href: Model.EventArgs.html
+  spec.vb:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.EventArgs
+    name: EventArgs
+    href: Model.EventArgs.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.EventArgs
+  commentId: T:System.EventArgs
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.eventargs
+  name: EventArgs
+  nameWithType: EventArgs
+  fullName: System.EventArgs
+- uid: Shared.Interfaces.Model.IPlayerChangedEventArgs
+  commentId: T:Shared.Interfaces.Model.IPlayerChangedEventArgs
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IPlayerChangedEventArgs.html
+  name: IPlayerChangedEventArgs
+  nameWithType: IPlayerChangedEventArgs
+  fullName: Shared.Interfaces.Model.IPlayerChangedEventArgs
+- uid: System.EventArgs.Empty
+  commentId: F:System.EventArgs.Empty
+  parent: System.EventArgs
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.eventargs.empty
+  name: Empty
+  nameWithType: EventArgs.Empty
+  fullName: System.EventArgs.Empty
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: Shared.Interfaces.Model.IPlayer
+  commentId: T:Shared.Interfaces.Model.IPlayer
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IPlayer.html
+  name: IPlayer
+  nameWithType: IPlayer
+  fullName: Shared.Interfaces.Model.IPlayer
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Shared.Interfaces.Model
+  commentId: N:Shared.Interfaces.Model
+  href: Shared.html
+  name: Shared.Interfaces.Model
+  nameWithType: Shared.Interfaces.Model
+  fullName: Shared.Interfaces.Model
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+- uid: Model.EventArgs.PlayerChangedEventArgs.#ctor*
+  commentId: Overload:Model.EventArgs.PlayerChangedEventArgs.#ctor
+  href: Model.EventArgs.PlayerChangedEventArgs.html#Model_EventArgs_PlayerChangedEventArgs__ctor_System_String_
+  name: PlayerChangedEventArgs
+  nameWithType: PlayerChangedEventArgs.PlayerChangedEventArgs
+  fullName: Model.EventArgs.PlayerChangedEventArgs.PlayerChangedEventArgs
+  nameWithType.vb: PlayerChangedEventArgs.New
+  fullName.vb: Model.EventArgs.PlayerChangedEventArgs.New
+  name.vb: New
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Shared.Interfaces.Model.IPlayer.Hand
+  commentId: P:Shared.Interfaces.Model.IPlayer.Hand
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Hand
+  name: Hand
+  nameWithType: IPlayer.Hand
+  fullName: Shared.Interfaces.Model.IPlayer.Hand
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Model.EventArgs.PlayerChangedEventArgs.PropertyName*
+  commentId: Overload:Model.EventArgs.PlayerChangedEventArgs.PropertyName
+  href: Model.EventArgs.PlayerChangedEventArgs.html#Model_EventArgs_PlayerChangedEventArgs_PropertyName
+  name: PropertyName
+  nameWithType: PlayerChangedEventArgs.PropertyName
+  fullName: Model.EventArgs.PlayerChangedEventArgs.PropertyName
+- uid: Shared.Interfaces.Model.IPlayerChangedEventArgs.PropertyName
+  commentId: P:Shared.Interfaces.Model.IPlayerChangedEventArgs.PropertyName
+  parent: Shared.Interfaces.Model.IPlayerChangedEventArgs
+  href: Shared.Interfaces.Model.IPlayerChangedEventArgs.html#Shared_Interfaces_Model_IPlayerChangedEventArgs_PropertyName
+  name: PropertyName
+  nameWithType: IPlayerChangedEventArgs.PropertyName
+  fullName: Shared.Interfaces.Model.IPlayerChangedEventArgs.PropertyName
+- uid: Model.EventArgs.PlayerChangedEventArgs.OldValue*
+  commentId: Overload:Model.EventArgs.PlayerChangedEventArgs.OldValue
+  href: Model.EventArgs.PlayerChangedEventArgs.html#Model_EventArgs_PlayerChangedEventArgs_OldValue
+  name: OldValue
+  nameWithType: PlayerChangedEventArgs.OldValue
+  fullName: Model.EventArgs.PlayerChangedEventArgs.OldValue
+- uid: Shared.Interfaces.Model.IPlayerChangedEventArgs.OldValue
+  commentId: P:Shared.Interfaces.Model.IPlayerChangedEventArgs.OldValue
+  parent: Shared.Interfaces.Model.IPlayerChangedEventArgs
+  href: Shared.Interfaces.Model.IPlayerChangedEventArgs.html#Shared_Interfaces_Model_IPlayerChangedEventArgs_OldValue
+  name: OldValue
+  nameWithType: IPlayerChangedEventArgs.OldValue
+  fullName: Shared.Interfaces.Model.IPlayerChangedEventArgs.OldValue
+- uid: Model.EventArgs.PlayerChangedEventArgs.NewValue*
+  commentId: Overload:Model.EventArgs.PlayerChangedEventArgs.NewValue
+  href: Model.EventArgs.PlayerChangedEventArgs.html#Model_EventArgs_PlayerChangedEventArgs_NewValue
+  name: NewValue
+  nameWithType: PlayerChangedEventArgs.NewValue
+  fullName: Model.EventArgs.PlayerChangedEventArgs.NewValue
+- uid: Shared.Interfaces.Model.IPlayerChangedEventArgs.NewValue
+  commentId: P:Shared.Interfaces.Model.IPlayerChangedEventArgs.NewValue
+  parent: Shared.Interfaces.Model.IPlayerChangedEventArgs
+  href: Shared.Interfaces.Model.IPlayerChangedEventArgs.html#Shared_Interfaces_Model_IPlayerChangedEventArgs_NewValue
+  name: NewValue
+  nameWithType: IPlayerChangedEventArgs.NewValue
+  fullName: Shared.Interfaces.Model.IPlayerChangedEventArgs.NewValue
+- uid: Model.EventArgs.PlayerChangedEventArgs.HandIndex*
+  commentId: Overload:Model.EventArgs.PlayerChangedEventArgs.HandIndex
+  href: Model.EventArgs.PlayerChangedEventArgs.html#Model_EventArgs_PlayerChangedEventArgs_HandIndex
+  name: HandIndex
+  nameWithType: PlayerChangedEventArgs.HandIndex
+  fullName: Model.EventArgs.PlayerChangedEventArgs.HandIndex
+- uid: Shared.Interfaces.Model.IPlayerChangedEventArgs.HandIndex
+  commentId: P:Shared.Interfaces.Model.IPlayerChangedEventArgs.HandIndex
+  parent: Shared.Interfaces.Model.IPlayerChangedEventArgs
+  href: Shared.Interfaces.Model.IPlayerChangedEventArgs.html#Shared_Interfaces_Model_IPlayerChangedEventArgs_HandIndex
+  name: HandIndex
+  nameWithType: IPlayerChangedEventArgs.HandIndex
+  fullName: Shared.Interfaces.Model.IPlayerChangedEventArgs.HandIndex
+- uid: System.Nullable{System.Int32}
+  commentId: T:System.Nullable{System.Int32}
+  parent: System
+  definition: System.Nullable`1
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int?
+  nameWithType: int?
+  fullName: int?
+  nameWithType.vb: Integer?
+  fullName.vb: Integer?
+  name.vb: Integer?
+  spec.csharp:
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  spec.vb:
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )

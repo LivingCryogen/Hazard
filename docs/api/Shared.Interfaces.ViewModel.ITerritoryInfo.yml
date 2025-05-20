@@ -1,0 +1,359 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Interfaces.ViewModel.ITerritoryInfo
+  commentId: T:Shared.Interfaces.ViewModel.ITerritoryInfo
+  id: ITerritoryInfo
+  parent: Shared.Interfaces.ViewModel
+  children:
+  - Shared.Interfaces.ViewModel.ITerritoryInfo.Armies
+  - Shared.Interfaces.ViewModel.ITerritoryInfo.DisplayName
+  - Shared.Interfaces.ViewModel.ITerritoryInfo.IsSelected
+  - Shared.Interfaces.ViewModel.ITerritoryInfo.Name
+  - Shared.Interfaces.ViewModel.ITerritoryInfo.PlayerOwner
+  langs:
+  - csharp
+  - vb
+  name: ITerritoryInfo
+  nameWithType: ITerritoryInfo
+  fullName: Shared.Interfaces.ViewModel.ITerritoryInfo
+  type: Interface
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ITerritoryInfo.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ITerritoryInfo
+    path: ../Shared/Interfaces/ViewModel/ITerritoryInfo.cs
+    startLine: 10
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Encapsulates data that should be public and updated for ViewModel/View bindings.
+  remarks: >-
+    Extending <xref href="System.ComponentModel.INotifyPropertyChanged" data-throw-if-not-resolved="false"></xref> and <xref href="System.ComponentModel.INotifyPropertyChanging" data-throw-if-not-resolved="false"></xref> to Territory data allows the use of MVVM Toolkit's ObservableProperty <br />
+
+    and ObservableObject attributes.
+  example: []
+  syntax:
+    content: 'public interface ITerritoryInfo : INotifyPropertyChanged, INotifyPropertyChanging'
+    content.vb: Public Interface ITerritoryInfo Inherits INotifyPropertyChanged, INotifyPropertyChanging
+  inheritedMembers:
+  - System.ComponentModel.INotifyPropertyChanged.PropertyChanged
+  - System.ComponentModel.INotifyPropertyChanging.PropertyChanging
+- uid: Shared.Interfaces.ViewModel.ITerritoryInfo.Name
+  commentId: P:Shared.Interfaces.ViewModel.ITerritoryInfo.Name
+  id: Name
+  parent: Shared.Interfaces.ViewModel.ITerritoryInfo
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: ITerritoryInfo.Name
+  fullName: Shared.Interfaces.ViewModel.ITerritoryInfo.Name
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ITerritoryInfo.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Name
+    path: ../Shared/Interfaces/ViewModel/ITerritoryInfo.cs
+    startLine: 15
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or sets the internal name of the Territory.
+  example: []
+  syntax:
+    content: string Name { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Property Name As String
+  overload: Shared.Interfaces.ViewModel.ITerritoryInfo.Name*
+- uid: Shared.Interfaces.ViewModel.ITerritoryInfo.DisplayName
+  commentId: P:Shared.Interfaces.ViewModel.ITerritoryInfo.DisplayName
+  id: DisplayName
+  parent: Shared.Interfaces.ViewModel.ITerritoryInfo
+  langs:
+  - csharp
+  - vb
+  name: DisplayName
+  nameWithType: ITerritoryInfo.DisplayName
+  fullName: Shared.Interfaces.ViewModel.ITerritoryInfo.DisplayName
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ITerritoryInfo.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: DisplayName
+    path: ../Shared/Interfaces/ViewModel/ITerritoryInfo.cs
+    startLine: 19
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or sets the name of the Territory that should be displayed to the user.
+  example: []
+  syntax:
+    content: string DisplayName { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Property DisplayName As String
+  overload: Shared.Interfaces.ViewModel.ITerritoryInfo.DisplayName*
+- uid: Shared.Interfaces.ViewModel.ITerritoryInfo.PlayerOwner
+  commentId: P:Shared.Interfaces.ViewModel.ITerritoryInfo.PlayerOwner
+  id: PlayerOwner
+  parent: Shared.Interfaces.ViewModel.ITerritoryInfo
+  langs:
+  - csharp
+  - vb
+  name: PlayerOwner
+  nameWithType: ITerritoryInfo.PlayerOwner
+  fullName: Shared.Interfaces.ViewModel.ITerritoryInfo.PlayerOwner
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ITerritoryInfo.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: PlayerOwner
+    path: ../Shared/Interfaces/ViewModel/ITerritoryInfo.cs
+    startLine: 26
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or sets the number of the player who currently owns the territory.
+  example: []
+  syntax:
+    content: int PlayerOwner { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: 0-5.
+    content.vb: Property PlayerOwner As Integer
+  overload: Shared.Interfaces.ViewModel.ITerritoryInfo.PlayerOwner*
+- uid: Shared.Interfaces.ViewModel.ITerritoryInfo.Armies
+  commentId: P:Shared.Interfaces.ViewModel.ITerritoryInfo.Armies
+  id: Armies
+  parent: Shared.Interfaces.ViewModel.ITerritoryInfo
+  langs:
+  - csharp
+  - vb
+  name: Armies
+  nameWithType: ITerritoryInfo.Armies
+  fullName: Shared.Interfaces.ViewModel.ITerritoryInfo.Armies
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ITerritoryInfo.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Armies
+    path: ../Shared/Interfaces/ViewModel/ITerritoryInfo.cs
+    startLine: 30
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or sets the number of armies currently located within this territory.
+  example: []
+  syntax:
+    content: int Armies { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Property Armies As Integer
+  overload: Shared.Interfaces.ViewModel.ITerritoryInfo.Armies*
+- uid: Shared.Interfaces.ViewModel.ITerritoryInfo.IsSelected
+  commentId: P:Shared.Interfaces.ViewModel.ITerritoryInfo.IsSelected
+  id: IsSelected
+  parent: Shared.Interfaces.ViewModel.ITerritoryInfo
+  langs:
+  - csharp
+  - vb
+  name: IsSelected
+  nameWithType: ITerritoryInfo.IsSelected
+  fullName: Shared.Interfaces.ViewModel.ITerritoryInfo.IsSelected
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ITerritoryInfo.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: IsSelected
+    path: ../Shared/Interfaces/ViewModel/ITerritoryInfo.cs
+    startLine: 37
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or sets a flag indicating that this territory is currently selected by the user.
+  example: []
+  syntax:
+    content: bool IsSelected { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if it is currently selected; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Property IsSelected As Boolean
+  overload: Shared.Interfaces.ViewModel.ITerritoryInfo.IsSelected*
+references:
+- uid: System.ComponentModel.INotifyPropertyChanged
+  commentId: T:System.ComponentModel.INotifyPropertyChanged
+  parent: System.ComponentModel
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanged
+  name: INotifyPropertyChanged
+  nameWithType: INotifyPropertyChanged
+  fullName: System.ComponentModel.INotifyPropertyChanged
+- uid: System.ComponentModel.INotifyPropertyChanging
+  commentId: T:System.ComponentModel.INotifyPropertyChanging
+  parent: System.ComponentModel
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanging
+  name: INotifyPropertyChanging
+  nameWithType: INotifyPropertyChanging
+  fullName: System.ComponentModel.INotifyPropertyChanging
+- uid: Shared.Interfaces.ViewModel
+  commentId: N:Shared.Interfaces.ViewModel
+  href: Shared.html
+  name: Shared.Interfaces.ViewModel
+  nameWithType: Shared.Interfaces.ViewModel
+  fullName: Shared.Interfaces.ViewModel
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.ViewModel
+    name: ViewModel
+    href: Shared.Interfaces.ViewModel.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.ViewModel
+    name: ViewModel
+    href: Shared.Interfaces.ViewModel.html
+- uid: System.ComponentModel.INotifyPropertyChanged.PropertyChanged
+  commentId: E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged
+  parent: System.ComponentModel.INotifyPropertyChanged
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanged.propertychanged
+  name: PropertyChanged
+  nameWithType: INotifyPropertyChanged.PropertyChanged
+  fullName: System.ComponentModel.INotifyPropertyChanged.PropertyChanged
+- uid: System.ComponentModel.INotifyPropertyChanging.PropertyChanging
+  commentId: E:System.ComponentModel.INotifyPropertyChanging.PropertyChanging
+  parent: System.ComponentModel.INotifyPropertyChanging
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanging.propertychanging
+  name: PropertyChanging
+  nameWithType: INotifyPropertyChanging.PropertyChanging
+  fullName: System.ComponentModel.INotifyPropertyChanging.PropertyChanging
+- uid: System.ComponentModel
+  commentId: N:System.ComponentModel
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.ComponentModel
+  nameWithType: System.ComponentModel
+  fullName: System.ComponentModel
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.ComponentModel
+    name: ComponentModel
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.componentmodel
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.ComponentModel
+    name: ComponentModel
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.componentmodel
+- uid: Shared.Interfaces.ViewModel.ITerritoryInfo.Name*
+  commentId: Overload:Shared.Interfaces.ViewModel.ITerritoryInfo.Name
+  href: Shared.Interfaces.ViewModel.ITerritoryInfo.html#Shared_Interfaces_ViewModel_ITerritoryInfo_Name
+  name: Name
+  nameWithType: ITerritoryInfo.Name
+  fullName: Shared.Interfaces.ViewModel.ITerritoryInfo.Name
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Shared.Interfaces.ViewModel.ITerritoryInfo.DisplayName*
+  commentId: Overload:Shared.Interfaces.ViewModel.ITerritoryInfo.DisplayName
+  href: Shared.Interfaces.ViewModel.ITerritoryInfo.html#Shared_Interfaces_ViewModel_ITerritoryInfo_DisplayName
+  name: DisplayName
+  nameWithType: ITerritoryInfo.DisplayName
+  fullName: Shared.Interfaces.ViewModel.ITerritoryInfo.DisplayName
+- uid: Shared.Interfaces.ViewModel.ITerritoryInfo.PlayerOwner*
+  commentId: Overload:Shared.Interfaces.ViewModel.ITerritoryInfo.PlayerOwner
+  href: Shared.Interfaces.ViewModel.ITerritoryInfo.html#Shared_Interfaces_ViewModel_ITerritoryInfo_PlayerOwner
+  name: PlayerOwner
+  nameWithType: ITerritoryInfo.PlayerOwner
+  fullName: Shared.Interfaces.ViewModel.ITerritoryInfo.PlayerOwner
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Shared.Interfaces.ViewModel.ITerritoryInfo.Armies*
+  commentId: Overload:Shared.Interfaces.ViewModel.ITerritoryInfo.Armies
+  href: Shared.Interfaces.ViewModel.ITerritoryInfo.html#Shared_Interfaces_ViewModel_ITerritoryInfo_Armies
+  name: Armies
+  nameWithType: ITerritoryInfo.Armies
+  fullName: Shared.Interfaces.ViewModel.ITerritoryInfo.Armies
+- uid: Shared.Interfaces.ViewModel.ITerritoryInfo.IsSelected*
+  commentId: Overload:Shared.Interfaces.ViewModel.ITerritoryInfo.IsSelected
+  href: Shared.Interfaces.ViewModel.ITerritoryInfo.html#Shared_Interfaces_ViewModel_ITerritoryInfo_IsSelected
+  name: IsSelected
+  nameWithType: ITerritoryInfo.IsSelected
+  fullName: Shared.Interfaces.ViewModel.ITerritoryInfo.IsSelected
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean

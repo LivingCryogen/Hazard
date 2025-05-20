@@ -1,0 +1,53 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Geography
+  commentId: N:Shared.Geography
+  id: Shared.Geography
+  children:
+  - Shared.Geography.BoardGeography
+  - Shared.Geography.GeographyInitializer
+  langs:
+  - csharp
+  - vb
+  name: Shared.Geography
+  nameWithType: Shared.Geography
+  fullName: Shared.Geography
+  type: Namespace
+  assemblies:
+  - Model
+references:
+- uid: Shared.Geography.BoardGeography
+  commentId: T:Shared.Geography.BoardGeography
+  href: Shared.Geography.BoardGeography.html
+  name: BoardGeography
+  nameWithType: BoardGeography
+  fullName: Shared.Geography.BoardGeography
+- uid: Shared.Geography.GeographyInitializer
+  commentId: T:Shared.Geography.GeographyInitializer
+  parent: Shared.Geography
+  href: Shared.Geography.GeographyInitializer.html
+  name: GeographyInitializer
+  nameWithType: GeographyInitializer
+  fullName: Shared.Geography.GeographyInitializer
+- uid: Shared.Geography
+  commentId: N:Shared.Geography
+  href: Shared.html
+  name: Shared.Geography
+  nameWithType: Shared.Geography
+  fullName: Shared.Geography
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html

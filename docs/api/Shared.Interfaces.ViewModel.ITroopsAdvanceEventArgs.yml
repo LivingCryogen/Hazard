@@ -1,0 +1,332 @@
+### YamlMime:ManagedReference
+items:
+- uid: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs
+  commentId: T:Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs
+  id: ITroopsAdvanceEventArgs
+  parent: Shared.Interfaces.ViewModel
+  children:
+  - Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Conquered
+  - Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Max
+  - Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Min
+  - Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Source
+  - Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Target
+  langs:
+  - csharp
+  - vb
+  name: ITroopsAdvanceEventArgs
+  nameWithType: ITroopsAdvanceEventArgs
+  fullName: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs
+  type: Interface
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ITroopsAdvanceEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ITroopsAdvanceEventArgs
+    path: ../Shared/Interfaces/ViewModel/ITroopsAdvanceEventArgs.cs
+    startLine: 7
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Contract for EventArgs used by <xref href="Shared.Interfaces.ViewModel.IMainVM.AdvanceRequest" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public interface ITroopsAdvanceEventArgs
+    content.vb: Public Interface ITroopsAdvanceEventArgs
+- uid: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Conquered
+  commentId: P:Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Conquered
+  id: Conquered
+  parent: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs
+  langs:
+  - csharp
+  - vb
+  name: Conquered
+  nameWithType: ITroopsAdvanceEventArgs.Conquered
+  fullName: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Conquered
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ITroopsAdvanceEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Conquered
+    path: ../Shared/Interfaces/ViewModel/ITroopsAdvanceEventArgs.cs
+    startLine: 15
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Get or inits a flag indicating if the target of the advance was conquered in attack.
+  example: []
+  syntax:
+    content: bool Conquered { get; init; }
+    parameters: []
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the advance is ocurring after a successful attack; <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a> if the advance is a move during <xref href="Shared.Enums.GamePhase.Move" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Property Conquered As Boolean
+  overload: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Conquered*
+- uid: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Max
+  commentId: P:Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Max
+  id: Max
+  parent: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs
+  langs:
+  - csharp
+  - vb
+  name: Max
+  nameWithType: ITroopsAdvanceEventArgs.Max
+  fullName: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Max
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ITroopsAdvanceEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Max
+    path: ../Shared/Interfaces/ViewModel/ITroopsAdvanceEventArgs.cs
+    startLine: 22
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or inits the maximum number of armies that may be advanced.
+  example: []
+  syntax:
+    content: int Max { get; init; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: A number &gt;= the number of dice used by the attacker.
+    content.vb: Property Max As Integer
+  overload: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Max*
+- uid: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Min
+  commentId: P:Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Min
+  id: Min
+  parent: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs
+  langs:
+  - csharp
+  - vb
+  name: Min
+  nameWithType: ITroopsAdvanceEventArgs.Min
+  fullName: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Min
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ITroopsAdvanceEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Min
+    path: ../Shared/Interfaces/ViewModel/ITroopsAdvanceEventArgs.cs
+    startLine: 29
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or inits the minimum number of armies that may be advanced.
+  example: []
+  syntax:
+    content: int Min { get; init; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: A number &gt;= the number of dice used by the attacker.
+    content.vb: Property Min As Integer
+  overload: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Min*
+- uid: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Source
+  commentId: P:Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Source
+  id: Source
+  parent: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs
+  langs:
+  - csharp
+  - vb
+  name: Source
+  nameWithType: ITroopsAdvanceEventArgs.Source
+  fullName: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Source
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ITroopsAdvanceEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Source
+    path: ../Shared/Interfaces/ViewModel/ITroopsAdvanceEventArgs.cs
+    startLine: 33
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or inits the source territory's Enum ID.
+  example: []
+  syntax:
+    content: TerrID Source { get; init; }
+    parameters: []
+    return:
+      type: Shared.Geography.Enums.TerrID
+    content.vb: Property Source As TerrID
+  overload: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Source*
+- uid: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Target
+  commentId: P:Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Target
+  id: Target
+  parent: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs
+  langs:
+  - csharp
+  - vb
+  name: Target
+  nameWithType: ITroopsAdvanceEventArgs.Target
+  fullName: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Target
+  type: Property
+  source:
+    remote:
+      path: Shared/Interfaces/ViewModel/ITroopsAdvanceEventArgs.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Target
+    path: ../Shared/Interfaces/ViewModel/ITroopsAdvanceEventArgs.cs
+    startLine: 37
+  assemblies:
+  - Model
+  namespace: Shared.Interfaces.ViewModel
+  summary: Gets or inits the target territory's Enum ID.
+  example: []
+  syntax:
+    content: TerrID Target { get; init; }
+    parameters: []
+    return:
+      type: Shared.Geography.Enums.TerrID
+    content.vb: Property Target As TerrID
+  overload: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Target*
+references:
+- uid: Shared.Interfaces.ViewModel.IMainVM.AdvanceRequest
+  commentId: E:Shared.Interfaces.ViewModel.IMainVM.AdvanceRequest
+  href: Shared.Interfaces.ViewModel.IMainVM.html#Shared_Interfaces_ViewModel_IMainVM_AdvanceRequest
+  name: AdvanceRequest
+  nameWithType: IMainVM.AdvanceRequest
+  fullName: Shared.Interfaces.ViewModel.IMainVM.AdvanceRequest
+- uid: Shared.Interfaces.ViewModel
+  commentId: N:Shared.Interfaces.ViewModel
+  href: Shared.html
+  name: Shared.Interfaces.ViewModel
+  nameWithType: Shared.Interfaces.ViewModel
+  fullName: Shared.Interfaces.ViewModel
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.ViewModel
+    name: ViewModel
+    href: Shared.Interfaces.ViewModel.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.ViewModel
+    name: ViewModel
+    href: Shared.Interfaces.ViewModel.html
+- uid: Shared.Enums.GamePhase.Move
+  commentId: F:Shared.Enums.GamePhase.Move
+  href: Shared.Enums.GamePhase.html#Shared_Enums_GamePhase_Move
+  name: Move
+  nameWithType: GamePhase.Move
+  fullName: Shared.Enums.GamePhase.Move
+- uid: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Conquered*
+  commentId: Overload:Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Conquered
+  href: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.html#Shared_Interfaces_ViewModel_ITroopsAdvanceEventArgs_Conquered
+  name: Conquered
+  nameWithType: ITroopsAdvanceEventArgs.Conquered
+  fullName: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Conquered
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Max*
+  commentId: Overload:Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Max
+  href: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.html#Shared_Interfaces_ViewModel_ITroopsAdvanceEventArgs_Max
+  name: Max
+  nameWithType: ITroopsAdvanceEventArgs.Max
+  fullName: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Max
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Min*
+  commentId: Overload:Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Min
+  href: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.html#Shared_Interfaces_ViewModel_ITroopsAdvanceEventArgs_Min
+  name: Min
+  nameWithType: ITroopsAdvanceEventArgs.Min
+  fullName: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Min
+- uid: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Source*
+  commentId: Overload:Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Source
+  href: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.html#Shared_Interfaces_ViewModel_ITroopsAdvanceEventArgs_Source
+  name: Source
+  nameWithType: ITroopsAdvanceEventArgs.Source
+  fullName: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Source
+- uid: Shared.Geography.Enums.TerrID
+  commentId: T:Shared.Geography.Enums.TerrID
+  parent: Shared.Geography.Enums
+  href: Shared.Geography.Enums.TerrID.html
+  name: TerrID
+  nameWithType: TerrID
+  fullName: Shared.Geography.Enums.TerrID
+- uid: Shared.Geography.Enums
+  commentId: N:Shared.Geography.Enums
+  href: Shared.html
+  name: Shared.Geography.Enums
+  nameWithType: Shared.Geography.Enums
+  fullName: Shared.Geography.Enums
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+- uid: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Target*
+  commentId: Overload:Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Target
+  href: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.html#Shared_Interfaces_ViewModel_ITroopsAdvanceEventArgs_Target
+  name: Target
+  nameWithType: ITroopsAdvanceEventArgs.Target
+  fullName: Shared.Interfaces.ViewModel.ITroopsAdvanceEventArgs.Target

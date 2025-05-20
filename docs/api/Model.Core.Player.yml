@@ -1,0 +1,2356 @@
+### YamlMime:ManagedReference
+items:
+- uid: Model.Core.Player
+  commentId: T:Model.Core.Player
+  id: Player
+  parent: Model.Core
+  children:
+  - Model.Core.Player.#ctor(System.Int32,System.Int32,Model.Entities.Cards.CardFactory,Shared.Interfaces.Model.IRuleValues,Shared.Interfaces.Model.IBoard,Microsoft.Extensions.Logging.ILogger{Model.Core.Player})
+  - Model.Core.Player.#ctor(System.String,System.Int32,System.Int32,Model.Entities.Cards.CardFactory,Shared.Interfaces.Model.IRuleValues,Shared.Interfaces.Model.IBoard,Microsoft.Extensions.Logging.ILogger{Model.Core.Player})
+  - Model.Core.Player.AddCard(Shared.Interfaces.Model.ICard)
+  - Model.Core.Player.AddTerritory(Shared.Geography.Enums.TerrID)
+  - Model.Core.Player.ArmyBonus
+  - Model.Core.Player.ArmyPool
+  - Model.Core.Player.ContinentBonus
+  - Model.Core.Player.ControlledTerritories
+  - Model.Core.Player.FindCardSet
+  - Model.Core.Player.GetBinarySerials
+  - Model.Core.Player.GetControlledTargets(Shared.Geography.Enums.TerrID[])
+  - Model.Core.Player.GetsTradeBonus(System.Int32)
+  - Model.Core.Player.Hand
+  - Model.Core.Player.HasCardSet
+  - Model.Core.Player.LoadFromBinary(System.IO.BinaryReader)
+  - Model.Core.Player.Name
+  - Model.Core.Player.Number
+  - Model.Core.Player.PlayerChanged
+  - Model.Core.Player.PlayerLost
+  - Model.Core.Player.RemoveCard(System.Int32)
+  - Model.Core.Player.RemoveTerritory(Shared.Geography.Enums.TerrID)
+  langs:
+  - csharp
+  - vb
+  name: Player
+  nameWithType: Player
+  fullName: Model.Core.Player
+  type: Class
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Player
+    path: ../Model/Core/Player.cs
+    startLine: 9
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Represents a player in the game.
+  example: []
+  syntax:
+    content: 'public class Player : IPlayer, IBinarySerializable'
+    content.vb: Public Class Player Implements IPlayer, IBinarySerializable
+  inheritance:
+  - System.Object
+  implements:
+  - Shared.Interfaces.Model.IPlayer
+  - Shared.Interfaces.Model.IBinarySerializable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Model.Core.Player.#ctor(System.Int32,System.Int32,Model.Entities.Cards.CardFactory,Shared.Interfaces.Model.IRuleValues,Shared.Interfaces.Model.IBoard,Microsoft.Extensions.Logging.ILogger{Model.Core.Player})
+  commentId: M:Model.Core.Player.#ctor(System.Int32,System.Int32,Model.Entities.Cards.CardFactory,Shared.Interfaces.Model.IRuleValues,Shared.Interfaces.Model.IBoard,Microsoft.Extensions.Logging.ILogger{Model.Core.Player})
+  id: '#ctor(System.Int32,System.Int32,Model.Entities.Cards.CardFactory,Shared.Interfaces.Model.IRuleValues,Shared.Interfaces.Model.IBoard,Microsoft.Extensions.Logging.ILogger{Model.Core.Player})'
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: Player(int, int, CardFactory, IRuleValues, IBoard, ILogger<Player>)
+  nameWithType: Player.Player(int, int, CardFactory, IRuleValues, IBoard, ILogger<Player>)
+  fullName: Model.Core.Player.Player(int, int, Model.Entities.Cards.CardFactory, Shared.Interfaces.Model.IRuleValues, Shared.Interfaces.Model.IBoard, Microsoft.Extensions.Logging.ILogger<Model.Core.Player>)
+  type: Constructor
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Model/Core/Player.cs
+    startLine: 25
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Constructs a player when their name is unknown.
+  example: []
+  syntax:
+    content: public Player(int number, int numPlayers, CardFactory cardFactory, IRuleValues values, IBoard board, ILogger<Player> logger)
+    parameters:
+    - id: number
+      type: System.Int32
+      description: The number of the player (0 or higher).
+    - id: numPlayers
+      type: System.Int32
+      description: The number of total players in the game.
+    - id: cardFactory
+      type: Model.Entities.Cards.CardFactory
+      description: A factory for producing <xref href="Shared.Interfaces.Model.ICard" data-throw-if-not-resolved="false"></xref>s; necessary for populating <xref href="Model.Core.Player.Hand" data-throw-if-not-resolved="false"></xref> via <xref href="Model.Core.Player.LoadFromBinary(System.IO.BinaryReader)" data-throw-if-not-resolved="false"></xref>.
+    - id: values
+      type: Shared.Interfaces.Model.IRuleValues
+      description: Provides game-rule defined values and equations.
+    - id: board
+      type: Shared.Interfaces.Model.IBoard
+      description: The game board.
+    - id: logger
+      type: Microsoft.Extensions.Logging.ILogger{Model.Core.Player}
+      description: A logger for logging errors and debug information.
+    content.vb: Public Sub New(number As Integer, numPlayers As Integer, cardFactory As CardFactory, values As IRuleValues, board As IBoard, logger As ILogger(Of Player))
+  overload: Model.Core.Player.#ctor*
+  nameWithType.vb: Player.New(Integer, Integer, CardFactory, IRuleValues, IBoard, ILogger(Of Player))
+  fullName.vb: Model.Core.Player.New(Integer, Integer, Model.Entities.Cards.CardFactory, Shared.Interfaces.Model.IRuleValues, Shared.Interfaces.Model.IBoard, Microsoft.Extensions.Logging.ILogger(Of Model.Core.Player))
+  name.vb: New(Integer, Integer, CardFactory, IRuleValues, IBoard, ILogger(Of Player))
+- uid: Model.Core.Player.#ctor(System.String,System.Int32,System.Int32,Model.Entities.Cards.CardFactory,Shared.Interfaces.Model.IRuleValues,Shared.Interfaces.Model.IBoard,Microsoft.Extensions.Logging.ILogger{Model.Core.Player})
+  commentId: M:Model.Core.Player.#ctor(System.String,System.Int32,System.Int32,Model.Entities.Cards.CardFactory,Shared.Interfaces.Model.IRuleValues,Shared.Interfaces.Model.IBoard,Microsoft.Extensions.Logging.ILogger{Model.Core.Player})
+  id: '#ctor(System.String,System.Int32,System.Int32,Model.Entities.Cards.CardFactory,Shared.Interfaces.Model.IRuleValues,Shared.Interfaces.Model.IBoard,Microsoft.Extensions.Logging.ILogger{Model.Core.Player})'
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: Player(string, int, int, CardFactory, IRuleValues, IBoard, ILogger<Player>)
+  nameWithType: Player.Player(string, int, int, CardFactory, IRuleValues, IBoard, ILogger<Player>)
+  fullName: Model.Core.Player.Player(string, int, int, Model.Entities.Cards.CardFactory, Shared.Interfaces.Model.IRuleValues, Shared.Interfaces.Model.IBoard, Microsoft.Extensions.Logging.ILogger<Model.Core.Player>)
+  type: Constructor
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: .ctor
+    path: ../Model/Core/Player.cs
+    startLine: 47
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Constructs a player with a user-provided name.
+  example: []
+  syntax:
+    content: public Player(string name, int number, int numPlayers, CardFactory cardFactory, IRuleValues values, IBoard board, ILogger<Player> logger)
+    parameters:
+    - id: name
+      type: System.String
+      description: The name for the player provided by the user.
+    - id: number
+      type: System.Int32
+      description: The number of the player (0 or higher).
+    - id: numPlayers
+      type: System.Int32
+      description: The number of total players in the game.
+    - id: cardFactory
+      type: Model.Entities.Cards.CardFactory
+      description: A factory for producing <xref href="Shared.Interfaces.Model.ICard" data-throw-if-not-resolved="false"></xref>s; necessary for populating <xref href="Model.Core.Player.Hand" data-throw-if-not-resolved="false"></xref> via <xref href="Model.Core.Player.LoadFromBinary(System.IO.BinaryReader)" data-throw-if-not-resolved="false"></xref>.
+    - id: values
+      type: Shared.Interfaces.Model.IRuleValues
+      description: Provides game-rule defined values and equations.
+    - id: board
+      type: Shared.Interfaces.Model.IBoard
+      description: The game board.
+    - id: logger
+      type: Microsoft.Extensions.Logging.ILogger{Model.Core.Player}
+      description: A logger for logging errors and debug information.
+    content.vb: Public Sub New(name As String, number As Integer, numPlayers As Integer, cardFactory As CardFactory, values As IRuleValues, board As IBoard, logger As ILogger(Of Player))
+  overload: Model.Core.Player.#ctor*
+  nameWithType.vb: Player.New(String, Integer, Integer, CardFactory, IRuleValues, IBoard, ILogger(Of Player))
+  fullName.vb: Model.Core.Player.New(String, Integer, Integer, Model.Entities.Cards.CardFactory, Shared.Interfaces.Model.IRuleValues, Shared.Interfaces.Model.IBoard, Microsoft.Extensions.Logging.ILogger(Of Model.Core.Player))
+  name.vb: New(String, Integer, Integer, CardFactory, IRuleValues, IBoard, ILogger(Of Player))
+- uid: Model.Core.Player.PlayerChanged
+  commentId: E:Model.Core.Player.PlayerChanged
+  id: PlayerChanged
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: PlayerChanged
+  nameWithType: Player.PlayerChanged
+  fullName: Model.Core.Player.PlayerChanged
+  type: Event
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: PlayerChanged
+    path: ../Model/Core/Player.cs
+    startLine: 61
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Should fire when this IPlayer's property values change.
+  example: []
+  syntax:
+    content: public event EventHandler<IPlayerChangedEventArgs>? PlayerChanged
+    return:
+      type: System.EventHandler{Shared.Interfaces.Model.IPlayerChangedEventArgs}
+    content.vb: Public Event PlayerChanged As EventHandler(Of IPlayerChangedEventArgs)
+  implements:
+  - Shared.Interfaces.Model.IPlayer.PlayerChanged
+- uid: Model.Core.Player.PlayerLost
+  commentId: E:Model.Core.Player.PlayerLost
+  id: PlayerLost
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: PlayerLost
+  nameWithType: Player.PlayerLost
+  fullName: Model.Core.Player.PlayerLost
+  type: Event
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: PlayerLost
+    path: ../Model/Core/Player.cs
+    startLine: 63
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Fires when this IPlayer has lost the game (by default, when they control no territories).
+  example: []
+  syntax:
+    content: public event EventHandler? PlayerLost
+    return:
+      type: System.EventHandler
+    content.vb: Public Event PlayerLost As EventHandler
+  implements:
+  - Shared.Interfaces.Model.IPlayer.PlayerLost
+- uid: Model.Core.Player.Name
+  commentId: P:Model.Core.Player.Name
+  id: Name
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: Player.Name
+  fullName: Model.Core.Player.Name
+  type: Property
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Name
+    path: ../Model/Core/Player.cs
+    startLine: 72
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Gets or sets the name of the player.
+  example: []
+  syntax:
+    content: public string Name { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Name As String
+  overload: Model.Core.Player.Name*
+  implements:
+  - Shared.Interfaces.Model.IPlayer.Name
+- uid: Model.Core.Player.Number
+  commentId: P:Model.Core.Player.Number
+  id: Number
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: Number
+  nameWithType: Player.Number
+  fullName: Model.Core.Player.Number
+  type: Property
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Number
+    path: ../Model/Core/Player.cs
+    startLine: 74
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Gets the number of the player.
+  example: []
+  syntax:
+    content: public int Number { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: An integer from 0-5.
+    content.vb: Public Property Number As Integer
+  overload: Model.Core.Player.Number*
+  implements:
+  - Shared.Interfaces.Model.IPlayer.Number
+- uid: Model.Core.Player.HasCardSet
+  commentId: P:Model.Core.Player.HasCardSet
+  id: HasCardSet
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: HasCardSet
+  nameWithType: Player.HasCardSet
+  fullName: Model.Core.Player.HasCardSet
+  type: Property
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: HasCardSet
+    path: ../Model/Core/Player.cs
+    startLine: 76
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Gets a flag indicating whether the player holds a valid trade set of cards.
+  example: []
+  syntax:
+    content: public bool HasCardSet { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if <xref href="Shared.Interfaces.Model.IPlayer.Hand" data-throw-if-not-resolved="false"></xref> contains cards that satisfy their set's <xref href="Shared.Interfaces.Model.ICardSet.IsValidTrade(Shared.Interfaces.Model.ICard%5b%5d)" data-throw-if-not-resolved="false"></xref>; otherwise <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Property HasCardSet As Boolean
+  overload: Model.Core.Player.HasCardSet*
+  implements:
+  - Shared.Interfaces.Model.IPlayer.HasCardSet
+- uid: Model.Core.Player.ArmyBonus
+  commentId: P:Model.Core.Player.ArmyBonus
+  id: ArmyBonus
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: ArmyBonus
+  nameWithType: Player.ArmyBonus
+  fullName: Model.Core.Player.ArmyBonus
+  type: Property
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ArmyBonus
+    path: ../Model/Core/Player.cs
+    startLine: 78
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Gets the bonus a player receives to their army pool each turn.
+  remarks: Should be recalculated at the start of each turn (during <xref href="Shared.Enums.GamePhase.Place" data-throw-if-not-resolved="false"></xref>)
+  example: []
+  syntax:
+    content: public int ArmyBonus { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: >-
+        The default rules never allow this to fall below 3 (<xref href="Shared.Interfaces.Model.IRuleValues.MinimumArmyBonus" data-throw-if-not-resolved="false"></xref>).<br />
+
+        It is calculated by <xref href="Shared.Interfaces.Model.IRuleValues.CalculateArmyBonus(System.Int32%2cSystem.Collections.Generic.List%7bShared.Geography.Enums.ContID%7d)" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public ReadOnly Property ArmyBonus As Integer
+  overload: Model.Core.Player.ArmyBonus*
+  implements:
+  - Shared.Interfaces.Model.IPlayer.ArmyBonus
+- uid: Model.Core.Player.ContinentBonus
+  commentId: P:Model.Core.Player.ContinentBonus
+  id: ContinentBonus
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: ContinentBonus
+  nameWithType: Player.ContinentBonus
+  fullName: Model.Core.Player.ContinentBonus
+  type: Property
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ContinentBonus
+    path: ../Model/Core/Player.cs
+    startLine: 80
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Gets or sets the increase to <xref href="Shared.Interfaces.Model.IPlayer.ArmyBonus" data-throw-if-not-resolved="false"></xref> a player receives from controlling continents.
+  example: []
+  syntax:
+    content: public int ContinentBonus { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: A natural number (0 or positive integer) determined by <xref href="Shared.Interfaces.Model.IRuleValues.ContinentBonus" data-throw-if-not-resolved="false"></xref> and the extent of the player's <xref href="Shared.Interfaces.Model.IPlayer.ControlledTerritories" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Property ContinentBonus As Integer
+  overload: Model.Core.Player.ContinentBonus*
+  implements:
+  - Shared.Interfaces.Model.IPlayer.ContinentBonus
+- uid: Model.Core.Player.ArmyPool
+  commentId: P:Model.Core.Player.ArmyPool
+  id: ArmyPool
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: ArmyPool
+  nameWithType: Player.ArmyPool
+  fullName: Model.Core.Player.ArmyPool
+  type: Property
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ArmyPool
+    path: ../Model/Core/Player.cs
+    startLine: 82
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Gets or sets the current number of armies a player has left to place.
+  example: []
+  syntax:
+    content: public int ArmyPool { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: An integer with an initial value equal to <xref href="Shared.Interfaces.Model.IPlayer.ArmyBonus" data-throw-if-not-resolved="false"></xref> that is reduced when an <xref href="Shared.Interfaces.Model.IPlayer" data-throw-if-not-resolved="false"></xref> places an army during <xref href="Shared.Enums.GamePhase.Place" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Property ArmyPool As Integer
+  overload: Model.Core.Player.ArmyPool*
+  implements:
+  - Shared.Interfaces.Model.IPlayer.ArmyPool
+- uid: Model.Core.Player.ControlledTerritories
+  commentId: P:Model.Core.Player.ControlledTerritories
+  id: ControlledTerritories
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: ControlledTerritories
+  nameWithType: Player.ControlledTerritories
+  fullName: Model.Core.Player.ControlledTerritories
+  type: Property
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: ControlledTerritories
+    path: ../Model/Core/Player.cs
+    startLine: 93
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Gets the territories controlled by the player.
+  example: []
+  syntax:
+    content: public HashSet<TerrID> ControlledTerritories { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.HashSet{Shared.Geography.Enums.TerrID}
+    content.vb: Public Property ControlledTerritories As HashSet(Of TerrID)
+  overload: Model.Core.Player.ControlledTerritories*
+  implements:
+  - Shared.Interfaces.Model.IPlayer.ControlledTerritories
+- uid: Model.Core.Player.Hand
+  commentId: P:Model.Core.Player.Hand
+  id: Hand
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: Hand
+  nameWithType: Player.Hand
+  fullName: Model.Core.Player.Hand
+  type: Property
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: Hand
+    path: ../Model/Core/Player.cs
+    startLine: 95
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Gets a list of cards in the player's hand.
+  example: []
+  syntax:
+    content: public List<ICard> Hand { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{Shared.Interfaces.Model.ICard}
+    content.vb: Public Property Hand As List(Of ICard)
+  overload: Model.Core.Player.Hand*
+  implements:
+  - Shared.Interfaces.Model.IPlayer.Hand
+- uid: Model.Core.Player.GetsTradeBonus(System.Int32)
+  commentId: M:Model.Core.Player.GetsTradeBonus(System.Int32)
+  id: GetsTradeBonus(System.Int32)
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: GetsTradeBonus(int)
+  nameWithType: Player.GetsTradeBonus(int)
+  fullName: Model.Core.Player.GetsTradeBonus(int)
+  type: Method
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: GetsTradeBonus
+    path: ../Model/Core/Player.cs
+    startLine: 103
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Adds the trade-in bonus to <xref href="Shared.Interfaces.Model.IPlayer.ArmyPool" data-throw-if-not-resolved="false"></xref> when the player trades in cards.
+  example: []
+  syntax:
+    content: public void GetsTradeBonus(int tradeInBonus)
+    parameters:
+    - id: tradeInBonus
+      type: System.Int32
+      description: The bonus granted.
+    content.vb: Public Sub GetsTradeBonus(tradeInBonus As Integer)
+  overload: Model.Core.Player.GetsTradeBonus*
+  implements:
+  - Shared.Interfaces.Model.IPlayer.GetsTradeBonus(System.Int32)
+  nameWithType.vb: Player.GetsTradeBonus(Integer)
+  fullName.vb: Model.Core.Player.GetsTradeBonus(Integer)
+  name.vb: GetsTradeBonus(Integer)
+- uid: Model.Core.Player.GetControlledTargets(Shared.Geography.Enums.TerrID[])
+  commentId: M:Model.Core.Player.GetControlledTargets(Shared.Geography.Enums.TerrID[])
+  id: GetControlledTargets(Shared.Geography.Enums.TerrID[])
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: GetControlledTargets(TerrID[])
+  nameWithType: Player.GetControlledTargets(TerrID[])
+  fullName: Model.Core.Player.GetControlledTargets(Shared.Geography.Enums.TerrID[])
+  type: Method
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: GetControlledTargets
+    path: ../Model/Core/Player.cs
+    startLine: 109
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Gets territories controlled by this player from among a given set.
+  example: []
+  syntax:
+    content: public TerrID[] GetControlledTargets(TerrID[] targets)
+    parameters:
+    - id: targets
+      type: Shared.Geography.Enums.TerrID[]
+      description: The territories to match.
+    return:
+      type: Shared.Geography.Enums.TerrID[]
+      description: Those territories from among <code class="paramref">targets</code> controlled by this player.
+    content.vb: Public Function GetControlledTargets(targets As TerrID()) As TerrID()
+  overload: Model.Core.Player.GetControlledTargets*
+  implements:
+  - Shared.Interfaces.Model.IPlayer.GetControlledTargets(Shared.Geography.Enums.TerrID[])
+  nameWithType.vb: Player.GetControlledTargets(TerrID())
+  fullName.vb: Model.Core.Player.GetControlledTargets(Shared.Geography.Enums.TerrID())
+  name.vb: GetControlledTargets(TerrID())
+- uid: Model.Core.Player.FindCardSet
+  commentId: M:Model.Core.Player.FindCardSet
+  id: FindCardSet
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: FindCardSet()
+  nameWithType: Player.FindCardSet()
+  fullName: Model.Core.Player.FindCardSet()
+  type: Method
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: FindCardSet
+    path: ../Model/Core/Player.cs
+    startLine: 114
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Finds trade-in card sets in the player's hand.
+  remarks: >-
+    Determines whether the player holds a set of <xref href="Shared.Interfaces.Model.ICard" data-throw-if-not-resolved="false"></xref>s that are a tradeable set according to<br />
+
+    <xref href="Shared.Interfaces.Model.ICardSet.FindTradeSets(Shared.Interfaces.Model.ICard%5b%5d)" data-throw-if-not-resolved="false"></xref> and <xref href="Shared.Interfaces.Model.ICardSet.IsValidTrade(Shared.Interfaces.Model.ICard%5b%5d)" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public void FindCardSet()
+    content.vb: Public Sub FindCardSet()
+  overload: Model.Core.Player.FindCardSet*
+  implements:
+  - Shared.Interfaces.Model.IPlayer.FindCardSet
+- uid: Model.Core.Player.AddTerritory(Shared.Geography.Enums.TerrID)
+  commentId: M:Model.Core.Player.AddTerritory(Shared.Geography.Enums.TerrID)
+  id: AddTerritory(Shared.Geography.Enums.TerrID)
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: AddTerritory(TerrID)
+  nameWithType: Player.AddTerritory(TerrID)
+  fullName: Model.Core.Player.AddTerritory(Shared.Geography.Enums.TerrID)
+  type: Method
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: AddTerritory
+    path: ../Model/Core/Player.cs
+    startLine: 142
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Adds a territory to this player's control.
+  example: []
+  syntax:
+    content: public bool AddTerritory(TerrID territory)
+    parameters:
+    - id: territory
+      type: Shared.Geography.Enums.TerrID
+      description: The territory to add.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if successfully added; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Function AddTerritory(territory As TerrID) As Boolean
+  overload: Model.Core.Player.AddTerritory*
+  implements:
+  - Shared.Interfaces.Model.IPlayer.AddTerritory(Shared.Geography.Enums.TerrID)
+- uid: Model.Core.Player.RemoveTerritory(Shared.Geography.Enums.TerrID)
+  commentId: M:Model.Core.Player.RemoveTerritory(Shared.Geography.Enums.TerrID)
+  id: RemoveTerritory(Shared.Geography.Enums.TerrID)
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: RemoveTerritory(TerrID)
+  nameWithType: Player.RemoveTerritory(TerrID)
+  fullName: Model.Core.Player.RemoveTerritory(Shared.Geography.Enums.TerrID)
+  type: Method
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: RemoveTerritory
+    path: ../Model/Core/Player.cs
+    startLine: 152
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Removes a territory from this player's control.
+  remarks: Also fires <xref href="Shared.Interfaces.Model.IPlayer.PlayerLost" data-throw-if-not-resolved="false"></xref> if the count of <xref href="Shared.Interfaces.Model.IPlayer.ControlledTerritories" data-throw-if-not-resolved="false"></xref> falls to 0.
+  example: []
+  syntax:
+    content: public bool RemoveTerritory(TerrID territory)
+    parameters:
+    - id: territory
+      type: Shared.Geography.Enums.TerrID
+      description: The territory to remove.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if successfully removed; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Function RemoveTerritory(territory As TerrID) As Boolean
+  overload: Model.Core.Player.RemoveTerritory*
+  implements:
+  - Shared.Interfaces.Model.IPlayer.RemoveTerritory(Shared.Geography.Enums.TerrID)
+- uid: Model.Core.Player.AddCard(Shared.Interfaces.Model.ICard)
+  commentId: M:Model.Core.Player.AddCard(Shared.Interfaces.Model.ICard)
+  id: AddCard(Shared.Interfaces.Model.ICard)
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: AddCard(ICard)
+  nameWithType: Player.AddCard(ICard)
+  fullName: Model.Core.Player.AddCard(Shared.Interfaces.Model.ICard)
+  type: Method
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: AddCard
+    path: ../Model/Core/Player.cs
+    startLine: 164
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Adds a card to this player's <xref href="Shared.Interfaces.Model.IPlayer.Hand" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public void AddCard(ICard card)
+    parameters:
+    - id: card
+      type: Shared.Interfaces.Model.ICard
+      description: The card to add.
+    content.vb: Public Sub AddCard(card As ICard)
+  overload: Model.Core.Player.AddCard*
+  implements:
+  - Shared.Interfaces.Model.IPlayer.AddCard(Shared.Interfaces.Model.ICard)
+- uid: Model.Core.Player.RemoveCard(System.Int32)
+  commentId: M:Model.Core.Player.RemoveCard(System.Int32)
+  id: RemoveCard(System.Int32)
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: RemoveCard(int)
+  nameWithType: Player.RemoveCard(int)
+  fullName: Model.Core.Player.RemoveCard(int)
+  type: Method
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: RemoveCard
+    path: ../Model/Core/Player.cs
+    startLine: 171
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Removes a card from this player's <xref href="Shared.Interfaces.Model.IPlayer.Hand" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public bool RemoveCard(int handIndex)
+    parameters:
+    - id: handIndex
+      type: System.Int32
+      description: The <xref href="System.Int32?text=index" data-throw-if-not-resolved="false"></xref> of <xref href="Shared.Interfaces.Model.IPlayer.Hand" data-throw-if-not-resolved="false"></xref> which holds the card to be removed.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if successfully removed; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Function RemoveCard(handIndex As Integer) As Boolean
+  overload: Model.Core.Player.RemoveCard*
+  implements:
+  - Shared.Interfaces.Model.IPlayer.RemoveCard(System.Int32)
+  nameWithType.vb: Player.RemoveCard(Integer)
+  fullName.vb: Model.Core.Player.RemoveCard(Integer)
+  name.vb: RemoveCard(Integer)
+- uid: Model.Core.Player.GetBinarySerials
+  commentId: M:Model.Core.Player.GetBinarySerials
+  id: GetBinarySerials
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: GetBinarySerials()
+  nameWithType: Player.GetBinarySerials()
+  fullName: Model.Core.Player.GetBinarySerials()
+  type: Method
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: GetBinarySerials
+    path: ../Model/Core/Player.cs
+    startLine: 183
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Asynchronously serializes the <xref href="Shared.Interfaces.Model.IBinarySerializable" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public Task<SerializedData[]> GetBinarySerials()
+    return:
+      type: System.Threading.Tasks.Task{Shared.Services.Serializer.SerializedData[]}
+      description: A task whose result contains serialized object data.
+    content.vb: Public Function GetBinarySerials() As Task(Of SerializedData())
+  overload: Model.Core.Player.GetBinarySerials*
+  implements:
+  - Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+- uid: Model.Core.Player.LoadFromBinary(System.IO.BinaryReader)
+  commentId: M:Model.Core.Player.LoadFromBinary(System.IO.BinaryReader)
+  id: LoadFromBinary(System.IO.BinaryReader)
+  parent: Model.Core.Player
+  langs:
+  - csharp
+  - vb
+  name: LoadFromBinary(BinaryReader)
+  nameWithType: Player.LoadFromBinary(BinaryReader)
+  fullName: Model.Core.Player.LoadFromBinary(System.IO.BinaryReader)
+  type: Method
+  source:
+    remote:
+      path: Model/Core/Player.cs
+      branch: main
+      repo: https://github.com/LivingCryogen/Hazard.git
+    id: LoadFromBinary
+    path: ../Model/Core/Player.cs
+    startLine: 205
+  assemblies:
+  - Model
+  namespace: Model.Core
+  summary: Loads the <xref href="Shared.Interfaces.Model.IBinarySerializable" data-throw-if-not-resolved="false"></xref> with binary values read from a file.
+  example: []
+  syntax:
+    content: public bool LoadFromBinary(BinaryReader reader)
+    parameters:
+    - id: reader
+      type: System.IO.BinaryReader
+      description: A reader whose <xref href="System.IO.BinaryReader.BaseStream" data-throw-if-not-resolved="false"></xref> was previously written to using <xref href="Shared.Services.Serializer.BinarySerializer" data-throw-if-not-resolved="false"></xref> and <xref href="Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials" data-throw-if-not-resolved="false"></xref>.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the load succeeded without exceptions; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Function LoadFromBinary(reader As BinaryReader) As Boolean
+  overload: Model.Core.Player.LoadFromBinary*
+  implements:
+  - Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+references:
+- uid: Model.Core
+  commentId: N:Model.Core
+  href: Model.html
+  name: Model.Core
+  nameWithType: Model.Core
+  fullName: Model.Core
+  spec.csharp:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.Core
+    name: Core
+    href: Model.Core.html
+  spec.vb:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.Core
+    name: Core
+    href: Model.Core.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Shared.Interfaces.Model.IPlayer
+  commentId: T:Shared.Interfaces.Model.IPlayer
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IPlayer.html
+  name: IPlayer
+  nameWithType: IPlayer
+  fullName: Shared.Interfaces.Model.IPlayer
+- uid: Shared.Interfaces.Model.IBinarySerializable
+  commentId: T:Shared.Interfaces.Model.IBinarySerializable
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IBinarySerializable.html
+  name: IBinarySerializable
+  nameWithType: IBinarySerializable
+  fullName: Shared.Interfaces.Model.IBinarySerializable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Shared.Interfaces.Model
+  commentId: N:Shared.Interfaces.Model
+  href: Shared.html
+  name: Shared.Interfaces.Model
+  nameWithType: Shared.Interfaces.Model
+  fullName: Shared.Interfaces.Model
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Interfaces
+    name: Interfaces
+    href: Shared.Interfaces.html
+  - name: .
+  - uid: Shared.Interfaces.Model
+    name: Model
+    href: Shared.Interfaces.Model.html
+- uid: Shared.Interfaces.Model.ICard
+  commentId: T:Shared.Interfaces.Model.ICard
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.ICard.html
+  name: ICard
+  nameWithType: ICard
+  fullName: Shared.Interfaces.Model.ICard
+- uid: Model.Core.Player.Hand
+  commentId: P:Model.Core.Player.Hand
+  href: Model.Core.Player.html#Model_Core_Player_Hand
+  name: Hand
+  nameWithType: Player.Hand
+  fullName: Model.Core.Player.Hand
+- uid: Model.Core.Player.LoadFromBinary(System.IO.BinaryReader)
+  commentId: M:Model.Core.Player.LoadFromBinary(System.IO.BinaryReader)
+  isExternal: true
+  href: Model.Core.Player.html#Model_Core_Player_LoadFromBinary_System_IO_BinaryReader_
+  name: LoadFromBinary(BinaryReader)
+  nameWithType: Player.LoadFromBinary(BinaryReader)
+  fullName: Model.Core.Player.LoadFromBinary(System.IO.BinaryReader)
+  spec.csharp:
+  - uid: Model.Core.Player.LoadFromBinary(System.IO.BinaryReader)
+    name: LoadFromBinary
+    href: Model.Core.Player.html#Model_Core_Player_LoadFromBinary_System_IO_BinaryReader_
+  - name: (
+  - uid: System.IO.BinaryReader
+    name: BinaryReader
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  - name: )
+  spec.vb:
+  - uid: Model.Core.Player.LoadFromBinary(System.IO.BinaryReader)
+    name: LoadFromBinary
+    href: Model.Core.Player.html#Model_Core_Player_LoadFromBinary_System_IO_BinaryReader_
+  - name: (
+  - uid: System.IO.BinaryReader
+    name: BinaryReader
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  - name: )
+- uid: Model.Core.Player.#ctor*
+  commentId: Overload:Model.Core.Player.#ctor
+  href: Model.Core.Player.html#Model_Core_Player__ctor_System_Int32_System_Int32_Model_Entities_Cards_CardFactory_Shared_Interfaces_Model_IRuleValues_Shared_Interfaces_Model_IBoard_Microsoft_Extensions_Logging_ILogger_Model_Core_Player__
+  name: Player
+  nameWithType: Player.Player
+  fullName: Model.Core.Player.Player
+  nameWithType.vb: Player.New
+  fullName.vb: Model.Core.Player.New
+  name.vb: New
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Model.Entities.Cards.CardFactory
+  commentId: T:Model.Entities.Cards.CardFactory
+  parent: Model.Entities.Cards
+  href: Model.Entities.Cards.CardFactory.html
+  name: CardFactory
+  nameWithType: CardFactory
+  fullName: Model.Entities.Cards.CardFactory
+- uid: Shared.Interfaces.Model.IRuleValues
+  commentId: T:Shared.Interfaces.Model.IRuleValues
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IRuleValues.html
+  name: IRuleValues
+  nameWithType: IRuleValues
+  fullName: Shared.Interfaces.Model.IRuleValues
+- uid: Shared.Interfaces.Model.IBoard
+  commentId: T:Shared.Interfaces.Model.IBoard
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.IBoard.html
+  name: IBoard
+  nameWithType: IBoard
+  fullName: Shared.Interfaces.Model.IBoard
+- uid: Microsoft.Extensions.Logging.ILogger{Model.Core.Player}
+  commentId: T:Microsoft.Extensions.Logging.ILogger{Model.Core.Player}
+  parent: Microsoft.Extensions.Logging
+  definition: Microsoft.Extensions.Logging.ILogger`1
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger-1
+  name: ILogger<Player>
+  nameWithType: ILogger<Player>
+  fullName: Microsoft.Extensions.Logging.ILogger<Model.Core.Player>
+  nameWithType.vb: ILogger(Of Player)
+  fullName.vb: Microsoft.Extensions.Logging.ILogger(Of Model.Core.Player)
+  name.vb: ILogger(Of Player)
+  spec.csharp:
+  - uid: Microsoft.Extensions.Logging.ILogger`1
+    name: ILogger
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger-1
+  - name: <
+  - uid: Model.Core.Player
+    name: Player
+    href: Model.Core.Player.html
+  - name: '>'
+  spec.vb:
+  - uid: Microsoft.Extensions.Logging.ILogger`1
+    name: ILogger
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Model.Core.Player
+    name: Player
+    href: Model.Core.Player.html
+  - name: )
+- uid: Model.Entities.Cards
+  commentId: N:Model.Entities.Cards
+  href: Model.html
+  name: Model.Entities.Cards
+  nameWithType: Model.Entities.Cards
+  fullName: Model.Entities.Cards
+  spec.csharp:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.Entities
+    name: Entities
+    href: Model.Entities.html
+  - name: .
+  - uid: Model.Entities.Cards
+    name: Cards
+    href: Model.Entities.Cards.html
+  spec.vb:
+  - uid: Model
+    name: Model
+    href: Model.html
+  - name: .
+  - uid: Model.Entities
+    name: Entities
+    href: Model.Entities.html
+  - name: .
+  - uid: Model.Entities.Cards
+    name: Cards
+    href: Model.Entities.Cards.html
+- uid: Microsoft.Extensions.Logging.ILogger`1
+  commentId: T:Microsoft.Extensions.Logging.ILogger`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger-1
+  name: ILogger<TCategoryName>
+  nameWithType: ILogger<TCategoryName>
+  fullName: Microsoft.Extensions.Logging.ILogger<TCategoryName>
+  nameWithType.vb: ILogger(Of TCategoryName)
+  fullName.vb: Microsoft.Extensions.Logging.ILogger(Of TCategoryName)
+  name.vb: ILogger(Of TCategoryName)
+  spec.csharp:
+  - uid: Microsoft.Extensions.Logging.ILogger`1
+    name: ILogger
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger-1
+  - name: <
+  - name: TCategoryName
+  - name: '>'
+  spec.vb:
+  - uid: Microsoft.Extensions.Logging.ILogger`1
+    name: ILogger
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TCategoryName
+  - name: )
+- uid: Microsoft.Extensions.Logging
+  commentId: N:Microsoft.Extensions.Logging
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.Extensions.Logging
+  nameWithType: Microsoft.Extensions.Logging
+  fullName: Microsoft.Extensions.Logging
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Logging
+    name: Logging
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Logging
+    name: Logging
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Shared.Interfaces.Model.IPlayer.PlayerChanged
+  commentId: E:Shared.Interfaces.Model.IPlayer.PlayerChanged
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_PlayerChanged
+  name: PlayerChanged
+  nameWithType: IPlayer.PlayerChanged
+  fullName: Shared.Interfaces.Model.IPlayer.PlayerChanged
+- uid: System.EventHandler{Shared.Interfaces.Model.IPlayerChangedEventArgs}
+  commentId: T:System.EventHandler{Shared.Interfaces.Model.IPlayerChangedEventArgs}
+  parent: System
+  definition: System.EventHandler`1
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  name: EventHandler<IPlayerChangedEventArgs>
+  nameWithType: EventHandler<IPlayerChangedEventArgs>
+  fullName: System.EventHandler<Shared.Interfaces.Model.IPlayerChangedEventArgs>
+  nameWithType.vb: EventHandler(Of IPlayerChangedEventArgs)
+  fullName.vb: System.EventHandler(Of Shared.Interfaces.Model.IPlayerChangedEventArgs)
+  name.vb: EventHandler(Of IPlayerChangedEventArgs)
+  spec.csharp:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: <
+  - uid: Shared.Interfaces.Model.IPlayerChangedEventArgs
+    name: IPlayerChangedEventArgs
+    href: Shared.Interfaces.Model.IPlayerChangedEventArgs.html
+  - name: '>'
+  spec.vb:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Interfaces.Model.IPlayerChangedEventArgs
+    name: IPlayerChangedEventArgs
+    href: Shared.Interfaces.Model.IPlayerChangedEventArgs.html
+  - name: )
+- uid: System.EventHandler`1
+  commentId: T:System.EventHandler`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  name: EventHandler<TEventArgs>
+  nameWithType: EventHandler<TEventArgs>
+  fullName: System.EventHandler<TEventArgs>
+  nameWithType.vb: EventHandler(Of TEventArgs)
+  fullName.vb: System.EventHandler(Of TEventArgs)
+  name.vb: EventHandler(Of TEventArgs)
+  spec.csharp:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: <
+  - name: TEventArgs
+  - name: '>'
+  spec.vb:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TEventArgs
+  - name: )
+- uid: Shared.Interfaces.Model.IPlayer.PlayerLost
+  commentId: E:Shared.Interfaces.Model.IPlayer.PlayerLost
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_PlayerLost
+  name: PlayerLost
+  nameWithType: IPlayer.PlayerLost
+  fullName: Shared.Interfaces.Model.IPlayer.PlayerLost
+- uid: System.EventHandler
+  commentId: T:System.EventHandler
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler
+  name: EventHandler
+  nameWithType: EventHandler
+  fullName: System.EventHandler
+- uid: Model.Core.Player.Name*
+  commentId: Overload:Model.Core.Player.Name
+  href: Model.Core.Player.html#Model_Core_Player_Name
+  name: Name
+  nameWithType: Player.Name
+  fullName: Model.Core.Player.Name
+- uid: Shared.Interfaces.Model.IPlayer.Name
+  commentId: P:Shared.Interfaces.Model.IPlayer.Name
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Name
+  name: Name
+  nameWithType: IPlayer.Name
+  fullName: Shared.Interfaces.Model.IPlayer.Name
+- uid: Model.Core.Player.Number*
+  commentId: Overload:Model.Core.Player.Number
+  href: Model.Core.Player.html#Model_Core_Player_Number
+  name: Number
+  nameWithType: Player.Number
+  fullName: Model.Core.Player.Number
+- uid: Shared.Interfaces.Model.IPlayer.Number
+  commentId: P:Shared.Interfaces.Model.IPlayer.Number
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Number
+  name: Number
+  nameWithType: IPlayer.Number
+  fullName: Shared.Interfaces.Model.IPlayer.Number
+- uid: Shared.Interfaces.Model.IPlayer.Hand
+  commentId: P:Shared.Interfaces.Model.IPlayer.Hand
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_Hand
+  name: Hand
+  nameWithType: IPlayer.Hand
+  fullName: Shared.Interfaces.Model.IPlayer.Hand
+- uid: Shared.Interfaces.Model.ICardSet.IsValidTrade(Shared.Interfaces.Model.ICard[])
+  commentId: M:Shared.Interfaces.Model.ICardSet.IsValidTrade(Shared.Interfaces.Model.ICard[])
+  parent: Shared.Interfaces.Model.ICardSet
+  href: Shared.Interfaces.Model.ICardSet.html#Shared_Interfaces_Model_ICardSet_IsValidTrade_Shared_Interfaces_Model_ICard___
+  name: IsValidTrade(ICard[])
+  nameWithType: ICardSet.IsValidTrade(ICard[])
+  fullName: Shared.Interfaces.Model.ICardSet.IsValidTrade(Shared.Interfaces.Model.ICard[])
+  nameWithType.vb: ICardSet.IsValidTrade(ICard())
+  fullName.vb: Shared.Interfaces.Model.ICardSet.IsValidTrade(Shared.Interfaces.Model.ICard())
+  name.vb: IsValidTrade(ICard())
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.ICardSet.IsValidTrade(Shared.Interfaces.Model.ICard[])
+    name: IsValidTrade
+    href: Shared.Interfaces.Model.ICardSet.html#Shared_Interfaces_Model_ICardSet_IsValidTrade_Shared_Interfaces_Model_ICard___
+  - name: (
+  - uid: Shared.Interfaces.Model.ICard
+    name: ICard
+    href: Shared.Interfaces.Model.ICard.html
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.ICardSet.IsValidTrade(Shared.Interfaces.Model.ICard[])
+    name: IsValidTrade
+    href: Shared.Interfaces.Model.ICardSet.html#Shared_Interfaces_Model_ICardSet_IsValidTrade_Shared_Interfaces_Model_ICard___
+  - name: (
+  - uid: Shared.Interfaces.Model.ICard
+    name: ICard
+    href: Shared.Interfaces.Model.ICard.html
+  - name: (
+  - name: )
+  - name: )
+- uid: Model.Core.Player.HasCardSet*
+  commentId: Overload:Model.Core.Player.HasCardSet
+  href: Model.Core.Player.html#Model_Core_Player_HasCardSet
+  name: HasCardSet
+  nameWithType: Player.HasCardSet
+  fullName: Model.Core.Player.HasCardSet
+- uid: Shared.Interfaces.Model.IPlayer.HasCardSet
+  commentId: P:Shared.Interfaces.Model.IPlayer.HasCardSet
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_HasCardSet
+  name: HasCardSet
+  nameWithType: IPlayer.HasCardSet
+  fullName: Shared.Interfaces.Model.IPlayer.HasCardSet
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Shared.Interfaces.Model.ICardSet
+  commentId: T:Shared.Interfaces.Model.ICardSet
+  parent: Shared.Interfaces.Model
+  href: Shared.Interfaces.Model.ICardSet.html
+  name: ICardSet
+  nameWithType: ICardSet
+  fullName: Shared.Interfaces.Model.ICardSet
+- uid: Shared.Interfaces.Model.IRuleValues.MinimumArmyBonus
+  commentId: P:Shared.Interfaces.Model.IRuleValues.MinimumArmyBonus
+  parent: Shared.Interfaces.Model.IRuleValues
+  href: Shared.Interfaces.Model.IRuleValues.html#Shared_Interfaces_Model_IRuleValues_MinimumArmyBonus
+  name: MinimumArmyBonus
+  nameWithType: IRuleValues.MinimumArmyBonus
+  fullName: Shared.Interfaces.Model.IRuleValues.MinimumArmyBonus
+- uid: Shared.Interfaces.Model.IRuleValues.CalculateArmyBonus(System.Int32,System.Collections.Generic.List{Shared.Geography.Enums.ContID})
+  commentId: M:Shared.Interfaces.Model.IRuleValues.CalculateArmyBonus(System.Int32,System.Collections.Generic.List{Shared.Geography.Enums.ContID})
+  parent: Shared.Interfaces.Model.IRuleValues
+  isExternal: true
+  href: Shared.Interfaces.Model.IRuleValues.html#Shared_Interfaces_Model_IRuleValues_CalculateArmyBonus_System_Int32_System_Collections_Generic_List_Shared_Geography_Enums_ContID__
+  name: CalculateArmyBonus(int, List<ContID>)
+  nameWithType: IRuleValues.CalculateArmyBonus(int, List<ContID>)
+  fullName: Shared.Interfaces.Model.IRuleValues.CalculateArmyBonus(int, System.Collections.Generic.List<Shared.Geography.Enums.ContID>)
+  nameWithType.vb: IRuleValues.CalculateArmyBonus(Integer, List(Of ContID))
+  fullName.vb: Shared.Interfaces.Model.IRuleValues.CalculateArmyBonus(Integer, System.Collections.Generic.List(Of Shared.Geography.Enums.ContID))
+  name.vb: CalculateArmyBonus(Integer, List(Of ContID))
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IRuleValues.CalculateArmyBonus(System.Int32,System.Collections.Generic.List{Shared.Geography.Enums.ContID})
+    name: CalculateArmyBonus
+    href: Shared.Interfaces.Model.IRuleValues.html#Shared_Interfaces_Model_IRuleValues_CalculateArmyBonus_System_Int32_System_Collections_Generic_List_Shared_Geography_Enums_ContID__
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Shared.Geography.Enums.ContID
+    name: ContID
+    href: Shared.Geography.Enums.ContID.html
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IRuleValues.CalculateArmyBonus(System.Int32,System.Collections.Generic.List{Shared.Geography.Enums.ContID})
+    name: CalculateArmyBonus
+    href: Shared.Interfaces.Model.IRuleValues.html#Shared_Interfaces_Model_IRuleValues_CalculateArmyBonus_System_Int32_System_Collections_Generic_List_Shared_Geography_Enums_ContID__
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Geography.Enums.ContID
+    name: ContID
+    href: Shared.Geography.Enums.ContID.html
+  - name: )
+  - name: )
+- uid: Shared.Enums.GamePhase.Place
+  commentId: F:Shared.Enums.GamePhase.Place
+  href: Shared.Enums.GamePhase.html#Shared_Enums_GamePhase_Place
+  name: Place
+  nameWithType: GamePhase.Place
+  fullName: Shared.Enums.GamePhase.Place
+- uid: Model.Core.Player.ArmyBonus*
+  commentId: Overload:Model.Core.Player.ArmyBonus
+  href: Model.Core.Player.html#Model_Core_Player_ArmyBonus
+  name: ArmyBonus
+  nameWithType: Player.ArmyBonus
+  fullName: Model.Core.Player.ArmyBonus
+- uid: Shared.Interfaces.Model.IPlayer.ArmyBonus
+  commentId: P:Shared.Interfaces.Model.IPlayer.ArmyBonus
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_ArmyBonus
+  name: ArmyBonus
+  nameWithType: IPlayer.ArmyBonus
+  fullName: Shared.Interfaces.Model.IPlayer.ArmyBonus
+- uid: Shared.Interfaces.Model.IRuleValues.ContinentBonus
+  commentId: P:Shared.Interfaces.Model.IRuleValues.ContinentBonus
+  parent: Shared.Interfaces.Model.IRuleValues
+  href: Shared.Interfaces.Model.IRuleValues.html#Shared_Interfaces_Model_IRuleValues_ContinentBonus
+  name: ContinentBonus
+  nameWithType: IRuleValues.ContinentBonus
+  fullName: Shared.Interfaces.Model.IRuleValues.ContinentBonus
+- uid: Shared.Interfaces.Model.IPlayer.ControlledTerritories
+  commentId: P:Shared.Interfaces.Model.IPlayer.ControlledTerritories
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_ControlledTerritories
+  name: ControlledTerritories
+  nameWithType: IPlayer.ControlledTerritories
+  fullName: Shared.Interfaces.Model.IPlayer.ControlledTerritories
+- uid: Model.Core.Player.ContinentBonus*
+  commentId: Overload:Model.Core.Player.ContinentBonus
+  href: Model.Core.Player.html#Model_Core_Player_ContinentBonus
+  name: ContinentBonus
+  nameWithType: Player.ContinentBonus
+  fullName: Model.Core.Player.ContinentBonus
+- uid: Shared.Interfaces.Model.IPlayer.ContinentBonus
+  commentId: P:Shared.Interfaces.Model.IPlayer.ContinentBonus
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_ContinentBonus
+  name: ContinentBonus
+  nameWithType: IPlayer.ContinentBonus
+  fullName: Shared.Interfaces.Model.IPlayer.ContinentBonus
+- uid: Model.Core.Player.ArmyPool*
+  commentId: Overload:Model.Core.Player.ArmyPool
+  href: Model.Core.Player.html#Model_Core_Player_ArmyPool
+  name: ArmyPool
+  nameWithType: Player.ArmyPool
+  fullName: Model.Core.Player.ArmyPool
+- uid: Shared.Interfaces.Model.IPlayer.ArmyPool
+  commentId: P:Shared.Interfaces.Model.IPlayer.ArmyPool
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_ArmyPool
+  name: ArmyPool
+  nameWithType: IPlayer.ArmyPool
+  fullName: Shared.Interfaces.Model.IPlayer.ArmyPool
+- uid: Model.Core.Player.ControlledTerritories*
+  commentId: Overload:Model.Core.Player.ControlledTerritories
+  href: Model.Core.Player.html#Model_Core_Player_ControlledTerritories
+  name: ControlledTerritories
+  nameWithType: Player.ControlledTerritories
+  fullName: Model.Core.Player.ControlledTerritories
+- uid: System.Collections.Generic.HashSet{Shared.Geography.Enums.TerrID}
+  commentId: T:System.Collections.Generic.HashSet{Shared.Geography.Enums.TerrID}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.HashSet`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  name: HashSet<TerrID>
+  nameWithType: HashSet<TerrID>
+  fullName: System.Collections.Generic.HashSet<Shared.Geography.Enums.TerrID>
+  nameWithType.vb: HashSet(Of TerrID)
+  fullName.vb: System.Collections.Generic.HashSet(Of Shared.Geography.Enums.TerrID)
+  name.vb: HashSet(Of TerrID)
+  spec.csharp:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: <
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: )
+- uid: System.Collections.Generic.HashSet`1
+  commentId: T:System.Collections.Generic.HashSet`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  name: HashSet<T>
+  nameWithType: HashSet<T>
+  fullName: System.Collections.Generic.HashSet<T>
+  nameWithType.vb: HashSet(Of T)
+  fullName.vb: System.Collections.Generic.HashSet(Of T)
+  name.vb: HashSet(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: Model.Core.Player.Hand*
+  commentId: Overload:Model.Core.Player.Hand
+  href: Model.Core.Player.html#Model_Core_Player_Hand
+  name: Hand
+  nameWithType: Player.Hand
+  fullName: Model.Core.Player.Hand
+- uid: System.Collections.Generic.List{Shared.Interfaces.Model.ICard}
+  commentId: T:System.Collections.Generic.List{Shared.Interfaces.Model.ICard}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<ICard>
+  nameWithType: List<ICard>
+  fullName: System.Collections.Generic.List<Shared.Interfaces.Model.ICard>
+  nameWithType.vb: List(Of ICard)
+  fullName.vb: System.Collections.Generic.List(Of Shared.Interfaces.Model.ICard)
+  name.vb: List(Of ICard)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Shared.Interfaces.Model.ICard
+    name: ICard
+    href: Shared.Interfaces.Model.ICard.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Interfaces.Model.ICard
+    name: ICard
+    href: Shared.Interfaces.Model.ICard.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Model.Core.Player.GetsTradeBonus*
+  commentId: Overload:Model.Core.Player.GetsTradeBonus
+  href: Model.Core.Player.html#Model_Core_Player_GetsTradeBonus_System_Int32_
+  name: GetsTradeBonus
+  nameWithType: Player.GetsTradeBonus
+  fullName: Model.Core.Player.GetsTradeBonus
+- uid: Shared.Interfaces.Model.IPlayer.GetsTradeBonus(System.Int32)
+  commentId: M:Shared.Interfaces.Model.IPlayer.GetsTradeBonus(System.Int32)
+  parent: Shared.Interfaces.Model.IPlayer
+  isExternal: true
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_GetsTradeBonus_System_Int32_
+  name: GetsTradeBonus(int)
+  nameWithType: IPlayer.GetsTradeBonus(int)
+  fullName: Shared.Interfaces.Model.IPlayer.GetsTradeBonus(int)
+  nameWithType.vb: IPlayer.GetsTradeBonus(Integer)
+  fullName.vb: Shared.Interfaces.Model.IPlayer.GetsTradeBonus(Integer)
+  name.vb: GetsTradeBonus(Integer)
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IPlayer.GetsTradeBonus(System.Int32)
+    name: GetsTradeBonus
+    href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_GetsTradeBonus_System_Int32_
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IPlayer.GetsTradeBonus(System.Int32)
+    name: GetsTradeBonus
+    href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_GetsTradeBonus_System_Int32_
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Model.Core.Player.GetControlledTargets*
+  commentId: Overload:Model.Core.Player.GetControlledTargets
+  href: Model.Core.Player.html#Model_Core_Player_GetControlledTargets_Shared_Geography_Enums_TerrID___
+  name: GetControlledTargets
+  nameWithType: Player.GetControlledTargets
+  fullName: Model.Core.Player.GetControlledTargets
+- uid: Shared.Interfaces.Model.IPlayer.GetControlledTargets(Shared.Geography.Enums.TerrID[])
+  commentId: M:Shared.Interfaces.Model.IPlayer.GetControlledTargets(Shared.Geography.Enums.TerrID[])
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_GetControlledTargets_Shared_Geography_Enums_TerrID___
+  name: GetControlledTargets(TerrID[])
+  nameWithType: IPlayer.GetControlledTargets(TerrID[])
+  fullName: Shared.Interfaces.Model.IPlayer.GetControlledTargets(Shared.Geography.Enums.TerrID[])
+  nameWithType.vb: IPlayer.GetControlledTargets(TerrID())
+  fullName.vb: Shared.Interfaces.Model.IPlayer.GetControlledTargets(Shared.Geography.Enums.TerrID())
+  name.vb: GetControlledTargets(TerrID())
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IPlayer.GetControlledTargets(Shared.Geography.Enums.TerrID[])
+    name: GetControlledTargets
+    href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_GetControlledTargets_Shared_Geography_Enums_TerrID___
+  - name: (
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IPlayer.GetControlledTargets(Shared.Geography.Enums.TerrID[])
+    name: GetControlledTargets
+    href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_GetControlledTargets_Shared_Geography_Enums_TerrID___
+  - name: (
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: (
+  - name: )
+  - name: )
+- uid: Shared.Geography.Enums.TerrID[]
+  isExternal: true
+  href: Shared.Geography.Enums.TerrID.html
+  name: TerrID[]
+  nameWithType: TerrID[]
+  fullName: Shared.Geography.Enums.TerrID[]
+  nameWithType.vb: TerrID()
+  fullName.vb: Shared.Geography.Enums.TerrID()
+  name.vb: TerrID()
+  spec.csharp:
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: (
+  - name: )
+- uid: Shared.Interfaces.Model.ICardSet.FindTradeSets(Shared.Interfaces.Model.ICard[])
+  commentId: M:Shared.Interfaces.Model.ICardSet.FindTradeSets(Shared.Interfaces.Model.ICard[])
+  parent: Shared.Interfaces.Model.ICardSet
+  href: Shared.Interfaces.Model.ICardSet.html#Shared_Interfaces_Model_ICardSet_FindTradeSets_Shared_Interfaces_Model_ICard___
+  name: FindTradeSets(ICard[])
+  nameWithType: ICardSet.FindTradeSets(ICard[])
+  fullName: Shared.Interfaces.Model.ICardSet.FindTradeSets(Shared.Interfaces.Model.ICard[])
+  nameWithType.vb: ICardSet.FindTradeSets(ICard())
+  fullName.vb: Shared.Interfaces.Model.ICardSet.FindTradeSets(Shared.Interfaces.Model.ICard())
+  name.vb: FindTradeSets(ICard())
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.ICardSet.FindTradeSets(Shared.Interfaces.Model.ICard[])
+    name: FindTradeSets
+    href: Shared.Interfaces.Model.ICardSet.html#Shared_Interfaces_Model_ICardSet_FindTradeSets_Shared_Interfaces_Model_ICard___
+  - name: (
+  - uid: Shared.Interfaces.Model.ICard
+    name: ICard
+    href: Shared.Interfaces.Model.ICard.html
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.ICardSet.FindTradeSets(Shared.Interfaces.Model.ICard[])
+    name: FindTradeSets
+    href: Shared.Interfaces.Model.ICardSet.html#Shared_Interfaces_Model_ICardSet_FindTradeSets_Shared_Interfaces_Model_ICard___
+  - name: (
+  - uid: Shared.Interfaces.Model.ICard
+    name: ICard
+    href: Shared.Interfaces.Model.ICard.html
+  - name: (
+  - name: )
+  - name: )
+- uid: Model.Core.Player.FindCardSet*
+  commentId: Overload:Model.Core.Player.FindCardSet
+  href: Model.Core.Player.html#Model_Core_Player_FindCardSet
+  name: FindCardSet
+  nameWithType: Player.FindCardSet
+  fullName: Model.Core.Player.FindCardSet
+- uid: Shared.Interfaces.Model.IPlayer.FindCardSet
+  commentId: M:Shared.Interfaces.Model.IPlayer.FindCardSet
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_FindCardSet
+  name: FindCardSet()
+  nameWithType: IPlayer.FindCardSet()
+  fullName: Shared.Interfaces.Model.IPlayer.FindCardSet()
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IPlayer.FindCardSet
+    name: FindCardSet
+    href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_FindCardSet
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IPlayer.FindCardSet
+    name: FindCardSet
+    href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_FindCardSet
+  - name: (
+  - name: )
+- uid: Model.Core.Player.AddTerritory*
+  commentId: Overload:Model.Core.Player.AddTerritory
+  href: Model.Core.Player.html#Model_Core_Player_AddTerritory_Shared_Geography_Enums_TerrID_
+  name: AddTerritory
+  nameWithType: Player.AddTerritory
+  fullName: Model.Core.Player.AddTerritory
+- uid: Shared.Interfaces.Model.IPlayer.AddTerritory(Shared.Geography.Enums.TerrID)
+  commentId: M:Shared.Interfaces.Model.IPlayer.AddTerritory(Shared.Geography.Enums.TerrID)
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_AddTerritory_Shared_Geography_Enums_TerrID_
+  name: AddTerritory(TerrID)
+  nameWithType: IPlayer.AddTerritory(TerrID)
+  fullName: Shared.Interfaces.Model.IPlayer.AddTerritory(Shared.Geography.Enums.TerrID)
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IPlayer.AddTerritory(Shared.Geography.Enums.TerrID)
+    name: AddTerritory
+    href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_AddTerritory_Shared_Geography_Enums_TerrID_
+  - name: (
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IPlayer.AddTerritory(Shared.Geography.Enums.TerrID)
+    name: AddTerritory
+    href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_AddTerritory_Shared_Geography_Enums_TerrID_
+  - name: (
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: )
+- uid: Shared.Geography.Enums.TerrID
+  commentId: T:Shared.Geography.Enums.TerrID
+  parent: Shared.Geography.Enums
+  href: Shared.Geography.Enums.TerrID.html
+  name: TerrID
+  nameWithType: TerrID
+  fullName: Shared.Geography.Enums.TerrID
+- uid: Shared.Geography.Enums
+  commentId: N:Shared.Geography.Enums
+  href: Shared.html
+  name: Shared.Geography.Enums
+  nameWithType: Shared.Geography.Enums
+  fullName: Shared.Geography.Enums
+  spec.csharp:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+  spec.vb:
+  - uid: Shared
+    name: Shared
+    href: Shared.html
+  - name: .
+  - uid: Shared.Geography
+    name: Geography
+    href: Shared.Geography.html
+  - name: .
+  - uid: Shared.Geography.Enums
+    name: Enums
+    href: Shared.Geography.Enums.html
+- uid: Model.Core.Player.RemoveTerritory*
+  commentId: Overload:Model.Core.Player.RemoveTerritory
+  href: Model.Core.Player.html#Model_Core_Player_RemoveTerritory_Shared_Geography_Enums_TerrID_
+  name: RemoveTerritory
+  nameWithType: Player.RemoveTerritory
+  fullName: Model.Core.Player.RemoveTerritory
+- uid: Shared.Interfaces.Model.IPlayer.RemoveTerritory(Shared.Geography.Enums.TerrID)
+  commentId: M:Shared.Interfaces.Model.IPlayer.RemoveTerritory(Shared.Geography.Enums.TerrID)
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_RemoveTerritory_Shared_Geography_Enums_TerrID_
+  name: RemoveTerritory(TerrID)
+  nameWithType: IPlayer.RemoveTerritory(TerrID)
+  fullName: Shared.Interfaces.Model.IPlayer.RemoveTerritory(Shared.Geography.Enums.TerrID)
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IPlayer.RemoveTerritory(Shared.Geography.Enums.TerrID)
+    name: RemoveTerritory
+    href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_RemoveTerritory_Shared_Geography_Enums_TerrID_
+  - name: (
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IPlayer.RemoveTerritory(Shared.Geography.Enums.TerrID)
+    name: RemoveTerritory
+    href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_RemoveTerritory_Shared_Geography_Enums_TerrID_
+  - name: (
+  - uid: Shared.Geography.Enums.TerrID
+    name: TerrID
+    href: Shared.Geography.Enums.TerrID.html
+  - name: )
+- uid: Model.Core.Player.AddCard*
+  commentId: Overload:Model.Core.Player.AddCard
+  href: Model.Core.Player.html#Model_Core_Player_AddCard_Shared_Interfaces_Model_ICard_
+  name: AddCard
+  nameWithType: Player.AddCard
+  fullName: Model.Core.Player.AddCard
+- uid: Shared.Interfaces.Model.IPlayer.AddCard(Shared.Interfaces.Model.ICard)
+  commentId: M:Shared.Interfaces.Model.IPlayer.AddCard(Shared.Interfaces.Model.ICard)
+  parent: Shared.Interfaces.Model.IPlayer
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_AddCard_Shared_Interfaces_Model_ICard_
+  name: AddCard(ICard)
+  nameWithType: IPlayer.AddCard(ICard)
+  fullName: Shared.Interfaces.Model.IPlayer.AddCard(Shared.Interfaces.Model.ICard)
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IPlayer.AddCard(Shared.Interfaces.Model.ICard)
+    name: AddCard
+    href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_AddCard_Shared_Interfaces_Model_ICard_
+  - name: (
+  - uid: Shared.Interfaces.Model.ICard
+    name: ICard
+    href: Shared.Interfaces.Model.ICard.html
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IPlayer.AddCard(Shared.Interfaces.Model.ICard)
+    name: AddCard
+    href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_AddCard_Shared_Interfaces_Model_ICard_
+  - name: (
+  - uid: Shared.Interfaces.Model.ICard
+    name: ICard
+    href: Shared.Interfaces.Model.ICard.html
+  - name: )
+- uid: Model.Core.Player.RemoveCard*
+  commentId: Overload:Model.Core.Player.RemoveCard
+  href: Model.Core.Player.html#Model_Core_Player_RemoveCard_System_Int32_
+  name: RemoveCard
+  nameWithType: Player.RemoveCard
+  fullName: Model.Core.Player.RemoveCard
+- uid: Shared.Interfaces.Model.IPlayer.RemoveCard(System.Int32)
+  commentId: M:Shared.Interfaces.Model.IPlayer.RemoveCard(System.Int32)
+  parent: Shared.Interfaces.Model.IPlayer
+  isExternal: true
+  href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_RemoveCard_System_Int32_
+  name: RemoveCard(int)
+  nameWithType: IPlayer.RemoveCard(int)
+  fullName: Shared.Interfaces.Model.IPlayer.RemoveCard(int)
+  nameWithType.vb: IPlayer.RemoveCard(Integer)
+  fullName.vb: Shared.Interfaces.Model.IPlayer.RemoveCard(Integer)
+  name.vb: RemoveCard(Integer)
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IPlayer.RemoveCard(System.Int32)
+    name: RemoveCard
+    href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_RemoveCard_System_Int32_
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IPlayer.RemoveCard(System.Int32)
+    name: RemoveCard
+    href: Shared.Interfaces.Model.IPlayer.html#Shared_Interfaces_Model_IPlayer_RemoveCard_System_Int32_
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Model.Core.Player.GetBinarySerials*
+  commentId: Overload:Model.Core.Player.GetBinarySerials
+  href: Model.Core.Player.html#Model_Core_Player_GetBinarySerials
+  name: GetBinarySerials
+  nameWithType: Player.GetBinarySerials
+  fullName: Model.Core.Player.GetBinarySerials
+- uid: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+  commentId: M:Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+  parent: Shared.Interfaces.Model.IBinarySerializable
+  href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials
+  name: GetBinarySerials()
+  nameWithType: IBinarySerializable.GetBinarySerials()
+  fullName: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials()
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+    name: GetBinarySerials
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.GetBinarySerials
+    name: GetBinarySerials
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_GetBinarySerials
+  - name: (
+  - name: )
+- uid: System.Threading.Tasks.Task{Shared.Services.Serializer.SerializedData[]}
+  commentId: T:System.Threading.Tasks.Task{Shared.Services.Serializer.SerializedData[]}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<SerializedData[]>
+  nameWithType: Task<SerializedData[]>
+  fullName: System.Threading.Tasks.Task<Shared.Services.Serializer.SerializedData[]>
+  nameWithType.vb: Task(Of SerializedData())
+  fullName.vb: System.Threading.Tasks.Task(Of Shared.Services.Serializer.SerializedData())
+  name.vb: Task(Of SerializedData())
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: Shared.Services.Serializer.SerializedData
+    name: SerializedData
+    href: Shared.Services.Serializer.SerializedData.html
+  - name: '['
+  - name: ']'
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Shared.Services.Serializer.SerializedData
+    name: SerializedData
+    href: Shared.Services.Serializer.SerializedData.html
+  - name: (
+  - name: )
+  - name: )
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: System.IO.BinaryReader.BaseStream
+  commentId: P:System.IO.BinaryReader.BaseStream
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader.basestream
+  name: BaseStream
+  nameWithType: BinaryReader.BaseStream
+  fullName: System.IO.BinaryReader.BaseStream
+- uid: Shared.Services.Serializer.BinarySerializer
+  commentId: T:Shared.Services.Serializer.BinarySerializer
+  href: Shared.Services.Serializer.BinarySerializer.html
+  name: BinarySerializer
+  nameWithType: BinarySerializer
+  fullName: Shared.Services.Serializer.BinarySerializer
+- uid: Model.Core.Player.LoadFromBinary*
+  commentId: Overload:Model.Core.Player.LoadFromBinary
+  href: Model.Core.Player.html#Model_Core_Player_LoadFromBinary_System_IO_BinaryReader_
+  name: LoadFromBinary
+  nameWithType: Player.LoadFromBinary
+  fullName: Model.Core.Player.LoadFromBinary
+- uid: Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+  commentId: M:Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+  parent: Shared.Interfaces.Model.IBinarySerializable
+  isExternal: true
+  href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_LoadFromBinary_System_IO_BinaryReader_
+  name: LoadFromBinary(BinaryReader)
+  nameWithType: IBinarySerializable.LoadFromBinary(BinaryReader)
+  fullName: Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+  spec.csharp:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+    name: LoadFromBinary
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_LoadFromBinary_System_IO_BinaryReader_
+  - name: (
+  - uid: System.IO.BinaryReader
+    name: BinaryReader
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  - name: )
+  spec.vb:
+  - uid: Shared.Interfaces.Model.IBinarySerializable.LoadFromBinary(System.IO.BinaryReader)
+    name: LoadFromBinary
+    href: Shared.Interfaces.Model.IBinarySerializable.html#Shared_Interfaces_Model_IBinarySerializable_LoadFromBinary_System_IO_BinaryReader_
+  - name: (
+  - uid: System.IO.BinaryReader
+    name: BinaryReader
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  - name: )
+- uid: System.IO.BinaryReader
+  commentId: T:System.IO.BinaryReader
+  parent: System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.io.binaryreader
+  name: BinaryReader
+  nameWithType: BinaryReader
+  fullName: System.IO.BinaryReader
+- uid: System.IO
+  commentId: N:System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.IO
+  nameWithType: System.IO
+  fullName: System.IO
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
