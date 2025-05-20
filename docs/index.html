@@ -2,45 +2,290 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title>Landing</title>
+    <title>Josh McKnight - Software Engineer</title>
     <link rel="stylesheet" href="stylesheet.css">
+    <!-- Added Font Awesome for tech stack icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="content-wrapper">
-        <h1>
-            Hazard!
-        </h1>
-        <h3>
-            Nothing ventured, nothing gained.
-        </h3>
-        <h5>
-            A WPF development demo by Josh McKnight.
-        </h5>
-        <br />
-        <div class="download-container">
-            <a class="download-button" href="https://hazardgameproxy-d4caecgsapakcwh0.centralus-01.azurewebsites.net/secure-link?arch=x64">Download (x64)</a>
-            <a class="download-button" href="https://hazardgameproxy-d4caecgsapakcwh0.centralus-01.azurewebsites.net/secure-link?arch=ARM">Download (ARM)</a>
+        <h1>Hazard!</h1>
+        <h3>Advanced C# WPF Software Engineering Showcase</h3>
+
+        <!-- Technical highlights section -->
+        <div class="tech-highlights">
+            <div class="highlight-item">
+                <i class="fa-solid fa-cubes"></i>
+                <span>Full-Stack</span>
+            </div>
+            <div class="highlight-item">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>MVVM Architecture</span>
+            </div>
+            <div class="highlight-item">
+                <i class="fa-solid fa-code-branch"></i>
+                <span>Event-Driven</span>
+            </div>
+            <div class="highlight-item">
+                <i class="fa-solid fa-sitemap"></i>
+                <span>Registry & DAL</span>
+            </div>
+            <div class="highlight-item">
+                <i class="fa-solid fa-database"></i>
+                <span>Binary Serialization</span>
+            </div>
+            <div class="highlight-item">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span>Self-serializing Interface</span>
+            </div>
+            <div class="highlight-item">
+                <i class="fa-solid fa-vial"></i>
+                <span>Unit Tests</span>
+            </div>
         </div>
-    </div>
-    <br />
-    <nav>
-        <div class="nav-container">
-            <a href="#" data-content="Download.html" class="dynamic-link">Download</a>
-            <a href="#" data-content="About.html" class="dynamic-link">About</a>
-            <a href="#" data-content="Features.html" class="dynamic-link">Features</a>
-            <a href="#" data-content="Tour.html" class="dynamic-link">Tour</a>
-            <a href="#" data-content="Background.html" class="dynamic-link">Background</a>
-            <a href="https://github.com/LivingCryogen/Hazard" class="external-link">
-                <span>Repo</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+
+        <!-- Visual showcase - small gallery -->
+        <div class="screenshot-gallery">
+            <img src="Images/AppSettings.jpg" alt="Game Settings Screen" class="gallery-img active">
+            <!-- Add 2-3 more screenshots here -->
+            <div class="gallery-nav">
+                <span class="gallery-dot active" data-index="0"></span>
+                <span class="gallery-dot" data-index="1"></span>
+                <span class="gallery-dot" data-index="2"></span>
+            </div>
+        </div>
+
+        <!-- Tech stack badges -->
+        <div class="tech-stack">
+            <span class="tech-badge">.NET</span>
+            <span class="tech-badge">C#</span>
+            <span class="tech-badge">WPF</span>
+            <span class="tech-badge">XAML</span>
+            <span class="tech-badge">MVVM</span>
+        </div>
+
+        <!-- Call to action buttons -->
+        <div class="cta-container">
+            <a href="https://github.com/LivingCryogen/Hazard" class="cta-button primary">
+                <i class="fa-brands fa-github"></i> View Code
             </a>
-            <a href="#" data-content="Copyright.html" class="dynamic-link">Copyright</a>
+            <a href="#" data-content="Features.html" class="cta-button dynamic-link">
+                <i class="fa-solid fa-code"></i> Technical Features
+            </a>
+            <a href="#" class="cta-button" id="demoButton">
+                <i class="fa-solid fa-play"></i> Watch Demo
+            </a>
+            <a href="#" data-content="About.html" class="cta-button dynamic-link">
+                <i class="fa-solid fa-info-circle"></i> About
+            </a>
+            <a href="../_site/index.html" class="cta-button" id="docsButton">
+                <i class="fa-solid fa-book-open"></i> XML Docs
+            </a>
+            <a href="#" class="cta-button" id="downloadButton">
+                <i class="fa-solid fa-download"></i> Download
+            </a>
         </div>
-    </nav>
-    <br />
-    <div id="content-area" class="dynamic-content-area">
-        <!-- Dynamic link content loads here -->
     </div>
-    <script src="nav.js"></script>
+    <br />
+
+    <!-- Main content area -->
+    <div id="content-area" class="dynamic-content-area">
+        <!-- Dynamic content loads here, Features.html will load by default -->
+    </div>
+
+    <!-- Add modal for demo video -->
+    <div id="demoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Application Demo</h3>
+            <div class="video-container">
+                <!-- Video embed would go here -->
+                <p>Demo video coming soon. For now, please explore the features section to see code examples and functionality details.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Download modal with installation details -->
+    <div id="downloadModal" class="modal">
+        <div class="modal-content download-modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Download Hazard!</h3>
+
+            <div class="download-buttons">
+                <a class="download-button" href="https://hazardgameproxy-d4caecgsapakcwh0.centralus-01.azurewebsites.net/secure-link?arch=x64" title="For most Windows, Mac, and Linux computers with Intel or AMD processors">Download (x64)</a>
+                <a class="download-button" href="https://hazardgameproxy-d4caecgsapakcwh0.centralus-01.azurewebsites.net/secure-link?arch=ARM" title="For newer Macs with Apple Silicon (M1/M2/M3), Windows on ARM devices, and many mobile devices">Download (ARM)</a>
+            </div>
+
+            <div class="installation-details">
+                <h4>Installation Details</h4>
+                <p>
+                    Installation may require access to the download source, <i>which is time-limited</i>. If too much time has passed, try
+                    redownloading and installing directly after download.
+                </p>
+
+                <p>
+                    Opening the MSIX package (.msixbundle), you should see:
+                </p>
+
+                <div class="install-info">
+                    <div class="install-preview">
+                        <img src="Images/Install.jpg" alt="What the installation window should look like." />
+                    </div>
+                    <div class="install-text">
+                        <p>
+                            <u>Publisher Name</u> Joshua McKnight <br /><br />
+                            <u>Source</u> livingcryogen.github.io
+                        </p>
+                        <p>If you see a warning, please verify this information.</p>
+                        <p>You may also verify the digital signature (see below).</p>
+                    </div>
+                </div>
+
+                <h4>Digital Signature</h4>
+                <p>
+                    The package is signed by me ("Joshua McKnight") via Microsoft's Azure Trusted Signing. You may right-click the package
+                    and select "Properties" -> "Digital Signatures" to verify.
+                </p>
+
+                <div class="signatures-preview">
+                    <img src="Images/DigitalSignaturesList.jpg" alt="Digital Signatures List" />
+                    <img src="Images/DigitalSignatureDetails.jpg" alt="Digital Signature Details" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add JavaScript for functionality
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Load Features.html by default
+            try {
+                const defaultSource = await fetch('Features.html');
+                const defaultInnerHTML = await (defaultSource.text());
+                document.getElementById('content-area').innerHTML = defaultInnerHTML;
+
+                // Balance heights for code-with-text sections after loading
+                setTimeout(balanceHeights, 100);
+            } catch (error) {
+                console.error('Error loading default content:', error);
+            }
+
+            // Set up dynamic links
+            document.querySelectorAll('.dynamic-link').forEach(link => {
+                link.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    try {
+                        const contentPath = link.dataset.content;
+                        const response = await fetch(contentPath);
+                        const html = await response.text();
+                        document.getElementById('content-area').innerHTML = html;
+
+                        // If Features.html is loaded, balance heights
+                        if (contentPath === 'Features.html') {
+                            setTimeout(balanceHeights, 100);
+                        }
+
+                        // Scroll to content area
+                        document.getElementById('content-area').scrollIntoView({ behavior: 'smooth' });
+                    } catch (error) {
+                        console.error('Error loading content:', error);
+                    }
+                });
+            });
+
+            // Demo modal
+            const demoButton = document.getElementById('demoButton');
+            const demoModal = document.getElementById('demoModal');
+
+            if (demoButton && demoModal) {
+                demoButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    demoModal.style.display = 'block';
+                });
+            }
+
+            // Download modal
+            const downloadButton = document.getElementById('downloadButton');
+            const downloadModal = document.getElementById('downloadModal');
+
+            if (downloadButton && downloadModal) {
+                downloadButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    downloadModal.style.display = 'block';
+                });
+            }
+
+            // Close modals
+            const closeModals = document.querySelectorAll('.close-modal');
+            closeModals.forEach(closeBtn => {
+                closeBtn.addEventListener('click', () => {
+                    document.querySelectorAll('.modal').forEach(modal => {
+                        modal.style.display = 'none';
+                    });
+                });
+            });
+
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+
+            // Image gallery navigation
+            const galleryDots = document.querySelectorAll('.gallery-dot');
+            const galleryImages = document.querySelectorAll('.gallery-img');
+
+            galleryDots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const index = dot.dataset.index;
+
+                    // Update active classes
+                    document.querySelector('.gallery-dot.active').classList.remove('active');
+                    dot.classList.add('active');
+
+                    document.querySelector('.gallery-img.active').classList.remove('active');
+                    galleryImages[index].classList.add('active');
+                });
+            });
+        });
+
+        // Function to balance heights for code snippets and text
+        function balanceHeights() {
+            const containers = document.querySelectorAll('#content-area .code-with-text');
+
+            containers.forEach(container => {
+                const codeElement = container.querySelector('.code-snippet') || container.querySelector('pre');
+                const textElement = container.querySelector('.image-text');
+
+                if (!codeElement || !textElement) return;
+
+                codeElement.style.maxHeight = 'none';
+                textElement.style.maxHeight = 'none';
+
+                const codeScrollHeight = codeElement.scrollHeight;
+                const textScrollHeight = textElement.scrollHeight;
+
+                const minHeight = Math.min(codeScrollHeight, textScrollHeight);
+                const heightWithBuffer = minHeight + 1;
+
+                codeElement.style.maxHeight = `${heightWithBuffer}px`;
+                textElement.style.maxHeight = `${heightWithBuffer}px`;
+
+                codeElement.classList.add('height-balanced');
+                textElement.classList.add('height-balanced');
+            });
+        }
+
+        // Run when window is resized
+        window.addEventListener('resize', function () {
+            // Check if Features.html is loaded
+            if (document.querySelector('.code-with-text')) {
+                balanceHeights();
+            }
+        });
+    </script>
 </body>
 </html>

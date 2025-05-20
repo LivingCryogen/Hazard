@@ -5,10 +5,59 @@
     <title>Download</title>
     <link rel="stylesheet" href="stylesheet.css">
 </head>
-<body>
-    <h3>Why ClickOnce?</h3>
-    <p class="indented-p">
+<body class="dynamic-content-body">
+    <br/><br/>
+    <h4> <i>Hazard!</i> is a board game for 2-6 local players.</h4>
+    <h4>To install, simply click a Download button and open the file.</h4>
+    <h5> You may need to wait a moment for your request to be verified.</h5>
+    <br/><br/>
+    <h2>
+        Installation Details
+    </h2>
 
+    <p class="indented-p">
+        Installation may require access to the download source, <i>which is time-limited</i>. If too much time has passed, try
+        redownloading and installing directly after download. Take care: excessive requests may result in rate-limiting or IP bans.
     </p>
+
+    <p class="indented-p">
+        Opening the MSIX package (.msixbundle), you should see:
+    </p>
+
+    <div class="image-with-text">
+        <img class="inline-pic" src="Images/Install.jpg" alt="What the installation window should look like." />
+        <div class="image-text">
+            <p class="centered">
+                <u>Publisher Name</u> Joshua McKnight <br /><br />
+                <u>Source</u> livingcryogen.github.io
+            </p>
+            <p class="centered"> If you see a warning, please verify this information. </p>
+            <p class="centered"> You may also verify the digital signature (see below). </p>
+        </div>
+    </div>
+    <br/>
+    <h4>
+        Digital Signature
+    </h4>
+    <p class="indented-p">
+        The package is signed by me ("Joshua McKnight") via Microsoft's Azure Trusted Signing. You may right-click the package
+        and select "Properties" -> "Digital Signatures." Then you should see:
+    </p>
+
+    <div class="image-with-text">
+        <div class="horizontal-flexbox-scroll">
+            <img src="Images/DigitalSignaturesList.jpg" alt="Digital Signatures List" />
+            <img src="Images/DigitalSignatureDetails.jpg" alt="Digital Signature Details" />
+            <img src="Images/Certificate.jpg" alt="Signing Certificate Info" />
+            <img src="Images/CertificatePath.jpg" alt="Signing Certifiate Authority Chain" />
+        </div>
+        <div class="image-text">
+            <p class="centered"><u>Signer</u> Joshua McKnight
+            <p class="centered"><u>Countersigner</u> Microsoft Public RSA...</p>
+            <p class="centered"><u>Certificate</u> OK, Valid, Trusted...</p>
+            <p class="centered"><u>Timestamp</u> In Certificate Validity Period</p>
+            <p class="centered"><u>Cert. Path</u> Microsoft Identity RCA</p>
+        </div>
+    </div>
 </body>
 </html>
