@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="32 32 191 191">
+  <defs>
+  </defs>
+  
+  <!-- Central Territory Node -->
+  <g id="territory-node">
+    <circle cx="127.5" cy="127.5" r="34" fill="#2b4252" stroke="#31c1cc" stroke-width="1.7"/>
+    <text x="127.5" y="131.75" font-family="'Courier New'" font-size="10.2" fill="#31c1cc" text-anchor="middle">Territory</text>
+  </g>
+  
+  <!-- Neighbor Nodes -->
+  <!-- Top Neighbor -->
+  <g id="neighbor-top">
+    <circle cx="127.5" cy="57.5" r="21.25" fill="#2b4252" stroke="#31c1cc" stroke-width="1.7"/>
+    <text x="128" y="59" font-family="'Courier New'" font-size="6.5" fill="#31c1cc" text-anchor="middle">Neighbor</text>
+  </g>
+  
+  <!-- Right Neighbor -->
+  <g id="neighbor-right">
+    <circle cx="197.5" cy="127.5" r="21.25" fill="#2b4252" stroke="#31c1cc" stroke-width="1.7"/>
+    <text x="198" y="128.75" font-family="'Courier New'" font-size="6.5" fill="#31c1cc" text-anchor="middle">Neighbor</text>
+  </g>
+  
+  <!-- Bottom Neighbor -->
+  <g id="neighbor-bottom">
+    <circle cx="127.5" cy="197.5" r="21.25" fill="#2b4252" stroke="#31c1cc" stroke-width="1.7"/>
+    <text x="128" y="198.75" font-family="'Courier New'" font-size="6.5" fill="#31c1cc" text-anchor="middle">Neighbor</text>
+  </g>
+  
+  <!-- Left Neighbor -->
+  <g id="neighbor-left">
+    <circle cx="57.5" cy="127.5" r="21.25" fill="#2b4252" stroke="#31c1cc" stroke-width="1.7"/>
+    <text x="58" y="128.75" font-family="'Courier New'" font-size="6.5" fill="#31c1cc" text-anchor="middle">Neighbor</text>
+  </g>
+  
+  <!-- Diagonal connections with smaller nodes -->
+  <!-- Top-Right Neighbor -->
+  <g id="neighbor-topright">
+    <circle cx="169.167" cy="85.833" r="17" fill="#2b4252" stroke="#31c1cc" stroke-width="1.7"/>
+    <text x="170" y="87" font-family="'Courier New'" font-size="4.8" fill="#31c1cc" text-anchor="middle">Neighbor</text>
+  </g>
+  
+  <!-- Bottom-Right Neighbor -->
+  <g id="neighbor-bottomright">
+    <circle cx="169.167" cy="169.167" r="17" fill="#2b4252" stroke="#31c1cc" stroke-width="1.7"/>
+    <text x="170" y="170" font-family="'Courier New'" font-size="4.8" fill="#31c1cc" text-anchor="middle">Neighbor</text>
+  </g>
+  
+  <!-- Connection Lines -->
+  <!-- Territory to Top Neighbor -->
+  <line x1="127.5" y1="93.5" x2="127.5" y2="78.75" stroke="#31c1cc" stroke-width="1.7"/>
+  
+  <!-- Territory to Right Neighbor -->
+  <line x1="161.5" y1="127.5" x2="176.25" y2="127.5" stroke="#31c1cc" stroke-width="1.7"/>
+  
+  <!-- Territory to Bottom Neighbor -->
+  <line x1="127.5" y1="161.5" x2="127.5" y2="176.25" stroke="#31c1cc" stroke-width="1.7"/>
+  
+  <!-- Territory to Left Neighbor -->
+  <line x1="93.5" y1="127.5" x2="78.75" y2="127.5" stroke="#31c1cc" stroke-width="1.7"/>
+  
+  <!-- Diagonal Connections -->
+  <line x1="151.52" y1="103.48" x2="157.167" y2="97.833" stroke="#31c1cc" stroke-width="1.7"/>
+  <line x1="151.52" y1="151.52" x2="157.167" y2="157.167" stroke="#31c1cc" stroke-width="1.7"/>
+</svg>

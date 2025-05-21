@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="15 30 215 130">
+  <defs>
+    <!-- Arrowhead marker definition -->
+    <marker id="arrowhead" markerWidth="2.4" markerHeight="2.4" refX="2" refY="1.2" orient="auto">
+      <polygon points="0 0, 2.4 1.2, 0 2.4" fill="#31c1cc" />
+    </marker>
+  </defs>
+	
+  <!-- Main Type Registry Container -->
+  <rect x="20" y="35" width="200" height="125" rx="5" fill="#2b4252" stroke="#31c1cc" stroke-width="2"/>
+  
+  <!-- Registry Header -->
+  <rect x="20" y="35" width="200" height="15" rx="5" fill="#31c1cc" stroke="#31c1cc" stroke-width="1"/>
+  
+  <!-- Type Entries -->
+  <!-- Type 1 -->
+  <rect x="30" y="65" width="60" height="20" rx="3" fill="#2a3141" stroke="#31c1cc" stroke-width="1.5"/>
+  <text x="60" y="78" font-family="'Courier New'" font-size="10" fill="#31c1cc" text-anchor="middle">Type</text>
+  
+  <!-- Object 1 -->
+  <rect x="150" y="65" width="60" height="20" rx="3" fill="#2a3141" stroke="#31c1cc" stroke-width="1.5"/>
+  <text x="180" y="78" font-family="'Courier New'" font-size="10" fill="#31c1cc" text-anchor="middle">Object</text>
+  
+  <!-- Relation 1 -->
+  <line x1="90" y1="75" x2="150" y2="75" stroke="#31c1cc" stroke-width="1.5"/>
+  <text x="120" y="72" font-family="'Courier New'" font-size="8" fill="#31c1cc" text-anchor="middle">Relation</text>
+  
+  <!-- Type 2 -->
+  <rect x="30" y="95" width="60" height="20" rx="3" fill="#2a3141" stroke="#31c1cc" stroke-width="1.5"/>
+  <text x="60" y="108" font-family="'Courier New'" font-size="10" fill="#31c1cc" text-anchor="middle">Type</text>
+  
+  <!-- Object 2 -->
+  <rect x="150" y="95" width="60" height="20" rx="3" fill="#2a3141" stroke="#31c1cc" stroke-width="1.5"/>
+  <text x="180" y="108" font-family="'Courier New'" font-size="10" fill="#31c1cc" text-anchor="middle">Object</text>
+  
+  <!-- Relation 2 -->
+  <line x1="90" y1="105" x2="150" y2="105" stroke="#31c1cc" stroke-width="1.5"/>
+  <text x="120" y="102" font-family="'Courier New'" font-size="8" fill="#31c1cc" text-anchor="middle">Relation</text>
+  
+  <!-- Type 3 -->
+  <rect x="30" y="125" width="60" height="20" rx="3" fill="#2a3141" stroke="#31c1cc" stroke-width="1.5"/>
+  <text x="60" y="138" font-family="'Courier New'" font-size="10" fill="#31c1cc" text-anchor="middle">Type</text>
+  
+  <!-- Object 3 -->
+  <rect x="150" y="125" width="60" height="20" rx="3" fill="#2a3141" stroke="#31c1cc" stroke-width="1.5"/>
+  <text x="180" y="138" font-family="'Courier New'" font-size="10" fill="#31c1cc" text-anchor="middle">Object</text>
+  
+  <!-- Relation 3 -->
+  <line x1="90" y1="135" x2="150" y2="135" stroke="#31c1cc" stroke-width="1.5"/>
+  <text x="120" y="132" font-family="'Courier New'" font-size="8" fill="#31c1cc" text-anchor="middle">Relation</text>
+</svg>
