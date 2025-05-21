@@ -6,39 +6,45 @@
     <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body class="dynamic-content-body">
-    <br />
     <h2>Features</h2>
 
-    <h3>Architecture</h3>
     <p class="indented-p">
-        <i>Hazard!</i> implements MVVM, separating concerns across distinct projects:
-    </p>
-    <ul style="text-align: left; margin-left: 3em;">
-        <li><strong>Model -</strong> Core game logic and state.</li>
-        <li><strong>ViewModel -</strong> Mediates between Model and View.</li>
-        <li><strong>View -</strong> WPF UI.</li>
-        <li><strong>Shared -</strong> Interfaces, globals, and shared services.</li>
-        <li><strong>BootStrap -</strong> A bootstrapper, handling environment variables and DI.</li>
-    </ul>
-    <p class="indented-p">
+        <i>Hazard!</i> implements the MVVM architecture, as diagrammed below.
         It's then packaged as an MSIX bundle (.msixbundle) using a Windows Application Packaging Project.
     </p>
     <p class="indented-p">In the the Model and Shared projects it features:</p>
-    <ul style="text-align: left; margin-left: 3em;">
+    <ul>
         <li><strong>Full .XML documentation</strong> integrates with Intellisense!</li>
         <li><strong>45+ Unit Tests</strong> for critical Functions.</li>
     </ul>
-    <h3>Core Technical Features</h3>
-    <p class="indented-p">
-        Below are some of the key technical highlights.
-    </p>
-
-    <div class="code-with-text">
+    <h3>Runtime Architecture</h3>
+    <div class="image-with-text" style="margin-left:6em; margin-right: 2em;">
         <div class="image-text">
+            <br />
+            <h3>
+                Model-ViewModel-View (MVVM)
+            </h3>
+            <ul>
+                <li><strong>Model -</strong> Core game logic and state.</li>
+                <li><strong>ViewModel -</strong> Mediates between Model and View.</li>
+                <li><strong>View -</strong> WPF UI.</li>
+                <li><strong>Shared -</strong> Interfaces, globals, and shared services.</li>
+                <li><strong>BootStrap -</strong> Entry point, dependency injection and environment and configuration.</li>
+            </ul>
+        </div>
+        <img src="Images/runtime-architecture.svg" style="max-width:550px; height: auto;" />
+    </div>
+    <br />
+
+    <h2>Technical Feature Highlights</h2>
+
+    <div class="code-with-text" id="EventSystem">
+        <div class="image-text">
+            <img src="Images/Events.svg" />
             <h3>State-Driven Event System</h3>
             <p class="indented-p">At <i>Hazard!</i>'s core is a regulated state machine that manages the game's complex flow between phases (Setup, Place, Attack, Move), with proper state transitions and validation.</p>
             <p class="indented-p">Rather than tight coupling, components communicate through a robust event system that ensures changes propagate correctly while maintaining separation of concerns:</p>
-            <ul style="text-align: left; margin-left: 2em;">
+            <ul>
                 <li>Each state change triggers appropriate events</li>
                 <li>Subscribers respond to state changes without direct dependencies</li>
                 <li>Player actions and game rules are cleanly separated</li>
@@ -379,7 +385,20 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         </div>
     </div>
 
-    <div class="code-with-text">
+    <div class="code-with-text" id="Registry">
+        <div class="image-text">
+            <img src="Images/Registry.svg" />
+            <h3>Type Registry System</h3>
+            <p>I designed a flexible type registration system that enables runtime discovery and management of related types, demonstrating advanced meta-programming capabilities:</p>
+            <ul>
+                <li>Dynamic type lookup by name or relationship</li>
+                <li>Parent-child type relationship management</li>
+                <li>Support for polymorphic operations without hard-coding</li>
+                <li>Integration with data loading and serialization systems</li>
+            </ul>
+            <p>This registry system provides a foundation for extensible components and reduces coupling between different parts of the application.</p>
+            <p><center><i>Key Files: TypeRegister.cs, TypeRelations.cs</i></center></p>
+        </div>
         <div>
             <pre class="code-snippet">
 public class TypeRegister : ITypeRegister&lt;ITypeRelations&gt;
@@ -451,25 +470,14 @@ public class TypeRegister : ITypeRegister&lt;ITypeRelations&gt;
 }
             </pre>
         </div>
-        <div class="image-text">
-            <h3>Type Registry System</h3>
-            <p>I designed a flexible type registration system that enables runtime discovery and management of related types, demonstrating advanced meta-programming capabilities:</p>
-            <ul style="text-align: left; margin-left: 2em;">
-                <li>Dynamic type lookup by name or relationship</li>
-                <li>Parent-child type relationship management</li>
-                <li>Support for polymorphic operations without hard-coding</li>
-                <li>Integration with data loading and serialization systems</li>
-            </ul>
-            <p>This registry system provides a foundation for extensible components and reduces coupling between different parts of the application.</p>
-            <p><center><i>Key Files: TypeRegister.cs, TypeRelations.cs</i></center></p>
-        </div>
     </div>
 
-    <div class="code-with-text">
+    <div class="code-with-text" id="Serializer">
         <div class="image-text">
+            <img src="Images/Serializer.svg" />
             <h3>Custom Binary Serialization Framework</h3>
             <p>I implemented a robust binary serialization system that enables efficient game state persistence with full control over the serialization process:</p>
-            <ul style="text-align: left; margin-left: 2em;">
+            <ul>
                 <li>Type-safe encoding and decoding of complex objects</li>
                 <li>Support for various data types including enums and collections</li>
                 <li>Reflection-based property discovery with opt-in serialization</li>
@@ -577,7 +585,19 @@ public static class BinarySerializer
         </div>
     </div>
 
-    <div class="code-with-text">
+    <div class="code-with-text" id="RulesLogic">
+        <div class="image-text">
+            <h3>Rule-Based Game Logic</h3>
+            <p>The game implements a sophisticated rule engine through the Regulator class, which enforces complex game mechanics:</p>
+            <ul>
+                <li>Phase-specific action validation and resolution</li>
+                <li>Resource management and distribution</li>
+                <li>Combat resolution using probabilistic outcomes</li>
+                <li>Turn-based progression with appropriate state transitions</li>
+            </ul>
+            <p>This system demonstrates the ability to translate abstract game rules into concrete code logic, a skill directly applicable to implementing business rules in enterprise applications.</p>
+            <p><center><i>Key Files: Regulator.cs, RuleValues.cs</i></center></p>
+        </div>
         <div>
             <pre class="code-snippet">
 public class Regulator : IRegulator
@@ -680,25 +700,14 @@ public class Regulator : IRegulator
 }
             </pre>
         </div>
-        <div class="image-text">
-            <h3>Rule-Based Game Logic</h3>
-            <p>The game implements a sophisticated rule engine through the Regulator class, which enforces complex game mechanics:</p>
-            <ul style="text-align: left; margin-left: 2em;">
-                <li>Phase-specific action validation and resolution</li>
-                <li>Resource management and distribution</li>
-                <li>Combat resolution using probabilistic outcomes</li>
-                <li>Turn-based progression with appropriate state transitions</li>
-            </ul>
-            <p>This system demonstrates the ability to translate abstract game rules into concrete code logic, a skill directly applicable to implementing business rules in enterprise applications.</p>
-            <p><center><i>Key Files: Regulator.cs, RuleValues.cs</i></center></p>
-        </div>
     </div>
 
-    <div class="code-with-text">
+    <div class="code-with-text" id="GeographyGraph">
         <div class="image-text">
+            <img src="Images/GeographyGraph.svg" />
             <h3>Geography Modeling System</h3>
             <p>I designed an elegant system for modeling complex geographical relationships between territories and continents:</p>
-            <ul style="text-align: left; margin-left: 2em;">
+            <ul>
                 <li>Efficient representation of adjacency using neighbor graphs</li>
                 <li>Continent-territory containment hierarchies</li>
                 <li>Data-driven initialization from external configuration</li>
@@ -797,37 +806,152 @@ public static class BoardGeography
 
     </div>
 
+    <div class="code-with-text" id="RapidProtoTyping">
+        <div class="image-text">
+            <img src="Images/PrototypingWithReflection.svg" />
+            <h3>Rule-Based Game Logic</h3>
+            <p>The game implements a sophisticated rule engine through the Regulator class, which enforces complex game mechanics:</p>
+            <ul>
+                <li>Phase-specific action validation and resolution</li>
+                <li>Resource management and distribution</li>
+                <li>Combat resolution using probabilistic outcomes</li>
+                <li>Turn-based progression with appropriate state transitions</li>
+            </ul>
+            <p>This system demonstrates the ability to translate abstract game rules into concrete code logic, a skill directly applicable to implementing business rules in enterprise applications.</p>
+            <p><center><i>Key Files: Regulator.cs, RuleValues.cs</i></center></p>
+        </div>
+        <div>
+            <pre class="code-snippet">
+public class Regulator : IRegulator
+{
+    private readonly IGame _currentGame;
+    private readonly StateMachine _machine;
+    private readonly ILogger _logger;
+    private readonly int _numPlayers;
+    private int _actionsCounter = 0;
+    private int _prevActionCount = 0;
+
+    public int CurrentActionsLimit { get; set; }
+    public int PhaseActions => _actionsCounter - _prevActionCount;
+    public ICard? Reward { get; set; } = null;
+
+    public event EventHandler&lt;TerrID[]&gt;? PromptBonusChoice;
+    public event EventHandler&lt;IPromptTradeEventArgs&gt;? PromptTradeIn;
+
+    private void HandleStateChanged(object? sender, string propName)
+    {
+        if (propName != "CurrentPhase")
+            return;
+
+        _prevActionCount = _actionsCounter;
+        switch (_machine.CurrentPhase) {
+            case GamePhase.Place:
+                CurrentActionsLimit = _actionsCounter;
+                _currentGame.Players[_machine.PlayerTurn].ArmyPool 
+                    += _currentGame.Players[_machine.PlayerTurn].ArmyBonus;
+                CurrentActionsLimit += _currentGame.Players[_machine.PlayerTurn].ArmyPool;
+
+                if (!_currentGame.Players[_machine.PlayerTurn].HasCardSet)
+                    break;
+
+                bool force = false;
+                if (_currentGame.Players[_machine.PlayerTurn].Hand.Count >= 5)
+                    force = true;
+                PromptTradeIn?.Invoke(this, new PromptTradeEventArgs(_machine.PlayerTurn, force));
+                break;
+
+            case GamePhase.Attack:
+                _currentGame.State.PhaseStageTwo = false;
+                break;
+
+            case GamePhase.Move:
+                CurrentActionsLimit = _actionsCounter + 1;
+                break;
+        }
+    }
+
+    public void TradeInCards(int playerNum, int[] handIndices)
+    {
+        var selectedCards = GetCardsFromHand(playerNum, handIndices);
+        if (selectedCards == null || selectedCards.Length == 0)
+            return;
+
+        var currentPlayer = _currentGame.Players[playerNum];
+        _machine.IncrementNumTrades(1);
+        int tradebonus = _currentGame.Values.CalculateBaseTradeInBonus(_machine.NumTrades);
+        currentPlayer.GetsTradeBonus(tradebonus);
+        CurrentActionsLimit += tradebonus;
+        ForceDiscard((Player)currentPlayer, handIndices);
+
+        var tradedTargets = selectedCards.SelectMany(item => item.Target);
+        var controlledTargets = currentPlayer.GetControlledTargets(tradedTargets.ToArray());
+        if (controlledTargets.Length == 1)
+            _currentGame.Board.Reinforce(controlledTargets[0], _currentGame.Values.TerritoryTradeInBonus);
+        else if (controlledTargets.Length > 1)
+            PromptBonusChoice?.Invoke(this, [.. controlledTargets]);
+    }
+    
+    public void Battle(TerrID source, TerrID target, ValueTuple<int, int>[] diceRolls)
+    {
+        _actionsCounter++;
+
+        int sourceLoss = 0;
+        int targetLoss = 0;
+        foreach (var (AttackRoll, DefenseRoll) in diceRolls)
+            if (AttackRoll > DefenseRoll)
+                targetLoss++;
+            else
+                sourceLoss++;
+
+        if (targetLoss >= _currentGame.Board.Armies[target]) {
+            int conqueredOwner = _currentGame.Board.TerritoryOwner[target];
+            int newOwner = _currentGame.Board.TerritoryOwner[source];
+            if (conqueredOwner > -1)
+                _currentGame.Players[conqueredOwner].RemoveTerritory(target);
+            _currentGame.Players[newOwner].AddTerritory(target);
+
+            _currentGame.Board.Conquer(source, target, _currentGame.Board.TerritoryOwner[source]);
+
+            Reward ??= _currentGame.Cards.GameDeck.DrawCard();
+        }
+        if (sourceLoss > 0)
+            _currentGame.Board.Reinforce(source, -sourceLoss);
+        if (targetLoss > 0)
+            _currentGame.Board.Reinforce(target, -targetLoss);
+    }
+}
+            </pre>
+        </div>
+    </div>
+
     <div class="presentation-box">
-        <h3 style="color: #31c1cc;">Technical Skills Demonstrated</h3>
-        <p>Through this project, I've demonstrated proficiency with:</p>
+        <h3 style="color: #31c1cc;">Technical Skills Developed</h3>
         <ul class="skills-list">
             <li>Advanced C# programming techniques</li>
-            <li>Object-oriented design principles</li>
-            <li>SOLID principles application</li>
-            <li>Design pattern implementation</li>
+            <li>Object-oriented design</li>
+            <li>Applying SOLID</li>
             <li>Event-driven architecture</li>
             <li>State management</li>
             <li>Domain-driven design</li>
+            <li>Custom serialization</li>
             <li>Binary serialization</li>
             <li>Reflection and meta-programming</li>
             <li>Error handling and logging</li>
             <li>Clean code architecture</li>
             <li>XML documentation</li>
             <li>Asynchronous programming</li>
-            <li>Custom serialization</li>
-            <li>Resource management</li>
-            <li>Software architecture principles</li>
+            <li>WPF UI design</li>
         </ul>
-        <p style="margin-top: 1em;">These software engineering skills transfer directly to enterprise application development, demonstrating my capability to build complex, maintainable systems.</p>
+        <p style="margin-top: 1em;">These software engineering skills transfer directly to enterprise application development, and demonstrate my capability for building complex, maintainable systems.</p>
     </div>
 
     <div class="call-to-action">
-        <h3>Ready to Discuss My Work</h3>
-        <p>I'd be happy to walk through any aspect of this project in detail, explaining the technical decisions and architectural patterns I implemented.</p>
-        <p>Contact me to schedule a conversation about how these skills can benefit your development team.</p>
+        <h2>Discuss My Work</h2>
+        <p>I'd be happy to walk through any aspect of this project in detail, including technical decisions and implementation patterns.</p>
+        <p>Contact me to schedule a conversation about how these skills can benefit your development team!</p>
         <div class="button-container">
-            <a href="mailto:contact@example.com" class="download-button">Contact Me</a>
-            <a href="https://github.com/YourUsername/ProjectRepo" class="download-button">View on GitHub</a>
+            <a href="mailto:joshua.a.mcknight@gmail.com" class="cta-button">Contact Me</a>
+            <a href="https://github.com/LivingCryogen/Hazard" class="cta-button">View on GitHub</a>
         </div>
     </div>
 </body>
