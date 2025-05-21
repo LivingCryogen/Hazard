@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="15 68.75 180 59">
+	<defs>
+		<!-- Arrowhead marker definition -->
+		<marker id="arrowhead" markerWidth="2.4" markerHeight="2.4" refX="2" refY="1.2" orient="auto">
+			<polygon points="0 0, 2.4 1.2, 0 2.4" fill="#31c1cc" />
+		</marker>
+		<!-- Dashed arrowhead marker -->
+		<marker id="dashedarrow" markerWidth="2.4" markerHeight="2.4" refX="2" refY="1.2" orient="auto">
+			<polygon points="0 0, 2.4 1.2, 0 2.4" fill="#E5E5CC" />
+		</marker>
+	</defs>
+
+	<!-- Object Container (ISerializable) -->
+	<rect x="20" y="77.5" width="38.25" height="45" rx="3" fill="#2a3141" stroke="#31c1cc" stroke-width="2"/>
+	<text x="40" y="102" font-family="'Courier New'" font-size="5" fill="#31c1cc" text-anchor="middle">Object</text>
+
+	<!-- Serializer Container -->
+	<rect x="79.25" y="73.75" width="44.625" height="52.5" rx="5" fill="#2b4252" stroke="#31c1cc" stroke-width="2"/>
+	<text x="102" y="102" font-family="'Courier New'" font-size="6" fill="#31c1cc" text-anchor="middle">Serializer</text>
+
+	<!-- Binary Output Container -->
+	<rect x="144.875" y="77.5" width="45" height="45" rx="3" fill="#2a3141" stroke="#31c1cc" stroke-width="2"/>
+
+	<!-- Binary Data -->
+	<text x="167.375" y="91" font-family="'Courier New'" font-size="6" fill="#31c1cc" text-anchor="middle">01011</text>
+	<text x="167.375" y="98" font-family="'Courier New'" font-size="6" fill="#31c1cc" text-anchor="middle">10101</text>
+	<text x="167.375" y="105" font-family="'Courier New'" font-size="6" fill="#31c1cc" text-anchor="middle">01001</text>
+	<text x="167.375" y="112" font-family="'Courier New'" font-size="6" fill="#31c1cc" text-anchor="middle">11010</text>
+
+	<!-- Write Flow (Object to Serializer) -->
+	<path d="M59.25 92.5 L78.25 92.5" stroke="#31c1cc" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+	<!-- Read Flow (Serializer to Object) -->
+	<path d="M78.25 107.5 L59.25 107.5" stroke="#31c1cc" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+	<!-- Binary Flow (Serializer to Binary) -->
+	<path d="M124.875 92.5 L143.875 92.5" stroke="#31c1cc" stroke-width="2" marker-end="url(#arrowhead)"/>
+	<path d="M143.875 107.5 L124.875 107.5" stroke="#31c1cc" stroke-width="2" marker-end="url(#arrowhead)"/>
+</svg>
