@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="100 10 400 430">
+	<defs>
+		<!-- Arrowhead marker definition -->
+		<marker id="arrowhead" markerWidth="2.4" markerHeight="2.4" refX="2" refY="1.2" orient="auto">
+			<polygon points="0 0, 2.4 1.2, 0 2.4" fill="#31c1cc" />
+		</marker>
+		<!-- Dashed arrowhead marker -->
+		<marker id="dashedarrow" markerWidth="2.4" markerHeight="2.4" refX="2" refY="1.2" orient="auto">
+			<polygon points="0 0, 2.4 1.2, 0 2.4" fill="#E5E5CC" />
+		</marker>
+	</defs>
+
+	<!-- External Components at Top -->
+	<g id="external-components-top">
+		<!-- Shared Project -->
+		<rect x="150" y="20" width="100" height="80" rx="5" fill="#2b4252" stroke="#31c1cc" stroke-width="2"/>
+		<text x="200" y="40" font-family="'Courier New'" font-size="14" fill="#E5E5CC" text-anchor="middle">Shared</text>
+		<text x="200" y="52" font-family="'Courier New'" font-size="14" fill="#E5E5CC" text-anchor="middle">Project</text>
+		<text x="200" y="64" font-family="'Courier New'" font-size="8" fill="#E5E5CC" text-anchor="middle">Serializer</text>
+		<text x="200" y="74" font-family="'Courier New'" font-size="8" fill="#E5E5CC" text-anchor="middle">Type Registry</text>
+		<text x="200" y="84" font-family="'Courier New'" font-size="8" fill="#E5E5CC" text-anchor="middle">Interfaces</text>
+
+		<!-- Bootstrapper Module -->
+		<rect x="330" y="20" width="140" height="70" rx="5" fill="#2b4252" stroke="#31c1cc" stroke-width="2"/>
+		<text x="400" y="57" font-family="'Courier New'" font-size="18" fill="#E5E5CC" text-anchor="middle">Bootstrapper</text>
+
+		<!-- Shared to Bootstrapper -->
+		<path d="M250 50 L330 50" stroke="#31c1cc" stroke-width="1.5" stroke-dasharray="4,2"/>
+		<text x="290" y="40" font-family="'Courier New'" font-size="10" fill="#E5E5CC" text-anchor="middle">DI Config</text>
+	</g>
+
+	<!-- Outer container for the architecture -->
+	<rect x="110" y="120" width="380" height="290" rx="8" fill="#2a3141" stroke="#31c1cc" stroke-width="2" stroke-dasharray="10,5"/>
+	<text x="300" y="145" font-family="'Courier New'" font-size="16" fill="#31c1cc" text-anchor="middle">Core Application Structure</text>
+
+	<!-- Bootstrap Connection to Core -->
+	<path d="M400 90 L400 120" stroke="#31c1cc" stroke-width="2" marker-end="url(#arrowhead)"/>
+	<text x="410" y="105" font-family="'Courier New'" font-size="12" fill="#E5E5CC">DI</text>
+
+	<!-- Architecture Components -->
+	<g id="components">
+		<!-- Model Layer -->
+		<rect x="150" y="160" width="300" height="60" rx="5" fill="#2b4252" stroke="#31c1cc" stroke-width="2"/>
+		<text x="300" y="195" font-family="'Courier New'" font-size="18" fill="#E5E5CC" text-anchor="middle">Model</text>
+
+		<!-- ViewModel Layer -->
+		<rect x="150" y="240" width="300" height="60" rx="5" fill="#2b4252" stroke="#31c1cc" stroke-width="2"/>
+		<text x="300" y="275" font-family="'Courier New'" font-size="18" fill="#E5E5CC" text-anchor="middle">ViewModel</text>
+
+		<!-- View Layer -->
+		<rect x="150" y="320" width="300" height="60" rx="5" fill="#2b4252" stroke="#31c1cc" stroke-width="2"/>
+		<text x="300" y="355" font-family="'Courier New'" font-size="18" fill="#E5E5CC" text-anchor="middle">View (WPF)</text>
+	</g>
+
+	<!-- Connections -->
+	<g id="connections">
+		<!-- Model to ViewModel (Events) -->
+		<path d="M250 220 L250 240" stroke="#E5E5CC" stroke-width="2" marker-end="url(#dashedarrow)"/>
+		<text x="195" y="230" font-family="'Courier New'" font-size="12" fill="#E5E5CC">Events</text>
+
+		<!-- ViewModel to Model (Method Calls) -->
+		<path d="M300 240 L300 220" stroke="#31c1cc" stroke-width="2" marker-end="url(#arrowhead)"/>
+		<text x="305" y="230" font-family="'Courier New'" font-size="12" fill="#E5E5CC">Method Calls</text>
+
+		<!-- ViewModel to View (Property Changed) -->
+		<path d="M250 300 L250 320" stroke="#E5E5CC" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#dashedarrow)"/>
+		<text x="195" y="310" font-family="'Courier New'" font-size="12" fill="#E5E5CC">Updates</text>
+
+		<!-- View to ViewModel (Data Binding) -->
+		<path d="M300 320 L300 300" stroke="#31c1cc" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowhead)"/>
+		<text x="305" y="310" font-family="'Courier New'" font-size="12" fill="#E5E5CC">Data Binding</text>
+	</g>
+
+	<!-- Shared to Model Connection -->
+	<path d="M200 100 C200 110, 190 135, 200 160" stroke="#31c1cc" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+	<text x="175" y="130" font-family="'Courier New'" font-size="10" fill="#E5E5CC" text-anchor="middle">Import</text>
+
+	<!-- Deployment Note -->
+	<text x="300" y="430" font-family="'Courier New'" font-size="12" fill="#E5E5CC" text-anchor="middle">Deployed via MSIX (WAPP entry: Bootstrapper)</text>
+</svg>

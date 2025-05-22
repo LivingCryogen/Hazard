@@ -34,6 +34,7 @@ jobs:
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           dotnet build --configuration Release --output ./output
+          cp host.json ./output/ # Ensure host.json is copied to the output directory
           popd
       
       - name: Login to Azure
