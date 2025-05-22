@@ -1,10 +1,10 @@
+using Azure.Core;
+using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Sas;
-using Azure.Storage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
-using Azure.Core;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Sasgen
@@ -68,8 +68,7 @@ namespace Sasgen
                 BlobServiceClient blobServiceClient;
                 try {
                     blobServiceClient = new(storageUri, credential);
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     logger.LogError(ex, "Blob service client failed to instantiate with uri {uri}.", storageUri);
                     return new UnprocessableEntityResult();
                 }

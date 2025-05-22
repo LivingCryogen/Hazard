@@ -1,13 +1,11 @@
 ﻿using Hazard.ViewModel.SubElements;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Shared.Geography.Enums;
 using Shared.Interfaces.ViewModel;
 using Shared.Services.Options;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -113,8 +111,8 @@ public partial class AttackWindow : Window
     }
 
     #region Properties
-    public required ReadOnlyDictionary<string,string> SoundFileMap { get; init; }
-   
+    public required ReadOnlyDictionary<string, string> SoundFileMap { get; init; }
+
     public int MaxAttackDice => CalcMaxAttackDice();
     public int MaxDefenseDice => CalcMaxDefenseDice();
     public int NumAttackDice {
@@ -437,7 +435,7 @@ public partial class AttackWindow : Window
         else
             DefenseDieVisual1.BeginAnimation(Image.SourceProperty, _defenseDiceAnimations[0]);
     }
- 
+
     private static SpinType DetermineSpin()
     {
         Random rand = new();
@@ -449,7 +447,7 @@ public partial class AttackWindow : Window
     {
         string spinAudioFileName = spinType.ToString() + ".wav";
         string spinAudioPath = SoundFileMap[spinAudioFileName];
-        Uri spinAudioUri = new (spinAudioPath, UriKind.Absolute);
+        Uri spinAudioUri = new(spinAudioPath, UriKind.Absolute);
 
         MediaPlayer dicePlayer = new();
         dicePlayer.Open(spinAudioUri);

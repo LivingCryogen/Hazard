@@ -51,7 +51,8 @@ public class BanListCache(ILogger<BanListCache> logger) : IBanCache
         return false;
     }
 
-    public IEnumerable<string> GetUpdatedAddresses() {
+    public IEnumerable<string> GetUpdatedAddresses()
+    {
         lock (_lock) {
             return [.. _addressesUpdated];
         }
@@ -62,14 +63,14 @@ public class BanListCache(ILogger<BanListCache> logger) : IBanCache
         foreach (BanListEntry entry in banRecords) {
             if (!entry.NowBanned)
                 continue;
-        
+
             string address = entry.RowKey;
             Ban cachedBan = new(
                 entry.IsLifetime ? Ban.BanType.Life : Ban.BanType.Temp,
                 entry.NumTempBans,
                 entry.UnbannedOn
                 );
-        
+
             _bans.AddOrUpdate(address, _ => cachedBan, (_, _) => cachedBan);
         }
 

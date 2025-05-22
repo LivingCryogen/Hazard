@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
-using Model.Core;
 using Model.EventArgs;
 using Shared.Enums;
 using Shared.Geography;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Services.Serializer;
-using System.Reflection.PortableExecutable;
 
 namespace Model.Core;
 
@@ -177,9 +175,9 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
 
             GamePhase.Move when !priorSelection => owner == _machine.PlayerTurn && territoryArmies >= 2,
 
-            GamePhase.Move when priorSelection => 
-                owner == _machine.PlayerTurn && 
-                oldSelected != newSelected && 
+            GamePhase.Move when priorSelection =>
+                owner == _machine.PlayerTurn &&
+                oldSelected != newSelected &&
                 IsMoveDestination(owner, newSelected, oldSelected),
             _ => false
         };
@@ -239,7 +237,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
             default:
                 ClaimOrReinforce(selected);
                 postSelection = TerrID.Null;
-            break;
+                break;
         }
 
         return (postSelection, requestInput, maxValue);
@@ -295,7 +293,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
                 break;
         }
     }
-    
+
     /// <inheritdoc cref="IRegulator.MoveArmies(TerrID, TerrID, int)"/>
     public void MoveArmies(TerrID source, TerrID target, int armies)
     {

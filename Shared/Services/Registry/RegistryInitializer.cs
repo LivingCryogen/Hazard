@@ -34,7 +34,7 @@ public class RegistryInitializer(IOptions<AppConfig> options) : IRegistryInitial
         public Type ConvertedDataType;
     }
 
-    private readonly CardRegistryRecord[] _cardTypeRegistryRecords = 
+    private readonly CardRegistryRecord[] _cardTypeRegistryRecords =
         [
             new() {
                 CardType = typeof(TroopCard),

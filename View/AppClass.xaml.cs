@@ -1,10 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Shared.Interfaces.View;
 using Shared.Services.Options;
-using Shared.Services.Serializer;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Threading;
@@ -20,7 +18,7 @@ public partial class App(IHost host, bool devMode, IOptions<AppConfig> appConfig
     private readonly IBootStrapperService _bootService = host.Services.GetRequiredService<IBootStrapperService>();
     public bool DevMode { get; init; } = devMode;
     public string InstallPath { get; init; } = appConfig.Value.AppPath;
-    public ReadOnlyDictionary<string,string> DataFileMap { get; } = new(appConfig.Value.DataFileMap);
+    public ReadOnlyDictionary<string, string> DataFileMap { get; } = new(appConfig.Value.DataFileMap);
 
     protected override void OnStartup(StartupEventArgs e)
     {

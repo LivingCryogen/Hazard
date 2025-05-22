@@ -1,7 +1,4 @@
-﻿using Azure.Core;
-using System.Net;
-
-namespace AzProxy;
+﻿namespace AzProxy;
 
 public class BanService(ILogger<BanService> logger, IConfiguration config, IBanCache cache)
 {
@@ -16,14 +13,14 @@ public class BanService(ILogger<BanService> logger, IConfiguration config, IBanC
             TimeSpan.FromHours(3),
         int.TryParse(config["ThirdBanDays"], out var thirdBanDays) ?
             TimeSpan.FromDays(thirdBanDays) :
-            TimeSpan.FromDays(7) 
+            TimeSpan.FromDays(7)
         ];
     private readonly int _maxRequests =
-        int.TryParse(config["MaxRequests"], out var maxRequests) ? 
+        int.TryParse(config["MaxRequests"], out var maxRequests) ?
             maxRequests : 25;
 
     public bool CacheInitialized => _cache.Initialized;
-  
+
     public bool Allow(string address, int requests)
     {
         // Check request limit, issue ban and reject if so

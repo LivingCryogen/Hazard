@@ -29,7 +29,8 @@ public static class FileProcessor
     public static string GetTempFile()
     {
         string tempPath = _fileSystem.Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-        using (var tempStream = _fileSystem.File.Create(tempPath)) { };
+        using (var tempStream = _fileSystem.File.Create(tempPath)) { }
+        ;
         return tempPath;
     }
 

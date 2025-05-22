@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Model.Core;
 using Model.EventArgs;
 using Shared.Enums;
-using Shared.Geography;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Interfaces.View;

@@ -8,7 +8,6 @@ using Model.Tests.Fixtures;
 using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Fixtures.Stubs;
 using Shared.Interfaces.Model;
-using Shared.Services.Helpers;
 using Shared.Services.Options;
 using Shared.Services.Registry;
 

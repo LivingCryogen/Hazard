@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.Win32;
 using Shared.Enums;
 using Shared.Geography.Enums;
@@ -70,10 +68,10 @@ public partial class MainWindow : Window
         DataContext = viewModel;
         PlayerColors = [];
         int numPlayers = _vM.PlayerDetails.Count;
-        
+
         if (AppOptions.Value.SoundFileMap.Count > 0)
             _soundFileMap = new(AppOptions.Value.SoundFileMap);
-        
+
         var app = (App)Application.Current;
         for (int i = 0; i < numPlayers; i++)
             PlayerColors.Add((SolidColorBrush)app.FindResource($"Army.{_vM.PlayerDetails[i].ColorName}"));
@@ -273,7 +271,7 @@ public partial class MainWindow : Window
         SolidColorBrush sourceColor = _territoryButtons[(int)sourceTerritory].Color;
         SolidColorBrush targetColor = _territoryButtons[targetTerritory].Color;
 
-        AttackWindow newAttackWindow = new() { 
+        AttackWindow newAttackWindow = new() {
             SoundFileMap = _soundFileMap,
         };
         newAttackWindow.Initialize((int)sourceTerritory, targetTerritory, sourceColor, targetColor, (IMainVM)DataContext);

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Shared.Geography;
 using Shared.Interfaces.Model;
-using Shared.Services.Helpers;
 using Shared.Services.Options;
 
 namespace Model.DataAccess;

@@ -1,6 +1,4 @@
 using Microsoft.Azure.Functions.Worker.Builder;
-using Azure.Identity;
-using Azure.Core;
 
 var builder = FunctionsApplication.CreateBuilder(args);
 

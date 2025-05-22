@@ -18,7 +18,6 @@ using Shared.Services.Registry;
 using Shared.Services.Serializer;
 using System.IO;
 using System.Runtime.Versioning;
-using System.Windows;
 using View;
 using View.Services;
 using ViewModel;
@@ -77,7 +76,7 @@ namespace Bootstrap
 
                     var builtConfig = config.Build();
 
-                    
+
                     settingDataFileNames.AddRange(builtConfig.GetSection("DataFileNames").Get<string[]>() ?? []);
                     settingSoundFileNames.AddRange(builtConfig.GetSection("SoundFileNames").Get<string[]>() ?? []);
                     cardDataSearchString = (string?)(builtConfig.GetValue(typeof(string), "CardDataSearchString")) ?? string.Empty;
@@ -85,7 +84,7 @@ namespace Bootstrap
                     for (int i = 0; i < settingDataFileNames.Count; i++) {
                         // Appconfig should only have 1 path discovered per file name, so we take only the first in the returned collection.
                         dataFileLocations.Add(
-                            settingDataFileNames[i], 
+                            settingDataFileNames[i],
                             DataFileFinder.FindFiles(appPath, settingDataFileNames[i])[0]);
                     }
                     for (int i = 0; i < settingSoundFileNames.Count; i++) {

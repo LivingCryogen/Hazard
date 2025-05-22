@@ -1,8 +1,4 @@
-using Azure.Core;
-using Azure.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Threading.Tasks;
 
 namespace AzProxy
 {
@@ -22,7 +18,7 @@ namespace AzProxy
 
             app.MapGet("/", () => "Proxy is up.");
             app.MapGet("/secure-link",
-                async (HttpContext context, 
+                async (HttpContext context,
                         RequestHandler requestHandler,
                         IHttpClientFactory httpClientFactory,
                         IConfiguration config,
@@ -50,7 +46,7 @@ namespace AzProxy
                         var azFuncURL = config["AzureFunctionURL"];
                         var azFuncKey = config["AzureFunctionKey"];
 
-                        if (string.IsNullOrEmpty(azFuncURL) || string.IsNullOrEmpty(azFuncKey)) { 
+                        if (string.IsNullOrEmpty(azFuncURL) || string.IsNullOrEmpty(azFuncKey)) {
                             logger.LogInformation("Azure function forwarding incorrectly configured. Request failed.");
                             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                             await context.Response.WriteAsync("Server configuration error.");
@@ -94,8 +90,7 @@ namespace AzProxy
                             context.Response.StatusCode = StatusCodes.Status502BadGateway;
                             await context.Response.WriteAsync("Error processing request while trying to fetch an SAS token for secure connection to storage.");
                         }
-                    }
-                    catch (OperationCanceledException) {
+                    } catch (OperationCanceledException) {
                         logger.LogWarning("Request was canceled by client.");
                         context.Response.StatusCode = StatusCodes.Status499ClientClosedRequest;
                     } catch (ArgumentException argEx) {
@@ -119,7 +114,8 @@ namespace AzProxy
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Configuration.AddEnvironmentVariables();
-            builder.Services.AddCors(options => {
+            builder.Services.AddCors(options =>
+            {
                 options.AddPolicy("FromGitHubPages", policy =>
                 {
                     policy.WithOrigins("https://livingcryogen.github.io")

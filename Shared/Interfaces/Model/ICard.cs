@@ -3,7 +3,6 @@ using Shared.Geography.Enums;
 using Shared.Services.Serializer;
 using System.Collections;
 using System.Reflection;
-using System.IO;
 
 namespace Shared.Interfaces.Model;
 
