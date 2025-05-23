@@ -10,6 +10,7 @@ namespace View;
 class TerritoryElement : ButtonBase
 {
     private readonly SolidColorBrush _preselectColor = (SolidColorBrush)((App)Application.Current).FindResource("OceanHighlight");
+    private bool _isPreSelected = false;
 
     public TerritoryElement() { }
     public TerritoryElement(int iD, string name)
@@ -40,7 +41,6 @@ class TerritoryElement : ButtonBase
     public int ID { get; init; }
     public Point StationPosition { get; set; } = new(0, 0);
 
-    #region DependencyProperties
     public Geometry Geometry {
         get => (Geometry)GetValue(GeometryProperty);
         set { SetValue(GeometryProperty, value); }
@@ -89,14 +89,6 @@ class TerritoryElement : ButtonBase
     }
     public static readonly DependencyProperty? IsSelectedProperty = DependencyProperty.Register("IsSelected", typeof(bool), typeof(TerritoryElement),
         new FrameworkPropertyMetadata(false, flags: FrameworkPropertyMetadataOptions.AffectsRender));
-
-    public bool IsPreSelected {
-        get { return (bool)GetValue(IsPreSelectedProperty); }
-        set { SetValue(IsPreSelectedProperty, value); }
-    }
-    public static readonly DependencyProperty IsPreSelectedProperty =
-        DependencyProperty.Register("IsPreSelected", typeof(bool), typeof(TerritoryElement), new FrameworkPropertyMetadata(false, flags: FrameworkPropertyMetadataOptions.AffectsRender));
-    #endregion
 
     #region Methods
     protected override void OnRender(DrawingContext drawingContext)
@@ -200,7 +192,7 @@ class TerritoryElement : ButtonBase
     {
         if (Geometry == null)
             return;
-        if (IsPreSelected)
+        if (_isPreSelected)
             drawingContext.DrawGeometry(_preselectColor, new Pen(Color, .5), Geometry);
         else
             drawingContext.DrawGeometry(Color, new Pen(Color, .5), Geometry);
@@ -221,14 +213,17 @@ class TerritoryElement : ButtonBase
     }
     private void OnMouseEnter(object sender, MouseEventArgs e)
     {
-        if (Command.CanExecute(ID))
-            if (!IsPreSelected)
-                IsPreSelected = true;
+        if (Command.CanExecute(ID)) {
+            _isPreSelected = true;
+            InvalidateVisual();
+        }
     }
     private void OnMouseLeave(object sender, MouseEventArgs e)
     {
-        if (IsPreSelected)
-            IsPreSelected = false;
+        if (_isPreSelected) {
+            _isPreSelected = false;
+            InvalidateVisual();
+        }
     }
     #endregion
 }

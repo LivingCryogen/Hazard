@@ -188,13 +188,6 @@ public partial class MainWindow : Window
             Binding boolSelected = new("Territories[" + index.ToString() + "].IsSelected");
             toAdd.SetBinding(TerritoryElement.IsSelectedProperty, boolSelected);
 
-            Binding boolPreSelected = new("Territories[" + index.ToString() + "].IsPreSelected") {
-                Mode = BindingMode.TwoWay,
-                NotifyOnSourceUpdated = true,
-                NotifyOnTargetUpdated = true
-            };
-            toAdd.SetBinding(TerritoryElement.IsPreSelectedProperty, boolPreSelected);
-
             MainCanvas.Children.Add(toAdd);
             _territoryButtons.SetValue(toAdd, index);
         }
