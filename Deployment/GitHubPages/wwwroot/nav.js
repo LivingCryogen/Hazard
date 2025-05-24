@@ -36,7 +36,7 @@
             }
     
             // If Features.html is loaded, balance heights
-            if (contentPath === 'Features.html') {
+            if (contentPath === 'Features.html' || contentPath === 'TestStrategy.html' || contentPath === 'Deployment.html') {
                 setTimeout(balanceHeights, 100);
             }
     

@@ -9,288 +9,25 @@
     <h2>Testing Framework</h2>
 
     <p class="indented-p">
-        <i>Hazard!</i> uses MSTest with mock objects, statistical validation, and round-trip testing. 
-        Tests cover serialization, game logic, data access, and randomness algorithms.
+        Testing quickly became an integral part of the development process for core features.
+        To build and run the tests yourself, see the <a href="https://github.com/LivingCryogen/Hazard#hazard" class="external-link">ReadMe</a>.
+        For a summary of <i>Hazard!</i>'s testing capabilities, metrics, and highlights, peruse this page!
     </p>
 
     <div class="presentation-box">
-        <h3>Built for Confident Refactoring</h3>
-        <p>Tests validate expected behavior and enable safe code evolution. Mock infrastructure isolates components for reliable testing.</p>
+        <h3>Testing Capabilities</h3>
+        <ul>
+            <li><strong>Round-Trip Testing</strong> - Complete game state serialization with property-level validation</li>
+            <li><strong>Statistical Validation</strong> - Fisher-Yates implementation proven fair (For pugnacious players!)</li>
+            <li><strong>Mock Infrastructure</strong> - Enables isolated component testing</li>
+            <li><strong>Complex Scenario Testing</strong> - Multi-stage workflows, state transitions, and object hierarchies</li>
+            <li><strong>Integration Testing</strong> - Full system validation throughout Save/Load functionality</li>
+        </ul>
     </div>
 
-    <h3>Test Organization</h3>
-    <div class="image-with-text" style="margin-left:2em; margin-right: 2em;">
-        <div class="image-text">
-            <h4>Testing Layers</h4>
-            <ul>
-                <li><strong>Unit Tests</strong> - Component behavior in isolation</li>
-                <li><strong>Integration Tests</strong> - Component interaction validation</li>
-                <li><strong>Mock Objects</strong> - Controlled testing environments</li>
-                <li><strong>Round-Trip Tests</strong> - Data integrity across save/load cycles</li>
-                <li><strong>Statistical Tests</strong> - Randomness algorithm validation</li>
-            </ul>
-            <p>Tests organized by functional area with shared fixtures to minimize duplication.</p>
-        </div>
-        <img src="Images/TestArchitecture.svg" style="max-width:400px; height: auto;" />
-    </div>
+    <h2>Technical Feature Highlights</h2>
 
-    <h2>Testing Highlights</h2>
-
-    <div class="code-with-text" id="MockInfrastructure">
-        <div class="image-text">
-            <h3>Mock Object Infrastructure</h3>
-            <p>Mock objects mirror production interfaces while providing predictable test environments:</p>
-            <ul>
-                <li>Mock games simulate complete state scenarios with configurable board layouts</li>
-                <li>Mock players handle serialization testing with varied hand and territory configurations</li>
-                <li>Mock boards manage territory and army state without UI dependencies</li>
-                <li>Mock cards support custom insignia and territory targeting for edge case testing</li>
-                <li>Logger stubs capture error conditions for validation</li>
-                <li>File system abstraction provides deterministic I/O operations</li>
-            </ul>
-            <p><center><i>Key Files: MockGame.cs, MockPlayer.cs, MockBoard.cs, MockCard.cs</i></center></p>
-        </div>
-        <div>
-            <pre class="code-snippet">
-            <code class="language-csharp">
-// MockGame.cs - Configurable game state for testing scenarios
-public class MockGame : IGame
-{
-    public MockGame()
-    {
-        ID = new Guid();
-        Players = [
-            new MockPlayer(0, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>()),
-            new MockPlayer(1, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>())
-        ];
-        State = new StateMachine(Players.Count, new LoggerStubT<StateMachine>());
-        Regulator = new MockRegulator(new LoggerStubT<MockRegulator>(), this);
-        Regulator.Initialize();
-    }
-
-    // Generate random board layouts for testing different scenarios
-    public void AutoBoard()
-    {
-        if (Board == null || Players.Count != 2) return;
-
-        int numTerritories = MockGeography.NumTerritories / 3;
-        int[] playerPool = [numTerritories, numTerritories, numTerritories];
-        Random rand = new();
-        byte poolsEmpty = 0b000; // Bitwise flags track available players
-        byte[] masks = [0b001, 0b010, 0b100];
-
-        for (int i = 0; i < MockGeography.NumTerritories; i++) {
-            int player = SelectRandomAvailablePlayer(poolsEmpty, rand);
-            
-            if (player < 2 && player > -1) {
-                Board.Claims(player, (TerrID)i, 1);
-                Players[player].AddTerritory((TerrID)i);
-                playerPool[player]--;
-                if (playerPool[player] <= 0)
-                    poolsEmpty |= masks[player];
-            }
-            else if (player == 2) {
-                Board.Claims(-1, (TerrID)i, 1); // Neutral territory
-                playerPool[player]--;
-                if (playerPool[player] <= 0)
-                    poolsEmpty |= masks[player];
-            }
-        }
-    }
-
-    // Reset state between tests for isolation
-    public void Wipe()
-    {
-        ID = Guid.Empty;
-        Players.Clear();
-        Cards.Wipe();
-        State = new StateMachine(2, new LoggerStubT<StateMachine>());
-        Board.Armies.Clear();
-        Board.ContinentOwner.Clear();
-        ((MockRegulator)Regulator).Wipe();
-    }
-}
-
-// LoggerStubT.cs - Controlled logging for error condition testing
-public class LoggerStubT<T> : ILogger<T> where T : class
-{
-    public LogLevel LastLoggedLevel { get; private set; }
-
-    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, 
-                           Exception? exception, Func<TState, Exception?, string> formatter)
-    {
-        LastLoggedLevel = logLevel; // Capture for test assertions
-    }
-
-    public bool IsEnabled(LogLevel logLevel) => true;
-    public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
-}
-
-// MockDataFiles.cs - Generated test data with cleanup
-public class MockDataFiles
-{
-    public MockDataFiles()
-    {
-        BuildCardSetFiles();
-    }
-
-    private void BuildCardSetFiles()
-    {
-        string temp = FileProcessor.GetTempFile();
-        CardSetPath = temp + "CardSet.json";
-        FileProcessor.Move(temp, CardSetPath);
-        BuildMockCardSetJson();
-
-        // Update registry for test file paths
-        if (SharedRegister.Registry[typeof(MockCardSet)]![RegistryRelation.DataFileName] == null)
-            SharedRegister.Registry.AddRelation(typeof(MockCardSet), (CardSetPath, RegistryRelation.DataFileName));
-    }
-
-    private void BuildMockCardSetJson()
-    {
-        List<string> mockTerritories = ["Alabama", "Alaska", "Arizona", /* ... all 50 states ... */];
-        List<string> mockInsignia = ["Marine", "FighterJet", "Tank"];
-        
-        var jsonDocument = new { TroopCards = new object[mockTerritories.Count] };
-
-        int insigniaIndex = 0;
-        for (int i = 0; i < mockTerritories.Count; i++) {
-            jsonDocument.TroopCards[i] = new {
-                Targets = new string[] { mockTerritories[i] },
-                Insignia = mockInsignia[insigniaIndex]
-            };
-            
-            insigniaIndex = (insigniaIndex + 1) % 3;
-        }
-
-        string jsonString = JsonSerializer.Serialize(jsonDocument, _jOptions);
-        FileProcessor.WriteFile(CardSetPath!, jsonString);
-    }
-
-    public static void CleanUp(string filePath)
-    {
-        FileProcessor.Delete(filePath);
-    }
-}
-</code>
-            </pre>
-        </div>
-    </div>
-
-    <div class="code-with-text" id="StatisticalTesting">
-        <div class="image-text">
-            <h3>Shuffle Algorithm Validation</h3>
-            <p>Statistical testing proves shuffle algorithms produce mathematically fair results:</p>
-            <ul>
-                <li>100,000 shuffle iterations track card positioning across all deck positions</li>
-                <li>Frequency analysis validates each card appears at each position with equal probability</li>
-                <li>Variance testing ensures results fall within 1% of perfect theoretical distribution</li>
-                <li>Position mapping records every card's appearance at every deck location</li>
-                <li>Results demonstrate provably fair randomness for skeptical players</li>
-                <li>Statistical confidence eliminates "rigged deck" complaints with hard data</li>
-            </ul>
-            <p><center><i>Key Files: DeckTests.cs (Shuffle_IsCalled_LibraryRandomized)</i></center></p>
-        </div>
-        <div>
-            <pre class="code-snippet">
-            <code class="language-csharp">
-// DeckTests.cs - Mathematical proof of shuffle fairness
-[TestMethod]
-public void Shuffle_IsCalled_LibraryRandomized()
-{
-    Deck testDeck = InitTestDeck(_numCards);
-    
-    int numShuffles = 100000; // Statistical confidence requires large sample
-    float targetPercentage = 1.00000f / _numCards; // Perfect theoretical distribution
-    float varianceLimit = 0.01f; // 1% tolerance for randomness validation
-    
-    // Track frequency of each card at each position
-    int[][] drawResultsTable = new int[_numCards][];
-    Dictionary<string, int> cardIDMap = [];
-    
-    // Initialize tracking matrix
-    for (int numCard = 0; numCard < _numCards; numCard++) {
-        drawResultsTable[numCard] = new int[_numCards];
-        for (int position = 0; position < _numCards; position++)
-            drawResultsTable[numCard][position] = 0;
-        
-        cardIDMap.Add(((MockCard)testDeck.Library[numCard]).ID, numCard);
-    }
-
-    // Execute shuffles and record positions
-    for (int shuffle = 0; shuffle < numShuffles; shuffle++) {
-        testDeck.Shuffle();
-
-        for (int position = 0; position < _numCards; position++) {
-            string cardID = ((MockCard)testDeck.Library[position]).ID;
-            int tableRow = cardIDMap[cardID];
-            drawResultsTable[tableRow][position]++; // Record card at position
-        }
-    }
-
-    // Validate mathematical distribution
-    for (int card = 0; card < _numCards; card++) {
-        for (int position = 0; position < _numCards; position++) {
-            float actualFrequency = drawResultsTable[card][position] / (float)numShuffles;
-            float variance = Math.Abs(targetPercentage - actualFrequency);
-            
-            // Each card must appear at each position with equal probability ±1%
-            Assert.IsTrue(variance < varianceLimit, 
-                $"Card {card} at position {position}: expected {targetPercentage:F5}, " +
-                $"actual {actualFrequency:F5}, variance {variance:F5}");
-        }
-    }
-}
-
-// Validate discard pile integration during shuffles
-[TestMethod]
-public void Shuffle_IsCalledWithDiscards_LibraryTakesDiscards()
-{
-    Deck testDeck = InitTestDeck(_numCards - 10, 10);
-    
-    int numLibrary = testDeck.Library.Count;
-    int numDiscards = testDeck.DiscardPile.Count;
-    string[] discardIDs = testDeck.DiscardPile
-        .Select(card => ((MockCard)card).ID)
-        .ToArray();
-
-    testDeck.Shuffle();
-
-    // Verify discard integration
-    Assert.IsTrue(testDeck.Library.Count == numLibrary + numDiscards);
-    Assert.IsTrue(testDeck.DiscardPile.Count == 0);
-    
-    // Ensure all discards now in library
-    foreach (var discardID in discardIDs) {
-        Assert.IsTrue(testDeck.Library
-            .Any(card => ((MockCard)card).ID == discardID));
-    }
-}
-
-// Handle edge case of drawing from empty library
-[TestMethod]
-public void DrawCard_EmptyLibrary_LibRenewedAndDrawnFrom()
-{
-    Deck testDeck = InitTestDeck(0, _numCards); // Empty library, full discard
-    
-    int numDiscards = testDeck.DiscardPile.Count;
-    string aDiscardID = ((MockCard)testDeck.DiscardPile[numDiscards - 1]).ID;
-
-    var drawnCard = testDeck.DrawCard();
-    MockCard mockCard = (MockCard)drawnCard;
-
-    // Library should be renewed from discard pile
-    Assert.IsTrue(testDeck.Library.Count == numDiscards - 1);
-    Assert.IsTrue(testDeck.DiscardPile.Count == 0);
-    
-    // Drawn card should be from original discard pile
-    bool testIDinLibrary = testDeck.Library.Where(card => ((MockCard)card).ID == aDiscardID).Any();
-    Assert.IsTrue(testIDinLibrary || mockCard.ID == aDiscardID);
-}
-</code>
-            </pre>
-        </div>
-    </div>
+    <h4>Note: Code Snippets below omit documentation comments and some code.</h4>
 
     <div class="code-with-text" id="RoundTripTesting">
         <div class="image-text">
@@ -461,47 +198,260 @@ public void GetData_RegisteredNameMockCard_ReturnMockCardSet()
         </div>
     </div>
 
-    <div class="presentation-box">
-        <h3>"Is This Deck Rigged?" - Mathematically Proven Fair</h3>
-        <p>100,000 shuffle iterations prove each card appears at each position within 1% of perfect distribution. 
-        Statistical validation eliminates player complaints about unfair randomness.</p>
-    </div>
-
-    <h3>Test Coverage & Organization</h3>
+    <div class="code-with-text" id="StatisticalTesting">
+        <div class="image-text">
+            <h3>Shuffle Algorithm Validation</h3>
+            <p>Statistical testing proves shuffle algorithms produce mathematically fair results:</p>
+            <ul>
+                <li>100,000 shuffle iterations track card positioning across all deck positions</li>
+                <li>Frequency analysis validates each card appears at each position with equal probability</li>
+                <li>Variance testing ensures results fall within 1% of perfect theoretical distribution</li>
+                <li>Position mapping records every card's appearance at every deck location</li>
+                <li>Results demonstrate provably fair randomness for skeptical players</li>
+                <li>Statistical confidence eliminates "rigged deck" complaints with hard data</li>
+            </ul>
+            <p><center><i>Key Files: DeckTests.cs (Shuffle_IsCalled_LibraryRandomized)</i></center></p>
+        </div>
+        <div>
+            <pre class="code-snippet">
+            <code class="language-csharp">
+// DeckTests.cs - Mathematical proof of shuffle fairness
+[TestMethod]
+public void Shuffle_IsCalled_LibraryRandomized()
+{
+    Deck testDeck = InitTestDeck(_numCards);
     
-    <div class="image-with-text">
-        <div class="image-text">
-            <h4>Test Metrics</h4>
-            <ul>
-                <li><strong>85+ test methods</strong> across core components</li>
-                <li><strong>15+ mock objects</strong> for isolated testing</li>
-                <li><strong>Statistical validation</strong> with 100,000+ iterations</li>
-                <li><strong>Round-trip testing</strong> for complete data integrity</li>
-                <li><strong>Error scenario coverage</strong> including edge cases</li>
-                <li><strong>JSON parsing validation</strong> with generated test data</li>
-            </ul>
-        </div>
-        <div class="image-text">
-            <h4>Project Structure</h4>
-            <ul>
-                <li><strong>Core Tests</strong> - Game logic and state management</li>
-                <li><strong>DataAccess Tests</strong> - Serialization and file operations</li>
-                <li><strong>Entity Tests</strong> - Individual component behavior</li>
-                <li><strong>Registry Tests</strong> - Type system validation</li>
-                <li><strong>Mock Infrastructure</strong> - Shared testing utilities</li>
-                <li><strong>Test Fixtures</strong> - Setup and teardown operations</li>
-            </ul>
+    int numShuffles = 100000; // Statistical confidence requires large sample
+    float targetPercentage = 1.00000f / _numCards; // Perfect theoretical distribution
+    float varianceLimit = 0.01f; // 1% tolerance for randomness validation
+    
+    // Track frequency of each card at each position
+    int[][] drawResultsTable = new int[_numCards][];
+    Dictionary<string, int> cardIDMap = [];
+    
+    // Initialize tracking matrix
+    for (int numCard = 0; numCard < _numCards; numCard++) {
+        drawResultsTable[numCard] = new int[_numCards];
+        for (int position = 0; position < _numCards; position++)
+            drawResultsTable[numCard][position] = 0;
+        
+        cardIDMap.Add(((MockCard)testDeck.Library[numCard]).ID, numCard);
+    }
+
+    // Execute shuffles and record positions
+    for (int shuffle = 0; shuffle < numShuffles; shuffle++) {
+        testDeck.Shuffle();
+
+        for (int position = 0; position < _numCards; position++) {
+            string cardID = ((MockCard)testDeck.Library[position]).ID;
+            int tableRow = cardIDMap[cardID];
+            drawResultsTable[tableRow][position]++; // Record card at position
+        }
+    }
+
+    // Validate mathematical distribution
+    for (int card = 0; card < _numCards; card++) {
+        for (int position = 0; position < _numCards; position++) {
+            float actualFrequency = drawResultsTable[card][position] / (float)numShuffles;
+            float variance = Math.Abs(targetPercentage - actualFrequency);
+            
+            // Each card must appear at each position with equal probability ±1%
+            Assert.IsTrue(variance < varianceLimit, 
+                $"Card {card} at position {position}: expected {targetPercentage:F5}, " +
+                $"actual {actualFrequency:F5}, variance {variance:F5}");
+        }
+    }
+}
+
+// Validate discard pile integration during shuffles
+[TestMethod]
+public void Shuffle_IsCalledWithDiscards_LibraryTakesDiscards()
+{
+    Deck testDeck = InitTestDeck(_numCards - 10, 10);
+    
+    int numLibrary = testDeck.Library.Count;
+    int numDiscards = testDeck.DiscardPile.Count;
+    string[] discardIDs = testDeck.DiscardPile
+        .Select(card => ((MockCard)card).ID)
+        .ToArray();
+
+    testDeck.Shuffle();
+
+    // Verify discard integration
+    Assert.IsTrue(testDeck.Library.Count == numLibrary + numDiscards);
+    Assert.IsTrue(testDeck.DiscardPile.Count == 0);
+    
+    // Ensure all discards now in library
+    foreach (var discardID in discardIDs) {
+        Assert.IsTrue(testDeck.Library
+            .Any(card => ((MockCard)card).ID == discardID));
+    }
+}
+
+// Handle edge case of drawing from empty library
+[TestMethod]
+public void DrawCard_EmptyLibrary_LibRenewedAndDrawnFrom()
+{
+    Deck testDeck = InitTestDeck(0, _numCards); // Empty library, full discard
+    
+    int numDiscards = testDeck.DiscardPile.Count;
+    string aDiscardID = ((MockCard)testDeck.DiscardPile[numDiscards - 1]).ID;
+
+    var drawnCard = testDeck.DrawCard();
+    MockCard mockCard = (MockCard)drawnCard;
+
+    // Library should be renewed from discard pile
+    Assert.IsTrue(testDeck.Library.Count == numDiscards - 1);
+    Assert.IsTrue(testDeck.DiscardPile.Count == 0);
+    
+    // Drawn card should be from original discard pile
+    bool testIDinLibrary = testDeck.Library.Where(card => ((MockCard)card).ID == aDiscardID).Any();
+    Assert.IsTrue(testIDinLibrary || mockCard.ID == aDiscardID);
+}
+</code>
+            </pre>
         </div>
     </div>
 
-    <div class="call-to-action">
-        <h2>Testing as Code Documentation</h2>
-        <p>Tests validate expected behavior and provide usage examples for system components. 
-        Mock infrastructure enables reliable testing while statistical validation proves algorithmic correctness.</p>
-        <div class="button-container">
-            <a href="mailto:joshua.a.mcknight@gmail.com" class="cta-button">Discuss Testing Approach</a>
-            <a href="https://github.com/LivingCryogen/Hazard" class="cta-button">View Test Code</a>
+    <div class="code-with-text" id="MockInfrastructure">
+        <div class="image-text">
+            <h3>Mock Object Infrastructure</h3>
+            <p>Mock objects mirror production interfaces while providing predictable test environments:</p>
+            <ul>
+                <li>Mock games simulate complete state scenarios with configurable board layouts</li>
+                <li>Mock players handle serialization testing with varied hand and territory configurations</li>
+                <li>Mock boards manage territory and army state without UI dependencies</li>
+                <li>Mock cards support custom insignia and territory targeting for edge case testing</li>
+                <li>Logger stubs capture error conditions for validation</li>
+                <li>File system abstraction provides deterministic I/O operations</li>
+            </ul>
+            <p><center><i>Key Files: MockGame.cs, MockPlayer.cs, MockBoard.cs, MockCard.cs</i></center></p>
+        </div>
+        <div>
+            <pre class="code-snippet">
+            <code class="language-csharp">
+// MockGame.cs - Configurable game state for testing scenarios
+public class MockGame : IGame
+{
+    public MockGame()
+    {
+        ID = new Guid();
+        Players = [
+            new MockPlayer(0, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>()),
+            new MockPlayer(1, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>())
+        ];
+        State = new StateMachine(Players.Count, new LoggerStubT<StateMachine>());
+        Regulator = new MockRegulator(new LoggerStubT<MockRegulator>(), this);
+        Regulator.Initialize();
+    }
+
+    // Generate random board layouts for testing different scenarios
+    public void AutoBoard()
+    {
+        if (Board == null || Players.Count != 2) return;
+
+        int numTerritories = MockGeography.NumTerritories / 3;
+        int[] playerPool = [numTerritories, numTerritories, numTerritories];
+        Random rand = new();
+        byte poolsEmpty = 0b000; // Bitwise flags track available players
+        byte[] masks = [0b001, 0b010, 0b100];
+
+        for (int i = 0; i < MockGeography.NumTerritories; i++) {
+            int player = SelectRandomAvailablePlayer(poolsEmpty, rand);
+            
+            if (player < 2 && player > -1) {
+                Board.Claims(player, (TerrID)i, 1);
+                Players[player].AddTerritory((TerrID)i);
+                playerPool[player]--;
+                if (playerPool[player] <= 0)
+                    poolsEmpty |= masks[player];
+            }
+            else if (player == 2) {
+                Board.Claims(-1, (TerrID)i, 1); // Neutral territory
+                playerPool[player]--;
+                if (playerPool[player] <= 0)
+                    poolsEmpty |= masks[player];
+            }
+        }
+    }
+
+    // Reset state between tests for isolation
+    public void Wipe()
+    {
+        ID = Guid.Empty;
+        Players.Clear();
+        Cards.Wipe();
+        State = new StateMachine(2, new LoggerStubT<StateMachine>());
+        Board.Armies.Clear();
+        Board.ContinentOwner.Clear();
+        ((MockRegulator)Regulator).Wipe();
+    }
+}
+
+// LoggerStubT.cs - Controlled logging for error condition testing
+public class LoggerStubT<T> : ILogger<T> where T : class
+{
+    public LogLevel LastLoggedLevel { get; private set; }
+
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, 
+                           Exception? exception, Func<TState, Exception?, string> formatter)
+    {
+        LastLoggedLevel = logLevel; // Capture for test assertions
+    }
+
+    public bool IsEnabled(LogLevel logLevel) => true;
+    public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+}
+
+// MockDataFiles.cs - Generated test data with cleanup
+public class MockDataFiles
+{
+    public MockDataFiles()
+    {
+        BuildCardSetFiles();
+    }
+
+    private void BuildCardSetFiles()
+    {
+        string temp = FileProcessor.GetTempFile();
+        CardSetPath = temp + "CardSet.json";
+        FileProcessor.Move(temp, CardSetPath);
+        BuildMockCardSetJson();
+
+        // Update registry for test file paths
+        if (SharedRegister.Registry[typeof(MockCardSet)]![RegistryRelation.DataFileName] == null)
+            SharedRegister.Registry.AddRelation(typeof(MockCardSet), (CardSetPath, RegistryRelation.DataFileName));
+    }
+
+    private void BuildMockCardSetJson()
+    {
+        List<string> mockTerritories = ["Alabama", "Alaska", "Arizona", /* ... all 50 states ... */];
+        List<string> mockInsignia = ["Marine", "FighterJet", "Tank"];
+        
+        var jsonDocument = new { TroopCards = new object[mockTerritories.Count] };
+
+        int insigniaIndex = 0;
+        for (int i = 0; i < mockTerritories.Count; i++) {
+            jsonDocument.TroopCards[i] = new {
+                Targets = new string[] { mockTerritories[i] },
+                Insignia = mockInsignia[insigniaIndex]
+            };
+            
+            insigniaIndex = (insigniaIndex + 1) % 3;
+        }
+
+        string jsonString = JsonSerializer.Serialize(jsonDocument, _jOptions);
+        FileProcessor.WriteFile(CardSetPath!, jsonString);
+    }
+
+    public static void CleanUp(string filePath)
+    {
+        FileProcessor.Delete(filePath);
+    }
+}
+</code>
+            </pre>
         </div>
     </div>
-</body>
+    </body>
 </html>

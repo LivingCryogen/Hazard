@@ -129,6 +129,70 @@ centered-p {
     text-align: center;
 }
 
+/* Contact page specific styles */
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #2a3141;
+    border-radius: 6px;
+    transition: transform 0.3s ease;
+}
+
+    .contact-item:hover {
+        transform: translateY(-2px);
+    }
+
+    .contact-item i {
+        font-size: 1.5rem;
+        color: #31c1cc;
+        min-width: 30px;
+        text-align: center;
+    }
+
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+    .contact-details strong {
+        color: #31c1cc;
+        font-size: 1.1rem;
+    }
+
+    .contact-details a {
+        color: #E5E5CC;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+    }
+
+        .contact-details a:hover {
+            color: #31c1cc;
+        }
+
+/* Responsive adjustments for contact page */
+@media (max-width: 768px) {
+    .contact-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+
+    .contact-details {
+        align-items: center;
+    }
+}
+
 .dynamic-link, nav a {
     text-decoration: none;
     padding: 0;
@@ -559,13 +623,37 @@ centered-p {
 
 /* Presentation box (separate style grouping) */
 .presentation-box {
+    margin: 4rem;
+    padding: 1rem;
     text-align: center;
-    padding: 1.5em;
     border-radius: 8px;
-    margin: 2em 1em;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     background-color: #2b4252;
     border: 1px solid #31c1cc;
+}
+.presentation-box ul {
+    list-style: none;
+    text-align: center;
+}
+.presentation-box h1 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+.presentation-box h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+.presentation-box h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+.presentation-box h4 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+.presentation-box h5 {
+    margin-top: 0;
+    margin-bottom: 1rem;
 }
 
 /* Skill list styling */
@@ -715,45 +803,20 @@ centered-p {
     border: 1px solid #31c1cc;
 }
 
-/* Call to action buttons */
-.cta-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin: 1.5rem 0;
-}
-
-.cta-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.7rem 1.2rem;
-    background-color: #2b4252;
-    color: #31c1cc;
-    text-decoration: none;
-    border-radius: 6px;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    border: 1px solid #31c1cc;
-}
-
-    .cta-button:hover {
-        background-color: #31c1cc;
-        color: #2a3141;
-        transform: translateY(-3px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .cta-primary, .cta-secondary {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
     }
 
-    .cta-button.primary {
-        background-color: #31c1cc;
-        color: #2a3141;
-    }
-
-        .cta-button.primary:hover {
-            background-color: #FFF5F5DC;
+        .cta-primary .cta-button,
+        .cta-secondary .cta-button {
+            width: 80%;
+            justify-content: center;
         }
-
+}
 /* Modal styles for demo video */
 .modal {
     display: none;
@@ -1048,22 +1111,23 @@ centered-p {
 /* Call to action buttons */
 .cta-container {
     display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin: 1.5rem 0;
+    flex-direction: column; /* Add this line */
+    align-items: center; /* Change from justify-content: center */
+}
+
+.cta-secondary {
+    margin-top: .75rem;
 }
 
 .cta-button {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.7rem 1.2rem;
+    padding: 1rem 2.5rem;
+    gap: 1rem;
     background-color: #2b4252;
     color: #31c1cc;
     text-decoration: none;
     border-radius: 6px;
-    font-weight: bold;
     transition: all 0.3s ease;
     border: 1px solid #31c1cc;
 }
@@ -1077,12 +1141,22 @@ centered-p {
 
     .cta-button.primary {
         background-color: #31c1cc;
+        font-weight: bold;
         color: #2a3141;
     }
 
         .cta-button.primary:hover {
             background-color: #FFF5F5DC;
         }
+
+.cta-container .cta-primary .cta-button {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.cta-container .cta-secondary .cta-button {
+    padding: .9rem 2rem;
+}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
