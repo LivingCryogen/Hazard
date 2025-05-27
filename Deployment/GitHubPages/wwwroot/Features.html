@@ -10,8 +10,13 @@
 
     <p class="indented-p">
         <i>Hazard!</i> implements an MVVM architecture, diagrammed below. It's packaged and deployed as an .MSIX bundle using WAPP.
-        It's built, signed, hosted, and secured using Azure Pipelines, Trusted Signing, Blob Storage, an Azure Function, and a WebApp which is, finally,
+        Finally, it's built, signed, hosted, and secured using Azure Pipelines, Trusted Signing, Blob Storage, an Azure Function, and a WebApp which is
         connected to this site!
+    </p>
+    <p class="indented-p">
+        Developing with team workflows in mind, I built <i>as if</i> each layer of the application was the domain of a different team. That meant decoupling,
+        but also providing tools and architecture that enable extensibility, convenience, and flexibility for development into the future: a shared Type Registry,
+        Serialization framework, and default reflective methods solve real problems while making future development easier and more reliable.
     </p>
     <p class="indented-p">
         The Model and Shared projects feature Unit Tests (see the
@@ -33,11 +38,11 @@
                 Model-ViewModel-View (MVVM)
             </h3>
             <ul>
-                <li><strong>Model -</strong> Core game logic and state.</li>
-                <li><strong>ViewModel -</strong> Mediates between Model and View.</li>
+                <li><strong>Model -</strong> Game logic and state, DAL.</li>
+                <li><strong>ViewModel -</strong> Mediates between Model and View, packaging and preparing data for display and interactivity.</li>
                 <li><strong>View -</strong> WPF UI.</li>
                 <li><strong>Shared -</strong> Interfaces, globals, and shared services.</li>
-                <li><strong>BootStrap -</strong> Entry point, dependency injection and environment and configuration.</li>
+                <li><strong>BootStrap -</strong> Entry point, configuration (Dependency Injection, Environment, etc)</li>
             </ul>
         </div>
         <img src="Images/runtime-architecture.svg" style="max-width:550px; height: auto;" />
@@ -53,7 +58,7 @@
             <img src="Images/Events.svg" />
             <h3>State-Driven Event System</h3>
             <p class="indented-p">At <i>Hazard!</i>'s core is a regulated state machine. It manages flow between phases (Setup, Place, Attack, Move), with proper state transitions and validation.</p>
-            <p class="indented-p">Rather than tight coupling, we rely on an event system that propagates changes correctly while maintaining separation of concerns:</p>
+            <p class="indented-p">Rather than tight coupling, we rely on an event system that propagates changes while maintaining separation of concerns:</p>
             <ul>
                 <li>State changes trigger appropriate events</li>
                 <li>Subscribers respond to state changes without direct dependencies</li>
@@ -487,7 +492,7 @@ public class Regulator : IRegulator
         <div class="image-text">
             <img src="Images/Registry.svg" />
             <h3>Team-Oriented Type Registry</h3>
-            <p>Solves string-to-type resolution for binary deserialization while enabling iterative team development—built when TroopCard needed extension for MissionCard:</p>
+            <p>Enabling iterative team development, a Type Registry solves string-to-type resolution for binary deserialization as well as associating asset files with their converters. </p>
             <ul>
                 <li>Decouples type discovery from hardcoded references across application layers</li>
                 <li>Enables data-driven initialization for different environments and test scenarios</li>
