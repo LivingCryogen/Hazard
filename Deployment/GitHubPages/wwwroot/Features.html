@@ -5,18 +5,13 @@
     <title>Features</title>
     <link rel="stylesheet" href="stylesheet.css">
 </head>
-<body class="dynamic-content-body">
+<body class="dynamic-content-body" style="text-align: left;">
     <h2>Features</h2>
 
     <p class="indented-p">
-        <i>Hazard!</i> implements an MVVM architecture, diagrammed below. It's packaged and deployed as an .MSIX bundle using WAPP.
+        <i>Hazard!</i> implements an MVVM architecture (diagrammed below). It's packaged and deployed as an .MSIX bundle using WAPP.
         Finally, it's built, signed, hosted, and secured using Azure Pipelines, Trusted Signing, Blob Storage, an Azure Function, and a WebApp which is
-        connected to this site!
-    </p>
-    <p class="indented-p">
-        Developing with team workflows in mind, I built <i>as if</i> each layer of the application was the domain of a different team. That meant decoupling,
-        but also providing tools and architecture that enable extensibility, convenience, and flexibility for development into the future: a shared Type Registry,
-        Serialization framework, and default reflective methods solve real problems while making future development easier and more reliable.
+        connected to this site (See the <a href="#" data-content="Deployment.html" class="dynamic-link">Deployment</a> page).
     </p>
     <p class="indented-p">
         The Model and Shared projects feature Unit Tests (see the
@@ -30,6 +25,23 @@
         [ <a href="https://hazardgameproxy-d4caecgsapakcwh0.centralus-01.azurewebsites.net/secure-link?arch=x64" class="external-link">Download(x64)</a>
         <a href="https://hazardgameproxy-d4caecgsapakcwh0.centralus-01.azurewebsites.net/secure-link?arch=ARM" class="external-link">Download(ARM)</a> ]
     </p>
+
+    <div class="presentation-box">
+        <h3>Development Strategy</h3>
+        <p class="indented-p">
+            I challenged myself to emulate modern, collaborative development environments as much as I could. I built <i>as if</i> each layer of <i>Hazard!</i>
+            was the domain of a different team. That meant:
+        </p>
+        <ul>
+            <li><strong>Decoupling</strong> - Each layer is its own project, and they interact through DI and commands/events.</li>
+            <li><strong>Datafile Configuration - </strong> application settings and assets are dynamically loaded from .json files for easy modification.</li>
+            <li><strong>Logging</strong> - Core features have validation and helpful logging baked in.</li>
+            <li><strong>Testing and Documentation</strong> - Essential for core features. See: <a href="#" data-content="TestingStrategy.html" class="dynamic-link">Testing strategy</a>, <a href="" class="external-link">Docs</a>.
+                <strong>Anticipating Team Workflows</strong> - Frameworks and design provide convenient extension and flexibility, including a shared Type Registry, Serialization framework, and default reflective methods
+                which solve real application problems while improving future collaborative development. See Feature Highlight #5.
+            </li>
+        </ul>
+    </div>
     <h3>Runtime Architecture</h3>
     <div class="image-with-text" style="margin-left:6em; margin-right: 2em;">
         <div class="image-text">
