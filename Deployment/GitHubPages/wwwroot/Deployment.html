@@ -9,15 +9,12 @@
     <h2>Azure-Based Deployment Pipeline</h2>
 
     <p class="indented-p">
-        From the beginning, my goal <i>Hazard!</i> was to see it through the entire software development process: from its first blank .cs page, to watching it publicly downloaded and installed.
-        And the user experience would be paramount; not only would it need to be distributed, but <strong>quickly, reliably, cheaply, and securely.</strong>
-
-        To that end, I worked with Microsoft's Azure systems and developed a complete deployment pipeline.<br/>
-        You can see it working by clicking :[ <a href="https://hazardgameproxy-d4caecgsapakcwh0.centralus-01.azurewebsites.net/secure-link?arch=x64" class="external-link">Download(x64)</a>
-        <a href="https://hazardgameproxy-d4caecgsapakcwh0.centralus-01.azurewebsites.net/secure-link?arch=ARM" class="external-link">Download(ARM)</a> ]<br/>
-
-        Some of its features include:
-    </p>
+        From the beginning, my goal with <i>Hazard!</i> was to see it through the entire software development process: from the first blank .cs page, to watching it publicly downloaded and installed.
+        And the user experience would be paramount; it would need to be distributed <strong>quickly, reliably, cheaply, and securely.</strong></p>
+    <p class="indented-p">To that end, I worked with Microsoft's Azure systems and developed a complete deployment pipeline.</p>
+    
+    You can see it in action here :[ <a href="https://hazardgameproxy-d4caecgsapakcwh0.centralus-01.azurewebsites.net/secure-link?arch=x64" class="external-link">Download(x64)</a>
+    <a href="https://hazardgameproxy-d4caecgsapakcwh0.centralus-01.azurewebsites.net/secure-link?arch=ARM" class="external-link">Download(ARM)</a> ]
 
     <div class="presentation-box">
         <h3 style="color: #31c1cc;">Pipeline Components</h3>
@@ -37,15 +34,14 @@
 
     <div class="code-with-text" id="PipelineArchitecture">
         <div class="image-text">
-            <h3>Matrix Build Strategy</h3>
-            <p>Built when ARM64 support became necessary for Apple Silicon compatibility. Pipeline handles multiple architectures without code duplication:</p>
+            <h3>Azure Pipeline</h3>
             <ul>
-                <li>Simultaneous x64 and ARM64 builds using Azure Pipelines matrix strategy</li>
-                <li>Self-contained MSIX packages eliminate runtime dependency issues</li>
-                <li>Federated identity authentication removes stored secrets from pipeline</li>
-                <li>Automated artifact staging validates packages before storage upload</li>
-                <li>Azure Trusted Signing integrates Microsoft certificate authority</li>
-                <li>Conditional deployment prevents broken builds reaching storage</li>
+                <li>Simultaneous <strong>x64 and ARM64 builds</strong></li>
+                <li><strong>Self-contained MSIX packages</strong> eliminate runtime dependencies</li>
+                <li><strong>Federated identity authentication</strong> removes stored secrets from pipeline</li>
+                <li><strong>Automated artifact validation</strong> before storage upload</li>
+                <li><strong>Azure Trusted Signing</strong> integrates Microsoft certificate authority</li>
+                <li><strong>Conditional deployment</strong> prevents broken builds reaching storage</li>
             </ul>
             <p><center><i>Key Files: LivingCryogen.Hazard.yml</i></center></p>
         </div>
@@ -136,14 +132,14 @@ steps:
     <div class="code-with-text" id="SASFunction">
         <div class="image-text">
             <h3>Time-Limited Download Links</h3>
-            <p>Built when public blob storage proved too expensive for portfolio distribution. Function generates secure, expiring download URLs:</p>
+            <p>An Azure Function generates secure, expiring download URLs:</p>
             <ul>
-                <li>Architecture detection from query parameters routes to correct package</li>
-                <li>SAS tokens expire after 5 minutes to prevent link sharing</li>
-                <li>Comprehensive error handling with appropriate HTTP status codes</li>
-                <li>Exponential retry patterns handle transient storage failures</li>
-                <li>Environment-based configuration supports multiple deployment stages</li>
-                <li>Structured logging enables monitoring and troubleshooting</li>
+                <li><strong>Architecture detection</strong> from query parameters routes to correct package</li>
+                <li><strong>SAS tokens</strong> expire after 5 minutes to prevent link sharing</li>
+                <li><strong>Error handling</strong> with appropriate HTTP status codes</li>
+                <li><strong>Exponential retry</strong> patterns handle transient storage failures</li>
+                <li><strong>Environment-based config</strong> supports multiple deployment stages</li>
+                <li><strong>Structured logging</strong> enables monitoring and troubleshooting</li>
             </ul>
             <p><center><i>Key Files: Sasgen.cs</i></center></p>
         </div>
@@ -246,14 +242,14 @@ public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "
     <div class="code-with-text" id="RateLimiting">
         <div class="image-text">
             <h3>Escalating Abuse Prevention</h3>
-            <p>Built when initial deployment attracted bot traffic and excessive download attempts. Manages legitimate users while blocking abuse:</p>
+            <p>After noticing a solo AZ function could incur costs if abused by bad actors, I built a Proxy Server to limit rates and ban malicious users.</p>
             <ul>
-                <li>Thread-safe request counting using concurrent dictionaries</li>
-                <li>Escalating ban durations discourage repeat offenders without permanent blocks</li>
-                <li>Azure Table Storage persists ban state across application restarts</li>
-                <li>Automatic cleanup of expired entries reduces storage costs</li>
-                <li>Cache initialization synchronization prevents race conditions</li>
-                <li>Request window resets allow legitimate usage patterns</li>
+                <li><strong>Thread-safe request counting</strong> using concurrent dictionaries</li>
+                <li><strong>Escalating ban durations</strong> discourage repeat offenders without permanent blocks</li>
+                <li><strong>Azure Table Storage</strong> persists bans across restarts and is cost effective</li>
+                <li><strong>Automatic cleanup</strong> of expired entries reduces storage costs</li>
+                <li><strong>Caching</strong> keeps the application smooth</li>
+                <li><strong>Request window resets</strong> allow legitimate usage patterns</li>
             </ul>
             <p><center><i>Key Files: BanService.cs, RequestHandler.cs, BanListTableManager.cs</i></center></p>
         </div>

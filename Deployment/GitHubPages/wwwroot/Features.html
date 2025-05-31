@@ -28,17 +28,20 @@
 
     <div class="presentation-box">
         <h3>Development Strategy</h3>
-        <p class="indented-p">
-            I challenged myself to emulate modern, collaborative development environments as much as I could. I built <i>as if</i> each layer of <i>Hazard!</i>
-            was the domain of a different team. That meant:
-        </p>
+        <h4>
+            Emulate modern, collaborative development environments. 
+        </h4>
+        <center><p>I built <i>as if</i> the application would be supported and extended by different teams:</p></center>
         <ul>
-            <li><strong>Decoupling</strong> - Each layer is its own project, and they interact through DI and commands/events.</li>
-            <li><strong>Datafile Configuration - </strong> application settings and assets are dynamically loaded from .json files for easy modification.</li>
+            <li><strong>Decoupling</strong> - Each MVVM layer is its own project, and they interact through DI and commands/events.</li>
+            <li><strong>Datafile Configuration - </strong> Application settings and assets are dynamically loaded from .json files for easy modification.</li>
             <li><strong>Logging</strong> - Core features have validation and helpful logging baked in.</li>
-            <li><strong>Testing and Documentation</strong> - Essential for core features. See: <a href="#" data-content="TestingStrategy.html" class="dynamic-link">Testing strategy</a>, <a href="" class="external-link">Docs</a>.
-                <strong>Anticipating Team Workflows</strong> - Frameworks and design provide convenient extension and flexibility, including a shared Type Registry, Serialization framework, and default reflective methods
-                which solve real application problems while improving future collaborative development. See Feature Highlight #5.
+            <li><strong>Professional Documentation</strong> - XML documentation with generated <a href="" class="external-link">DocFX site</a> enables team development</li>
+            <li><strong>Testing</strong> - Essential for Model and Shared features. See <a href="#" data-content="TestingStrategy.html" class="dynamic-link">Testing strategy</a>.
+            <li><strong>Toolkit</strong> - We leverage Microsoft's MVVM Community Toolkit to reduce boilerplate on update notifications and commands.</li>
+            <li>
+                <strong>Anticipating Team Workflows</strong> - Systems like a Type registry, serialization framework, and rapid prototyping (see Feature Highlight #5),
+                which solve real application problems while providing tools, flexibility, and convenience for collaborators.
             </li>
         </ul>
     </div>
@@ -52,7 +55,7 @@
             <ul>
                 <li><strong>Model -</strong> Game logic and state, DAL.</li>
                 <li><strong>ViewModel -</strong> Mediates between Model and View, packaging and preparing data for display and interactivity.</li>
-                <li><strong>View -</strong> WPF UI.</li>
+                <li><strong>View -</strong> WPF User Interface.</li>
                 <li><strong>Shared -</strong> Interfaces, globals, and shared services.</li>
                 <li><strong>BootStrap -</strong> Entry point, configuration (Dependency Injection, Environment, etc)</li>
             </ul>
@@ -73,11 +76,11 @@
             <p class="indented-p">Rather than tight coupling, we rely on an event system that propagates changes while maintaining separation of concerns:</p>
             <ul>
                 <li>State changes trigger appropriate events</li>
-                <li>Subscribers respond to state changes without direct dependencies</li>
+                <li>Subscribers respond without direct dependencies</li>
                 <li>Player actions and game rules are separated</li>
-                <li>Phases with multi-stage actions are handled</li>
-                <li>Turn and round progression are managed automatically</li>
-                <li>Clean architecture - DI manages component lifetimes and subscription cleanup, while synchronous game logic eliminates threading concerns</li>
+                <li>Multi-stage phases handled</li>
+                <li>Automatic turn and round progression</li>
+                <li><strong>Clean architecture</strong> - DI manages component lifetimes and subscription cleanup, while synchronous game logic eliminates threading concerns</li>
             </ul>
             <p><center><i>Key Files: StateMachine, Regulator, MainVM_Base, et al.</i></center></p>
         </div>
@@ -503,15 +506,14 @@ public class Regulator : IRegulator
     <div class="code-with-text" id="Registry">
         <div class="image-text">
             <img src="Images/Registry.svg" />
-            <h3>Team-Oriented Type Registry</h3>
-            <p>Enabling iterative team development, a Type Registry solves string-to-type resolution for binary deserialization as well as associating asset files with their converters. </p>
+            <h3>Team-Friendly Type Registry</h3>
+            <p>A Type Registry solves string-to-Type resolution (for binary deserialization) and associates asset files with their converters while simplifying later development and support. </p>
             <ul>
-                <li>Decouples type discovery from hardcoded references across application layers</li>
-                <li>Enables data-driven initialization for different environments and test scenarios</li>
-                <li>Validates type relationships automatically to catch integration errors early</li>
-                <li>Provides consistent patterns for DAL, serialization, and factory components</li>
-                <li>Supports adding new card types through configuration rather than code changes</li>
-                <li>Creates clear extension points that junior developers can follow safely</li>
+                <li><strong>Decouples</strong> type discovery from hardcoded references</li>
+                <li><strong>Provides Data-driven initialization</strong> for different environments and test scenarios</li>
+                <li><strong>Validates type relationships automatically</strong> to catch integration errors early</li>
+                <li><strong>Provides consistent patterns</strong> for DAL, serialization, and factory components</li>
+                <li><strong>Supports extension</strong>, creating clear extension points that developers can follow safely</li>
             </ul>
             <p><center><i>Key Files: TypeRegister.cs, TypeRelations.cs, RegistryInitializer.cs</i></center></p>
         </div>
@@ -723,14 +725,15 @@ public class RegistryInitializer(IOptions&lt;AppConfig&gt; options) : IRegistryI
         <div class="image-text">
             <img src="Images/Serializer.svg" />
             <h3>Custom Binary Serialization Framework</h3>
-            <p>Built anticipating team development workflows where game state persistence needed to handle arbitrary object hierarchies without forcing developers into specific serialization patterns:</p>
+            <p>A binary serialization framework serializaes arbitrary object hierarchies without developers into narrow serialization patterns:</p>
             <ul>
-                <li>Handles type-safe encoding/decoding of complex nested structures through metadata-driven approach</li>
-                <li>Supports mixed collections, tagged values, and optional metadata without breaking changes</li>
-                <li>Eliminates serialization boilerplate through reflection-based discovery with performance escape hatches</li>
-                <li>Provides consistent error handling and logging across all serialization operations</li>
-                <li>Enables complete game state snapshots with minimal memory overhead</li>
-                <li>Creates clear patterns for adding new serializable types without touching core framework</li>
+                <li><strong>Type-safe encoding/decoding</strong> of complex nested structures</li>
+                <li><strong>Flexible support</strong> for mixed collections, tagged values, and optional metadata</li>
+                <li><strong>Eliminates boilerplate</strong> through reflection, with performance escape hatches</li>
+                <li><strong>Errors handled</strong> consistently with logging</li>
+                <li><strong>Complete Game Snapshots</strong> are enabled, with minimal memory overhead</li>
+                <li><strong>Extension Made Easy</strong> with parallel interface methods for serializable types</li>
+                <li><strong>Validated</strong> through comprehensive Round-trip Tests</li>
             </ul>
             <p><center><i>Key Files: BinarySerializer.cs, SerializedData.cs, IBinarySerializable.cs</i></center></p>
         </div>
@@ -1059,15 +1062,15 @@ public class GameState : IBinarySerializable
     <div class="code-with-text" id="GeographyGraph">
         <div class="image-text">
             <img src="Images/GeographyGraph.svg" />
-            <h3>Configuration-Driven Spatial Graph</h3>
-            <p>Bridges dynamic JSON configuration with type-safe spatial operations while providing foundation for extensible map systems:</p>
+            <h3>Config-Driven Spatial Graph</h3>
+            <p>Bridges dynamic JSON configuration with type-safe spatial operations, providing a foundation for extensible map systems:</p>
             <ul>
-                <li>Resolves enum types dynamically from configuration while maintaining compile-time safety in core algorithms</li>
-                <li>Pre-computes spatial relationships into immutable O(1) lookup structures for runtime performance</li>
-                <li>Handles bidirectional territory-continent hierarchies with automatic integrity validation</li>
-                <li>Enables complex spatial queries using efficient set operations</li>
-                <li>Supports map layout variations through data files without code changes</li>
-                <li>Provides architecture foundation that could extend to full assembly-based modding</li>
+                <li><strong>Resolves enum types dynamically from configuration</strong> while maintaining compile-time safety in core algorithms</li>
+                <li><strong>Caches</strong> spatial relationships in immutable O(1) lookup structures for safety and performance</li>
+                <li><strong>Validates</strong> bidirectional territory-continent hierarchies automatically</li>
+                <li><strong>Efficient set operations</strong> enable complex spatial queries</li>
+                <li><strong>Supports map layout variations</strong> through data files without code changes</li>
+                <li><strong>Provides architectual foundation for modding</strong> that could extend to full assembly-based modding</li>
             </ul>
             <p><center><i>Key Files: BoardGeography.cs, GeographyInitializer.cs</i></center></p>
         </div>
@@ -1286,14 +1289,13 @@ public class EarthBoard : IBoard
         <div class="image-text">
             <img src="Images/PrototypingWithReflection.svg" />
             <h3>Reflection-Based Rapid Prototyping</h3>
-            <p>Built on registry and serialization systems to eliminate implementation friction for team members experimenting with new card types:</p>
+            <p>Using registry and serialization systems, we ease implementation frictions for team members experimenting with new card types:</p>
             <ul>
                 <li>Uses C# 8.0+ default interface methods to provide automatic serialization</li>
-                <li>Eliminates boilerplate for developers adding experimental card implementations</li>
-                <li>Handles complex reflection logic once rather than per-implementation</li>
+                <li><strong>Facilitates iteration</strong> by eliminating boilerplate for developers experimenting with card implementations</li>
                 <li>Provides consistent serialization behavior across all card types</li>
                 <li>Includes clear migration path from prototype to optimized production code</li>
-                <li>Reduces cognitive load during rapid iteration and experimentation phases</li>
+                <li><strong>Reduces cognitive load</strong> during rapid iteration and experimentation phases</li>
             </ul>
             <p><center><i>Key Files: ICard.cs, TroopCard.cs, CardBase.cs</i></center></p>
         </div>

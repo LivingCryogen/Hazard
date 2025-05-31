@@ -633,8 +633,13 @@ centered-p {
 }
 .presentation-box ul {
     list-style: none;
-    text-align: center;
+    text-align: left;
+    line-
 }
+.presentation-box li {
+    margin-top: 1em;
+}
+
 .presentation-box h1 {
     margin-top: 0;
     margin-bottom: 1rem;

@@ -32,14 +32,14 @@
     <div class="code-with-text" id="RoundTripTesting">
         <div class="image-text">
             <h3>Data Integrity Validation</h3>
-            <p>Round-trip testing ensures complete game state preservation across save/load operations:</p>
+            <p>Round-trip testing ensures complete game state preservation:</p>
             <ul>
-                <li>Full game serialization validates players, board state, cards, and game progression</li>
-                <li>Property-level verification checks every serializable field for exact accuracy</li>
-                <li>Collection integrity preserves arrays, dictionaries, and complex object graphs</li>
-                <li>Reference consistency maintains object relationships through serialization</li>
-                <li>Error handling tests graceful recovery from corrupted save data</li>
-                <li>Individual component tests isolate serialization logic for focused validation</li>
+                <li><strong>Full game serialization</strong> validates players, board state, cards, and game progression</li>
+                <li><strong>Property-level verification</strong> checks every serializable field for exact accuracy</li>
+                <li><strong>Collection integrity</strong> preserves arrays, dictionaries, and complex object graphs</li>
+                <li><strong>Reference consistency</strong> maintains object relationships through serialization</li>
+                <li><strong>Error handling</strong> tests graceful recovery from corrupted save data</li>
+                <li><strong>Individualized component tests</strong> isolate serialization logic for focused validation</li>
             </ul>
             <p><center><i>Key Files: BinarySerializerTests.cs</i></center></p>
         </div>
@@ -200,17 +200,14 @@ public void GetData_RegisteredNameMockCard_ReturnMockCardSet()
 
     <div class="code-with-text" id="StatisticalTesting">
         <div class="image-text">
-            <h3>Shuffle Algorithm Validation</h3>
-            <p>Statistical testing proves shuffle algorithms produce mathematically fair results:</p>
+            <h3>Shuffle Algorithm Validation (Fisher-Yates)</h3>
+            <p>Statistical testing proves our shuffle algorithm implementation:</p>
             <ul>
-                <li>100,000 shuffle iterations track card positioning across all deck positions</li>
-                <li>Frequency analysis validates each card appears at each position with equal probability</li>
-                <li>Variance testing ensures results fall within 1% of perfect theoretical distribution</li>
-                <li>Position mapping records every card's appearance at every deck location</li>
-                <li>Results demonstrate provably fair randomness for skeptical players</li>
-                <li>Statistical confidence eliminates "rigged deck" complaints with hard data</li>
+                <li>Shuffle iterations track card positioning across all deck positions</li>
+                <li><strong>Frequency analysis verifies</strong> that each card appears at each position with proper variance</li>
+                <li><strong>Demonstrates fair operation</strong> for skeptical players</li>
             </ul>
-            <p><center><i>Key Files: DeckTests.cs (Shuffle_IsCalled_LibraryRandomized)</i></center></p>
+            <p><center><i>Key Files: DeckTests.cs</i></center></p>
         </div>
         <div>
             <pre class="code-snippet">
@@ -316,7 +313,7 @@ public void DrawCard_EmptyLibrary_LibRenewedAndDrawnFrom()
     <div class="code-with-text" id="MockInfrastructure">
         <div class="image-text">
             <h3>Mock Object Infrastructure</h3>
-            <p>Mock objects mirror production interfaces while providing predictable test environments:</p>
+            <p>Mock objects mirror production interfaces for predictable test environments:</p>
             <ul>
                 <li>Mock games simulate complete state scenarios with configurable board layouts</li>
                 <li>Mock players handle serialization testing with varied hand and territory configurations</li>
