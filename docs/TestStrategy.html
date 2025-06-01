@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Test Strategy</title>
+    <link rel="stylesheet" href="stylesheet.css">
+</head>
+<body class="dynamic-content-body">
+    <h2>Testing Framework</h2>
+
+    <p class="indented-p">
+        Testing quickly became an integral part of the development process for core features.
+        To build and run the tests yourself, see the <a href="https://github.com/LivingCryogen/Hazard#hazard" class="external-link">ReadMe</a>.
+        For a summary of <i>Hazard!</i>'s testing capabilities, metrics, and highlights, peruse this page!
+    </p>
+
+    <div class="presentation-box">
+        <h3>Testing Capabilities</h3>
+        <ul>
+            <li><strong>Round-Trip Testing</strong> - Complete game state serialization with property-level validation</li>
+            <li><strong>Statistical Validation</strong> - Fisher-Yates implementation proven fair (For pugnacious players!)</li>
+            <li><strong>Mock Infrastructure</strong> - Enables isolated component testing</li>
+            <li><strong>Complex Scenario Testing</strong> - Multi-stage workflows, state transitions, and object hierarchies</li>
+            <li><strong>Integration Testing</strong> - Full system validation throughout Save/Load functionality</li>
+        </ul>
+    </div>
+
+    <h2>Technical Feature Highlights</h2>
+
+    <h4>Note: Code Snippets below omit documentation comments and some code.</h4>
+
+    <div class="code-with-text" id="RoundTripTesting">
+        <div class="image-text">
+            <h3>Data Integrity Validation</h3>
+            <p>Round-trip testing ensures complete game state preservation:</p>
+            <ul>
+                <li><strong>Full game serialization</strong> validates players, board state, cards, and game progression</li>
+                <li><strong>Property-level verification</strong> checks every serializable field for exact accuracy</li>
+                <li><strong>Collection integrity</strong> preserves arrays, dictionaries, and complex object graphs</li>
+                <li><strong>Reference consistency</strong> maintains object relationships through serialization</li>
+                <li><strong>Error handling</strong> tests graceful recovery from corrupted save data</li>
+                <li><strong>Individualized component tests</strong> isolate serialization logic for focused validation</li>
+            </ul>
+            <p><center><i>Key Files: BinarySerializerTests.cs</i></center></p>
+        </div>
+        <div>
+            <pre class="code-snippet">
+            <code class="language-csharp">
+// BinarySerializerTests.cs - Complete game state round-trip validation
+[TestMethod]
+public async Task EntireGame_RoundTrip_Match()
+{
+    #region Arrange Complex Game State
+    // Configure mid-game state
+    _toSerialGame.State.NumTrades = 4;
+    _toSerialGame.State.CurrentPhase = GamePhase.Attack;
+    _toSerialGame.State.Round = 8;
+    _toSerialGame.State.PlayerTurn = 1;
+    _toSerialGame.State.PhaseStageTwo = true;
+    _toSerialGame.State.Winner = 1;
+
+    // Add reward card to regulator
+    MockCard rewardCard = new(new MockCardSet()) 
+    {
+        Target = [MockTerrID.Idaho],
+        Insigne = MockCard.Insignia.FighterJet
+    };
+    rewardCard.FillTestValues();
+    _toSerialGame.Regulator.Reward = rewardCard;
+    _toSerialGame.Regulator.CurrentActionsLimit = 7;
+
+    // Create diverse player states
+    _toSerialGame.Players.Clear();
+    _toSerialGame.Players.Add(new MockPlayer(0, _toSerialGame.Cards.CardFactory, 
+                                           _toSerialGame.Values, _toSerialGame.Board, 
+                                           new LoggerStubT&lt;MockPlayer&gt;()) 
+    {
+        Name = "TestPlayer1",
+        ArmyPool = 50,
+        ControlledTerritories = [TerrID.Alaska, TerrID.Kamchatka, TerrID.Peru],
+        Hand = [new MockCard()],
+    });
+    // ... additional players with varying configurations
+    #endregion
+
+    // Execute serialization cycle
+    await BinarySerializer.Save([_toSerialGame], _testFileName, true);
+
+    if (BinarySerializer.Load([_deserialGame], _testFileName)) 
+    {
+        
+        // Validate board state preservation
+        foreach (var contKey in _toSerialGame.Board.ContinentOwner.Keys)
+            Assert.AreEqual(_toSerialGame.Board.ContinentOwner[contKey], 
+                          _deserialGame.Board.ContinentOwner[contKey]);
+        
+        foreach (var terrKey in _toSerialGame.Board.TerritoryOwner.Keys) 
+        {
+            Assert.AreEqual(_toSerialGame.Board.TerritoryOwner[terrKey], 
+                          _deserialGame.Board.TerritoryOwner[terrKey]);
+            Assert.AreEqual(_toSerialGame.Board.Armies[terrKey], 
+                          _deserialGame.Board.Armies[terrKey]);
+        }
+
+        // Validate player state accuracy
+        for (int i = 0; i &lt; _toSerialGame.Players.Count; i++) 
+        {
+            Assert.AreEqual(_toSerialGame.Players[i].Number, _deserialGame.Players[i].Number);
+            Assert.AreEqual(_toSerialGame.Players[i].Name, _deserialGame.Players[i].Name);
+            Assert.AreEqual(_toSerialGame.Players[i].ArmyPool, _deserialGame.Players[i].ArmyPool);
+            
+            // Verify collection equality
+            Assert.IsTrue(_toSerialGame.Players[i].ControlledTerritories
+                         .SetEquals(_deserialGame.Players[i].ControlledTerritories));
+            
+            // Check card details including custom test properties
+            for (int j = 0; j &lt; _toSerialGame.Players[i].Hand.Count; j++) 
+            {
+                MockCard serialCard = (MockCard)_toSerialGame.Players[i].Hand[j];
+                MockCard deserialCard = (MockCard)_deserialGame.Players[i].Hand[j];
+                
+                Assert.AreEqual(serialCard.TestBytes, deserialCard.TestBytes);
+                Assert.AreEqual(serialCard.TestInts, deserialCard.TestInts);
+                Assert.AreEqual(serialCard.TestLongs, deserialCard.TestLongs);
+                Assert.AreEqual(serialCard.TestBools, deserialCard.TestBools);
+                Assert.AreEqual(serialCard.TestStrings, deserialCard.TestStrings);
+            }
+        }
+
+        // Verify state machine preservation
+        Assert.AreEqual(_toSerialGame.State.NumTrades, _deserialGame.State.NumTrades);
+        Assert.AreEqual(_toSerialGame.State.CurrentPhase, _deserialGame.State.CurrentPhase);
+        Assert.AreEqual(_toSerialGame.State.Round, _deserialGame.State.Round);
+        Assert.AreEqual(_toSerialGame.State.PlayerTurn, _deserialGame.State.PlayerTurn);
+        Assert.AreEqual(_toSerialGame.State.PhaseStageTwo, _deserialGame.State.PhaseStageTwo);
+
+        // Check card system integrity
+        Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library.Count, 
+                       _deserialGame.Cards.GameDeck.Library.Count);
+        
+        for (int j = 0; j &lt; _toSerialGame.Cards.GameDeck.Library.Count; j++) 
+        {
+            Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].ParentTypeName, 
+                           _deserialGame.Cards.GameDeck.Library[j].ParentTypeName);
+            Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].Target[0], 
+                           _deserialGame.Cards.GameDeck.Library[j].Target[0]);
+        }
+    }
+    else Assert.Fail("Game deserialization failed");
+}
+
+// Test individual player serialization in isolation
+[TestMethod]
+public async Task Players_RoundTrip_Match()
+{
+    // Configure edge case player
+    _toSerialGame.Players.Add(new MockPlayer(3, _toSerialGame.Cards.CardFactory, 
+                                           _toSerialGame.Values, _toSerialGame.Board, 
+                                           new LoggerStubT&lt;MockPlayer&gt;()) 
+    {
+        Name = "TestPlayer4",
+        ArmyPool = 20,
+        ControlledTerritories = [], // Empty territories
+        Hand = [new MockCard(), new MockCard(), new MockCard()], // Multiple cards
+        HasCardSet = true // Special state
+    });
+
+    // Test each player individually
+    for (int i = 0; i &lt; _toSerialGame.Players.Count; i++) 
+    {
+        await BinarySerializer.Save([_toSerialGame.Players[i]], _testFileName, true);
+        _deserialGame.Players.Add(new MockPlayer(i, _deserialGame.Cards.CardFactory, 
+                                                _deserialGame.Values, _deserialGame.Board, 
+                                                new LoggerStubT&lt;MockPlayer&gt;()));
+        
+        if (BinarySerializer.Load([_deserialGame.Players[i]], _testFileName)) 
+        {
+            ValidatePlayerEquality(_toSerialGame.Players[i], _deserialGame.Players[i]);
+        }
+        else Assert.Fail($"Player {i} deserialization failed");
+    }
+}
+
+// Validate data access layer JSON parsing
+[TestMethod]
+public void GetData_RegisteredNameMockCard_ReturnMockCardSet()
+{
+    string registeredName = (string)SharedRegister.Registry[typeof(MockCard)]![RegistryRelation.Name]!;
+
+    var returned = _testDataProvider!.GetData(registeredName);
+
+    Assert.IsTrue(returned is MockCardSet);
+
+    var returnedCardSetData = ((MockCardSet)returned).JData;
+
+    Assert.IsNotNull(returnedCardSetData);
+    Assert.IsTrue(returnedCardSetData.Targets.Length &gt; 0);
+    
+    // Verify all mock territories represented
+    foreach (MockTerrID mockID in Enum.GetValues(typeof(MockTerrID))) 
+    {
+        var mockTargets = returnedCardSetData.Targets.SelectMany(array =&gt; array).Cast&lt;MockTerrID&gt;();
+        if (mockID != MockTerrID.Null)
+            Assert.IsTrue(mockTargets.Contains(mockID));
+    }
+}
+
+// SerializedData.cs - Flexible metadata container for serialization
+public readonly struct SerializedData
+{
+    // Multiple constructors handle different serialization scenarios
+    public SerializedData(Type serialType, IConvertible value)
+    {
+        SerialType = serialType;
+        SerialValues = [value];
+    }
+
+    public SerializedData(Type serialType, IConvertible value, string tag)
+    {
+        SerialType = serialType;
+        SerialValues = [value];
+        Tag = tag;
+    }
+
+    public SerializedData(Type serialType, IConvertible[] serialValues, string tag)
+    {
+        SerialType = serialType;
+        // Automatic collection type detection
+        if (BinarySerializer.IsIConvertibleCollection(serialType, out Type? memberType))
+            MemberType = memberType;
+        SerialValues = serialValues;
+        Tag = tag;
+    }
+
+    public SerializedData(Type serialType, IConvertible[] serialValues)
+    {
+        SerialType = serialType;
+        if (BinarySerializer.IsIConvertibleCollection(serialType, out Type? memberType))
+            MemberType = memberType;
+        SerialValues = serialValues;
+    }
+
+    // Metadata properties support different serialization patterns
+    public Type? MemberType { get; init; } = null;  // Collection element type
+    public Type SerialType { get; init; }           // Primary type information
+    public IConvertible[] SerialValues { get; init; } // Actual data to serialize
+    public string? Tag { get; init; } = null;       // Optional metadata tag
+}
+
+// Example usage - Game state persistence
+public class GameState : IBinarySerializable
+{
+    public int CurrentRound { get; set; }
+    public TerrID[] PlayerTerritories { get; set; } = [];
+    public Dictionary&lt;string, int&gt; PlayerScores { get; set; } = [];
+
+    public async Task&lt;SerializedData[]&gt; GetBinarySerials()
+    {
+        return await Task.Run(() => [
+            // Tagged single value with metadata
+            new SerializedData(typeof(int), CurrentRound, "GameRound"),
+            
+            // Enum array with automatic type detection
+            new SerializedData(typeof(TerrID[]), PlayerTerritories.Cast&lt;IConvertible&gt;().ToArray()),
+            
+            // Complex nested structure handling
+            new SerializedData(typeof(int), PlayerScores.Count, "ScoreCount"),
+            new SerializedData(typeof(string[]), PlayerScores.Keys.Cast&lt;IConvertible&gt;().ToArray()),
+            new SerializedData(typeof(int[]), PlayerScores.Values.Cast&lt;IConvertible&gt;().ToArray())
+        ]);
+    }
+
+    public bool LoadFromBinary(BinaryReader reader)
+    {
+        try 
+        {
+            // Read tagged values with metadata validation
+            string roundTag = reader.ReadString();
+            if (roundTag != "GameRound") return false;
+            CurrentRound = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+
+            // Handle collections with type safety
+            int terrCount = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            var territories = BinarySerializer.ReadEnums(reader, typeof(TerrID), terrCount);
+            PlayerTerritories = territories.Cast&lt;TerrID&gt;().ToArray();
+
+            // Reconstruct complex structures
+            string scoreTag = reader.ReadString();
+            int scoreCount = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            var keys = BinarySerializer.ReadStrings(reader, scoreCount);
+            var values = BinarySerializer.ReadConvertibles(reader, typeof(int), scoreCount);
+            
+            PlayerScores.Clear();
+            for (int i = 0; i < scoreCount; i++) 
+            {
+                PlayerScores[(string)keys.GetValue(i)!] = (int)values.GetValue(i)!;
+            }
+
+            return true;
+        } 
+        catch (Exception ex) 
+        {
+            _logger?.LogError("Deserialization failed: {Message}", ex.Message);
+            return false;
+// BoardGeography.cs - Immutable spatial relationship system
+public static class BoardGeography
+{
+    private static ReadOnlyDictionary&lt;ContID, HashSet&lt;TerrID&gt;&gt;? _continentMembers;
+    private static ReadOnlyDictionary&lt;TerrID, ContID&gt;? _terrIDToContID;
+    private static ReadOnlyDictionary&lt;TerrID, HashSet&lt;TerrID&gt;&gt;? _neighborWeb;
+    
+    public static int NumTerritories { get; private set; }
+    public static int NumContinents { get; private set; }
+    
+    // Data-driven initialization from JSON configuration
+    public static void Initialize(GeographyInitializer initializer)
+    {
+        NumTerritories = initializer.TerritoryNames.Length - 1; // Account for Null values
+        NumContinents = initializer.ContinentNames.Length - 1;
+
+        Dictionary&lt;ContID, HashSet&lt;TerrID&gt;&gt; continentMembers = [];
+        Dictionary&lt;TerrID, ContID&gt; terrIDToContID = [];
+        Dictionary&lt;TerrID, HashSet&lt;TerrID&gt;&gt; neighborWeb = [];
+        
+        // Handle runtime type safety at configuration boundary
+        foreach (var contTerrPair in initializer.ContinentMembers) 
+        {
+            if (contTerrPair.Key is not ContID continent)
+                continue;
+
+            foreach (Enum territoryEnum in contTerrPair.Value) 
+            {
+                if (territoryEnum is not TerrID territory)
+                    continue;
+
+                // Build continent membership maps
+                if (!continentMembers.ContainsKey(continent))
+                    continentMembers.Add(continent, []);
+
+                continentMembers[continent].Add(territory);
+                terrIDToContID[territory] = continent;
+                
+                // Initialize neighbor structure
+                if (!neighborWeb.ContainsKey(territory))
+                    neighborWeb.Add(territory, []);
+
+                // Process adjacency relationships from configuration
+                if (!initializer.TerritoryNeighbors.TryGetValue(territory, 
+                       out HashSet&lt;Enum&gt;? neighbors) || neighbors == null)
+                    continue;
+                    
+                foreach (Enum terrEnum in neighbors) 
+                {
+                    if (terrEnum is not TerrID neighborTerritory)
+                        continue;
+                    neighborWeb[territory].Add(neighborTerritory);
+                }
+            }
+        }
+        
+        // Create immutable collections for thread-safe access
+        _continentMembers = new(continentMembers);
+        _terrIDToContID = new(terrIDToContID);
+        _neighborWeb = new(neighborWeb);
+    }
+    
+    // O(1) continent lookup for territory ownership calculations
+    public static ContID TerritoryToContinent(TerrID terrID)
+    {
+        if (_terrIDToContID == null) return ContID.Null;
+        return _terrIDToContID.TryGetValue(terrID, out var continent) 
+            ? continent : ContID.Null;
+    }
+    
+    // Efficient continent membership queries
+    public static HashSet&lt;TerrID&gt; GetContinentMembers(ContID continent)
+    {
+        if (_continentMembers == null) return [];
+        return _continentMembers.TryGetValue(continent, out var members)
+            ? members : [];
+    }
+    
+    // Fast adjacency validation for move/attack legality
+    public static HashSet&lt;TerrID&gt; GetNeighbors(TerrID territory)
+    {
+        if (_neighborWeb == null) return [];
+        return _neighborWeb.TryGetValue(territory, out var neighbors) 
+            ? neighbors : [];
+    }
+    
+    // Complex spatial query using set operations
+    public static bool IncludesContinent(HashSet&lt;TerrID&gt; territoryList, ContID continent)
+    {
+        if (_continentMembers == null) return false;
+        if (!_continentMembers.TryGetValue(continent, out var continentMembers))
+            return false;
+        
+        // Leverage HashSet.IsSubsetOf for efficient continent control validation
+        return continentMembers.IsSubsetOf(territoryList);
+    }
+    
+    // ... other spatial utilities omitted
+}
+
+// GeographyInitializer.cs - Flexible configuration processor
+public class GeographyInitializer
+{
+    public Type? ContinentEnumType { get; set; }
+    public Type? TerritoryEnumType { get; set; }
+    public string[] ContinentNames { get; private set; } = [];
+    public string[] TerritoryNames { get; private set; } = [];
+    public Dictionary&lt;Enum, HashSet&lt;Enum&gt;&gt; ContinentMembers { get; } = [];
+    public Dictionary&lt;Enum, HashSet&lt;Enum&gt;&gt; TerritoryNeighbors { get; } = [];
+    
+    // Runtime type resolution bridges JSON config with compile-time type safety
+    public void SetEnumTypes((string ContinentEnumName, string TerritoryEnumName) names)
+    {
+        // Resolve enum types dynamically from configuration strings
+        if (Type.GetType(names.ContinentEnumName) is not Type continentEnumType || !continentEnumType.IsEnum)
+            throw new InvalidDataException($"Could not locate Continent Enum: {names.ContinentEnumName}");
+        ContinentEnumType = continentEnumType;
+        
+        if (Type.GetType(names.TerritoryEnumName) is not Type territoryEnumType || !territoryEnumType.IsEnum)
+            throw new InvalidDataException($"Could not locate Territory Enum: {names.TerritoryEnumName}");
+        TerritoryEnumType = territoryEnumType;
+
+        ContinentNames = Enum.GetNames(ContinentEnumType);
+        TerritoryNames = Enum.GetNames(TerritoryEnumType);
+    }
+    
+    // Validate types at configuration boundary, maintain safety in core operations
+    public bool AddContinentMember(string continentName, string territoryName)
+    {
+        if (ContinentEnumType == null || TerritoryEnumType == null)
+            return false;
+            
+        // Type validation happens once during configuration loading
+        if (Enum.Parse(ContinentEnumType, continentName) is not Enum continentEnum)
+            return false;
+        if (Enum.Parse(TerritoryEnumType, territoryName) is not Enum territoryEnum)
+            return false;
+            
+        try 
+        {
+            if (!ContinentMembers.ContainsKey(continentEnum))
+                ContinentMembers.Add(continentEnum, []);
+
+            ContinentMembers[continentEnum].Add(territoryEnum);
+        } 
+        catch 
+        {
+            return false;
+        }
+        return true;
+    }
+    
+    // Bidirectional neighbor relationship management
+    public bool AddTerritoryNeighbor(string territoryName, string neighborName)
+    {
+        if (TerritoryEnumType == null)
+            return false;
+            
+        if (Enum.Parse(TerritoryEnumType, territoryName) is not Enum territoryEnum)
+            return false;
+        if (Enum.Parse(TerritoryEnumType, neighborName) is not Enum neighborEnum)
+            return false;
+            
+        try 
+        {
+            if (!TerritoryNeighbors.ContainsKey(territoryEnum))
+                TerritoryNeighbors.Add(territoryEnum, []);
+
+            TerritoryNeighbors[territoryEnum].Add(neighborEnum);
+        } 
+        catch 
+        {
+            return false;
+        }
+        return true;
+    }
+    
+    // ... other configuration methods omitted
+}
+
+// EarthBoard.cs - Geography integration example
+public class EarthBoard : IBoard
+{
+    // Efficient continent control detection using geography system
+    public void CheckContinentFlip(TerrID changed, int previousOwner)
+    {
+        int newOwner = TerritoryOwner[changed];
+        var changedHomeContinent = BoardGeography.TerritoryToContinent(changed);
+        var continentTerritories = BoardGeography.GetContinentMembers(changedHomeContinent);
+        
+        if (continentTerritories.Count <= 0) return;
+
+        // Use geography system for ownership validation
+        if (ContinentOwner[changedHomeContinent] == previousOwner && previousOwner > -1) 
+        {
+            ContinentOwner[changedHomeContinent] = -1;
+            
+            // Efficient "all territories owned by same player" check
+            if (continentTerritories.All(terr => TerritoryOwner[terr] == newOwner))
+                ContinentOwner[changedHomeContinent] = newOwner;
+
+            ContinentOwnerChanged?.Invoke(this, 
+                new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
+        }
+        else if (continentTerritories.All(terr => TerritoryOwner[terr] == newOwner)) 
+        {
+            ContinentOwner[changedHomeContinent] = newOwner;
+            ContinentOwnerChanged?.Invoke(this, 
+                new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
+        }
+    }
+    
+    // ... other board methods omitted
+}
+</code>
+            </pre>
+        </div>
+    </div>
+
+    <div class="code-with-text" id="StatisticalTesting">
+        <div class="image-text">
+            <h3>Shuffle Algorithm Validation (Fisher-Yates)</h3>
+            <p>Statistical testing proves our shuffle algorithm implementation:</p>
+            <ul>
+                <li>Shuffle iterations track card positioning across all deck positions</li>
+                <li><strong>Frequency analysis verifies</strong> that each card appears at each position with proper variance</li>
+                <li><strong>Demonstrates fair operation</strong> for skeptical players</li>
+            </ul>
+            <p><center><i>Key Files: DeckTests.cs</i></center></p>
+        </div>
+        <div>
+            <pre class="code-snippet">
+            <code class="language-csharp">
+// DeckTests.cs - Mathematical proof of shuffle fairness
+[TestMethod]
+public void Shuffle_IsCalled_LibraryRandomized()
+{
+    Deck testDeck = InitTestDeck(_numCards);
+    
+    int numShuffles = 100000; // Statistical confidence requires large sample
+    float targetPercentage = 1.00000f / _numCards; // Perfect theoretical distribution
+    float varianceLimit = 0.01f; // 1% tolerance for randomness validation
+    
+    // Track frequency of each card at each position
+    int[][] drawResultsTable = new int[_numCards][];
+    Dictionary&lt;string, int&gt; cardIDMap = [];
+    
+    // Initialize tracking matrix
+    for (int numCard = 0; numCard &lt; _numCards; numCard++) 
+    {
+        drawResultsTable[numCard] = new int[_numCards];
+        for (int position = 0; position &lt; _numCards; position++)
+            drawResultsTable[numCard][position] = 0;
+        
+        cardIDMap.Add(((MockCard)testDeck.Library[numCard]).ID, numCard);
+    }
+    // Execute shuffles and record positions
+    for (int shuffle = 0; shuffle &lt; numShuffles; shuffle++) 
+    {
+        testDeck.Shuffle();
+        for (int position = 0; position &lt; _numCards; position++) 
+        {
+            string cardID = ((MockCard)testDeck.Library[position]).ID;
+            int tableRow = cardIDMap[cardID];
+            drawResultsTable[tableRow][position]++; // Record card at position
+        }
+    }
+    // Validate mathematical distribution
+    for (int card = 0; card &lt; _numCards; card++) 
+    {
+        for (int position = 0; position &lt; _numCards; position++) 
+        {
+            float actualFrequency = drawResultsTable[card][position] / (float)numShuffles;
+            float variance = Math.Abs(targetPercentage - actualFrequency);
+            
+            // Each card must appear at each position with equal probability ±1%
+            Assert.IsTrue(variance &lt; varianceLimit, 
+                $"Card {card} at position {position}: expected {targetPercentage:F5}, " +
+                $"actual {actualFrequency:F5}, variance {variance:F5}");
+        }
+    }
+}
+// Validate discard pile integration during shuffles
+[TestMethod]
+public void Shuffle_IsCalledWithDiscards_LibraryTakesDiscards()
+{
+    Deck testDeck = InitTestDeck(_numCards - 10, 10);
+    
+    int numLibrary = testDeck.Library.Count;
+    int numDiscards = testDeck.DiscardPile.Count;
+    string[] discardIDs = testDeck.DiscardPile
+        .Select(card =&gt; ((MockCard)card).ID)
+        .ToArray();
+    testDeck.Shuffle();
+    // Verify discard integration
+    Assert.IsTrue(testDeck.Library.Count == numLibrary + numDiscards);
+    Assert.IsTrue(testDeck.DiscardPile.Count == 0);
+    
+    // Ensure all discards now in library
+    foreach (var discardID in discardIDs) 
+    {
+        Assert.IsTrue(testDeck.Library
+            .Any(card =&gt; ((MockCard)card).ID == discardID));
+    }
+}
+// Handle edge case of drawing from empty library
+[TestMethod]
+public void DrawCard_EmptyLibrary_LibRenewedAndDrawnFrom()
+{
+    Deck testDeck = InitTestDeck(0, _numCards); // Empty library, full discard
+    
+    int numDiscards = testDeck.DiscardPile.Count;
+    string aDiscardID = ((MockCard)testDeck.DiscardPile[numDiscards - 1]).ID;
+    var drawnCard = testDeck.DrawCard();
+    MockCard mockCard = (MockCard)drawnCard;
+    // Library should be renewed from discard pile
+    Assert.IsTrue(testDeck.Library.Count == numDiscards - 1);
+    Assert.IsTrue(testDeck.DiscardPile.Count == 0);
+    
+    // Drawn card should be from original discard pile
+    bool testIDinLibrary = testDeck.Library.Where(card =&gt; ((MockCard)card).ID == aDiscardID).Any();
+    Assert.IsTrue(testIDinLibrary || mockCard.ID == aDiscardID);
+}
+</code>
+            </pre>
+        </div>
+    </div>
+
+    <div class="code-with-text" id="MockInfrastructure">
+        <div class="image-text">
+            <h3>Mock Object Infrastructure</h3>
+            <p>Mock objects mirror production interfaces for predictable test environments:</p>
+            <ul>
+                <li>Mock games simulate complete state scenarios with configurable board layouts</li>
+                <li>Mock players handle serialization testing with varied hand and territory configurations</li>
+                <li>Mock boards manage territory and army state without UI dependencies</li>
+                <li>Mock cards support custom insignia and territory targeting for edge case testing</li>
+                <li>Logger stubs capture error conditions for validation</li>
+                <li>File system abstraction provides deterministic I/O operations</li>
+            </ul>
+            <p><center><i>Key Files: MockGame.cs, MockPlayer.cs, MockBoard.cs, MockCard.cs</i></center></p>
+        </div>
+        <div>
+            <pre class="code-snippet">
+            <code class="language-csharp">
+                // MockGame.cs - Configurable game state for testing scenarios
+public class MockGame : IGame
+{
+    public MockGame()
+    {
+        ID = new Guid();
+        Players = [
+            new MockPlayer(0, Cards.CardFactory, Values, Board, new LoggerStubT&lt;MockPlayer&gt;()),
+            new MockPlayer(1, Cards.CardFactory, Values, Board, new LoggerStubT&lt;MockPlayer&gt;())
+        ];
+        State = new StateMachine(Players.Count, new LoggerStubT&lt;StateMachine&gt;());
+        Regulator = new MockRegulator(new LoggerStubT&lt;MockRegulator&gt;(), this);
+        Regulator.Initialize();
+    }
+
+    // Generate random board layouts for testing different scenarios
+    public void AutoBoard()
+    {
+        if (Board == null || Players.Count != 2) return;
+
+        int numTerritories = MockGeography.NumTerritories / 3;
+        int[] playerPool = [numTerritories, numTerritories, numTerritories];
+        Random rand = new();
+        byte poolsEmpty = 0b000; // Bitwise flags track available players
+        byte[] masks = [0b001, 0b010, 0b100];
+
+        for (int i = 0; i &lt; MockGeography.NumTerritories; i++) 
+        {
+            int player = SelectRandomAvailablePlayer(poolsEmpty, rand);
+            
+            if (player &lt; 2 && player &gt; -1) 
+            {
+                Board.Claims(player, (TerrID)i, 1);
+                Players[player].AddTerritory((TerrID)i);
+                playerPool[player]--;
+                if (playerPool[player] &lt;= 0)
+                    poolsEmpty |= masks[player];
+            }
+            else if (player == 2) 
+            {
+                Board.Claims(-1, (TerrID)i, 1); // Neutral territory
+                playerPool[player]--;
+                if (playerPool[player] &lt;= 0)
+                    poolsEmpty |= masks[player];
+            }
+        }
+    }
+
+    // Reset state between tests for isolation
+    public void Wipe()
+    {
+        ID = Guid.Empty;
+        Players.Clear();
+        Cards.Wipe();
+        State = new StateMachine(2, new LoggerStubT&lt;StateMachine&gt;());
+        Board.Armies.Clear();
+        Board.ContinentOwner.Clear();
+        ((MockRegulator)Regulator).Wipe();
+    }
+}
+
+// LoggerStubT.cs - Controlled logging for error condition testing
+public class LoggerStubT&lt;T&gt; : ILogger&lt;T&gt; where T : class
+{
+    public LogLevel LastLoggedLevel { get; private set; }
+
+    public void Log&lt;TState&gt;(LogLevel logLevel, EventId eventId, TState state, 
+                           Exception? exception, Func&lt;TState, Exception?, string&gt; formatter)
+    {
+        LastLoggedLevel = logLevel; // Capture for test assertions
+    }
+
+    public bool IsEnabled(LogLevel logLevel) =&gt; true;
+    public IDisposable? BeginScope&lt;TState&gt;(TState state) where TState : notnull =&gt; null;
+}
+
+// MockDataFiles.cs - Generated test data with cleanup
+public class MockDataFiles
+{
+    public MockDataFiles()
+    {
+        BuildCardSetFiles();
+    }
+
+    private void BuildCardSetFiles()
+    {
+        string temp = FileProcessor.GetTempFile();
+        CardSetPath = temp + "CardSet.json";
+        FileProcessor.Move(temp, CardSetPath);
+        BuildMockCardSetJson();
+
+        // Update registry for test file paths
+        if (SharedRegister.Registry[typeof(MockCardSet)]![RegistryRelation.DataFileName] == null)
+            SharedRegister.Registry.AddRelation(typeof(MockCardSet), (CardSetPath, RegistryRelation.DataFileName));
+    }
+
+    private void BuildMockCardSetJson()
+    {
+        List&lt;string&gt; mockTerritories = ["Alabama", "Alaska", "Arizona", /* ... all 50 states ... */];
+        List&lt;string&gt; mockInsignia = ["Marine", "FighterJet", "Tank"];
+        
+        var jsonDocument = new { TroopCards = new object[mockTerritories.Count] };
+
+        int insigniaIndex = 0;
+        for (int i = 0; i &lt; mockTerritories.Count; i++) 
+        {
+            jsonDocument.TroopCards[i] = new 
+            {
+                Targets = new string[] { mockTerritories[i] },
+                Insignia = mockInsignia[insigniaIndex]
+            };
+            
+            insigniaIndex = (insigniaIndex + 1) % 3;
+        }
+
+        string jsonString = JsonSerializer.Serialize(jsonDocument, _jOptions);
+        FileProcessor.WriteFile(CardSetPath!, jsonString);
+    }
+
+    public static void CleanUp(string filePath)
+    {
+        FileProcessor.Delete(filePath);
+    }
+}
+</code>
+            </pre>
+        </div>
+    </div>
+
+    <div class="presentation-box" style="margin-top: 3rem; background: linear-gradient(135deg, #3498db, #2980b9); color: white;">
+        <h3>📊 Back-End Quantitative Testing Metrics</h3>
+        <p style="margin: 1rem 0;">
+            Interested in code coverage metrics of the back-end (Model)? View a comprehensive testing dashboard:
+        </p>
+        <div style="text-align: center; margin: 1.5rem 0;">
+            <button type="button"
+                    id="metricsButton"
+                    class="cta-button"
+                    style="background: white; color: #2980b9;">
+                <i class="fa-solid fa-chart-line"></i>
+                View Testing Metrics Dashboard
+            </button>
+        </div>
+        <div style="font-size: 0.9rem; opacity: 0.8; text-align: center;">
+            Interactive metrics visualization created with Claude Sonnet 4
+        </div>
+    </div>
+</body>
+
+<div class="presentation-box">
+    <h3 style="color: #31c1cc;">Quality Assurance and Testing Skills Developed</h3>
+    <p style="text-align: center; margin: 1rem 0; font-style: italic;">
+        Learning to test, debug, and document made this complex development possible, relying on skills like:
+    </p>
+
+    <!-- Test Strategy & Framework Design -->
+    <div class="presentation-box" style="margin: 2rem 1rem; background-color: #1e2632; border: 1px solid #2c5f6b;">
+        <h4 style="color: #31c1cc; margin-bottom: 1rem; text-align: center;">📋 Test Strategy & Framework Design</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <ul style="margin: 0; list-style-type: circle;">
+                <li>Comprehensive test strategy development</li>
+                <li>Test case design and prioritization</li>
+                <li>Risk-based testing approaches</li>
+                <li>MSTest framework implementation</li>
+            </ul>
+            <ul style="margin: 0; list-style-type: circle;">
+                <li>Test coverage analysis</li>
+                <li>Quality metrics definition</li>
+                <li>Test data management</li>
+                <li>Test environment setup</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Unit Testing & Isolation -->
+    <div class="presentation-box" style="margin: 2rem 1rem; background-color: #1e2632; border: 1px solid #2c5f6b;">
+        <h4 style="color: #31c1cc; margin-bottom: 1rem; text-align: center;">🧪 Unit Testing & Isolation</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <ul style="margin: 0; list-style-type: circle;">
+                <li>Test-driven development (TDD)</li>
+                <li>Isolated component testing</li>
+                <li>Mock object design and implementation</li>
+                <li>Dependency injection for testing</li>
+            </ul>
+            <ul style="margin: 0; list-style-type: circle;">
+                <li>Test double patterns (stubs, spies)</li>
+                <li>Assertion design and validation</li>
+                <li>Edge case identification</li>
+                <li>Test fixture management</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Data Integrity & Serialization Testing -->
+    <div class="presentation-box" style="margin: 2rem 1rem; background-color: #1e2632; border: 1px solid #2c5f6b;">
+        <h4 style="color: #31c1cc; margin-bottom: 1rem; text-align: center;">💾 Data Integrity & Serialization Testing</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <ul style="margin: 0; list-style-type: circle;">
+                <li>Round-trip testing methodology</li>
+                <li>Binary serialization validation</li>
+                <li>Object graph preservation testing</li>
+                <li>Data corruption detection</li>
+            </ul>
+            <ul style="margin: 0; list-style-type: circle;">
+                <li>Property-level verification</li>
+                <li>Collection integrity testing</li>
+                <li>Reference consistency validation</li>
+                <li>Backward compatibility testing</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Statistical & Algorithmic Validation -->
+    <div class="presentation-box" style="margin: 2rem 1rem; background-color: #1e2632; border: 1px solid #2c5f6b;">
+        <h4 style="color: #31c1cc; margin-bottom: 1rem; text-align: center;">📊 Statistical & Algorithmic Validation</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <ul style="margin: 0; list-style-type: circle;">
+                <li>Mathematical algorithm validation</li>
+                <li>Statistical distribution testing</li>
+                <li>Randomness verification methods</li>
+                <li>Algorithm fairness testing</li>
+            </ul>
+            <ul style="margin: 0; list-style-type: circle;">
+                <li>Large-scale statistical sampling</li>
+                <li>Probability distribution analysis</li>
+                <li>Performance benchmarking</li>
+                <li>Mathematical proof through testing</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Integration & System Testing -->
+    <div class="presentation-box" style="margin: 2rem 1rem; background-color: #1e2632; border: 1px solid #2c5f6b;">
+        <h4 style="color: #31c1cc; margin-bottom: 1rem; text-align: center;">🔗 Integration & System Testing</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <ul style="margin: 0; list-style-type: circle;">
+                <li>Component interaction validation</li>
+                <li>End-to-end workflow testing</li>
+                <li>Cross-module testing</li>
+                <li>Interface contract testing</li>
+            </ul>
+            <ul style="margin: 0; list-style-type: circle;">
+                <li>Data flow validation</li>
+                <li>System integration verification</li>
+                <li>Multi-stage workflow testing</li>
+                <li>Error condition handling</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Quality Metrics & Analysis -->
+    <div class="presentation-box" style="margin: 2rem 1rem; background-color: #1e2632; border: 1px solid #2c5f6b;">
+        <h4 style="color: #31c1cc; margin-bottom: 1rem; text-align: center;">📈 Quality Metrics & Analysis</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <ul style="margin: 0; list-style-type: circle;">
+                <li>Code coverage measurement</li>
+                <li>Test effectiveness scoring</li>
+                <li>Defect density tracking</li>
+                <li>Quality trend analysis</li>
+            </ul>
+            <ul style="margin: 0; list-style-type: circle;">
+                <li>Performance regression detection</li>
+                <li>Risk assessment methodologies</li>
+                <li>Complexity metrics evaluation</li>
+                <li>Failure analysis automation</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Summary -->
+    <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background-color: #1e2632; border-radius: 8px; border: 1px solid #31c1cc;">
+        <p style="margin: 0; font-style: italic; color: #31c1cc; font-size: 1.1em;">
+            I gained testing and QA skills that not only ensured the complex systems in the application are reliable and maintainable, but it made its development possible.
+        </p>
+    </div>
+</div>
+</html>

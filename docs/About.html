@@ -6,25 +6,30 @@
     <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body class="dynamic-content-body">
-    <br />
-    <h2>About Hazard!</h2>
+    <h3>About <i>Hazard!</i></h3>
 
     <!-- About section -->
     <div class="about-section">
-        <div class="image-with-text presentation-box">
-            <img src="Images/AppSettings.jpg" alt="Game Settings" />
-            <div class="image-text">
-                <p class="indented-p">Hi! I'm Josh McKnight, an aspiring software developer.</p>
-                <p class="indented-p">
-                    I'm proud to present <i>Hazard!: Nothing ventured, nothing gained</i>, a local, "hot-seat" game for two to six players who vie for military control of the globe.
-                </p>
-                <p class="indented-p">Thanks to the art of my lovely wife, Kiah, your conquests come with real charm!</p>
-            </div>
-        </div>
-
-        <p class="indented-p"><i>Hazard!</i> was developed using Windows Presentation Foundation (WPF).</p>
-        <p class="indented-p">Deployed as an MSIX package (.msixbundle), Windows users can get the application by clicking the download button. For more installation details, please visit the Download section.</p>
+        <p class="indented-p">
+            <i>Hazard!: Nothing ventured, nothing gained</i> is a strategic conquest game for two to six players who vie for military control of the globe. Built with beautiful artwork by Kiah Baxter-Ferguson, this project demonstrates enterprise-grade software development practices from architecture to deployment.
+        </p>
+        <p class="indented-p"><i>Hazard!</i> was developed using Windows Presentation Foundation (WPF) and deployed as an MSIX package (.msixbundle). Windows users can get the application by clicking the download button.</p>
         <p class="indented-p"><i>Hazard!</i> emulates a popular board game's ruleset. See the "Help" and "About" sections of the application menu after installation.</p>
+
+        <h4>Background</h4>
+        <p class="indented-p">
+            In high school, I had one programming project I could never get fully working: a "Risk" clone in VB6.
+            When I decided to pivot back to software development, I figured I should finish what I had started.
+        </p>
+        <p class="indented-p">
+            Of course, VB6 wouldn't serve any more. The program would have to be written in a contemporary language,
+            conform to modern industry standards and practices, and leverage current technologies. Hopefully, developing
+            it would also teach me something about how to work within a team.
+        </p>
+        <p class="indented-p" style="margin-top: 1rem; font-weight: bold; color: #31c1cc;">
+            This is that project, now evolved into a software engineering showcase!
+        </p>
+
 
         <div class="presentation-box">
             <h5>Warning!</h5>
@@ -34,33 +39,85 @@
         </div>
     </div>
 
-    <!-- Background section -->
-    <h2>Background</h2>
-    <div class="background-section">
-        <p class="indented-p">
-            In high school I had one programming project I could never get fully working: a "Risk" clone in VB6.
-            When I decided to return to software development, I figured I should finish what I had started.
-            Of course, VB6 wouldn't serve any more. The program would have to be written in a contemporary language, conform
-            to modern industry standards and practices, and leverage current technologies. Hopefully, developing
-            it would also begin to teach me how to work within a team.
-        </p>
-        <p class="indented-p">This is that project.</p>
+    <!-- Key Features Highlight -->
+    <div class="presentation-box">
+        <h3 style="color: #31c1cc;">✨ Key Engineering Highlights</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+            <div style="background: #2a3141; padding: 1.5rem; border-radius: 8px; border: 1px solid #31c1cc;">
+                <h4 style="color: #31c1cc; margin-bottom: 0.5rem;">🎭 State Machine & Events</h4>
+                <p style="font-size: 0.9rem; line-height: 1.4;">Regulated game flow with event-driven architecture enabling loose coupling between components.</p>
+            </div>
+            <div style="background: #2a3141; padding: 1.5rem; border-radius: 8px; border: 1px solid #31c1cc;">
+                <h4 style="color: #31c1cc; margin-bottom: 0.5rem;">💾 Custom Serialization</h4>
+                <p style="font-size: 0.9rem; line-height: 1.4;">Binary serialization framework with reflection-based prototyping and production optimization paths.</p>
+            </div>
+            <div style="background: #2a3141; padding: 1.5rem; border-radius: 8px; border: 1px solid #31c1cc;">
+                <h4 style="color: #31c1cc; margin-bottom: 0.5rem;">🗂️ Type Registry System</h4>
+                <p style="font-size: 0.9rem; line-height: 1.4;">Dynamic type resolution with data-driven configuration supporting runtime modularity.</p>
+            </div>
+            <div style="background: #2a3141; padding: 1.5rem; border-radius: 8px; border: 1px solid #31c1cc;">
+                <h4 style="color: #31c1cc; margin-bottom: 0.5rem;">☁️ Azure DevOps Pipeline</h4>
+                <p style="font-size: 0.9rem; line-height: 1.4;">Complete CI/CD with multi-architecture builds, code signing, and secure distribution.</p>
+            </div>
+        </div>
     </div>
 
-    <!-- Copyright section -->
-    <h2>Copyright Information</h2>
-    <div class="copyright-section">
-        <p>
-            All source code © Joshua McKnight, 2025. All rights reserved.<br />
-            Artwork © Kiah Baxter-Ferguson and Joshua McKnight, 2025. All rights reserved.<br />
-            <br />
-            'Hazard!' emulates the ruleset of 'Risk: The Game of Global Domination' by Hasbro, Inc.<br />
-            'Risk: The Game of Global Domination' is © 2020 Hasbro, Inc. All rights reserved.<br />
-            This application is not endorsed by, or affiliated with, Hasbro, Inc.<br />
-            <br />
-            This application is solely intended as a learning tool and demonstration of software development.<br />
-            It is not for commercial use, and no revenue or profit will be generated from this application.<br />
+    <!-- Deployment Information -->
+    <div class="presentation-box">
+        <h3 style="color: #31c1cc;">🚀 Deployment & Distribution</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: .5rem;">
+            <div style="background: #2a3141; padding: 1.5rem; border-radius: 8px; border: 1px solid #31c1cc;">
+                <h4 style="color: #31c1cc; margin-bottom: 0.5rem;">📦 Multi-Architecture MSIX</h4>
+                <p style="font-size: 0.9rem; line-height: 1.4;">Self-contained packages for x64 and ARM64 with Microsoft-verified code signatures via Azure Trusted Signing.</p>
+            </div>
+            <div style="background: #2a3141; padding: 1.5rem; border-radius: 8px; border: 1px solid #31c1cc;">
+                <h4 style="color: #31c1cc; margin-bottom: 0.5rem;">🔒 Secure Distribution</h4>
+                <p style="font-size: 0.9rem; line-height: 1.4;">Time-limited download links with escalating rate limiting and persistent ban management prevent abuse.</p>
+            </div>
+            <div style="background: #2a3141; padding: 1.5rem; border-radius: 8px; border: 1px solid #31c1cc;">
+                <h4 style="color: #31c1cc; margin-bottom: 0.5rem;">⚙️ CI/CD Pipeline</h4>
+                <p style="font-size: 0.9rem; line-height: 1.4;">Automated Azure DevOps pipeline with federated authentication and cost-optimized storage management.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="call-to-action">
+        <h2>Explore the Engineering</h2>
+        <p style="font-size: 1.1rem; margin-bottom: 2rem;">
+            Explore architecture and features, try the application, review the code, or reach out!
         </p>
+        <div class="button-container">
+            <a href="#" data-content="Features.html" class="cta-button primary dynamic-link">
+                <i class="fa-solid fa-code"></i> Tech Features
+            </a>
+            <a href="https://github.com/LivingCryogen/Hazard" class="cta-button">
+                <i class="fa-brands fa-github"></i> Source Code
+            </a>
+            <a href="#" data-content="Contact.html" class="cta-button dynamic-link">
+                <i class="fa-solid fa-envelope"></i> Contact
+            </a>
+        </div>
+    </div>
+
+    <div style="background: #2a3141; padding: 2rem; border-radius: 8px; margin: 2rem 0; font-size: 0.9rem; line-height: 1.6;" id="CopyrightInfo">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            <div>
+                <h4 style="color: #31c1cc; margin-bottom: 1rem;">📋 Software License</h4>
+                <p><strong>All source code</strong> © Joshua McKnight, 2025. All rights reserved.</p>
+                <p><strong>Artwork</strong> © Kiah Baxter-Ferguson and Joshua McKnight, 2025. All rights reserved.</p>
+            </div>
+            <div>
+                <h4 style="color: #31c1cc; margin-bottom: 1rem;">🎲 Game Mechanics</h4>
+                <p>Hazard! emulates the ruleset of 'Risk: The Game of Global Domination' by Hasbro, Inc.</p>
+                <p>'Risk: The Game of Global Domination' is © 2020 Hasbro, Inc. All rights reserved.</p>
+                <p style="font-style: italic;">This application is not endorsed by, or affiliated with, Hasbro, Inc.</p>
+            </div>
+        </div>
+        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #31c1cc; text-align: center;">
+            <p style="font-weight: bold; color: #31c1cc;">Educational & Portfolio Purpose</p>
+            <p>This application is solely intended as a learning tool and demonstration of software development capabilities. It is not for commercial use, and no revenue or profit will be generated from this application.</p>
+        </div>
     </div>
 </body>
 </html>

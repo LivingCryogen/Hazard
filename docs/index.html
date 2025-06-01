@@ -4,8 +4,14 @@
     <meta charset="utf-8" />
     <title>Josh McKnight - Software Engineer - Portfolio Project #1</title>
     <link rel="stylesheet" href="stylesheet.css">
-    <!-- Added Font Awesome for tech stack icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Add Prism.js for syntax highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+    <script src="nav.js"></script>
 </head>
 <body>
     <div class="content-wrapper">
@@ -76,25 +82,37 @@
 
         <!-- Call to action buttons -->
         <div class="cta-container">
-            <a href="#" data-content="Contact.html" class="cta-button dynamic-link" id="contactPage">Contact</a>
-            <a href="https://github.com/LivingCryogen/Hazard" class="cta-button primary">
-                <i class="fa-brands fa-github"></i> Code Repo
-            </a>
-            <a href="#" data-content="Features.html" class="cta-button dynamic-link">
-                <i class="fa-solid fa-code"></i> Tech Features
-            </a>
-            <a href="#" class="cta-button" id="demoButton">
-                <i class="fa-solid fa-play"></i> Demo
-            </a>
-            <a href="#" data-content="About.html" class="cta-button dynamic-link">
-                <i class="fa-solid fa-info-circle"></i> About
-            </a>
-            <a href="docs.html" class="cta-button" id="docsButton">
-                <i class="fa-solid fa-book-open"></i> Docs
-            </a>
-            <a href="#" class="cta-button" id="downloadButton">
-                <i class="fa-solid fa-download"></i> Download
-            </a>
+            <!-- Primary tier - core technical showcase -->
+            <div class="cta-primary">
+                <a href="https://github.com/LivingCryogen/Hazard" class="cta-button primary">
+                    <i class="fa-brands fa-github"></i> Repo
+                </a>
+                <a href="#" class="cta-button" id="demoButton">
+                    <i class="fa-solid fa-play"></i> Demo
+                </a>
+                <a href="#" data-content="Features.html" class="cta-button dynamic-link">
+                    <i class="fa-solid fa-code"></i> Features
+                </a>
+                <a href="#" data-content="TestStrategy.html" class="cta-button dynamic-link">
+                    <i class="fa-solid fa-vial"></i> Testing
+                </a>
+            </div>
+            <!-- Secondary tier - supporting content -->
+            <div class="cta-secondary">
+                <a href="#" class="cta-button" id="downloadButton">
+                    <i class="fa-solid fa-download"></i> Download
+                </a>
+                <a href="#" data-content="Deployment.html" class="cta-button dynamic-link">
+                    <i class="fa-solid fa-cloud-upload-alt"></i> Deployment
+                </a>
+                <a href="#" data-content="About.html" class="cta-button dynamic-link">
+                    <i class="fa-solid fa-info-circle"></i> About
+                </a>
+                <a href="docs.html" class="cta-button" id="docsButton">
+                    <i class="fa-solid fa-book-open"></i> Docs
+                </a>
+                <a href="#" data-content="Contact.html" class="cta-button dynamic-link" id="contactPage">Contact</a>
+            </div>
         </div>
     </div>
     <br />
@@ -166,137 +184,37 @@
         </div>
     </div>
 
-    <script>
-        // Add JavaScript for functionality
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Load Features.html by default
-            try {
-                const defaultSource = await fetch('Features.html');
-                const defaultInnerHTML = await (defaultSource.text());
-                document.getElementById('content-area').innerHTML = defaultInnerHTML;
+    <div id="codeModal" class="code-modal">
+        <div class="code-modal-content">
+            <div class="code-modal-header">
+                <span id="codeModalTitle">Code Snippet</span>
+                <div>
+                    <button class="copy-code-btn" id="copyCodeBtn">Copy Code</button>
+                    <button class="close-code-modal" id="closeCodeModal">&times;</button>
+                </div>
+            </div>
+            <div class="code-modal-body">
+                <pre class="code-snippet" id="codeModalContent"><code></code></pre>
+            </div>
+        </div>
+    </div>
 
-                // Balance heights for code-with-text sections after loading
-                setTimeout(balanceHeights, 100);
-            } catch (error) {
-                console.error('Error loading default content:', error);
-            }
-
-            // Set up dynamic links
-            document.querySelectorAll('.dynamic-link').forEach(link => {
-                link.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    try {
-                        const contentPath = link.dataset.content;
-                        const response = await fetch(contentPath);
-                        const html = await response.text();
-                        document.getElementById('content-area').innerHTML = html;
-
-                        // If Features.html is loaded, balance heights
-                        if (contentPath === 'Features.html') {
-                            setTimeout(balanceHeights, 100);
-                        }
-
-                        // Scroll to content area
-                        document.getElementById('content-area').scrollIntoView({ behavior: 'smooth' });
-                    } catch (error) {
-                        console.error('Error loading content:', error);
-                    }
-                });
-            });
-
-            // Demo modal
-            const demoButton = document.getElementById('demoButton');
-            const demoModal = document.getElementById('demoModal');
-
-            if (demoButton && demoModal) {
-                demoButton.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    demoModal.style.display = 'block';
-                });
-            }
-
-            // Download modal
-            const downloadButton = document.getElementById('downloadButton');
-            const downloadModal = document.getElementById('downloadModal');
-
-            if (downloadButton && downloadModal) {
-                downloadButton.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    downloadModal.style.display = 'block';
-                });
-            }
-
-            // Close modals
-            const closeModals = document.querySelectorAll('.close-modal');
-            closeModals.forEach(closeBtn => {
-                closeBtn.addEventListener('click', () => {
-                    document.querySelectorAll('.modal').forEach(modal => {
-                        modal.style.display = 'none';
-                    });
-                });
-            });
-
-            // Close modal when clicking outside
-            window.addEventListener('click', (e) => {
-                document.querySelectorAll('.modal').forEach(modal => {
-                    if (e.target === modal) {
-                        modal.style.display = 'none';
-                    }
-                });
-            });
-
-            // Image gallery navigation
-            const galleryDots = document.querySelectorAll('.gallery-dot');
-            const galleryImages = document.querySelectorAll('.gallery-img');
-
-            galleryDots.forEach(dot => {
-                dot.addEventListener('click', () => {
-                    const index = dot.dataset.index;
-
-                    // Update active classes
-                    document.querySelector('.gallery-dot.active').classList.remove('active');
-                    dot.classList.add('active');
-
-                    document.querySelector('.gallery-img.active').classList.remove('active');
-                    galleryImages[index].classList.add('active');
-                });
-            });
-        });
-
-        // Function to balance heights for code snippets and text
-        function balanceHeights() {
-            const containers = document.querySelectorAll('#content-area .code-with-text');
-
-            containers.forEach(container => {
-                const codeElement = container.querySelector('.code-snippet') || container.querySelector('pre');
-                const textElement = container.querySelector('.image-text');
-
-                if (!codeElement || !textElement) return;
-
-                codeElement.style.maxHeight = 'none';
-                textElement.style.maxHeight = 'none';
-
-                const codeScrollHeight = codeElement.scrollHeight;
-                const textScrollHeight = textElement.scrollHeight;
-
-                const minHeight = Math.min(codeScrollHeight, textScrollHeight);
-                const heightWithBuffer = minHeight + 1;
-
-                codeElement.style.maxHeight = `${heightWithBuffer}px`;
-                textElement.style.maxHeight = `${heightWithBuffer}px`;
-
-                codeElement.classList.add('height-balanced');
-                textElement.classList.add('height-balanced');
-            });
-        }
-
-        // Run when window is resized
-        window.addEventListener('resize', function () {
-            // Check if Features.html is loaded
-            if (document.querySelector('.code-with-text')) {
-                balanceHeights();
-            }
-        });
-    </script>
+    <div id="metricsModal" class="modal">
+        <div class="modal-content" style="width: 95%; max-width: 1400px; height: 90vh; padding: 0; border-radius: 10px; overflow: hidden;">
+            <div style="background: #31c1cc; color: #2a3141; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0;">Testing Metrics Dashboard</h3>
+                <span class="close-modal" style="cursor: pointer; font-size: 1.5rem;">&times;</span>
+            </div>
+            <iframe id="metricsFrame"
+                    src="TestingMetrics.html"
+                    style="width: 100%; height: calc(100% - 60px); border: none; background: white;"
+                    title="Testing Metrics Dashboard">
+            </iframe>
+            <div style="background: #f8f9fa; padding: 10px 20px; font-size: 0.85rem; color: #666; text-align: center;">
+                <i class="fa-solid fa-robot" style="margin-right: 5px;"></i>
+                Dashboard generated by Claude Sonnet 4 | Industry-standard code coverage analysis
+            </div>
+        </div>
+    </div>
 </body>
 </html>
