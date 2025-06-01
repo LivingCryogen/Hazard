@@ -1,10 +1,10 @@
 # Hazard!
 ## Architecture
 
-Note: I took on this demonstration project ***as if* it were to be extended and worked on by teams** in a modern development environment. Smart, incremental development was the goal. This is definitely *not* the simplest way you could develop a board game!
+Note: I took on this demonstration project ***as if* it were to be extended and worked on by teams** in a modern development environment. Smart, incremental development was the goal. (This is definitely *not* the simplest way you could develop a board game!)
    
 ## External Dependencies
-*Hazard!* relies on the following packages:
+*Hazard!*'s core relies on the following packages:
 
 **Third-Party**
 1. System.IO.Abstractions v 21.0.29, by Tatham Oddie & friends
@@ -23,9 +23,9 @@ Note: I took on this demonstration project ***as if* it were to be extended and 
 4. .DependencyInjection
 
 ## Staging Unit Tests
-Around 50 MSTest unit tests help check up on the functioning of crucial systems like the Data Access Layer (AssetFetcher, AssetFactory, DataProvider, and converters), the Registry (TypeRegister and its initializer), and the Binary Serializer. This latter one was a pleasure to work on because I lighted on the "round-trip" test pattern quite on my own!
+Around 50 MSTest unit tests verify the functioning of crucial systems.
 
-Tests should be enabled once you have the complete source code in an IDE and you install the Microsoft.Net.Test.Sdk v 17.11, the MSTest.TestFramework v 3.5.2, and the MSTest.TestAdapter v3.5.2 (available via nuget). The tests are in their own separate project (.csproj): Model.UnitTests.
+Tests should be enabled once you have the complete source code of the "Model," "Model.UnitTests," and "Shared" projects in an IDE with Microsoft.Net.Test.Sdk, the MSTest.TestFramework, and the MSTest.TestAdapter installed (available via nuget).
 
 ## Copyright Information
 All source code © Joshua McKnight, 2024. All rights reserved.  
