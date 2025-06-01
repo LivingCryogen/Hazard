@@ -1,5 +1,6 @@
 # Hazard!
-## Architecture
+## Details
+For full details: https://livingcryogen.github.io/Hazard/.
 
 Note: I took on this demonstration project ***as if* it were to be extended and worked on by teams** in a modern development environment. Smart, incremental development was the goal. (This is definitely *not* the simplest way you could develop a board game!)
    
