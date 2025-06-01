@@ -146,17 +146,18 @@ steps:
         <div>
             <pre class="code-snippet">
             <code class="language-csharp">
-// Azure Function - Secure SAS token generation with architecture detection
+                // Azure Function - Secure SAS token generation with architecture detection
 [Function("hazardgamesecurelink")]
-public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+public async Task&lt;IActionResult&gt; Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
 {
     logger.LogInformation("C# HTTP trigger function processed a request.");
 
     // Architecture detection from query parameters
-    string architecture = req.QueryString.Value switch {
-        string value when value.Contains("x64") => "x64",
-        string value when value.Contains("ARM") => "ARM64", 
-        _ => string.Empty
+    string architecture = req.QueryString.Value switch 
+    {
+        string value when value.Contains("x64") =&gt; "x64",
+        string value when value.Contains("ARM") =&gt; "ARM64", 
+        _ =&gt; string.Empty
     };
 
     // Environment configuration validation
@@ -170,7 +171,8 @@ public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "
     if (string.IsNullOrEmpty(storageString) || string.IsNullOrEmpty(storageKey) || 
         string.IsNullOrEmpty(accountName) || string.IsNullOrEmpty(containerName) || 
         string.IsNullOrEmpty(blobPrefix) || string.IsNullOrEmpty(blobExtension) || 
-        string.IsNullOrEmpty(architecture)) {
+        string.IsNullOrEmpty(architecture)) 
+    {
         logger.LogError("Application settings invalid.");
         return new StatusCodeResult(StatusCodes.Status500InternalServerError);
     }
@@ -178,23 +180,30 @@ public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "
     Uri storageUri = new(storageString);
     string blobName = $"{blobPrefix}{architecture}{blobExtension}";
 
-    try {
+    try 
+    {
         // Resilient blob client configuration
-        var options = new BlobClientOptions() {
-            Retry = {
+        var options = new BlobClientOptions() 
+        {
+            Retry = 
+            {
                 MaxRetries = 3,
                 Mode = RetryMode.Exponential,
             },
-            Diagnostics = {
+            Diagnostics = 
+            {
                 IsLoggingEnabled = true,
             }
         };
 
         // Azure Storage authentication with shared key credential
         StorageSharedKeyCredential credential;
-        try {
+        try 
+        {
             credential = new StorageSharedKeyCredential(accountName, storageKey);
-        } catch (Exception ex) {
+        } 
+        catch (Exception ex) 
+        {
             logger.LogError(ex, "Azure Function failed to authenticate with Storage account {name}.", accountName);
             return new StatusCodeResult(StatusCodes.Status401Unauthorized);
         }
@@ -204,20 +213,23 @@ public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "
         BlobContainerClient blobContainerClient = blobServiceClient.GetBlobContainerClient(containerName);
         
         bool containerExists = await blobContainerClient.ExistsAsync();
-        if (!containerExists) {
+        if (!containerExists) 
+        {
             logger.LogError("Blob container named {name} did not exist.", containerName);
             return new StatusCodeResult(StatusCodes.Status404NotFound);
         }
 
         BlobClient blobClient = blobContainerClient.GetBlobClient(blobName);
         bool blobExists = await blobClient.ExistsAsync();
-        if (!blobExists) {
+        if (!blobExists) 
+        {
             logger.LogError("Blob named {name} did not exist.", blobName);
             return new StatusCodeResult(StatusCodes.Status404NotFound);
         }
 
         // Time-limited SAS token generation (5 minutes)
-        BlobSasBuilder sasBuilder = new() {
+        BlobSasBuilder sasBuilder = new() 
+        {
             BlobContainerName = containerName,
             BlobName = blobName,
             Resource = "b", // Individual file access
@@ -229,7 +241,9 @@ public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "
         var token = sasBuilder.ToSasQueryParameters(credential).ToString();
         return new JsonResult(new { Uri = blobClient.Uri.ToString(), SasToken = token });
 
-    } catch (Exception ex) {
+    } 
+    catch (Exception ex) 
+    {
         logger.LogError(ex, "Error generating SAS token and/or secure URL: {message}.", ex.Message);
         return new StatusCodeResult(StatusCodes.Status500InternalServerError);
     }
@@ -256,8 +270,8 @@ public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "
         <div>
             <pre class="code-snippet">
             <code class="language-csharp">
-// Sophisticated rate limiting with escalating ban system
-public class BanService(ILogger<BanService> logger, IConfiguration config, IBanCache cache)
+// Rate limiting with escalating ban system
+public class BanService(ILogger&lt;BanService&gt; logger, IConfiguration config, IBanCache cache)
 {
     private readonly TimeSpan[] _banSpans = [
         double.TryParse(config["FirstBanMinutes"], out var firstBanMinutes) ?
@@ -271,7 +285,8 @@ public class BanService(ILogger<BanService> logger, IConfiguration config, IBanC
     public bool Allow(string address, int requests)
     {
         // Check request limit, issue ban and reject if exceeded
-        if (requests > _maxRequests) {
+        if (requests &gt; _maxRequests) 
+        {
             IssueBan(address);
             return false;
         }
@@ -287,7 +302,7 @@ public class BanService(ILogger<BanService> logger, IConfiguration config, IBanC
             return true;
 
         // Handle temporary bans with automatic expiration
-        if (ban?.Expiration > DateTime.UtcNow)
+        if (ban?.Expiration &gt; DateTime.UtcNow)
             return false;
 
         SetUnbanned(address, ban);
@@ -298,36 +313,39 @@ public class BanService(ILogger<BanService> logger, IConfiguration config, IBanC
     public void IssueBan(string address)
     {
         _cache.AddOrUpdateBan(address,
-            _ => new(Ban.BanType.Temp, DateTime.UtcNow + _banSpans[0]), // First offense: 30 min
-            (_, oldBan) => new(
-                oldBan.BanCount >= 3 ? Ban.BanType.Life : Ban.BanType.Temp, // Life ban after 3 strikes
+            _ =&gt; new(Ban.BanType.Temp, DateTime.UtcNow + _banSpans[0]), // First offense: 30 min
+            (_, oldBan) =&gt; new(
+                oldBan.BanCount &gt;= 3 ? Ban.BanType.Life : Ban.BanType.Temp, // Life ban after 3 strikes
                 oldBan.BanCount + 1,
-                oldBan.BanCount >= 0 && oldBan.BanCount < 3 ?
+                oldBan.BanCount &gt;= 0 && oldBan.BanCount &lt; 3 ?
                     DateTime.UtcNow + _banSpans[oldBan.BanCount] : DateTime.MaxValue)
         );
     }
 }
 
 // Thread-safe request counting with automatic reset windows
-public class RequestHandler(ILogger<RequestHandler> logger, IConfiguration config, BanService banService)
+public class RequestHandler(ILogger&lt;RequestHandler&gt; logger, IConfiguration config, BanService banService)
 {
     private readonly TimeSpan _requestReset = TimeSpan.FromMinutes(
         double.TryParse(config["RequestResetMinutes"], out double minutes) ? minutes : 15);
     
-    private readonly ConcurrentDictionary<string, (DateTime LastReset, int Count)> _requestCounters = new();
+    private readonly ConcurrentDictionary&lt;string, (DateTime LastReset, int Count)&gt; _requestCounters = new();
 
     public bool ValidateRequest(string iPaddress)
     {
         // Ensure ban cache is initialized before processing requests
-        if (!_banService.CacheInitialized) {
+        if (!_banService.CacheInitialized) 
+        {
             int timeOut = 10000;
             int checkInterval = 100;
             int timeSpent = 0;
 
-            while (!_banService.CacheInitialized) {
+            while (!_banService.CacheInitialized) 
+            {
                 Thread.Sleep(checkInterval);
                 timeSpent += checkInterval;
-                if (timeSpent > timeOut) {
+                if (timeSpent &gt; timeOut) 
+                {
                     _logger.LogError("Cache initialization timed out.");
                     return false;
                 }
@@ -336,9 +354,9 @@ public class RequestHandler(ILogger<RequestHandler> logger, IConfiguration confi
 
         // Thread-safe request counter with automatic window reset
         var (LastReset, Count) = _requestCounters.AddOrUpdate(iPaddress,
-            _ => (DateTime.UtcNow, 1),  // New IP gets fresh counter
-            (_, oldValue) => // Existing IP: reset window if expired, otherwise increment
-                (DateTime.UtcNow - oldValue.LastReset > _requestReset) ? 
+            _ =&gt; (DateTime.UtcNow, 1),  // New IP gets fresh counter
+            (_, oldValue) =&gt; // Existing IP: reset window if expired, otherwise increment
+                (DateTime.UtcNow - oldValue.LastReset &gt; _requestReset) ? 
                     (DateTime.UtcNow, 1) : (oldValue.LastReset, oldValue.Count + 1));
 
         return _banService.Allow(iPaddress, Count);
@@ -352,14 +370,18 @@ public class BanListTableManager : IHostedService
     {
         _logger.LogInformation("Beginning Table Update....");
         
-        try {
-            foreach (string address in _cache.GetUpdatedAddresses()) {
-                if (!_cache.TryGetBan(address, out Ban? ban) || ban == null) {
+        try 
+        {
+            foreach (string address in _cache.GetUpdatedAddresses()) 
+            {
+                if (!_cache.TryGetBan(address, out Ban? ban) || ban == null) 
+                {
                     _logger.LogWarning("Table Manager failed to get updated ban from cache for address {address}.", address);
                     continue;
                 }
 
-                BanListEntry updatedEntry = new() {
+                BanListEntry updatedEntry = new() 
+                {
                     PartitionKey = _partitionKey,
                     RowKey = address,
                     Timestamp = DateTime.UtcNow,
@@ -370,12 +392,14 @@ public class BanListTableManager : IHostedService
                 };
 
                 // Handle new vs. existing entries appropriately
-                if (ban.TimeStamp > _bootTime && ban.BanCount == 1)
+                if (ban.TimeStamp &gt; _bootTime && ban.BanCount == 1)
                     _ = NewEntry(address, updatedEntry);
                 else
                     _ = UpdateEntry(address, updatedEntry);
             }
-        } catch (Exception ex) {
+        } 
+        catch (Exception ex) 
+        {
             _logger.LogError(ex, "Table Update failed: {message}", ex.Message);
         }
     }
@@ -383,12 +407,13 @@ public class BanListTableManager : IHostedService
     // Automatic cleanup reduces storage costs
     private bool ShouldPrune(BanListEntry entry)
     {
-        return entry switch {
-            { IsLifetime: true } => false, // Never prune permanent bans
-            { NowBanned: true } when DateTime.UtcNow - entry.Timestamp < _entryDuration => false,
-            { NowBanned: true } when DateTime.UtcNow - entry.Timestamp > _entryDuration => true,
-            { NowBanned: false } when DateTime.UtcNow - entry.Timestamp > _entryDuration => true,
-            _ => false
+        return entry switch 
+        {
+            { IsLifetime: true } =&gt; false, // Never prune permanent bans
+            { NowBanned: true } when DateTime.UtcNow - entry.Timestamp &lt; _entryDuration =&gt; false,
+            { NowBanned: true } when DateTime.UtcNow - entry.Timestamp &gt; _entryDuration =&gt; true,
+            { NowBanned: false } when DateTime.UtcNow - entry.Timestamp &gt; _entryDuration =&gt; true,
+            _ =&gt; false
         };
     }
 }
