@@ -97,9 +97,12 @@ public class MockGeographyInitializer
             return false;
         if (Enum.ToObject(TerritoryEnumType, territoryName) is not Enum territoryEnum)
             return false;
-        try {
+        try
+        {
             ContinentMembers[continentEnum].Add(territoryEnum);
-        } catch {
+        }
+        catch
+        {
             return false;
         }
         return true;

@@ -53,9 +53,12 @@ namespace Bootstrap
         {
             // Check if application is running as MSIX package (ie, was installed and running after public distribution)
             // If so, it's containerized and Environment.CurrentDirectory won't work.
-            try {
+            try
+            {
                 return Package.Current.InstalledLocation.Path;
-            } catch (Exception) {
+            }
+            catch (Exception)
+            {
                 return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)!;
             }
         }
@@ -81,13 +84,15 @@ namespace Bootstrap
                     settingSoundFileNames.AddRange(builtConfig.GetSection("SoundFileNames").Get<string[]>() ?? []);
                     cardDataSearchString = (string?)(builtConfig.GetValue(typeof(string), "CardDataSearchString")) ?? string.Empty;
 
-                    for (int i = 0; i < settingDataFileNames.Count; i++) {
+                    for (int i = 0; i < settingDataFileNames.Count; i++)
+                    {
                         // Appconfig should only have 1 path discovered per file name, so we take only the first in the returned collection.
                         dataFileLocations.Add(
                             settingDataFileNames[i],
                             DataFileFinder.FindFiles(appPath, settingDataFileNames[i])[0]);
                     }
-                    for (int i = 0; i < settingSoundFileNames.Count; i++) {
+                    for (int i = 0; i < settingSoundFileNames.Count; i++)
+                    {
                         // Appconfig should only have 1 path discovered per file name, so we take only the first in the returned collection.
                         soundFileLocations.Add(
                             settingSoundFileNames[i],

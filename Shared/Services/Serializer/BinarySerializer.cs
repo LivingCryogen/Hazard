@@ -174,27 +174,35 @@ public static class BinarySerializer
     {
         await Task.Run(() =>
         {
-            if (newFile) {
+            if (newFile)
+            {
                 using FileStream fileStream = new(fileName, FileMode.Create, FileAccess.Write);
                 using BinaryWriter writer = new(fileStream);
 
                 foreach (var obj in serializableObjects)
-                    try {
+                    try
+                    {
                         if (!WriteSerializableObject(obj, writer).Result)
                             _logger?.LogWarning("BinarySerializer failed to write {Object}.", obj);
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e)
+                    {
                         _logger?.LogError("An exception was thrown when attempting to write {obj}: {Message}.", obj, e.Message);
                     }
             }
-            else {
+            else
+            {
                 using FileStream fileStream = new(fileName, FileMode.Truncate, FileAccess.Write);
                 using BinaryWriter writer = new(fileStream);
 
                 foreach (var obj in serializableObjects)
-                    try {
+                    try
+                    {
                         if (!WriteSerializableObject(obj, writer).Result)
                             _logger?.LogWarning("BinarySerializer failed to write {Object}.", obj);
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e)
+                    {
                         _logger?.LogError("An exception was thrown when attempting to write {obj}: {Message}.", obj, e.Message);
                     }
             }
@@ -212,10 +220,14 @@ public static class BinarySerializer
         using BinaryReader reader = new(fileStream);
 
         bool errors = false;
-        foreach (var obj in serializableObjects) {
-            try {
+        foreach (var obj in serializableObjects)
+        {
+            try
+            {
                 obj.LoadFromBinary(reader);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 _logger?.LogError("{Message}.", ex.Message);
                 errors = true;
             }
@@ -234,10 +246,14 @@ public static class BinarySerializer
         using BinaryReader reader = new(fileStream);
 
         bool errors = false;
-        foreach (var obj in serializableObjects) {
-            try {
+        foreach (var obj in serializableObjects)
+        {
+            try
+            {
                 obj.LoadFromBinary(reader);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 _logger?.LogError("{Message}.", ex.Message);
                 errors = true;
             }
@@ -247,15 +263,19 @@ public static class BinarySerializer
     }
     private async static Task<bool> WriteSerializableObject(IBinarySerializable serializableObject, BinaryWriter writer)
     {
-        try {
-            if (await serializableObject.GetBinarySerials() is not SerializedData[] saveData) {
+        try
+        {
+            if (await serializableObject.GetBinarySerials() is not SerializedData[] saveData)
+            {
                 _logger?.LogError("BinarySerializer failed to write {object} because it did not return a valid SerializedData[].", serializableObject);
                 return false;
             }
 
-            foreach (SerializedData saveDatum in saveData) {
+            foreach (SerializedData saveDatum in saveData)
+            {
 
-                switch (saveDatum) {
+                switch (saveDatum)
+                {
                     case { MemberType: not null, Tag: not null }: // Tagged Collection
                         WriteTaggedConvertibles(writer, saveDatum.MemberType, saveDatum.SerialValues, saveDatum.Tag);
                         break;
@@ -273,7 +293,9 @@ public static class BinarySerializer
                         break;
                 }
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             _logger?.LogError("{Message}.", ex.Message);
             return false;
         }
@@ -286,7 +308,8 @@ public static class BinarySerializer
     /// <returns><see langword="true"/> if objects of type <paramref name="type"/> are serializable by <see cref="BinarySerializer"/>.</returns>
     public static bool IsSerializable(Type type)
     {
-        return type switch {
+        return type switch
+        {
             Type t when t == typeof(string) => true,
             Type t when t.IsEnum => t.GetEnumUnderlyingType() == typeof(int),
             Type t when t.IsPrimitive => true,
@@ -302,28 +325,34 @@ public static class BinarySerializer
     /// <returns><see langword="true"/> if the collection is a collection of IConvertibles; otherwise, <see langword="false"/>.</returns>
     public static bool IsIConvertibleCollection(Type type, out Type? memberType)
     {
-        if (!typeof(IEnumerable).IsAssignableFrom(type) || type == typeof(string)) {
+        if (!typeof(IEnumerable).IsAssignableFrom(type) || type == typeof(string))
+        {
             memberType = null;
             return false;
         }
 
         // test if an Array contains IConvertible elements
-        if (type.IsArray) {
+        if (type.IsArray)
+        {
             var elementType = type.GetElementType();
             memberType = elementType;
             return typeof(IConvertible).IsAssignableFrom(elementType);
         }
 
         // test if a non-generic IEnumerable contains IConvertible elements
-        if (!type.IsGenericType) {
+        if (!type.IsGenericType)
+        {
 
-            if (Activator.CreateInstance(type) is not IEnumerable testInstance) {
+            if (Activator.CreateInstance(type) is not IEnumerable testInstance)
+            {
                 memberType = null;
                 return false;
             }
             Type? elementType = null;
-            foreach (var element in testInstance) {
-                if (element is not IConvertible) {
+            foreach (var element in testInstance)
+            {
+                if (element is not IConvertible)
+                {
                     memberType = null;
                     return false;
                 }
@@ -339,13 +368,16 @@ public static class BinarySerializer
         // Find the IEnumerable<> interface
         var typeInterfaces = type.GetInterfaces();
         Type? genericType = null;
-        foreach (var iFace in typeInterfaces) {
-            if (iFace.IsGenericType && iFace.GetGenericTypeDefinition() == typeof(IEnumerable<>)) {
+        foreach (var iFace in typeInterfaces)
+        {
+            if (iFace.IsGenericType && iFace.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            {
                 genericType = iFace.GetGenericArguments()[0];
                 break;
             }
         }
-        if (genericType != null) {
+        if (genericType != null)
+        {
             memberType = genericType;
             return typeof(IConvertible).IsAssignableFrom(genericType);
         }
@@ -360,10 +392,13 @@ public static class BinarySerializer
     public static IConvertible[] ToIConvertibleCollection(IEnumerable collection)
     {
         List<IConvertible> propConvertibles = [];
-        foreach (var value in collection) {
-            try {
+        foreach (var value in collection)
+        {
+            try
+            {
                 propConvertibles.Add((IConvertible)value);
-            } catch { continue; }
+            }
+            catch { continue; }
         }
         return [.. propConvertibles];
     }

@@ -33,7 +33,8 @@ public partial class MainVM(IGameService gameService,
         if (sender is not StateMachine stateMachine || string.IsNullOrEmpty(propName))
             return;
 
-        switch (propName) {
+        switch (propName)
+        {
             case "CurrentPhase":
                 CurrentPhase = stateMachine.CurrentPhase;
                 TerritorySelected = TerrID.Null;
@@ -56,14 +57,16 @@ public partial class MainVM(IGameService gameService,
         if (e is not TerritoryChangedEventArgs || Territories == null || PlayerDetails == null)
             return;
 
-        if (e.Player == null) {
+        if (e.Player == null)
+        {
             Territories[(int)e.Changed].Armies = CurrentGame?.Board.Armies[e.Changed] ?? 0;
             int owner = CurrentGame?.Board.TerritoryOwner[e.Changed] ?? -1;
             if (owner > -1)
                 PlayerDetails[owner].NumArmies = base.SumArmies(owner);
 
         }
-        else if (e.Player > -2 && e.Player < NumPlayers) {
+        else if (e.Player > -2 && e.Player < NumPlayers)
+        {
             Territories[(int)e.Changed].PlayerOwner = CurrentGame?.Board.TerritoryOwner[e.Changed] ?? -1;
             Territories[(int)e.Changed].Armies = CurrentGame?.Board.Armies[e.Changed] ?? -1;
             if ((int)e.Player > -1)
@@ -101,17 +104,20 @@ public partial class MainVM(IGameService gameService,
 
 
         // determine if request for Attack or Move are made, then invoke them
-        if (!RequestInput) {
+        if (!RequestInput)
+        {
             // For whatever reason the CommandManager auto-detection does not always function
             // manual Notification is sometimes needed
             TerritorySelectCommand.NotifyCanExecuteChanged();
             return;
         }
-        if (MaxValue != null) {
+        if (MaxValue != null)
+        {
             Territories[(int)oldSelect].IsSelected = false;
             if (MaxValue > 1)
                 base.RaiseAdvanceRequest(oldSelect, newSelect, 1, (int)MaxValue, false);
-            else if (MaxValue == 1) {
+            else if (MaxValue == 1)
+            {
                 (TerrID Source, TerrID Target, int NumAdvance) advanceParams = (oldSelect, newSelect, 1);
                 if (base.CanAdvance(advanceParams))
                     base.AdvanceCommand.Execute(advanceParams);

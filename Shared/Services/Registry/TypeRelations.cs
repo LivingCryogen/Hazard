@@ -25,8 +25,10 @@ public class TypeRelations : ITypeRelations
     /// <inheritdoc cref="ITypeRelations.IsEmpty"/>
     public bool IsEmpty { get => _relatedObjects.Count == 0; }
     /// <inheritdoc cref="ITypeRelations.this[RegistryRelation]"/>
-    public object? this[RegistryRelation relation] {
-        get {
+    public object? this[RegistryRelation relation]
+    {
+        get
+        {
             if (_relatedObjects.TryGetValue(relation, out object? value))
                 return value;
 
@@ -41,7 +43,8 @@ public class TypeRelations : ITypeRelations
     {
         if (_relatedObjects.ContainsKey(relation))
             throw new ArgumentException("This object has already been related (A given object can be related to a Type only once).", nameof(obj));
-        switch (relation) {
+        switch (relation)
+        {
             case RegistryRelation.Name:
                 if (obj is not string)
                     throw new ArgumentException($"{obj} is not a string. {relation} only targets objects of type string.");

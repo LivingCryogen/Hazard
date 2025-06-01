@@ -71,19 +71,22 @@ public interface ICard : IBinarySerializable
             List<SerializedData> serialData = [];
             // The Name tag must be read on the other end with BinaryReader.ReadString()
             serialData.Add(new SerializedData(typeof(int), SerializablePropertyNames.Count, instanceType.Name));
-            foreach (PropertyInfo propInfo in orderedProperties) {
+            foreach (PropertyInfo propInfo in orderedProperties)
+            {
                 string propName = propInfo.Name;
                 Type propType = propInfo.PropertyType;
                 if (!SerializablePropertyNames.Contains(propName))
                     continue;
-                if (!BinarySerializer.IsSerializable(propType)) {
+                if (!BinarySerializer.IsSerializable(propType))
+                {
                     Logger.LogWarning("{Card} attempted to serialize a property, {Name}, that was not serializable.", this, propName);
                     continue;
                 }
                 if (propInfo.GetValue(this) is not object propValue)
                     continue;
                 IConvertible[] propConvertibles = new IConvertible[1];
-                if (typeof(IEnumerable).IsAssignableFrom(propType) && propInfo.PropertyType != typeof(string)) {
+                if (typeof(IEnumerable).IsAssignableFrom(propType) && propInfo.PropertyType != typeof(string))
+                {
                     propConvertibles = BinarySerializer.ToIConvertibleCollection((IEnumerable)propValue);
                 }
                 else
@@ -101,7 +104,8 @@ public interface ICard : IBinarySerializable
     {
         // The first data point of GetBinarySerials is the Type Name of this card, but this is to be read outside of this Load method (e.g. in CardBase.LoadFromBinary())
         bool loadComplete = true;
-        try {
+        try
+        {
             var cardProps = this.GetType().GetProperties();
             int loadedNumProperties = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
 
@@ -115,24 +119,30 @@ public interface ICard : IBinarySerializable
                 return false;
 
 
-            foreach (string propName in orderedMatchNames) {
+            foreach (string propName in orderedMatchNames)
+            {
                 int numValues = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
                 string readPropName = reader.ReadString();
-                if (readPropName != propName) {
+                if (readPropName != propName)
+                {
                     Logger.LogError("{Card} attempted to load from binary, but there was a property name mismatch.", this);
                     return false;
                 }
-                if (cardProps.Where(prop => prop.Name == readPropName).FirstOrDefault() is not PropertyInfo matchingProperty) {
+                if (cardProps.Where(prop => prop.Name == readPropName).FirstOrDefault() is not PropertyInfo matchingProperty)
+                {
                     Logger.LogError("{Card} attempted to load from binary, but the name of a loaded property, {name}, was not found.", this, readPropName);
                     return false;
                 }
 
                 Type propType = matchingProperty.PropertyType;
-                if (!propType.IsArray) {
+                if (!propType.IsArray)
+                {
                     matchingProperty.SetValue(this, BinarySerializer.ReadConvertible(reader, propType));
                 }
-                else {
-                    if (propType.GetElementType() is not Type elementType) {
+                else
+                {
+                    if (propType.GetElementType() is not Type elementType)
+                    {
                         Logger.LogError("{Card} attempted to load an array property, {name}, from binary, but failed to get its member type.", this, propName);
                         return false;
                     }
@@ -144,7 +154,9 @@ public interface ICard : IBinarySerializable
                         matchingProperty.SetValue(this, BinarySerializer.ReadConvertibles(reader, elementType, numValues));
                 }
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Logger.LogError("An exception was thrown while loading {Card}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
         }

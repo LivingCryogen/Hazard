@@ -16,7 +16,8 @@ namespace Model.Tests.Entities
         public void Setup()
         {
             _testCards = [];
-            for (int i = 0; i < _numCards; i++) {
+            for (int i = 0; i < _numCards; i++)
+            {
                 _testCards.Add(new(_mockSet));
             }
         }
@@ -54,7 +55,8 @@ namespace Model.Tests.Entities
             float targetPercentage = 1.00000f / _numCards; // how often a perfect shuffler would place a given card (of the total numcards) in a given library position
             float varianceLimit = 0.01f; // how much the resulting frequencies may differ from ideal to pass
             float[][] cardResults = new float[_numCards][]; // results table in frequencies
-            for (int i = 0; i < cardResults.Length; i++) {
+            for (int i = 0; i < cardResults.Length; i++)
+            {
                 cardResults[i] = new float[_numCards];
                 for (int j = 0; j < _numCards; j++)
                     cardResults[i][j] = 0;
@@ -65,7 +67,8 @@ namespace Model.Tests.Entities
             /* For each Mock Card, we want a table that records the number of times it appears at a given Library position
              * after an arbitray number of shuffles. This will allow us to test the randomness of the Shuffler. */
             int[][] drawResultsTable = new int[_numCards][]; // Rows for each Card
-            for (int numCard = 0; numCard < _numCards; numCard++) {
+            for (int numCard = 0; numCard < _numCards; numCard++)
+            {
                 drawResultsTable[numCard] = new int[_numCards]; // Library Positions
                 for (int numPositions = 0; numPositions < _numCards; numPositions++) // Initialize table to 0
                     drawResultsTable[numCard][numPositions] = 0;
@@ -73,10 +76,12 @@ namespace Model.Tests.Entities
                 cardIDMap.Add(((MockCard)testDeck.Library[numCard]).ID, numCard); // Slot a row in the table for each unique Card
             }
 
-            for (int i = 0; i < numShuffles; i++) {
+            for (int i = 0; i < numShuffles; i++)
+            {
                 testDeck.Shuffle();
 
-                for (int position = 0; position < _numCards; position++) {
+                for (int position = 0; position < _numCards; position++)
+                {
                     string cardID = ((MockCard)testDeck.Library[position]).ID; // discover which Card is at position
                     int tableRow = cardIDMap[cardID]; // Find the row in the table mapped to this Card numID
                     drawResultsTable[tableRow][position]++; // Increment the count for this library position
@@ -87,18 +92,22 @@ namespace Model.Tests.Entities
              * against acceptable randomness ranges. */
 
             Debug.WriteLine($"Target Frequency: {targetPercentage}.");
-            foreach (var key in cardIDMap.Keys) {
+            foreach (var key in cardIDMap.Keys)
+            {
                 Debug.WriteLine($"  - Card {key} -    Position : Freq");
 
-                for (int i = 0; i < _numCards; i++) {
+                for (int i = 0; i < _numCards; i++)
+                {
                     var result = drawResultsTable[cardIDMap[key]][i] / (float)numShuffles;
                     cardResults[cardIDMap[key]][i] = result;
                     Debug.WriteLine($"                               {i} | {result:F5}");
                 }
             }
 
-            for (int i = 0; i < cardResults.Length; i++) {
-                for (int j = 0; j < cardResults[i].Length; j++) {
+            for (int i = 0; i < cardResults.Length; i++)
+            {
+                for (int j = 0; j < cardResults[i].Length; j++)
+                {
                     var difference = Math.Abs(targetPercentage - cardResults[i][j]);
                     Assert.IsTrue(difference < varianceLimit);
                 }

@@ -63,7 +63,8 @@ public class RegistryInitializer(IOptions<AppConfig> options) : IRegistryInitial
     {
         RegisterGeography(registry);
 
-        foreach (var registryInfo in _cardTypeRegistryRecords) {
+        foreach (var registryInfo in _cardTypeRegistryRecords)
+        {
             TypeRelations cardRelations = new();
             cardRelations.Add(registryInfo.Name, RegistryRelation.Name);
             cardRelations.Add(registryInfo.CardSetType, RegistryRelation.CollectionType);
@@ -71,7 +72,8 @@ public class RegistryInitializer(IOptions<AppConfig> options) : IRegistryInitial
             registry.Register(registryInfo.CardType, cardRelations);
         }
 
-        foreach (var registryInfo in _cardSetTypeRegistryRecords) {
+        foreach (var registryInfo in _cardSetTypeRegistryRecords)
+        {
             TypeRelations cardSetRelations = new();
             cardSetRelations.Add(registryInfo.Name, RegistryRelation.Name);
             cardSetRelations.Add(registryInfo.CardType, RegistryRelation.ElementType);

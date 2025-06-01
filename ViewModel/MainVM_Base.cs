@@ -175,11 +175,13 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         regulator.PromptBonusChoice += OnTerritoryBonusChoice;
         regulator.PromptTradeIn += OnPromptTradeIn;
 
-        if (fileName != null) {
+        if (fileName != null)
+        {
             BinarySerializer.Load([this, CurrentGame, Regulator], fileName);
             colors = ParseColorNames();
         }
-        else {
+        else
+        {
             _colorNames = string.Concat(colors);
             CurrentGame.UpdatePlayerNames(playerNames);
         }
@@ -187,7 +189,8 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         for (int i = 0; i < BoardGeography.NumTerritories; i++)
             Territories.Add(new TerritoryInfo(i) { Armies = CurrentGame.Board.Armies[(TerrID)i] });
 
-        for (int i = 0; i < NumPlayers; i++) {
+        for (int i = 0; i < NumPlayers; i++)
+        {
             PlayerData newPlayerData = new(CurrentGame.Players[i], colors[i], this);
             PlayerDetails.Add(newPlayerData);
         }
@@ -275,11 +278,13 @@ public partial class MainVM_Base : ObservableObject, IMainVM
 
         if (PlayerDetails == null)
             return;
-        if (previousOwner != -1) {
+        if (previousOwner != -1)
+        {
             PlayerDetails[previousOwner].Continents.Remove(e.Changed);
             PlayerDetails[previousOwner].ArmyBonus = CurrentGame?.Players[previousOwner].ArmyBonus ?? 0;
         }
-        if (newOwner != -1) {
+        if (newOwner != -1)
+        {
             PlayerDetails[newOwner].Continents.Add(e.Changed);
             PlayerDetails[newOwner].ArmyBonus = CurrentGame?.Players[newOwner].ArmyBonus ?? 0;
         }
@@ -336,7 +341,8 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         string fileName;
         if (!saveParams.NewFile)
             fileName = _bootStrapper.SaveFileName;
-        else {
+        else
+        {
             fileName = saveParams.FileName;
             _bootStrapper.SaveFileName = fileName;
         }
@@ -446,11 +452,13 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         Round = CurrentGame.State.Round;
         PhaseStageTwo = CurrentGame.State.PhaseStageTwo;
 
-        for (int i = 0; i < Territories.Count; i++) {
+        for (int i = 0; i < Territories.Count; i++)
+        {
             Territories[i].Armies = CurrentGame.Board.Armies[(TerrID)i];
             Territories[i].PlayerOwner = CurrentGame.Board.TerritoryOwner[(TerrID)i];
         }
-        for (int i = 0; i < NumPlayers; i++) {
+        for (int i = 0; i < NumPlayers; i++)
+        {
             PlayerDetails[i].Name = CurrentGame.Players[i].Name;
             PlayerDetails[i].Number = CurrentGame.Players[i].Number;
             PlayerDetails[i].ArmyPool = CurrentGame.Players![i].ArmyPool;
@@ -467,7 +475,8 @@ public partial class MainVM_Base : ObservableObject, IMainVM
             PlayerDetails[i].NumArmies = SumArmies(i);
         }
 
-        foreach (KeyValuePair<ContID, int> keyPair in CurrentGame.Board.ContinentOwner) {
+        foreach (KeyValuePair<ContID, int> keyPair in CurrentGame.Board.ContinentOwner)
+        {
             var continent = keyPair.Key;
             int contOwner = CurrentGame.Board.ContinentOwner[continent];
             if (contOwner != -1)
@@ -494,7 +503,8 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     {
         var shuffledList = playerDetails;
         Random rand = new();
-        for (int i = shuffledList.Length - 1; i >= 0; i--) {
+        for (int i = shuffledList.Length - 1; i >= 0; i--)
+        {
             int swapTarget = rand.Next(0, i + 1); // recall that Fischer-Yates must allow for "self swap"
             (shuffledList[i], shuffledList[swapTarget]) = (shuffledList[swapTarget], shuffledList[i]);
         }
@@ -509,9 +519,12 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     bool IBinarySerializable.LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;
-        try {
+        try
+        {
             _colorNames = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             _logger.LogError("An exception was thrown while loading {Regulator}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
         }

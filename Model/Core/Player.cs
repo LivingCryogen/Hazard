@@ -80,11 +80,14 @@ public class Player : IPlayer
     /// <inheritdoc cref="IPlayer.ContinentBonus"/>.
     public int ContinentBonus { get; set; }
     /// <inheritdoc cref="IPlayer.ArmyPool"/>.
-    public int ArmyPool {
+    public int ArmyPool
+    {
         get { return _armyPool; }
-        set {
+        set
+        {
             bool changed = !_armyPool.Equals(value);
-            if (changed) {
+            if (changed)
+            {
                 _armyPool = value;
                 PlayerChanged?.Invoke(this, new PlayerChangedEventArgs(nameof(ArmyPool)));
             }
@@ -116,7 +119,8 @@ public class Player : IPlayer
     {
         List<ICardSet> setsInHand = [];
         List<ICard> tradeableCards = [];
-        foreach (var card in Hand) {
+        foreach (var card in Hand)
+        {
             if (card.CardSet != null && !setsInHand.Contains(card.CardSet))
                 setsInHand.Add(card.CardSet);
 
@@ -124,14 +128,16 @@ public class Player : IPlayer
                 tradeableCards.Add(card);
         }
 
-        if (setsInHand.Count == 0 || tradeableCards.Count == 0) {
+        if (setsInHand.Count == 0 || tradeableCards.Count == 0)
+        {
             HasCardSet = false;
             return;
         }
 
         ICard[] tradeable = [.. tradeableCards];
 
-        foreach (ICardSet cardSet in setsInHand) {
+        foreach (ICardSet cardSet in setsInHand)
+        {
             var matches = cardSet.FindTradeSets(tradeable);
             if (matches == null || matches.Length == 0)
                 HasCardSet = false;
@@ -195,7 +201,8 @@ public class Player : IPlayer
             foreach (TerrID territory in ControlledTerritories)
                 data.Add(new(typeof(TerrID), [territory]));
             data.Add(new(typeof(int), [Hand.Count]));
-            for (int i = 0; i < Hand.Count; i++) {
+            for (int i = 0; i < Hand.Count; i++)
+            {
                 IEnumerable<SerializedData> cardSerials = await Hand[i].GetBinarySerials();
                 data.AddRange(cardSerials ?? []);
             }
@@ -206,7 +213,8 @@ public class Player : IPlayer
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;
-        try {
+        try
+        {
             Name = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
             ArmyPool = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             ContinentBonus = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
@@ -217,13 +225,16 @@ public class Player : IPlayer
                 ControlledTerritories.Add((TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID)));
             int numCards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             Hand = [];
-            for (int i = 0; i < numCards; i++) {
+            for (int i = 0; i < numCards; i++)
+            {
                 string cardTypeName = reader.ReadString();
                 ICard newCard = _cardFactory.BuildCard(cardTypeName);
                 newCard.LoadFromBinary(reader);
                 Hand.Add(newCard);
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             _logger.LogError("An exception was thrown while loading {Player}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
         }

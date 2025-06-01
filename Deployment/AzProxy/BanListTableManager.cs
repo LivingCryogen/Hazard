@@ -24,22 +24,27 @@ public class BanListTableManager : IHostedService
 
         string? storageConnection = config["StorageConnectionString"];
 
-        if (string.IsNullOrEmpty(storageConnection)) {
+        if (string.IsNullOrEmpty(storageConnection))
+        {
             logger.LogError("Storage access configuration incorrect.");
             throw new NullReferenceException();
         }
 
-        try {
+        try
+        {
             TableServiceClient serviceClient = new(storageConnection);
 
             string? tableName = config["TableName"];
             if (string.IsNullOrEmpty(tableName))
                 throw new ArgumentException("TableName was null or empty. Check configuration (App settings).");
             _tableClient = serviceClient.GetTableClient(tableName);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             _logger.LogError(ex, "Failed to construct TableClient due to an error: {message}", ex.Message);
         }
-        if (_tableClient == null) {
+        if (_tableClient == null)
+        {
             throw new NullReferenceException("Failed to construct TableClient.");
         }
 
@@ -72,14 +77,18 @@ public class BanListTableManager : IHostedService
         List<Ban> updatedBans = [];
         _logger.LogInformation("Beginning Table Update....");
 
-        try {
-            foreach (string address in _cache.GetUpdatedAddresses()) {
-                if (!_cache.TryGetBan(address, out Ban? ban) || ban == null) {
+        try
+        {
+            foreach (string address in _cache.GetUpdatedAddresses())
+            {
+                if (!_cache.TryGetBan(address, out Ban? ban) || ban == null)
+                {
                     _logger.LogWarning("Table Manager failed to get updated ban from the cache for address {address}.", address);
                     continue;
                 }
 
-                BanListEntry updatedEntry = new() {
+                BanListEntry updatedEntry = new()
+                {
                     PartitionKey = _partitionKey,
                     RowKey = address,
                     Timestamp = DateTime.UtcNow,
@@ -94,7 +103,9 @@ public class BanListTableManager : IHostedService
                 else
                     _ = UpdateEntry(address, updatedEntry);
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             _logger.LogError(ex, "Table Update failed: {message}", ex.Message);
         }
     }
@@ -103,11 +114,13 @@ public class BanListTableManager : IHostedService
     {
         filter ??= _ => true;
 
-        if (string.IsNullOrEmpty(_partitionKey)) {
+        if (string.IsNullOrEmpty(_partitionKey))
+        {
             _logger.LogWarning("The partition key for querying the banlist table was invalid. Cache was not populated.");
             return [];
         }
-        try {
+        try
+        {
             List<BanListEntry> recordList = [];
             var tableEntities = _tableClient.QueryAsync<BanListEntry>(e => e.PartitionKey == _partitionKey);
             await foreach (var tableEntity in tableEntities)
@@ -122,7 +135,9 @@ public class BanListTableManager : IHostedService
             _ = Task.Run(() => Prune([.. pruneList]));
 
             return [.. filteredList];
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             _logger.LogError(ex, "There was an error while fetching banlist records: {message}.", ex.Message);
             return [];
         }
@@ -143,19 +158,25 @@ public class BanListTableManager : IHostedService
 
     private async Task<bool> NewEntry(string ipAddress, BanListEntry entry)
     {
-        try {
+        try
+        {
             entry.PartitionKey ??= _partitionKey;
             entry.RowKey ??= ipAddress;
             await _tableSemaphore.WaitAsync();
-            try {
+            try
+            {
                 var response = await _tableClient.AddEntityAsync(entry);
-            } finally {
+            }
+            finally
+            {
                 _tableSemaphore.Release();
             }
 
             _tagCache.TryAdd(entry.RowKey, entry.ETag);
             return true;
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             _logger.LogError(ex, "Error when attempting to a add via table client: {message}", ex.Message);
             return false;
         }
@@ -163,28 +184,35 @@ public class BanListTableManager : IHostedService
 
     private async Task<bool> UpdateEntry(string ipAddress, BanListEntry updatedEntry)
     {
-        try {
+        try
+        {
             updatedEntry.PartitionKey ??= _partitionKey;
             updatedEntry.RowKey ??= ipAddress;
             bool tagCached = _tagCache.TryGetValue(ipAddress, out ETag entryTag);
 
             await _tableSemaphore.WaitAsync();
-            try {
+            try
+            {
                 var response = await _tableClient.UpdateEntityAsync(
                     updatedEntry,
                     tagCached ? entryTag :
                         updatedEntry.ETag != default ? updatedEntry.ETag : default,
                     TableUpdateMode.Merge);
-            } finally {
+            }
+            finally
+            {
                 _tableSemaphore.Release();
             }
 
-            if (!tagCached && updatedEntry.ETag == default) {
+            if (!tagCached && updatedEntry.ETag == default)
+            {
                 _logger.LogWarning("An entry update was attempted for IP {ip} without a proper ETag.", ipAddress);
                 return false;
             }
             return true;
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             _logger.LogError(ex, "Error when attempting to a update via table client: {message}", ex.Message);
             return false;
         }
@@ -192,14 +220,20 @@ public class BanListTableManager : IHostedService
 
     private async Task<bool> RemoveEntry(string ipAddress)
     {
-        try {
+        try
+        {
             await _tableSemaphore.WaitAsync();
-            try {
+            try
+            {
                 var response = await _tableClient.DeleteEntityAsync(_partitionKey, ipAddress);
-            } finally {
+            }
+            finally
+            {
                 _tableSemaphore.Release();
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             _logger.LogError(ex, "Error when attempting to a remove an entry via table client: {message}", ex.Message);
             return false;
         }
@@ -209,7 +243,8 @@ public class BanListTableManager : IHostedService
 
     private bool ShouldPrune(BanListEntry entry)
     {
-        return entry switch {
+        return entry switch
+        {
             { IsLifetime: true } => false,
             { NowBanned: true } when DateTime.UtcNow - entry.Timestamp < _entryDuration => false,
             { NowBanned: true } when DateTime.UtcNow - entry.Timestamp > _entryDuration => true,

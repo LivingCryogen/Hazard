@@ -51,7 +51,8 @@ namespace View
                 _countdownBlock.Text = _secondsLeft.ToString();
             CommandManager.InvalidateRequerySuggested();
 
-            if (_secondsLeft <= 0) {
+            if (_secondsLeft <= 0)
+            {
                 ((DispatcherTimer)sender).Stop();
                 Close();
             }

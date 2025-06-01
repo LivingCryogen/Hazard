@@ -42,11 +42,13 @@ internal class MockBoard : IBoard
             saveData[0] = new(typeof(int), [numCont]);
             saveData[1] = new(typeof(int), [numTerr]);
             int dataIndex = 2;
-            for (int i = 0; i < numCont; i++) {
+            for (int i = 0; i < numCont; i++)
+            {
                 saveData[dataIndex] = new(typeof(int), [ContinentOwner[(ContID)i]]);
                 dataIndex++;
             }
-            for (int i = 0; i < numTerr; i++) {
+            for (int i = 0; i < numTerr; i++)
+            {
                 saveData[dataIndex] = new(typeof(int), [TerritoryOwner[(TerrID)i]]);
                 dataIndex++;
                 saveData[dataIndex] = new(typeof(int), [Armies[(TerrID)i]]);
@@ -59,7 +61,8 @@ internal class MockBoard : IBoard
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;
-        try {
+        try
+        {
             int numCont = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             int numTerr = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             ContinentOwner.Clear();
@@ -67,11 +70,14 @@ internal class MockBoard : IBoard
                 ContinentOwner.Add((ContID)i, (int)BinarySerializer.ReadConvertible(reader, typeof(int)));
             TerritoryOwner.Clear();
             Armies.Clear();
-            for (int i = 0; i < numTerr; i++) {
+            for (int i = 0; i < numTerr; i++)
+            {
                 TerritoryOwner.Add((TerrID)i, (int)BinarySerializer.ReadConvertible(reader, typeof(int)));
                 Armies.Add((TerrID)i, (int)BinarySerializer.ReadConvertible(reader, typeof(int)));
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             _logger.LogError("An exception was thrown while loading {EarthBoard}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
         }

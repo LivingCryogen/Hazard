@@ -39,14 +39,16 @@ namespace View
         public IMainVM ViewModel;
         #endregion
         #region DependencyProperties
-        public string Message {
+        public string Message
+        {
             get { return (string)GetValue(MessageProperty); }
             set { SetValue(MessageProperty, value); }
         }
         public static readonly DependencyProperty MessageProperty =
             DependencyProperty.Register("Message", typeof(string), typeof(HandView), new PropertyMetadata(""));
 
-        public ObservableCollection<UserControl> CardControls {
+        public ObservableCollection<UserControl> CardControls
+        {
             get { return (ObservableCollection<UserControl>)GetValue(CardControlsProperty); }
             set { SetValue(CardControlsProperty, value); }
         }
@@ -56,11 +58,13 @@ namespace View
         #region Methods
         public void OnHandCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            switch (e.NewItems, e.OldItems) {
+            switch (e.NewItems, e.OldItems)
+            {
                 case (not null, null): // item added
                     if (e.NewItems[0] is not ICardInfo)
                         return;
-                    foreach (ICardInfo item in e.NewItems) {
+                    foreach (ICardInfo item in e.NewItems)
+                    {
                         AddCard(item);
 
                         CardView drawnCardView = new() { Card = CardControls.Last(), Message = $"{PlayerOwnerName}, you have drawn:" };
@@ -80,7 +84,8 @@ namespace View
         }
         private void CommandBinding_TradeInCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (e.Parameter is not System.Collections.IList selected) {
+            if (e.Parameter is not System.Collections.IList selected)
+            {
                 e.CanExecute = false;
                 return;
             }
@@ -91,12 +96,14 @@ namespace View
 
             ValueTuple<int, int[]> tradeParams = new(PlayerOwner, [.. selectedIndices]);
 
-            if (!ViewModel.TradeIn_Command.CanExecute(tradeParams)) {
+            if (!ViewModel.TradeIn_Command.CanExecute(tradeParams))
+            {
                 e.CanExecute = false;
                 return;
             }
 
-            if (PlayerOwner != ViewModel.PlayerTurn) {
+            if (PlayerOwner != ViewModel.PlayerTurn)
+            {
                 e.CanExecute = false;
                 return;
             }
@@ -140,13 +147,15 @@ namespace View
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (_isShuttingDown) {
+            if (_isShuttingDown)
+            {
                 _handBox?.SelectedItems.Clear();
                 return;
             }
             e.Cancel = true;
             bool ForcingTrade = ForceTrade == true && CardControls.Count >= 5;
-            if (!ForcingTrade) {
+            if (!ForcingTrade)
+            {
                 Message = "";
                 _handBox?.SelectedItems.Clear();
                 this.Hide();

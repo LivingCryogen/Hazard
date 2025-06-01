@@ -41,7 +41,8 @@ public class Game : IGame
         Cards = new(loggerFactory, typeRegister);
         Cards.InitializeFromAssets(AssetFetcher, DefaultCardMode);
         Players = [];
-        for (int i = 0; i < numPlayers; i++) {
+        for (int i = 0; i < numPlayers; i++)
+        {
             Players.Add(new Player(i, State.NumPlayers, Cards.CardFactory, Values, Board, _loggerFactory.CreateLogger<Player>()));
             Players.Last().PlayerLost += OnPlayerLost;
             // Players.Last().PlayerWon += OnPlayerWin;
@@ -79,7 +80,8 @@ public class Game : IGame
 
     private void OnPlayerLost(object? sender, System.EventArgs e)
     {
-        if (sender is IPlayer loser) {
+        if (sender is IPlayer loser)
+        {
             State?.DisablePlayer(loser.Number);
             foreach (ICard card in loser.Hand)
                 Cards?.GameDeck?.Discard(card);
@@ -99,7 +101,8 @@ public class Game : IGame
     }
     private void OnPlayerWin(object? sender, System.EventArgs e)
     {
-        if (sender is IPlayer winner) {
+        if (sender is IPlayer winner)
+        {
             PlayerWon?.Invoke(this, (winner.Number));
             State?.DisablePlayer(winner.Number);
         }
@@ -128,10 +131,12 @@ public class Game : IGame
         byte poolsEmpty = 0b000; // bitwise flags
         byte[] masks = [0b001, 0b010, 0b100]; // flag bitwise manipulators
 
-        for (int i = 0; i < BoardGeography.NumTerritories; i++) {
+        for (int i = 0; i < BoardGeography.NumTerritories; i++)
+        {
             // select the random player, making sure not to select a player without any selections left
             int player;
-            switch (poolsEmpty) {
+            switch (poolsEmpty)
+            {
                 case 0:
                     player = rand.Next(0, 3);
                     break;
@@ -160,14 +165,16 @@ public class Game : IGame
                     break;
             }
 
-            if (player < 2 && player > -1) {
+            if (player < 2 && player > -1)
+            {
                 Board.Claims(player, (TerrID)i, 1);
                 Players[player].AddTerritory((TerrID)i);
                 playerPool[player]--;
                 if (playerPool[player] <= 0)
                     poolsEmpty |= masks[player];  // If a player's pool is emptied, trip the PoolsEmpty flag at the appropriate bit 
             }
-            else if (player == 2) {
+            else if (player == 2)
+            {
                 Board.Claims(-1, (TerrID)i, 1);
                 playerPool[player]--;
                 if (playerPool[player] <= 0)
@@ -202,13 +209,15 @@ public class Game : IGame
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;
-        try {
+        try
+        {
             this.ID = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
             Board.LoadFromBinary(reader);
             Cards.LoadFromBinary(reader);
             int numPlayers = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             Players.Clear();
-            for (int i = 0; i < numPlayers; i++) {
+            for (int i = 0; i < numPlayers; i++)
+            {
                 Player newPlayer = new(i, numPlayers, Cards.CardFactory, Values, Board, _loggerFactory.CreateLogger<Player>());
                 newPlayer.LoadFromBinary(reader);
                 Cards.MapCardsToSets([.. newPlayer.Hand]);
@@ -217,7 +226,9 @@ public class Game : IGame
                 Players.Add(newPlayer);
             }
             State.LoadFromBinary(reader);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Logger.LogError("An exception was thrown while loading {Regulator}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
         }

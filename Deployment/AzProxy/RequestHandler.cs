@@ -14,16 +14,19 @@ public class RequestHandler(ILogger<RequestHandler> logger, IConfiguration confi
 
     public bool ValidateRequest(string iPaddress)
     {
-        if (!_banService.CacheInitialized) {
+        if (!_banService.CacheInitialized)
+        {
             int timeOut = 10000;
             int checkInterval = 100;
             int timeSpent = 0;
 
-            while (!_banService.CacheInitialized) {
+            while (!_banService.CacheInitialized)
+            {
                 Thread.Sleep(checkInterval);
                 timeSpent += checkInterval;
 
-                if (timeSpent > timeOut) {
+                if (timeSpent > timeOut)
+                {
                     _logger.LogError("Cache initialization timed out.");
                     return false;
                 }

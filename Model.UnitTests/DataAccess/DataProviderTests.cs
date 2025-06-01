@@ -26,7 +26,8 @@ public class DataProviderTests
         string mockFileName = Path.GetFileName(_mockFiles.ConfigDataFileList[0]);
         string mockFilePath = _mockFiles.ConfigDataFileList[0];
         _configDataFileMap.Add(mockFileName, mockFilePath);
-        AppConfig testConfig = new() {
+        AppConfig testConfig = new()
+        {
             DataFileMap = _configDataFileMap
         };
         var testOptions = Options.Create(testConfig);
@@ -45,45 +46,60 @@ public class DataProviderTests
     [TestMethod]
     public void GetData_NoDataFileRelation_ThrowKeyNotFoundException()
     {
-        try {
+        try
+        {
             var data = _testDataProvider!.GetData(nameof(SharedRegister));
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.IsInstanceOfType(ex, typeof(KeyNotFoundException));
         }
     }
     [TestMethod]
     public void GetData_RegisteredFileNameNotFoundInConfig_ThrowKeyNotFoundException()
     {
-        try {
+        try
+        {
             var data = _testDataProvider!.GetData(nameof(EarthBoard));
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.IsInstanceOfType(ex, typeof(KeyNotFoundException));
         }
     }
     [TestMethod]
     public void GetData_NoDataConverter_ThrowKeyNotFoundException()
     {
-        try {
+        try
+        {
             var data = _testDataProvider!.GetData(nameof(ICard));
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.IsInstanceOfType(ex, typeof(KeyNotFoundException));
         }
     }
     [TestMethod]
     public void GetData_NoConvertedDataTypeDefault_ConvertedDataTypeReturnsSameType()
     {
-        try {
+        try
+        {
             var data = _testDataProvider!.GetData(nameof(ICard));
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.IsInstanceOfType(ex, typeof(KeyNotFoundException));
         }
     }
     [TestMethod]
     public void GetData_NoConvertedDataTypeNoDefault_ThrowsKeyNotFoundException()
     {
-        try {
+        try
+        {
             var data = _testDataProvider!.GetData(nameof(Deck));
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.IsInstanceOfType(ex, typeof(KeyNotFoundException));
         }
     }
@@ -102,7 +118,8 @@ public class DataProviderTests
         Assert.IsTrue(returnedCardSetData.Targets.Length > 0);
         foreach (var targetList in returnedCardSetData.Targets)
             Assert.IsTrue(targetList.Length > 0);
-        foreach (MockTerrID mockID in Enum.GetValues(typeof(MockTerrID))) {
+        foreach (MockTerrID mockID in Enum.GetValues(typeof(MockTerrID)))
+        {
             var mockTargets = returnedCardSetData.Targets.SelectMany(array => array).Cast<MockTerrID>();
             if (mockID != MockTerrID.Null)
                 Assert.IsTrue(mockTargets.Contains(mockID));

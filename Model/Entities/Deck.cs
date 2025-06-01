@@ -111,7 +111,8 @@ public class Deck
     /// </remarks>
     public void Shuffle()
     {
-        if (DiscardPile.Count > 0) {
+        if (DiscardPile.Count > 0)
+        {
             Library.AddRange(DiscardPile);
             DiscardPile.Clear();
         }
@@ -119,7 +120,8 @@ public class Deck
             return;
 
         Random randGen = new();
-        for (int i = Library.Count - 1; i >= 1; i--) {
+        for (int i = Library.Count - 1; i >= 1; i--)
+        {
             int j = randGen.Next(0, i + 1);
             (Library[j], Library[i]) = (Library[i], Library[j]);
         }

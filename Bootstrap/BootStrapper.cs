@@ -21,7 +21,8 @@ public class BootStrapper(ILogger<BootStrapper> logger) : IBootStrapperService
         if (MainApp == null)
             return;
         var viewModel = MainApp.Host.Services.GetRequiredService<IMainVM>();
-        MainWindow mainWindow = new() {
+        MainWindow mainWindow = new()
+        {
             AppOptions = MainApp.Host.Services.GetRequiredService<IOptions<AppConfig>>()
         };
         mainWindow.Initialize(viewModel);
@@ -35,13 +36,15 @@ public class BootStrapper(ILogger<BootStrapper> logger) : IBootStrapperService
         if (string.IsNullOrEmpty(fileName))
             return;
         SaveFileName = fileName;
-        MainWindow mainWindow = new() {
+        MainWindow mainWindow = new()
+        {
             AppOptions = MainApp.Host.Services.GetRequiredService<IOptions<AppConfig>>()
         };
         MainApp.MainWindow = mainWindow;
 
         _logger.LogInformation($"Closing old Windows...");
-        foreach (Window window in Application.Current.Windows) {
+        foreach (Window window in Application.Current.Windows)
+        {
             if (window == mainWindow)
                 continue;
             if (window is MainWindow oldWindow)
@@ -63,11 +66,13 @@ public class BootStrapper(ILogger<BootStrapper> logger) : IBootStrapperService
         var playerColors = namesAndColors.Select(item => item.Color).ToArray();
         SaveFileName = string.Empty;
 
-        MainWindow mainWindow = new() {
+        MainWindow mainWindow = new()
+        {
             AppOptions = MainApp.Host.Services.GetRequiredService<IOptions<AppConfig>>()
         };
         MainApp.MainWindow = mainWindow;
-        foreach (Window window in Application.Current.Windows) {
+        foreach (Window window in Application.Current.Windows)
+        {
             if (window == mainWindow)
                 continue;
             if (window is MainWindow oldWindow)

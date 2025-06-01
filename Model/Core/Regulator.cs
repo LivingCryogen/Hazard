@@ -46,7 +46,8 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     private bool ReachedSecondStage()
     {
         bool exceededTerritoryLimit = ActionsExceedTerritoryCount();
-        return (CurrentPhase, IsInSecondStage(), exceededTerritoryLimit) switch {
+        return (CurrentPhase, IsInSecondStage(), exceededTerritoryLimit) switch
+        {
             (GamePhase.DefaultSetup, false, true) => true,
             (GamePhase.Move, false, _) => true,
             _ => false
@@ -58,7 +59,8 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
             return;
         var phase = CurrentPhase;
         _prevActionCount = _actionsCounter;
-        switch (phase) {
+        switch (phase)
+        {
             case GamePhase.Place:
                 // Update number of allowed player actions (based on armies available to place)
                 CurrentActionsLimit = _actionsCounter;
@@ -106,7 +108,8 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     }
     private void ForceDiscard(Player player, int[] handIndices)
     {
-        foreach (int discardIndex in handIndices.OrderByDescending(i => i)) { // If the indices remain in ascending order, .RemoveAt() will improperly affect the list in subsequent iterations
+        foreach (int discardIndex in handIndices.OrderByDescending(i => i))
+        { // If the indices remain in ascending order, .RemoveAt() will improperly affect the list in subsequent iterations
             _currentGame.Cards.GameDeck.Discard(player.Hand[discardIndex]);
             player.RemoveCard(discardIndex);
         }
@@ -118,7 +121,8 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         if (handIndices.Length > player.Hand.Count)
             throw new IndexOutOfRangeException($"An attempt was made to get {handIndices.Length} cards from {player}'s hand, but they only had {player.Hand.Count}.");
 
-        foreach (int index in handIndices) {
+        foreach (int index in handIndices)
+        {
             var indCard = _currentGame.Players[playerNum].Hand[index];
             selectedCards.Add(indCard);
         }
@@ -131,7 +135,8 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         if (_actionsCounter == 0 && _currentGame.Values.SetupActionsPerPlayers.TryGetValue(_numPlayers, out int actions))
             CurrentActionsLimit = actions;
 
-        if (CurrentPhase == GamePhase.TwoPlayerSetup) {
+        if (CurrentPhase == GamePhase.TwoPlayerSetup)
+        {
             _prevActionCount = _actionsCounter;
             if (_currentGame is Game game)
                 game.TwoPlayerAutoSetup();
@@ -143,7 +148,8 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     /// <inheritdoc cref="IRegulator.CanSelectTerritory(TerrID, TerrID)"/>
     public bool CanSelectTerritory(TerrID newSelected, TerrID oldSelected)
     {
-        bool priorSelection = oldSelected switch {
+        bool priorSelection = oldSelected switch
+        {
             TerrID.Null => false,
             _ => true
         };
@@ -151,16 +157,19 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         int owner = _currentGame.Board.TerritoryOwner[newSelected];
         int territoryArmies = _currentGame.Board.Armies[newSelected];
 
-        return CurrentPhase switch {
+        return CurrentPhase switch
+        {
             GamePhase.DefaultSetup =>
-                _machine.PhaseStageTwo switch {
+                _machine.PhaseStageTwo switch
+                {
                     false when owner == -1 => true, // claiming unowned territory
                     true when owner == _machine.PlayerTurn => true, // reinforcing owned territory
                     _ => false
                 },
 
             GamePhase.TwoPlayerSetup =>
-                _machine.PhaseStageTwo switch {
+                _machine.PhaseStageTwo switch
+                {
                     false when owner == _machine.PlayerTurn => true, // reinforcing auto-assigned territory
                     true when owner == -1 => true, // reinforcing AI territory
                     _ => false
@@ -205,13 +214,15 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         int? maxValue = null;
         var phase = _machine.CurrentPhase;
 
-        switch (phase) {
+        switch (phase)
+        {
             case GamePhase.Attack when !IsInSecondStage():
                 postSelection = selected;
                 _machine.PhaseStageTwo = true;
                 break;
             case GamePhase.Attack when IsInSecondStage():
-                if (!havePriorSelection) {
+                if (!havePriorSelection)
+                {
                     _logger.LogError("A second selection was attempted during Attack phase, but no prior selection was provided.");
                     throw new ArgumentNullException(nameof(priorSelected));
                 }
@@ -225,7 +236,8 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
                 _machine.PhaseStageTwo = true;
                 break;
             case GamePhase.Move when IsInSecondStage():
-                if (!havePriorSelection) {
+                if (!havePriorSelection)
+                {
                     _logger.LogError("A second selection was attempted during Move phase, but no prior selection was provided.");
                     throw new ArgumentNullException(nameof(priorSelected));
                 }
@@ -245,11 +257,13 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     /// <inheritdoc cref="IRegulator.ClaimOrReinforce(TerrID)"/>
     public void ClaimOrReinforce(TerrID territory)
     {
-        switch (CurrentPhase) {
+        switch (CurrentPhase)
+        {
             case GamePhase.DefaultSetup:
                 _currentGame.Players[PlayerTurn].ArmyPool--;
 
-                if (!IsInSecondStage()) {
+                if (!IsInSecondStage())
+                {
                     _currentGame.Board.Claims(PlayerTurn, territory);
                     _currentGame.Players[PlayerTurn].AddTerritory(territory);
                 }
@@ -269,7 +283,8 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
                 // Rules for 2-player setup (with passive NPC player) dictate each player places twice on their territory, once on NPC territory.
                 // The following determines which step we're at by tracking the difference in action count (actDiff), which resets at 3.
                 int actDiff = _actionsCounter - _prevActionCount;
-                switch (actDiff) {
+                switch (actDiff)
+                {
                     case 1:
                         _currentGame.Players[PlayerTurn].ArmyPool--;
                         break;
@@ -278,7 +293,8 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
                         SetSecondStage(true);
                         break;
                     case 3:
-                        if (CurrentPhase == GamePhase.TwoPlayerSetup) {
+                        if (CurrentPhase == GamePhase.TwoPlayerSetup)
+                        {
                             SetSecondStage(false);
                             _machine.IncrementPlayerTurn();
                             _prevActionCount = _actionsCounter;
@@ -316,7 +332,8 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
             else
                 sourceLoss++;
 
-        if (targetLoss >= _currentGame.Board.Armies[target]) {
+        if (targetLoss >= _currentGame.Board.Armies[target])
+        {
             int conqueredOwner = _currentGame.Board.TerritoryOwner[target];
             int newOwner = _currentGame.Board.TerritoryOwner[source];
             if (conqueredOwner > -1)
@@ -344,11 +361,13 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
             return false;
 
         List<ICardSet> tradedSets = [];
-        foreach (var card in selectedCards) {
+        foreach (var card in selectedCards)
+        {
             if (card.IsTradeable == false)
                 return false;
 
-            if (card.CardSet == null) {
+            if (card.CardSet == null)
+            {
                 _logger.LogError("{Card} did not have a CardSet specified on Trade-In check.", card);
                 return false;
             }
@@ -359,7 +378,8 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         if (tradedSets.Count == 0)
             return false;
 
-        foreach (var set in tradedSets) {
+        foreach (var set in tradedSets)
+        {
             if (!set.IsValidTrade([.. selectedCards]))
                 return false;
         }
@@ -406,7 +426,8 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     {
         int numRewards = 0;
         List<SerializedData> rewardData = [];
-        if (Reward != null) {
+        if (Reward != null)
+        {
             rewardData.AddRange(await Reward.GetBinarySerials());
             numRewards = 1;
         }
@@ -426,22 +447,27 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;
-        try {
+        try
+        {
             _actionsCounter = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             _prevActionCount = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             CurrentActionsLimit = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             int numRewards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             if (numRewards == 0)
                 Reward = null;
-            else {
+            else
+            {
                 string cardTypeName = reader.ReadString();
-                if (_currentGame?.Cards?.CardFactory.BuildCard(cardTypeName) is not ICard rewardCard) {
+                if (_currentGame?.Cards?.CardFactory.BuildCard(cardTypeName) is not ICard rewardCard)
+                {
                     throw new InvalidDataException("While loading Regulator, construction of the reward card failed");
                 }
                 rewardCard.LoadFromBinary(reader);
                 Reward = rewardCard;
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             _logger.LogError("An exception was thrown while loading {Regulator}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
         }

@@ -25,11 +25,13 @@ public static class MockGeography
         Dictionary<ContID, HashSet<TerrID>> continentMembers = [];
         Dictionary<TerrID, ContID> terrIDToContID = [];
         Dictionary<TerrID, HashSet<TerrID>> neighborWeb = [];
-        foreach (var contTerrPair in initializer.ContinentMembers) {
+        foreach (var contTerrPair in initializer.ContinentMembers)
+        {
             if (contTerrPair.Key is not ContID continent)
                 continue;
 
-            foreach (Enum territoryEnum in contTerrPair.Value) {
+            foreach (Enum territoryEnum in contTerrPair.Value)
+            {
                 if (territoryEnum is not TerrID territory)
                     continue;
                 continentMembers[continent].Add(territory);
@@ -38,7 +40,8 @@ public static class MockGeography
                 if (!initializer.TerritoryNeighbors.TryGetValue(territory, out HashSet<Enum>? neighbors) || neighbors == null)
                     continue;
 
-                foreach (Enum terrEnum in neighbors) {
+                foreach (Enum terrEnum in neighbors)
+                {
                     if (terrEnum is not TerrID neighborTerritory)
                         continue;
                     neighborWeb[territory].Add(neighborTerritory);

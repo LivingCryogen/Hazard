@@ -53,7 +53,8 @@ public class RuleValues(IConfiguration config) : IRuleValues
     {
         if (numTerritories < 0)
             throw new ArgumentOutOfRangeException(nameof(numTerritories));
-        else {
+        else
+        {
             return numTerritories / 3;
         }
     }

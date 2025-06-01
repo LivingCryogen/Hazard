@@ -67,10 +67,12 @@ public class MockGame : IGame
         byte poolsEmpty = 0b000; // bitwise flags
         byte[] masks = [0b001, 0b010, 0b100]; // flag bitwise manipulators
 
-        for (int i = 0; i < MockGeography.NumTerritories; i++) {
+        for (int i = 0; i < MockGeography.NumTerritories; i++)
+        {
             // select the random player, making sure not to select a player without any selections left
             int player;
-            switch (poolsEmpty) {
+            switch (poolsEmpty)
+            {
                 case 0:
                     player = rand.Next(0, 3);
                     break;
@@ -99,14 +101,16 @@ public class MockGame : IGame
                     break;
             }
 
-            if (player < 2 && player > -1) {
+            if (player < 2 && player > -1)
+            {
                 Board.Claims(player, (TerrID)i, 1);
                 Players[player].AddTerritory((TerrID)i);
                 playerPool[player]--;
                 if (playerPool[player] <= 0)
                     poolsEmpty |= masks[player];  // If a player's pool is emptied, trip the PoolsEmpty flag at the appropriate bit 
             }
-            else if (player == 2) {
+            else if (player == 2)
+            {
                 Board.Claims(-1, (TerrID)i, 1);
                 playerPool[player]--;
                 if (playerPool[player] <= 0)
@@ -146,13 +150,15 @@ public class MockGame : IGame
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;
-        try {
+        try
+        {
             this.ID = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
             Board.LoadFromBinary(reader);
             Cards.LoadFromBinary(reader);
             int numPlayers = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             Players.Clear();
-            for (int i = 0; i < numPlayers; i++) {
+            for (int i = 0; i < numPlayers; i++)
+            {
                 MockPlayer newPlayer = new(i, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>());
                 newPlayer.LoadFromBinary(reader);
                 Cards.MapCardsToSets([.. newPlayer.Hand]);
@@ -163,7 +169,9 @@ public class MockGame : IGame
             Regulator.LoadFromBinary(reader);
             if (Regulator.Reward is ICard rewardCard)
                 Cards.MapCardsToSets([rewardCard]);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Logger.LogError("An exception was thrown while loading {Regulator}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
         }

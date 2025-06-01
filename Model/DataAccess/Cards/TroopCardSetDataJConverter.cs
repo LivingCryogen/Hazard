@@ -33,16 +33,20 @@ public class TroopCardSetDataJConverter : JsonConverter<TroopCardSet>, ICardSetD
     public override TroopCardSet? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         TroopCardSet? newTroopCardSet = new() { JData = new TroopCardSetData() };
-        while (reader.Read()) {
+        while (reader.Read())
+        {
             JsonTokenType tokenType = reader.TokenType;
 
-            switch (tokenType) {
+            switch (tokenType)
+            {
                 case JsonTokenType.PropertyName:
-                    if (reader.ValueTextEquals("exclude")) {
+                    if (reader.ValueTextEquals("exclude"))
+                    {
                         reader.Skip();
                         continue;
                     }
-                    if (reader.ValueTextEquals("TroopCards")) {
+                    if (reader.ValueTextEquals("TroopCards"))
+                    {
                         reader.Read(); // move to value
 
                         if (reader.TokenType != JsonTokenType.StartArray)
@@ -51,12 +55,15 @@ public class TroopCardSetDataJConverter : JsonConverter<TroopCardSet>, ICardSetD
                         List<TerrID[]> cardSetTargets = [];
                         List<TroopInsignia> cardSetInsignia = [];
 
-                        while (reader.Read()) { // Loops through the "TroopCards" Property -- the list of TroopCardData to add
+                        while (reader.Read())
+                        { // Loops through the "TroopCards" Property -- the list of TroopCardData to add
                             if (reader.TokenType == JsonTokenType.EndArray)
                                 break;
 
-                            if (reader.TokenType == JsonTokenType.PropertyName) {
-                                if (reader.ValueTextEquals("Targets")) {
+                            if (reader.TokenType == JsonTokenType.PropertyName)
+                            {
+                                if (reader.ValueTextEquals("Targets"))
+                                {
 
                                     reader.Read(); // move to value
 
@@ -64,7 +71,8 @@ public class TroopCardSetDataJConverter : JsonConverter<TroopCardSet>, ICardSetD
                                         throw new JsonException($"TroopCardData expects an Array for value of 'Targets' property but the first token in the property value was not a StartArray token.");
 
                                     List<string> targetStrings = [];
-                                    while (reader.Read()) { // Loops through the "Targets" Array
+                                    while (reader.Read())
+                                    { // Loops through the "Targets" Array
                                         if (reader.TokenType == JsonTokenType.EndArray)
                                             break;
 
@@ -78,7 +86,8 @@ public class TroopCardSetDataJConverter : JsonConverter<TroopCardSet>, ICardSetD
 
                                     cardSetTargets.Add(targetIDs.ToArray());
                                 }
-                                else if (reader.ValueTextEquals("Insignia")) {
+                                else if (reader.ValueTextEquals("Insignia"))
+                                {
                                     reader.Read(); // move to value
 
                                     string insigniaString = reader.GetString() ?? string.Empty;

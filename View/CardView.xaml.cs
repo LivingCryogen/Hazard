@@ -18,14 +18,18 @@ public partial class CardView : Window
         InitializeComponent();
     }
 
-    public required UserControl? Card {
+    public required UserControl? Card
+    {
         get { return _card; }
-        init {
-            if (value is TroopCardControl card) {
+        init
+        {
+            if (value is TroopCardControl card)
+            {
                 int? owner = card.Owner;
                 if (owner == null)
                     return;
-                TroopCardControl cardClone = new() {
+                TroopCardControl cardClone = new()
+                {
                     PlayerTurn = (int)owner,
                     Owner = (int)owner,
                     CardFace = card.CardFace,
@@ -43,9 +47,11 @@ public partial class CardView : Window
                 box.Child = _cardGrid;
         }
     }
-    public string? Message {
+    public string? Message
+    {
         get { return _message; }
-        init {
+        init
+        {
             _message = value;
             if (FindName("MessageBlock") is TextBlock txtBlock)
                 txtBlock.Text = _message;

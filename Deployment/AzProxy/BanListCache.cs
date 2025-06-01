@@ -23,7 +23,8 @@ public class BanListCache(ILogger<BanListCache> logger) : IBanCache
 
     public bool TryGetBan(string address, out Ban? ban)
     {
-        if (_bans.TryGetValue(address, out Ban? value) && value != null) {
+        if (_bans.TryGetValue(address, out Ban? value) && value != null)
+        {
             ban = value;
             return true;
         }
@@ -35,15 +36,18 @@ public class BanListCache(ILogger<BanListCache> logger) : IBanCache
     {
         _bans.AddOrUpdate(address, addFactory, updateFactory);
 
-        lock (_lock) {
+        lock (_lock)
+        {
             _addressesUpdated.Add(address);
         }
     }
 
     public bool TryUpdateBan(string address, Ban newBan, Ban oldBan)
     {
-        if (_bans.TryUpdate(address, newBan, oldBan)) {
-            lock (_lock) {
+        if (_bans.TryUpdate(address, newBan, oldBan))
+        {
+            lock (_lock)
+            {
                 _addressesUpdated.Add(address);
             }
             return true;
@@ -53,14 +57,16 @@ public class BanListCache(ILogger<BanListCache> logger) : IBanCache
 
     public IEnumerable<string> GetUpdatedAddresses()
     {
-        lock (_lock) {
+        lock (_lock)
+        {
             return [.. _addressesUpdated];
         }
     }
 
     public void Initialize(HashSet<BanListEntry> banRecords)
     {
-        foreach (BanListEntry entry in banRecords) {
+        foreach (BanListEntry entry in banRecords)
+        {
             if (!entry.NowBanned)
                 continue;
 

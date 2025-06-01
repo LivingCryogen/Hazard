@@ -34,7 +34,8 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        if (this.FindName("StateInfoBorder") is Border stateInfoBorder) {
+        if (this.FindName("StateInfoBorder") is Border stateInfoBorder)
+        {
             _stateInfoBorder = stateInfoBorder;
             _stateInfoBorder.Visibility = Visibility.Collapsed;
         }
@@ -46,14 +47,16 @@ public partial class MainWindow : Window
     public (TerrID Source, TerrID Target, int NumAdvance)? AdvanceParams { get; set; } = null;
 
     #region DependencyProperties
-    public ObservableCollection<SolidColorBrush> PlayerColors {
+    public ObservableCollection<SolidColorBrush> PlayerColors
+    {
         get => (ObservableCollection<SolidColorBrush>)GetValue(PlayerColorsProperty);
         set => SetValue(PlayerColorsProperty, value);
     }
     public static readonly DependencyProperty PlayerColorsProperty =
         DependencyProperty.Register("PlayerColors", typeof(ObservableCollection<SolidColorBrush>), typeof(MainWindow));
 
-    public Visibility ConfirmNoticeVisibility {
+    public Visibility ConfirmNoticeVisibility
+    {
         get => (Visibility)GetValue(ConfirmNoticeVisibilityProperty);
         set => SetValue(ConfirmNoticeVisibilityProperty, value);
     }
@@ -100,8 +103,10 @@ public partial class MainWindow : Window
     private void BuildHandViews(int numPlayers)
     {
         if (_vM == null) return;
-        for (int i = 0; i < numPlayers; i++) {
-            _handViews[i] = new(_vM) {
+        for (int i = 0; i < numPlayers; i++)
+        {
+            _handViews[i] = new(_vM)
+            {
                 MainWindow = this,
                 PlayerOwner = i,
                 PlayerOwnerName = _vM.PlayerDetails[i].Name,
@@ -116,8 +121,10 @@ public partial class MainWindow : Window
     private void BuildPlayerDataBoxes(int numPlayers)
     {
         if (_vM == null) return;
-        for (int i = 0; i < numPlayers; i++) {
-            Border newPlayerBorder = new() {
+        for (int i = 0; i < numPlayers; i++)
+        {
+            Border newPlayerBorder = new()
+            {
                 Width = 220,
                 Height = 177,
                 BorderBrush = PlayerColors[i],
@@ -126,28 +133,32 @@ public partial class MainWindow : Window
                 CornerRadius = new(0)
             };
 
-            TabControl newPlayerTabControl = new() {
+            TabControl newPlayerTabControl = new()
+            {
                 Name = "Player" + i.ToString() + "TabControl",
                 Background = Brushes.FloralWhite,
                 TabStripPlacement = Dock.Top,
                 DataContext = _vM.PlayerDetails[i]
             };
 
-            TabItem overviewTab = new() {
+            TabItem overviewTab = new()
+            {
                 Name = "Player" + i.ToString() + "OverviewTab",
                 ContentTemplate = (DataTemplate)this.FindResource("OverviewTabTemplate"),
                 Content = _vM.PlayerDetails[i],
                 Header = new TextBlock() { Text = "Overview", FontSize = 9, FontFamily = new FontFamily("Courier New"), HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top }
             };
 
-            TabItem handTab = new() {
+            TabItem handTab = new()
+            {
                 Name = "Player" + i.ToString() + "HandTab",
                 Header = new TextBlock() { Text = "Hand", FontSize = 9, HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top },
                 ContentTemplate = (DataTemplate)this.FindResource($"HandTabTemplate{i}"),
                 Content = _vM.PlayerDetails[i],
             };
 
-            TabItem continentsTab = new() {
+            TabItem continentsTab = new()
+            {
                 Name = "Player" + i.ToString() + "ContinentTab",
                 Header = new TextBlock() { Text = "Continents", FontSize = 9, HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top },
                 ContentTemplate = (DataTemplate)App.Current.FindResource("ContinentsOwnedTabTemplate"),
@@ -169,7 +180,8 @@ public partial class MainWindow : Window
     {
         int numTerritories = _vM?.Territories.Count ?? -1;
         _territoryButtons = new TerritoryElement[numTerritories];
-        for (int index = 0; index < numTerritories; index++) {
+        for (int index = 0; index < numTerritories; index++)
+        {
             TerritoryElement toAdd = new(index, _vM!.Territories[index].Name); // if vM is null, this for loop is skipped entirely
 
             Binding selectBinding = new("TerritorySelectCommand");
@@ -208,7 +220,8 @@ public partial class MainWindow : Window
         if (FindName("MainCanvas") is not Canvas mainCanvas)
             return;
 
-        if (scaleProduct != 1) {
+        if (scaleProduct != 1)
+        {
             Transform canvasTransform = new ScaleTransform(scaleX, scaleY);
             mainCanvas.LayoutTransform = canvasTransform;
         }
@@ -230,7 +243,8 @@ public partial class MainWindow : Window
         bool isTwoPlayerSetup = _vM.CurrentPhase != GamePhase.TwoPlayerSetup;
         bool isPostTwoPlayerSetup = _vM.PlayerDetails[playerNumber].NumArmies == 40;
         // Transition Window at the beginning of a 2 player game (post setup) is missed due to order/timing of event firings unless it is done explicitly here
-        if (notDefaultSetup && (isTwoPlayerSetup || isPostTwoPlayerSetup)) {
+        if (notDefaultSetup && (isTwoPlayerSetup || isPostTwoPlayerSetup))
+        {
             string name = _vM.PlayerDetails[playerNumber].Name;
             TransitionWindow transitionWindow = new(name);
             transitionWindow.ShowDialog();
@@ -264,7 +278,8 @@ public partial class MainWindow : Window
         SolidColorBrush sourceColor = _territoryButtons[(int)sourceTerritory].Color;
         SolidColorBrush targetColor = _territoryButtons[targetTerritory].Color;
 
-        AttackWindow newAttackWindow = new() {
+        AttackWindow newAttackWindow = new()
+        {
             SoundFileMap = _soundFileMap,
         };
         newAttackWindow.Initialize((int)sourceTerritory, targetTerritory, sourceColor, targetColor, (IMainVM)DataContext);
@@ -281,7 +296,8 @@ public partial class MainWindow : Window
         else
             message = "How many Armies should relocate?";
 
-        TroopAdvanceWindow advancePopup = new(e.Source, e.Target, e.Min, e.Max, message, this) {
+        TroopAdvanceWindow advancePopup = new(e.Source, e.Target, e.Min, e.Max, message, this)
+        {
             DataContext = context,
             WindowStartupLocation = WindowStartupLocation.CenterScreen,
             SizeToContent = SizeToContent.WidthAndHeight,
@@ -372,7 +388,8 @@ public partial class MainWindow : Window
     }
     private void CommandBindingOpen_Executed(object sender, ExecutedRoutedEventArgs e)
     {
-        OpenFileDialog openDialog = new() {
+        OpenFileDialog openDialog = new()
+        {
             AddExtension = true,
             DefaultExt = ".hzd",
             Filter = "Hazard! Save Games (.hzd)|*.hzd"
@@ -397,14 +414,16 @@ public partial class MainWindow : Window
     }
     private void CommandBindingSaveAs_Executed(object sender, ExecutedRoutedEventArgs e)
     {
-        SaveFileDialog saveAsDialog = new() {
+        SaveFileDialog saveAsDialog = new()
+        {
             AddExtension = true,
             DefaultExt = ".hzd",
             Filter = "Hazard! Save Games (.hzd)|*.hzd"
         };
         bool? result = saveAsDialog.ShowDialog();
 
-        if (result.HasValue && !string.IsNullOrEmpty(saveAsDialog.FileName)) {
+        if (result.HasValue && !string.IsNullOrEmpty(saveAsDialog.FileName))
+        {
             ValueTuple<string, bool> saveParams = new(saveAsDialog.FileName, true);
             if (_vM?.SaveGame_Command.CanExecute(saveParams) ?? false)
                 _vM.SaveGame_Command.Execute(saveParams);

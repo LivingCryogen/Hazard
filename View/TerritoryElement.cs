@@ -20,7 +20,8 @@ class TerritoryElement : ButtonBase
         Geometry = Application.Current.FindResource(Name + "Geometry") as Geometry ?? Geometry.Empty;
         StationPosition = GetStationPosition(Geometry);
 
-        Binding contentToSize = new("StationContent") {
+        Binding contentToSize = new("StationContent")
+        {
             RelativeSource = RelativeSource.Self,
             NotifyOnSourceUpdated = true,
             Converter = new ArmiesTextToStation(),
@@ -28,7 +29,8 @@ class TerritoryElement : ButtonBase
         };
         BindingOperations.SetBinding(this, StationProperty, contentToSize);
 
-        Binding stationTextColor = new("Color") {
+        Binding stationTextColor = new("Color")
+        {
             RelativeSource = RelativeSource.Self,
             NotifyOnSourceUpdated = true
         };
@@ -41,49 +43,56 @@ class TerritoryElement : ButtonBase
     public int ID { get; init; }
     public Point StationPosition { get; set; } = new(0, 0);
 
-    public Geometry Geometry {
+    public Geometry Geometry
+    {
         get => (Geometry)GetValue(GeometryProperty);
         set { SetValue(GeometryProperty, value); }
     }
     public static readonly DependencyProperty? GeometryProperty = DependencyProperty.Register("Geometry", typeof(Geometry), typeof(TerritoryElement),
         new FrameworkPropertyMetadata(defaultValue: null, flags: FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsArrange));
 
-    public SolidColorBrush Color {
+    public SolidColorBrush Color
+    {
         get => (SolidColorBrush)GetValue(ColorProperty);
         set { SetValue(ColorProperty, value); }
     }
     public static readonly DependencyProperty? ColorProperty = DependencyProperty.Register("Color", typeof(SolidColorBrush), typeof(TerritoryElement),
         new FrameworkPropertyMetadata(defaultValue: Brushes.Transparent, flags: FrameworkPropertyMetadataOptions.AffectsRender));
 
-    public Rect Station {
+    public Rect Station
+    {
         get => (Rect)GetValue(StationProperty);
         set => SetValue(StationProperty, value);
     }
     public static readonly DependencyProperty? StationProperty = DependencyProperty.Register("Station", typeof(Rect), typeof(TerritoryElement),
         new FrameworkPropertyMetadata(defaultValue: new Rect(), flags: FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange));
 
-    public Brush StationBackgroundColor {
+    public Brush StationBackgroundColor
+    {
         get => (Brush)GetValue(StationBackgroundColorProperty);
         set => SetValue(StationBackgroundColorProperty, value);
     }
     public static readonly DependencyProperty? StationBackgroundColorProperty = DependencyProperty.Register("StationBackgroundColor", typeof(Brush), typeof(TerritoryElement),
         new FrameworkPropertyMetadata(defaultValue: Brushes.WhiteSmoke, flags: FrameworkPropertyMetadataOptions.AffectsRender));
 
-    public Brush StationTextColor {
+    public Brush StationTextColor
+    {
         get => (Brush)GetValue(StationTextColorProperty);
         set => SetValue(StationTextColorProperty, value);
     }
     public static readonly DependencyProperty? StationTextColorProperty = DependencyProperty.Register("StationTextColor", typeof(Brush), typeof(TerritoryElement),
         new FrameworkPropertyMetadata(defaultValue: Brushes.Black, flags: FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange));
 
-    public string StationContent {
+    public string StationContent
+    {
         get => (string)GetValue(StationContentProperty);
         set { SetValue(StationContentProperty, value); }
     }
     public static readonly DependencyProperty? StationContentProperty = DependencyProperty.Register("StationContent", typeof(string), typeof(TerritoryElement),
         new FrameworkPropertyMetadata(defaultValue: "0", flags: FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange));
 
-    public bool IsSelected {
+    public bool IsSelected
+    {
         get => (bool)GetValue(IsSelectedProperty);
         set { SetValue(IsSelectedProperty, value); }
     }
@@ -213,14 +222,16 @@ class TerritoryElement : ButtonBase
     }
     private void OnMouseEnter(object sender, MouseEventArgs e)
     {
-        if (Command.CanExecute(ID)) {
+        if (Command.CanExecute(ID))
+        {
             _isPreSelected = true;
             InvalidateVisual();
         }
     }
     private void OnMouseLeave(object sender, MouseEventArgs e)
     {
-        if (_isPreSelected) {
+        if (_isPreSelected)
+        {
             _isPreSelected = false;
             InvalidateVisual();
         }

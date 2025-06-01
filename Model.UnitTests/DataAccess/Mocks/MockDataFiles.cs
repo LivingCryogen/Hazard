@@ -28,7 +28,8 @@ public class MockDataFiles
         // Shared. Registry DataFile name must be added for the MockCardSet class
         if (SharedRegister.Registry[typeof(MockCardSet)]![RegistryRelation.DataFileName] == null)
             SharedRegister.Registry.AddRelation(typeof(MockCardSet), (CardSetPath, RegistryRelation.DataFileName));
-        else {
+        else
+        {
             SharedRegister.Registry.RemoveRelation(typeof(MockCardSet), RegistryRelation.DataFileName);
             SharedRegister.Registry.AddRelation(typeof(MockCardSet), (CardSetPath, RegistryRelation.DataFileName));
         }
@@ -50,7 +51,8 @@ public class MockDataFiles
         };
 
         int insigniaIndex = 0;
-        for (int i = 0; i < mockTerritories.Count; i++) {
+        for (int i = 0; i < mockTerritories.Count; i++)
+        {
             var troopCardJObject = new
             {
                 Targets = new string[] { mockTerritories[i] },

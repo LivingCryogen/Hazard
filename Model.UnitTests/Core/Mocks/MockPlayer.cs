@@ -60,7 +60,8 @@ internal class MockPlayer : IPlayer
             foreach (TerrID territory in ControlledTerritories)
                 data.Add(new(typeof(TerrID), [territory]));
             data.Add(new(typeof(int), [Hand.Count]));
-            for (int i = 0; i < Hand.Count; i++) {
+            for (int i = 0; i < Hand.Count; i++)
+            {
                 IEnumerable<SerializedData> cardSerials = await Hand[i].GetBinarySerials();
                 data.AddRange(cardSerials ?? []);
             }
@@ -70,7 +71,8 @@ internal class MockPlayer : IPlayer
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;
-        try {
+        try
+        {
             Name = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
             ArmyPool = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             ContinentBonus = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
@@ -81,13 +83,16 @@ internal class MockPlayer : IPlayer
                 ControlledTerritories.Add((TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID)));
             int numCards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             Hand = [];
-            for (int i = 0; i < numCards; i++) {
+            for (int i = 0; i < numCards; i++)
+            {
                 string cardTypeName = reader.ReadString();
                 ICard newCard = _cardFactory.BuildCard(cardTypeName);
                 newCard.LoadFromBinary(reader);
                 Hand.Add(newCard);
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             _logger.LogError("An exception was thrown while loading {Player}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
         }
@@ -123,7 +128,8 @@ internal class MockPlayer : IPlayer
     {
         List<ICardSet> setsInHand = [];
         List<ICard> tradeableCards = [];
-        foreach (var card in Hand) {
+        foreach (var card in Hand)
+        {
             if (card.CardSet != null && !setsInHand.Contains(card.CardSet))
                 setsInHand.Add(card.CardSet);
 
@@ -136,7 +142,8 @@ internal class MockPlayer : IPlayer
 
         ICard[] tradeable = [.. tradeableCards];
 
-        foreach (ICardSet cardSet in setsInHand) {
+        foreach (ICardSet cardSet in setsInHand)
+        {
             if ((cardSet?.FindTradeSets(tradeable) ?? []).Length != 0)
                 HasCardSet = true;
         }

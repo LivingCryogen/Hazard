@@ -20,8 +20,10 @@ public class TypeRegister : ITypeRegister<ITypeRelations>
      * Implementation: Performs a linear search through the dictionary for values containing <paramref name="lookupName"/>.
      * If <see cref="_typeRelata"/> remains small, this is fine. If it were to grow large, it would be better to split off Names
      * from <see cref="ITypeRelations"/> and create a dedicated Name/Type dictionary. */
-    public Type? this[string lookupName] {
-        get {
+    public Type? this[string lookupName]
+    {
+        get
+        {
             if (string.IsNullOrEmpty(lookupName))
                 return null;
 
@@ -35,14 +37,17 @@ public class TypeRegister : ITypeRegister<ITypeRelations>
         }
     }
     /// <inheritdoc cref="ITypeRegister{T}.this[Type]"/>
-    public ITypeRelations? this[Type type] {
-        get {
+    public ITypeRelations? this[Type type]
+    {
+        get
+        {
             if (_typeRelata.TryGetValue(type, out ITypeRelations? relata) && relata != null)
                 return _typeRelata[type];
             else return null;
         }
 
-        set {
+        set
+        {
             if (value is ITypeRelations and not null)
                 Register(type, value);
             else throw new ArgumentException($"{value} is not a valid instance (it is null or does not implement ITypeRelations.)", nameof(value));
@@ -50,11 +55,15 @@ public class TypeRegister : ITypeRegister<ITypeRelations>
     }
     /** <inheritdoc cref="ITypeRegister{T}.this[RegistryRelation]"/>
      * Performs a linear search through <see cref="_typeRelata"/> */
-    public (Type KeyType, object RelatedObject)[]? this[RegistryRelation relation] {
-        get {
+    public (Type KeyType, object RelatedObject)[]? this[RegistryRelation relation]
+    {
+        get
+        {
             List<(Type, object)> entries = [];
-            foreach (Type type in _typeRelata.Keys) {
-                if (_typeRelata[type][relation] != null) {
+            foreach (Type type in _typeRelata.Keys)
+            {
+                if (_typeRelata[type][relation] != null)
+                {
                     entries.Add(new(type, _typeRelata[type][relation]!));
                 }
             }
@@ -104,7 +113,8 @@ public class TypeRegister : ITypeRegister<ITypeRelations>
     /// <exception cref="ArgumentException">Thrown if <paramref name="targetRelation"/> is not registered to <paramref name="type"/>.</exception>
     public void RemoveRelation(Type type, RegistryRelation targetRelation)
     {
-        if (_typeRelata.TryGetValue(type, out ITypeRelations? relations)) {
+        if (_typeRelata.TryGetValue(type, out ITypeRelations? relations))
+        {
             if (relations[targetRelation] == null)
                 throw new ArgumentException($"{targetRelation} was not found in the entry for {type}");
             relations.Remove(targetRelation);
@@ -137,11 +147,13 @@ public class TypeRegister : ITypeRegister<ITypeRelations>
     /// <inheritdoc cref="ITypeRegister{T}.TryGetParentType(Type, out Type?)"/>
     public bool TryGetParentType(Type registeredType, out Type? parentType)
     {
-        if (!_typeRelata.TryGetValue(registeredType, out ITypeRelations? registeredRelations) || registeredRelations == null) {
+        if (!_typeRelata.TryGetValue(registeredType, out ITypeRelations? registeredRelations) || registeredRelations == null)
+        {
             parentType = null;
             return false;
         }
-        if (registeredRelations[RegistryRelation.CollectionType] is not Type collection) {
+        if (registeredRelations[RegistryRelation.CollectionType] is not Type collection)
+        {
             parentType = null;
             return false;
         }

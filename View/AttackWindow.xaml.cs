@@ -88,13 +88,15 @@ public partial class AttackWindow : Window
         var appConfig = ((App)Application.Current).Host.Services.GetRequiredService(typeof(IOptions<AppConfig>));
 
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++)
+        {
             _attackDiceVisuals[i].Visibility = Visibility.Hidden;
             if (i < 2)
                 _defenseDiceVisuals[i].Visibility = Visibility.Hidden;
         }
 
-        Binding attackEnabled = new("AttackEnabled") {
+        Binding attackEnabled = new("AttackEnabled")
+        {
             NotifyOnSourceUpdated = true,
             Mode = BindingMode.OneWay
         };
@@ -115,11 +117,13 @@ public partial class AttackWindow : Window
 
     public int MaxAttackDice => CalcMaxAttackDice();
     public int MaxDefenseDice => CalcMaxDefenseDice();
-    public int NumAttackDice {
+    public int NumAttackDice
+    {
         get { return (int)GetValue(NumAttackDiceProperty); }
         set { SetValue(NumAttackDiceProperty, value); }
     }
-    public bool AttackEnabled {
+    public bool AttackEnabled
+    {
         get { return (bool)GetValue(AttackEnabledProperty); }
         set { SetValue(AttackEnabledProperty, value); }
     }
@@ -132,7 +136,8 @@ public partial class AttackWindow : Window
     public static readonly DependencyProperty NumAttackDiceProperty =
         DependencyProperty.Register("NumAttackDice", typeof(int), typeof(AttackWindow), new PropertyMetadata(defaultValue: 0));
 
-    public int NumDefenseDice {
+    public int NumDefenseDice
+    {
         get { return (int)GetValue(NumDefenseDiceProperty); }
         set { SetValue(NumDefenseDiceProperty, value); }
     }
@@ -141,7 +146,8 @@ public partial class AttackWindow : Window
     public static readonly DependencyProperty NumDefenseDiceProperty =
         DependencyProperty.Register("NumDefenseDice", typeof(int), typeof(AttackWindow), new PropertyMetadata(defaultValue: 0));
 
-    public int[] AttackParams {
+    public int[] AttackParams
+    {
         get { return (int[])GetValue(AttackParamsProperty); }
         set { SetValue(AttackParamsProperty, value); }
     }
@@ -150,7 +156,8 @@ public partial class AttackWindow : Window
     public static readonly DependencyProperty AttackParamsProperty =
         DependencyProperty.Register("AttackParams", typeof(int[]), typeof(AttackWindow), new PropertyMetadata(defaultValue: new int[4] { 0, 0, 0, 0 }));
 
-    public string TargetName {
+    public string TargetName
+    {
         get { return (string)GetValue(TargetNameProperty); }
         set { SetValue(TargetNameProperty, value); }
     }
@@ -159,7 +166,8 @@ public partial class AttackWindow : Window
     public static readonly DependencyProperty TargetNameProperty =
         DependencyProperty.Register("TargetName", typeof(string), typeof(AttackWindow), new PropertyMetadata(defaultValue: string.Empty));
 
-    public string SourceName {
+    public string SourceName
+    {
         get { return (string)GetValue(SourceNameProperty); }
         set { SetValue(SourceNameProperty, value); }
     }
@@ -168,7 +176,8 @@ public partial class AttackWindow : Window
     public static readonly DependencyProperty SourceNameProperty =
         DependencyProperty.Register("SourceName", typeof(string), typeof(AttackWindow), new PropertyMetadata(defaultValue: string.Empty));
 
-    public int SourceArmies {
+    public int SourceArmies
+    {
         get { return (int)GetValue(SourceArmiesProperty); }
         set { SetValue(SourceArmiesProperty, value); }
     }
@@ -177,7 +186,8 @@ public partial class AttackWindow : Window
     public static readonly DependencyProperty SourceArmiesProperty =
         DependencyProperty.Register("SourceArmies", typeof(int), typeof(AttackWindow), new PropertyMetadata(defaultValue: 0));
 
-    public int TargetArmies {
+    public int TargetArmies
+    {
         get { return (int)GetValue(TargetArmiesProperty); }
         set { SetValue(TargetArmiesProperty, value); }
     }
@@ -186,7 +196,8 @@ public partial class AttackWindow : Window
     public static readonly DependencyProperty TargetArmiesProperty =
         DependencyProperty.Register("TargetArmies", typeof(int), typeof(AttackWindow), new PropertyMetadata(defaultValue: 0));
 
-    public int SourceLoss {
+    public int SourceLoss
+    {
         get { return (int)GetValue(SourceLossProperty); }
         set { SetValue(SourceLossProperty, value); }
     }
@@ -196,7 +207,8 @@ public partial class AttackWindow : Window
         DependencyProperty.Register("SourceLoss", typeof(int), typeof(AttackWindow), new PropertyMetadata(defaultValue: 0));
 
 
-    public int TargetLoss {
+    public int TargetLoss
+    {
         get { return (int)GetValue(TargetLossProperty); }
         set { SetValue(TargetLossProperty, value); }
     }
@@ -213,12 +225,14 @@ public partial class AttackWindow : Window
         SourceName = _vM.Territories[source].DisplayName;
         TargetName = _vM.Territories[target].DisplayName;
 
-        Binding sourceArmiesText = new("Territories[" + source.ToString() + "].ArmiesText") {
+        Binding sourceArmiesText = new("Territories[" + source.ToString() + "].ArmiesText")
+        {
             NotifyOnSourceUpdated = true,
             NotifyOnTargetUpdated = true
         };
         BindingOperations.SetBinding(SourceArmiesBlock, TextBlock.TextProperty, sourceArmiesText);
-        Binding targetArmiesText = new("Territories[" + target.ToString() + "].ArmiesText") {
+        Binding targetArmiesText = new("Territories[" + target.ToString() + "].ArmiesText")
+        {
             NotifyOnSourceUpdated = true,
             NotifyOnTargetUpdated = true
         };
@@ -248,12 +262,14 @@ public partial class AttackWindow : Window
 
         SourceArmies = _vM!.Territories[source].Armies;
         TargetArmies = _vM!.Territories[target].Armies;
-        Binding sourceArmies = new("Territories[" + source.ToString() + "].Armies") {
+        Binding sourceArmies = new("Territories[" + source.ToString() + "].Armies")
+        {
             NotifyOnSourceUpdated = true,
             NotifyOnTargetUpdated = true
         };
         BindingOperations.SetBinding(this, SourceArmiesProperty, sourceArmies);
-        Binding targetArmies = new("Territories[" + target.ToString() + "].Armies") {
+        Binding targetArmies = new("Territories[" + target.ToString() + "].Armies")
+        {
             NotifyOnSourceUpdated = true,
             NotifyOnTargetUpdated = true
         };
@@ -276,11 +292,13 @@ public partial class AttackWindow : Window
         AttackParams[2] = NumAttackDice;
         AttackParams[3] = NumDefenseDice;
 
-        for (int i = 0; i < NumAttackDice; i++) {
+        for (int i = 0; i < NumAttackDice; i++)
+        {
             _attackDiceVisuals[i].Source = AttackDieFaces[i];
         }
 
-        for (int i = 0; i < NumDefenseDice; i++) {
+        for (int i = 0; i < NumDefenseDice; i++)
+        {
             _defenseDiceVisuals[i].Source = DefenseDieFaces[i];
         }
 
@@ -305,14 +323,18 @@ public partial class AttackWindow : Window
 
     private void OnSourceChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (sender != null) {
+        if (sender != null)
+        {
             var territory = sender as TerritoryInfo;
-            if (e.PropertyName == "Armies") {
+            if (e.PropertyName == "Armies")
+            {
                 SourceLoss = _oldSourceArmies - territory!.Armies;
-                if (territory.Armies < 2) {
+                if (territory.Armies < 2)
+                {
                     _attackFails = true;
                 }
-                else {
+                else
+                {
                     UpdateDiceCount();
                     SetDiceVisibility(DiceGroup.Attack);
                 }
@@ -325,13 +347,15 @@ public partial class AttackWindow : Window
     {
         if (sender is not TerritoryInfo territory) return;
 
-        if (e.PropertyName == "Armies") {
+        if (e.PropertyName == "Armies")
+        {
             TargetLoss = _oldTargetArmies - territory.Armies;
             UpdateDiceCount();
             SetDiceVisibility(DiceGroup.Defense);
             _targetArmiesChanged = true;
         }
-        else if (e.PropertyName == "PlayerOwner") {
+        else if (e.PropertyName == "PlayerOwner")
+        {
             TargetArmiesBlock.Foreground = _sourceColor;
             TargetNameBlock.Foreground = _sourceColor;
             TargetTerritoryImage.Fill = _sourceColor;
@@ -360,7 +384,8 @@ public partial class AttackWindow : Window
 
         _lossIndicatorActiveAnimation?.Begin();
 
-        if (_attackFails) {
+        if (_attackFails)
+        {
             MessageBox.Show("Our attack failed! We must retreat!");
             Close();
         }
@@ -387,7 +412,8 @@ public partial class AttackWindow : Window
 
     private void SetDiceVisibility(DiceGroup diceGroup)
     {
-        switch (diceGroup) {
+        switch (diceGroup)
+        {
             case DiceGroup.Attack:
                 DisplayAttackDice();
                 break;
@@ -428,7 +454,8 @@ public partial class AttackWindow : Window
         if (NumAttackDice >= 1)
             AttackDieVisual1.BeginAnimation(Image.SourceProperty, _attackDiceAnimations[0]);
 
-        if (NumDefenseDice == 2) {
+        if (NumDefenseDice == 2)
+        {
             DefenseDieVisual2.BeginAnimation(Image.SourceProperty, _defenseDiceAnimations[1]);
             DefenseDieVisual1.BeginAnimation(Image.SourceProperty, _defenseDiceAnimations[0]);
         }
@@ -471,7 +498,8 @@ public partial class AttackWindow : Window
 
         diceFrames.Add(new DiscreteObjectKeyFrame(diceImages[result], KeyTime.Paced));
 
-        ObjectAnimationUsingKeyFrames dieAnimation = new() {
+        ObjectAnimationUsingKeyFrames dieAnimation = new()
+        {
             KeyFrames = diceFrames,
             Duration = new TimeSpan(tickDuration),
             DecelerationRatio = .5,
@@ -488,12 +516,15 @@ public partial class AttackWindow : Window
         List<int> faces = [];
 
         int facesThisSpin;
-        for (int i = 0; i < spins; i++) {
+        for (int i = 0; i < spins; i++)
+        {
             facesThisSpin = rand.Next(3, 11);
             int faceShowing = 0;
-            for (int j = 0; j < facesThisSpin; j++) {
+            for (int j = 0; j < facesThisSpin; j++)
+            {
                 int newFace;
-                do {
+                do
+                {
                     newFace = rand.Next(1, 6);
                 }
                 while (newFace == faceShowing);
@@ -509,7 +540,8 @@ public partial class AttackWindow : Window
 
     private void SourceDiceUpButton_Click(object sender, RoutedEventArgs e)
     {
-        if (NumAttackDice < MaxAttackDice) {
+        if (NumAttackDice < MaxAttackDice)
+        {
             NumAttackDice++;
             AttackParams[2] = NumAttackDice; // Command Parameter for Attack Command include number of Attack Dice as final element and must be manually updated
 
@@ -519,7 +551,8 @@ public partial class AttackWindow : Window
 
     private void SourceDiceDownButton_Click(object sender, RoutedEventArgs e)
     {
-        if (NumAttackDice > 1) {
+        if (NumAttackDice > 1)
+        {
             NumAttackDice--;
             AttackParams[2] = NumAttackDice; // Command Parameter for Attack Command include number of Attack Dice as final element and must be manually updated
 
@@ -569,7 +602,8 @@ public partial class AttackWindow : Window
 
     private void CommandBinding_CanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
     {
-        if (_vM?.AttackEnabled ?? false) {
+        if (_vM?.AttackEnabled ?? false)
+        {
             e.CanExecute = true;
         }
         else

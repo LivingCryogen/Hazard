@@ -65,12 +65,15 @@ public class GeographyInitializer
             return false;
         if (Enum.Parse(TerritoryEnumType, territoryName) is not Enum territoryEnum)
             return false;
-        try {
+        try
+        {
             if (!ContinentMembers.ContainsKey(continentEnum))
                 ContinentMembers.Add(continentEnum, []);
 
             ContinentMembers[continentEnum].Add(territoryEnum);
-        } catch {
+        }
+        catch
+        {
             return false;
         }
         return true;
@@ -89,12 +92,15 @@ public class GeographyInitializer
             return false;
         if (Enum.Parse(TerritoryEnumType, neighborName) is not Enum neighborEnum)
             return false;
-        try {
+        try
+        {
             if (!TerritoryNeighbors.ContainsKey(territoryEnum))
                 TerritoryNeighbors.Add(territoryEnum, []);
 
             TerritoryNeighbors[territoryEnum].Add(neighborEnum);
-        } catch {
+        }
+        catch
+        {
             return false;
         }
         return true;

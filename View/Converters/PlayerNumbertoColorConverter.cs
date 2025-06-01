@@ -13,16 +13,19 @@ public class PlayerNumbertoColorConverter : IMultiValueConverter
         int playerOwner = (int)values[1];
         int numPlayers = colorsList.Count;
 
-        if (numPlayers > 2) {
+        if (numPlayers > 2)
+        {
             if (playerOwner < 0)
                 return Brushes.Transparent;
             else
                 return new SolidColorBrush(colorsList[playerOwner].Color);
         }
-        else if (numPlayers == 2) {
+        else if (numPlayers == 2)
+        {
             if (playerOwner < -1)
                 return Brushes.Transparent;
-            else if (playerOwner == -1) {
+            else if (playerOwner == -1)
+            {
                 SolidColorBrush aiColor = new() { Color = Brushes.MediumPurple.Color };
                 return aiColor;
             }

@@ -11,7 +11,8 @@ public class CardControlFactory(IMainVM viewModel)
     public UserControl GetCardControl(ICardInfo card)
     {
         Face newCardFace;
-        if (card is ITroopCardInfo troopCard) {
+        if (card is ITroopCardInfo troopCard)
+        {
             if (string.IsNullOrEmpty(troopCard.InsigniaName))
                 throw new ArgumentOutOfRangeException(nameof(card));
 
@@ -21,7 +22,8 @@ public class CardControlFactory(IMainVM viewModel)
                 newCardFace = Face.Troop;
             else throw new ArgumentOutOfRangeException(nameof(card));
 
-            TroopCardControl newCard = new(_viewModel) {
+            TroopCardControl newCard = new(_viewModel)
+            {
                 Content = card,
                 CardFace = newCardFace,
                 Owner = card.Owner ?? -1

@@ -25,7 +25,8 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
     {
         int numRewards = 0;
         List<SerializedData> rewardData = [];
-        if (Reward != null) {
+        if (Reward != null)
+        {
             rewardData.AddRange(await Reward.GetBinarySerials());
             numRewards = 1;
         }
@@ -44,22 +45,27 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;
-        try {
+        try
+        {
             _actionsCounter = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             _prevActionCount = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             CurrentActionsLimit = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             int numRewards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             if (numRewards == 0)
                 Reward = null;
-            else {
+            else
+            {
                 string cardTypeName = reader.ReadString();
-                if (_currentGame?.Cards?.CardFactory.BuildCard(cardTypeName) is not ICard rewardCard) {
+                if (_currentGame?.Cards?.CardFactory.BuildCard(cardTypeName) is not ICard rewardCard)
+                {
                     throw new InvalidDataException("While loading Regulator, construction of the reward card failed");
                 }
                 rewardCard.LoadFromBinary(reader);
                 Reward = rewardCard;
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             _logger.LogError("An exception was thrown while loading {Regulator}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
         }
@@ -89,7 +95,8 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
     {
         CurrentActionsLimit = _currentGame.Values.SetupActionsPerPlayers[_numPlayers];
 
-        if (_currentGame?.State?.CurrentPhase == GamePhase.TwoPlayerSetup) {
+        if (_currentGame?.State?.CurrentPhase == GamePhase.TwoPlayerSetup)
+        {
             // _currentGame?.AutoBoard(); For MockGame, we don't need to arrange the Board
             _prevActionCount = _actionsCounter;
         }
@@ -100,7 +107,8 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
         _currentGame = (MockGame)game;
         _numPlayers = _currentGame.Players!.Count;
 
-        if (loadedValues != null) {
+        if (loadedValues != null)
+        {
             _actionsCounter = (int)(loadedValues?[0] ?? 0);
             _prevActionCount = (int)(loadedValues?[1] ?? 0);
             CurrentActionsLimit = (int)(loadedValues?[2] ?? 0);

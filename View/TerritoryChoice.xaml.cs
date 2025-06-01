@@ -31,14 +31,16 @@ public partial class TerritoryChoice : Window
     public IMainVM? BoardVM { get; init; }
 
     #region DependencyProperties
-    public Tuple<int, string, Geometry, SolidColorBrush>[] TerritoryChoiceItems {
+    public Tuple<int, string, Geometry, SolidColorBrush>[] TerritoryChoiceItems
+    {
         get { return (Tuple<int, string, Geometry, SolidColorBrush>[])GetValue(TerritoryChoiceItemsProperty); }
         set { SetValue(TerritoryChoiceItemsProperty, value); }
     }
     public static readonly DependencyProperty TerritoryChoiceItemsProperty =
         DependencyProperty.Register("TerritoryChoiceItems", typeof(Tuple<int, string, Geometry, SolidColorBrush>[]), typeof(TerritoryChoice), new PropertyMetadata());
 
-    public ValueTuple<int, string>[] TerritoryChoiceData {
+    public ValueTuple<int, string>[] TerritoryChoiceData
+    {
         get { return (ValueTuple<int, string>[])GetValue(TerritoryChoiceDataProperty); }
         set { SetValue(TerritoryChoiceDataProperty, value); }
     }

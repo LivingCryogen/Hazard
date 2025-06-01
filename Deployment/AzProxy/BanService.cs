@@ -24,18 +24,21 @@ public class BanService(ILogger<BanService> logger, IConfiguration config, IBanC
     public bool Allow(string address, int requests)
     {
         // Check request limit, issue ban and reject if so
-        if (requests > _maxRequests) {
+        if (requests > _maxRequests)
+        {
             IssueBan(address);
             return false;
         }
         // If not banned, accept
         if (!_cache.TryGetBan(address, out Ban? ban))
             return true;
-        if (ban == null) {
+        if (ban == null)
+        {
             _logger.LogWarning("Address {address} was found in the ban cache but with a null Ban reference.", address);
             return true;
         }
-        if (ban.Type == Ban.BanType.None) {
+        if (ban.Type == Ban.BanType.None)
+        {
             _logger.LogWarning("Address {address} was found in the ban cache with Ban type of none.", address);
             return true;
         }

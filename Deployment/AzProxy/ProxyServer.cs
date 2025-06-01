@@ -24,10 +24,12 @@ namespace AzProxy
                         IConfiguration config,
                         ILogger<ProxyServer> logger) =>
                 {
-                    try {
+                    try
+                    {
                         // get client IP
                         string? clientIP = context.Connection.RemoteIpAddress?.ToString();
-                        if (string.IsNullOrEmpty(clientIP)) {
+                        if (string.IsNullOrEmpty(clientIP))
+                        {
                             logger.LogWarning("Request received without IP address");
                             context.Response.StatusCode = StatusCodes.Status400BadRequest;
                             await context.Response.WriteAsync("Invalid request.");
@@ -35,7 +37,8 @@ namespace AzProxy
                         }
 
                         // reject if banned
-                        if (!requestHandler.ValidateRequest(clientIP)) {
+                        if (!requestHandler.ValidateRequest(clientIP))
+                        {
                             logger.LogInformation("Request from address {clientIP} was rejected due to ban or rate restriction.", clientIP);
                             context.Response.StatusCode = StatusCodes.Status403Forbidden;
                             await context.Response.WriteAsync("Request denied. This has been rate restricted or banned.");
@@ -46,7 +49,8 @@ namespace AzProxy
                         var azFuncURL = config["AzureFunctionURL"];
                         var azFuncKey = config["AzureFunctionKey"];
 
-                        if (string.IsNullOrEmpty(azFuncURL) || string.IsNullOrEmpty(azFuncKey)) {
+                        if (string.IsNullOrEmpty(azFuncURL) || string.IsNullOrEmpty(azFuncKey))
+                        {
                             logger.LogInformation("Azure function forwarding incorrectly configured. Request failed.");
                             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                             await context.Response.WriteAsync("Server configuration error.");
@@ -54,7 +58,8 @@ namespace AzProxy
                         }
 
                         // forward to az function
-                        try {
+                        try
+                        {
                             // use Query string 
                             string clientQuery = context.Request.QueryString.Value ?? string.Empty;
                             string azTarget = $"{azFuncURL}{clientQuery}";
@@ -64,7 +69,8 @@ namespace AzProxy
 
                             var azResponse = await azClient.GetAsync(azTarget);
 
-                            if (!azResponse.IsSuccessStatusCode) {
+                            if (!azResponse.IsSuccessStatusCode)
+                            {
                                 logger.LogError("Azure Function returned an error: {StatusCode}", azResponse.StatusCode);
                                 context.Response.StatusCode = (int)azResponse.StatusCode;
                                 await context.Response.WriteAsync("External dependency failed.");
@@ -73,7 +79,8 @@ namespace AzProxy
 
                             var funcContent = await azResponse.Content.ReadAsStringAsync();
                             var funcJson = JsonConvert.DeserializeObject<FunctionResponse>(funcContent);
-                            if (funcJson == null) {
+                            if (funcJson == null)
+                            {
                                 logger.LogError("Azure Function did not return a valid response.");
                                 context.Response.StatusCode = StatusCodes.Status417ExpectationFailed;
                                 await context.Response.WriteAsync("External dependency failed.");
@@ -85,23 +92,33 @@ namespace AzProxy
                             context.Response.Headers.Append("Location", redirectURL);
                             await context.Response.CompleteAsync();
 
-                        } catch (Exception ex) {
+                        }
+                        catch (Exception ex)
+                        {
                             logger.LogError(ex, "There was an error while forwarding request to Azure function: {message}.", ex.Message);
                             context.Response.StatusCode = StatusCodes.Status502BadGateway;
                             await context.Response.WriteAsync("Error processing request while trying to fetch an SAS token for secure connection to storage.");
                         }
-                    } catch (OperationCanceledException) {
+                    }
+                    catch (OperationCanceledException)
+                    {
                         logger.LogWarning("Request was canceled by client.");
                         context.Response.StatusCode = StatusCodes.Status499ClientClosedRequest;
-                    } catch (ArgumentException argEx) {
+                    }
+                    catch (ArgumentException argEx)
+                    {
                         logger.LogWarning(argEx, "A configuration or argument error occurred: {Message}", argEx.Message);
                         context.Response.StatusCode = StatusCodes.Status400BadRequest;
                         await context.Response.WriteAsync("Bad request: invalid configuration or input.");
-                    } catch (HttpRequestException httpEx) {
+                    }
+                    catch (HttpRequestException httpEx)
+                    {
                         logger.LogError(httpEx, "An error occurred while making an HTTP request: {Message}", httpEx.Message);
                         context.Response.StatusCode = StatusCodes.Status502BadGateway;
                         await context.Response.WriteAsync("Failed to process the request due to an external service error.");
-                    } catch (Exception ex) {
+                    }
+                    catch (Exception ex)
+                    {
                         logger.LogError(ex, "An unexpected error occurred: {Message}", ex.Message);
                         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                         await context.Response.WriteAsync("An unexpected server error occurred.");

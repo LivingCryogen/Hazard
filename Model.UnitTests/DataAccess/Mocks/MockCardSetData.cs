@@ -11,10 +11,13 @@ public class MockCardSetData : ITroopCardSetData
     public MockCard.Insignia[] Insignia { get; set; } = [];
     public MockTerrID[][] Targets { get; set; } = [];
     TroopInsignia[] ITroopCardSetData.Insignia { get => Insignia.Select(insigne => ((TroopInsignia)((int)insigne))).ToArray(); set { } }
-    TerrID[][] ICardSetData.Targets {
-        get {
+    TerrID[][] ICardSetData.Targets
+    {
+        get
+        {
             List<TerrID[]> castList = [];
-            foreach (MockTerrID[] targetList in Targets) {
+            foreach (MockTerrID[] targetList in Targets)
+            {
                 List<TerrID> innerCastList = [];
                 foreach (MockTerrID id in targetList)
                     innerCastList.Add((TerrID)(int)id);

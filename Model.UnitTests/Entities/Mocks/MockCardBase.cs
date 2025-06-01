@@ -17,7 +17,8 @@ public class MockCardBase : CardBase
         if (numMockCards != mockData.Insignia.Length)
             throw new Exception($"{mockData} returned improper data.");
         List<MockCard> mockCards = [];
-        for (int i = 0; i < numMockCards; i++) {
+        for (int i = 0; i < numMockCards; i++)
+        {
             MockCard newMock = new(mockSet) { Target = mockData.Targets[i], Insigne = mockData.Insignia[i] };
             newMock.FillTestValues();
             mockCards.Add(newMock);

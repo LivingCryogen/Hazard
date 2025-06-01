@@ -18,7 +18,8 @@ public class CardControlContentTemplateSelector(MainVM_Base vM) : DataTemplateSe
         if (container is not FrameworkElement control || item is not ICardInfo cardInfo)
             return null;
 
-        if (cardInfo is ITroopCardInfo troopCardInfo) {
+        if (cardInfo is ITroopCardInfo troopCardInfo)
+        {
             if (cardInfo.Owner != _vM.PlayerTurn || string.IsNullOrEmpty(troopCardInfo.InsigniaName))
                 return _backTemplate;
 

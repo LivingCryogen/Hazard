@@ -28,7 +28,8 @@ public class AssetFetcher(IAssetFactory factory, IOptions<AppConfig> options) : 
         foreach (string fileName in _dataFileMap.Keys)
             if (fileName.Contains(_cardDataSearchString))
                 filePaths.Add(_dataFileMap[fileName]);
-        foreach (string path in filePaths) {
+        foreach (string path in filePaths)
+        {
             string fileName = Path.GetFileNameWithoutExtension(path);
             string typeName = fileName.Replace("Set", "");
             if (_factory.GetAsset(typeName) is ICardSet cardSetData)

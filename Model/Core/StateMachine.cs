@@ -35,7 +35,8 @@ public class StateMachine : IBinarySerializable
         NumPlayers = numPlayers;
         _logger = logger;
 
-        CurrentPhase = NumPlayers switch {
+        CurrentPhase = NumPlayers switch
+        {
             2 => GamePhase.TwoPlayerSetup,
             int n when n > 2 && n < 7 => GamePhase.DefaultSetup,
             _ => GamePhase.Null,
@@ -63,10 +64,13 @@ public class StateMachine : IBinarySerializable
     /// <summary>
     /// Gets what phase the game is currently in, or sets the phase and invokes <see cref="StateChanged"/>.
     /// </summary>
-    public GamePhase CurrentPhase {
+    public GamePhase CurrentPhase
+    {
         get { return _currentPhase; }
-        set {
-            if (!value.Equals(_currentPhase)) {
+        set
+        {
+            if (!value.Equals(_currentPhase))
+            {
                 _currentPhase = value;
                 StateChanged?.Invoke(this, new(nameof(CurrentPhase)));
             }
@@ -78,10 +82,13 @@ public class StateMachine : IBinarySerializable
     /// In the second stage, it must use this selection together with a second input: the attack target.</example></para>
     /// </summary>
     /// <value><see langword="true"/> if the <see cref="CurrentPhase"/> is a two-stage <see cref="GamePhase"/> and is in its second stage. Otherwise, <see langword="false"/>.</value>  
-    public bool PhaseStageTwo {
+    public bool PhaseStageTwo
+    {
         get { return _phaseStageTwo; }
-        set {
-            if (!value.Equals(_phaseStageTwo)) {
+        set
+        {
+            if (!value.Equals(_phaseStageTwo))
+            {
                 _phaseStageTwo = value;
                 StateChanged?.Invoke(this, new(nameof(PhaseStageTwo)));
             }
@@ -93,10 +100,13 @@ public class StateMachine : IBinarySerializable
     /// <value>
     /// An integer assignation for a player, from 0-5. 
     /// </value>
-    public int PlayerTurn {
+    public int PlayerTurn
+    {
         get { return _playerTurn; }
-        set {
-            if (!value.Equals(_playerTurn)) {
+        set
+        {
+            if (!value.Equals(_playerTurn))
+            {
                 _playerTurn = value;
                 StateChanged?.Invoke(this, new(nameof(PlayerTurn)));
             }
@@ -109,10 +119,13 @@ public class StateMachine : IBinarySerializable
     /// <value>
     /// An integer representing the number of times the turn has passed to each player.
     /// </value>
-    public int Round {
+    public int Round
+    {
         get { return _round; }
-        set {
-            if (!value.Equals(_round)) {
+        set
+        {
+            if (!value.Equals(_round))
+            {
                 _round = value;
                 StateChanged?.Invoke(this, new(nameof(Round)));
             }
@@ -124,10 +137,13 @@ public class StateMachine : IBinarySerializable
     /// <value>
     /// An integer of 0 or more that is incremented each time a player trades in a set of cards.
     /// </value>
-    public int NumTrades {
+    public int NumTrades
+    {
         get { return _numTrades; }
-        set {
-            if (!value.Equals(_numTrades)) {
+        set
+        {
+            if (!value.Equals(_numTrades))
+            {
                 _numTrades = value;
                 StateChanged?.Invoke(this, new(nameof(NumTrades)));
             }
@@ -162,7 +178,8 @@ public class StateMachine : IBinarySerializable
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;
-        try {
+        try
+        {
             NumPlayers = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             byte activePlayerByte = (byte)BinarySerializer.ReadConvertible(reader, typeof(byte));
             IsActivePlayer = new(new byte[] { activePlayerByte }); // Reverse of "BitArrayToByte()" method
@@ -171,7 +188,9 @@ public class StateMachine : IBinarySerializable
             _playerTurn = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             _round = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             _numTrades = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             _logger.LogError("An exception was thrown while loading {Player}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
         }
@@ -201,10 +220,12 @@ public class StateMachine : IBinarySerializable
     /// <exception cref="InvalidOperationException">Thrown if there is an attempt to calculate the next active player when all players are inactive.</exception>
     public void IncrementPlayerTurn()
     {
-        if (CurrentPhase == GamePhase.DefaultSetup || CurrentPhase == GamePhase.TwoPlayerSetup) {
+        if (CurrentPhase == GamePhase.DefaultSetup || CurrentPhase == GamePhase.TwoPlayerSetup)
+        {
             if (PlayerTurn >= NumPlayers)
                 PlayerTurn = 0;
-            else {
+            else
+            {
                 int firstActive = NextActivePlayer();
                 if (firstActive != -1)
                     PlayerTurn = firstActive;
@@ -212,10 +233,12 @@ public class StateMachine : IBinarySerializable
                     throw new InvalidOperationException("No Active Player Remaining!");
             }
         }
-        else if (PlayerTurn >= NumPlayers) {
+        else if (PlayerTurn >= NumPlayers)
+        {
             IncrementRound();
         }
-        else {
+        else
+        {
             int firstActive = NextActivePlayer();
             if (firstActive != -1)
                 PlayerTurn = firstActive;
@@ -236,7 +259,8 @@ public class StateMachine : IBinarySerializable
             intPhase++;
             CurrentPhase = (GamePhase)intPhase;
         }
-        else if (intPhase == 3) {
+        else if (intPhase == 3)
+        {
             IncrementPlayerTurn();
         }
         else if (intPhase == -1) // TwoPlayerSetup (-1)
@@ -278,7 +302,8 @@ public class StateMachine : IBinarySerializable
 
         // Loop until we find an active player or we've checked all of them.
         int index = start;
-        do {
+        do
+        {
             if (IsActivePlayer[index])
                 return index;
             else
@@ -293,9 +318,11 @@ public class StateMachine : IBinarySerializable
     }
     private int NextActivePlayer(int start) // begins checking at a specified player number, *inclusive*
     {
-        if (start >= 0 && start < NumPlayers) {
+        if (start >= 0 && start < NumPlayers)
+        {
             int index = start;
-            do {
+            do
+            {
                 if (IsActivePlayer[index])
                     return index;
                 else
@@ -329,7 +356,8 @@ public class StateMachine : IBinarySerializable
         byte[] converted = new byte[1];
         if (bitArray.Count > 8)
             throw new ArgumentOutOfRangeException(nameof(bitArray));
-        else {
+        else
+        {
             bitArray.CopyTo(converted, 0);
             return converted[0];
         }

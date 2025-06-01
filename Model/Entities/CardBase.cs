@@ -49,10 +49,12 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
             return;
 
         List<ICard> defaultCards = [];
-        foreach (var set in Sets) {
+        foreach (var set in Sets)
+        {
             if (set.Cards.Count == 0)
                 continue;
-            if (set.Cards.OfType<ITroopCard>().Count() == set.Cards.Count) {
+            if (set.Cards.OfType<ITroopCard>().Count() == set.Cards.Count)
+            {
                 defaultCards.AddRange(set.Cards);
                 var setTypeName = set.GetType().Name;
                 foreach (ICard card in defaultCards)
@@ -100,9 +102,12 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
         foreach (ICardSet set in Sets)
             cardSetToTypeNameMap.Add(set.TypeName, set);
 
-        foreach (ICard card in cards) {
-            if (cardSetToTypeNameMap.TryGetValue(card.ParentTypeName, out ICardSet? parentSet)) {
-                if (parentSet?.MemberTypeName != card.TypeName) {
+        foreach (ICard card in cards)
+        {
+            if (cardSetToTypeNameMap.TryGetValue(card.ParentTypeName, out ICardSet? parentSet))
+            {
+                if (parentSet?.MemberTypeName != card.TypeName)
+                {
                     _logger?.LogWarning("{Card} was registered as a member of {Set} but member and parent type names were mismatched. ", card, parentSet);
                     continue;
                 }
@@ -113,20 +118,24 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
                 parentSet.Cards.Add(card);
                 continue;
             }
-            if (registry[card.ParentTypeName] is not Type parentType) {
+            if (registry[card.ParentTypeName] is not Type parentType)
+            {
                 _logger?.LogWarning("The name {Name} registered as parent type for {Card} was not found in the registry.", card.ParentTypeName, card);
                 continue;
             }
-            if (parentType.Name != card.ParentTypeName) {
+            if (parentType.Name != card.ParentTypeName)
+            {
                 _logger?.LogWarning("{Name}, the name of the type registered as parent of {Card}, did not match the expected value ({Expected}).", parentType.Name, card, card.ParentTypeName);
                 continue;
             }
             var setObject = Activator.CreateInstance(parentType);
-            if (setObject is not ICardSet parentSetObject) {
+            if (setObject is not ICardSet parentSetObject)
+            {
                 _logger?.LogWarning("Activation of type {Type}, which was registered as parent of {Card}, failed.", parentType, card);
                 continue;
             }
-            if (parentSetObject.MemberTypeName != card.TypeName) {
+            if (parentSetObject.MemberTypeName != card.TypeName)
+            {
                 _logger?.LogWarning("{Name}, the name of the type registered as member of {Set}, did not match the expected value({Expected}).", card.TypeName, card, card.ParentTypeName);
                 continue;
             }
@@ -147,14 +156,16 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
             List<SerializedData> serials = [];
             int numLibrary = GameDeck.Library.Count;
             serials.Add(new(typeof(int), [numLibrary]));
-            for (int i = 0; i < numLibrary; i++) {
+            for (int i = 0; i < numLibrary; i++)
+            {
                 ICard currentCard = GameDeck.Library[i];
                 IEnumerable<SerializedData> cardSerials = await currentCard.GetBinarySerials();
                 serials.AddRange(cardSerials ?? []);
             }
             int numDiscard = GameDeck.DiscardPile.Count;
             serials.Add(new(typeof(int), [numDiscard]));
-            for (int i = 0; i < numDiscard; i++) {
+            for (int i = 0; i < numDiscard; i++)
+            {
                 ICard currentCard = GameDeck.DiscardPile[i];
                 IEnumerable<SerializedData> cardSerials = await currentCard.GetBinarySerials();
                 serials.AddRange(cardSerials ?? []);
@@ -170,12 +181,15 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
         GameDeck.DiscardPile = [];
         bool loadComplete = true;
 
-        try {
+        try
+        {
             int numLibrary = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             List<ICard> newLibrary = [];
-            for (int i = 0; i < numLibrary; i++) {
+            for (int i = 0; i < numLibrary; i++)
+            {
                 string typeName = reader.ReadString();
-                if (CardFactory.BuildCard(typeName) is not ICard newCard) {
+                if (CardFactory.BuildCard(typeName) is not ICard newCard)
+                {
                     _logger?.LogWarning("{CardFactory} failed to construct a card of type {name} during loading of {base}.", CardFactory, typeName, this);
                     loadComplete = false;
                     continue;
@@ -186,9 +200,11 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
             }
             List<ICard> newDiscard = [];
             int numDiscard = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-            for (int i = 0; i < numDiscard; i++) {
+            for (int i = 0; i < numDiscard; i++)
+            {
                 string typeName = reader.ReadString();
-                if (CardFactory.BuildCard(typeName) is not ICard newCard) {
+                if (CardFactory.BuildCard(typeName) is not ICard newCard)
+                {
                     _logger?.LogWarning("{CardFactory} failed to construct a card of type {name} during loading of {base}.", CardFactory, typeName, this);
                     loadComplete = false;
                     continue;
@@ -199,7 +215,9 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
 
             InitializeLibrary([.. newLibrary]);
             InitializeDiscardPile([.. newDiscard]);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             _logger?.LogError("An exception was thrown while loading {CardBase}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
         }

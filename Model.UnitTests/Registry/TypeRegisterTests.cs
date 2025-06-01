@@ -137,9 +137,12 @@ public class TypeRegisterTests
         TypeRegister testRegister = new(new MockRegistryInitializer());
         testRegister.Register(GetType(), new TypeRelations([(nameof(TypeRegisterTests), RegistryRelation.Name)]));
 
-        try {
+        try
+        {
             testRegister.AddRelation(typeof(TroopCard), ("TroopCard", RegistryRelation.Name));
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.IsInstanceOfType(ex, typeof(ArgumentException));
         }
     }
@@ -161,9 +164,12 @@ public class TypeRegisterTests
         var testRegister = new TypeRegister(new MockRegistryInitializer());
         testRegister.Register(GetType(), new TypeRelations([(GetType().Name, RegistryRelation.Name)]));
 
-        try {
+        try
+        {
             testRegister.RemoveRelation(typeof(TroopCard), RegistryRelation.Name);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.IsInstanceOfType(ex, typeof(KeyNotFoundException));
         }
     }
@@ -173,9 +179,12 @@ public class TypeRegisterTests
         var testRegister = new TypeRegister(new MockRegistryInitializer());
         testRegister.Register(GetType(), new TypeRelations([(GetType().Name, RegistryRelation.Name)]));
 
-        try {
+        try
+        {
             testRegister.RemoveRelation(GetType(), RegistryRelation.DataFileName);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.IsInstanceOfType(ex, typeof(ArgumentException));
         }
     }
@@ -201,9 +210,12 @@ public class TypeRegisterTests
         var thisType = GetType();
         testRegister.Register(thisType, new TypeRelations([(thisType.Name, RegistryRelation.Name)]));
 
-        try {
+        try
+        {
             testRegister.DeRegister(typeof(TroopCard));
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.IsInstanceOfType(ex, typeof(ArgumentException));
         }
     }

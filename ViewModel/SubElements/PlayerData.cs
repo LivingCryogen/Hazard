@@ -35,8 +35,10 @@ public partial class PlayerData : ObservableObject, IPlayerData
         ArmyPool = player.ArmyPool;
         ArmyBonus = player.ArmyBonus;
         NumContinents = 0;
-        if (player.Hand != null) {
-            for (int i = 0; i < player.Hand.Count; i++) {
+        if (player.Hand != null)
+        {
+            for (int i = 0; i < player.Hand.Count; i++)
+            {
                 Hand.Add((ICardInfo)CardInfoFactory.BuildCardInfo(player.Hand[i], _number, i));
             }
         }
@@ -52,7 +54,8 @@ public partial class PlayerData : ObservableObject, IPlayerData
     {
         if (e.NewItems?[0] is ContID newContID)
             ContinentNames.Add(VMInstance.ContNameMap[newContID]);
-        else if (e.OldItems?[0] is ContID oldContID) {
+        else if (e.OldItems?[0] is ContID oldContID)
+        {
             var oldName = VMInstance.ContNameMap[oldContID];
             ContinentNames.Remove(oldName);
         }
@@ -62,13 +65,16 @@ public partial class PlayerData : ObservableObject, IPlayerData
         if (sender is not IPlayer player)
             return;
 
-        switch (e.PropertyName) {
+        switch (e.PropertyName)
+        {
             case "ControlledTerritories":
-                if (e.OldValue is TerrID oldTerritory) {
+                if (e.OldValue is TerrID oldTerritory)
+                {
                     Realm.Remove(oldTerritory);
                     NumTerritories--;
                 }
-                if (e.NewValue is TerrID newTerritory) {
+                if (e.NewValue is TerrID newTerritory)
+                {
                     Realm.Add(newTerritory);
                     NumTerritories++;
                 }

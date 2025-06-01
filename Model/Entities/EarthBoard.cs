@@ -23,7 +23,8 @@ public class EarthBoard : IBoard, IBinarySerializable
         _logger = logger;
         Armies = [];
         TerritoryOwner = [];
-        for (int i = 0; i < BoardGeography.NumTerritories; i++) {
+        for (int i = 0; i < BoardGeography.NumTerritories; i++)
+        {
             Armies.Add((TerrID)i, int.Parse(config["StartingArmies"] ?? "0"));
             TerritoryOwner.Add((TerrID)i, -1);
         }
@@ -63,8 +64,10 @@ public class EarthBoard : IBoard, IBinarySerializable
     /// <param name="playerNumber">The <see cref="int">number</see> of the <see cref="IPlayer"/> who owns the territories or continents.</param>
     /// <param name="enumName">The name of <see cref="TerrID"/> or of <see cref="ContID"/>, for territory and continent, respectively.</param>
     /// <returns>A <see cref="List{T}"/> of either <see cref="TerrID"/> or <see cref="ContID"/>.</returns>
-    public List<object> this[int playerNumber, string enumName] {
-        get {
+    public List<object> this[int playerNumber, string enumName]
+    {
+        get
+        {
             if (string.IsNullOrEmpty(enumName)) return [];
             if (enumName == nameof(TerrID))
                 return TerritoryOwner
@@ -132,14 +135,16 @@ public class EarthBoard : IBoard, IBinarySerializable
         if (continentTerritories == null || continentTerritories.Count <= 0)
             return;
 
-        if (ContinentOwner[changedHomeContinent] == previousOwner && previousOwner > -1) {
+        if (ContinentOwner[changedHomeContinent] == previousOwner && previousOwner > -1)
+        {
             ContinentOwner[changedHomeContinent] = -1;
             if (continentTerritories.All(item => TerritoryOwner[item] == newOwner))
                 ContinentOwner[changedHomeContinent] = newOwner;
 
             ContinentOwnerChanged?.Invoke(this, new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
         }
-        else if (continentTerritories.All(item => TerritoryOwner[item] == newOwner)) {
+        else if (continentTerritories.All(item => TerritoryOwner[item] == newOwner))
+        {
             ContinentOwner[changedHomeContinent] = newOwner;
             ContinentOwnerChanged?.Invoke(this, new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
         }
@@ -156,11 +161,13 @@ public class EarthBoard : IBoard, IBinarySerializable
             saveData[0] = new(typeof(int), [numCont]);
             saveData[1] = new(typeof(int), [numTerr]);
             int dataIndex = 2;
-            for (int i = 0; i < numCont; i++) {
+            for (int i = 0; i < numCont; i++)
+            {
                 saveData[dataIndex] = new(typeof(int), [ContinentOwner[(ContID)i]]);
                 dataIndex++;
             }
-            for (int i = 0; i < numTerr; i++) {
+            for (int i = 0; i < numTerr; i++)
+            {
                 saveData[dataIndex] = new(typeof(int), [TerritoryOwner[(TerrID)i]]);
                 dataIndex++;
                 saveData[dataIndex] = new(typeof(int), [Armies[(TerrID)i]]);
@@ -174,7 +181,8 @@ public class EarthBoard : IBoard, IBinarySerializable
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;
-        try {
+        try
+        {
             int numCont = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             int numTerr = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             ContinentOwner.Clear();
@@ -182,11 +190,14 @@ public class EarthBoard : IBoard, IBinarySerializable
                 ContinentOwner.Add((ContID)i, (int)BinarySerializer.ReadConvertible(reader, typeof(int)));
             TerritoryOwner.Clear();
             Armies.Clear();
-            for (int i = 0; i < numTerr; i++) {
+            for (int i = 0; i < numTerr; i++)
+            {
                 TerritoryOwner.Add((TerrID)i, (int)BinarySerializer.ReadConvertible(reader, typeof(int)));
                 Armies.Add((TerrID)i, (int)BinarySerializer.ReadConvertible(reader, typeof(int)));
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             _logger.LogError("An exception was thrown while loading {EarthBoard}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
             loadComplete = false;
         }

@@ -9,7 +9,8 @@ public class MockFileData
     {
         List<MockCard.Insignia> newInsignia = [];
         int enumCounter = 0;
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 50; i++)
+        {
             newInsignia.Add((MockCard.Insignia)enumCounter);
             enumCounter++;
             if (enumCounter > 2)

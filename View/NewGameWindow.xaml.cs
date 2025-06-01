@@ -47,14 +47,17 @@ public partial class NewGameWindow : Window
         NewPlayerColor = [null, null, null, null, null, null];
         NewPlayerName = ["", "", "", "", "", ""];
 
-        foreach (ObservableCollection<Tuple<ArmyColor, SolidColorBrush>> obs in ColorsRemaining) {
+        foreach (ObservableCollection<Tuple<ArmyColor, SolidColorBrush>> obs in ColorsRemaining)
+        {
             foreach (Tuple<ArmyColor, SolidColorBrush> colorPair in _armyColors)
                 obs.Add(colorPair);
         }
 
-        foreach (object obj in NewGameGrid.Children) {
+        foreach (object obj in NewGameGrid.Children)
+        {
             Type childType = obj.GetType();
-            if (childType.Equals(typeof(WrapPanel))) {
+            if (childType.Equals(typeof(WrapPanel)))
+            {
                 if (((WrapPanel)obj).Name != "NumPlayersWrap")
                     ((WrapPanel)obj).IsEnabled = false;
             }
@@ -79,7 +82,8 @@ public partial class NewGameWindow : Window
     private static void TogglePlayerWrapPanels(int numSelection, List<WrapPanel> wrapList)
     {
         int nameNum;
-        foreach (WrapPanel panel in wrapList) {
+        foreach (WrapPanel panel in wrapList)
+        {
             nameNum = panel.Name[6];
 
             if (nameNum <= numSelection)
@@ -152,7 +156,8 @@ public partial class NewGameWindow : Window
     {
         List<WrapPanel> returnList = [];
 
-        foreach (object obj in grid.Children) {
+        foreach (object obj in grid.Children)
+        {
             if (obj is not WrapPanel panel)
                 continue;
             if (panel.Name != "" && panel.Name != "NumPlayersWrap")
@@ -163,7 +168,8 @@ public partial class NewGameWindow : Window
     }
     private void RemoveFromOthers(Tuple<ArmyColor, SolidColorBrush> colorInfo, int boxIndex)
     {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++)
+        {
             if (i == boxIndex)
                 continue;
             if (ColorsRemaining[i].Contains(colorInfo))
@@ -172,7 +178,8 @@ public partial class NewGameWindow : Window
     }
     private void AddToOthers(Tuple<ArmyColor, SolidColorBrush> colorInfo, int boxIndex)
     {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++)
+        {
             if (i == boxIndex)
                 continue;
             ColorsRemaining[i].Add(colorInfo);

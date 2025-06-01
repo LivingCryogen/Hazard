@@ -10,7 +10,8 @@ public class MockDataProvider(Dictionary<string, string> dataFileMap) : IDataPro
 
     public object? GetData(string typeName)
     {
-        if (typeName == "MockCard") {
+        if (typeName == "MockCard")
+        {
             var set = new MockCardSet { JData = new MockCardSetData() };
             ((MockCardSetData)(set.JData)).BuildFromMockData();
             return set;

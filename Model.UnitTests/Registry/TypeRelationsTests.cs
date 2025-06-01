@@ -44,9 +44,12 @@ public class TypeRelationsTests
         RegistryRelation repeatRelation = RegistryRelation.Name;
         object testParam = "Test";
 
-        try {
+        try
+        {
             _testRelations.Add(testParam, repeatRelation);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.IsInstanceOfType(ex, typeof(ArgumentException));
         }
     }
@@ -68,9 +71,11 @@ public class TypeRelationsTests
         RegistryRelation testRelation = RegistryRelation.Name;
         object testParam = 123;
 
-        try {
+        try
+        {
             _testRelations.Add(testParam, testRelation);
-        } catch (Exception ex) { Assert.IsInstanceOfType(ex, typeof(ArgumentException)); }
+        }
+        catch (Exception ex) { Assert.IsInstanceOfType(ex, typeof(ArgumentException)); }
     }
     [TestMethod]
     public void Add_DataFileNameRelationIsString_AddsToDictionary()
@@ -90,9 +95,11 @@ public class TypeRelationsTests
         RegistryRelation testRelation = RegistryRelation.DataFileName;
         object testParam = 123;
 
-        try {
+        try
+        {
             _testRelations.Add(testParam, testRelation);
-        } catch (Exception ex) { Assert.IsInstanceOfType(ex, typeof(ArgumentException)); }
+        }
+        catch (Exception ex) { Assert.IsInstanceOfType(ex, typeof(ArgumentException)); }
     }
     [TestMethod]
     public void Add_DataConverterIsClass_AddsToDictionary()
@@ -112,9 +119,12 @@ public class TypeRelationsTests
         RegistryRelation testRelation = RegistryRelation.DataConverter;
         object testObj = new TestStruct();
 
-        try {
+        try
+        {
             _testRelations.Add(testObj, testRelation);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.IsInstanceOfType(ex, typeof(ArgumentException));
         }
     }
@@ -136,9 +146,12 @@ public class TypeRelationsTests
         RegistryRelation testRelation = RegistryRelation.ConvertedDataType;
         object testObj = this;
 
-        try {
+        try
+        {
             _testRelations.Add(testObj, testRelation);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.IsInstanceOfType(ex, typeof(ArgumentException));
         }
     }
@@ -163,9 +176,12 @@ public class TypeRelationsTests
         Assert.IsNotNull(_testRelations);
         RegistryRelation removeTestRelation = RegistryRelation.Name;
 
-        try {
+        try
+        {
             _testRelations.Remove(removeTestRelation);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.IsInstanceOfType(ex, typeof(KeyNotFoundException));
         }
     }

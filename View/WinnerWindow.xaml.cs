@@ -26,14 +26,16 @@ public partial class WinnerWindow : Window
     #endregion
 
     #region DependencyProperties
-    public SolidColorBrush WinnerColor {
+    public SolidColorBrush WinnerColor
+    {
         get { return (SolidColorBrush)GetValue(WinnerColorProperty); }
         set { SetValue(WinnerColorProperty, value); }
     }
     public static readonly DependencyProperty WinnerColorProperty =
         DependencyProperty.Register("WinnerColor", typeof(SolidColorBrush), typeof(WinnerWindow), new PropertyMetadata(defaultValue: Brushes.Beige));
 
-    public string WinnerName {
+    public string WinnerName
+    {
         get { return (string)GetValue(WinnerNameProperty); }
         set { SetValue(WinnerNameProperty, value); }
     }

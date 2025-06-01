@@ -56,7 +56,8 @@ public class AssetFactory : IAssetFactory
     {
         var dataObject = _dataProvider?.GetData(typeName);
 
-        switch (dataObject) {
+        switch (dataObject)
+        {
             case ICardSet cardSet:
                 cardSet.Cards = [.. BuildTroopCards(cardSet)];
                 return cardSet;
@@ -77,25 +78,29 @@ public class AssetFactory : IAssetFactory
         List<TroopCard> troopCards = [];
         if (troopCardSet.JData == null ||
             troopCardSet.JData.Targets == null ||
-            ((ITroopCardSetData)troopCardSet.JData).Insignia == null) {
+            ((ITroopCardSetData)troopCardSet.JData).Insignia == null)
+        {
             _logger.LogWarning($"Valid ICardSetData for TroopCards not found by AssetFactory.");
             return [];
         }
 
         int numTroopCards = troopCardSet.JData.Targets.Length;
-        for (int i = 0; i < numTroopCards; i++) {
+        for (int i = 0; i < numTroopCards; i++)
+        {
             List<TerrID> targets = [];
             for (int j = 0; j < troopCardSet.JData.Targets[i].Length; j++)
                 targets.Add(troopCardSet.JData.Targets[i][j]);
 
-            troopCards.Add(new TroopCard(_loggerFactory.CreateLogger<TroopCard>()) {
+            troopCards.Add(new TroopCard(_loggerFactory.CreateLogger<TroopCard>())
+            {
                 CardSet = troopCardSet,
                 Target = [.. targets],
                 Insigne = ((ITroopCardSetData)troopCardSet.JData).Insignia[i],
             });
         }
 
-        if (troopCards.Count <= 0) {
+        if (troopCards.Count <= 0)
+        {
             _logger.LogWarning($"TroopCardSet factory returned null set.");
             return [];
         }

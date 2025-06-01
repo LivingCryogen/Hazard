@@ -21,22 +21,26 @@ public class DataProvider(ITypeRegister<ITypeRelations> typeRegister, ILogger<Da
 
     private bool CanGetDataFromParent(Type memberType, out Type? parentType, out ITypeRelations? parentRelations)
     {
-        if (!_typeRegister.TryGetParentType(memberType, out Type? parent) || parent == null) {
+        if (!_typeRegister.TryGetParentType(memberType, out Type? parent) || parent == null)
+        {
             parentType = null;
             parentRelations = null;
             return false;
         }
-        if (_typeRegister[parent] is not ITypeRelations collectionRelata) {
+        if (_typeRegister[parent] is not ITypeRelations collectionRelata)
+        {
             parentType = parent;
             parentRelations = null;
             return false;
         }
-        if (collectionRelata[RegistryRelation.DataFileName] == null) {
+        if (collectionRelata[RegistryRelation.DataFileName] == null)
+        {
             parentType = parent;
             parentRelations = collectionRelata;
             return false;
         }
-        if (collectionRelata[RegistryRelation.DataConverter] == null) {
+        if (collectionRelata[RegistryRelation.DataConverter] == null)
+        {
             parentType = parent;
             parentRelations = collectionRelata;
             return false;
@@ -60,7 +64,8 @@ public class DataProvider(ITypeRegister<ITypeRelations> typeRegister, ILogger<Da
         if (registeredRelations[RegistryRelation.DataFileName] == null &&
             CanGetDataFromParent(registeredType, out Type? parentType, out ITypeRelations? parentRelations) &&
             parentType != null &&
-            parentRelations != null) {
+            parentRelations != null)
+        {
             registeredRelations = parentRelations;
             registeredType = parentType;
         }
@@ -89,24 +94,32 @@ public class DataProvider(ITypeRegister<ITypeRelations> typeRegister, ILogger<Da
     }
     private object? ReadData(object converter, Type conversionTargetType, string filePath)
     {
-        if (converter is ICardSetDataJConverter jConverter) {
+        if (converter is ICardSetDataJConverter jConverter)
+        {
             if (!typeof(ICardSetData).IsAssignableFrom(conversionTargetType) && !typeof(ICardSet).IsAssignableFrom(conversionTargetType))
                 throw new ArgumentException($"The provided target Type is not valid. Converter {converter} requires a target Type which implements ICardSetData or ICardSet.");
 
-            try {
+            try
+            {
                 return jConverter.ReadCardSetData(filePath);
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 _logger.LogError("{Converter} encountered an exception attempting to read card set data: {Message}", jConverter, e.Message);
                 return null;
             }
         }
-        if (converter is GeographyJConverter geographyConverter) {
-            try {
+        if (converter is GeographyJConverter geographyConverter)
+        {
+            try
+            {
                 ReadOnlySpan<byte> jsonROSpan = File.ReadAllBytes(filePath);
                 var reader = new Utf8JsonReader(jsonROSpan);
                 return geographyConverter.Read(ref reader, typeof(GeographyInitializer), options: JsonSerializerOptions.Default) ??
                     throw new InvalidDataException($"{geographyConverter} failed to return a valid {nameof(GeographyInitializer)}.");
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 _logger.LogError("{Converter} encountered an exception attempting to read Geography data: {Message}", geographyConverter, e.Message);
                 return null;
             }
