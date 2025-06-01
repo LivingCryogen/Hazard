@@ -28,13 +28,4 @@ Around 50 MSTest unit tests verify the functioning of crucial systems.
 
 Tests should be enabled once you have the complete source code of the "Model," "Model.UnitTests," and "Shared" projects in an IDE with Microsoft.Net.Test.Sdk, the MSTest.TestFramework, and the MSTest.TestAdapter installed (available via nuget).
 
-## Copyright Information
-All source code © Joshua McKnight, 2024. All rights reserved.  
-Artwork © Kiah Baxter-Ferguson and Joshua McKnight, 2024. All rights reserved.
-
-*Hazard!* emulates rules from *Risk: The Game of Global Domination* by Hasbro, Inc.
-*Risk: The Game of Global Domination* is © 2020 Hasbro, Inc. All Rights Reserved.
-
-This project is for educational and demonstration purposes only and is not intended for wide distribution or commercial use.
-
 
