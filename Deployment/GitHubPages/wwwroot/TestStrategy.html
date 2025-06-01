@@ -60,7 +60,8 @@ public async Task EntireGame_RoundTrip_Match()
     _toSerialGame.State.Winner = 1;
 
     // Add reward card to regulator
-    MockCard rewardCard = new(new MockCardSet()) {
+    MockCard rewardCard = new(new MockCardSet()) 
+    {
         Target = [MockTerrID.Idaho],
         Insigne = MockCard.Insignia.FighterJet
     };
@@ -72,7 +73,8 @@ public async Task EntireGame_RoundTrip_Match()
     _toSerialGame.Players.Clear();
     _toSerialGame.Players.Add(new MockPlayer(0, _toSerialGame.Cards.CardFactory, 
                                            _toSerialGame.Values, _toSerialGame.Board, 
-                                           new LoggerStubT<MockPlayer>()) {
+                                           new LoggerStubT&lt;MockPlayer&gt;()) 
+    {
         Name = "TestPlayer1",
         ArmyPool = 50,
         ControlledTerritories = [TerrID.Alaska, TerrID.Kamchatka, TerrID.Peru],
@@ -84,14 +86,16 @@ public async Task EntireGame_RoundTrip_Match()
     // Execute serialization cycle
     await BinarySerializer.Save([_toSerialGame], _testFileName, true);
 
-    if (BinarySerializer.Load([_deserialGame], _testFileName)) {
+    if (BinarySerializer.Load([_deserialGame], _testFileName)) 
+    {
         
         // Validate board state preservation
         foreach (var contKey in _toSerialGame.Board.ContinentOwner.Keys)
             Assert.AreEqual(_toSerialGame.Board.ContinentOwner[contKey], 
                           _deserialGame.Board.ContinentOwner[contKey]);
         
-        foreach (var terrKey in _toSerialGame.Board.TerritoryOwner.Keys) {
+        foreach (var terrKey in _toSerialGame.Board.TerritoryOwner.Keys) 
+        {
             Assert.AreEqual(_toSerialGame.Board.TerritoryOwner[terrKey], 
                           _deserialGame.Board.TerritoryOwner[terrKey]);
             Assert.AreEqual(_toSerialGame.Board.Armies[terrKey], 
@@ -99,7 +103,8 @@ public async Task EntireGame_RoundTrip_Match()
         }
 
         // Validate player state accuracy
-        for (int i = 0; i < _toSerialGame.Players.Count; i++) {
+        for (int i = 0; i &lt; _toSerialGame.Players.Count; i++) 
+        {
             Assert.AreEqual(_toSerialGame.Players[i].Number, _deserialGame.Players[i].Number);
             Assert.AreEqual(_toSerialGame.Players[i].Name, _deserialGame.Players[i].Name);
             Assert.AreEqual(_toSerialGame.Players[i].ArmyPool, _deserialGame.Players[i].ArmyPool);
@@ -109,7 +114,8 @@ public async Task EntireGame_RoundTrip_Match()
                          .SetEquals(_deserialGame.Players[i].ControlledTerritories));
             
             // Check card details including custom test properties
-            for (int j = 0; j < _toSerialGame.Players[i].Hand.Count; j++) {
+            for (int j = 0; j &lt; _toSerialGame.Players[i].Hand.Count; j++) 
+            {
                 MockCard serialCard = (MockCard)_toSerialGame.Players[i].Hand[j];
                 MockCard deserialCard = (MockCard)_deserialGame.Players[i].Hand[j];
                 
@@ -132,7 +138,8 @@ public async Task EntireGame_RoundTrip_Match()
         Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library.Count, 
                        _deserialGame.Cards.GameDeck.Library.Count);
         
-        for (int j = 0; j < _toSerialGame.Cards.GameDeck.Library.Count; j++) {
+        for (int j = 0; j &lt; _toSerialGame.Cards.GameDeck.Library.Count; j++) 
+        {
             Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].ParentTypeName, 
                            _deserialGame.Cards.GameDeck.Library[j].ParentTypeName);
             Assert.AreEqual(_toSerialGame.Cards.GameDeck.Library[j].Target[0], 
@@ -149,7 +156,8 @@ public async Task Players_RoundTrip_Match()
     // Configure edge case player
     _toSerialGame.Players.Add(new MockPlayer(3, _toSerialGame.Cards.CardFactory, 
                                            _toSerialGame.Values, _toSerialGame.Board, 
-                                           new LoggerStubT<MockPlayer>()) {
+                                           new LoggerStubT&lt;MockPlayer&gt;()) 
+    {
         Name = "TestPlayer4",
         ArmyPool = 20,
         ControlledTerritories = [], // Empty territories
@@ -158,13 +166,15 @@ public async Task Players_RoundTrip_Match()
     });
 
     // Test each player individually
-    for (int i = 0; i < _toSerialGame.Players.Count; i++) {
+    for (int i = 0; i &lt; _toSerialGame.Players.Count; i++) 
+    {
         await BinarySerializer.Save([_toSerialGame.Players[i]], _testFileName, true);
         _deserialGame.Players.Add(new MockPlayer(i, _deserialGame.Cards.CardFactory, 
                                                 _deserialGame.Values, _deserialGame.Board, 
-                                                new LoggerStubT<MockPlayer>()));
+                                                new LoggerStubT&lt;MockPlayer&gt;()));
         
-        if (BinarySerializer.Load([_deserialGame.Players[i]], _testFileName)) {
+        if (BinarySerializer.Load([_deserialGame.Players[i]], _testFileName)) 
+        {
             ValidatePlayerEquality(_toSerialGame.Players[i], _deserialGame.Players[i]);
         }
         else Assert.Fail($"Player {i} deserialization failed");
@@ -184,14 +194,327 @@ public void GetData_RegisteredNameMockCard_ReturnMockCardSet()
     var returnedCardSetData = ((MockCardSet)returned).JData;
 
     Assert.IsNotNull(returnedCardSetData);
-    Assert.IsTrue(returnedCardSetData.Targets.Length > 0);
+    Assert.IsTrue(returnedCardSetData.Targets.Length &gt; 0);
     
     // Verify all mock territories represented
-    foreach (MockTerrID mockID in Enum.GetValues(typeof(MockTerrID))) {
-        var mockTargets = returnedCardSetData.Targets.SelectMany(array => array).Cast<MockTerrID>();
+    foreach (MockTerrID mockID in Enum.GetValues(typeof(MockTerrID))) 
+    {
+        var mockTargets = returnedCardSetData.Targets.SelectMany(array =&gt; array).Cast&lt;MockTerrID&gt;();
         if (mockID != MockTerrID.Null)
             Assert.IsTrue(mockTargets.Contains(mockID));
     }
+}
+
+// SerializedData.cs - Flexible metadata container for serialization
+public readonly struct SerializedData
+{
+    // Multiple constructors handle different serialization scenarios
+    public SerializedData(Type serialType, IConvertible value)
+    {
+        SerialType = serialType;
+        SerialValues = [value];
+    }
+
+    public SerializedData(Type serialType, IConvertible value, string tag)
+    {
+        SerialType = serialType;
+        SerialValues = [value];
+        Tag = tag;
+    }
+
+    public SerializedData(Type serialType, IConvertible[] serialValues, string tag)
+    {
+        SerialType = serialType;
+        // Automatic collection type detection
+        if (BinarySerializer.IsIConvertibleCollection(serialType, out Type? memberType))
+            MemberType = memberType;
+        SerialValues = serialValues;
+        Tag = tag;
+    }
+
+    public SerializedData(Type serialType, IConvertible[] serialValues)
+    {
+        SerialType = serialType;
+        if (BinarySerializer.IsIConvertibleCollection(serialType, out Type? memberType))
+            MemberType = memberType;
+        SerialValues = serialValues;
+    }
+
+    // Metadata properties support different serialization patterns
+    public Type? MemberType { get; init; } = null;  // Collection element type
+    public Type SerialType { get; init; }           // Primary type information
+    public IConvertible[] SerialValues { get; init; } // Actual data to serialize
+    public string? Tag { get; init; } = null;       // Optional metadata tag
+}
+
+// Example usage - Game state persistence
+public class GameState : IBinarySerializable
+{
+    public int CurrentRound { get; set; }
+    public TerrID[] PlayerTerritories { get; set; } = [];
+    public Dictionary&lt;string, int&gt; PlayerScores { get; set; } = [];
+
+    public async Task&lt;SerializedData[]&gt; GetBinarySerials()
+    {
+        return await Task.Run(() => [
+            // Tagged single value with metadata
+            new SerializedData(typeof(int), CurrentRound, "GameRound"),
+            
+            // Enum array with automatic type detection
+            new SerializedData(typeof(TerrID[]), PlayerTerritories.Cast&lt;IConvertible&gt;().ToArray()),
+            
+            // Complex nested structure handling
+            new SerializedData(typeof(int), PlayerScores.Count, "ScoreCount"),
+            new SerializedData(typeof(string[]), PlayerScores.Keys.Cast&lt;IConvertible&gt;().ToArray()),
+            new SerializedData(typeof(int[]), PlayerScores.Values.Cast&lt;IConvertible&gt;().ToArray())
+        ]);
+    }
+
+    public bool LoadFromBinary(BinaryReader reader)
+    {
+        try 
+        {
+            // Read tagged values with metadata validation
+            string roundTag = reader.ReadString();
+            if (roundTag != "GameRound") return false;
+            CurrentRound = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+
+            // Handle collections with type safety
+            int terrCount = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            var territories = BinarySerializer.ReadEnums(reader, typeof(TerrID), terrCount);
+            PlayerTerritories = territories.Cast&lt;TerrID&gt;().ToArray();
+
+            // Reconstruct complex structures
+            string scoreTag = reader.ReadString();
+            int scoreCount = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            var keys = BinarySerializer.ReadStrings(reader, scoreCount);
+            var values = BinarySerializer.ReadConvertibles(reader, typeof(int), scoreCount);
+            
+            PlayerScores.Clear();
+            for (int i = 0; i < scoreCount; i++) 
+            {
+                PlayerScores[(string)keys.GetValue(i)!] = (int)values.GetValue(i)!;
+            }
+
+            return true;
+        } 
+        catch (Exception ex) 
+        {
+            _logger?.LogError("Deserialization failed: {Message}", ex.Message);
+            return false;
+// BoardGeography.cs - Immutable spatial relationship system
+public static class BoardGeography
+{
+    private static ReadOnlyDictionary&lt;ContID, HashSet&lt;TerrID&gt;&gt;? _continentMembers;
+    private static ReadOnlyDictionary&lt;TerrID, ContID&gt;? _terrIDToContID;
+    private static ReadOnlyDictionary&lt;TerrID, HashSet&lt;TerrID&gt;&gt;? _neighborWeb;
+    
+    public static int NumTerritories { get; private set; }
+    public static int NumContinents { get; private set; }
+    
+    // Data-driven initialization from JSON configuration
+    public static void Initialize(GeographyInitializer initializer)
+    {
+        NumTerritories = initializer.TerritoryNames.Length - 1; // Account for Null values
+        NumContinents = initializer.ContinentNames.Length - 1;
+
+        Dictionary&lt;ContID, HashSet&lt;TerrID&gt;&gt; continentMembers = [];
+        Dictionary&lt;TerrID, ContID&gt; terrIDToContID = [];
+        Dictionary&lt;TerrID, HashSet&lt;TerrID&gt;&gt; neighborWeb = [];
+        
+        // Handle runtime type safety at configuration boundary
+        foreach (var contTerrPair in initializer.ContinentMembers) 
+        {
+            if (contTerrPair.Key is not ContID continent)
+                continue;
+
+            foreach (Enum territoryEnum in contTerrPair.Value) 
+            {
+                if (territoryEnum is not TerrID territory)
+                    continue;
+
+                // Build continent membership maps
+                if (!continentMembers.ContainsKey(continent))
+                    continentMembers.Add(continent, []);
+
+                continentMembers[continent].Add(territory);
+                terrIDToContID[territory] = continent;
+                
+                // Initialize neighbor structure
+                if (!neighborWeb.ContainsKey(territory))
+                    neighborWeb.Add(territory, []);
+
+                // Process adjacency relationships from configuration
+                if (!initializer.TerritoryNeighbors.TryGetValue(territory, 
+                       out HashSet&lt;Enum&gt;? neighbors) || neighbors == null)
+                    continue;
+                    
+                foreach (Enum terrEnum in neighbors) 
+                {
+                    if (terrEnum is not TerrID neighborTerritory)
+                        continue;
+                    neighborWeb[territory].Add(neighborTerritory);
+                }
+            }
+        }
+        
+        // Create immutable collections for thread-safe access
+        _continentMembers = new(continentMembers);
+        _terrIDToContID = new(terrIDToContID);
+        _neighborWeb = new(neighborWeb);
+    }
+    
+    // O(1) continent lookup for territory ownership calculations
+    public static ContID TerritoryToContinent(TerrID terrID)
+    {
+        if (_terrIDToContID == null) return ContID.Null;
+        return _terrIDToContID.TryGetValue(terrID, out var continent) 
+            ? continent : ContID.Null;
+    }
+    
+    // Efficient continent membership queries
+    public static HashSet&lt;TerrID&gt; GetContinentMembers(ContID continent)
+    {
+        if (_continentMembers == null) return [];
+        return _continentMembers.TryGetValue(continent, out var members)
+            ? members : [];
+    }
+    
+    // Fast adjacency validation for move/attack legality
+    public static HashSet&lt;TerrID&gt; GetNeighbors(TerrID territory)
+    {
+        if (_neighborWeb == null) return [];
+        return _neighborWeb.TryGetValue(territory, out var neighbors) 
+            ? neighbors : [];
+    }
+    
+    // Complex spatial query using set operations
+    public static bool IncludesContinent(HashSet&lt;TerrID&gt; territoryList, ContID continent)
+    {
+        if (_continentMembers == null) return false;
+        if (!_continentMembers.TryGetValue(continent, out var continentMembers))
+            return false;
+        
+        // Leverage HashSet.IsSubsetOf for efficient continent control validation
+        return continentMembers.IsSubsetOf(territoryList);
+    }
+    
+    // ... other spatial utilities omitted
+}
+
+// GeographyInitializer.cs - Flexible configuration processor
+public class GeographyInitializer
+{
+    public Type? ContinentEnumType { get; set; }
+    public Type? TerritoryEnumType { get; set; }
+    public string[] ContinentNames { get; private set; } = [];
+    public string[] TerritoryNames { get; private set; } = [];
+    public Dictionary&lt;Enum, HashSet&lt;Enum&gt;&gt; ContinentMembers { get; } = [];
+    public Dictionary&lt;Enum, HashSet&lt;Enum&gt;&gt; TerritoryNeighbors { get; } = [];
+    
+    // Runtime type resolution bridges JSON config with compile-time type safety
+    public void SetEnumTypes((string ContinentEnumName, string TerritoryEnumName) names)
+    {
+        // Resolve enum types dynamically from configuration strings
+        if (Type.GetType(names.ContinentEnumName) is not Type continentEnumType || !continentEnumType.IsEnum)
+            throw new InvalidDataException($"Could not locate Continent Enum: {names.ContinentEnumName}");
+        ContinentEnumType = continentEnumType;
+        
+        if (Type.GetType(names.TerritoryEnumName) is not Type territoryEnumType || !territoryEnumType.IsEnum)
+            throw new InvalidDataException($"Could not locate Territory Enum: {names.TerritoryEnumName}");
+        TerritoryEnumType = territoryEnumType;
+
+        ContinentNames = Enum.GetNames(ContinentEnumType);
+        TerritoryNames = Enum.GetNames(TerritoryEnumType);
+    }
+    
+    // Validate types at configuration boundary, maintain safety in core operations
+    public bool AddContinentMember(string continentName, string territoryName)
+    {
+        if (ContinentEnumType == null || TerritoryEnumType == null)
+            return false;
+            
+        // Type validation happens once during configuration loading
+        if (Enum.Parse(ContinentEnumType, continentName) is not Enum continentEnum)
+            return false;
+        if (Enum.Parse(TerritoryEnumType, territoryName) is not Enum territoryEnum)
+            return false;
+            
+        try 
+        {
+            if (!ContinentMembers.ContainsKey(continentEnum))
+                ContinentMembers.Add(continentEnum, []);
+
+            ContinentMembers[continentEnum].Add(territoryEnum);
+        } 
+        catch 
+        {
+            return false;
+        }
+        return true;
+    }
+    
+    // Bidirectional neighbor relationship management
+    public bool AddTerritoryNeighbor(string territoryName, string neighborName)
+    {
+        if (TerritoryEnumType == null)
+            return false;
+            
+        if (Enum.Parse(TerritoryEnumType, territoryName) is not Enum territoryEnum)
+            return false;
+        if (Enum.Parse(TerritoryEnumType, neighborName) is not Enum neighborEnum)
+            return false;
+            
+        try 
+        {
+            if (!TerritoryNeighbors.ContainsKey(territoryEnum))
+                TerritoryNeighbors.Add(territoryEnum, []);
+
+            TerritoryNeighbors[territoryEnum].Add(neighborEnum);
+        } 
+        catch 
+        {
+            return false;
+        }
+        return true;
+    }
+    
+    // ... other configuration methods omitted
+}
+
+// EarthBoard.cs - Geography integration example
+public class EarthBoard : IBoard
+{
+    // Efficient continent control detection using geography system
+    public void CheckContinentFlip(TerrID changed, int previousOwner)
+    {
+        int newOwner = TerritoryOwner[changed];
+        var changedHomeContinent = BoardGeography.TerritoryToContinent(changed);
+        var continentTerritories = BoardGeography.GetContinentMembers(changedHomeContinent);
+        
+        if (continentTerritories.Count <= 0) return;
+
+        // Use geography system for ownership validation
+        if (ContinentOwner[changedHomeContinent] == previousOwner && previousOwner > -1) 
+        {
+            ContinentOwner[changedHomeContinent] = -1;
+            
+            // Efficient "all territories owned by same player" check
+            if (continentTerritories.All(terr => TerritoryOwner[terr] == newOwner))
+                ContinentOwner[changedHomeContinent] = newOwner;
+
+            ContinentOwnerChanged?.Invoke(this, 
+                new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
+        }
+        else if (continentTerritories.All(terr => TerritoryOwner[terr] == newOwner)) 
+        {
+            ContinentOwner[changedHomeContinent] = newOwner;
+            ContinentOwnerChanged?.Invoke(this, 
+                new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
+        }
+    }
+    
+    // ... other board methods omitted
 }
 </code>
             </pre>
@@ -224,42 +547,43 @@ public void Shuffle_IsCalled_LibraryRandomized()
     
     // Track frequency of each card at each position
     int[][] drawResultsTable = new int[_numCards][];
-    Dictionary<string, int> cardIDMap = [];
+    Dictionary&lt;string, int&gt; cardIDMap = [];
     
     // Initialize tracking matrix
-    for (int numCard = 0; numCard < _numCards; numCard++) {
+    for (int numCard = 0; numCard &lt; _numCards; numCard++) 
+    {
         drawResultsTable[numCard] = new int[_numCards];
-        for (int position = 0; position < _numCards; position++)
+        for (int position = 0; position &lt; _numCards; position++)
             drawResultsTable[numCard][position] = 0;
         
         cardIDMap.Add(((MockCard)testDeck.Library[numCard]).ID, numCard);
     }
-
     // Execute shuffles and record positions
-    for (int shuffle = 0; shuffle < numShuffles; shuffle++) {
+    for (int shuffle = 0; shuffle &lt; numShuffles; shuffle++) 
+    {
         testDeck.Shuffle();
-
-        for (int position = 0; position < _numCards; position++) {
+        for (int position = 0; position &lt; _numCards; position++) 
+        {
             string cardID = ((MockCard)testDeck.Library[position]).ID;
             int tableRow = cardIDMap[cardID];
             drawResultsTable[tableRow][position]++; // Record card at position
         }
     }
-
     // Validate mathematical distribution
-    for (int card = 0; card < _numCards; card++) {
-        for (int position = 0; position < _numCards; position++) {
+    for (int card = 0; card &lt; _numCards; card++) 
+    {
+        for (int position = 0; position &lt; _numCards; position++) 
+        {
             float actualFrequency = drawResultsTable[card][position] / (float)numShuffles;
             float variance = Math.Abs(targetPercentage - actualFrequency);
             
             // Each card must appear at each position with equal probability ±1%
-            Assert.IsTrue(variance < varianceLimit, 
+            Assert.IsTrue(variance &lt; varianceLimit, 
                 $"Card {card} at position {position}: expected {targetPercentage:F5}, " +
                 $"actual {actualFrequency:F5}, variance {variance:F5}");
         }
     }
 }
-
 // Validate discard pile integration during shuffles
 [TestMethod]
 public void Shuffle_IsCalledWithDiscards_LibraryTakesDiscards()
@@ -269,22 +593,20 @@ public void Shuffle_IsCalledWithDiscards_LibraryTakesDiscards()
     int numLibrary = testDeck.Library.Count;
     int numDiscards = testDeck.DiscardPile.Count;
     string[] discardIDs = testDeck.DiscardPile
-        .Select(card => ((MockCard)card).ID)
+        .Select(card =&gt; ((MockCard)card).ID)
         .ToArray();
-
     testDeck.Shuffle();
-
     // Verify discard integration
     Assert.IsTrue(testDeck.Library.Count == numLibrary + numDiscards);
     Assert.IsTrue(testDeck.DiscardPile.Count == 0);
     
     // Ensure all discards now in library
-    foreach (var discardID in discardIDs) {
+    foreach (var discardID in discardIDs) 
+    {
         Assert.IsTrue(testDeck.Library
-            .Any(card => ((MockCard)card).ID == discardID));
+            .Any(card =&gt; ((MockCard)card).ID == discardID));
     }
 }
-
 // Handle edge case of drawing from empty library
 [TestMethod]
 public void DrawCard_EmptyLibrary_LibRenewedAndDrawnFrom()
@@ -293,16 +615,14 @@ public void DrawCard_EmptyLibrary_LibRenewedAndDrawnFrom()
     
     int numDiscards = testDeck.DiscardPile.Count;
     string aDiscardID = ((MockCard)testDeck.DiscardPile[numDiscards - 1]).ID;
-
     var drawnCard = testDeck.DrawCard();
     MockCard mockCard = (MockCard)drawnCard;
-
     // Library should be renewed from discard pile
     Assert.IsTrue(testDeck.Library.Count == numDiscards - 1);
     Assert.IsTrue(testDeck.DiscardPile.Count == 0);
     
     // Drawn card should be from original discard pile
-    bool testIDinLibrary = testDeck.Library.Where(card => ((MockCard)card).ID == aDiscardID).Any();
+    bool testIDinLibrary = testDeck.Library.Where(card =&gt; ((MockCard)card).ID == aDiscardID).Any();
     Assert.IsTrue(testIDinLibrary || mockCard.ID == aDiscardID);
 }
 </code>
@@ -327,18 +647,18 @@ public void DrawCard_EmptyLibrary_LibRenewedAndDrawnFrom()
         <div>
             <pre class="code-snippet">
             <code class="language-csharp">
-// MockGame.cs - Configurable game state for testing scenarios
+                // MockGame.cs - Configurable game state for testing scenarios
 public class MockGame : IGame
 {
     public MockGame()
     {
         ID = new Guid();
         Players = [
-            new MockPlayer(0, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>()),
-            new MockPlayer(1, Cards.CardFactory, Values, Board, new LoggerStubT<MockPlayer>())
+            new MockPlayer(0, Cards.CardFactory, Values, Board, new LoggerStubT&lt;MockPlayer&gt;()),
+            new MockPlayer(1, Cards.CardFactory, Values, Board, new LoggerStubT&lt;MockPlayer&gt;())
         ];
-        State = new StateMachine(Players.Count, new LoggerStubT<StateMachine>());
-        Regulator = new MockRegulator(new LoggerStubT<MockRegulator>(), this);
+        State = new StateMachine(Players.Count, new LoggerStubT&lt;StateMachine&gt;());
+        Regulator = new MockRegulator(new LoggerStubT&lt;MockRegulator&gt;(), this);
         Regulator.Initialize();
     }
 
@@ -353,20 +673,23 @@ public class MockGame : IGame
         byte poolsEmpty = 0b000; // Bitwise flags track available players
         byte[] masks = [0b001, 0b010, 0b100];
 
-        for (int i = 0; i < MockGeography.NumTerritories; i++) {
+        for (int i = 0; i &lt; MockGeography.NumTerritories; i++) 
+        {
             int player = SelectRandomAvailablePlayer(poolsEmpty, rand);
             
-            if (player < 2 && player > -1) {
+            if (player &lt; 2 && player &gt; -1) 
+            {
                 Board.Claims(player, (TerrID)i, 1);
                 Players[player].AddTerritory((TerrID)i);
                 playerPool[player]--;
-                if (playerPool[player] <= 0)
+                if (playerPool[player] &lt;= 0)
                     poolsEmpty |= masks[player];
             }
-            else if (player == 2) {
+            else if (player == 2) 
+            {
                 Board.Claims(-1, (TerrID)i, 1); // Neutral territory
                 playerPool[player]--;
-                if (playerPool[player] <= 0)
+                if (playerPool[player] &lt;= 0)
                     poolsEmpty |= masks[player];
             }
         }
@@ -378,7 +701,7 @@ public class MockGame : IGame
         ID = Guid.Empty;
         Players.Clear();
         Cards.Wipe();
-        State = new StateMachine(2, new LoggerStubT<StateMachine>());
+        State = new StateMachine(2, new LoggerStubT&lt;StateMachine&gt;());
         Board.Armies.Clear();
         Board.ContinentOwner.Clear();
         ((MockRegulator)Regulator).Wipe();
@@ -386,18 +709,18 @@ public class MockGame : IGame
 }
 
 // LoggerStubT.cs - Controlled logging for error condition testing
-public class LoggerStubT<T> : ILogger<T> where T : class
+public class LoggerStubT&lt;T&gt; : ILogger&lt;T&gt; where T : class
 {
     public LogLevel LastLoggedLevel { get; private set; }
 
-    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, 
-                           Exception? exception, Func<TState, Exception?, string> formatter)
+    public void Log&lt;TState&gt;(LogLevel logLevel, EventId eventId, TState state, 
+                           Exception? exception, Func&lt;TState, Exception?, string&gt; formatter)
     {
         LastLoggedLevel = logLevel; // Capture for test assertions
     }
 
-    public bool IsEnabled(LogLevel logLevel) => true;
-    public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+    public bool IsEnabled(LogLevel logLevel) =&gt; true;
+    public IDisposable? BeginScope&lt;TState&gt;(TState state) where TState : notnull =&gt; null;
 }
 
 // MockDataFiles.cs - Generated test data with cleanup
@@ -422,14 +745,16 @@ public class MockDataFiles
 
     private void BuildMockCardSetJson()
     {
-        List<string> mockTerritories = ["Alabama", "Alaska", "Arizona", /* ... all 50 states ... */];
-        List<string> mockInsignia = ["Marine", "FighterJet", "Tank"];
+        List&lt;string&gt; mockTerritories = ["Alabama", "Alaska", "Arizona", /* ... all 50 states ... */];
+        List&lt;string&gt; mockInsignia = ["Marine", "FighterJet", "Tank"];
         
         var jsonDocument = new { TroopCards = new object[mockTerritories.Count] };
 
         int insigniaIndex = 0;
-        for (int i = 0; i < mockTerritories.Count; i++) {
-            jsonDocument.TroopCards[i] = new {
+        for (int i = 0; i &lt; mockTerritories.Count; i++) 
+        {
+            jsonDocument.TroopCards[i] = new 
+            {
                 Targets = new string[] { mockTerritories[i] },
                 Insignia = mockInsignia[insigniaIndex]
             };
