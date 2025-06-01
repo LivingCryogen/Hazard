@@ -49,8 +49,8 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.3" />
-    <PackageReference Include="Microsoft.Trusted.Signing.Client" Version="1.0.76" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Trusted.Signing.Client" Version="1.0.86" />
     <PackageReference Include="NHotkey.Wpf" Version="3.0.0" />
   </ItemGroup>
 
