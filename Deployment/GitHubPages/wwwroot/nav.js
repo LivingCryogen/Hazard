@@ -15,7 +15,20 @@
             setTimeout(balanceHeights, 100);
          } catch (error) {
          console.error('Error loading default content:', error);
-    }
+        }
+
+    document.addEventListener('click', (e) => {
+        if (e.target && e.target.id === 'metricsButton') {
+            e.preventDefault();
+            console.log('Metrics button clicked!'); // Debug log
+            if (metricsModal) {
+                metricsModal.style.display = 'block';
+                console.log('Metrics modal opened!'); // Debug log
+            } else {
+                console.error('Metrics modal not found!');
+            }
+        }
+    });
 
     // Set up download button tooltips
     setupDownloadTooltips();
@@ -60,6 +73,11 @@
             demoModal.style.display = 'block';
         });
         }
+
+    // Testing metrics modal
+    const metricsButton = document.getElementById('metricsButton');
+    const metricsModal = document.getElementById('metricsModal');
+    
 
     // Download modal
     const downloadButton = document.getElementById('downloadButton');
