@@ -3,13 +3,13 @@
 *Hazard!* is a __software engineering demonstration__ and __functioning board game__ for (2-6) local players. 
 
 It showcases the __entire enterprise production process__: 
-1. Development (C#, XAML, WPF, MVVM)
-2. Testing (MSTest)
-3. Documentation (DocFX, from XML comments)
-4. Packaging (.MSIX)
-5. Automated Deployment (Azure Pipeline)
-6. Hosting (Azure Storage)
-7. Secure Public Distribution (Azure Function, Proxy WebApp, GitHubPages)
+__1. Development__ with C#, XAML, WPF, and MVVM architecture.
+__2. Testing__ with MSTest and mock Frameworks.
+__3. Documentation__ generated to professional standards from XML comments using DocFx.
+__4. Packaging__ as an .msixbundle via WAPP.
+__5. Automated Deployment__ via Azure Pipelines and Trusted Signing.
+__6. Hosting__ via Azure Storage.
+__7. Secure Public Distribution__ via Serverless Azure Function, Proxy WebApp, Data Tables, and GitHubPages site (link below).
 
 For full project background and details, including architecture, code, and testing highlights, see: https://livingcryogen.github.io/Hazard/.
 
