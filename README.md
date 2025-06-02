@@ -5,7 +5,7 @@ It showcases the entire production process: development, QA (testing and documen
 
 For full project background and details, including architecture, code, and testing highlights, see: https://livingcryogen.github.io/Hazard/.
 
-Oh, and you there can download and install it as a signed .MSIX package!  :)
+Oh, and there you can also download and install it (as a signed .MSIX package) to try for yourself!  :)
 
 ## Dependencies
 *Hazard!*'s core relies on the following package versions (or newer):
