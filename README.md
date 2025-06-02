@@ -1,7 +1,7 @@
-# Hazard!
+# About *Hazard!: Nothing Ventured, Nothing Gained*
 
-*Hazard!: Nothing Ventured, Nothing Gained* is a software engineering demonstration showcasing the entire process: development, QA (testing and documentation), automated deployment, and secure public distribution.
-It's also a functioning board game!
+*Hazard!* is a software engineering demonstration and functioning board game for (2-6) local players. 
+It showcases the entire production process: development, QA (testing and documentation), automated cloud deployment, and secure public distribution.
 
 For full project background and details, including architecture, code, and testing highlights, see: https://livingcryogen.github.io/Hazard/.
 
