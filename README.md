@@ -1,7 +1,13 @@
 ## *Hazard!: Nothing Ventured, Nothing Gained*
 
-*Hazard!* is a software engineering demonstration and functioning board game for (2-6) local players. 
-It showcases the entire production process: development, QA (testing and documentation), automated cloud deployment, and secure public distribution.
+*Hazard!* is a __software engineering demonstration__ and __functioning board game__ for (2-6) local players. 
+It showcases the __entire production process__: 
+1. Development
+2. Testing
+3. Documentation
+4. Automated Deployment (Azure Cloud)
+5. Hosting (Azure Storage)
+6. Secure Public Distribution (Azure Function and Proxy WebApp)
 
 For full project background and details, including architecture, code, and testing highlights, see: https://livingcryogen.github.io/Hazard/.
 
