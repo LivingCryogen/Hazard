@@ -2,7 +2,7 @@
 
 *Hazard!* is a __software engineering demonstration__ and __functioning board game__ for (2-6) local players. 
 
-It showcases the __entire production process__: 
+It showcases the __entire enterprise production process__: 
 1. Development
 2. Testing
 3. Documentation
