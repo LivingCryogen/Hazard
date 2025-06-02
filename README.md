@@ -1,4 +1,4 @@
-#*Hazard!: Nothing Ventured, Nothing Gained*
+##*Hazard!: Nothing Ventured, Nothing Gained*
 
 *Hazard!* is a software engineering demonstration and functioning board game for (2-6) local players. 
 It showcases the entire production process: development, QA (testing and documentation), automated cloud deployment, and secure public distribution.
