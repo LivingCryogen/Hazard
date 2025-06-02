@@ -6,13 +6,14 @@ It showcases the __entire production process__:
 1. Development
 2. Testing
 3. Documentation
-4. Automated Deployment (Azure Cloud)
-5. Hosting (Azure Storage)
-6. Secure Public Distribution (Azure Function and Proxy WebApp)
+4. Packaging (.MSIX)
+5. Automated Deployment (Azure Pipeline)
+6. Hosting (Azure Storage)
+7. Secure Public Distribution (Azure Function and Proxy WebApp)
 
 For full project background and details, including architecture, code, and testing highlights, see: https://livingcryogen.github.io/Hazard/.
 
-Oh, and there you can also download and install it (as a signed .MSIX package) to try for yourself!  :)
+Oh, and there __*you can also download and install it*__ (as a signed .MSIX package) to try for yourself!  :)
 
 ## Dependencies
 *Hazard!*'s core relies on the following package versions (or newer):
