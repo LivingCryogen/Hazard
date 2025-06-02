@@ -1,6 +1,11 @@
 # Hazard!
-## General Note
-For full project background and details, see: https://livingcryogen.github.io/Hazard/.
+
+*Hazard!: Nothing Ventured, Nothing Gained* is a software engineering demonstration showcasing the entire process: development, QA (testing and documentation), automated deployment, and secure public distribution.
+It's also a functioning board game!
+
+For full project background and details, including architecture, code, and testing highlights, see: https://livingcryogen.github.io/Hazard/.
+
+Oh, and you there can download and install it as a signed .MSIX package!  :)
 
 ## Dependencies
 *Hazard!*'s core relies on the following package versions (or newer):
