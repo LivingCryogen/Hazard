@@ -1,11 +1,9 @@
 # Hazard!
-## Details
-For full details: https://livingcryogen.github.io/Hazard/.
+## General Note
+For full project background and details, see: https://livingcryogen.github.io/Hazard/.
 
-Note: I took on this demonstration project ***as if* it were to be extended and worked on by teams** in a modern development environment. Smart, incremental development was the goal. (This is definitely *not* the simplest way you could develop a board game!)
-   
-## External Dependencies
-*Hazard!*'s core relies on the following packages:
+## Dependencies
+*Hazard!*'s core relies on the following package versions (or newer):
 
 **Third-Party**
 1. System.IO.Abstractions v 21.0.29, by Tatham Oddie & friends
