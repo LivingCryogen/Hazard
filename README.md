@@ -4,8 +4,8 @@
 
 It showcases the __entire enterprise production process__: 
 1. Development
-2. Testing
-3. Documentation
+2. Testing (MSTest)
+3. Documentation (DocFX, from XML comments)
 4. Packaging (.MSIX)
 5. Automated Deployment (Azure Pipeline)
 6. Hosting (Azure Storage)
