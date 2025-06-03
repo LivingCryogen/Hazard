@@ -193,6 +193,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         {
             PlayerData newPlayerData = new(CurrentGame.Players[i], colors[i], this);
             PlayerDetails.Add(newPlayerData);
+            
         }
         for (int i = 0; i < CurrentGame.Values.ContinentBonus.Count - 1; i++) // Count needs -1 because of Null entry
             ContinentBonuses[i] = CurrentGame.Values.ContinentBonus[(ContID)i];

@@ -68,7 +68,6 @@ public class Player : IPlayer
     /// </remarks>
      public event EventHandler? PlayerWon;*/
 
-    #region Properties
     /// <inheritdoc cref="IPlayer.Name"/>.
     public string Name { get; set; }
     /// <inheritdoc cref="IPlayer.Number"/>.
@@ -97,7 +96,6 @@ public class Player : IPlayer
     public HashSet<TerrID> ControlledTerritories { get; private set; } = [];
     /// <inheritdoc cref="IPlayer.Hand"/>.
     public List<ICard> Hand { get; set; } = [];
-    #endregion
 
     private int CalculateTotalBonus()
     {
@@ -177,7 +175,7 @@ public class Player : IPlayer
     /// <inheritdoc cref="IPlayer.RemoveCard(int)"/>
     public bool RemoveCard(int handIndex)
     {
-        if (handIndex < Hand.Count)
+        if (handIndex >= Hand.Count)
             return false;
 
         var tempCard = Hand[handIndex];

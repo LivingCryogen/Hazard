@@ -5,6 +5,7 @@ using Shared.Geography;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Services.Serializer;
+using System.Collections.Immutable;
 
 namespace Model.Core;
 
@@ -108,8 +109,11 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     }
     private void ForceDiscard(Player player, int[] handIndices)
     {
-        foreach (int discardIndex in handIndices.OrderByDescending(i => i))
-        { // If the indices remain in ascending order, .RemoveAt() will improperly affect the list in subsequent iterations
+        // If the indices remain in ascending order, .RemoveAt() will improperly affect the list in subsequent iterations
+        Array.Sort(handIndices);
+        Array.Reverse(handIndices);
+        foreach (int discardIndex in handIndices)
+        { 
             _currentGame.Cards.GameDeck.Discard(player.Hand[discardIndex]);
             player.RemoveCard(discardIndex);
         }

@@ -114,7 +114,9 @@ public partial class MainWindow : Window
                 Title = $"{_vM.PlayerDetails[i].Name}'s Hand"
             };
             for (int j = 0; j < _vM.PlayerDetails[i].Hand.Count; j++)
+            {
                 _handViews[i].AddCard(_vM.PlayerDetails[i].Hand[j]);
+            }
             _vM.PlayerDetails[i].Hand.CollectionChanged += _handViews[i].OnHandCollectionChanged;
         }
     }

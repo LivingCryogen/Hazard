@@ -29,7 +29,6 @@ namespace View
             _handBox = FindName("CardControlListBox") as ListBox;
         }
 
-        #region Properties
         public required MainWindow MainWindow { get; init; }
         public required int PlayerOwner { get; init; }
         public required CardControlFactory CardFactory { get; init; }
@@ -37,8 +36,7 @@ namespace View
         public bool ForceTrade { get; set; } = false;
         public RoutedCommand TradeIn { get; } = new();
         public IMainVM ViewModel;
-        #endregion
-        #region DependencyProperties
+
         public string Message
         {
             get { return (string)GetValue(MessageProperty); }
@@ -54,8 +52,7 @@ namespace View
         }
         public static readonly DependencyProperty CardControlsProperty =
             DependencyProperty.Register("CardControls", typeof(ObservableCollection<UserControl>), typeof(HandView), new PropertyMetadata());
-        #endregion
-        #region Methods
+
         public void OnHandCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.NewItems, e.OldItems)
@@ -166,6 +163,5 @@ namespace View
             _isShuttingDown = true;
             this.Close();
         }
-        #endregion
     }
 }

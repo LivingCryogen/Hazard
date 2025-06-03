@@ -67,31 +67,36 @@ public partial class PlayerData : ObservableObject, IPlayerData
 
         switch (e.PropertyName)
         {
-            case "ControlledTerritories":
-                if (e.OldValue is TerrID oldTerritory)
-                {
-                    Realm.Remove(oldTerritory);
-                    NumTerritories--;
-                }
-                if (e.NewValue is TerrID newTerritory)
-                {
-                    Realm.Add(newTerritory);
-                    NumTerritories++;
-                }
+            case "ControlledTerritories" when e.OldValue is TerrID oldTerritory: // territory removed
+                Realm.Remove(oldTerritory);
+                NumTerritories--;
                 NumArmies = VMInstance.SumArmies(Number);
                 ArmyBonus = VMInstance.CurrentGame?.Players[Number].ArmyBonus ?? 0;
                 break;
-            case "Hand":
-                if (e.NewValue is ICard newCard && e.OldValue is null) // item added
-                    if (CardInfoFactory.BuildCardInfo(newCard, player!.Number, e.HandIndex ?? -1) is ICardInfo cardInfo)
-                        Hand.Add(cardInfo);
-                    else if (e.OldValue is not null && e.NewValue is null) // item removed
-                        if (e.HandIndex >= 0 && e.HandIndex < Hand.Count)
-                            Hand.RemoveAt((int)e.HandIndex);
-                        else if (e.OldValue is null && e.NewValue is null) // items cleared
-                            Hand.Clear();
+
+            case "ControlledTerritories" when e.NewValue is TerrID newTerritory: // territory added
+                Realm.Add(newTerritory);
+                NumTerritories++;
+                NumArmies = VMInstance.SumArmies(Number);
+                ArmyBonus = VMInstance.CurrentGame?.Players[Number].ArmyBonus ?? 0;
                 break;
+
+            case "Hand" when e.NewValue is ICard newCard: // item added
+                if (CardInfoFactory.BuildCardInfo(newCard, player!.Number, e.HandIndex ?? -1) is ICardInfo cardInfo)
+                    Hand.Add(cardInfo);
+                break;
+
+            case "Hand" when e.NewValue is null && e.OldValue is not null: // card removed
+                if (e.HandIndex >= 0 && e.HandIndex < Hand.Count)
+                    Hand.RemoveAt((int)e.HandIndex);
+                break;
+
+            case "Hand" when e.OldValue is null && e.NewValue is null: // cards cleared
+                    Hand.Clear();
+                break;
+
             case "ArmyPool": ArmyPool = player.ArmyPool; break;
+
             case "ArmyBonus": ArmyBonus = player.ArmyBonus; break;
         }
     }

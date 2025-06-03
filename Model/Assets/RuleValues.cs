@@ -71,14 +71,11 @@ public class RuleValues(IConfiguration config) : IRuleValues
         return bonus;
     }
     /// <inheritdoc cref="IRuleValues.CalculateBaseTradeInBonus(int)"/>.
-    public int CalculateBaseTradeInBonus(int numTrades)
+    public int CalculateBaseTradeInBonus(int numTrades) => numTrades switch
     {
-        if (numTrades > 0 && numTrades < 6)
-            return 2 + 2 * numTrades; // 1|4, 2|6, 3|8, 4|10, 5|12 -- according to default rules
-        else if (numTrades == 6)
-            return 15;
-        else if (numTrades > 6)
-            return 15 + (numTrades - 6) * 5; // 7|20, 8|25, 9|30...
-        else return 0;
-    }
+        < 0 => 0,
+        < 6 => 2 + 2 * numTrades, // 1|4, 2|6, 3|8, 4|10, 5|12 -- according to default rules
+        6 => 15,
+        > 6 => 15 + (numTrades - 6) * 5,// 7|20, 8|25, 9|30...
+    };
 }
