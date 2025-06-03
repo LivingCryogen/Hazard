@@ -1,10 +1,22 @@
-# Hazard!
-## Architecture
+## *Hazard!: Nothing Ventured, Nothing Gained*
 
-Note: I took on this demonstration project ***as if* it were to be extended and worked on by teams** in a modern development environment. Smart, incremental development was the goal. (This is definitely *not* the simplest way you could develop a board game!)
-   
-## External Dependencies
-*Hazard!*'s core relies on the following packages:
+*Hazard!* is a __software engineering demonstration__ and __functioning board game__ for (2-6) local players. 
+
+It showcases the __entire enterprise production process__: 
+__1. Development__ with C#, XAML, WPF, and MVVM architecture.
+__2. Testing__ with MSTest and mock Frameworks.
+__3. Documentation__ generated to professional standards from XML comments using DocFx.
+__4. Packaging__ as an .msixbundle via WAPP.
+__5. Automated Deployment__ via Azure Pipelines and Trusted Signing.
+__6. Hosting__ via Azure Storage.
+__7. Secure Public Distribution__ via Serverless Azure Function, Proxy WebApp, Data Tables, and GitHubPages site (link below).
+
+For full project background and details, including architecture, code, and testing highlights, see: https://livingcryogen.github.io/Hazard/.
+
+Oh, and there __*you can also download and install it*__ (as a signed .MSIX package) to try for yourself!  :)
+
+## Dependencies
+*Hazard!*'s core relies on the following package versions (or newer):
 
 **Third-Party**
 1. System.IO.Abstractions v 21.0.29, by Tatham Oddie & friends
@@ -26,14 +38,5 @@ Note: I took on this demonstration project ***as if* it were to be extended and 
 Around 50 MSTest unit tests verify the functioning of crucial systems.
 
 Tests should be enabled once you have the complete source code of the "Model," "Model.UnitTests," and "Shared" projects in an IDE with Microsoft.Net.Test.Sdk, the MSTest.TestFramework, and the MSTest.TestAdapter installed (available via nuget).
-
-## Copyright Information
-All source code © Joshua McKnight, 2024. All rights reserved.  
-Artwork © Kiah Baxter-Ferguson and Joshua McKnight, 2024. All rights reserved.
-
-*Hazard!* emulates rules from *Risk: The Game of Global Domination* by Hasbro, Inc.
-*Risk: The Game of Global Domination* is © 2020 Hasbro, Inc. All Rights Reserved.
-
-This project is for educational and demonstration purposes only and is not intended for wide distribution or commercial use.
 
 

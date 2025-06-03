@@ -5,18 +5,46 @@
     <title>Features</title>
     <link rel="stylesheet" href="stylesheet.css">
 </head>
-<body class="dynamic-content-body">
+<body class="dynamic-content-body" style="text-align: left;">
     <h2>Features</h2>
 
     <p class="indented-p">
-        <i>Hazard!</i> implements the MVVM architecture, as diagrammed below.
-        It's then packaged as an MSIX bundle (.msixbundle) using a Windows Application Packaging Project.
+        <i>Hazard!</i> implements an MVVM architecture (diagrammed below). It's packaged and deployed as an .MSIX bundle using WAPP.
+        Finally, it's built, signed, hosted, and secured using Azure Pipelines, Trusted Signing, Blob Storage, an Azure Function, and a WebApp which is
+        connected to this site (See the <a href="#" data-content="Deployment.html" class="dynamic-link">Deployment</a> page).
     </p>
-    <p class="indented-p">In the the Model and Shared projects it features:</p>
-    <ul>
-        <li><strong>Full .XML documentation</strong> integrates with Intellisense!</li>
-        <li><strong>45+ Unit Tests</strong> for critical Functions.</li>
-    </ul>
+    <p class="indented-p">
+        The Model and Shared projects feature Unit Tests (see the
+        <a href="https://github.com/LivingCryogen/Hazard#hazard" class="external-link">ReadMe</a>
+        for build instructions), and<a href="docs.html" class="external-link"> .XML documentation</a>, integrating with Intellisense.
+
+    <p class="indented-p">For Feature highlights, see below, and check out the <a href="" class="external-link">Demo</a> video.</p>
+
+    <p class="indented-p">
+        For full details see the <a href="https://github.com/LivingCryogen/Hazard" class="external-link">Repo</a>, or even try running it for yourself!
+        [ <a href="https://hazardgameproxy-d4caecgsapakcwh0.centralus-01.azurewebsites.net/secure-link?arch=x64" class="external-link">Download(x64)</a>
+        <a href="https://hazardgameproxy-d4caecgsapakcwh0.centralus-01.azurewebsites.net/secure-link?arch=ARM" class="external-link">Download(ARM)</a> ]
+    </p>
+
+    <div class="presentation-box">
+        <h3>Development Strategy</h3>
+        <h4>
+            Emulate modern, collaborative development environments.
+        </h4>
+        <center><p>I built <i>as if</i> the application would be supported and extended by different teams:</p></center>
+        <ul>
+            <li><strong>Decoupling</strong> - Each MVVM layer is its own project, and they interact through DI and commands/events.</li>
+            <li><strong>Datafile Configuration - </strong> Application settings and assets are dynamically loaded from .json files for easy modification.</li>
+            <li><strong>Error Handling and Logging</strong> - Core features have validation and helpful logging baked in.</li>
+            <li><strong>Professional Documentation</strong> - XML documentation with generated <a href="" class="external-link">DocFX site</a> enables team development</li>
+            <li><strong>Testing</strong> - Essential for Model and Shared features. See <a href="#" data-content="TestingStrategy.html" class="dynamic-link">Testing strategy</a>.
+            <li><strong>Toolkit</strong> - Microsoft's MVVM Community Toolkit reduces boilerplate on update notifications and commands.</li>
+            <li>
+                <strong>Anticipating Team Workflows</strong> - Systems like a Type registry, serialization framework, and default methods on interfaces (see Feature Highlight #5),
+                solve real application problems while providing tools, flexibility, and convenience for collaborators.
+            </li>
+        </ul>
+    </div>
     <h3>Runtime Architecture</h3>
     <div class="image-with-text" style="margin-left:6em; margin-right: 2em;">
         <div class="image-text">
@@ -25,11 +53,11 @@
                 Model-ViewModel-View (MVVM)
             </h3>
             <ul>
-                <li><strong>Model -</strong> Core game logic and state.</li>
-                <li><strong>ViewModel -</strong> Mediates between Model and View.</li>
-                <li><strong>View -</strong> WPF UI.</li>
+                <li><strong>Model -</strong> Game logic and state, Data Acess Layer.</li>
+                <li><strong>ViewModel -</strong> Mediates between Model and View, packaging and preparing data for display and interactivity.</li>
+                <li><strong>View -</strong> WPF User Interface.</li>
                 <li><strong>Shared -</strong> Interfaces, globals, and shared services.</li>
-                <li><strong>BootStrap -</strong> Entry point, dependency injection and environment and configuration.</li>
+                <li><strong>BootStrap -</strong> Entry point, configuration (Dependency Injection, Environment)</li>
             </ul>
         </div>
         <img src="Images/runtime-architecture.svg" style="max-width:550px; height: auto;" />
@@ -38,127 +66,161 @@
 
     <h2>Technical Feature Highlights</h2>
 
+    <h4>Note: Code Snippets below omit documentation comments and some code.</h4>
+
     <div class="code-with-text" id="EventSystem">
         <div class="image-text">
             <img src="Images/Events.svg" />
             <h3>State-Driven Event System</h3>
-            <p class="indented-p">At <i>Hazard!</i>'s core is a regulated state machine that manages the game's complex flow between phases (Setup, Place, Attack, Move), with proper state transitions and validation.</p>
-            <p class="indented-p">Rather than tight coupling, components communicate through a robust event system that ensures changes propagate correctly while maintaining separation of concerns:</p>
+            <p class="indented-p">At <i>Hazard!</i>'s core is a regulated state machine. It manages flow between phases (Setup, Place, Attack, Move), with proper state transitions and validation.</p>
+            <p class="indented-p">Rather than tight coupling, we rely on an event system that propagates changes while maintaining separation of concerns:</p>
             <ul>
-                <li>Each state change triggers appropriate events</li>
-                <li>Subscribers respond to state changes without direct dependencies</li>
-                <li>Player actions and game rules are cleanly separated</li>
-                <li>Multi-stage actions within phases are elegantly handled</li>
-                <li>Player turns and round progression are automatically managed</li>
+                <li>State changes trigger appropriate events</li>
+                <li>Subscribers respond without direct dependencies</li>
+                <li>Player actions and game rules are separated</li>
+                <li>Multi-stage phases handled</li>
+                <li>Automatic turn and round progression</li>
+                <li><strong>Clean architecture</strong> - DI manages component lifetimes and subscription cleanup, while synchronous game logic eliminates threading concerns</li>
             </ul>
-            <p><center><i>Key Files: StateMachine.cs, Regulator.cs, et al.</i></center></p>
+            <p><center><i>Key Files: StateMachine, Regulator, MainVM_Base</i></center></p>
         </div>
         <div>
             <pre class="code-snippet">
+            <code class="language-csharp">
+// StateMachine.cs - Core state management with event propagation
 public class StateMachine : IBinarySerializable
 {
+    private readonly ILogger&lt;StateMachine&gt; _logger; // ... constructor and other fields omitted
     private GamePhase _currentPhase = GamePhase.Null;
     private bool _phaseStageTwo = false;
     private int _playerTurn = 0;
     private int _round = 0;
-    private int _numTrades = 0;
+    // ... _numTrades and other properties omitted
 
+    // Event system for loose coupling
     public event EventHandler&lt;string&gt;? StateChanged;
 
-    public StateMachine(int numPlayers, ILogger<StateMachine> logger)
+    public GamePhase CurrentPhase 
     {
-        NumPlayers = numPlayers;
-        _logger = logger;
-
-        CurrentPhase = NumPlayers switch {
-            2 => GamePhase.TwoPlayerSetup,
-            int n when n > 2 && n < 7 => GamePhase.DefaultSetup,
-            _ => GamePhase.Null,
-        };
-
-        IsActivePlayer = new(NumPlayers);
-        IsActivePlayer.SetAll(true);
-    }
-
-    public int NumPlayers { get; private set; }
-    public BitArray IsActivePlayer { get; private set; }
-    
-    public GamePhase CurrentPhase {
-        get { return _currentPhase; }
-        set {
-            if (!value.Equals(_currentPhase)) {
+        get 
+        { 
+            return _currentPhase; 
+        }
+        set 
+        {
+            if (!value.Equals(_currentPhase)) 
+            {
                 _currentPhase = value;
                 StateChanged?.Invoke(this, new(nameof(CurrentPhase)));
             }
         }
     }
-    
-    public bool PhaseStageTwo .... 
 
-public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulator
+    public bool PhaseStageTwo 
+    {
+        get 
+        { 
+            return _phaseStageTwo; 
+        }
+        set 
+        {
+            if (!value.Equals(_phaseStageTwo)) 
+            {
+                _phaseStageTwo = value;
+                StateChanged?.Invoke(this, new(nameof(PhaseStageTwo)));
+            }
+        }
+    }
+
+    public int PlayerTurn 
+    {
+        get 
+        { 
+            return _playerTurn; 
+        }
+        set 
+        {
+            if (!value.Equals(_playerTurn)) 
+            {
+                _playerTurn = value;
+                StateChanged?.Invoke(this, new(nameof(PlayerTurn)));
+            }
+        }
+    }
+
+    // Automated state progression
+    public void IncrementPhase()
+    {
+        PhaseStageTwo = false;
+        int intPhase = (int)CurrentPhase;
+        if (intPhase >= 0 && intPhase < 3) // Place (1) -> Attack (2) -> Move (3)
+        {
+            intPhase++;
+            CurrentPhase = (GamePhase)intPhase;
+        }
+        else if (intPhase == 3) 
+        {
+            IncrementPlayerTurn(); // Move -> next player's turn
+        }
+        // ... special case handling for setup phases omitted
+    }
+
+    public void IncrementPlayerTurn()
+    {
+        // ... complex player validation and setup phase logic omitted
+        int nextActive = NextActivePlayer();
+        if (nextActive != -1) 
+        {
+            PlayerTurn = nextActive;
+            CurrentPhase = GamePhase.Place; // Start new turn
+        }
+    }
+
+    // ... NextActivePlayer(), serialization methods, and other utilities omitted
+}
+
+// Regulator.cs - Event subscriber that enforces game rules
+public class Regulator : IRegulator
 {
-    private readonly IGame _currentGame = currentGame;
-    private readonly StateMachine _machine = currentGame.State;
-    private readonly ILogger _logger = logger;
-    private readonly int _numPlayers = currentGame.State.NumPlayers;
+    private readonly IGame _currentGame;
+    private readonly StateMachine _machine;
+    private readonly ILogger _logger; // ... other fields omitted
     private int _actionsCounter = 0;
-    private int _prevActionCount = 0;
+    // ... _prevActionCount, CurrentActionsLimit properties omitted
 
-    // State Check Properties
-    private int PlayerTurn => _machine.PlayerTurn;
-    private GamePhase CurrentPhase => _machine.CurrentPhase;
-    private bool InSetupPhase => _machine.CurrentPhase == GamePhase.DefaultSetup || _machine.CurrentPhase == GamePhase.TwoPlayerSetup;
+    public event EventHandler&lt;TerrID[]&gt;? PromptBonusChoice;
+    public event EventHandler&lt;IPromptTradeEventArgs&gt;? PromptTradeIn;
 
-
-    public int CurrentActionsLimit { get; set; }
-    public int PhaseActions => _actionsCounter - _prevActionCount;
-    public ICard? Reward { get; set; } = null;
-
-
-    public event EventHandler<TerrID[]>? PromptBonusChoice;
-    public event EventHandler<IPromptTradeEventArgs>? PromptTradeIn;
-
-    private bool IsInSecondStage()
+    public void Initialize()
     {
-        return _machine.PhaseStageTwo;
+        // ... action limit initialization omitted
+        // Subscribe to state changes - loose coupling via events
+        _machine.StateChanged += HandleStateChanged;
     }
-    private void SetSecondStage(bool newState)
-    {
-        _machine.PhaseStageTwo = newState;
-    }
-    private bool ReachedSecondStage()
-    {
-        bool exceededTerritoryLimit = ActionsExceedTerritoryCount();
-        return (CurrentPhase, IsInSecondStage(), exceededTerritoryLimit) switch {
-            (GamePhase.DefaultSetup, false, true) => true,
-            (GamePhase.Move, false, _) => true,
-            _ => false
-        };
-    }
+
+    // Event handler responds to state changes
     private void HandleStateChanged(object? sender, string propName)
     {
         if (propName != "CurrentPhase")
             return;
-        var phase = CurrentPhase;
-        _prevActionCount = _actionsCounter;
-        switch (phase) {
-            case GamePhase.Place:
-                // Update number of allowed player actions (based on armies available to place)
-                CurrentActionsLimit = _actionsCounter;
-                _currentGame.Players[PlayerTurn].ArmyPool += _currentGame.Players[PlayerTurn].ArmyBonus;
-                CurrentActionsLimit += _currentGame.Players[PlayerTurn].ArmyPool;
 
-                // Check for trade-in and whether it must be forced (cards in hand limit reached)
-                if (!_currentGame.Players[PlayerTurn].HasCardSet)
-                    break;
-                bool force = false;
-                if (_currentGame.Players[PlayerTurn].Hand.Count >= 5)
-                    force = true;
-                PromptTradeIn?.Invoke(this, new PromptTradeEventArgs(PlayerTurn, force));
+        // Each phase triggers different game logic
+        switch (_machine.CurrentPhase) 
+        {
+            case GamePhase.Place:
+                // Update army pools and check for mandatory trades
+                _currentGame.Players[_machine.PlayerTurn].ArmyPool += 
+                    _currentGame.Players[_machine.PlayerTurn].ArmyBonus;
+                
+                if (_currentGame.Players[_machine.PlayerTurn].HasCardSet) 
+                {
+                    bool force = _currentGame.Players[_machine.PlayerTurn].Hand.Count >= 5;
+                    PromptTradeIn?.Invoke(this, new PromptTradeEventArgs(_machine.PlayerTurn, force));
+                }
                 break;
 
             case GamePhase.Attack:
-                _currentGame.State.PhaseStageTwo = false;
+                _machine.PhaseStageTwo = false;
                 break;
 
             case GamePhase.Move:
@@ -166,241 +228,333 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
                 break;
         }
     }
+
+    // Multi-stage action handling
+    public (TerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(
+        TerrID selected, TerrID priorSelected)
+    {
+        switch (_machine.CurrentPhase) 
+        {
+            case GamePhase.Attack when !_machine.PhaseStageTwo:
+                // Stage 1: Select attacking territory
+                _machine.PhaseStageTwo = true;
+                return (selected, false, null);
+                
+            case GamePhase.Attack when _machine.PhaseStageTwo:
+                // Stage 2: Select target and request dice input
+                _machine.PhaseStageTwo = false;
+                return (selected, true, null);
+
+            case GamePhase.Move when !_machine.PhaseStageTwo:
+                // Stage 1: Select source territory
+                _machine.PhaseStageTwo = true;
+                return (selected, false, null);
+                
+            case GamePhase.Move when _machine.PhaseStageTwo:
+                // Stage 2: Select destination and request army count
+                _machine.PhaseStageTwo = false;
+                int maxArmies = _currentGame.Board.Armies[priorSelected] - 1;
+                return (TerrID.Null, true, maxArmies);
+
+            default:
+                // Single-stage actions (Place phase)
+                ClaimOrReinforce(selected);
+                return (TerrID.Null, false, null);
+        }
+    }
+
+    // ... ClaimOrReinforce(), Battle(), TradeInCards() methods omitted
+
     private void IncrementAction()
     {
         _actionsCounter++;
-
-        if (ReachedSecondStage())
-            SetSecondStage(true);
-
-        if (_actionsCounter >= CurrentActionsLimit)
-            ActionLimitHit();
-    }
-    private bool ActionsExceedTerritoryCount()
-    {
-        return _actionsCounter >= BoardGeography.NumTerritories;
-    }
-    private void ActionLimitHit()
-    {
-        if (InSetupPhase)
-            _machine.IncrementRound();
-        else
-            _machine.IncrementPhase();
-    }
-    private void ForceDiscard(Player player, int[] handIndices)
-    {
-        foreach (int discardIndex in handIndices.OrderByDescending(i => i)) {
-            _currentGame.Cards.GameDeck.Discard(player.Hand[discardIndex]);
-            player.RemoveCard(discardIndex);
+        
+        // ... ReachedSecondStage() logic omitted
+        
+        // Automatic progression when action limit reached
+        if (_actionsCounter >= CurrentActionsLimit) 
+        {
+            if (InSetupPhase)
+                _machine.IncrementRound();
+            else
+                _machine.IncrementPhase(); // Triggers StateChanged event
         }
     }
-    private ICard[] GetCardsFromHand(int playerNum, int[] handIndices)
+
+    // ... validation methods, serialization, and other utilities omitted
+}
+
+// MainVM_Base.cs - ViewModel layer subscribes to events
+public partial class MainVM_Base : ObservableObject, IMainVM
+{
+    // ... properties, commands, and other members omitted
+
+    public void Initialize(string[] players, string[] colors, string? fileName)
     {
-        var player = _currentGame.Players[playerNum];
-        List<ICard> selectedCards = [];
-        if (handIndices.Length > player.Hand.Count)
-            throw new IndexOutOfRangeException($"An attempt was made to get {handIndices.Length} cards from {player}'s hand, but they only had {player.Hand.Count}.");
-
-        foreach (int index in handIndices) {
-            var indCard = _currentGame.Players[playerNum].Hand[index];
-            selectedCards.Add(indCard);
-        }
-
-        return [.. selectedCards];
+        // ... game creation and setup logic omitted
+        
+        // Event subscription creates loose coupling
+        CurrentGame.State.StateChanged += HandleStateChanged;
+        CurrentGame.Board.TerritoryChanged += HandleTerritoryChanged;
+        Regulator.PromptBonusChoice += OnTerritoryBonusChoice;
+        Regulator.PromptTradeIn += OnPromptTradeIn;
+        
+        // ... initialization of collections and UI state omitted
     }
 
-    public void Initialize()
+    // UI responds to state changes without direct dependencies
+    private void HandleStateChanged(object? sender, string propName)
     {
-        if (_actionsCounter == 0 && _currentGame.Values.SetupActionsPerPlayers.TryGetValue(_numPlayers, out int actions))
-            CurrentActionsLimit = actions;
-
-        if (CurrentPhase == GamePhase.TwoPlayerSetup) {
-            _prevActionCount = _actionsCounter;
-            if (_currentGame is Game game)
-                game.TwoPlayerAutoSetup();
-        }
-
-        _machine.StateChanged += HandleStateChanged;
-    }
-
-    public void ClaimOrReinforce(TerrID territory)
-    {
-        switch (CurrentPhase) {
-            case GamePhase.DefaultSetup:
-                _currentGame.Players[PlayerTurn].ArmyPool--;
-
-                if (!IsInSecondStage()) {
-                    _currentGame.Board.Claims(PlayerTurn, territory);
-                    _currentGame.Players[PlayerTurn].AddTerritory(territory);
-                }
-                else
-                    _currentGame.Board.Reinforce(territory);
-
-                IncrementAction();
-
-                if (CurrentPhase == GamePhase.DefaultSetup)
-                    _machine.IncrementPlayerTurn();
-
+        switch (propName) 
+        {
+            case nameof(CurrentPhase):
+                CurrentPhase = CurrentGame.State.CurrentPhase;
                 break;
-            case GamePhase.TwoPlayerSetup:
-                _currentGame.Board.Reinforce(territory);
-                IncrementAction();
-
-                // Rules for 2-player setup (with passive NPC player) dictate each player places twice on their territory, once on NPC territory.
-                // The following determines which step we're at by tracking the difference in action count (actDiff), which resets at 3.
-                int actDiff = _actionsCounter - _prevActionCount;
-                switch (actDiff) {
-                    case 1:
-                        _currentGame.Players[PlayerTurn].ArmyPool--;
-                        break;
-                    case 2:
-                        _currentGame.Players[PlayerTurn].ArmyPool--;
-                        SetSecondStage(true);
-                        break;
-                    case 3:
-                        if (CurrentPhase == GamePhase.TwoPlayerSetup) {
-                            SetSecondStage(false);
-                            _machine.IncrementPlayerTurn();
-                            _prevActionCount = _actionsCounter;
-                        }
-                        break;
-                }
+            case nameof(PlayerTurn):
+                PlayerTurn = CurrentGame.State.PlayerTurn;
+                PlayerTurnChanging?.Invoke(this, PlayerTurn);
                 break;
+            // ... other property change handlers omitted
+        }
+    }
+    
+    // ... other event handlers and methods omitted
+}
+</code>
+                </pre>
+        </div>
+    </div>
+    <div class="code-with-text" id="RulesLogic">
+        <div class="image-text">
+            <h3>Declarative Rules Engine</h3>
+            <p class="indented-p">A rules engine ("Regulator") enforces complex game mechanics. It:</p>
+            <ul>
+                <li><strong>Validates player actions</strong> based on current state, like game phase and player ownership</li>
+                <li> <strong>Breaks complex operations</strong> into validated steps (attacks, moves)</li>
+                <li> Systematically calculates and distributes resources (armies, bonuses, card rewards, etc)</li>
+                <li> <strong>Responds to state changes</strong>, enforcing constraints without tight coupling</li>
+            </ul>
+
+            <p><center><i>Key Files: Regulator.cs, RuleValues.cs</i></center></p>
+        </div>
+        <div>
+            <pre class="code-snippet">
+            <code class="language-csharp">
+public class Regulator : IRegulator
+{
+    private readonly IGame _currentGame;
+    private readonly StateMachine _machine;
+    private int _actionsCounter = 0;
+    private int _prevActionCount = 0;
+
+    public int CurrentActionsLimit { get; set; }
+    public event EventHandler? PromptBonusChoice;
+    public event EventHandler? PromptTradeIn;
+
+    // Handle phase transitions
+    private void HandleStateChanged(object? sender, string propName)
+    {
+        if (propName != "CurrentPhase") return;
+
+        _prevActionCount = _actionsCounter;
+        switch (_machine.CurrentPhase) 
+        {
             case GamePhase.Place:
-                _currentGame.Players[PlayerTurn].ArmyPool--;
-                _currentGame.Board.Reinforce(territory);
-                IncrementAction();
+                // Distribute army bonuses
+                _currentGame.Players[_machine.PlayerTurn].ArmyPool += 
+                    _currentGame.Players[_machine.PlayerTurn].ArmyBonus;
+                CurrentActionsLimit = _actionsCounter + _currentGame.Players[_machine.PlayerTurn].ArmyPool;
+
+                // Force trade if hand limit exceeded
+                if (_currentGame.Players[_machine.PlayerTurn].HasCardSet) 
+                {
+                    bool mandatoryTrade = _currentGame.Players[_machine.PlayerTurn].Hand.Count >= 5;
+                    PromptTradeIn?.Invoke(this, new PromptTradeEventArgs(_machine.PlayerTurn, mandatoryTrade));
+                }
+                break;
+
+            case GamePhase.Attack:
+                _machine.PhaseStageTwo = false;
+                break;
+
+            case GamePhase.Move:
+                CurrentActionsLimit = _actionsCounter + 1;
                 break;
         }
     }
 
-    public void MoveArmies(TerrID source, TerrID target, int armies)
+    // Validate territory selection
+    public bool CanSelectTerritory(TerrID newSelected, TerrID oldSelected)
     {
-        _currentGame.Board.Reinforce(source, -armies);
-        _currentGame.Board.Reinforce(target, armies);
+        bool priorSelection = oldSelected != TerrID.Null;
+        int owner = _currentGame.Board.TerritoryOwner[newSelected];
+        int territoryArmies = _currentGame.Board.Armies[newSelected];
 
-        if (CurrentPhase == GamePhase.Move)
-            IncrementAction();
+        return _machine.CurrentPhase switch 
+        {
+            GamePhase.DefaultSetup => _machine.PhaseStageTwo switch 
+            {
+                false when owner == -1 => true,                    // Claim unowned territory
+                true when owner == _machine.PlayerTurn => true,    // Reinforce owned territory
+                _ => false
+            },
+
+            GamePhase.Place => owner == _machine.PlayerTurn,
+
+            // Attack requires two selections: source then target
+            GamePhase.Attack when !priorSelection => 
+                owner == _machine.PlayerTurn && territoryArmies >= 2,           // Select attacking territory
+            GamePhase.Attack when priorSelection => 
+                owner != _machine.PlayerTurn &&                                // Target enemy territory
+                BoardGeography.GetNeighbors(oldSelected).Contains(newSelected), // Adjacent to source
+
+            // Move requires two selections: source then destination  
+            GamePhase.Move when !priorSelection => 
+                owner == _machine.PlayerTurn && territoryArmies >= 2,           // Select source territory
+            GamePhase.Move when priorSelection => 
+                owner == _machine.PlayerTurn && oldSelected != newSelected &&  // Own destination, different from source
+                IsConnectedPath(oldSelected, newSelected, _machine.PlayerTurn), // Connected through owned territories
+
+            _ => false
+        };
     }
 
+    // Manage attack/move workflow
+    public (TerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(TerrID selected, TerrID priorSelected)
+    {
+        switch (_machine.CurrentPhase) 
+        {
+            case GamePhase.Attack when !_machine.PhaseStageTwo:
+                // Store attacking territory, advance to target selection
+                _machine.PhaseStageTwo = true;
+                return (selected, false, null);
+                
+            case GamePhase.Attack when _machine.PhaseStageTwo:
+                // Target selected, request dice allocation
+                _machine.PhaseStageTwo = false;
+                return (selected, true, null);
+
+            case GamePhase.Move when !_machine.PhaseStageTwo:
+                // Store source territory, advance to destination selection
+                _machine.PhaseStageTwo = true;
+                return (selected, false, null);
+                
+            case GamePhase.Move when _machine.PhaseStageTwo:
+                // Destination selected, request army count
+                _machine.PhaseStageTwo = false;
+                int maxArmies = _currentGame.Board.Armies[priorSelected] - 1;
+                return (TerrID.Null, true, maxArmies);
+
+            default:
+                // Single-stage actions (Place phase)
+                ClaimOrReinforce(selected);
+                return (TerrID.Null, false, null);
+        }
+    }
+
+    // Resolve combat
     public void Battle(TerrID source, TerrID target, (int AttackRoll, int DefenseRoll)[] diceRolls)
     {
         _actionsCounter++;
 
-        int sourceLoss = 0;
-        int targetLoss = 0;
-        foreach (var (AttackRoll, DefenseRoll) in diceRolls)
-            if (AttackRoll > DefenseRoll)
-                targetLoss++;
-            else
-                sourceLoss++;
+        int sourceLoss = 0, targetLoss = 0;
+        
+        // Calculate casualties from dice results
+        foreach (var (AttackRoll, DefenseRoll) in diceRolls) 
+        {
+            if (AttackRoll > DefenseRoll) targetLoss++;
+            else sourceLoss++;
+        }
 
-        if (targetLoss >= _currentGame.Board.Armies[target]) {
+        // Handle territory conquest
+        if (targetLoss >= _currentGame.Board.Armies[target]) 
+        {
             int conqueredOwner = _currentGame.Board.TerritoryOwner[target];
             int newOwner = _currentGame.Board.TerritoryOwner[source];
+            
+            // Transfer ownership
             if (conqueredOwner > -1)
                 _currentGame.Players[conqueredOwner].RemoveTerritory(target);
             _currentGame.Players[newOwner].AddTerritory(target);
 
-            _currentGame.Board.Conquer(source, target, _currentGame.Board.TerritoryOwner[source]);
+            _currentGame.Board.Conquer(source, target, newOwner);
 
+            // Award conquest card
             Reward ??= _currentGame.Cards.GameDeck.DrawCard();
         }
-        if (sourceLoss > 0)
-            _currentGame.Board.Reinforce(source, -sourceLoss);
-        if (targetLoss > 0)
-            _currentGame.Board.Reinforce(target, -targetLoss);
+        
+        // Apply losses
+        if (sourceLoss > 0) _currentGame.Board.Reinforce(source, -sourceLoss);
+        if (targetLoss > 0) _currentGame.Board.Reinforce(target, -targetLoss);
     }
 
-    public bool CanTradeInCards(int playerNum, int[] handIndices)
-    {
-        if (playerNum != PlayerTurn)
-            return false;
-        if (handIndices.Length < 3)
-            return false;
-        var selectedCards = GetCardsFromHand(playerNum, handIndices);
-        if (selectedCards == null || selectedCards.Length == 0)
-            return false;
-
-        List<ICardSet> tradedSets = [];
-        foreach (var card in selectedCards) {
-            if (card.IsTradeable == false)
-                return false;
-
-            if (card.CardSet == null) {
-                _logger.LogError("{Card} did not have a CardSet specified on Trade-In check.", card);
-                return false;
-            }
-            else if (!tradedSets.Contains(card.CardSet))
-                tradedSets.Add(card.CardSet);
-        }
-
-        if (tradedSets.Count == 0)
-            return false;
-
-        foreach (var set in tradedSets) {
-            if (!set.IsValidTrade([.. selectedCards]))
-                return false;
-        }
-
-        return true;
-    }
-
+    // Process card trade-in
     public void TradeInCards(int playerNum, int[] handIndices)
     {
         var selectedCards = GetCardsFromHand(playerNum, handIndices);
-        if (selectedCards == null || selectedCards.Length == 0)
-            return;
-
         var currentPlayer = _currentGame.Players[playerNum];
+        
+        // Calculate escalating bonus
         _machine.IncrementNumTrades(1);
-        int tradebonus = _currentGame.Values.CalculateBaseTradeInBonus(_machine.NumTrades);
-        currentPlayer.GetsTradeBonus(tradebonus);
-        CurrentActionsLimit += tradebonus;
+        int tradeBonus = _currentGame.Values.CalculateBaseTradeInBonus(_machine.NumTrades);
+        
+        // Apply bonus and discard cards
+        currentPlayer.GetsTradeBonus(tradeBonus);
+        CurrentActionsLimit += tradeBonus;
         ForceDiscard((Player)currentPlayer, handIndices);
 
-        var tradedTargets = selectedCards.SelectMany(item => item.Target);
+        // Handle territory bonuses
+        var tradedTargets = selectedCards.SelectMany(card => card.Target);
         var controlledTargets = currentPlayer.GetControlledTargets(tradedTargets.ToArray());
+        
         if (controlledTargets.Length == 1)
             _currentGame.Board.Reinforce(controlledTargets[0], _currentGame.Values.TerritoryTradeInBonus);
         else if (controlledTargets.Length > 1)
-            PromptBonusChoice?.Invoke(this, [.. controlledTargets]);
+            PromptBonusChoice?.Invoke(this, controlledTargets);
     }
 
-    public void AwardTradeInBonus(TerrID territory)
+    // Track actions and trigger phase progression
+    private void IncrementAction()
     {
-        _currentGame.Board.Reinforce(territory, _currentGame.Values.TerritoryTradeInBonus);
+        _actionsCounter++;
+
+        // Check for stage transitions
+        if (ReachedSecondStage())
+            _machine.PhaseStageTwo = true;
+
+        // Trigger next phase when limit reached
+        if (_actionsCounter >= CurrentActionsLimit) 
+        {
+            if (InSetupPhase) _machine.IncrementRound();
+            else _machine.IncrementPhase();
+        }
     }
 
-    public void DeliverCardReward()
-    {
-        if (Reward == null)
-            return;
+    // ... helper methods omitted
+}
 
-        _currentGame.Players[PlayerTurn].AddCard(Reward);
-        Reward = null;
-    }
-
-            </pre>
+                    </code>
+                </pre>
         </div>
     </div>
-
     <div class="code-with-text" id="Registry">
         <div class="image-text">
             <img src="Images/Registry.svg" />
-            <h3>Type Registry System</h3>
-            <p>I designed a flexible type registration system that enables runtime discovery and management of related types, demonstrating advanced meta-programming capabilities:</p>
+            <h3>Team-Friendly Type Registry</h3>
+            <p>A Type Registry solves string-to-Type resolution (for binary deserialization) and associates asset files with their converters while simplifying later development and support. </p>
             <ul>
-                <li>Dynamic type lookup by name or relationship</li>
-                <li>Parent-child type relationship management</li>
-                <li>Support for polymorphic operations without hard-coding</li>
-                <li>Integration with data loading and serialization systems</li>
+                <li><strong>Decouples</strong> type discovery from hardcoded references</li>
+                <li><strong>Provides Data-driven initialization</strong> for different environments and test scenarios</li>
+                <li><strong>Validates type relationships automatically</strong> to catch integration errors early</li>
+                <li><strong>Provides consistent patterns</strong> for DAL, serialization, and factory components</li>
+                <li><strong>Supports extension</strong>, creating clear extension points that developers can follow safely</li>
             </ul>
-            <p>This registry system provides a foundation for extensible components and reduces coupling between different parts of the application.</p>
-            <p><center><i>Key Files: TypeRegister.cs, TypeRelations.cs</i></center></p>
+            <p><center><i>Key Files: TypeRegister.cs, TypeRelations.cs, RegistryInitializer.cs</i></center></p>
         </div>
         <div>
             <pre class="code-snippet">
+            <code class="language-csharp">
+// TypeRegister.cs - Extensible lookup system for team development
 public class TypeRegister : ITypeRegister&lt;ITypeRelations&gt;
 {
     private readonly Dictionary&lt;Type, ITypeRelations&gt; _typeRelata = [];
@@ -410,8 +564,11 @@ public class TypeRegister : ITypeRegister&lt;ITypeRelations&gt;
         initializer.PopulateRegistry(this);
     }
 
-    public Type? this[string lookupName] {
-        get {
+    // String-based type lookup for runtime resolution
+    public Type? this[string lookupName] 
+    {
+        get 
+        {
             if (string.IsNullOrEmpty(lookupName))
                 return null;
 
@@ -419,56 +576,200 @@ public class TypeRegister : ITypeRegister&lt;ITypeRelations&gt;
                 if (_typeRelata[type][RegistryRelation.Name] is string registeredName 
                     && registeredName == lookupName)
                     return type;
-
             return null;
         }
     }
     
-    public ITypeRelations? this[Type type] {
-        get {
+    // Type-based relationship lookup
+    public ITypeRelations? this[Type type] 
+    {
+        get 
+        {
             if (_typeRelata.TryGetValue(type, out ITypeRelations? relata))
                 return _typeRelata[type];
             else return null;
         }
-        set {
+        set 
+        {
             if (value is ITypeRelations and not null)
                 Register(type, value);
-            else throw new ArgumentException($"{value} is not valid (null or not ITypeRelations)");
+            else throw new ArgumentException($"{value} is not valid");
         }
     }
     
-    public (Type KeyType, object RelatedObject)[]? this[RegistryRelation relation] {
-        get {
+    // Relation-based reverse lookup across all types
+    public (Type KeyType, object RelatedObject)[]? this[RegistryRelation relation] 
+    {
+        get 
+        {
             List&lt;(Type, object)&gt; entries = [];
-            foreach (Type type in _typeRelata.Keys) {
-                if (_typeRelata[type][relation] != null) {
+            foreach (Type type in _typeRelata.Keys) 
+            {
+                if (_typeRelata[type][relation] != null) 
+                {
                     entries.Add(new(type, _typeRelata[type][relation]!));
                 }
             }
-            if (entries.Count > 0)
-                return [.. entries];
-            else return null;
+            return entries.Count > 0 ? [.. entries] : null;
         }
     }
 
+    // Validate parent-child type relationships with integrity checking
     public bool TryGetParentType(Type registeredType, out Type? parentType)
     {
-        if (!_typeRelata.TryGetValue(registeredType, out ITypeRelations? relations)) {
+        if (!_typeRelata.TryGetValue(registeredType, out ITypeRelations? relations)) 
+        {
             parentType = null;
             return false;
         }
         
-        if (relations[RegistryRelation.CollectionType] is not Type collection) {
+        if (relations[RegistryRelation.CollectionType] is not Type collection) 
+        {
             parentType = null;
             return false;
         }
         
-        // Validate parent-member relationship...
+        // Verify bidirectional relationship integrity
+        string? regCollectionName = relations[RegistryRelation.CollectionName] as string;
+        if (regCollectionName != collection.Name)
+            throw new InvalidDataException($"Collection name mismatch for {registeredType}");
+            
+        if (!_typeRelata.TryGetValue(collection, out ITypeRelations? collectionRelations))
+            throw new InvalidDataException($"Parent collection {collection} not registered");
+            
+        if (collectionRelations[RegistryRelation.ElementType] is not Type elementType 
+            || elementType != registeredType)
+            throw new InvalidDataException($"Parent-child relationship broken");
+
         parentType = collection;
         return true;
     }
+
+    // Reflection-based registration with default naming
+    public void Register(Type type)
+    {
+        if (_typeRelata.ContainsKey(type))
+            throw new ArgumentException($"{type} already registered");
+
+        _typeRelata.Add(type, new TypeRelations([(type.Name, RegistryRelation.Name)]));
+    }
+
+    // ... other registration and management methods omitted
 }
-            </pre>
+
+// TypeRelations.cs - Flexible object relationship container
+public class TypeRelations : ITypeRelations
+{
+    private readonly Dictionary&lt;RegistryRelation, object&gt; _relatedObjects = [];
+
+    public TypeRelations((object, RegistryRelation)[] relations)
+    {
+        foreach (var relation in relations)
+            Add(relation.Item1, relation.Item2);
+    }
+
+    public object? this[RegistryRelation relation] 
+    {
+        get 
+        {
+            return _relatedObjects.TryGetValue(relation, out object? value) ? value : null;
+        }
+    }
+
+    // Type-safe relationship validation
+    public void Add(object obj, RegistryRelation relation)
+    {
+        if (_relatedObjects.ContainsKey(relation))
+            throw new ArgumentException("Relation already exists");
+            
+        switch (relation) 
+        {
+            case RegistryRelation.Name:
+            case RegistryRelation.CollectionName:
+            case RegistryRelation.DataFileName:
+                if (obj is not string)
+                    throw new ArgumentException($"{relation} requires string object");
+                break;
+                
+            case RegistryRelation.CollectionType:
+            case RegistryRelation.ElementType:
+            case RegistryRelation.ConvertedDataType:
+                if (obj is not Type)
+                    throw new ArgumentException($"{relation} requires Type object");
+                break;
+                
+            case RegistryRelation.DataConverter:
+                if (!obj.GetType().IsClass)
+                    throw new ArgumentException("DataConverter must be reference type");
+                break;
+                
+            default:
+                throw new ArgumentOutOfRangeException(nameof(relation));
+        }
+        
+        _relatedObjects.Add(relation, obj);
+    }
+
+    // ... removal and utility methods omitted
+}
+
+// RegistryInitializer.cs - Data-driven type registration
+public class RegistryInitializer(IOptions&lt;AppConfig&gt; options) : IRegistryInitializer
+{
+    private readonly CardRegistryRecord[] _cardTypeRegistryRecords = [
+        new() 
+        {
+            CardType = typeof(TroopCard),
+            Name = nameof(TroopCard),
+            CardSetType = typeof(TroopCardSet),
+            SetName = nameof(TroopCardSet)
+        }
+    ];
+    
+    private readonly CardSetRegistryRecord[] _cardSetTypeRegistryRecords = [
+        new() 
+        {
+            CardSetType = typeof(TroopCardSet),
+            Name = nameof(TroopCardSet),
+            CardType = typeof(TroopCard),
+            DataFileName = options.Value.DataFileMap[nameof(TroopCard) + "Set.json"],
+            CardSetDataConverter = new TroopCardSetDataJConverter(),
+            ConvertedDataType = typeof(TroopCardSet)
+        }
+    ];
+
+    // Register types with full relationship metadata
+    public void PopulateRegistry(ITypeRegister&lt;ITypeRelations&gt; registry)
+    {
+        RegisterGeography(registry);
+
+        // Register card types with collection relationships
+        foreach (var info in _cardTypeRegistryRecords) 
+        {
+            TypeRelations cardRelations = new();
+            cardRelations.Add(info.Name, RegistryRelation.Name);
+            cardRelations.Add(info.CardSetType, RegistryRelation.CollectionType);
+            cardRelations.Add(info.SetName, RegistryRelation.CollectionName);
+            registry.Register(info.CardType, cardRelations);
+        }
+
+    // Register collection types with serialization metadata for DAL integration
+    foreach (var info in _cardSetTypeRegistryRecords) 
+    {
+        TypeRelations cardSetRelations = new();
+        cardSetRelations.Add(info.Name, RegistryRelation.Name);
+        cardSetRelations.Add(info.CardType, RegistryRelation.ElementType);
+        cardSetRelations.Add(info.DataFileName, RegistryRelation.DataFileName);
+        cardSetRelations.Add(info.CardSetDataConverter, RegistryRelation.DataConverter);
+        cardSetRelations.Add(info.ConvertedDataType, RegistryRelation.ConvertedDataType);
+        registry.Register(info.CardSetType, cardSetRelations);
+    }
+    }
+
+    // ... geography registration and helper methods omitted
+}
+                    </code>
+                </pre>
         </div>
     </div>
 
@@ -476,49 +777,35 @@ public class TypeRegister : ITypeRegister&lt;ITypeRelations&gt;
         <div class="image-text">
             <img src="Images/Serializer.svg" />
             <h3>Custom Binary Serialization Framework</h3>
-            <p>I implemented a robust binary serialization system that enables efficient game state persistence with full control over the serialization process:</p>
+            <p>A binary serialization framework serializaes arbitrary object hierarchies without developers into narrow serialization patterns:</p>
             <ul>
-                <li>Type-safe encoding and decoding of complex objects</li>
-                <li>Support for various data types including enums and collections</li>
-                <li>Reflection-based property discovery with opt-in serialization</li>
-                <li>Complete game state persistence with minimal overhead</li>
+                <li><strong>Type-safe encoding/decoding</strong> of complex nested structures</li>
+                <li><strong>Flexible support</strong> for mixed collections, tagged values, and optional metadata</li>
+                <li><strong>Eliminates boilerplate</strong> through reflection, with performance escape hatches</li>
+                <li><strong>Errors handled</strong> consistently with logging</li>
+                <li><strong>Complete Game Snapshots</strong> are enabled, with minimal memory overhead</li>
+                <li><strong>Extension Made Easy</strong> with parallel interface methods for serializable types</li>
+                <li><strong>Validated</strong> through comprehensive Round-trip Tests</li>
             </ul>
-            <p>This system demonstrates understanding of low-level data structures, I/O operations, and efficient state management techniques.</p>
-            <p><center><i>Key Files: BinarySerializer.cs, SerializedData.cs</i></center></p>
+            <p><center><i>Key Files: BinarySerializer.cs, SerializedData.cs, IBinarySerializable.cs</i></center></p>
         </div>
         <div>
             <pre class="code-snippet">
+            <code class="language-csharp">
+// BinarySerializer.cs - Type-safe binary persistence framework
 public static class BinarySerializer
 {
-    public static async Task Save(IBinarySerializable[] serializableObjects, string fileName, bool newFile)
+    private static ILogger? _logger;
+
+    // Flexible encoding handles different data types consistently
+    private static byte[] ConvertibleToBytes(Type type, IConvertible value)
     {
-        await Task.Run(() =>
-        {
-            if (newFile) {
-                using FileStream fileStream = new(fileName, FileMode.Create, FileAccess.Write);
-                using BinaryWriter writer = new(fileStream);
-
-                foreach (var obj in serializableObjects)
-                    try {
-                        if (!WriteSerializableObject(obj, writer).Result)
-                            _logger?.LogWarning("BinarySerializer failed to write {Object}.", obj);
-                    } catch (Exception e) {
-                        _logger?.LogError("An exception was thrown when attempting to write {obj}: {Message}.", obj, e.Message);
-                    }
-            }
-            else {
-                using FileStream fileStream = new(fileName, FileMode.Truncate, FileAccess.Write);
-                using BinaryWriter writer = new(fileStream);
-
-                foreach (var obj in serializableObjects)
-                    try {
-                        if (!WriteSerializableObject(obj, writer).Result)
-                            _logger?.LogWarning("BinarySerializer failed to write {Object}.", obj);
-                    } catch (Exception e) {
-                        _logger?.LogError("An exception was thrown when attempting to write {obj}: {Message}.", obj, e.Message);
-                    }
-            }
-        });
+        return type switch {
+            Type t when t == typeof(byte) => [(byte)value],
+            Type t when t == typeof(string) => Encoding.UTF8.GetBytes((string)value),
+            Type t when t.IsEnum => BitConverter.GetBytes(Convert.ToInt64(value)),
+            _ => BitConverter.GetBytes(Convert.ToDouble(value))
+        };
     }
 
     private static IConvertible BytesToConvertible(Type type, byte[] bytes)
@@ -534,112 +821,434 @@ public static class BinarySerializer
         return (IConvertible)Convert.ChangeType(doubleVal, type);
     }
 
+    // Core serialization with length-prefixed encoding for robust deserialization
+    private static void WriteConvertible(BinaryWriter writer, Type type, IConvertible value)
+    {
+        byte[] bytes = ConvertibleToBytes(type, value);
+        writer.Write(bytes.Length);  // Length prefix for safe reading
+        writer.Write(bytes);
+    }
+
     public static IConvertible ReadConvertible(BinaryReader reader, Type type)
     {
         int length = reader.ReadInt32();
         byte[] bytes = reader.ReadBytes(length);
         return BytesToConvertible(type, bytes);
     }
-    
+
+    // Handle collections of arbitrary length with type safety
     public static Array ReadConvertibles(BinaryReader reader, Type type, int numValues)
     {
         if (!typeof(IConvertible).IsAssignableFrom(type) || type.IsEnum || type == typeof(string))
-            throw new ArgumentException("ReadConvertibles accepts only IConvertible types, excluding strings and Enums.", nameof(type));
+            throw new ArgumentException("ReadConvertibles accepts only IConvertible types, excluding strings and Enums.");
 
         Array returnArray = Array.CreateInstance(type, numValues);
         for (int i = 0; i < numValues; i++)
             returnArray.SetValue(ReadConvertible(reader, type), i);
         return returnArray;
     }
-    
-    private static async Task&lt;bool&gt; WriteSerializableObject(IBinarySerializable serializableObject, BinaryWriter writer)
+
+    // Specialized handling for enums and strings preserves type information
+    public static Array ReadEnums(BinaryReader reader, Type type, int numValues)
+    {
+        if (!type.IsEnum)
+            throw new ArgumentException("ReadEnums accepts only Enum types.");
+
+        Array returnArray = Array.CreateInstance(type, numValues);
+        for (int i = 0; i < numValues; i++) {
+            int length = reader.ReadInt32();
+            byte[] bytes = reader.ReadBytes(length);
+            returnArray.SetValue(Enum.ToObject(type, BitConverter.ToInt64(bytes, 0)), i);
+        }
+        return returnArray;
+    }
+
+    public static Array ReadStrings(BinaryReader reader, int numValues)
+    {
+        Array returnArray = Array.CreateInstance(typeof(string), numValues);
+        for (int i = 0; i < numValues; i++)
+            returnArray.SetValue((string)ReadConvertible(reader, typeof(string)), i);
+        return returnArray;
+    }
+
+    // Optional metadata support without breaking untagged serialization
+    private static void WriteTaggedConvertible(BinaryWriter writer, Type type, IConvertible value, string tag)
+    {
+        writer.Write(tag);  // Tag precedes data for optional metadata
+        WriteConvertible(writer, type, value);
+    }
+
+    // Async file operations with comprehensive error handling
+    public static async Task Save(IBinarySerializable[] serializableObjects, string fileName, bool newFile)
+    {
+        await Task.Run(() =>
+        {
+            FileMode mode = newFile ? FileMode.Create : FileMode.Truncate;
+            using FileStream fileStream = new(fileName, mode, FileAccess.Write);
+            using BinaryWriter writer = new(fileStream);
+
+            foreach (var obj in serializableObjects) {
+                try {
+                    if (!WriteSerializableObject(obj, writer).Result)
+                        _logger?.LogWarning("Failed to write {Object}", obj);
+                } catch (Exception e) {
+                    _logger?.LogError("Exception writing {obj}: {Message}", obj, e.Message);
+                }
+            }
+        });
+    }
+
+    // Metadata-driven serialization handles complex object structures
+    private static async Task<bool> WriteSerializableObject(IBinarySerializable serializableObject, BinaryWriter writer)
     {
         try {
             if (await serializableObject.GetBinarySerials() is not SerializedData[] saveData) {
-                _logger?.LogError("Failed: {object} did not return valid SerializedData[].", serializableObject);
+                _logger?.LogError("Object {object} returned invalid SerializedData[]", serializableObject);
                 return false;
             }
 
+            // Pattern matching handles all serialization scenarios
             foreach (SerializedData saveDatum in saveData) {
-                if (saveDatum.MemberType is not null) {
-                    if (saveDatum.Tag != null)
+                switch (saveDatum) {
+                    case { MemberType: not null, Tag: not null }:
+                        // Tagged collections with type metadata
                         WriteTaggedConvertibles(writer, saveDatum.MemberType, saveDatum.SerialValues, saveDatum.Tag);
-                    else
+                        break;
+
+                    case { MemberType: not null, Tag: null }:
+                        // Untagged collections for performance-critical scenarios
                         WriteConvertibles(writer, saveDatum.MemberType, saveDatum.SerialValues);
-                }
-                else {
-                    if (saveDatum.Tag != null)
+                        break;
+
+                    case { MemberType: null, Tag: not null }:
+                        // Tagged single values with metadata
                         WriteTaggedConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0], saveDatum.Tag);
-                    else
+                        break;
+
+                    case { MemberType: null, Tag: null }:
+                        // Untagged single values for minimal overhead
                         WriteConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0]);
+                        break;
                 }
             }
         } catch (Exception ex) {
-            _logger?.LogError("{Message}.", ex.Message);
+            _logger?.LogError("Serialization error: {Message}", ex.Message);
             return false;
         }
         return true;
     }
+
+    // Runtime type validation enables flexible collection handling
+    public static bool IsSerializable(Type type)
+    {
+        return type switch {
+            Type t when t == typeof(string) => true,
+            Type t when t.IsEnum => t.GetEnumUnderlyingType() == typeof(int),
+            Type t when t.IsPrimitive => true,
+            Type t when IsIConvertibleCollection(t, out _) => true,
+            _ => false
+        };
+    }
+
+    // Collection type discovery through reflection with caching opportunities
+    public static bool IsIConvertibleCollection(Type type, out Type? memberType)
+    {
+        if (!typeof(IEnumerable).IsAssignableFrom(type) || type == typeof(string)) {
+            memberType = null;
+            return false;
+        }
+
+        // Handle arrays with element type extraction
+        if (type.IsArray) {
+            var elementType = type.GetElementType();
+            memberType = elementType;
+            return typeof(IConvertible).IsAssignableFrom(elementType);
+        }
+
+        // Handle generic collections through interface discovery
+        if (type.IsGenericType) {
+            var typeInterfaces = type.GetInterfaces();
+            foreach (var iFace in typeInterfaces) {
+                if (iFace.IsGenericType && iFace.GetGenericTypeDefinition() == typeof(IEnumerable<>)) {
+                    var genericType = iFace.GetGenericArguments()[0];
+                    memberType = genericType;
+                    return typeof(IConvertible).IsAssignableFrom(genericType);
+                }
+            }
+        }
+
+        // Fallback to runtime inspection for non-generic collections
+        if (Activator.CreateInstance(type) is IEnumerable testInstance) {
+            Type? elementType = null;
+            foreach (var element in testInstance) {
+                if (element is not IConvertible) {
+                    memberType = null;
+                    return false;
+                }
+                elementType ??= element.GetType();
+            }
+            memberType = elementType;
+            return true;
+        }
+
+        memberType = null;
+        return false;
+    }
 }
+
+// SerializedData.cs - Flexible metadata container for serialization
+public readonly struct SerializedData
+{
+    // Multiple constructors handle different serialization scenarios
+    public SerializedData(Type serialType, IConvertible value)
+    {
+        SerialType = serialType;
+        SerialValues = [value];
+    }
+
+    public SerializedData(Type serialType, IConvertible value, string tag)
+    {
+        SerialType = serialType;
+        SerialValues = [value];
+        Tag = tag;
+    }
+
+    public SerializedData(Type serialType, IConvertible[] serialValues, string tag)
+    {
+        SerialType = serialType;
+        // Automatic collection type detection
+        if (BinarySerializer.IsIConvertibleCollection(serialType, out Type? memberType))
+            MemberType = memberType;
+        SerialValues = serialValues;
+        Tag = tag;
+    }
+
+    public SerializedData(Type serialType, IConvertible[] serialValues)
+    {
+        SerialType = serialType;
+        if (BinarySerializer.IsIConvertibleCollection(serialType, out Type? memberType))
+            MemberType = memberType;
+        SerialValues = serialValues;
+    }
+
+    // Metadata properties support different serialization patterns
+    public Type? MemberType { get; init; } = null;  // Collection element type
+    public Type SerialType { get; init; }           // Primary type information
+    public IConvertible[] SerialValues { get; init; } // Actual data to serialize
+    public string? Tag { get; init; } = null;       // Optional metadata tag
+}
+
+// Example usage - Game state persistence
+public class GameState : IBinarySerializable
+{
+    public int CurrentRound { get; set; }
+    public TerrID[] PlayerTerritories { get; set; } = [];
+    public Dictionary<string, int> PlayerScores { get; set; } = [];
+
+    public async Task<SerializedData[]> GetBinarySerials()
+    {
+        return await Task.Run(() => [
+            // Tagged single value with metadata
+            new SerializedData(typeof(int), CurrentRound, "GameRound"),
+            
+            // Enum array with automatic type detection
+            new SerializedData(typeof(TerrID[]), PlayerTerritories.Cast<IConvertible>().ToArray()),
+            
+            // Complex nested structure handling
+            new SerializedData(typeof(int), PlayerScores.Count, "ScoreCount"),
+            new SerializedData(typeof(string[]), PlayerScores.Keys.Cast<IConvertible>().ToArray()),
+            new SerializedData(typeof(int[]), PlayerScores.Values.Cast<IConvertible>().ToArray())
+        ]);
+    }
+
+    public bool LoadFromBinary(BinaryReader reader)
+    {
+        try {
+            // Read tagged values with metadata validation
+            string roundTag = reader.ReadString();
+            if (roundTag != "GameRound") return false;
+            CurrentRound = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+
+            // Handle collections with type safety
+            int terrCount = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            var territories = BinarySerializer.ReadEnums(reader, typeof(TerrID), terrCount);
+            PlayerTerritories = territories.Cast<TerrID>().ToArray();
+
+            // Reconstruct complex structures
+            string scoreTag = reader.ReadString();
+            int scoreCount = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            var keys = BinarySerializer.ReadStrings(reader, scoreCount);
+            var values = BinarySerializer.ReadConvertibles(reader, typeof(int), scoreCount);
+            
+            PlayerScores.Clear();
+            for (int i = 0; i < scoreCount; i++) {
+                PlayerScores[(string)keys.GetValue(i)!] = (int)values.GetValue(i)!;
+            }
+
+            return true;
+        } catch (Exception ex) {
+            _logger?.LogError("Deserialization failed: {Message}", ex.Message);
+            return false;
+        }
+    }
+}
+</code>
             </pre>
         </div>
     </div>
 
-    <div class="code-with-text" id="RulesLogic">
+    <div class="code-with-text" id="GeographyGraph">
         <div class="image-text">
-            <h3>Rule-Based Game Logic</h3>
-            <p>The game implements a sophisticated rule engine through the Regulator class, which enforces complex game mechanics:</p>
+            <img src="Images/GeographyGraph.svg" />
+            <h3>Config-Driven Spatial Graph</h3>
+            <p>Bridges dynamic JSON configuration with type-safe spatial operations, providing a foundation for extensible map systems:</p>
             <ul>
-                <li>Phase-specific action validation and resolution</li>
-                <li>Resource management and distribution</li>
-                <li>Combat resolution using probabilistic outcomes</li>
-                <li>Turn-based progression with appropriate state transitions</li>
+                <li><strong>Resolves enum types dynamically from configuration</strong> while maintaining compile-time safety in core algorithms</li>
+                <li><strong>Caches</strong> spatial relationships in immutable O(1) lookup structures for safety and performance</li>
+                <li><strong>Validates</strong> bidirectional territory-continent hierarchies automatically</li>
+                <li><strong>Efficient set operations</strong> enable complex spatial queries</li>
+                <li><strong>Supports map layout variations</strong> through data files without code changes</li>
+                <li><strong>Provides architectual foundation for modding</strong> that could extend to full assembly-based modding</li>
             </ul>
-            <p>This system demonstrates the ability to translate abstract game rules into concrete code logic, a skill directly applicable to implementing business rules in enterprise applications.</p>
-            <p><center><i>Key Files: Regulator.cs, RuleValues.cs</i></center></p>
+            <p><center><i>Key Files: BoardGeography.cs, GeographyInitializer.cs</i></center></p>
         </div>
         <div>
             <pre class="code-snippet">
+            <code class="language-csharp">
+// StateMachine.cs - Core state management with event propagation
+public class StateMachine : IBinarySerializable
+{
+    private readonly ILogger&lt;StateMachine&gt; _logger; // ... constructor and other fields omitted
+    private GamePhase _currentPhase = GamePhase.Null;
+    private bool _phaseStageTwo = false;
+    private int _playerTurn = 0;
+    private int _round = 0;
+    // ... _numTrades and other properties omitted
+
+    // Event system for loose coupling
+    public event EventHandler&lt;string&gt;? StateChanged;
+
+    public GamePhase CurrentPhase 
+    {
+        get 
+        { 
+            return _currentPhase; 
+        }
+        set 
+        {
+            if (!value.Equals(_currentPhase)) 
+            {
+                _currentPhase = value;
+                StateChanged?.Invoke(this, new(nameof(CurrentPhase)));
+            }
+        }
+    }
+
+    public bool PhaseStageTwo 
+    {
+        get 
+        { 
+            return _phaseStageTwo; 
+        }
+        set 
+        {
+            if (!value.Equals(_phaseStageTwo)) 
+            {
+                _phaseStageTwo = value;
+                StateChanged?.Invoke(this, new(nameof(PhaseStageTwo)));
+            }
+        }
+    }
+
+    public int PlayerTurn 
+    {
+        get 
+        { 
+            return _playerTurn; 
+        }
+        set 
+        {
+            if (!value.Equals(_playerTurn)) 
+            {
+                _playerTurn = value;
+                StateChanged?.Invoke(this, new(nameof(PlayerTurn)));
+            }
+        }
+    }
+
+    // Automated state progression
+    public void IncrementPhase()
+    {
+        PhaseStageTwo = false;
+        int intPhase = (int)CurrentPhase;
+        if (intPhase >= 0 && intPhase < 3) // Place (1) -> Attack (2) -> Move (3)
+        {
+            intPhase++;
+            CurrentPhase = (GamePhase)intPhase;
+        }
+        else if (intPhase == 3) 
+        {
+            IncrementPlayerTurn(); // Move -> next player's turn
+        }
+        // ... special case handling for setup phases omitted
+    }
+
+    public void IncrementPlayerTurn()
+    {
+        // ... complex player validation and setup phase logic omitted
+        int nextActive = NextActivePlayer();
+        if (nextActive != -1) 
+        {
+            PlayerTurn = nextActive;
+            CurrentPhase = GamePhase.Place; // Start new turn
+        }
+    }
+
+    // ... NextActivePlayer(), serialization methods, and other utilities omitted
+}
+
+// Regulator.cs - Event subscriber that enforces game rules
 public class Regulator : IRegulator
 {
     private readonly IGame _currentGame;
     private readonly StateMachine _machine;
-    private readonly ILogger _logger;
-    private readonly int _numPlayers;
+    private readonly ILogger _logger; // ... other fields omitted
     private int _actionsCounter = 0;
-    private int _prevActionCount = 0;
-
-    public int CurrentActionsLimit { get; set; }
-    public int PhaseActions => _actionsCounter - _prevActionCount;
-    public ICard? Reward { get; set; } = null;
+    // ... _prevActionCount, CurrentActionsLimit properties omitted
 
     public event EventHandler&lt;TerrID[]&gt;? PromptBonusChoice;
     public event EventHandler&lt;IPromptTradeEventArgs&gt;? PromptTradeIn;
 
+    public void Initialize()
+    {
+        // ... action limit initialization omitted
+        // Subscribe to state changes - loose coupling via events
+        _machine.StateChanged += HandleStateChanged;
+    }
+
+    // Event handler responds to state changes
     private void HandleStateChanged(object? sender, string propName)
     {
         if (propName != "CurrentPhase")
             return;
 
-        _prevActionCount = _actionsCounter;
-        switch (_machine.CurrentPhase) {
+        // Each phase triggers different game logic
+        switch (_machine.CurrentPhase) 
+        {
             case GamePhase.Place:
-                CurrentActionsLimit = _actionsCounter;
-                _currentGame.Players[_machine.PlayerTurn].ArmyPool 
-                    += _currentGame.Players[_machine.PlayerTurn].ArmyBonus;
-                CurrentActionsLimit += _currentGame.Players[_machine.PlayerTurn].ArmyPool;
-
-                if (!_currentGame.Players[_machine.PlayerTurn].HasCardSet)
-                    break;
-
-                bool force = false;
-                if (_currentGame.Players[_machine.PlayerTurn].Hand.Count >= 5)
-                    force = true;
-                PromptTradeIn?.Invoke(this, new PromptTradeEventArgs(_machine.PlayerTurn, force));
+                // Update army pools and check for mandatory trades
+                _currentGame.Players[_machine.PlayerTurn].ArmyPool += 
+                    _currentGame.Players[_machine.PlayerTurn].ArmyBonus;
+                
+                if (_currentGame.Players[_machine.PlayerTurn].HasCardSet) 
+                {
+                    bool force = _currentGame.Players[_machine.PlayerTurn].Hand.Count >= 5;
+                    PromptTradeIn?.Invoke(this, new PromptTradeEventArgs(_machine.PlayerTurn, force));
+                }
                 break;
 
             case GamePhase.Attack:
-                _currentGame.State.PhaseStageTwo = false;
+                _machine.PhaseStageTwo = false;
                 break;
 
             case GamePhase.Move:
@@ -648,78 +1257,844 @@ public class Regulator : IRegulator
         }
     }
 
-    public void TradeInCards(int playerNum, int[] handIndices)
+    // Multi-stage action handling
+    public (TerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(
+        TerrID selected, TerrID priorSelected)
     {
-        var selectedCards = GetCardsFromHand(playerNum, handIndices);
-        if (selectedCards == null || selectedCards.Length == 0)
-            return;
+        switch (_machine.CurrentPhase) 
+        {
+            case GamePhase.Attack when !_machine.PhaseStageTwo:
+                // Stage 1: Select attacking territory
+                _machine.PhaseStageTwo = true;
+                return (selected, false, null);
+                
+            case GamePhase.Attack when _machine.PhaseStageTwo:
+                // Stage 2: Select target and request dice input
+                _machine.PhaseStageTwo = false;
+                return (selected, true, null);
 
-        var currentPlayer = _currentGame.Players[playerNum];
-        _machine.IncrementNumTrades(1);
-        int tradebonus = _currentGame.Values.CalculateBaseTradeInBonus(_machine.NumTrades);
-        currentPlayer.GetsTradeBonus(tradebonus);
-        CurrentActionsLimit += tradebonus;
-        ForceDiscard((Player)currentPlayer, handIndices);
+            case GamePhase.Move when !_machine.PhaseStageTwo:
+                // Stage 1: Select source territory
+                _machine.PhaseStageTwo = true;
+                return (selected, false, null);
+                
+            case GamePhase.Move when _machine.PhaseStageTwo:
+                // Stage 2: Select destination and request army count
+                _machine.PhaseStageTwo = false;
+                int maxArmies = _currentGame.Board.Armies[priorSelected] - 1;
+                return (TerrID.Null, true, maxArmies);
 
-        var tradedTargets = selectedCards.SelectMany(item => item.Target);
-        var controlledTargets = currentPlayer.GetControlledTargets(tradedTargets.ToArray());
-        if (controlledTargets.Length == 1)
-            _currentGame.Board.Reinforce(controlledTargets[0], _currentGame.Values.TerritoryTradeInBonus);
-        else if (controlledTargets.Length > 1)
-            PromptBonusChoice?.Invoke(this, [.. controlledTargets]);
+            default:
+                // Single-stage actions (Place phase)
+                ClaimOrReinforce(selected);
+                return (TerrID.Null, false, null);
+        }
+    }
+
+    // ... ClaimOrReinforce(), Battle(), TradeInCards() methods omitted
+
+    private void IncrementAction()
+    {
+        _actionsCounter++;
+        
+        // ... ReachedSecondStage() logic omitted
+        
+        // Automatic progression when action limit reached
+        if (_actionsCounter >= CurrentActionsLimit) 
+        {
+            if (InSetupPhase)
+                _machine.IncrementRound();
+            else
+                _machine.IncrementPhase(); // Triggers StateChanged event
+        }
+    }
+
+    // ... validation methods, serialization, and other utilities omitted
+}
+
+// MainVM_Base.cs - ViewModel layer subscribes to events
+public partial class MainVM_Base : ObservableObject, IMainVM
+{
+    // ... properties, commands, and other members omitted
+
+    public void Initialize(string[] players, string[] colors, string? fileName)
+    {
+        // ... game creation and setup logic omitted
+        
+        // Event subscription creates loose coupling
+        CurrentGame.State.StateChanged += HandleStateChanged;
+        CurrentGame.Board.TerritoryChanged += HandleTerritoryChanged;
+        Regulator.PromptBonusChoice += OnTerritoryBonusChoice;
+        Regulator.PromptTradeIn += OnPromptTradeIn;
+        
+        // ... initialization of collections and UI state omitted
+    }
+
+    // UI responds to state changes without direct dependencies
+    private void HandleStateChanged(object? sender, string propName)
+    {
+        switch (propName) 
+        {
+            case nameof(CurrentPhase):
+                CurrentPhase = CurrentGame.State.CurrentPhase;
+                break;
+            case nameof(PlayerTurn):
+                PlayerTurn = CurrentGame.State.PlayerTurn;
+                PlayerTurnChanging?.Invoke(this, PlayerTurn);
+                break;
+            // ... other property change handlers omitted
+        }
     }
     
-    public void Battle(TerrID source, TerrID target, ValueTuple<int, int>[] diceRolls)
+    // ... other event handlers and methods omitted
+}
+
+public class Regulator : IRegulator
+{
+    private readonly IGame _currentGame;
+    private readonly StateMachine _machine;
+    private int _actionsCounter = 0;
+    private int _prevActionCount = 0;
+
+    public int CurrentActionsLimit { get; set; }
+    public event EventHandler? PromptBonusChoice;
+    public event EventHandler? PromptTradeIn;
+
+    // Handle phase transitions
+    private void HandleStateChanged(object? sender, string propName)
+    {
+        if (propName != "CurrentPhase") return;
+
+        _prevActionCount = _actionsCounter;
+        switch (_machine.CurrentPhase) 
+        {
+            case GamePhase.Place:
+                // Distribute army bonuses
+                _currentGame.Players[_machine.PlayerTurn].ArmyPool += 
+                    _currentGame.Players[_machine.PlayerTurn].ArmyBonus;
+                CurrentActionsLimit = _actionsCounter + _currentGame.Players[_machine.PlayerTurn].ArmyPool;
+
+                // Force trade if hand limit exceeded
+                if (_currentGame.Players[_machine.PlayerTurn].HasCardSet) 
+                {
+                    bool mandatoryTrade = _currentGame.Players[_machine.PlayerTurn].Hand.Count >= 5;
+                    PromptTradeIn?.Invoke(this, new PromptTradeEventArgs(_machine.PlayerTurn, mandatoryTrade));
+                }
+                break;
+
+            case GamePhase.Attack:
+                _machine.PhaseStageTwo = false;
+                break;
+
+            case GamePhase.Move:
+                CurrentActionsLimit = _actionsCounter + 1;
+                break;
+        }
+    }
+
+    // Validate territory selection
+    public bool CanSelectTerritory(TerrID newSelected, TerrID oldSelected)
+    {
+        bool priorSelection = oldSelected != TerrID.Null;
+        int owner = _currentGame.Board.TerritoryOwner[newSelected];
+        int territoryArmies = _currentGame.Board.Armies[newSelected];
+
+        return _machine.CurrentPhase switch 
+        {
+            GamePhase.DefaultSetup => _machine.PhaseStageTwo switch 
+            {
+                false when owner == -1 => true,                    // Claim unowned territory
+                true when owner == _machine.PlayerTurn => true,    // Reinforce owned territory
+                _ => false
+            },
+
+            GamePhase.Place => owner == _machine.PlayerTurn,
+
+            // Attack requires two selections: source then target
+            GamePhase.Attack when !priorSelection => 
+                owner == _machine.PlayerTurn && territoryArmies >= 2,           // Select attacking territory
+            GamePhase.Attack when priorSelection => 
+                owner != _machine.PlayerTurn &&                                // Target enemy territory
+                BoardGeography.GetNeighbors(oldSelected).Contains(newSelected), // Adjacent to source
+
+            // Move requires two selections: source then destination  
+            GamePhase.Move when !priorSelection => 
+                owner == _machine.PlayerTurn && territoryArmies >= 2,           // Select source territory
+            GamePhase.Move when priorSelection => 
+                owner == _machine.PlayerTurn && oldSelected != newSelected &&  // Own destination, different from source
+                IsConnectedPath(oldSelected, newSelected, _machine.PlayerTurn), // Connected through owned territories
+
+            _ => false
+        };
+    }
+
+    // Manage attack/move workflow
+    public (TerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(TerrID selected, TerrID priorSelected)
+    {
+        switch (_machine.CurrentPhase) 
+        {
+            case GamePhase.Attack when !_machine.PhaseStageTwo:
+                // Store attacking territory, advance to target selection
+                _machine.PhaseStageTwo = true;
+                return (selected, false, null);
+                
+            case GamePhase.Attack when _machine.PhaseStageTwo:
+                // Target selected, request dice allocation
+                _machine.PhaseStageTwo = false;
+                return (selected, true, null);
+
+            case GamePhase.Move when !_machine.PhaseStageTwo:
+                // Store source territory, advance to destination selection
+                _machine.PhaseStageTwo = true;
+                return (selected, false, null);
+                
+            case GamePhase.Move when _machine.PhaseStageTwo:
+                // Destination selected, request army count
+                _machine.PhaseStageTwo = false;
+                int maxArmies = _currentGame.Board.Armies[priorSelected] - 1;
+                return (TerrID.Null, true, maxArmies);
+
+            default:
+                // Single-stage actions (Place phase)
+                ClaimOrReinforce(selected);
+                return (TerrID.Null, false, null);
+        }
+    }
+
+    // Resolve combat
+    public void Battle(TerrID source, TerrID target, (int AttackRoll, int DefenseRoll)[] diceRolls)
     {
         _actionsCounter++;
 
-        int sourceLoss = 0;
-        int targetLoss = 0;
-        foreach (var (AttackRoll, DefenseRoll) in diceRolls)
-            if (AttackRoll > DefenseRoll)
-                targetLoss++;
-            else
-                sourceLoss++;
+        int sourceLoss = 0, targetLoss = 0;
+        
+        // Calculate casualties from dice results
+        foreach (var (AttackRoll, DefenseRoll) in diceRolls) 
+        {
+            if (AttackRoll > DefenseRoll) targetLoss++;
+            else sourceLoss++;
+        }
 
-        if (targetLoss >= _currentGame.Board.Armies[target]) {
+        // Handle territory conquest
+        if (targetLoss >= _currentGame.Board.Armies[target]) 
+        {
             int conqueredOwner = _currentGame.Board.TerritoryOwner[target];
             int newOwner = _currentGame.Board.TerritoryOwner[source];
+            
+            // Transfer ownership
             if (conqueredOwner > -1)
                 _currentGame.Players[conqueredOwner].RemoveTerritory(target);
             _currentGame.Players[newOwner].AddTerritory(target);
 
-            _currentGame.Board.Conquer(source, target, _currentGame.Board.TerritoryOwner[source]);
+            _currentGame.Board.Conquer(source, target, newOwner);
 
+            // Award conquest card
             Reward ??= _currentGame.Cards.GameDeck.DrawCard();
         }
-        if (sourceLoss > 0)
-            _currentGame.Board.Reinforce(source, -sourceLoss);
-        if (targetLoss > 0)
-            _currentGame.Board.Reinforce(target, -targetLoss);
+        
+        // Apply losses
+        if (sourceLoss > 0) _currentGame.Board.Reinforce(source, -sourceLoss);
+        if (targetLoss > 0) _currentGame.Board.Reinforce(target, -targetLoss);
+    }
+
+    // Process card trade-in
+    public void TradeInCards(int playerNum, int[] handIndices)
+    {
+        var selectedCards = GetCardsFromHand(playerNum, handIndices);
+        var currentPlayer = _currentGame.Players[playerNum];
+        
+        // Calculate escalating bonus
+        _machine.IncrementNumTrades(1);
+        int tradeBonus = _currentGame.Values.CalculateBaseTradeInBonus(_machine.NumTrades);
+        
+        // Apply bonus and discard cards
+        currentPlayer.GetsTradeBonus(tradeBonus);
+        CurrentActionsLimit += tradeBonus;
+        ForceDiscard((Player)currentPlayer, handIndices);
+
+        // Handle territory bonuses
+        var tradedTargets = selectedCards.SelectMany(card => card.Target);
+        var controlledTargets = currentPlayer.GetControlledTargets(tradedTargets.ToArray());
+        
+        if (controlledTargets.Length == 1)
+            _currentGame.Board.Reinforce(controlledTargets[0], _currentGame.Values.TerritoryTradeInBonus);
+        else if (controlledTargets.Length > 1)
+            PromptBonusChoice?.Invoke(this, controlledTargets);
+    }
+
+    // Track actions and trigger phase progression
+    private void IncrementAction()
+    {
+        _actionsCounter++;
+
+        // Check for stage transitions
+        if (ReachedSecondStage())
+            _machine.PhaseStageTwo = true;
+
+        // Trigger next phase when limit reached
+        if (_actionsCounter >= CurrentActionsLimit) 
+        {
+            if (InSetupPhase) _machine.IncrementRound();
+            else _machine.IncrementPhase();
+        }
+    }
+
+    // ... helper methods omitted
+}
+
+// TypeRegister.cs - Extensible lookup system for team development
+public class TypeRegister : ITypeRegister&lt;ITypeRelations&gt;
+{
+    private readonly Dictionary&lt;Type, ITypeRelations&gt; _typeRelata = [];
+
+    public TypeRegister(IRegistryInitializer initializer)
+    {
+        initializer.PopulateRegistry(this);
+    }
+
+    // String-based type lookup for runtime resolution
+    public Type? this[string lookupName] 
+    {
+        get 
+        {
+            if (string.IsNullOrEmpty(lookupName))
+                return null;
+
+            foreach (Type type in _typeRelata.Keys)
+                if (_typeRelata[type][RegistryRelation.Name] is string registeredName 
+                    && registeredName == lookupName)
+                    return type;
+            return null;
+        }
+    }
+    
+    // Type-based relationship lookup
+    public ITypeRelations? this[Type type] 
+    {
+        get 
+        {
+            if (_typeRelata.TryGetValue(type, out ITypeRelations? relata))
+                return _typeRelata[type];
+            else return null;
+        }
+        set 
+        {
+            if (value is ITypeRelations and not null)
+                Register(type, value);
+            else throw new ArgumentException($"{value} is not valid");
+        }
+    }
+    
+    // Relation-based reverse lookup across all types
+    public (Type KeyType, object RelatedObject)[]? this[RegistryRelation relation] 
+    {
+        get 
+        {
+            List&lt;(Type, object)&gt; entries = [];
+            foreach (Type type in _typeRelata.Keys) 
+            {
+                if (_typeRelata[type][relation] != null) 
+                {
+                    entries.Add(new(type, _typeRelata[type][relation]!));
+                }
+            }
+            return entries.Count > 0 ? [.. entries] : null;
+        }
+    }
+
+    // Validate parent-child type relationships with integrity checking
+    public bool TryGetParentType(Type registeredType, out Type? parentType)
+    {
+        if (!_typeRelata.TryGetValue(registeredType, out ITypeRelations? relations)) 
+        {
+            parentType = null;
+            return false;
+        }
+        
+        if (relations[RegistryRelation.CollectionType] is not Type collection) 
+        {
+            parentType = null;
+            return false;
+        }
+        
+        // Verify bidirectional relationship integrity
+        string? regCollectionName = relations[RegistryRelation.CollectionName] as string;
+        if (regCollectionName != collection.Name)
+            throw new InvalidDataException($"Collection name mismatch for {registeredType}");
+            
+        if (!_typeRelata.TryGetValue(collection, out ITypeRelations? collectionRelations))
+            throw new InvalidDataException($"Parent collection {collection} not registered");
+            
+        if (collectionRelations[RegistryRelation.ElementType] is not Type elementType 
+            || elementType != registeredType)
+            throw new InvalidDataException($"Parent-child relationship broken");
+
+        parentType = collection;
+        return true;
+    }
+
+    // Reflection-based registration with default naming
+    public void Register(Type type)
+    {
+        if (_typeRelata.ContainsKey(type))
+            throw new ArgumentException($"{type} already registered");
+
+        _typeRelata.Add(type, new TypeRelations([(type.Name, RegistryRelation.Name)]));
+    }
+
+    // ... other registration and management methods omitted
+}
+
+// TypeRelations.cs - Flexible object relationship container
+public class TypeRelations : ITypeRelations
+{
+    private readonly Dictionary&lt;RegistryRelation, object&gt; _relatedObjects = [];
+
+    public TypeRelations((object, RegistryRelation)[] relations)
+    {
+        foreach (var relation in relations)
+            Add(relation.Item1, relation.Item2);
+    }
+
+    public object? this[RegistryRelation relation] 
+    {
+        get 
+        {
+            return _relatedObjects.TryGetValue(relation, out object? value) ? value : null;
+        }
+    }
+
+    // Type-safe relationship validation
+    public void Add(object obj, RegistryRelation relation)
+    {
+        if (_relatedObjects.ContainsKey(relation))
+            throw new ArgumentException("Relation already exists");
+            
+        switch (relation) 
+        {
+            case RegistryRelation.Name:
+            case RegistryRelation.CollectionName:
+            case RegistryRelation.DataFileName:
+                if (obj is not string)
+                    throw new ArgumentException($"{relation} requires string object");
+                break;
+                
+            case RegistryRelation.CollectionType:
+            case RegistryRelation.ElementType:
+            case RegistryRelation.ConvertedDataType:
+                if (obj is not Type)
+                    throw new ArgumentException($"{relation} requires Type object");
+                break;
+                
+            case RegistryRelation.DataConverter:
+                if (!obj.GetType().IsClass)
+                    throw new ArgumentException("DataConverter must be reference type");
+                break;
+                
+            default:
+                throw new ArgumentOutOfRangeException(nameof(relation));
+        }
+        
+        _relatedObjects.Add(relation, obj);
+    }
+
+    // ... removal and utility methods omitted
+}
+
+// RegistryInitializer.cs - Data-driven type registration
+public class RegistryInitializer(IOptions&lt;AppConfig&gt; options) : IRegistryInitializer
+{
+    private readonly CardRegistryRecord[] _cardTypeRegistryRecords = [
+        new() 
+        {
+            CardType = typeof(TroopCard),
+            Name = nameof(TroopCard),
+            CardSetType = typeof(TroopCardSet),
+            SetName = nameof(TroopCardSet)
+        }
+    ];
+    
+    private readonly CardSetRegistryRecord[] _cardSetTypeRegistryRecords = [
+        new() 
+        {
+            CardSetType = typeof(TroopCardSet),
+            Name = nameof(TroopCardSet),
+            CardType = typeof(TroopCard),
+            DataFileName = options.Value.DataFileMap[nameof(TroopCard) + "Set.json"],
+            CardSetDataConverter = new TroopCardSetDataJConverter(),
+            ConvertedDataType = typeof(TroopCardSet)
+        }
+    ];
+
+    // Register types with full relationship metadata
+    public void PopulateRegistry(ITypeRegister&lt;ITypeRelations&gt; registry)
+    {
+        RegisterGeography(registry);
+
+        // Register card types with collection relationships
+        foreach (var info in _cardTypeRegistryRecords) 
+        {
+            TypeRelations cardRelations = new();
+            cardRelations.Add(info.Name, RegistryRelation.Name);
+            cardRelations.Add(info.CardSetType, RegistryRelation.CollectionType);
+            cardRelations.Add(info.SetName, RegistryRelation.CollectionName);
+            registry.Register(info.CardType, cardRelations);
+        }
+
+    // Register collection types with serialization metadata for DAL integration
+    foreach (var info in _cardSetTypeRegistryRecords) 
+    {
+        TypeRelations cardSetRelations = new();
+        cardSetRelations.Add(info.Name, RegistryRelation.Name);
+        cardSetRelations.Add(info.CardType, RegistryRelation.ElementType);
+        cardSetRelations.Add(info.DataFileName, RegistryRelation.DataFileName);
+        cardSetRelations.Add(info.CardSetDataConverter, RegistryRelation.DataConverter);
+        cardSetRelations.Add(info.ConvertedDataType, RegistryRelation.ConvertedDataType);
+        registry.Register(info.CardSetType, cardSetRelations);
+    }
+    }
+
+// BinarySerializer.cs - Type-safe binary persistence framework
+public static class BinarySerializer
+{
+    private static ILogger? _logger;
+
+    // Flexible encoding handles different data types consistently
+    private static byte[] ConvertibleToBytes(Type type, IConvertible value)
+    {
+        return type switch 
+        {
+            Type t when t == typeof(byte) => [(byte)value],
+            Type t when t == typeof(string) => Encoding.UTF8.GetBytes((string)value),
+            Type t when t.IsEnum => BitConverter.GetBytes(Convert.ToInt64(value)),
+            _ => BitConverter.GetBytes(Convert.ToDouble(value))
+        };
+    }
+
+    private static IConvertible BytesToConvertible(Type type, byte[] bytes)
+    {
+        if (type == typeof(byte) && bytes.Length == 1)
+            return bytes[0];
+        if (type == typeof(string))
+            return Encoding.UTF8.GetString(bytes);
+        if (type.IsEnum)
+            return (IConvertible)Enum.ToObject(type, BitConverter.ToInt64(bytes, 0));
+
+        double doubleVal = BitConverter.ToDouble(bytes, 0);
+        return (IConvertible)Convert.ChangeType(doubleVal, type);
+    }
+
+    // Core serialization with length-prefixed encoding for robust deserialization
+    private static void WriteConvertible(BinaryWriter writer, Type type, IConvertible value)
+    {
+        byte[] bytes = ConvertibleToBytes(type, value);
+        writer.Write(bytes.Length);  // Length prefix for safe reading
+        writer.Write(bytes);
+    }
+
+    public static IConvertible ReadConvertible(BinaryReader reader, Type type)
+    {
+        int length = reader.ReadInt32();
+        byte[] bytes = reader.ReadBytes(length);
+        return BytesToConvertible(type, bytes);
+    }
+
+    // Handle collections of arbitrary length with type safety
+    public static Array ReadConvertibles(BinaryReader reader, Type type, int numValues)
+    {
+        if (!typeof(IConvertible).IsAssignableFrom(type) || type.IsEnum || type == typeof(string))
+            throw new ArgumentException("ReadConvertibles accepts only IConvertible types, excluding strings and Enums.");
+
+        Array returnArray = Array.CreateInstance(type, numValues);
+        for (int i = 0; i < numValues; i++)
+            returnArray.SetValue(ReadConvertible(reader, type), i);
+        return returnArray;
+    }
+
+    // Specialized handling for enums and strings preserves type information
+    public static Array ReadEnums(BinaryReader reader, Type type, int numValues)
+    {
+        if (!type.IsEnum)
+            throw new ArgumentException("ReadEnums accepts only Enum types.");
+
+        Array returnArray = Array.CreateInstance(type, numValues);
+        for (int i = 0; i < numValues; i++) 
+        {
+            int length = reader.ReadInt32();
+            byte[] bytes = reader.ReadBytes(length);
+            returnArray.SetValue(Enum.ToObject(type, BitConverter.ToInt64(bytes, 0)), i);
+        }
+        return returnArray;
+    }
+
+    public static Array ReadStrings(BinaryReader reader, int numValues)
+    {
+        Array returnArray = Array.CreateInstance(typeof(string), numValues);
+        for (int i = 0; i < numValues; i++)
+            returnArray.SetValue((string)ReadConvertible(reader, typeof(string)), i);
+        return returnArray;
+    }
+
+    // Optional metadata support without breaking untagged serialization
+    private static void WriteTaggedConvertible(BinaryWriter writer, Type type, IConvertible value, string tag)
+    {
+        writer.Write(tag);  // Tag precedes data for optional metadata
+        WriteConvertible(writer, type, value);
+    }
+
+    // Async file operations with comprehensive error handling
+    public static async Task Save(IBinarySerializable[] serializableObjects, string fileName, bool newFile)
+    {
+        await Task.Run(() =>
+        {
+            FileMode mode = newFile ? FileMode.Create : FileMode.Truncate;
+            using FileStream fileStream = new(fileName, mode, FileAccess.Write);
+            using BinaryWriter writer = new(fileStream);
+
+            foreach (var obj in serializableObjects) 
+            {
+                try 
+                {
+                    if (!WriteSerializableObject(obj, writer).Result)
+                        _logger?.LogWarning("Failed to write {Object}", obj);
+                } 
+                catch (Exception e) 
+                {
+                    _logger?.LogError("Exception writing {obj}: {Message}", obj, e.Message);
+                }
+            }
+        });
+    }
+
+    // Metadata-driven serialization handles complex object structures
+    private static async Task&lt;bool&gt; WriteSerializableObject(IBinarySerializable serializableObject, BinaryWriter writer)
+    {
+        try 
+        {
+            if (await serializableObject.GetBinarySerials() is not SerializedData[] saveData) 
+            {
+                _logger?.LogError("Object {object} returned invalid SerializedData[]", serializableObject);
+                return false;
+            }
+
+            // Pattern matching handles all serialization scenarios
+            foreach (SerializedData saveDatum in saveData) 
+            {
+                switch (saveDatum) 
+                {
+                    case { MemberType: not null, Tag: not null }:
+                        // Tagged collections with type metadata
+                        WriteTaggedConvertibles(writer, saveDatum.MemberType, saveDatum.SerialValues, saveDatum.Tag);
+                        break;
+
+                    case { MemberType: not null, Tag: null }:
+                        // Untagged collections for performance-critical scenarios
+                        WriteConvertibles(writer, saveDatum.MemberType, saveDatum.SerialValues);
+                        break;
+
+                    case { MemberType: null, Tag: not null }:
+                        // Tagged single values with metadata
+                        WriteTaggedConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0], saveDatum.Tag);
+                        break;
+
+                    case { MemberType: null, Tag: null }:
+                        // Untagged single values for minimal overhead
+                        WriteConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0]);
+                        break;
+                }
+            }
+        } 
+        catch (Exception ex) 
+        {
+            _logger?.LogError("Serialization error: {Message}", ex.Message);
+            return false;
+        }
+        return true;
+    }
+
+    // Runtime type validation enables flexible collection handling
+    public static bool IsSerializable(Type type)
+    {
+        return type switch 
+        {
+            Type t when t == typeof(string) => true,
+            Type t when t.IsEnum => t.GetEnumUnderlyingType() == typeof(int),
+            Type t when t.IsPrimitive => true,
+            Type t when IsIConvertibleCollection(t, out _) => true,
+            _ => false
+        };
+    }
+
+    // Collection type discovery through reflection with caching opportunities
+    public static bool IsIConvertibleCollection(Type type, out Type? memberType)
+    {
+        if (!typeof(IEnumerable).IsAssignableFrom(type) || type == typeof(string)) 
+        {
+            memberType = null;
+            return false;
+        }
+
+        // Handle arrays with element type extraction
+        if (type.IsArray) 
+        {
+            var elementType = type.GetElementType();
+            memberType = elementType;
+            return typeof(IConvertible).IsAssignableFrom(elementType);
+        }
+
+        // Handle generic collections through interface discovery
+        if (type.IsGenericType) 
+        {
+            var typeInterfaces = type.GetInterfaces();
+            foreach (var iFace in typeInterfaces) 
+            {
+                if (iFace.IsGenericType && iFace.GetGenericTypeDefinition() == typeof(IEnumerable&lt;&gt;)) 
+                {
+                    var genericType = iFace.GetGenericArguments()[0];
+                    memberType = genericType;
+                    return typeof(IConvertible).IsAssignableFrom(genericType);
+                }
+            }
+        }
+
+        // Fallback to runtime inspection for non-generic collections
+        if (Activator.CreateInstance(type) is IEnumerable testInstance) 
+        {
+            Type? elementType = null;
+            foreach (var element in testInstance) 
+            {
+                if (element is not IConvertible) 
+                {
+                    memberType = null;
+                    return false;
+                }
+                elementType ??= element.GetType();
+            }
+            memberType = elementType;
+            return true;
+        }
+
+        memberType = null;
+        return false;
+    }
+
+    // Safe collection conversion with error recovery
+    public static IConvertible[] ToIConvertibleCollection(IEnumerable collection)
+    {
+        List&lt;IConvertible&gt; propConvertibles = [];
+        foreach (var value in collection) 
+        {
+            try 
+            {
+                propConvertibles.Add((IConvertible)value);
+            } 
+            catch 
+            { 
+                continue; // Skip non-convertible elements rather than failing
+            }
+        }
+        return [.. propConvertibles];
     }
 }
-            </pre>
-        </div>
-    </div>
 
-    <div class="code-with-text" id="GeographyGraph">
-        <div class="image-text">
-            <img src="Images/GeographyGraph.svg" />
-            <h3>Geography Modeling System</h3>
-            <p>I designed an elegant system for modeling complex geographical relationships between territories and continents:</p>
-            <ul>
-                <li>Efficient representation of adjacency using neighbor graphs</li>
-                <li>Continent-territory containment hierarchies</li>
-                <li>Data-driven initialization from external configuration</li>
-                <li>Clean API for spatial queries (e.g., "are these territories adjacent?")</li>
-                <li>Optimized for performance with read-only immutable collections</li>
-                <li>Support for complex queries like "does a player control an entire continent?"</li>
-            </ul>
-            <p>This demonstrates skills in transforming complex real-world relationships into clean domain models, a fundamental aspect of domain-driven design.</p>
-            <p><center><i>Key Files: BoardGeography.cs, GeographyInitializer.cs</i></center></p>
-        </div>
-        <div>
-            <pre class="code-snippet">
+// SerializedData.cs - Flexible metadata container for serialization
+public readonly struct SerializedData
+{
+    // Multiple constructors handle different serialization scenarios
+    public SerializedData(Type serialType, IConvertible value)
+    {
+        SerialType = serialType;
+        SerialValues = [value];
+    }
+
+    public SerializedData(Type serialType, IConvertible value, string tag)
+    {
+        SerialType = serialType;
+        SerialValues = [value];
+        Tag = tag;
+    }
+
+    public SerializedData(Type serialType, IConvertible[] serialValues, string tag)
+    {
+        SerialType = serialType;
+        // Automatic collection type detection
+        if (BinarySerializer.IsIConvertibleCollection(serialType, out Type? memberType))
+            MemberType = memberType;
+        SerialValues = serialValues;
+        Tag = tag;
+    }
+
+    public SerializedData(Type serialType, IConvertible[] serialValues)
+    {
+        SerialType = serialType;
+        if (BinarySerializer.IsIConvertibleCollection(serialType, out Type? memberType))
+            MemberType = memberType;
+        SerialValues = serialValues;
+    }
+
+    // Metadata properties support different serialization patterns
+    public Type? MemberType { get; init; } = null;  // Collection element type
+    public Type SerialType { get; init; }           // Primary type information
+    public IConvertible[] SerialValues { get; init; } // Actual data to serialize
+    public string? Tag { get; init; } = null;       // Optional metadata tag
+}
+
+// Example usage - Game state persistence
+public class GameState : IBinarySerializable
+{
+    public int CurrentRound { get; set; }
+    public TerrID[] PlayerTerritories { get; set; } = [];
+    public Dictionary&lt;string, int&gt; PlayerScores { get; set; } = [];
+
+    public async Task&lt;SerializedData[]&gt; GetBinarySerials()
+    {
+        return await Task.Run(() => [
+            // Tagged single value with metadata
+            new SerializedData(typeof(int), CurrentRound, "GameRound"),
+            
+            // Enum array with automatic type detection
+            new SerializedData(typeof(TerrID[]), PlayerTerritories.Cast&lt;IConvertible&gt;().ToArray()),
+            
+            // Complex nested structure handling
+            new SerializedData(typeof(int), PlayerScores.Count, "ScoreCount"),
+            new SerializedData(typeof(string[]), PlayerScores.Keys.Cast&lt;IConvertible&gt;().ToArray()),
+            new SerializedData(typeof(int[]), PlayerScores.Values.Cast&lt;IConvertible&gt;().ToArray())
+        ]);
+    }
+
+    public bool LoadFromBinary(BinaryReader reader)
+    {
+        try 
+        {
+            // Read tagged values with metadata validation
+            string roundTag = reader.ReadString();
+            if (roundTag != "GameRound") return false;
+            CurrentRound = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+
+            // Handle collections with type safety
+            int terrCount = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            var territories = BinarySerializer.ReadEnums(reader, typeof(TerrID), terrCount);
+            PlayerTerritories = territories.Cast&lt;TerrID&gt;().ToArray();
+
+            // Reconstruct complex structures
+            string scoreTag = reader.ReadString();
+            int scoreCount = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            var keys = BinarySerializer.ReadStrings(reader, scoreCount);
+            var values = BinarySerializer.ReadConvertibles(reader, typeof(int), scoreCount);
+            
+            PlayerScores.Clear();
+            for (int i = 0; i < scoreCount; i++) 
+            {
+                PlayerScores[(string)keys.GetValue(i)!] = (int)values.GetValue(i)!;
+            }
+
+            return true;
+        } 
+        catch (Exception ex) 
+        {
+            _logger?.LogError("Deserialization failed: {Message}", ex.Message);
+            return false;
+// BoardGeography.cs - Immutable spatial relationship system
 public static class BoardGeography
 {
     private static ReadOnlyDictionary&lt;ContID, HashSet&lt;TerrID&gt;&gt;? _continentMembers;
@@ -729,37 +2104,45 @@ public static class BoardGeography
     public static int NumTerritories { get; private set; }
     public static int NumContinents { get; private set; }
     
+    // Data-driven initialization from JSON configuration
     public static void Initialize(GeographyInitializer initializer)
     {
-        NumTerritories = initializer.TerritoryNames.Length - 1;
+        NumTerritories = initializer.TerritoryNames.Length - 1; // Account for Null values
         NumContinents = initializer.ContinentNames.Length - 1;
 
         Dictionary&lt;ContID, HashSet&lt;TerrID&gt;&gt; continentMembers = [];
         Dictionary&lt;TerrID, ContID&gt; terrIDToContID = [];
         Dictionary&lt;TerrID, HashSet&lt;TerrID&gt;&gt; neighborWeb = [];
         
-        foreach (var contTerrPair in initializer.ContinentMembers) {
+        // Handle runtime type safety at configuration boundary
+        foreach (var contTerrPair in initializer.ContinentMembers) 
+        {
             if (contTerrPair.Key is not ContID continent)
                 continue;
 
-            foreach (Enum territoryEnum in contTerrPair.Value) {
+            foreach (Enum territoryEnum in contTerrPair.Value) 
+            {
                 if (territoryEnum is not TerrID territory)
                     continue;
 
+                // Build continent membership maps
                 if (!continentMembers.ContainsKey(continent))
                     continentMembers.Add(continent, []);
 
                 continentMembers[continent].Add(territory);
                 terrIDToContID[territory] = continent;
                 
+                // Initialize neighbor structure
                 if (!neighborWeb.ContainsKey(territory))
                     neighborWeb.Add(territory, []);
 
+                // Process adjacency relationships from configuration
                 if (!initializer.TerritoryNeighbors.TryGetValue(territory, 
                        out HashSet&lt;Enum&gt;? neighbors) || neighbors == null)
                     continue;
                     
-                foreach (Enum terrEnum in neighbors) {
+                foreach (Enum terrEnum in neighbors) 
+                {
                     if (terrEnum is not TerrID neighborTerritory)
                         continue;
                     neighborWeb[territory].Add(neighborTerritory);
@@ -767,11 +2150,13 @@ public static class BoardGeography
             }
         }
         
+        // Create immutable collections for thread-safe access
         _continentMembers = new(continentMembers);
         _terrIDToContID = new(terrIDToContID);
         _neighborWeb = new(neighborWeb);
     }
     
+    // O(1) continent lookup for territory ownership calculations
     public static ContID TerritoryToContinent(TerrID terrID)
     {
         if (_terrIDToContID == null) return ContID.Null;
@@ -779,6 +2164,7 @@ public static class BoardGeography
             ? continent : ContID.Null;
     }
     
+    // Efficient continent membership queries
     public static HashSet&lt;TerrID&gt; GetContinentMembers(ContID continent)
     {
         if (_continentMembers == null) return [];
@@ -786,82 +2172,298 @@ public static class BoardGeography
             ? members : [];
     }
     
-    public static bool IncludesContinent(HashSet&lt;TerrID&gt; territoryList, ContID continent)
-    {
-        if (_continentMembers == null) return false;
-        if (!_continentMembers.TryGetValue(continent, out var continentMembers))
-            return false;
-        return continentMembers.IsSubsetOf(territoryList);
-    }
-    
+    // Fast adjacency validation for move/attack legality
     public static HashSet&lt;TerrID&gt; GetNeighbors(TerrID territory)
     {
         if (_neighborWeb == null) return [];
         return _neighborWeb.TryGetValue(territory, out var neighbors) 
             ? neighbors : [];
     }
+    
+    // Complex spatial query using set operations
+    public static bool IncludesContinent(HashSet&lt;TerrID&gt; territoryList, ContID continent)
+    {
+        if (_continentMembers == null) return false;
+        if (!_continentMembers.TryGetValue(continent, out var continentMembers))
+            return false;
+        
+        // Leverage HashSet.IsSubsetOf for efficient continent control validation
+        return continentMembers.IsSubsetOf(territoryList);
+    }
+    
+    // ... other spatial utilities omitted
 }
+
+// GeographyInitializer.cs - Flexible configuration processor
+public class GeographyInitializer
+{
+    public Type? ContinentEnumType { get; set; }
+    public Type? TerritoryEnumType { get; set; }
+    public string[] ContinentNames { get; private set; } = [];
+    public string[] TerritoryNames { get; private set; } = [];
+    public Dictionary&lt;Enum, HashSet&lt;Enum&gt;&gt; ContinentMembers { get; } = [];
+    public Dictionary&lt;Enum, HashSet&lt;Enum&gt;&gt; TerritoryNeighbors { get; } = [];
+    
+    // Runtime type resolution bridges JSON config with compile-time type safety
+    public void SetEnumTypes((string ContinentEnumName, string TerritoryEnumName) names)
+    {
+        // Resolve enum types dynamically from configuration strings
+        if (Type.GetType(names.ContinentEnumName) is not Type continentEnumType || !continentEnumType.IsEnum)
+            throw new InvalidDataException($"Could not locate Continent Enum: {names.ContinentEnumName}");
+        ContinentEnumType = continentEnumType;
+        
+        if (Type.GetType(names.TerritoryEnumName) is not Type territoryEnumType || !territoryEnumType.IsEnum)
+            throw new InvalidDataException($"Could not locate Territory Enum: {names.TerritoryEnumName}");
+        TerritoryEnumType = territoryEnumType;
+
+        ContinentNames = Enum.GetNames(ContinentEnumType);
+        TerritoryNames = Enum.GetNames(TerritoryEnumType);
+    }
+    
+    // Validate types at configuration boundary, maintain safety in core operations
+    public bool AddContinentMember(string continentName, string territoryName)
+    {
+        if (ContinentEnumType == null || TerritoryEnumType == null)
+            return false;
+            
+        // Type validation happens once during configuration loading
+        if (Enum.Parse(ContinentEnumType, continentName) is not Enum continentEnum)
+            return false;
+        if (Enum.Parse(TerritoryEnumType, territoryName) is not Enum territoryEnum)
+            return false;
+            
+        try 
+        {
+            if (!ContinentMembers.ContainsKey(continentEnum))
+                ContinentMembers.Add(continentEnum, []);
+
+            ContinentMembers[continentEnum].Add(territoryEnum);
+        } 
+        catch 
+        {
+            return false;
+        }
+        return true;
+    }
+    
+    // Bidirectional neighbor relationship management
+    public bool AddTerritoryNeighbor(string territoryName, string neighborName)
+    {
+        if (TerritoryEnumType == null)
+            return false;
+            
+        if (Enum.Parse(TerritoryEnumType, territoryName) is not Enum territoryEnum)
+            return false;
+        if (Enum.Parse(TerritoryEnumType, neighborName) is not Enum neighborEnum)
+            return false;
+            
+        try 
+        {
+            if (!TerritoryNeighbors.ContainsKey(territoryEnum))
+                TerritoryNeighbors.Add(territoryEnum, []);
+
+            TerritoryNeighbors[territoryEnum].Add(neighborEnum);
+        } 
+        catch 
+        {
+            return false;
+        }
+        return true;
+    }
+    
+    // ... other configuration methods omitted
+}
+
+// EarthBoard.cs - Geography integration example
+public class EarthBoard : IBoard
+{
+    // Efficient continent control detection using geography system
+    public void CheckContinentFlip(TerrID changed, int previousOwner)
+    {
+        int newOwner = TerritoryOwner[changed];
+        var changedHomeContinent = BoardGeography.TerritoryToContinent(changed);
+        var continentTerritories = BoardGeography.GetContinentMembers(changedHomeContinent);
+        
+        if (continentTerritories.Count <= 0) return;
+
+        // Use geography system for ownership validation
+        if (ContinentOwner[changedHomeContinent] == previousOwner && previousOwner > -1) 
+        {
+            ContinentOwner[changedHomeContinent] = -1;
+            
+            // Efficient "all territories owned by same player" check
+            if (continentTerritories.All(terr => TerritoryOwner[terr] == newOwner))
+                ContinentOwner[changedHomeContinent] = newOwner;
+
+            ContinentOwnerChanged?.Invoke(this, 
+                new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
+        }
+        else if (continentTerritories.All(terr => TerritoryOwner[terr] == newOwner)) 
+        {
+            ContinentOwner[changedHomeContinent] = newOwner;
+            ContinentOwnerChanged?.Invoke(this, 
+                new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
+        }
+    }
+    
+    // ... other board methods omitted
+}
+            </code>
             </pre>
         </div>
-
     </div>
 
-    <div class="code-with-text" id="RapidProtoTyping">
+    <div class="code-with-text" id="DefaultPrototyping">
         <div class="image-text">
             <img src="Images/PrototypingWithReflection.svg" />
-            <h3>Rule-Based Game Logic</h3>
-            <p>The game implements a sophisticated rule engine through the Regulator class, which enforces complex game mechanics:</p>
+            <h3>Reflection-Based Rapid Prototyping</h3>
+            <p>Using registry and serialization systems, we ease implementation frictions for team members experimenting with new card types:</p>
             <ul>
-                <li>Phase-specific action validation and resolution</li>
-                <li>Resource management and distribution</li>
-                <li>Combat resolution using probabilistic outcomes</li>
-                <li>Turn-based progression with appropriate state transitions</li>
+                <li>Uses C# 8.0+ default interface methods to provide automatic serialization</li>
+                <li><strong>Facilitates iteration</strong> by eliminating boilerplate for developers experimenting with card implementations</li>
+                <li>Provides consistent serialization behavior across all card types</li>
+                <li>Includes clear migration path from prototype to optimized production code</li>
+                <li><strong>Reduces cognitive load</strong> during rapid iteration and experimentation phases</li>
             </ul>
-            <p>This system demonstrates the ability to translate abstract game rules into concrete code logic, a skill directly applicable to implementing business rules in enterprise applications.</p>
-            <p><center><i>Key Files: Regulator.cs, RuleValues.cs</i></center></p>
+            <p><center><i>Key Files: ICard.cs, TroopCard.cs, CardBase.cs</i></center></p>
         </div>
         <div>
             <pre class="code-snippet">
+            <code class="language-csharp">
+// StateMachine.cs - Core state management with event propagation
+public class StateMachine : IBinarySerializable
+{
+    private readonly ILogger&lt;StateMachine&gt; _logger; // ... constructor and other fields omitted
+    private GamePhase _currentPhase = GamePhase.Null;
+    private bool _phaseStageTwo = false;
+    private int _playerTurn = 0;
+    private int _round = 0;
+    // ... _numTrades and other properties omitted
+
+    // Event system for loose coupling
+    public event EventHandler&lt;string&gt;? StateChanged;
+
+    public GamePhase CurrentPhase 
+    {
+        get 
+        { 
+            return _currentPhase; 
+        }
+        set 
+        {
+            if (!value.Equals(_currentPhase)) 
+            {
+                _currentPhase = value;
+                StateChanged?.Invoke(this, new(nameof(CurrentPhase)));
+            }
+        }
+    }
+
+    public bool PhaseStageTwo 
+    {
+        get 
+        { 
+            return _phaseStageTwo; 
+        }
+        set 
+        {
+            if (!value.Equals(_phaseStageTwo)) 
+            {
+                _phaseStageTwo = value;
+                StateChanged?.Invoke(this, new(nameof(PhaseStageTwo)));
+            }
+        }
+    }
+
+    public int PlayerTurn 
+    {
+        get 
+        { 
+            return _playerTurn; 
+        }
+        set 
+        {
+            if (!value.Equals(_playerTurn)) 
+            {
+                _playerTurn = value;
+                StateChanged?.Invoke(this, new(nameof(PlayerTurn)));
+            }
+        }
+    }
+
+    // Automated state progression
+    public void IncrementPhase()
+    {
+        PhaseStageTwo = false;
+        int intPhase = (int)CurrentPhase;
+        if (intPhase >= 0 && intPhase < 3) // Place (1) -> Attack (2) -> Move (3)
+        {
+            intPhase++;
+            CurrentPhase = (GamePhase)intPhase;
+        }
+        else if (intPhase == 3) 
+        {
+            IncrementPlayerTurn(); // Move -> next player's turn
+        }
+        // ... special case handling for setup phases omitted
+    }
+
+    public void IncrementPlayerTurn()
+    {
+        // ... complex player validation and setup phase logic omitted
+        int nextActive = NextActivePlayer();
+        if (nextActive != -1) 
+        {
+            PlayerTurn = nextActive;
+            CurrentPhase = GamePhase.Place; // Start new turn
+        }
+    }
+
+    // ... NextActivePlayer(), serialization methods, and other utilities omitted
+}
+
+// Regulator.cs - Event subscriber that enforces game rules
 public class Regulator : IRegulator
 {
     private readonly IGame _currentGame;
     private readonly StateMachine _machine;
-    private readonly ILogger _logger;
-    private readonly int _numPlayers;
+    private readonly ILogger _logger; // ... other fields omitted
     private int _actionsCounter = 0;
-    private int _prevActionCount = 0;
-
-    public int CurrentActionsLimit { get; set; }
-    public int PhaseActions => _actionsCounter - _prevActionCount;
-    public ICard? Reward { get; set; } = null;
+    // ... _prevActionCount, CurrentActionsLimit properties omitted
 
     public event EventHandler&lt;TerrID[]&gt;? PromptBonusChoice;
     public event EventHandler&lt;IPromptTradeEventArgs&gt;? PromptTradeIn;
 
+    public void Initialize()
+    {
+        // ... action limit initialization omitted
+        // Subscribe to state changes - loose coupling via events
+        _machine.StateChanged += HandleStateChanged;
+    }
+
+    // Event handler responds to state changes
     private void HandleStateChanged(object? sender, string propName)
     {
         if (propName != "CurrentPhase")
             return;
 
-        _prevActionCount = _actionsCounter;
-        switch (_machine.CurrentPhase) {
+        // Each phase triggers different game logic
+        switch (_machine.CurrentPhase) 
+        {
             case GamePhase.Place:
-                CurrentActionsLimit = _actionsCounter;
-                _currentGame.Players[_machine.PlayerTurn].ArmyPool 
-                    += _currentGame.Players[_machine.PlayerTurn].ArmyBonus;
-                CurrentActionsLimit += _currentGame.Players[_machine.PlayerTurn].ArmyPool;
-
-                if (!_currentGame.Players[_machine.PlayerTurn].HasCardSet)
-                    break;
-
-                bool force = false;
-                if (_currentGame.Players[_machine.PlayerTurn].Hand.Count >= 5)
-                    force = true;
-                PromptTradeIn?.Invoke(this, new PromptTradeEventArgs(_machine.PlayerTurn, force));
+                // Update army pools and check for mandatory trades
+                _currentGame.Players[_machine.PlayerTurn].ArmyPool += 
+                    _currentGame.Players[_machine.PlayerTurn].ArmyBonus;
+                
+                if (_currentGame.Players[_machine.PlayerTurn].HasCardSet) 
+                {
+                    bool force = _currentGame.Players[_machine.PlayerTurn].Hand.Count >= 5;
+                    PromptTradeIn?.Invoke(this, new PromptTradeEventArgs(_machine.PlayerTurn, force));
+                }
                 break;
 
             case GamePhase.Attack:
-                _currentGame.State.PhaseStageTwo = false;
+                _machine.PhaseStageTwo = false;
                 break;
 
             case GamePhase.Move:
@@ -870,88 +2472,1372 @@ public class Regulator : IRegulator
         }
     }
 
-    public void TradeInCards(int playerNum, int[] handIndices)
+    // Multi-stage action handling
+    public (TerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(
+        TerrID selected, TerrID priorSelected)
     {
-        var selectedCards = GetCardsFromHand(playerNum, handIndices);
-        if (selectedCards == null || selectedCards.Length == 0)
-            return;
+        switch (_machine.CurrentPhase) 
+        {
+            case GamePhase.Attack when !_machine.PhaseStageTwo:
+                // Stage 1: Select attacking territory
+                _machine.PhaseStageTwo = true;
+                return (selected, false, null);
+                
+            case GamePhase.Attack when _machine.PhaseStageTwo:
+                // Stage 2: Select target and request dice input
+                _machine.PhaseStageTwo = false;
+                return (selected, true, null);
 
-        var currentPlayer = _currentGame.Players[playerNum];
-        _machine.IncrementNumTrades(1);
-        int tradebonus = _currentGame.Values.CalculateBaseTradeInBonus(_machine.NumTrades);
-        currentPlayer.GetsTradeBonus(tradebonus);
-        CurrentActionsLimit += tradebonus;
-        ForceDiscard((Player)currentPlayer, handIndices);
+            case GamePhase.Move when !_machine.PhaseStageTwo:
+                // Stage 1: Select source territory
+                _machine.PhaseStageTwo = true;
+                return (selected, false, null);
+                
+            case GamePhase.Move when _machine.PhaseStageTwo:
+                // Stage 2: Select destination and request army count
+                _machine.PhaseStageTwo = false;
+                int maxArmies = _currentGame.Board.Armies[priorSelected] - 1;
+                return (TerrID.Null, true, maxArmies);
 
-        var tradedTargets = selectedCards.SelectMany(item => item.Target);
-        var controlledTargets = currentPlayer.GetControlledTargets(tradedTargets.ToArray());
-        if (controlledTargets.Length == 1)
-            _currentGame.Board.Reinforce(controlledTargets[0], _currentGame.Values.TerritoryTradeInBonus);
-        else if (controlledTargets.Length > 1)
-            PromptBonusChoice?.Invoke(this, [.. controlledTargets]);
+            default:
+                // Single-stage actions (Place phase)
+                ClaimOrReinforce(selected);
+                return (TerrID.Null, false, null);
+        }
+    }
+
+    // ... ClaimOrReinforce(), Battle(), TradeInCards() methods omitted
+
+    private void IncrementAction()
+    {
+        _actionsCounter++;
+        
+        // ... ReachedSecondStage() logic omitted
+        
+        // Automatic progression when action limit reached
+        if (_actionsCounter >= CurrentActionsLimit) 
+        {
+            if (InSetupPhase)
+                _machine.IncrementRound();
+            else
+                _machine.IncrementPhase(); // Triggers StateChanged event
+        }
+    }
+
+    // ... validation methods, serialization, and other utilities omitted
+}
+
+// MainVM_Base.cs - ViewModel layer subscribes to events
+public partial class MainVM_Base : ObservableObject, IMainVM
+{
+    // ... properties, commands, and other members omitted
+
+    public void Initialize(string[] players, string[] colors, string? fileName)
+    {
+        // ... game creation and setup logic omitted
+        
+        // Event subscription creates loose coupling
+        CurrentGame.State.StateChanged += HandleStateChanged;
+        CurrentGame.Board.TerritoryChanged += HandleTerritoryChanged;
+        Regulator.PromptBonusChoice += OnTerritoryBonusChoice;
+        Regulator.PromptTradeIn += OnPromptTradeIn;
+        
+        // ... initialization of collections and UI state omitted
+    }
+
+    // UI responds to state changes without direct dependencies
+    private void HandleStateChanged(object? sender, string propName)
+    {
+        switch (propName) 
+        {
+            case nameof(CurrentPhase):
+                CurrentPhase = CurrentGame.State.CurrentPhase;
+                break;
+            case nameof(PlayerTurn):
+                PlayerTurn = CurrentGame.State.PlayerTurn;
+                PlayerTurnChanging?.Invoke(this, PlayerTurn);
+                break;
+            // ... other property change handlers omitted
+        }
     }
     
-    public void Battle(TerrID source, TerrID target, ValueTuple<int, int>[] diceRolls)
+    // ... other event handlers and methods omitted
+}
+
+public class Regulator : IRegulator
+{
+    private readonly IGame _currentGame;
+    private readonly StateMachine _machine;
+    private int _actionsCounter = 0;
+    private int _prevActionCount = 0;
+
+    public int CurrentActionsLimit { get; set; }
+    public event EventHandler? PromptBonusChoice;
+    public event EventHandler? PromptTradeIn;
+
+    // Handle phase transitions
+    private void HandleStateChanged(object? sender, string propName)
+    {
+        if (propName != "CurrentPhase") return;
+
+        _prevActionCount = _actionsCounter;
+        switch (_machine.CurrentPhase) 
+        {
+            case GamePhase.Place:
+                // Distribute army bonuses
+                _currentGame.Players[_machine.PlayerTurn].ArmyPool += 
+                    _currentGame.Players[_machine.PlayerTurn].ArmyBonus;
+                CurrentActionsLimit = _actionsCounter + _currentGame.Players[_machine.PlayerTurn].ArmyPool;
+
+                // Force trade if hand limit exceeded
+                if (_currentGame.Players[_machine.PlayerTurn].HasCardSet) 
+                {
+                    bool mandatoryTrade = _currentGame.Players[_machine.PlayerTurn].Hand.Count >= 5;
+                    PromptTradeIn?.Invoke(this, new PromptTradeEventArgs(_machine.PlayerTurn, mandatoryTrade));
+                }
+                break;
+
+            case GamePhase.Attack:
+                _machine.PhaseStageTwo = false;
+                break;
+
+            case GamePhase.Move:
+                CurrentActionsLimit = _actionsCounter + 1;
+                break;
+        }
+    }
+
+    // Validate territory selection
+    public bool CanSelectTerritory(TerrID newSelected, TerrID oldSelected)
+    {
+        bool priorSelection = oldSelected != TerrID.Null;
+        int owner = _currentGame.Board.TerritoryOwner[newSelected];
+        int territoryArmies = _currentGame.Board.Armies[newSelected];
+
+        return _machine.CurrentPhase switch 
+        {
+            GamePhase.DefaultSetup => _machine.PhaseStageTwo switch 
+            {
+                false when owner == -1 => true,                    // Claim unowned territory
+                true when owner == _machine.PlayerTurn => true,    // Reinforce owned territory
+                _ => false
+            },
+
+            GamePhase.Place => owner == _machine.PlayerTurn,
+
+            // Attack requires two selections: source then target
+            GamePhase.Attack when !priorSelection => 
+                owner == _machine.PlayerTurn && territoryArmies >= 2,           // Select attacking territory
+            GamePhase.Attack when priorSelection => 
+                owner != _machine.PlayerTurn &&                                // Target enemy territory
+                BoardGeography.GetNeighbors(oldSelected).Contains(newSelected), // Adjacent to source
+
+            // Move requires two selections: source then destination  
+            GamePhase.Move when !priorSelection => 
+                owner == _machine.PlayerTurn && territoryArmies >= 2,           // Select source territory
+            GamePhase.Move when priorSelection => 
+                owner == _machine.PlayerTurn && oldSelected != newSelected &&  // Own destination, different from source
+                IsConnectedPath(oldSelected, newSelected, _machine.PlayerTurn), // Connected through owned territories
+
+            _ => false
+        };
+    }
+
+    // Manage attack/move workflow
+    public (TerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(TerrID selected, TerrID priorSelected)
+    {
+        switch (_machine.CurrentPhase) 
+        {
+            case GamePhase.Attack when !_machine.PhaseStageTwo:
+                // Store attacking territory, advance to target selection
+                _machine.PhaseStageTwo = true;
+                return (selected, false, null);
+                
+            case GamePhase.Attack when _machine.PhaseStageTwo:
+                // Target selected, request dice allocation
+                _machine.PhaseStageTwo = false;
+                return (selected, true, null);
+
+            case GamePhase.Move when !_machine.PhaseStageTwo:
+                // Store source territory, advance to destination selection
+                _machine.PhaseStageTwo = true;
+                return (selected, false, null);
+                
+            case GamePhase.Move when _machine.PhaseStageTwo:
+                // Destination selected, request army count
+                _machine.PhaseStageTwo = false;
+                int maxArmies = _currentGame.Board.Armies[priorSelected] - 1;
+                return (TerrID.Null, true, maxArmies);
+
+            default:
+                // Single-stage actions (Place phase)
+                ClaimOrReinforce(selected);
+                return (TerrID.Null, false, null);
+        }
+    }
+
+    // Resolve combat
+    public void Battle(TerrID source, TerrID target, (int AttackRoll, int DefenseRoll)[] diceRolls)
     {
         _actionsCounter++;
 
-        int sourceLoss = 0;
-        int targetLoss = 0;
-        foreach (var (AttackRoll, DefenseRoll) in diceRolls)
-            if (AttackRoll > DefenseRoll)
-                targetLoss++;
-            else
-                sourceLoss++;
+        int sourceLoss = 0, targetLoss = 0;
+        
+        // Calculate casualties from dice results
+        foreach (var (AttackRoll, DefenseRoll) in diceRolls) 
+        {
+            if (AttackRoll > DefenseRoll) targetLoss++;
+            else sourceLoss++;
+        }
 
-        if (targetLoss >= _currentGame.Board.Armies[target]) {
+        // Handle territory conquest
+        if (targetLoss >= _currentGame.Board.Armies[target]) 
+        {
             int conqueredOwner = _currentGame.Board.TerritoryOwner[target];
             int newOwner = _currentGame.Board.TerritoryOwner[source];
+            
+            // Transfer ownership
             if (conqueredOwner > -1)
                 _currentGame.Players[conqueredOwner].RemoveTerritory(target);
             _currentGame.Players[newOwner].AddTerritory(target);
 
-            _currentGame.Board.Conquer(source, target, _currentGame.Board.TerritoryOwner[source]);
+            _currentGame.Board.Conquer(source, target, newOwner);
 
+            // Award conquest card
             Reward ??= _currentGame.Cards.GameDeck.DrawCard();
         }
-        if (sourceLoss > 0)
-            _currentGame.Board.Reinforce(source, -sourceLoss);
-        if (targetLoss > 0)
-            _currentGame.Board.Reinforce(target, -targetLoss);
+        
+        // Apply losses
+        if (sourceLoss > 0) _currentGame.Board.Reinforce(source, -sourceLoss);
+        if (targetLoss > 0) _currentGame.Board.Reinforce(target, -targetLoss);
+    }
+
+    // Process card trade-in
+    public void TradeInCards(int playerNum, int[] handIndices)
+    {
+        var selectedCards = GetCardsFromHand(playerNum, handIndices);
+        var currentPlayer = _currentGame.Players[playerNum];
+        
+        // Calculate escalating bonus
+        _machine.IncrementNumTrades(1);
+        int tradeBonus = _currentGame.Values.CalculateBaseTradeInBonus(_machine.NumTrades);
+        
+        // Apply bonus and discard cards
+        currentPlayer.GetsTradeBonus(tradeBonus);
+        CurrentActionsLimit += tradeBonus;
+        ForceDiscard((Player)currentPlayer, handIndices);
+
+        // Handle territory bonuses
+        var tradedTargets = selectedCards.SelectMany(card => card.Target);
+        var controlledTargets = currentPlayer.GetControlledTargets(tradedTargets.ToArray());
+        
+        if (controlledTargets.Length == 1)
+            _currentGame.Board.Reinforce(controlledTargets[0], _currentGame.Values.TerritoryTradeInBonus);
+        else if (controlledTargets.Length > 1)
+            PromptBonusChoice?.Invoke(this, controlledTargets);
+    }
+
+    // Track actions and trigger phase progression
+    private void IncrementAction()
+    {
+        _actionsCounter++;
+
+        // Check for stage transitions
+        if (ReachedSecondStage())
+            _machine.PhaseStageTwo = true;
+
+        // Trigger next phase when limit reached
+        if (_actionsCounter >= CurrentActionsLimit) 
+        {
+            if (InSetupPhase) _machine.IncrementRound();
+            else _machine.IncrementPhase();
+        }
+    }
+
+    // ... helper methods omitted
+}
+
+// TypeRegister.cs - Extensible lookup system for team development
+public class TypeRegister : ITypeRegister&lt;ITypeRelations&gt;
+{
+    private readonly Dictionary&lt;Type, ITypeRelations&gt; _typeRelata = [];
+
+    public TypeRegister(IRegistryInitializer initializer)
+    {
+        initializer.PopulateRegistry(this);
+    }
+
+    // String-based type lookup for runtime resolution
+    public Type? this[string lookupName] 
+    {
+        get 
+        {
+            if (string.IsNullOrEmpty(lookupName))
+                return null;
+
+            foreach (Type type in _typeRelata.Keys)
+                if (_typeRelata[type][RegistryRelation.Name] is string registeredName 
+                    && registeredName == lookupName)
+                    return type;
+            return null;
+        }
+    }
+    
+    // Type-based relationship lookup
+    public ITypeRelations? this[Type type] 
+    {
+        get 
+        {
+            if (_typeRelata.TryGetValue(type, out ITypeRelations? relata))
+                return _typeRelata[type];
+            else return null;
+        }
+        set 
+        {
+            if (value is ITypeRelations and not null)
+                Register(type, value);
+            else throw new ArgumentException($"{value} is not valid");
+        }
+    }
+    
+    // Relation-based reverse lookup across all types
+    public (Type KeyType, object RelatedObject)[]? this[RegistryRelation relation] 
+    {
+        get 
+        {
+            List&lt;(Type, object)&gt; entries = [];
+            foreach (Type type in _typeRelata.Keys) 
+            {
+                if (_typeRelata[type][relation] != null) 
+                {
+                    entries.Add(new(type, _typeRelata[type][relation]!));
+                }
+            }
+            return entries.Count > 0 ? [.. entries] : null;
+        }
+    }
+
+    // Validate parent-child type relationships with integrity checking
+    public bool TryGetParentType(Type registeredType, out Type? parentType)
+    {
+        if (!_typeRelata.TryGetValue(registeredType, out ITypeRelations? relations)) 
+        {
+            parentType = null;
+            return false;
+        }
+        
+        if (relations[RegistryRelation.CollectionType] is not Type collection) 
+        {
+            parentType = null;
+            return false;
+        }
+        
+        // Verify bidirectional relationship integrity
+        string? regCollectionName = relations[RegistryRelation.CollectionName] as string;
+        if (regCollectionName != collection.Name)
+            throw new InvalidDataException($"Collection name mismatch for {registeredType}");
+            
+        if (!_typeRelata.TryGetValue(collection, out ITypeRelations? collectionRelations))
+            throw new InvalidDataException($"Parent collection {collection} not registered");
+            
+        if (collectionRelations[RegistryRelation.ElementType] is not Type elementType 
+            || elementType != registeredType)
+            throw new InvalidDataException($"Parent-child relationship broken");
+
+        parentType = collection;
+        return true;
+    }
+
+    // Reflection-based registration with default naming
+    public void Register(Type type)
+    {
+        if (_typeRelata.ContainsKey(type))
+            throw new ArgumentException($"{type} already registered");
+
+        _typeRelata.Add(type, new TypeRelations([(type.Name, RegistryRelation.Name)]));
+    }
+
+    // ... other registration and management methods omitted
+}
+
+// TypeRelations.cs - Flexible object relationship container
+public class TypeRelations : ITypeRelations
+{
+    private readonly Dictionary&lt;RegistryRelation, object&gt; _relatedObjects = [];
+
+    public TypeRelations((object, RegistryRelation)[] relations)
+    {
+        foreach (var relation in relations)
+            Add(relation.Item1, relation.Item2);
+    }
+
+    public object? this[RegistryRelation relation] 
+    {
+        get 
+        {
+            return _relatedObjects.TryGetValue(relation, out object? value) ? value : null;
+        }
+    }
+
+    // Type-safe relationship validation
+    public void Add(object obj, RegistryRelation relation)
+    {
+        if (_relatedObjects.ContainsKey(relation))
+            throw new ArgumentException("Relation already exists");
+            
+        switch (relation) 
+        {
+            case RegistryRelation.Name:
+            case RegistryRelation.CollectionName:
+            case RegistryRelation.DataFileName:
+                if (obj is not string)
+                    throw new ArgumentException($"{relation} requires string object");
+                break;
+                
+            case RegistryRelation.CollectionType:
+            case RegistryRelation.ElementType:
+            case RegistryRelation.ConvertedDataType:
+                if (obj is not Type)
+                    throw new ArgumentException($"{relation} requires Type object");
+                break;
+                
+            case RegistryRelation.DataConverter:
+                if (!obj.GetType().IsClass)
+                    throw new ArgumentException("DataConverter must be reference type");
+                break;
+                
+            default:
+                throw new ArgumentOutOfRangeException(nameof(relation));
+        }
+        
+        _relatedObjects.Add(relation, obj);
+    }
+
+    // ... removal and utility methods omitted
+}
+
+// RegistryInitializer.cs - Data-driven type registration
+public class RegistryInitializer(IOptions&lt;AppConfig&gt; options) : IRegistryInitializer
+{
+    private readonly CardRegistryRecord[] _cardTypeRegistryRecords = [
+        new() 
+        {
+            CardType = typeof(TroopCard),
+            Name = nameof(TroopCard),
+            CardSetType = typeof(TroopCardSet),
+            SetName = nameof(TroopCardSet)
+        }
+    ];
+    
+    private readonly CardSetRegistryRecord[] _cardSetTypeRegistryRecords = [
+        new() 
+        {
+            CardSetType = typeof(TroopCardSet),
+            Name = nameof(TroopCardSet),
+            CardType = typeof(TroopCard),
+            DataFileName = options.Value.DataFileMap[nameof(TroopCard) + "Set.json"],
+            CardSetDataConverter = new TroopCardSetDataJConverter(),
+            ConvertedDataType = typeof(TroopCardSet)
+        }
+    ];
+
+    // Register types with full relationship metadata
+    public void PopulateRegistry(ITypeRegister&lt;ITypeRelations&gt; registry)
+    {
+        RegisterGeography(registry);
+
+        // Register card types with collection relationships
+        foreach (var info in _cardTypeRegistryRecords) 
+        {
+            TypeRelations cardRelations = new();
+            cardRelations.Add(info.Name, RegistryRelation.Name);
+            cardRelations.Add(info.CardSetType, RegistryRelation.CollectionType);
+            cardRelations.Add(info.SetName, RegistryRelation.CollectionName);
+            registry.Register(info.CardType, cardRelations);
+        }
+
+    // Register collection types with serialization metadata for DAL integration
+    foreach (var info in _cardSetTypeRegistryRecords) 
+    {
+        TypeRelations cardSetRelations = new();
+        cardSetRelations.Add(info.Name, RegistryRelation.Name);
+        cardSetRelations.Add(info.CardType, RegistryRelation.ElementType);
+        cardSetRelations.Add(info.DataFileName, RegistryRelation.DataFileName);
+        cardSetRelations.Add(info.CardSetDataConverter, RegistryRelation.DataConverter);
+        cardSetRelations.Add(info.ConvertedDataType, RegistryRelation.ConvertedDataType);
+        registry.Register(info.CardSetType, cardSetRelations);
+    }
+    }
+
+// BinarySerializer.cs - Type-safe binary persistence framework
+public static class BinarySerializer
+{
+    private static ILogger? _logger;
+
+    // Flexible encoding handles different data types consistently
+    private static byte[] ConvertibleToBytes(Type type, IConvertible value)
+    {
+        return type switch 
+        {
+            Type t when t == typeof(byte) => [(byte)value],
+            Type t when t == typeof(string) => Encoding.UTF8.GetBytes((string)value),
+            Type t when t.IsEnum => BitConverter.GetBytes(Convert.ToInt64(value)),
+            _ => BitConverter.GetBytes(Convert.ToDouble(value))
+        };
+    }
+
+    private static IConvertible BytesToConvertible(Type type, byte[] bytes)
+    {
+        if (type == typeof(byte) && bytes.Length == 1)
+            return bytes[0];
+        if (type == typeof(string))
+            return Encoding.UTF8.GetString(bytes);
+        if (type.IsEnum)
+            return (IConvertible)Enum.ToObject(type, BitConverter.ToInt64(bytes, 0));
+
+        double doubleVal = BitConverter.ToDouble(bytes, 0);
+        return (IConvertible)Convert.ChangeType(doubleVal, type);
+    }
+
+    // Core serialization with length-prefixed encoding for robust deserialization
+    private static void WriteConvertible(BinaryWriter writer, Type type, IConvertible value)
+    {
+        byte[] bytes = ConvertibleToBytes(type, value);
+        writer.Write(bytes.Length);  // Length prefix for safe reading
+        writer.Write(bytes);
+    }
+
+    public static IConvertible ReadConvertible(BinaryReader reader, Type type)
+    {
+        int length = reader.ReadInt32();
+        byte[] bytes = reader.ReadBytes(length);
+        return BytesToConvertible(type, bytes);
+    }
+
+    // Handle collections of arbitrary length with type safety
+    public static Array ReadConvertibles(BinaryReader reader, Type type, int numValues)
+    {
+        if (!typeof(IConvertible).IsAssignableFrom(type) || type.IsEnum || type == typeof(string))
+            throw new ArgumentException("ReadConvertibles accepts only IConvertible types, excluding strings and Enums.");
+
+        Array returnArray = Array.CreateInstance(type, numValues);
+        for (int i = 0; i < numValues; i++)
+            returnArray.SetValue(ReadConvertible(reader, type), i);
+        return returnArray;
+    }
+
+    // Specialized handling for enums and strings preserves type information
+    public static Array ReadEnums(BinaryReader reader, Type type, int numValues)
+    {
+        if (!type.IsEnum)
+            throw new ArgumentException("ReadEnums accepts only Enum types.");
+
+        Array returnArray = Array.CreateInstance(type, numValues);
+        for (int i = 0; i < numValues; i++) 
+        {
+            int length = reader.ReadInt32();
+            byte[] bytes = reader.ReadBytes(length);
+            returnArray.SetValue(Enum.ToObject(type, BitConverter.ToInt64(bytes, 0)), i);
+        }
+        return returnArray;
+    }
+
+    public static Array ReadStrings(BinaryReader reader, int numValues)
+    {
+        Array returnArray = Array.CreateInstance(typeof(string), numValues);
+        for (int i = 0; i < numValues; i++)
+            returnArray.SetValue((string)ReadConvertible(reader, typeof(string)), i);
+        return returnArray;
+    }
+
+    // Optional metadata support without breaking untagged serialization
+    private static void WriteTaggedConvertible(BinaryWriter writer, Type type, IConvertible value, string tag)
+    {
+        writer.Write(tag);  // Tag precedes data for optional metadata
+        WriteConvertible(writer, type, value);
+    }
+
+    // Async file operations with comprehensive error handling
+    public static async Task Save(IBinarySerializable[] serializableObjects, string fileName, bool newFile)
+    {
+        await Task.Run(() =>
+        {
+            FileMode mode = newFile ? FileMode.Create : FileMode.Truncate;
+            using FileStream fileStream = new(fileName, mode, FileAccess.Write);
+            using BinaryWriter writer = new(fileStream);
+
+            foreach (var obj in serializableObjects) 
+            {
+                try 
+                {
+                    if (!WriteSerializableObject(obj, writer).Result)
+                        _logger?.LogWarning("Failed to write {Object}", obj);
+                } 
+                catch (Exception e) 
+                {
+                    _logger?.LogError("Exception writing {obj}: {Message}", obj, e.Message);
+                }
+            }
+        });
+    }
+
+    // Metadata-driven serialization handles complex object structures
+    private static async Task&lt;bool&gt; WriteSerializableObject(IBinarySerializable serializableObject, BinaryWriter writer)
+    {
+        try 
+        {
+            if (await serializableObject.GetBinarySerials() is not SerializedData[] saveData) 
+            {
+                _logger?.LogError("Object {object} returned invalid SerializedData[]", serializableObject);
+                return false;
+            }
+
+            // Pattern matching handles all serialization scenarios
+            foreach (SerializedData saveDatum in saveData) 
+            {
+                switch (saveDatum) 
+                {
+                    case { MemberType: not null, Tag: not null }:
+                        // Tagged collections with type metadata
+                        WriteTaggedConvertibles(writer, saveDatum.MemberType, saveDatum.SerialValues, saveDatum.Tag);
+                        break;
+
+                    case { MemberType: not null, Tag: null }:
+                        // Untagged collections for performance-critical scenarios
+                        WriteConvertibles(writer, saveDatum.MemberType, saveDatum.SerialValues);
+                        break;
+
+                    case { MemberType: null, Tag: not null }:
+                        // Tagged single values with metadata
+                        WriteTaggedConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0], saveDatum.Tag);
+                        break;
+
+                    case { MemberType: null, Tag: null }:
+                        // Untagged single values for minimal overhead
+                        WriteConvertible(writer, saveDatum.SerialType, saveDatum.SerialValues[0]);
+                        break;
+                }
+            }
+        } 
+        catch (Exception ex) 
+        {
+            _logger?.LogError("Serialization error: {Message}", ex.Message);
+            return false;
+        }
+        return true;
+    }
+
+    // Runtime type validation enables flexible collection handling
+    public static bool IsSerializable(Type type)
+    {
+        return type switch 
+        {
+            Type t when t == typeof(string) => true,
+            Type t when t.IsEnum => t.GetEnumUnderlyingType() == typeof(int),
+            Type t when t.IsPrimitive => true,
+            Type t when IsIConvertibleCollection(t, out _) => true,
+            _ => false
+        };
+    }
+
+    // Collection type discovery through reflection with caching opportunities
+    public static bool IsIConvertibleCollection(Type type, out Type? memberType)
+    {
+        if (!typeof(IEnumerable).IsAssignableFrom(type) || type == typeof(string)) 
+        {
+            memberType = null;
+            return false;
+        }
+
+        // Handle arrays with element type extraction
+        if (type.IsArray) 
+        {
+            var elementType = type.GetElementType();
+            memberType = elementType;
+            return typeof(IConvertible).IsAssignableFrom(elementType);
+        }
+
+        // Handle generic collections through interface discovery
+        if (type.IsGenericType) 
+        {
+            var typeInterfaces = type.GetInterfaces();
+            foreach (var iFace in typeInterfaces) 
+            {
+                if (iFace.IsGenericType && iFace.GetGenericTypeDefinition() == typeof(IEnumerable&lt;&gt;)) 
+                {
+                    var genericType = iFace.GetGenericArguments()[0];
+                    memberType = genericType;
+                    return typeof(IConvertible).IsAssignableFrom(genericType);
+                }
+            }
+        }
+
+        // Fallback to runtime inspection for non-generic collections
+        if (Activator.CreateInstance(type) is IEnumerable testInstance) 
+        {
+            Type? elementType = null;
+            foreach (var element in testInstance) 
+            {
+                if (element is not IConvertible) 
+                {
+                    memberType = null;
+                    return false;
+                }
+                elementType ??= element.GetType();
+            }
+            memberType = elementType;
+            return true;
+        }
+
+        memberType = null;
+        return false;
+    }
+
+    // Safe collection conversion with error recovery
+    public static IConvertible[] ToIConvertibleCollection(IEnumerable collection)
+    {
+        List&lt;IConvertible&gt; propConvertibles = [];
+        foreach (var value in collection) 
+        {
+            try 
+            {
+                propConvertibles.Add((IConvertible)value);
+            } 
+            catch 
+            { 
+                continue; // Skip non-convertible elements rather than failing
+            }
+        }
+        return [.. propConvertibles];
+// ICard.cs - Default interface methods for rapid prototyping
+public interface ICard : IBinarySerializable
+{
+    #region Properties
+    ILogger Logger { get; set; }
+    /// &lt;summary&gt;
+    /// Property names for automatic serialization via reflection.
+    /// Developers specify what to serialize; interface handles how.
+    /// &lt;summary&gt;
+    HashSet&lt;string&gt; SerializablePropertyNames { get; }
+    string TypeName { get; set; }
+    string ParentTypeName { get; }
+    ICardSet? CardSet { get; set; }
+    TerrID[] Target { get; set; }
+    bool IsTradeable { get; set; }
+    #endregion
+
+    // Default implementation eliminates serialization boilerplate
+    async Task&lt;SerializedData[]&gt; IBinarySerializable.GetBinarySerials()
+    {
+        return await Task.Run(() =&gt;
+        {
+            Type instanceType = this.GetType();
+            PropertyInfo[] instanceProperties = instanceType.GetProperties();
+            var orderedProperties = instanceProperties.OrderBy(property =&gt; property.Name);
+
+            List&lt;SerializedData&gt; serialData = [];
+            
+            // Type name for registry lookup during deserialization
+            serialData.Add(new SerializedData(typeof(int), SerializablePropertyNames.Count, instanceType.Name));
+            
+            foreach (PropertyInfo propInfo in orderedProperties) 
+            {
+                string propName = propInfo.Name;
+                Type propType = propInfo.PropertyType;
+                
+                if (!SerializablePropertyNames.Contains(propName))
+                    continue;
+                    
+                if (!BinarySerializer.IsSerializable(propType)) 
+                {
+                    Logger.LogWarning("{Card} property {Name} not serializable.", this, propName);
+                    continue;
+                }
+                
+                if (propInfo.GetValue(this) is not object propValue)
+                    continue;
+
+                // Handle both single values and collections automatically
+                IConvertible[] propConvertibles = new IConvertible[1];
+                if (typeof(IEnumerable).IsAssignableFrom(propType) && propType != typeof(string)) 
+                {
+                    propConvertibles = BinarySerializer.ToIConvertibleCollection((IEnumerable)propValue);
+                }
+                else 
+                {
+                    propConvertibles[0] = (IConvertible)propValue;
+                }
+
+                serialData.Add(new SerializedData(typeof(int), propConvertibles.Length));
+                serialData.Add(new SerializedData(propType, [.. propConvertibles], propInfo.Name));
+            }
+            
+            return serialData.ToArray();
+        });
+    }
+
+    // Default deserialization with property matching validation
+    bool IBinarySerializable.LoadFromBinary(BinaryReader reader)
+    {
+        bool loadComplete = true;
+        try 
+        {
+            var cardProps = this.GetType().GetProperties();
+            int loadedNumProperties = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+
+            // Validate property count matches expectations
+            if (loadedNumProperties != SerializablePropertyNames.Count)
+                return false;
+                
+            var propertyNames = cardProps.Select(prop =&gt; prop.Name);
+            var matchingNames = propertyNames.Intersect(SerializablePropertyNames);
+            var orderedMatchNames = matchingNames.OrderBy(name =&gt; name).ToHashSet();
+
+            // Process each serialized property in alphabetical order
+            foreach (string propName in orderedMatchNames) 
+            {
+                int numValues = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+                string readPropName = reader.ReadString();
+                
+                if (readPropName != propName) 
+                {
+                    Logger.LogError("{Card} property name mismatch during load.", this);
+                    return false;
+                }
+                
+                var matchingProperty = cardProps.Where(prop =&gt; prop.Name == readPropName).FirstOrDefault();
+                if (matchingProperty == null) 
+                {
+                    Logger.LogError("{Card} property {name} not found during load.", this, readPropName);
+                    return false;
+                }
+
+                Type propType = matchingProperty.PropertyType;
+                
+                // Handle arrays and single values with appropriate deserializers
+                if (!propType.IsArray) 
+                {
+                    matchingProperty.SetValue(this, BinarySerializer.ReadConvertible(reader, propType));
+                }
+                else 
+                {
+                    Type? elementType = propType.GetElementType();
+                    if (elementType == null) 
+                    {
+                        Logger.LogError("{Card} array property {name} missing element type.", this, propName);
+                        return false;
+                    }
+                    
+                    if (elementType.IsEnum)
+                        matchingProperty.SetValue(this, BinarySerializer.ReadEnums(reader, elementType, numValues));
+                    else if (elementType == typeof(string))
+                        matchingProperty.SetValue(this, BinarySerializer.ReadStrings(reader, numValues));
+                    else
+                        matchingProperty.SetValue(this, BinarySerializer.ReadConvertibles(reader, elementType, numValues));
+                }
+            }
+        } 
+        catch (Exception ex) 
+        {
+            Logger.LogError("Exception loading {Card}: {Message}", this, ex.Message);
+            loadComplete = false;
+        }
+        
+        return loadComplete;
     }
 }
-            </pre>
+
+// Example Usage - Minimal implementation for rapid experimentation
+public class MissionCard : ICard
+{
+    public ILogger Logger { get; set; } = null!;
+    
+    // Declarative serialization - specify what, not how
+    public HashSet&lt;string&gt; SerializablePropertyNames { get; } = 
+        [nameof(MissionType), nameof(Reward), nameof(Target), nameof(IsTradeable)];
+    
+    public string TypeName { get; set; } = nameof(MissionCard);
+    public string ParentTypeName =&gt; nameof(MissionCardSet);
+    public ICardSet? CardSet { get; set; }
+    
+    // Card-specific properties
+    public string MissionType { get; set; } = string.Empty;
+    public int Reward { get; set; }
+    public TerrID[] Target { get; set; } = [];
+    public bool IsTradeable { get; set; } = true;
+    
+    // Serialization happens automatically via interface defaults
+    // Override with custom implementation when performance becomes critical
+}
+
+// Production example - Custom serialization for performance-critical scenarios
+public class TroopCard : ICard
+{
+    // ... properties omitted for brevity
+    
+    // Override default with optimized implementation
+    async Task&lt;SerializedData[]&gt; IBinarySerializable.GetBinarySerials()
+    {
+        // Custom, high-performance serialization logic
+        // Avoids reflection overhead for production scenarios
+        return await Task.Run(() =&gt; [
+            new SerializedData(typeof(string), [TypeName]),
+            new SerializedData(typeof(TerrID), Target.Cast&lt;IConvertible&gt;().ToArray()),
+            new SerializedData(typeof(bool), [IsTradeable])
+        ]);
+    }
+    
+    // ... custom LoadFromBinary implementation omitted
+}
+
+// SerializedData.cs - Flexible metadata container for serialization
+public readonly struct SerializedData
+{
+    // Multiple constructors handle different serialization scenarios
+    public SerializedData(Type serialType, IConvertible value)
+    {
+        SerialType = serialType;
+        SerialValues = [value];
+    }
+
+    public SerializedData(Type serialType, IConvertible value, string tag)
+    {
+        SerialType = serialType;
+        SerialValues = [value];
+        Tag = tag;
+    }
+
+    public SerializedData(Type serialType, IConvertible[] serialValues, string tag)
+    {
+        SerialType = serialType;
+        // Automatic collection type detection
+        if (BinarySerializer.IsIConvertibleCollection(serialType, out Type? memberType))
+            MemberType = memberType;
+        SerialValues = serialValues;
+        Tag = tag;
+    }
+
+    public SerializedData(Type serialType, IConvertible[] serialValues)
+    {
+        SerialType = serialType;
+        if (BinarySerializer.IsIConvertibleCollection(serialType, out Type? memberType))
+            MemberType = memberType;
+        SerialValues = serialValues;
+    }
+
+    // Metadata properties support different serialization patterns
+    public Type? MemberType { get; init; } = null;  // Collection element type
+    public Type SerialType { get; init; }           // Primary type information
+    public IConvertible[] SerialValues { get; init; } // Actual data to serialize
+    public string? Tag { get; init; } = null;       // Optional metadata tag
+}
+
+// Example usage - Game state persistence
+public class GameState : IBinarySerializable
+{
+    public int CurrentRound { get; set; }
+    public TerrID[] PlayerTerritories { get; set; } = [];
+    public Dictionary&lt;string, int&gt; PlayerScores { get; set; } = [];
+
+    public async Task&lt;SerializedData[]&gt; GetBinarySerials()
+    {
+        return await Task.Run(() => [
+            // Tagged single value with metadata
+            new SerializedData(typeof(int), CurrentRound, "GameRound"),
+            
+            // Enum array with automatic type detection
+            new SerializedData(typeof(TerrID[]), PlayerTerritories.Cast&lt;IConvertible&gt;().ToArray()),
+            
+            // Complex nested structure handling
+            new SerializedData(typeof(int), PlayerScores.Count, "ScoreCount"),
+            new SerializedData(typeof(string[]), PlayerScores.Keys.Cast&lt;IConvertible&gt;().ToArray()),
+            new SerializedData(typeof(int[]), PlayerScores.Values.Cast&lt;IConvertible&gt;().ToArray())
+        ]);
+    }
+
+    public bool LoadFromBinary(BinaryReader reader)
+    {
+        try 
+        {
+            // Read tagged values with metadata validation
+            string roundTag = reader.ReadString();
+            if (roundTag != "GameRound") return false;
+            CurrentRound = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+
+            // Handle collections with type safety
+            int terrCount = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            var territories = BinarySerializer.ReadEnums(reader, typeof(TerrID), terrCount);
+            PlayerTerritories = territories.Cast&lt;TerrID&gt;().ToArray();
+
+            // Reconstruct complex structures
+            string scoreTag = reader.ReadString();
+            int scoreCount = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            var keys = BinarySerializer.ReadStrings(reader, scoreCount);
+            var values = BinarySerializer.ReadConvertibles(reader, typeof(int), scoreCount);
+            
+            PlayerScores.Clear();
+            for (int i = 0; i < scoreCount; i++) 
+            {
+                PlayerScores[(string)keys.GetValue(i)!] = (int)values.GetValue(i)!;
+            }
+
+            return true;
+        } 
+        catch (Exception ex) 
+        {
+            _logger?.LogError("Deserialization failed: {Message}", ex.Message);
+            return false;
+// BoardGeography.cs - Immutable spatial relationship system
+public static class BoardGeography
+{
+    private static ReadOnlyDictionary&lt;ContID, HashSet&lt;TerrID&gt;&gt;? _continentMembers;
+    private static ReadOnlyDictionary&lt;TerrID, ContID&gt;? _terrIDToContID;
+    private static ReadOnlyDictionary&lt;TerrID, HashSet&lt;TerrID&gt;&gt;? _neighborWeb;
+    
+    public static int NumTerritories { get; private set; }
+    public static int NumContinents { get; private set; }
+    
+    // Data-driven initialization from JSON configuration
+    public static void Initialize(GeographyInitializer initializer)
+    {
+        NumTerritories = initializer.TerritoryNames.Length - 1; // Account for Null values
+        NumContinents = initializer.ContinentNames.Length - 1;
+
+        Dictionary&lt;ContID, HashSet&lt;TerrID&gt;&gt; continentMembers = [];
+        Dictionary&lt;TerrID, ContID&gt; terrIDToContID = [];
+        Dictionary&lt;TerrID, HashSet&lt;TerrID&gt;&gt; neighborWeb = [];
+        
+        // Handle runtime type safety at configuration boundary
+        foreach (var contTerrPair in initializer.ContinentMembers) 
+        {
+            if (contTerrPair.Key is not ContID continent)
+                continue;
+
+            foreach (Enum territoryEnum in contTerrPair.Value) 
+            {
+                if (territoryEnum is not TerrID territory)
+                    continue;
+
+                // Build continent membership maps
+                if (!continentMembers.ContainsKey(continent))
+                    continentMembers.Add(continent, []);
+
+                continentMembers[continent].Add(territory);
+                terrIDToContID[territory] = continent;
+                
+                // Initialize neighbor structure
+                if (!neighborWeb.ContainsKey(territory))
+                    neighborWeb.Add(territory, []);
+
+                // Process adjacency relationships from configuration
+                if (!initializer.TerritoryNeighbors.TryGetValue(territory, 
+                       out HashSet&lt;Enum&gt;? neighbors) || neighbors == null)
+                    continue;
+                    
+                foreach (Enum terrEnum in neighbors) 
+                {
+                    if (terrEnum is not TerrID neighborTerritory)
+                        continue;
+                    neighborWeb[territory].Add(neighborTerritory);
+                }
+            }
+        }
+        
+        // Create immutable collections for thread-safe access
+        _continentMembers = new(continentMembers);
+        _terrIDToContID = new(terrIDToContID);
+        _neighborWeb = new(neighborWeb);
+    }
+    
+    // O(1) continent lookup for territory ownership calculations
+    public static ContID TerritoryToContinent(TerrID terrID)
+    {
+        if (_terrIDToContID == null) return ContID.Null;
+        return _terrIDToContID.TryGetValue(terrID, out var continent) 
+            ? continent : ContID.Null;
+    }
+    
+    // Efficient continent membership queries
+    public static HashSet&lt;TerrID&gt; GetContinentMembers(ContID continent)
+    {
+        if (_continentMembers == null) return [];
+        return _continentMembers.TryGetValue(continent, out var members)
+            ? members : [];
+    }
+    
+    // Fast adjacency validation for move/attack legality
+    public static HashSet&lt;TerrID&gt; GetNeighbors(TerrID territory)
+    {
+        if (_neighborWeb == null) return [];
+        return _neighborWeb.TryGetValue(territory, out var neighbors) 
+            ? neighbors : [];
+    }
+    
+    // Complex spatial query using set operations
+    public static bool IncludesContinent(HashSet&lt;TerrID&gt; territoryList, ContID continent)
+    {
+        if (_continentMembers == null) return false;
+        if (!_continentMembers.TryGetValue(continent, out var continentMembers))
+            return false;
+        
+        // Leverage HashSet.IsSubsetOf for efficient continent control validation
+        return continentMembers.IsSubsetOf(territoryList);
+    }
+    
+    // ... other spatial utilities omitted
+}
+
+// GeographyInitializer.cs - Flexible configuration processor
+public class GeographyInitializer
+{
+    public Type? ContinentEnumType { get; set; }
+    public Type? TerritoryEnumType { get; set; }
+    public string[] ContinentNames { get; private set; } = [];
+    public string[] TerritoryNames { get; private set; } = [];
+    public Dictionary&lt;Enum, HashSet&lt;Enum&gt;&gt; ContinentMembers { get; } = [];
+    public Dictionary&lt;Enum, HashSet&lt;Enum&gt;&gt; TerritoryNeighbors { get; } = [];
+    
+    // Runtime type resolution bridges JSON config with compile-time type safety
+    public void SetEnumTypes((string ContinentEnumName, string TerritoryEnumName) names)
+    {
+        // Resolve enum types dynamically from configuration strings
+        if (Type.GetType(names.ContinentEnumName) is not Type continentEnumType || !continentEnumType.IsEnum)
+            throw new InvalidDataException($"Could not locate Continent Enum: {names.ContinentEnumName}");
+        ContinentEnumType = continentEnumType;
+        
+        if (Type.GetType(names.TerritoryEnumName) is not Type territoryEnumType || !territoryEnumType.IsEnum)
+            throw new InvalidDataException($"Could not locate Territory Enum: {names.TerritoryEnumName}");
+        TerritoryEnumType = territoryEnumType;
+
+        ContinentNames = Enum.GetNames(ContinentEnumType);
+        TerritoryNames = Enum.GetNames(TerritoryEnumType);
+    }
+    
+    // Validate types at configuration boundary, maintain safety in core operations
+    public bool AddContinentMember(string continentName, string territoryName)
+    {
+        if (ContinentEnumType == null || TerritoryEnumType == null)
+            return false;
+            
+        // Type validation happens once during configuration loading
+        if (Enum.Parse(ContinentEnumType, continentName) is not Enum continentEnum)
+            return false;
+        if (Enum.Parse(TerritoryEnumType, territoryName) is not Enum territoryEnum)
+            return false;
+            
+        try 
+        {
+            if (!ContinentMembers.ContainsKey(continentEnum))
+                ContinentMembers.Add(continentEnum, []);
+
+            ContinentMembers[continentEnum].Add(territoryEnum);
+        } 
+        catch 
+        {
+            return false;
+        }
+        return true;
+    }
+    
+    // Bidirectional neighbor relationship management
+    public bool AddTerritoryNeighbor(string territoryName, string neighborName)
+    {
+        if (TerritoryEnumType == null)
+            return false;
+            
+        if (Enum.Parse(TerritoryEnumType, territoryName) is not Enum territoryEnum)
+            return false;
+        if (Enum.Parse(TerritoryEnumType, neighborName) is not Enum neighborEnum)
+            return false;
+            
+        try 
+        {
+            if (!TerritoryNeighbors.ContainsKey(territoryEnum))
+                TerritoryNeighbors.Add(territoryEnum, []);
+
+            TerritoryNeighbors[territoryEnum].Add(neighborEnum);
+        } 
+        catch 
+        {
+            return false;
+        }
+        return true;
+    }
+    
+    // ... other configuration methods omitted
+}
+
+// EarthBoard.cs - Geography integration example
+public class EarthBoard : IBoard
+{
+    // Efficient continent control detection using geography system
+    public void CheckContinentFlip(TerrID changed, int previousOwner)
+    {
+        int newOwner = TerritoryOwner[changed];
+        var changedHomeContinent = BoardGeography.TerritoryToContinent(changed);
+        var continentTerritories = BoardGeography.GetContinentMembers(changedHomeContinent);
+        
+        if (continentTerritories.Count <= 0) return;
+
+        // Use geography system for ownership validation
+        if (ContinentOwner[changedHomeContinent] == previousOwner && previousOwner > -1) 
+        {
+            ContinentOwner[changedHomeContinent] = -1;
+            
+            // Efficient "all territories owned by same player" check
+            if (continentTerritories.All(terr => TerritoryOwner[terr] == newOwner))
+                ContinentOwner[changedHomeContinent] = newOwner;
+
+            ContinentOwnerChanged?.Invoke(this, 
+                new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
+        }
+        else if (continentTerritories.All(terr => TerritoryOwner[terr] == newOwner)) 
+        {
+            ContinentOwner[changedHomeContinent] = newOwner;
+            ContinentOwnerChanged?.Invoke(this, 
+                new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
+        }
+    }
+    
+    // ... other board methods omitted
+}
+                    </code>
+                </pre>
+        </div>
+    </div>
+
+    <div class="presentation-box" id="CoreSkillsList">
+        <h3 style="color: #31c1cc;">Core Skills Developed</h3>
+        <p style="text-align: center; margin: 1rem 0; font-style: italic;">
+            This project helped me develop enterprise-level software engineering skills (by doing!) like:
+        </p>
+
+        <!-- Software Architecture -->
+        <div class="presentation-box" style="margin: 2rem 1rem; background-color: #1e2632; border: 1px solid #2c5f6b;">
+            <h4 style="color: #31c1cc; margin-bottom: 1rem; text-align: center;">🏗️ Software Architecture</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>MVVM pattern implementation</li>
+                    <li>Event-driven architecture design</li>
+                    <li>Dependency injection configuration</li>
+                    <li>Domain-driven design principles</li>
+                </ul>
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>SOLID principles application</li>
+                    <li>Clean architecture patterns</li>
+                    <li>State management systems</li>
+                    <li>Command pattern implementation</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Advanced C# Programming -->
+        <div class="presentation-box" style="margin: 2rem 1rem; background-color: #1e2632; border: 1px solid #2c5f6b;">
+            <h4 style="color: #31c1cc; margin-bottom: 1rem; text-align: center;">⚡ Advanced C# Programming</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>Generic type systems</li>
+                    <li>Reflection and meta-programming</li>
+                    <li>Custom serialization frameworks</li>
+                    <li>Interface default methods (C# 8+)</li>
+                </ul>
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>Pattern matching expressions</li>
+                    <li>Async/await programming</li>
+                    <li>LINQ and functional programming</li>
+                    <li>Custom collections and data structures</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Data Management & Persistence -->
+        <div class="presentation-box" style="margin: 2rem 1rem; background-color: #1e2632; border: 1px solid #2c5f6b;">
+            <h4 style="color: #31c1cc; margin-bottom: 1rem; text-align: center;">💾 Data Management & Persistence</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>Binary serialization design</li>
+                    <li>JSON data processing</li>
+                    <li>Type-safe deserialization</li>
+                    <li>Data access layer architecture</li>
+                </ul>
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>Configuration-driven data loading</li>
+                    <li>Object graph preservation</li>
+                    <li>Data integrity validation</li>
+                    <li>Dynamic type resolution</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- System Design & Frameworks -->
+        <div class="presentation-box" style="margin: 2rem 1rem; background-color: #1e2632; border: 1px solid #2c5f6b;">
+            <h4 style="color: #31c1cc; margin-bottom: 1rem; text-align: center;">🔧 System Design & Frameworks</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>Type registry systems</li>
+                    <li>Plugin architecture design</li>
+                    <li>Event system orchestration</li>
+                    <li>Rules engine development</li>
+                </ul>
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>State machine implementation</li>
+                    <li>Factory pattern applications</li>
+                    <li>Observer pattern usage</li>
+                    <li>Strategy pattern implementation</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- UI & User Experience -->
+        <div class="presentation-box" style="margin: 2rem 1rem; background-color: #1e2632; border: 1px solid #2c5f6b;">
+            <h4 style="color: #31c1cc; margin-bottom: 1rem; text-align: center;">🎨 UI & User Experience</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>WPF application development</li>
+                    <li>XAML markup and binding</li>
+                    <li>Data binding and templates</li>
+                    <li>Command binding patterns</li>
+                </ul>
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>ViewModel design patterns</li>
+                    <li>UI state management</li>
+                    <li>User input validation</li>
+                    <li>Event handling and routing</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Quality & Documentation -->
+        <div class="presentation-box" style="margin: 2rem 1rem; background-color: #1e2632; border: 1px solid #2c5f6b;">
+            <h4 style="color: #31c1cc; margin-bottom: 1rem; text-align: center;">📋 Quality & Documentation</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>XML documentation standards</li>
+                    <li>Error handling and logging</li>
+                    <li>Exception management strategies</li>
+                    <li>Code organization and structure</li>
+                </ul>
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>Professional documentation</li>
+                    <li>Team collaboration patterns</li>
+                    <li>Extension point design</li>
+                    <li>Maintainable code practices</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background-color: #1e2632; border-radius: 8px; border: 1px solid #31c1cc;">
+            <p style="margin: 0; font-style: italic; color: #31c1cc; font-size: 1.1em;">
+                These comprehensive software engineering skills show I can build complex, maintainable systems in collaborative, enterprise development settings.
+            </p>
         </div>
     </div>
 
     <div class="presentation-box">
-        <h3 style="color: #31c1cc;">Technical Skills Developed</h3>
-        <ul class="skills-list">
-            <li>Advanced C# programming techniques</li>
-            <li>Object-oriented design</li>
-            <li>Applying SOLID</li>
-            <li>Event-driven architecture</li>
-            <li>State management</li>
-            <li>Domain-driven design</li>
-            <li>Custom serialization</li>
-            <li>Binary serialization</li>
-            <li>Reflection and meta-programming</li>
-            <li>Error handling and logging</li>
-            <li>Clean code architecture</li>
-            <li>XML documentation</li>
-            <li>Asynchronous programming</li>
-            <li>WPF UI design</li>
-        </ul>
-        <p style="margin-top: 1em;">These software engineering skills transfer directly to enterprise application development, and demonstrate my capability for building complex, maintainable systems.</p>
-    </div>
-
-    <div class="call-to-action">
-        <h2>Discuss My Work</h2>
-        <p>I'd be happy to walk through any aspect of this project in detail, including technical decisions and implementation patterns.</p>
-        <p>Contact me to schedule a conversation about how these skills can benefit your development team!</p>
+        <p>I'd love to walk through this project in detail!</p>
         <div class="button-container">
-            <a href="mailto:joshua.a.mcknight@gmail.com" class="cta-button">Contact Me</a>
-            <a href="https://github.com/LivingCryogen/Hazard" class="cta-button">View on GitHub</a>
+            <a href="#" class="cta-button" data-content="Contact.html">Contact Me</a>
         </div>
     </div>
 </body>

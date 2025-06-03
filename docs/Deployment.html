@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Deployment Pipeline</title>
+    <link rel="stylesheet" href="stylesheet.css">
+</head>
+<body class="dynamic-content-body">
+    <h2>Azure-Based Deployment Pipeline</h2>
+
+    <p class="indented-p">
+        From the beginning, my goal with <i>Hazard!</i> was to see it through the entire software development process: from the first blank .cs page, to watching it publicly downloaded and installed.
+        And the user experience would be paramount; it would need to be distributed <strong>quickly, reliably, cheaply, and securely.</strong></p>
+    <p class="indented-p">To that end, I worked with Microsoft's Azure systems and developed a complete deployment pipeline.</p>
+    
+    You can see it in action here :[ <a href="https://hazardgameproxy-d4caecgsapakcwh0.centralus-01.azurewebsites.net/secure-link?arch=x64" class="external-link">Download(x64)</a>
+    <a href="https://hazardgameproxy-d4caecgsapakcwh0.centralus-01.azurewebsites.net/secure-link?arch=ARM" class="external-link">Download(ARM)</a> ]
+
+    <div class="presentation-box">
+        <h3 style="color: #31c1cc;">Pipeline Components</h3>
+        <ul>
+            <li><strong>Multi-architecture builds</strong> generate x64 and ARM64 packages automatically</li>
+            <li><strong>Azure Trusted Signing</strong> provides Microsoft-verified code certificates</li>
+            <li><strong>Time-limited download links</strong> prevent unauthorized redistribution</li>
+            <li><strong>Escalating rate limiting</strong> manages abuse without blocking legitimate users</li>
+            <li><strong>Persistent ban management</strong> tracks repeat offenders across sessions</li>
+            <li><strong>Cost-optimized storage</strong> with automatic cleanup of expired data</li>
+        </ul>
+    </div>
+
+    <h2>Technical Feature Highlights</h2>
+
+    <h4>Note: Code Snippets below omit documentation comments and some code.</h4>
+
+    <div class="code-with-text" id="PipelineArchitecture">
+        <div class="image-text">
+            <h3>Azure Pipeline</h3>
+            <ul>
+                <li>Simultaneous <strong>x64 and ARM64 builds</strong></li>
+                <li><strong>Self-contained MSIX packages</strong> eliminate runtime dependencies</li>
+                <li><strong>Federated identity authentication</strong> removes stored secrets from pipeline</li>
+                <li><strong>Automated artifact validation</strong> before storage upload</li>
+                <li><strong>Azure Trusted Signing</strong> integrates Microsoft certificate authority</li>
+                <li><strong>Conditional deployment</strong> prevents broken builds reaching storage</li>
+            </ul>
+            <p><center><i>Key Files: LivingCryogen.Hazard.yml</i></center></p>
+        </div>
+        <div>
+            <pre class="code-snippet">
+            <code class="language-yaml">
+# Azure Pipelines - Multi-architecture build matrix
+strategy:
+  matrix:
+    x64:
+      buildPlatform: 'x64'
+      runtimeId: 'win-x64'
+      publishPath: '$(Build.ArtifactStagingDirectory)/publish/x64/'
+      msixOutputPath: '$(Build.ArtifactStagingDirectory)/msix/x64/'
+      archPath: 'x64'
+      fileName: 'InstallHazardGame_x64.msixbundle'
+    ARM64:
+      buildPlatform: 'ARM64'
+      runtimeId: 'win-arm64'
+      publishPath: '$(Build.ArtifactStagingDirectory)/publish/arm64/'
+      msixOutputPath: '$(Build.ArtifactStagingDirectory)/msix/arm64/'
+      archPath: 'arm64'
+      fileName: 'InstallHazardGame_ARM64.msixbundle'
+
+steps:
+- task: VSBuild@1
+  displayName: 'Build Self-Contained MSIX ($(buildPlatform))'
+  inputs:
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    msbuildArgs: >
+      /p:RuntimeIdentifier=$(runtimeId) 
+      /p:AppxPackageDir=$(msixOutputPath) 
+      /p:UapAppxPackageBuildMode=SideloadOnly 
+      /p:AppxBundlePlatforms=$(buildPlatform) 
+      /p:AppxBundle=Always 
+      /p:SelfContained=true 
+      /p:WindowsAppSDKSelfContained=true 
+      /p:AppxAutoIncrementPackageRevision=True
+
+# Federated identity authentication eliminates stored secrets
+- task: AzureCLI@2
+  displayName: 'Azure CLI Setup ($(buildPlatform))'
+  inputs:
+    azureSubscription: 'JoshMcKnight Azure TopLevel'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      echo "##vso[task.setvariable variable=ARM_CLIENT_ID;issecret=true]$servicePrincipalId"
+      echo "##vso[task.setvariable variable=ARM_ID_TOKEN;issecret=true]$idToken"
+      echo "##vso[task.setvariable variable=ARM_TENANT_ID;issecret=true]$tenantId"
+    addSpnToEnvironment: true
+
+# Azure Trusted Signing for production-grade code certificates
+- task: TrustedSigning@0
+  displayName: 'Sign with Trusted Signing ($(buildPlatform))'
+  inputs:
+    Endpoint: 'https://eus.codesigning.azure.net/'
+    TrustedSigningAccountName: 'joshmcknightsigning'
+    CertificateProfileName: 'JoshuaMcKnight'
+    FilesFolder: '$(publishPath)'
+    FilesFolderRecurse: true
+    FilesFolderFilter: '*.msixbundle'
+    ExcludeAzureCliCredential: false
+
+# Secure upload to blob storage with proper content headers
+- task: AzureCLI@2
+  displayName: 'Copy to Blob Storage for ($(buildPlatform))'
+  inputs:
+    azureSubscription: 'JoshMcKnight Azure TopLevel'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az storage blob upload-batch `
+        --source "$(publishPath)" `
+        --destination "$(containerName)" `
+        --account-name "$(storageAccount)" `
+        --content-type "application/vnd.ms-appx" `
+        --content-disposition "attachment; filename=$(fileName)" `
+        --auth-mode login `
+        --overwrite $true
+</code>
+            </pre>
+        </div>
+    </div>
+
+    <div class="code-with-text" id="SASFunction">
+        <div class="image-text">
+            <h3>Time-Limited Download Links</h3>
+            <p>An Azure Function generates secure, expiring download URLs:</p>
+            <ul>
+                <li><strong>Architecture detection</strong> from query parameters routes to correct package</li>
+                <li><strong>SAS tokens</strong> expire after 5 minutes to prevent link sharing</li>
+                <li><strong>Error handling</strong> with appropriate HTTP status codes</li>
+                <li><strong>Exponential retry</strong> patterns handle transient storage failures</li>
+                <li><strong>Environment-based config</strong> supports multiple deployment stages</li>
+                <li><strong>Structured logging</strong> enables monitoring and troubleshooting</li>
+            </ul>
+            <p><center><i>Key Files: Sasgen.cs</i></center></p>
+        </div>
+        <div>
+            <pre class="code-snippet">
+            <code class="language-csharp">
+                // Azure Function - Secure SAS token generation with architecture detection
+[Function("hazardgamesecurelink")]
+public async Task&lt;IActionResult&gt; Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+{
+    logger.LogInformation("C# HTTP trigger function processed a request.");
+
+    // Architecture detection from query parameters
+    string architecture = req.QueryString.Value switch 
+    {
+        string value when value.Contains("x64") =&gt; "x64",
+        string value when value.Contains("ARM") =&gt; "ARM64", 
+        _ =&gt; string.Empty
+    };
+
+    // Environment configuration validation
+    string? storageString = Environment.GetEnvironmentVariable("StorageString");
+    string? storageKey = Environment.GetEnvironmentVariable("StorageKey");
+    string? accountName = Environment.GetEnvironmentVariable("AccountName");
+    string? containerName = Environment.GetEnvironmentVariable("ContainerName");
+    string? blobPrefix = Environment.GetEnvironmentVariable("BlobPrefix");
+    string? blobExtension = Environment.GetEnvironmentVariable("BlobExtension");
+
+    if (string.IsNullOrEmpty(storageString) || string.IsNullOrEmpty(storageKey) || 
+        string.IsNullOrEmpty(accountName) || string.IsNullOrEmpty(containerName) || 
+        string.IsNullOrEmpty(blobPrefix) || string.IsNullOrEmpty(blobExtension) || 
+        string.IsNullOrEmpty(architecture)) 
+    {
+        logger.LogError("Application settings invalid.");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
+
+    Uri storageUri = new(storageString);
+    string blobName = $"{blobPrefix}{architecture}{blobExtension}";
+
+    try 
+    {
+        // Resilient blob client configuration
+        var options = new BlobClientOptions() 
+        {
+            Retry = 
+            {
+                MaxRetries = 3,
+                Mode = RetryMode.Exponential,
+            },
+            Diagnostics = 
+            {
+                IsLoggingEnabled = true,
+            }
+        };
+
+        // Azure Storage authentication with shared key credential
+        StorageSharedKeyCredential credential;
+        try 
+        {
+            credential = new StorageSharedKeyCredential(accountName, storageKey);
+        } 
+        catch (Exception ex) 
+        {
+            logger.LogError(ex, "Azure Function failed to authenticate with Storage account {name}.", accountName);
+            return new StatusCodeResult(StatusCodes.Status401Unauthorized);
+        }
+
+        // Comprehensive error handling for storage operations
+        BlobServiceClient blobServiceClient = new(storageUri, credential);
+        BlobContainerClient blobContainerClient = blobServiceClient.GetBlobContainerClient(containerName);
+        
+        bool containerExists = await blobContainerClient.ExistsAsync();
+        if (!containerExists) 
+        {
+            logger.LogError("Blob container named {name} did not exist.", containerName);
+            return new StatusCodeResult(StatusCodes.Status404NotFound);
+        }
+
+        BlobClient blobClient = blobContainerClient.GetBlobClient(blobName);
+        bool blobExists = await blobClient.ExistsAsync();
+        if (!blobExists) 
+        {
+            logger.LogError("Blob named {name} did not exist.", blobName);
+            return new StatusCodeResult(StatusCodes.Status404NotFound);
+        }
+
+        // Time-limited SAS token generation (5 minutes)
+        BlobSasBuilder sasBuilder = new() 
+        {
+            BlobContainerName = containerName,
+            BlobName = blobName,
+            Resource = "b", // Individual file access
+            ExpiresOn = DateTimeOffset.UtcNow.AddSeconds(300) // 5-minute expiry
+        };
+        sasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+        // Return secure download URL with SAS token
+        var token = sasBuilder.ToSasQueryParameters(credential).ToString();
+        return new JsonResult(new { Uri = blobClient.Uri.ToString(), SasToken = token });
+
+    } 
+    catch (Exception ex) 
+    {
+        logger.LogError(ex, "Error generating SAS token and/or secure URL: {message}.", ex.Message);
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
+}
+</code>
+            </pre>
+        </div>
+    </div>
+
+    <div class="code-with-text" id="RateLimiting">
+        <div class="image-text">
+            <h3>Escalating Abuse Prevention</h3>
+            <p>After noticing a solo AZ function could incur costs if abused by bad actors, I built a Proxy Server to limit rates and ban malicious users.</p>
+            <ul>
+                <li><strong>Thread-safe request counting</strong> using concurrent dictionaries</li>
+                <li><strong>Escalating ban durations</strong> discourage repeat offenders without permanent blocks</li>
+                <li><strong>Azure Table Storage</strong> persists bans across restarts and is cost effective</li>
+                <li><strong>Automatic cleanup</strong> of expired entries reduces storage costs</li>
+                <li><strong>Caching</strong> keeps the application smooth</li>
+                <li><strong>Request window resets</strong> allow legitimate usage patterns</li>
+            </ul>
+            <p><center><i>Key Files: BanService.cs, RequestHandler.cs, BanListTableManager.cs</i></center></p>
+        </div>
+        <div>
+            <pre class="code-snippet">
+            <code class="language-csharp">
+// Rate limiting with escalating ban system
+public class BanService(ILogger&lt;BanService&gt; logger, IConfiguration config, IBanCache cache)
+{
+    private readonly TimeSpan[] _banSpans = [
+        double.TryParse(config["FirstBanMinutes"], out var firstBanMinutes) ?
+            TimeSpan.FromMinutes(firstBanMinutes) : TimeSpan.FromMinutes(30),
+        int.TryParse(config["SecondBanHours"], out var secondBanHours) ?
+            TimeSpan.FromHours(secondBanHours) : TimeSpan.FromHours(3),
+        int.TryParse(config["ThirdBanDays"], out var thirdBanDays) ?
+            TimeSpan.FromDays(thirdBanDays) : TimeSpan.FromDays(7)
+    ];
+
+    public bool Allow(string address, int requests)
+    {
+        // Check request limit, issue ban and reject if exceeded
+        if (requests &gt; _maxRequests) 
+        {
+            IssueBan(address);
+            return false;
+        }
+        
+        // Validate existing bans with expiration checking
+        if (!_cache.TryGetBan(address, out Ban? ban))
+            return true;
+            
+        if (ban?.Type == Ban.BanType.Life)
+            return false;
+            
+        if (ban?.Type == Ban.BanType.Unbanned)
+            return true;
+
+        // Handle temporary bans with automatic expiration
+        if (ban?.Expiration &gt; DateTime.UtcNow)
+            return false;
+
+        SetUnbanned(address, ban);
+        return true;
+    }
+
+    // Escalating ban system - progressively longer bans for repeat offenders
+    public void IssueBan(string address)
+    {
+        _cache.AddOrUpdateBan(address,
+            _ =&gt; new(Ban.BanType.Temp, DateTime.UtcNow + _banSpans[0]), // First offense: 30 min
+            (_, oldBan) =&gt; new(
+                oldBan.BanCount &gt;= 3 ? Ban.BanType.Life : Ban.BanType.Temp, // Life ban after 3 strikes
+                oldBan.BanCount + 1,
+                oldBan.BanCount &gt;= 0 && oldBan.BanCount &lt; 3 ?
+                    DateTime.UtcNow + _banSpans[oldBan.BanCount] : DateTime.MaxValue)
+        );
+    }
+}
+
+// Thread-safe request counting with automatic reset windows
+public class RequestHandler(ILogger&lt;RequestHandler&gt; logger, IConfiguration config, BanService banService)
+{
+    private readonly TimeSpan _requestReset = TimeSpan.FromMinutes(
+        double.TryParse(config["RequestResetMinutes"], out double minutes) ? minutes : 15);
+    
+    private readonly ConcurrentDictionary&lt;string, (DateTime LastReset, int Count)&gt; _requestCounters = new();
+
+    public bool ValidateRequest(string iPaddress)
+    {
+        // Ensure ban cache is initialized before processing requests
+        if (!_banService.CacheInitialized) 
+        {
+            int timeOut = 10000;
+            int checkInterval = 100;
+            int timeSpent = 0;
+
+            while (!_banService.CacheInitialized) 
+            {
+                Thread.Sleep(checkInterval);
+                timeSpent += checkInterval;
+                if (timeSpent &gt; timeOut) 
+                {
+                    _logger.LogError("Cache initialization timed out.");
+                    return false;
+                }
+            }
+        }
+
+        // Thread-safe request counter with automatic window reset
+        var (LastReset, Count) = _requestCounters.AddOrUpdate(iPaddress,
+            _ =&gt; (DateTime.UtcNow, 1),  // New IP gets fresh counter
+            (_, oldValue) =&gt; // Existing IP: reset window if expired, otherwise increment
+                (DateTime.UtcNow - oldValue.LastReset &gt; _requestReset) ? 
+                    (DateTime.UtcNow, 1) : (oldValue.LastReset, oldValue.Count + 1));
+
+        return _banService.Allow(iPaddress, Count);
+    }
+}
+
+// Azure Table Storage integration for persistent ban management
+public class BanListTableManager : IHostedService
+{
+    private void OnAppStopping()
+    {
+        _logger.LogInformation("Beginning Table Update....");
+        
+        try 
+        {
+            foreach (string address in _cache.GetUpdatedAddresses()) 
+            {
+                if (!_cache.TryGetBan(address, out Ban? ban) || ban == null) 
+                {
+                    _logger.LogWarning("Table Manager failed to get updated ban from cache for address {address}.", address);
+                    continue;
+                }
+
+                BanListEntry updatedEntry = new() 
+                {
+                    PartitionKey = _partitionKey,
+                    RowKey = address,
+                    Timestamp = DateTime.UtcNow,
+                    NowBanned = ban.Type != Ban.BanType.Unbanned,
+                    UnbannedOn = ban.Expiration,
+                    IsLifetime = ban.Type == Ban.BanType.Life,
+                    NumTempBans = ban.BanCount
+                };
+
+                // Handle new vs. existing entries appropriately
+                if (ban.TimeStamp &gt; _bootTime && ban.BanCount == 1)
+                    _ = NewEntry(address, updatedEntry);
+                else
+                    _ = UpdateEntry(address, updatedEntry);
+            }
+        } 
+        catch (Exception ex) 
+        {
+            _logger.LogError(ex, "Table Update failed: {message}", ex.Message);
+        }
+    }
+
+    // Automatic cleanup reduces storage costs
+    private bool ShouldPrune(BanListEntry entry)
+    {
+        return entry switch 
+        {
+            { IsLifetime: true } =&gt; false, // Never prune permanent bans
+            { NowBanned: true } when DateTime.UtcNow - entry.Timestamp &lt; _entryDuration =&gt; false,
+            { NowBanned: true } when DateTime.UtcNow - entry.Timestamp &gt; _entryDuration =&gt; true,
+            { NowBanned: false } when DateTime.UtcNow - entry.Timestamp &gt; _entryDuration =&gt; true,
+            _ =&gt; false
+        };
+    }
+}
+</code>
+            </pre>
+        </div>
+    </div>
+
+    <div class="presentation-box">
+        <h3 style="color: #31c1cc;">Cloud Infrastructure Skills Developed</h3>
+        <p style="text-align: center; margin: 1rem 0; font-style: italic;">
+            Building a complete deployment pipeline from scratch taught me some production-grade cloud engineering:
+        </p>
+
+        <!-- CI/CD Pipeline Engineering -->
+        <div class="presentation-box" style="margin: 2rem 1rem; background-color: #1e2632; border: 1px solid #2c5f6b;">
+            <h4 style="color: #31c1cc; margin-bottom: 1rem; text-align: center;">🔄 CI/CD Pipeline Engineering</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>Azure DevOps pipeline design</li>
+                    <li>Multi-architecture build automation</li>
+                    <li>YAML pipeline configuration</li>
+                    <li>Build matrix strategies</li>
+                </ul>
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>Artifact management and validation</li>
+                    <li>Conditional deployment logic</li>
+                    <li>Pipeline debugging and troubleshooting</li>
+                    <li>Release management workflows</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Cloud Security & Authentication -->
+        <div class="presentation-box" style="margin: 2rem 1rem; background-color: #1e2632; border: 1px solid #2c5f6b;">
+            <h4 style="color: #31c1cc; margin-bottom: 1rem; text-align: center;">🔐 Cloud Security & Authentication</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>Azure Trusted Signing integration</li>
+                    <li>Federated identity authentication</li>
+                    <li>SAS token generation and management</li>
+                    <li>Code signing and certificate management</li>
+                </ul>
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>Secret-free pipeline configuration</li>
+                    <li>Security key rotation practices</li>
+                    <li>Access control implementation</li>
+                    <li>Certificate authority integration</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Serverless & Function Development -->
+        <div class="presentation-box" style="margin: 2rem 1rem; background-color: #1e2632; border: 1px solid #2c5f6b;">
+            <h4 style="color: #31c1cc; margin-bottom: 1rem; text-align: center;">⚡ Serverless & Function Development</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>Azure Functions development</li>
+                    <li>HTTP trigger implementation</li>
+                    <li>Serverless architecture design</li>
+                    <li>Function app configuration</li>
+                </ul>
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>Environment-based deployments</li>
+                    <li>Serverless monitoring and logging</li>
+                    <li>Function performance optimization</li>
+                    <li>Event-driven function design</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Application Security & Rate Limiting -->
+        <div class="presentation-box" style="margin: 2rem 1rem; background-color: #1e2632; border: 1px solid #2c5f6b;">
+            <h4 style="color: #31c1cc; margin-bottom: 1rem; text-align: center;">🛡️ Application Security & Rate Limiting</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>Thread-safe concurrent programming</li>
+                    <li>Rate limiting algorithm design</li>
+                    <li>Escalating ban system implementation</li>
+                    <li>Abuse prevention strategies</li>
+                </ul>
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>IP-based access control</li>
+                    <li>Request validation and sanitization</li>
+                    <li>Security pattern implementation</li>
+                    <li>Malicious traffic mitigation</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Cloud Storage & Cost Optimization -->
+        <div class="presentation-box" style="margin: 2rem 1rem; background-color: #1e2632; border: 1px solid #2c5f6b;">
+            <h4 style="color: #31c1cc; margin-bottom: 1rem; text-align: center;">💰 Cloud Storage & Cost Optimization</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>Azure Blob Storage operations</li>
+                    <li>Azure Table Storage integration</li>
+                    <li>Storage account management</li>
+                    <li>Data persistence strategies</li>
+                </ul>
+                <ul style="margin: 0; list-style-type: circle;">
+                    <li>Storage cost optimization</li>
+                    <li>Data lifecycle management</li>
+                    <li>Automatic cleanup implementation</li>
+                    <li>Performance vs. cost balancing</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background-color: #1e2632; border-radius: 8px; border: 1px solid #31c1cc;">
+            <p style="margin: 0; font-style: italic; color: #31c1cc; font-size: 1.1em;">
+                I've learned to leverage scalable, secure deployment systems for production environments.
+            </p>
+        </div>
+    </div>
+
+    <div class="call-to-action">
+        <h2>Discuss the Infrastructure</h2>
+        <p>I'd be happy to walk through the deployment architecture, security considerations, and cost optimization strategies.</p>
+        <p>Contact me to discuss how these cloud infrastructure skills can benefit your engineering team!</p>
+        <div class="button-container">
+            <a href="mailto:joshua.a.mcknight@gmail.com" class="cta-button">Contact Me</a>
+            <a href="https://github.com/LivingCryogen/Hazard" class="cta-button">View on GitHub</a>
+        </div>
+    </div>
+</body>
+</html>
