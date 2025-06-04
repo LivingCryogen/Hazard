@@ -1135,20 +1135,20 @@ centered-p {
 
     .cta-button {
         padding: 0.9rem 1rem;
-        font-size: 1rem;
+        font-size: 1.1rem;
         min-height: 2.8rem;
         gap: 0.6rem;
     }
 
         .cta-button.primary {
-            font-size: 1.1rem;
+            font-size: 1.75rem;
             padding: 1rem 1.2rem;
             min-height: 3.2rem;
         }
 
         /* Make buttons more touch-friendly */
         .cta-button i {
-            font-size: 1.1rem;
+            font-size: 1.5rem;
         }
 
     /* Screenshot gallery mobile */
