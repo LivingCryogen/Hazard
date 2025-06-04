@@ -1163,6 +1163,47 @@ centered-p {
         padding: 1rem;
     }
 
+    /* Image-with-text mobile layout fixes */
+    .image-with-text {
+        grid-template-columns: 1fr; /* Stack vertically on mobile */
+        gap: 1rem;
+        align-items: stretch; /* Allow natural height */
+    }
+
+        /* Ensure image comes first, then text */
+        .image-with-text .image-text {
+            order: 2; /* Text comes after image */
+            padding: 1rem;
+        }
+
+        /* Make sure images are properly sized */
+        .image-with-text img {
+            width: 100%;
+            height: auto;
+            max-width: 400px; /* Prevent overly large images */
+            margin: 0 auto; /* Center the image */
+            display: block;
+        }
+
+        /* Reset any height restrictions for mobile */
+        .image-with-text .height-balanced {
+            height: auto;
+            max-height: none;
+            overflow: visible;
+        }
+
+        /* Adjust text sizing for mobile in image-with-text sections */
+        .image-with-text ul,
+        .image-with-text li {
+            font-size: 1rem;
+            margin: 0.5em 0.5em;
+        }
+
+        .image-with-text p {
+            font-size: 1rem;
+            margin: 0.5rem 0;
+        }
+
     /* Code sections mobile layout */
     .image-with-text,
     .code-with-text {
