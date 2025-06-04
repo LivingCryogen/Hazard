@@ -5,22 +5,32 @@
     font-family: 'Courier New';
     font-size: 2rem;
     position: relative;
+    /* Fix mobile spacing issues */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
-    body::before {
-        content: '';
-        position: fixed;
-        background-image: url('cavalryEllipse.png');
-        background-repeat: no-repeat;
-        background-size: 450px auto;
-        background-position: calc(85%) -5vh;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        z-index: -1;
-        pointer-events: none;
-    }
+/* Apply box-sizing to all elements */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    background-image: url('cavalryEllipse.png');
+    background-repeat: no-repeat;
+    background-size: 450px auto;
+    background-position: calc(85%) -5vh;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    pointer-events: none;
+}
 
 nav {
     padding: 1.2rem 2rem;
@@ -101,6 +111,7 @@ h5 {
 p {
     font-size: 1em;
 }
+
     p a {
         font-size: 1.5rem;
         color: #31c1cc;
@@ -120,10 +131,10 @@ ul {
     text-align: left;
 }
 
-ul li {
-    padding: 2px;
-    margin-left: 1em;
-}
+    ul li {
+        padding: 2px;
+        margin-left: 1em;
+    }
 
 centered-p {
     text-align: center;
@@ -180,19 +191,6 @@ centered-p {
             color: #31c1cc;
         }
 
-/* Responsive adjustments for contact page */
-@media (max-width: 768px) {
-    .contact-item {
-        flex-direction: column;
-        text-align: center;
-        gap: 0.5rem;
-    }
-
-    .contact-details {
-        align-items: center;
-    }
-}
-
 .dynamic-link, nav a {
     text-decoration: none;
     padding: 0;
@@ -213,24 +211,29 @@ centered-p {
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     margin: 0 auto;
-    max-width: 85%;
+    max-width: 90%; /* Increased from 85% for better mobile use */
     display: flow-root;
-    padding-top: 1em;
+    padding: 1em;
+    /* Ensure proper mobile spacing */
+    width: calc(100% - 2rem);
 }
 
-.dynamic-content-area p {
-    margin-right: 2em;
-    margin-left: 3em;
-}
-.dynamic-content-area h2 {
-    margin-top: 1.5em;
-}
-.dynamic-content-area h3 {
-    margin-top: 1.5em;
-}
-.dynamic-content-area ul {
-    margin-left: 3.5em;
-}
+    .dynamic-content-area p {
+        margin-right: 1em; /* Reduced from 2em */
+        margin-left: 1.5em; /* Reduced from 3em */
+    }
+
+    .dynamic-content-area h2 {
+        margin-top: 1.5em;
+    }
+
+    .dynamic-content-area h3 {
+        margin-top: 1.5em;
+    }
+
+    .dynamic-content-area ul {
+        margin-left: 2em; /* Reduced from 3.5em */
+    }
 
 .download-container {
     margin: 0.5rem 0;
@@ -297,11 +300,13 @@ centered-p {
 .content-wrapper {
     position: relative;
     z-index: 1;
+    padding: 0 1rem; /* Add horizontal padding for mobile */
 }
-.content-wrapper h1, h2, h3, h4, h5 {
-    margin: 0;
-    padding: 0;
-}
+
+    .content-wrapper h1, h2, h3, h4, h5 {
+        margin: 0;
+        padding: 0;
+    }
 
 .inline-pic {
     width: 100%;
@@ -374,6 +379,7 @@ centered-p {
 .image-with-text {
     align-items: center;
 }
+
     .image-with-text ul, li {
         margin: .25em;
         font-size: 1.1em;
@@ -386,12 +392,14 @@ centered-p {
     align-items: start;
     position: relative; /* For JS height calculation reference */
 }
+
     .code-with-text li, ul {
         margin-top: .25em;
         margin-bottom: .25em;
         margin-left: 0em;
         padding: 2px;
     }
+
     .code-with-text p {
         margin: 0;
         padding-left: .5em;
@@ -399,6 +407,7 @@ centered-p {
         padding-top: 0;
         padding-bottom: 1px;
     }
+
     .code-with-text h1, h2, h3, h4, h5 {
         text-align: center;
         margin-top: 0;
@@ -406,11 +415,12 @@ centered-p {
         margin-right: 0;
         margin-bottom: 1em;
     }
-.code-with-text .image-text img {
-    display: block;
-    margin: auto;
-    padding-left: 1em;
-}
+
+    .code-with-text .image-text img {
+        display: block;
+        margin: auto;
+        padding-left: 1em;
+    }
 
 /* Code snippet styling with scroll for overflow */
 .code-snippet {
@@ -482,6 +492,7 @@ centered-p {
     max-height: none;
     cursor: default;
 }
+
 .close-code-modal {
     background: none;
     border: none;
@@ -585,6 +596,7 @@ centered-p {
 .image-text h {
     text-align: center;
 }
+
 .image-text img {
     text-align: center;
 }
@@ -623,43 +635,54 @@ centered-p {
 
 /* Presentation box (separate style grouping) */
 .presentation-box {
-    margin: 4rem;
-    padding: 1rem;
+    margin: 2rem; /* Reduced from 4rem */
+    padding-top: 2em;
+    padding-bottom: 2em;
+    padding-left: 1.25em;
+    padding-right: 1.25em;
     text-align: center;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     background-color: #2b4252;
     border: 1px solid #31c1cc;
 }
-.presentation-box ul {
-    list-style: none;
-    text-align: left;
-    line-
-}
-.presentation-box li {
-    margin-top: 1em;
-}
 
-.presentation-box h1 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-}
-.presentation-box h2 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-}
-.presentation-box h3 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-}
-.presentation-box h4 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-}
-.presentation-box h5 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-}
+    .presentation-box ul {
+        list-style: none;
+        text-align: left;
+        line-height: 1.4;
+        margin-right: 1em;
+        margin-bottom: 1em;
+    }
+
+    .presentation-box li {
+        margin-top: 1em;
+    }
+
+    .presentation-box h1 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+    }
+
+    .presentation-box h2 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+    }
+
+    .presentation-box h3 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+    }
+
+    .presentation-box h4 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+    }
+
+    .presentation-box h5 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+    }
 
 /* Skill list styling */
 .skills-list {
@@ -685,25 +708,6 @@ centered-p {
     display: flex;
     justify-content: center;
     gap: 1em;
-}
-
-/* Media query for smaller screens */
-@media (max-width: 768px) {
-    .image-with-text {
-        grid-template-columns: 1fr; /* Stack vertically on smaller screens */
-    }
-
-        .image-with-text .code-snippet,
-        .image-with-text pre,
-        .image-with-text .image-text {
-            height: auto; /* Auto height on mobile */
-            max-height: 250px; /* But limit maximum height */
-        }
-
-    .image-text {
-        padding-left: 0; /* Remove left padding when stacked */
-        margin-top: 1em; /* Add top margin when stacked */
-    }
 }
 
 .tech-highlights {
@@ -808,20 +812,6 @@ centered-p {
     border: 1px solid #31c1cc;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .cta-primary, .cta-secondary {
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
-
-        .cta-primary .cta-button,
-        .cta-secondary .cta-button {
-            width: 80%;
-            justify-content: center;
-        }
-}
 /* Modal styles for demo video */
 .modal {
     display: none;
@@ -876,32 +866,6 @@ centered-p {
     width: 90%;
     max-width: 500px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .tech-highlights {
-        gap: 1rem;
-    }
-
-    .highlight-item {
-        min-width: 120px;
-        padding: 0.8rem;
-    }
-
-    .cta-container {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .cta-button {
-        width: 80%;
-        justify-content: center;
-    }
-
-    .screenshot-gallery, .gallery-img {
-        height: 300px;
-    }
 }
 
 .modal {
@@ -1015,126 +979,46 @@ centered-p {
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
 
-/* Hero section styles */
-.tech-highlights {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin: 1.5rem 0;
-}
-
-.highlight-item {
+/* Call to action buttons - IMPROVED MOBILE LAYOUT */
+.cta-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #2b4252;
-    padding: 1rem;
-    border-radius: 8px;
-    min-width: 160px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease;
+    gap: 1rem;
+    margin: 2rem 0;
+    padding: 0 1rem; /* Add horizontal padding */
 }
 
-    .highlight-item:hover {
-        transform: translateY(-5px);
-    }
-
-    .highlight-item i {
-        font-size: 2rem;
-        color: #31c1cc;
-        margin-bottom: 0.5rem;
-    }
-
-    .highlight-item span {
-        font-size: 1rem;
-        text-align: center;
-    }
-
-/* Screenshot gallery */
-.screenshot-gallery {
-    position: relative;
-    width: 90%;
-    max-width: 800px;
-    margin: 2rem auto;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 6px 18px rgba(0,0,0, 0.5);
-}
-
-.gallery-img {
+.cta-primary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
     width: 100%;
-    display: none;
-    border-radius: 8px;
-}
-
-    .gallery-img.active {
-        display: block;
-    }
-
-.gallery-nav {
-    position: absolute;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 10px;
-}
-
-.gallery-dot {
-    width: 12px;
-    height: 12px;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-    .gallery-dot.active {
-        background-color: #31c1cc;
-    }
-
-/* Tech stack badges */
-.tech-stack {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.8rem;
-    margin: 1.5rem 0;
-}
-
-.tech-badge {
-    background-color: #2a3141;
-    color: #31c1cc;
-    padding: 0.4rem 0.8rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    font-weight: bold;
-    border: 1px solid #31c1cc;
-}
-
-/* Call to action buttons */
-.cta-container {
-    display: flex;
-    flex-direction: column; /* Add this line */
-    align-items: center; /* Change from justify-content: center */
+    margin-bottom: 0.5rem;
 }
 
 .cta-secondary {
-    margin-top: .75rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.8rem;
+    width: 100%;
 }
 
 .cta-button {
     display: inline-flex;
     align-items: center;
-    padding: 1rem 2.5rem;
-    gap: 1rem;
+    justify-content: center;
+    padding: 1rem 1.5rem;
+    gap: 0.8rem;
     background-color: #2b4252;
     color: #31c1cc;
     text-decoration: none;
     border-radius: 6px;
     transition: all 0.3s ease;
     border: 1px solid #31c1cc;
+    font-size: 1.5rem;
+    min-height: 3rem;
+    text-align: center;
 }
 
     .cta-button:hover {
@@ -1148,48 +1032,308 @@ centered-p {
         background-color: #31c1cc;
         font-weight: bold;
         color: #2a3141;
+        font-size: 1.3rem;
+        padding: 1.2rem 2rem;
     }
 
         .cta-button.primary:hover {
             background-color: #FFF5F5DC;
         }
 
-.cta-container .cta-primary .cta-button {
-    font-size: 2.5rem;
-    font-weight: bold;
-}
-
-.cta-container .cta-secondary .cta-button {
-    padding: .9rem 2rem;
-}
-
-/* Responsive adjustments */
+/* MOBILE-SPECIFIC IMPROVEMENTS */
 @media (max-width: 768px) {
+    /* Reduce base font sizes for mobile */
+    body {
+        font-size: 1.6rem; /* Reduced from 2rem */
+    }
+
+    h1 {
+        font-size: 2rem; /* Reduced from 2.5em */
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    h3 {
+        font-size: 1.3rem;
+    }
+
+    h5 {
+        font-size: 1.1rem;
+    }
+
+    /* Dynamic content area mobile improvements */
+    .dynamic-content-area {
+        font-size: 1.2rem; /* Reduced from 1.5rem */
+        margin: 0 0.5rem; /* Reduced margins */
+        max-width: 95%;
+        padding: 0.8rem;
+        width: calc(100% - 1rem); /* Better mobile spacing */
+    }
+
+        .dynamic-content-area p {
+            margin-right: 0.5em;
+            margin-left: 1em;
+            font-size: 1rem; /* Even smaller for mobile paragraphs */
+        }
+
+        .dynamic-content-area h2 {
+            font-size: 1.4rem;
+            margin-top: 1.2em;
+        }
+
+        .dynamic-content-area h3 {
+            font-size: 1.2rem;
+            margin-top: 1.2em;
+        }
+
+        .dynamic-content-area h4 {
+            font-size: 1.1rem;
+        }
+
+        .dynamic-content-area ul {
+            margin-left: 1em;
+            font-size: 1rem;
+        }
+
+    /* Content wrapper mobile padding */
+    .content-wrapper {
+        padding: 0 0.5rem;
+    }
+
+    /* Tech highlights mobile layout */
     .tech-highlights {
         gap: 1rem;
+        margin: 1rem 0;
     }
 
     .highlight-item {
-        min-width: 120px;
+        min-width: 140px;
         padding: 0.8rem;
     }
 
+        .highlight-item span {
+            font-size: 0.9rem;
+        }
+
+    /* CTA buttons mobile improvements */
     .cta-container {
-        flex-direction: column;
-        align-items: center;
+        padding: 0 0.5rem;
+        gap: 0.8rem;
+    }
+
+    .cta-primary {
+        grid-template-columns: 1fr 1fr; /* Force 2 columns on mobile */
+        gap: 0.8rem;
+    }
+
+    .cta-secondary {
+        grid-template-columns: 1fr 1fr; /* Force 2 columns on mobile */
+        gap: 0.6rem;
     }
 
     .cta-button {
-        width: 80%;
-        justify-content: center;
+        padding: 0.9rem 1rem;
+        font-size: 1rem;
+        min-height: 2.8rem;
+        gap: 0.6rem;
+    }
+
+        .cta-button.primary {
+            font-size: 1.1rem;
+            padding: 1rem 1.2rem;
+            min-height: 3.2rem;
+        }
+
+        /* Make buttons more touch-friendly */
+        .cta-button i {
+            font-size: 1.1rem;
+        }
+
+    /* Screenshot gallery mobile */
+    .screenshot-gallery,
+    .gallery-img {
+        height: 250px; /* Reduced from 450px */
+    }
+
+    /* Presentation boxes mobile */
+    .presentation-box {
+        margin: 1rem 0.5rem;
+        padding: 1rem;
+    }
+
+    /* Code sections mobile layout */
+    .image-with-text,
+    .code-with-text {
+        grid-template-columns: 1fr; /* Stack vertically on mobile */
+        gap: 1rem;
+    }
+
+        .image-with-text .code-snippet,
+        .image-with-text pre,
+        .image-with-text .image-text,
+        .code-with-text .code-snippet,
+        .code-with-text pre,
+        .code-with-text .image-text {
+            height: auto;
+            max-height: none; /* Remove height restrictions on mobile */
+        }
+
+        .code-with-text .image-text {
+            padding: 1rem;
+            order: -1; /* Put text before code on mobile */
+        }
+
+    .code-snippet {
+        font-size: 0.9rem;
+        padding: 1rem;
+        line-height: 1.3;
+    }
+
+    /* Contact page mobile */
+    .contact-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.8rem;
+        padding: 1rem;
+    }
+
+    .contact-details {
+        align-items: center;
+    }
+
+    /* Modal improvements for mobile */
+    .modal-content {
+        width: 95%;
+        margin: 2% auto;
+        padding: 1.5rem;
+    }
+
+    .download-modal-content {
+        width: 95%;
+        padding: 1rem;
     }
 
     .install-info {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
 
     .install-preview {
         display: flex;
         justify-content: center;
+    }
+
+    .signatures-preview {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Tech stack mobile */
+    .tech-stack {
+        gap: 0.5rem;
+        margin: 1rem 0;
+    }
+
+    .tech-badge {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    /* Button container mobile */
+    .button-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+    }
+
+    /* Navigation mobile */
+    nav {
+        margin: 0 0.5rem;
+        padding: 1rem;
+    }
+
+    .nav-container {
+        gap: 0.5rem;
+    }
+
+    nav a {
+        font-size: 1.4rem;
+    }
+
+    /* Background image mobile adjustment */
+    body::before {
+        background-size: 300px auto;
+        background-position: calc(90%) -3vh;
+    }
+}
+
+/* Tablet-specific adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .cta-primary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cta-secondary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dynamic-content-area {
+        font-size: 1.3rem;
+    }
+
+    .tech-highlights {
+        gap: 1.2rem;
+    }
+}
+
+/* Large mobile/small tablet breakpoint */
+@media (max-width: 480px) {
+    body {
+        font-size: 1.4rem;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .dynamic-content-area {
+        font-size: 1.1rem;
+        margin: 0 0.25rem;
+        padding: 0.6rem;
+    }
+
+        .dynamic-content-area p {
+            font-size: 0.9rem;
+            margin-right: 0.3em;
+            margin-left: 0.8em;
+        }
+
+    .cta-primary,
+    .cta-secondary {
+        grid-template-columns: 1fr; /* Single column on very small screens */
+    }
+
+    .cta-button {
+        padding: 1rem;
+        font-size: 1rem;
+    }
+
+    .tech-highlights {
+        gap: 0.8rem;
+    }
+
+    .highlight-item {
+        min-width: 120px;
+        padding: 0.6rem;
+    }
+
+    .presentation-box {
+        margin: 0.5rem 0.25rem;
+    }
+
+    .content-wrapper {
+        padding: 0 0.25rem;
     }
 }
