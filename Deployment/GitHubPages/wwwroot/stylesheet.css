@@ -1105,35 +1105,28 @@ centered-p {
 
     /* Dynamic content area mobile improvements */
     .dynamic-content-area {
-        margin: 0 0.5rem; /* Reduced margins */
+        margin: 0 0.5em; /* Reduced margins */
         max-width: 95%;
-        padding: 0.8rem;
+        padding: 0.8em;
         width: 95%; /* Better mobile spacing */
     }
 
     /* Content wrapper mobile padding */
     .content-wrapper {
-        padding: 0 0.5rem;
-    }
-
-    /* Tech highlights mobile layout */
-    .tech-highlights {
-        gap: 1rem;
-        margin: 1rem 0;
+        padding: 0 0.5em;
     }
 
     .highlight-item {
-        padding: 0.5rem;
+        padding: 0.5em;
     }
-
         .highlight-item span {
             font-size: 0.7em;
         }
 
     /* CTA buttons mobile improvements */
     .cta-container {
-        padding: 0 0.5rem;
-        gap: 0.8rem;
+        padding: 0 0.5em;
+        gap: 0.8em;
     }
 
     .cta-primary {
@@ -1143,25 +1136,25 @@ centered-p {
 
     .cta-secondary {
         grid-template-columns: 1fr 1fr; /* Force 2 columns on mobile */
-        gap: 0.6rem;
+        gap: 0.6em;
     }
 
     .cta-button {
-        padding: 0.9rem 1rem;
-        font-size: 1.1rem;
-        min-height: 2.8rem;
-        gap: 0.6rem;
+        padding: 0.9em 1em;
+        font-size: 1.1em;
+        min-height: 2.8em;
+        gap: 0.6em;
     }
 
         .cta-button.primary {
-            font-size: 1.75rem;
-            padding: 1rem 1.2rem;
-            min-height: 3.2rem;
+            font-size: 1.75em;
+            padding: 1em 1.2em;
+            min-height: 3.2em;
         }
 
         /* Make buttons more touch-friendly */
         .cta-button i {
-            font-size: 1.5rem;
+            font-size: 1.5em;
         }
 
     /* Screenshot gallery mobile */
@@ -1172,8 +1165,8 @@ centered-p {
 
     /* Presentation boxes mobile */
     .presentation-box {
-        margin: 1rem 0.5rem;
-        padding: 1rem;
+        margin: 1em 0.5em;
+        padding: 1em;
     }
 
     /* Presentation box mobile lists */
@@ -1188,7 +1181,7 @@ centered-p {
     /* Image-with-text mobile layout fixes */
     .image-with-text {
         grid-template-columns: 1fr; /* Stack vertically on mobile */
-        gap: 1rem;
+        gap: 1em;
         align-items: stretch; /* Allow natural height */
     }
     
@@ -1226,29 +1219,24 @@ centered-p {
     }
     
     .image-with-text p {
-        font-size: 1rem;
-        margin: 0.5rem 0;
+        margin: 0.5em 0;
     }
 
     /* Code sections mobile layout */
     .image-with-text,
     .code-with-text {
         grid-template-columns: 1fr; /* Stack vertically on mobile */
-        gap: 1rem;
+        gap: 1em;
     }
 
-        .image-with-text .code-snippet,
-        .image-with-text pre,
         .image-with-text .image-text,
-        .code-with-text .code-snippet,
-        .code-with-text pre,
         .code-with-text .image-text {
             height: auto;
             max-height: none; /* Remove height restrictions on mobile */
         }
 
         .code-with-text .image-text {
-            padding: 1rem;
+            padding: 1em;
             order: -1; /* Put text before code on mobile */
             grid-template-columns: 1fr !important;
             max-width: 100vw;
@@ -1259,8 +1247,8 @@ centered-p {
     }
 
     .code-snippet {
-        font-size: 0.7rem !important;
-        padding: 0.8rem !important;
+        font-size: 0.7em !important;
+        padding: 0.8em !important;
         line-height: 1.2 !important;
 
         -webkit-overflow-scrolling: touch;
@@ -1304,7 +1292,7 @@ centered-p {
         margin: 0;
         border-radius: 0;
         border: none;
-        font-size: 0.8rem; /* Readable but compact */
+        font-size: 0.8em; /* Readable but compact */
         line-height: 1.4;
         padding: 15px;
         height: 100%;
@@ -1321,7 +1309,7 @@ centered-p {
     .close-code-modal,
     .copy-code-btn {
         padding: 8px 12px;
-        font-size: 1rem;
+        font-size: 1em;
         min-height: 44px; /* Touch-friendly size */
     }
     /* Better scrollbar for mobile */
@@ -1339,7 +1327,7 @@ centered-p {
     .contact-item {
         flex-direction: column;
         text-align: center;
-        gap: 0.8rem;
+        gap: 0.8em;
         padding: 1rem;
     }
 
@@ -1351,17 +1339,17 @@ centered-p {
     .modal-content {
         width: 95%;
         margin: 2% auto;
-        padding: 1.5rem;
+        padding: 1.5em;
     }
 
     .download-modal-content {
         width: 95%;
-        padding: 1rem;
+        padding: 1em;
     }
 
     .install-info {
         grid-template-columns: 1fr;
-        gap: 1rem;
+        gap: 1em;
     }
 
     .install-preview {
@@ -1376,30 +1364,20 @@ centered-p {
 
     /* Tech stack mobile */
     .content-wrapper .tech-stack {
-        gap: 0.25rem !important;
-        margin: .5rem 0 !important;
+        gap: 0.25em !important;
+        margin: .5em 0 !important;
     }
 
     .content-wrapper .tech-stack .tech-badge {
-        font-size: 0.6rem !important;
-        padding: 0.1rem 0.2rem !important;
+        font-size: 0.6em !important;
+        padding: 0.1em 0.2em !important;
     }
 
     /* Button container mobile */
     .button-container {
         flex-direction: column;
         align-items: center;
-        gap: 0.8rem;
-    }
-
-    /* Navigation mobile */
-    nav {
-        margin: 0 0.5rem;
-        padding: 1rem;
-    }
-
-    .nav-container {
-        gap: 0.5rem;
+        gap: 0.8em;
     }
 
     /* Skills list mobile optimization */
@@ -1447,7 +1425,7 @@ centered-p {
     }
 
     .tech-highlights {
-        gap: 1.2rem;
+        gap: .5em;
     }
 }
 
