@@ -71,6 +71,10 @@
         demoButton.addEventListener('click', (e) => {
             e.preventDefault();
             demoModal.style.display = 'block';
+
+            if (window.innerWidth <= 768) {   // add specific modal class on mobile
+                document.body.classList.add('modal-open');
+            }
         });
         }
 
@@ -87,6 +91,10 @@
         downloadButton.addEventListener('click', (e) => {
             e.preventDefault();
             downloadModal.style.display = 'block';
+
+            if (window.innerWidth <= 768) {   // add specific modal class on mobile
+                document.body.classList.add('modal-open');
+            }
         });
         }
 
@@ -97,6 +105,9 @@
             document.querySelectorAll('.modal').forEach(modal => {
                 modal.style.display = 'none';
             });
+            if (window.innerWidth <= 768) {   // remove specific modal class on mobile
+                document.body.classList.remove('modal-open');
+            }
         });
         });
 
@@ -105,6 +116,9 @@
         document.querySelectorAll('.modal').forEach(modal => {
             if (e.target === modal) {
                 modal.style.display = 'none';
+            }
+            if (window.innerWidth <= 768) {   // remove specific modal class on mobile
+                document.body.classList.remove('modal-open');
             }
         });
         });
@@ -206,6 +220,10 @@ function setupCodeModals() {
 
         codeModal.style.display = 'block';
 
+        if (window.innerWidth <= 768) {   // add specific modal class on mobile
+            document.body.classList.add('modal-open');
+        }
+
         // Re-apply Prism highlighting
         if (typeof Prism !== 'undefined') {
             Prism.highlightElement(modalCode);
@@ -215,11 +233,18 @@ function setupCodeModals() {
     // Close modal handlers
     closeCodeModal.addEventListener('click', () => {
         codeModal.style.display = 'none';
+        if (window.innerWidth <= 768) {   // remove specific modal class on mobile
+            document.body.classList.remove('modal-open');
+        }
     });
 
     window.addEventListener('click', (e) => {
         if (e.target === codeModal) {
             codeModal.style.display = 'none';
+
+            if (window.innerWidth <= 768) {   // remove specific modal class on mobile
+                document.body.classList.remove('modal-open');
+            }
         }
     });
 
@@ -227,6 +252,10 @@ function setupCodeModals() {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && codeModal.style.display === 'block') {
             codeModal.style.display = 'none';
+
+            if (window.innerWidth <= 768) {   // remove specific modal class on mobile
+                document.body.classList.remove('modal-open');
+            }
         }
     });
 

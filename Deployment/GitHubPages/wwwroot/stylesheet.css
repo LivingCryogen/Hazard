@@ -425,15 +425,22 @@ centered-p {
 /* Code snippet styling with scroll for overflow */
 .code-snippet {
     text-align: left;
-    font-size: 1.1rem;
+    font-size: 0.8rem; /* Even smaller on mobile */
     background: #2b4252;
-    padding: 1.2em;
+    padding: 1rem;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     border: 1px solid #31c1cc;
     font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-    line-height: 1.4;
-    overflow: auto;
+    line-height: 1.3;
+    /* Better overflow handling */
+    overflow-x: auto;
+    overflow-y: auto;
+    white-space: pre; /* Preserve formatting but allow scroll */
+    word-wrap: normal; /* Don't break code words */
+    /* Ensure it doesn't break out of container */
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 /* Code Modal Styles */
@@ -895,6 +902,12 @@ centered-p {
     max-width: 900px;
 }
 
+.modal-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+}
+
 .close-modal {
     position: absolute;
     top: 10px;
@@ -1045,6 +1058,14 @@ centered-p {
     /* Reduce base font sizes for mobile */
     body {
         font-size: 1.6rem; /* Reduced from 2rem */
+    }
+
+    body.modal-open {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
     }
 
     h1 {
@@ -1224,12 +1245,80 @@ centered-p {
         .code-with-text .image-text {
             padding: 1rem;
             order: -1; /* Put text before code on mobile */
+            grid-template-columns: 1fr !important;
+            max-width: 100vw;
         }
 
+    .code-with-text {
+        overflow-x: hidden;
+    }
+
     .code-snippet {
-        font-size: 0.9rem;
-        padding: 1rem;
-        line-height: 1.3;
+        font-size: 0.7rem !important;
+        padding: 0.8rem !important;
+        line-height: 1.2 !important;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .code-modal {
+        padding: 0;
+    }
+    .code-modal-content {
+        margin: 0;
+        width: 100vw;
+        height: 100vh;
+        max-width: 100vw;
+        max-height: 100vh;
+        border-radius: 0;
+        min-height: 100vh;
+    }
+    .code-modal-header {
+        padding: 10px 15px;
+        border-radius: 0;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    .code-modal-body {
+        height: calc(100vh - 50px);
+        overflow: auto;
+        padding: 0;
+        -webkit-overflow-scrolling: touch;
+    }
+    .code-modal, .code-snippet {
+        margin: 0;
+        border-radius: 0;
+        border: none;
+        font-size: 0.8rem; /* Readable but compact */
+        line-height: 1.4;
+        padding: 15px;
+        height: 100%;
+        max-height: none;
+        /* Better mobile code scrolling */
+        overflow-x: auto;
+        overflow-y: auto;
+        white-space: pre;
+        word-wrap: normal;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Make header buttons more touch-friendly */
+    .close-code-modal,
+    .copy-code-btn {
+        padding: 8px 12px;
+        font-size: 1rem;
+        min-height: 44px; /* Touch-friendly size */
+    }
+    /* Better scrollbar for mobile */
+    .code-modal .code-snippet::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .code-modal .code-snippet::-webkit-scrollbar-thumb {
+        background: #31c1cc;
+        border-radius: 4px;
     }
 
     /* Contact page mobile */
@@ -1337,6 +1426,16 @@ centered-p {
 
     h1 {
         font-size: 1.8rem;
+    }
+
+    .code-modal .code-snippet {
+        font-size: 0.7rem;
+        padding: 10px;
+    }
+
+    .code-modal-header {
+        padding: 8px 12px;
+        font-size: 0.9rem;
     }
 
     .dynamic-content-area {
