@@ -1064,7 +1064,7 @@ centered-p {
 @media (max-width: 768px) {
     /* Reduce base font sizes for mobile */
     body {
-        font-size: 1.6rem; /* Reduced from 2rem */
+        font-size: 1.3rem; /* Reduced from 2rem */
     }
 
         body::before {
@@ -1081,19 +1081,19 @@ centered-p {
     }
 
     h1 {
-        font-size: 2rem; /* Reduced from 2.5em */
+        font-size: 2em; /* Reduced from 2.5em */
     }
 
     h2 {
-        font-size: 1.5rem;
+        font-size: 1.5em;
     }
 
     h3 {
-        font-size: 1.3rem;
+        font-size: 1.3em;
     }
 
     h5 {
-        font-size: 1.1rem;
+        font-size: 1.1em;
     }
     /* Base mobile list styling */
     ul {
@@ -1105,44 +1105,11 @@ centered-p {
 
     /* Dynamic content area mobile improvements */
     .dynamic-content-area {
-        font-size: 1.2rem; /* Reduced from 1.5rem */
         margin: 0 0.5rem; /* Reduced margins */
         max-width: 95%;
         padding: 0.8rem;
-        width: calc(100% - 1rem); /* Better mobile spacing */
+        width: 95%; /* Better mobile spacing */
     }
-
-        .dynamic-content-area p {
-            margin-right: 0.5em;
-            margin-left: 1em;
-            font-size: 1rem; /* Even smaller for mobile paragraphs */
-        }
-
-        .dynamic-content-area h2 {
-            font-size: 1.4rem;
-            margin-top: 1.2em;
-        }
-
-        .dynamic-content-area h3 {
-            font-size: 1.2rem;
-            margin-top: 1.2em;
-        }
-
-        .dynamic-content-area h4 {
-            font-size: 1.1rem;
-        }
-
-        /* Dynamic content area mobile lists */
-        .dynamic-content-area ul {
-            margin-left: 1em; /* Consistent with mobile spacing */
-            margin-bottom: 1em;
-            padding-left: 0.8em;
-            font-size: 1rem;
-        }
-
-        .dynamic-content-area li {
-
-        }
 
     /* Content wrapper mobile padding */
     .content-wrapper {
@@ -1156,12 +1123,11 @@ centered-p {
     }
 
     .highlight-item {
-        min-width: 140px;
-        padding: 0.8rem;
+        padding: 0.5rem;
     }
 
         .highlight-item span {
-            font-size: 0.9rem;
+            font-size: 0.7em;
         }
 
     /* CTA buttons mobile improvements */
