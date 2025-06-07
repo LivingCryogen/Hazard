@@ -1115,13 +1115,12 @@ centered-p {
     .content-wrapper {
         padding: 0 0.5em;
     }
-
-    .highlight-item {
-        padding: 0.5em;
+    .content-wrapper .tech-highlights .highlight-item {
+        padding: .5em;
     }
-        .highlight-item span {
-            font-size: 0.7em;
-        }
+    .content-wrapper .tech-highlights .highlight-item span {
+        font-size: .2em;
+    }
 
     /* CTA buttons mobile improvements */
     .cta-container {
