@@ -1361,12 +1361,12 @@ centered-p {
     }
 
     /* Tech stack mobile */
-    .tech-stack {
+    body .tech-stack {
         gap: 0.25rem !important;
         margin: .5rem 0 !important;
     }
 
-    .tech-badge {
+    .tech-stack .tech-badge {
         font-size: 0.6rem !important;
         padding: 0.1rem 0.2rem !important;
     }
