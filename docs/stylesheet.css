@@ -1274,7 +1274,7 @@ centered-p {
         min-height: 100vh;
     }
     .code-modal-header {
-        padding: 10px 15px;
+        padding: 2px 5px;
         border-radius: 0;
         position: sticky;
         top: 0;
@@ -1367,8 +1367,8 @@ centered-p {
     }
 
     .tech-badge {
-        font-size: 0.8rem;
-        padding: 0.3rem 0.6rem;
+        font-size: 0.6rem;
+        padding: 0.1rem 0.2rem;
     }
 
     /* Button container mobile */
