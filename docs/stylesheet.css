@@ -1362,13 +1362,13 @@ centered-p {
 
     /* Tech stack mobile */
     .tech-stack {
-        gap: 0.5rem;
-        margin: 1rem 0;
+        gap: 0.25rem !important;
+        margin: .5rem 0 !important;
     }
 
     .tech-badge {
-        font-size: 0.6rem;
-        padding: 0.1rem 0.2rem;
+        font-size: 0.6rem !important;
+        padding: 0.1rem 0.2rem !important;
     }
 
     /* Button container mobile */
