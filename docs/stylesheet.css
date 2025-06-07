@@ -1135,6 +1135,13 @@ centered-p {
     .content-wrapper .tech-highlights .highlight-item span {
         font-size: .4em;
     }
+    .content-wrapper .tech-highlights .tech-stack {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.4em;
+        margin: .5em 0;
+    }
 
     /* CTA buttons mobile improvements */
     .cta-container {
@@ -1373,17 +1380,6 @@ centered-p {
     .signatures-preview {
         flex-direction: column;
         align-items: center;
-    }
-
-    /* Tech stack mobile */
-    .content-wrapper .tech-stack {
-        gap: 0.25em !important;
-        margin: .5em 0 !important;
-    }
-
-    .content-wrapper .tech-stack .tech-badge {
-        font-size: 0.6em !important;
-        padding: 0.1em 0.2em !important;
     }
 
     /* Button container mobile */
