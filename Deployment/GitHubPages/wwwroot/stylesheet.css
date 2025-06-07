@@ -127,14 +127,17 @@ p {
 }
 
 ul {
-    margin-left: 3em;
     text-align: left;
+    padding-left: 0;
+}
+li {
+    padding: .25em;
+}
+.ul-center {
+    text-align: center !important;
+    line-height: 2em;
 }
 
-    ul li {
-        padding: 2px;
-        margin-left: 1em;
-    }
 
 centered-p {
     text-align: center;
@@ -229,10 +232,6 @@ centered-p {
 
     .dynamic-content-area h3 {
         margin-top: 1.5em;
-    }
-
-    .dynamic-content-area ul {
-        margin-left: 2em; /* Reduced from 3.5em */
     }
 
 .download-container {
@@ -376,14 +375,18 @@ centered-p {
     gap: 0em;
 }
 
+    .image-with-text ul,
+    .code-with-text ul {
+        margin-top: 2em;
+        margin-bottom: 2em;
+        margin-left: 3em;
+        margin-right: 3em;
+        text-align: left;
+    }
+
 .image-with-text {
     align-items: center;
 }
-
-    .image-with-text ul, li {
-        margin: .25em;
-        font-size: 1.1em;
-    }
 
 /* Layout container with balanced code and text using the shortest element for height */
 .code-with-text {
@@ -394,10 +397,7 @@ centered-p {
 }
 
     .code-with-text li, ul {
-        margin-top: .25em;
-        margin-bottom: .25em;
-        margin-left: 0em;
-        padding: 2px;
+
     }
 
     .code-with-text p {
@@ -642,12 +642,15 @@ centered-p {
 
 /* Presentation box (separate style grouping) */
 .presentation-box {
-    margin: 2rem; /* Reduced from 4rem */
-    padding-top: 2em;
-    padding-bottom: 2em;
-    padding-left: 1.25em;
-    padding-right: 1.25em;
     text-align: center;
+    margin-top:2em;
+    margin-bottom:2em;
+    margin-left: 1em;
+    margin-right: 1em;
+    padding-top: 1em;
+    padding-left: 2em;
+    padding-right: 2em;
+    padding-bottom: 1em;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     background-color: #2b4252;
@@ -655,15 +658,20 @@ centered-p {
 }
 
     .presentation-box ul {
-        list-style: none;
+        margin-top: 2em;
+        margin-bottom: 2em;
+        margin-left: 3em;
+        margin-right: 3em;
         text-align: left;
-        line-height: 1.4;
-        margin-right: 1em;
-        margin-bottom: 1em;
+    }
+
+    .presentation-box .ul-center {
+        margin: 2em;
+        list-style: none;
     }
 
     .presentation-box li {
-        margin-top: 1em;
+
     }
 
     .presentation-box h1 {
@@ -701,7 +709,7 @@ centered-p {
 }
 
     .skills-list li {
-        margin-bottom: 0.5em;
+
     }
 
 .call-to-action {
@@ -997,7 +1005,7 @@ centered-p {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: .5rem;
     margin: 2rem 0;
     padding: 0 1rem; /* Add horizontal padding */
 }
@@ -1005,15 +1013,14 @@ centered-p {
 .cta-primary {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
+    gap: .5rem;
     width: 100%;
-    margin-bottom: 0.5rem;
 }
 
 .cta-secondary {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 0.8rem;
+    gap: 0.25rem;
     width: 100%;
 }
 
@@ -1045,8 +1052,8 @@ centered-p {
         background-color: #31c1cc;
         font-weight: bold;
         color: #2a3141;
-        font-size: 1.3rem;
-        padding: 1.2rem 2rem;
+        font-size: 1.3em;
+        padding: 1.2rem 2em;
     }
 
         .cta-button.primary:hover {
@@ -1059,6 +1066,11 @@ centered-p {
     body {
         font-size: 1.6rem; /* Reduced from 2rem */
     }
+
+        body::before {
+            background-size: 275px auto;
+            background-position: calc(91%) -5vh;
+        }
 
     body.modal-open {
         position: fixed;
@@ -1082,6 +1094,13 @@ centered-p {
 
     h5 {
         font-size: 1.1rem;
+    }
+    /* Base mobile list styling */
+    ul {
+
+    }
+    li {
+
     }
 
     /* Dynamic content area mobile improvements */
@@ -1113,9 +1132,16 @@ centered-p {
             font-size: 1.1rem;
         }
 
+        /* Dynamic content area mobile lists */
         .dynamic-content-area ul {
-            margin-left: 1em;
+            margin-left: 1em; /* Consistent with mobile spacing */
+            margin-bottom: 1em;
+            padding-left: 0.8em;
             font-size: 1rem;
+        }
+
+        .dynamic-content-area li {
+
         }
 
     /* Content wrapper mobile padding */
@@ -1184,6 +1210,15 @@ centered-p {
         padding: 1rem;
     }
 
+    /* Presentation box mobile lists */
+    .presentation-box ul {
+
+    }
+    
+    .presentation-box li {
+
+    }
+
     /* Image-with-text mobile layout fixes */
     .image-with-text {
         grid-template-columns: 1fr; /* Stack vertically on mobile */
@@ -1212,12 +1247,16 @@ centered-p {
         max-height: none;
         overflow: visible;
     }
-    
-    /* Adjust text sizing for mobile in image-with-text sections */
+
+    /* Image and code section mobile lists */
     .image-with-text ul,
-    .image-with-text li {
-        font-size: 1rem;
-        margin: 0.5em 0.5em;
+    .code-with-text ul {
+
+    }
+    
+    .image-with-text li,
+    .code-with-text li {
+
     }
     
     .image-with-text p {
@@ -1261,6 +1300,15 @@ centered-p {
         -webkit-overflow-scrolling: touch;
     }
 
+    /* Image-text container mobile adjustments */
+    .image-text ul {
+
+    }
+
+    .image-text li {
+
+    }
+
     .code-modal {
         padding: 0;
     }
@@ -1274,7 +1322,7 @@ centered-p {
         min-height: 100vh;
     }
     .code-modal-header {
-        padding: 10px 15px;
+        padding: 2px 5px;
         border-radius: 0;
         position: sticky;
         top: 0;
@@ -1361,14 +1409,14 @@ centered-p {
     }
 
     /* Tech stack mobile */
-    .tech-stack {
-        gap: 0.5rem;
-        margin: 1rem 0;
+    .content-wrapper .tech-stack {
+        gap: 0.25rem !important;
+        margin: .5rem 0 !important;
     }
 
-    .tech-badge {
-        font-size: 0.8rem;
-        padding: 0.3rem 0.6rem;
+    .content-wrapper .tech-stack .tech-badge {
+        font-size: 0.6rem !important;
+        padding: 0.1rem 0.2rem !important;
     }
 
     /* Button container mobile */
@@ -1388,19 +1436,38 @@ centered-p {
         gap: 0.5rem;
     }
 
-    nav a {
-        font-size: 1.4rem;
+    /* Skills list mobile optimization */
+    .skills-list {
+        text-align: left;
+        margin-left: 1em; /* Reduced from 2em */
+        columns: 1; /* Single column on mobile */
+        column-gap: 0;
+        list-style-type: circle;
+        font-size: 1rem;
     }
 
-    /* Background image mobile adjustment */
-    body::before {
-        background-size: 300px auto;
-        background-position: calc(90%) -3vh;
-    }
+        .skills-list li {
+
+        }
 }
 
 /* Tablet-specific adjustments */
 @media (min-width: 769px) and (max-width: 1024px) {
+    .presentation-box ul {
+
+    }
+
+    .presentation-box li {
+
+    }
+
+    .dynamic-content-area ul {
+
+    }
+
+    .dynamic-content-area li {
+
+    }
     .cta-primary {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -1426,6 +1493,42 @@ centered-p {
 
     h1 {
         font-size: 1.8rem;
+    }
+
+    ul {
+
+    }
+
+    li {
+
+    }
+
+    .presentation-box ul {
+
+    }
+
+    .presentation-box li {
+
+    }
+
+    .dynamic-content-area ul {
+
+    }
+
+    .dynamic-content-area li {
+
+    }
+
+    .image-with-text ul,
+    .code-with-text ul,
+    .image-text ul {
+
+    }
+
+    .image-with-text li,
+    .code-with-text li,
+    .image-text li {
+
     }
 
     .code-modal .code-snippet {
