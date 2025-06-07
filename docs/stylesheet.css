@@ -382,7 +382,6 @@ centered-p {
 .code-with-text ul,
 .code-with-text li {
     margin: 0.25em 0; /* Simplified margin */
-    font-size: 1.1em;
     line-height: 1.4;
 }
 
