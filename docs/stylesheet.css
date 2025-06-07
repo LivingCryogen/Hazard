@@ -127,15 +127,17 @@ p {
 }
 
 ul {
-    margin-left: 3em;
     text-align: left;
     padding-left: 0;
 }
+li {
+    padding: .25em;
+}
+.ul-center {
+    text-align: center !important;
+    line-height: 2em;
+}
 
-    ul li {
-        padding: 2px;
-        margin-left: 1em;
-    }
 
 centered-p {
     text-align: center;
@@ -230,10 +232,6 @@ centered-p {
 
     .dynamic-content-area h3 {
         margin-top: 1.5em;
-    }
-
-    .dynamic-content-area ul {
-        margin-left: 2em; /* Reduced from 3.5em */
     }
 
 .download-container {
@@ -377,13 +375,14 @@ centered-p {
     gap: 0em;
 }
 
-.image-with-text ul,
-.image-with-text li,
-.code-with-text ul,
-.code-with-text li {
-    margin: 0.25em 0; /* Simplified margin */
-    line-height: 1.4;
-}
+    .image-with-text ul,
+    .code-with-text ul {
+        margin-top: 2em;
+        margin-bottom: 2em;
+        margin-left: 3em;
+        margin-right: 3em;
+        text-align: left;
+    }
 
 .image-with-text {
     align-items: center;
@@ -398,10 +397,7 @@ centered-p {
 }
 
     .code-with-text li, ul {
-        margin-top: .25em;
-        margin-bottom: .25em;
-        margin-left: 0em;
-        padding: 2px;
+
     }
 
     .code-with-text p {
@@ -646,12 +642,15 @@ centered-p {
 
 /* Presentation box (separate style grouping) */
 .presentation-box {
-    margin: 2rem; /* Reduced from 4rem */
-    padding-top: 2em;
-    padding-bottom: 2em;
-    padding-left: 1.25em;
-    padding-right: 1.25em;
     text-align: center;
+    margin-top:2em;
+    margin-bottom:2em;
+    margin-left: 1em;
+    margin-right: 1em;
+    padding-top: 1em;
+    padding-left: 2em;
+    padding-right: 2em;
+    padding-bottom: 1em;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     background-color: #2b4252;
@@ -659,20 +658,20 @@ centered-p {
 }
 
     .presentation-box ul {
-        list-style: none;
+        margin-top: 2em;
+        margin-bottom: 2em;
+        margin-left: 3em;
+        margin-right: 3em;
         text-align: left;
-        line-height: 1.4;
-        padding-left: .5em;
-        margin-left: 2em;
-        margin-right: 1em;
-        margin-bottom: 1em;
+    }
+
+    .presentation-box .ul-center {
+        margin: 2em;
+        list-style: none;
     }
 
     .presentation-box li {
-        margin-top: .75em;
-        margin-bottom: .25em;
-        margin-left: 0;
-        padding: 4px 0;
+
     }
 
     .presentation-box h1 {
@@ -710,7 +709,7 @@ centered-p {
 }
 
     .skills-list li {
-        margin-bottom: 0.5em;
+
     }
 
 .call-to-action {
@@ -1006,7 +1005,7 @@ centered-p {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: .5rem;
     margin: 2rem 0;
     padding: 0 1rem; /* Add horizontal padding */
 }
@@ -1014,15 +1013,14 @@ centered-p {
 .cta-primary {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
+    gap: .5rem;
     width: 100%;
-    margin-bottom: 0.5rem;
 }
 
 .cta-secondary {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 0.8rem;
+    gap: 0.25rem;
     width: 100%;
 }
 
@@ -1054,8 +1052,8 @@ centered-p {
         background-color: #31c1cc;
         font-weight: bold;
         color: #2a3141;
-        font-size: 1.3rem;
-        padding: 1.2rem 2rem;
+        font-size: 1.3em;
+        padding: 1.2rem 2em;
     }
 
         .cta-button.primary:hover {
@@ -1099,15 +1097,10 @@ centered-p {
     }
     /* Base mobile list styling */
     ul {
-        margin-left: 1.5em; /* Reduced from 3em */
-        margin-bottom: 1em;
-        padding-left: 0.8em;
+
     }
     li {
-        padding: 4px 0; /* Better touch targets */
-        margin-left: 0;
-        font-size: 1rem; /* Consistent mobile font size */
-        line-height: 1.5; /* Slightly more breathing room on mobile */
+
     }
 
     /* Dynamic content area mobile improvements */
@@ -1139,13 +1132,6 @@ centered-p {
             font-size: 1.1rem;
         }
 
-        .dynamic-content-area ul {
-            margin-left: 2em;
-            margin-bottom: 1em;
-            padding-left: 1em;
-            list-style-type: disc;
-        }
-
         /* Dynamic content area mobile lists */
         .dynamic-content-area ul {
             margin-left: 1em; /* Consistent with mobile spacing */
@@ -1155,11 +1141,7 @@ centered-p {
         }
 
         .dynamic-content-area li {
-            margin-top: 0.4em;
-            margin-bottom: 0.4em;
-            font-size: 1rem;
-            line-height: 1.5;
-            padding: 3px 0;
+
         }
 
     /* Content wrapper mobile padding */
@@ -1230,21 +1212,11 @@ centered-p {
 
     /* Presentation box mobile lists */
     .presentation-box ul {
-        margin-left: 1em; /* Much smaller left margin */
-        margin-right: 0.5em;
-        margin-bottom: 1em;
-        padding-left: 1em;
-        list-style-type: disc;
-        font-size: 1rem;
+
     }
     
     .presentation-box li {
-        margin-top: 0.4em;
-        margin-bottom: 0.4em;
-        margin-left: 0;
-        padding: 4px 0;
-        font-size: 1rem;
-        line-height: 1.5;
+
     }
 
     /* Image-with-text mobile layout fixes */
@@ -1279,18 +1251,12 @@ centered-p {
     /* Image and code section mobile lists */
     .image-with-text ul,
     .code-with-text ul {
-        margin-left: 1em;
-        margin-bottom: 1em;
-        padding-left: 0.8em;
-        font-size: 1rem;
+
     }
     
     .image-with-text li,
     .code-with-text li {
-        margin: 0.3em 0;
-        font-size: 1rem;
-        line-height: 1.5;
-        padding: 3px 0;
+
     }
     
     .image-with-text p {
@@ -1336,16 +1302,11 @@ centered-p {
 
     /* Image-text container mobile adjustments */
     .image-text ul {
-        margin-left: 0.8em;
-        padding-left: 1em;
-        font-size: 1rem;
+
     }
 
     .image-text li {
-        margin: 0.3em 0;
-        font-size: 1rem;
-        line-height: 1.5;
-        padding: 3px 0;
+
     }
 
     .code-modal {
@@ -1475,10 +1436,6 @@ centered-p {
         gap: 0.5rem;
     }
 
-    nav a {
-        font-size: 1.4rem;
-    }
-
     /* Skills list mobile optimization */
     .skills-list {
         text-align: left;
@@ -1490,33 +1447,26 @@ centered-p {
     }
 
         .skills-list li {
-            margin-bottom: 0.6em;
-            font-size: 1rem;
-            line-height: 1.5;
-            padding: 2px 0;
-            break-inside: avoid; /* Prevent awkward column breaks */
+
         }
 }
 
 /* Tablet-specific adjustments */
 @media (min-width: 769px) and (max-width: 1024px) {
     .presentation-box ul {
-        margin-left: 2em;
-        font-size: 1.1rem;
+
     }
 
     .presentation-box li {
-        font-size: 1.1rem;
-        margin: 0.6em 0;
+
     }
 
     .dynamic-content-area ul {
-        margin-left: 1.5em;
-        font-size: 1.1rem;
+
     }
 
     .dynamic-content-area li {
-        font-size: 1.1rem;
+
     }
     .cta-primary {
         grid-template-columns: repeat(2, 1fr);
@@ -1546,52 +1496,39 @@ centered-p {
     }
 
     ul {
-        margin-left: 1em;
-        padding-left: 0.6em;
+
     }
 
     li {
-        font-size: 0.9rem;
-        line-height: 1.6;
-        padding: 3px 0;
+
     }
 
     .presentation-box ul {
-        margin-left: 0.8em;
-        padding-left: 0.8em;
-        font-size: 0.9rem;
+
     }
 
     .presentation-box li {
-        font-size: 0.9rem;
-        line-height: 1.6;
-        margin: 0.3em 0;
+
     }
 
     .dynamic-content-area ul {
-        margin-left: 0.8em;
-        padding-left: 0.6em;
-        font-size: 0.9rem;
+
     }
 
     .dynamic-content-area li {
-        font-size: 0.9rem;
-        line-height: 1.6;
+
     }
 
     .image-with-text ul,
     .code-with-text ul,
     .image-text ul {
-        margin-left: 0.6em;
-        padding-left: 0.8em;
-        font-size: 0.9rem;
+
     }
 
     .image-with-text li,
     .code-with-text li,
     .image-text li {
-        font-size: 0.9rem;
-        line-height: 1.6;
+
     }
 
     .code-modal .code-snippet {
