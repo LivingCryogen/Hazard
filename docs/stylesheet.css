@@ -1115,11 +1115,25 @@ centered-p {
     .content-wrapper {
         padding: 0 0.5em;
     }
+    .content-wrapper .tech-highlights {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: .1em;
+        margin: .5em 0;
+    }
     .content-wrapper .tech-highlights .highlight-item {
-        padding: .5em;
+        padding: .25em;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #2b4252;
+        border-radius: 2px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease;
     }
     .content-wrapper .tech-highlights .highlight-item span {
-        font-size: .2em;
+        font-size: .4em;
     }
 
     /* CTA buttons mobile improvements */
