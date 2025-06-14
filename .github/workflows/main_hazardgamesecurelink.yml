@@ -7,6 +7,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'Deployment/secureURL/**'
   workflow_dispatch:
 
 env:
