@@ -6,7 +6,9 @@ using Shared.Interfaces.ViewModel;
 using Shared.Services.Options;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -30,6 +32,8 @@ public partial class MainWindow : Window
     private readonly Border? _stateInfoBorder = null;
     private bool _isShuttingDown = true;
     private ReadOnlyDictionary<string, string> _soundFileMap = new(new Dictionary<string, string>());
+    private string? _defaultSaveFolder;
+    private string? _lastSavedFolder;
 
     public MainWindow()
     {
@@ -46,7 +50,6 @@ public partial class MainWindow : Window
     public required IOptions<AppConfig> AppOptions { get; init; }
     public (TerrID Source, TerrID Target, int NumAdvance)? AdvanceParams { get; set; } = null;
 
-    #region DependencyProperties
     public ObservableCollection<SolidColorBrush> PlayerColors
     {
         get => (ObservableCollection<SolidColorBrush>)GetValue(PlayerColorsProperty);
@@ -62,9 +65,7 @@ public partial class MainWindow : Window
     }
     public static readonly DependencyProperty ConfirmNoticeVisibilityProperty =
         DependencyProperty.Register("ConfirmNoticeVisibility", typeof(Visibility), typeof(MainWindow), new(defaultValue: Visibility.Visible));
-    #endregion
 
-    #region Methods
     public void Initialize(IMainVM viewModel)
     {
         _vM = viewModel;
@@ -75,7 +76,13 @@ public partial class MainWindow : Window
         if (AppOptions.Value.SoundFileMap.Count > 0)
             _soundFileMap = new(AppOptions.Value.SoundFileMap);
 
-        var app = (App)Application.Current;
+        string saveFolder = Path.Combine(AppOptions.Value.AppPath, "Saves"); 
+        if (Directory.Exists(saveFolder))
+            _defaultSaveFolder = saveFolder;
+        else
+            _defaultSaveFolder = AppOptions.Value.AppPath;
+
+            var app = (App)Application.Current;
         for (int i = 0; i < numPlayers; i++)
             PlayerColors.Add((SolidColorBrush)app.FindResource($"Army.{_vM.PlayerDetails[i].ColorName}"));
 
@@ -392,6 +399,7 @@ public partial class MainWindow : Window
     {
         OpenFileDialog openDialog = new()
         {
+            InitialDirectory = _lastSavedFolder ?? _defaultSaveFolder ?? ".",
             AddExtension = true,
             DefaultExt = ".hzd",
             Filter = "Hazard! Save Games (.hzd)|*.hzd"
@@ -429,6 +437,7 @@ public partial class MainWindow : Window
             ValueTuple<string, bool> saveParams = new(saveAsDialog.FileName, true);
             if (_vM?.SaveGame_Command.CanExecute(saveParams) ?? false)
                 _vM.SaveGame_Command.Execute(saveParams);
+            _lastSavedFolder = Path.GetDirectoryName(saveAsDialog.FileName);
         }
     }
     private void CommandBindingSave_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -472,5 +481,4 @@ public partial class MainWindow : Window
         else
             _isShuttingDown = false;
     }
-    #endregion
 }
