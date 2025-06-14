@@ -1069,8 +1069,9 @@ centered-p {
     }
     .highlight-item {
         flex-direction: row;
-        min-width: 0;
-        max-height: 7vw;
+        min-width: 10vw;
+        max-width: 25vw;
+        max-height: 15vw;
         font-weight: normal;
         gap: 3vw;
     }
@@ -1079,7 +1080,7 @@ centered-p {
         }
 
         .highlight-item span {
-            font-size: 2.4vw;
+            font-size: 2.7vw;
         }
 
     .tech-highlights {
@@ -1126,7 +1127,7 @@ centered-p {
     }
 
     .cta-primary .cta-button {
-        min-height: 4.75rem;
+        min-height: 9vw;
         font-weight: bold;
     }
 
@@ -1226,5 +1227,94 @@ centered-p {
     }
     .ul-center li {
         margin-top: 4vw;
+    }
+}
+@media (max-width: 480px) {
+    .dynamic-content-area {
+        font-size: 3.5vw;
+    }
+    .hero {
+        font-size: 2em;
+    }
+    .hero h1 {
+        font-size: 1.75rem;
+    }
+
+    .screenshot-gallery {
+        width: 100%;
+        max-width: 100vw;
+        max-height: 40vw;
+        margin: 0;
+        margin-top: .5vw;
+        margin-left: 1vw;
+        margin-bottom: 0;
+    }
+    .gallery-dot {
+        height: 2.5vw;
+        width: 2.5vw;
+    }
+
+    .tech-highlights {
+        margin: 0;
+        padding: 0;
+        gap: 1vw;
+    }
+    .tech-highlights i {
+        font-size: 2.5vw;
+    }
+    .tech-highlights span {
+        font-size: 2vw;
+    }
+    .highlight-item {
+        flex-direction: column;
+        padding: 1.5vw;
+        gap: 0;
+        min-width: 0;
+        min-height: 0;
+    }
+    .tech-badge {
+        font-size: 1.75vw;
+        margin-left: 0;
+        margin-right: 0;
+        margin-top: .1vw;
+        margin-bottom: .1vw;
+        padding: .65vw;
+        border-radius: 1px;
+    }
+    .tech-stack {
+        margin: 1vw;
+    }
+    .cta-button {
+        padding: 0vw;
+        gap: 3vw;
+        margin: 0;
+        font-size: 3vw;
+        border-radius: 3px;
+    }
+    .cta-container {
+        gap: 1vw;
+        margin: 0;
+        padding: 0;
+    }
+    .cta-primary {
+        display: grid;
+        grid-template-columns: 1fr 1fr; 
+        gap: .15vw;
+        width: 100%;
+    }
+    .cta-primary .cta-button {
+        font-size: 4vw;
+        max-width: 45vw;
+    }
+    .cta-secondary .cta-button {
+        font-size: 3vw;
+        min-height: 8vw;
+        font-weight: normal;
+    }
+    .code-snippet,
+    .code-snippet pre,
+    .code-snippet code,
+    .code-snippet pre code {
+        font-size: 3vw !important;
     }
 }
