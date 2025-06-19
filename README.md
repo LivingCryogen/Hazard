@@ -10,7 +10,7 @@ __2. Testing__ with MSTest and mock Frameworks.
 
 __3. Documentation__ generated to professional standards from XML comments using DocFx.
 
-__4. Packaging__ as an .msixbundle via WAPP.
+__4. Packaging__ as an .msixbundle via WAP.
 
 __5. Automated Deployment__ via Azure Pipelines and Trusted Signing.
 
