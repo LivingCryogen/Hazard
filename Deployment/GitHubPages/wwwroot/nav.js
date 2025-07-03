@@ -1,5 +1,4 @@
-    // Add JavaScript for functionality
-    document.addEventListener('DOMContentLoaded', async () => {
+     document.addEventListener('DOMContentLoaded', async () => {
         // Load Features.html by default
         try {
             const defaultSource = await fetch('Features.html');

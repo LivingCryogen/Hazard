@@ -778,7 +778,7 @@ public class RegistryInitializer(IOptions&lt;AppConfig&gt; options) : IRegistryI
         <div class="image-text">
             <img src="Images/Serializer.svg" />
             <h3>Custom Binary Serialization Framework</h3>
-            <p>A binary serialization framework serializaes arbitrary object hierarchies without developers into narrow serialization patterns:</p>
+            <p>A binary serialization framework serializes arbitrary object hierarchies automatically:</p>
             <ul>
                 <li><strong>Type-safe encoding/decoding</strong> of complex nested structures</li>
                 <li><strong>Flexible support</strong> for mixed collections, tagged values, and optional metadata</li>
@@ -1105,7 +1105,7 @@ public class GameState : IBinarySerializable
             <p>Bridges dynamic JSON configuration with type-safe spatial operations, providing a foundation for extensible map systems:</p>
             <ul>
                 <li><strong>Resolves enum types dynamically from configuration</strong> while maintaining compile-time safety in core algorithms</li>
-                <li><strong>Caches</strong> spatial relationships in immutable O(1) lookup structures for safety and performance</li>
+                <li><strong>Caches</strong> spatial relationships in immutable O(1) lookup structures (ReadOnlyDictionary) for safety and performance</li>
                 <li><strong>Validates</strong> bidirectional territory-continent hierarchies automatically</li>
                 <li><strong>Efficient set operations</strong> enable complex spatial queries</li>
                 <li><strong>Supports map layout variations</strong> through data files without code changes</li>
@@ -2318,13 +2318,14 @@ public class EarthBoard : IBoard
         <div class="image-text">
             <img src="Images/PrototypingWithReflection.svg" />
             <h3>Reflection-Based Rapid Prototyping</h3>
-            <p>Using registry and serialization systems, we ease implementation frictions for team members experimenting with new card types:</p>
+            <p>Using the above registry and serialization systems, we can ease implementation frictions for team members when they experiment with new card types.
+            Leveraging a C# 8.0+ default interface method, we:</p>
             <ul>
-                <li>Uses C# 8.0+ default interface methods to provide automatic serialization</li>
-                <li><strong>Facilitates iteration</strong> by eliminating boilerplate for developers experimenting with card implementations</li>
-                <li>Provides consistent serialization behavior across all card types</li>
-                <li>Includes clear migration path from prototype to optimized production code</li>
-                <li><strong>Reduces cognitive load</strong> during rapid iteration and experimentation phases</li>
+                <li>Provide automatic serialization</li>
+                <li><strong>Facilitate iteration</strong> by eliminating boilerplate for developers experimenting with card implementations</li>
+                <li>Provide consistent serialization behavior across all card types</li>
+                <li>Include clear migration paths from prototype to optimized production code</li>
+                <li><strong>Reduce cognitive load</strong> during rapid iteration and experimentation phases</li>
             </ul>
             <p><center><i>Key Files: ICard.cs, TroopCard.cs, CardBase.cs</i></center></p>
         </div>
