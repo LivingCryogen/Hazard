@@ -152,7 +152,7 @@ centered-p {
     }
 
     .contact-item i {
-        font-size: 1.5rem;
+        font-size: 1.5vw;
         color: #31c1cc;
         min-width: 30px;
         text-align: center;
@@ -166,19 +166,195 @@ centered-p {
 
     .contact-details strong {
         color: #31c1cc;
-        font-size: 1.1rem;
+        font-size: 1.5vw;
     }
 
     .contact-details a {
         color: #E5E5CC;
         text-decoration: none;
-        font-size: 1rem;
+        font-size: 1.3vw;
         transition: color 0.3s ease;
     }
 
         .contact-details a:hover {
             color: #31c1cc;
         }
+
+.contact-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+    .contact-header h2 {
+        color: #31c1cc;
+        margin-bottom: 0.5rem;
+    }
+
+.contact-intro {
+    margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: minmax(0, 40%) minmax(250px, 60%);
+    gap: 2rem;
+    align-items: center;
+}
+
+.profile-section {
+    text-align: center;
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #31c1cc, #2a9ba5);
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: white;
+}
+
+.profile-section h3 {
+    color: #31c1cc;
+    margin: 0;
+}
+
+.profile-title {
+    color: #E5E5CC;
+    margin: 0.5rem 0 0 0;
+    font-style: italic;
+}
+
+.profile-description {
+    text-align: left;
+}
+
+    .profile-description p {
+        margin-bottom: 1rem;
+        line-height: 1.1;
+        font-size: 1.5vw;
+    }
+
+.contact-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.contact-item-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.contact-icon {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.contact-icon-email {
+    background: linear-gradient(135deg, #31c1cc, #2a9ba5);
+}
+
+.contact-icon-github {
+    background: linear-gradient(135deg, #333, #555);
+}
+
+.contact-icon-linkedin {
+    background: linear-gradient(135deg, #0077b5, #005885);
+}
+
+.contact-details-wrapper {
+    flex: 1;
+}
+
+.team-value-section {
+    background: linear-gradient(135deg, #2a3141, #2b4252);
+    border: 1px solid #31c1cc;
+}
+
+    .team-value-section h3 {
+        color: #31c1cc;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+.team-values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.team-value-item {
+    text-align: center;
+    padding: 1rem;
+}
+
+.team-value-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #31c1cc, #2a9ba5);
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+}
+
+.team-value-item h4 {
+    color: #31c1cc;
+    margin-bottom: 0.5rem;
+}
+
+.team-value-item p {
+    font-size: 1vw;
+    line-height: 1.4;
+}
+
+.location-availability {
+    text-align: center;
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #2a3141;
+    border-radius: 8px;
+    border: 1px solid #31c1cc;
+    font-size: 1.5vw;
+}
+
+    .location-availability h4 {
+        color: #31c1cc;
+        margin-bottom: 1rem;
+    }
+
+.location-details {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+    text-align: center;
+}
+
+.location-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+    .location-item i {
+        color: #31c1cc;
+        margin-right: 0.5rem;
+    }
 
 .dynamic-link, nav a {
     text-decoration: none;
@@ -1273,6 +1449,85 @@ centered-p {
     .ul-center li {
         margin-top: 4vw;
     }
+
+    .contact-intro {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .profile-description {
+        text-align: center;
+    }
+
+        .profile-description p {
+            font-size: 2.5vw;
+            line-height: 1.3;
+        }
+
+    .profile-avatar {
+        width: 15vw;
+        height: 15vw;
+        font-size: 7vw;
+        margin: 0 auto 1rem;
+    }
+
+    .contact-item {
+        padding: 1.5rem 1rem;
+        gap: 1rem;
+    }
+
+    .contact-icon {
+        width: 12vw;
+        height: 12vw;
+        font-size: 5vw;
+        flex-shrink: 0;
+    }
+
+    .contact-details strong {
+        font-size: 2.8vw;
+    }
+
+    .contact-details a {
+        font-size: 2.4vw;
+    }
+
+    .team-values-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .team-value-icon {
+        width: 12vw;
+        height: 12vw;
+        font-size: 5vw;
+    }
+
+    .team-value-item p {
+        font-size: 2.2vw;
+        line-height: 1.4;
+    }
+
+    .location-availability {
+        font-size: 2.4vw;
+        padding: 1rem;
+    }
+
+    .location-details {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .location-item {
+        justify-content: center;
+        font-size: 2.2vw;
+    }
+
+        .location-item i {
+            font-size: 2.8vw;
+        }
+
 }
 @media (max-width: 480px) {
     .dynamic-content-area {
