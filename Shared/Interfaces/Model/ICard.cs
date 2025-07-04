@@ -14,7 +14,6 @@ namespace Shared.Interfaces.Model;
 /// </remarks>
 public interface ICard : IBinarySerializable
 {
-    #region Properties
     /// <summary>
     /// Gets or sets the logger.
     /// </summary>
@@ -58,7 +57,7 @@ public interface ICard : IBinarySerializable
     /// <see langword="true"/> if this card can be traded in. Otherwise, <see langword="false"/>.
     /// </value>
     bool IsTradeable { get; set; }
-    #endregion
+
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
     async Task<SerializedData[]> IBinarySerializable.GetBinarySerials()
     {
