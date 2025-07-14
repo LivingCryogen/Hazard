@@ -65,6 +65,8 @@ namespace Bootstrap
         private static protected IHost BuildAppHost(bool devMode, string environmentName, string appPath)
         {
             var host = Host.CreateDefaultBuilder();
+            string statFileName = string.Empty;
+            int statVersionNo = 0;
             List<string> settingDataFileNames = [];
             List<string> settingSoundFileNames = [];
             Dictionary<string, string> dataFileLocations = [];
@@ -79,7 +81,8 @@ namespace Bootstrap
 
                     var builtConfig = config.Build();
 
-
+                    statFileName = (string?)builtConfig.GetValue(typeof(string), "StatRepoFileName") ?? string.Empty;
+                    statVersionNo = (int?)builtConfig.GetValue(typeof(int), "StatVersionNo") ?? 1;
                     settingDataFileNames.AddRange(builtConfig.GetSection("DataFileNames").Get<string[]>() ?? []);
                     settingSoundFileNames.AddRange(builtConfig.GetSection("SoundFileNames").Get<string[]>() ?? []);
                     cardDataSearchString = (string?)(builtConfig.GetValue(typeof(string), "CardDataSearchString")) ?? string.Empty;
@@ -114,6 +117,8 @@ namespace Bootstrap
                     services.Configure<AppConfig>(options =>
                     {
                         options.AppPath = appPath;
+                        options.StatRepoFilePath = Path.Combine(statFileName, appPath);
+                        options.StatVersion = statVersionNo;
                         if (dataFileLocations.Count > 0)
                             options.DataFileMap = dataFileLocations;
                         if (soundFileLocations.Count > 0)

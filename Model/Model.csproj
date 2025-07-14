@@ -30,10 +30,5 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.5" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Stats\Repository\" />
-    <Folder Include="Stats\Services\" />
-  </ItemGroup>
-
   <Import Project="..\Shared\Shared.projitems" Label="Shared" />
 </Project>

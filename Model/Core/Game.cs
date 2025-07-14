@@ -54,7 +54,6 @@ public class Game : IGame
     /// <inheritdoc cref="IGame.PlayerWon"/>.
     public event EventHandler<int>? PlayerWon;
 
-    #region Properties
     /// <inheritdoc cref="IGame.AssetFetcher"/>
     public IAssetFetcher AssetFetcher { get; }
     /// <inheritdoc cref="IGame.ID"/>.
@@ -76,7 +75,6 @@ public class Game : IGame
     public CardBase Cards { get; private set; }
     /// <inheritdoc cref="IGame.Players"/>.
     public List<IPlayer> Players { get; private set; }
-    #endregion
 
     private void OnPlayerLost(object? sender, System.EventArgs e)
     {

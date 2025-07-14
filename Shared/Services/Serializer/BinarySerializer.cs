@@ -37,7 +37,6 @@ public static class BinarySerializer
         _logger = logger;
     }
 
-    #region Encoding Methods
     private static byte[] ConvertibleToBytes(Type type, IConvertible value)
     {
         if (type == typeof(byte))
@@ -65,8 +64,7 @@ public static class BinarySerializer
     {
         return Enum.ToObject(type, BitConverter.ToInt64(bytes, 0));
     }
-    #endregion
-    #region Serialization Methods
+
     private static void WriteConvertible(BinaryWriter writer, Type type, IConvertible value)
     {
         byte[] bytes = ConvertibleToBytes(type, value);
@@ -159,7 +157,7 @@ public static class BinarySerializer
         writer.Write(tag);
         WriteConvertibles(writer, type, values);
     }
-    #endregion
+
     /// <summary>
     /// Serializes <see cref="IBinarySerializable"/> objects and writes them to a file. 
     /// </summary>

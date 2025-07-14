@@ -12,6 +12,17 @@ public class AppConfig
     /// </remarks>
     public string AppPath { get; set; } = string.Empty;
     /// <summary>
+    /// Gets or sets the path to the Game Statistics repository file.
+    /// </summary>
+    /// <value>
+    /// 'GameStatistics.hzd' + AppPath unless otherwise specified in 'appsettings.json.'
+    /// </value>
+    public string StatRepoFilePath { get; set; } = string.Empty;
+    /// <summary>
+    /// Gets or sets the Version Number of the Statistics records to be used.
+    /// </summary>
+    public int StatVersion { get; set; }
+    /// <summary>
     /// Gets or sets a map of data file paths keyed by their filenames (with extension).
     /// </summary>
     /// <value>

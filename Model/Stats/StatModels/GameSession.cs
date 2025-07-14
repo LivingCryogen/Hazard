@@ -9,11 +9,10 @@ using System.Threading.Tasks;
 namespace Model.Stats.StatModels;
 
 public record GameSession(
-    byte Version,
+    int Version,
     Guid Id,
     DateTime StartTime,
     DateTime? EndTime,
-    int NumPlayers,
     int? Winner
 )
 {
@@ -45,4 +44,5 @@ public record GameSession(
     public List<AttackAction> Attacks { get; init; } = new();
     public List<MoveAction> Moves { get; init; } = new();
     public List<TradeAction> TradeIns { get; init; } = new();
+    public List<PlayerStats> PlayerStats { get; init; } = new();
 }

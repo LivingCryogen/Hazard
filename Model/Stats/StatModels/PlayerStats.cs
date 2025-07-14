@@ -7,19 +7,12 @@ using System.Threading.Tasks;
 namespace Model.Stats.StatModels;
 
 public record PlayerStats( 
-    byte Version,
     string Name,
-    DateTime FirstPlayed,
-    DateTime LastPlayed,
-    TimeSpan PlayTime,
-    int GamesPlayed,
-    int ContinentsConquered,
-    int GamesWon,
-    int GamesLost,
-    int AttacksWon,
-    int AttacksLost,
-    int Conquests,
-    int Retreats,
-    int ForcedRetreats,
-    int TradeIns
+    int ContinentsConquered = 0,
+    int AttacksWon = 0,
+    int AttacksLost = 0,
+    int Conquests = 0,
+    int Retreats = 0,
+    int ForcedRetreats = 0,
+    int TradeIns = 0
 );
