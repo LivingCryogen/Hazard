@@ -34,6 +34,7 @@ public class MockGame : IGame
     public IBoard Board { get; set; } = new MockBoard();
     public IRegulator Regulator { get; set; }
     public IRuleValues Values { get; set; } = new MockRuleValues();
+    public IStatTracker StatTracker { get; set; }
     public Guid ID { get; set; }
     public bool DefaultCardMode { get; set; } = true;
     public List<IPlayer> Players { get; set; }

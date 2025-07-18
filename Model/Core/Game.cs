@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Model.Assets;
 using Model.Entities;
+using Model.Stats.Services;
 using Shared.Geography;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
@@ -24,10 +25,16 @@ public class Game : IGame
     /// <br/>When loading from a file, this will be 0, and components update after calling <see cref="LoadFromBinary(BinaryReader)"/>.</param>
     /// <param name="loggerFactory">Builds configured loggers for various components when and where the DI system does not do so directly.</param>
     /// <param name="assetFetcher">Connects the Model and the DAL through bespoke methods. Provides assets to game properties, eg:<see cref="IAssetFetcher.FetchCardSets"/> for <see cref="Game.Cards"/>.</param>
+    /// <param name="statTracker">Increments game and player related stats in response to game events / player actions.</param>
     /// <param name="typeRegister">Serves as an Application Type Registry. Simplifies asset loading and configuration extension.<br/> Required for operation of <see cref="ICard"/>'s default methods and DAL operations.</param>
     /// <param name="config">Configuration provided by DI. Values derived from "View\appsettings.json."</param>
-    public Game(int numPlayers, ILoggerFactory loggerFactory, IAssetFetcher assetFetcher,
-        ITypeRegister<ITypeRelations> typeRegister, IConfiguration config)
+    public Game(
+        int numPlayers,
+        ILoggerFactory loggerFactory,
+        IAssetFetcher assetFetcher,
+        IStatTracker statTracker,
+        ITypeRegister<ITypeRelations> typeRegister,
+        IConfiguration config)
     {
         AssetFetcher = assetFetcher;
         _typeRegister = typeRegister;
@@ -47,6 +54,7 @@ public class Game : IGame
             Players.Last().PlayerLost += OnPlayerLost;
             // Players.Last().PlayerWon += OnPlayerWin;
         }
+        StatTracker = statTracker; 
     }
 
     /// <inheritdoc cref="IGame.PlayerLost"/>.
@@ -75,6 +83,8 @@ public class Game : IGame
     public CardBase Cards { get; private set; }
     /// <inheritdoc cref="IGame.Players"/>.
     public List<IPlayer> Players { get; private set; }
+    public IStatTracker StatTracker { get; init; }
+
 
     private void OnPlayerLost(object? sender, System.EventArgs e)
     {
@@ -192,10 +202,15 @@ public class Game : IGame
         {
             List<SerializedData> saveData = [];
             if (this.ID is Guid gameID)
-                saveData.Add(new(typeof(string), [gameID.ToString()]));
+            {
+                saveData.Add(new(typeof(int), 1));
+                saveData.Add(new(typeof(string), gameID.ToString()));
+            }
+            else
+                saveData.Add(new(typeof(int), 0));
             saveData.AddRange(Board?.GetBinarySerials().Result ?? []);
             saveData.AddRange(Cards?.GetBinarySerials().Result ?? []);
-            saveData.Add(new(typeof(int), [Players.Count]));
+            saveData.Add(new(typeof(int), Players.Count));
             foreach (IPlayer player in Players)
                 saveData.AddRange(player?.GetBinarySerials().Result ?? []);
             saveData.AddRange(State?.GetBinarySerials().Result ?? []);
@@ -209,7 +224,9 @@ public class Game : IGame
         bool loadComplete = true;
         try
         {
-            this.ID = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
+            bool hasGuid = (int)BinarySerializer.ReadConvertible(reader, typeof(int)) == 1;
+            if (hasGuid)
+                this.ID = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
             Board.LoadFromBinary(reader);
             Cards.LoadFromBinary(reader);
             int numPlayers = (int)BinarySerializer.ReadConvertible(reader, typeof(int));

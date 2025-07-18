@@ -56,6 +56,10 @@ public interface IGame : IBinarySerializable
     /// After initialization and/or loading, should have a count of 2-6.
     /// </value>
     List<IPlayer> Players { get; }
+    /// <summary>
+    /// Gets the stat tracker.
+    /// </summary>
+    IStatTracker StatTracker { get; }
     #endregion
 
     /// <summary>

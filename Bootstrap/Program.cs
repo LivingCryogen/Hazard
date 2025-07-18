@@ -142,6 +142,7 @@ namespace Bootstrap
                     services.AddTransient<IRuleValues, RuleValues>();
                     services.AddTransient<IBoard, EarthBoard>();
                     services.AddTransient<IRegulator, Regulator>();
+                    services.AddTransient<IStatTracker, Model.Stats.Services.StatTracker>();
                     services.AddTransient<IGame, Game>();
                     services.AddTransient<IMainVM, MainVM>();
                     services.AddTransient<IDialogState, DialogService>();

@@ -33,6 +33,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IPromptTradeEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IRegulator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IRuleValues.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IStatTracker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\ITerritoryChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\ITroopCard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ViewModel\ICardInfo.cs" />

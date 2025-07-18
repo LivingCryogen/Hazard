@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Model.EventArgs;
+using Model.Stats.Services;
 using Shared.Enums;
 using Shared.Geography;
 using Shared.Geography.Enums;
@@ -14,6 +15,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
 {
     private readonly IGame _currentGame = currentGame;
     private readonly StateMachine _machine = currentGame.State;
+    private readonly IStatTracker _statTracker = currentGame.StatTracker;
     private readonly ILogger _logger = logger;
     private readonly int _numPlayers = currentGame.State.NumPlayers;
     private int _actionsCounter = 0;
@@ -319,6 +321,8 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     {
         _currentGame.Board.Reinforce(source, -armies);
         _currentGame.Board.Reinforce(target, armies);
+
+
 
         if (CurrentPhase == GamePhase.Move)
             IncrementAction();
