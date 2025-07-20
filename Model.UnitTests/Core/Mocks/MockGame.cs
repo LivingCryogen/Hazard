@@ -6,6 +6,7 @@ using Model.Tests.DataAccess.Stubs;
 using Model.Tests.Entities.Mocks;
 using Model.Tests.Fixtures;
 using Model.Tests.Fixtures.Stubs;
+using Model.Tests.Stats;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Services.Serializer;
@@ -27,6 +28,7 @@ public class MockGame : IGame
         Regulator = new MockRegulator(new LoggerStubT<MockRegulator>(), this);
         Regulator.Initialize();
         AssetFetcher = new AssetFetcherStub();
+        StatTracker = new MockStatTracker(this);
     }
 
     public Microsoft.Extensions.Logging.ILogger<MockGame> Logger { get => _logger; }

@@ -1,51 +1,43 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Model.Core;
+using Microsoft.Testing.Platform.Logging;
 using Model.Stats.StatModels;
+using Model.Tests.Fixtures.Stubs;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Services.Options;
 using Shared.Services.Serializer;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Stats.Services;
+namespace Model.Tests.Stats;
 
-public class StatTracker: IStatTracker, IBinarySerializable
+public class MockStatTracker(IGame game) : IStatTracker, IBinarySerializable
 {
-    private readonly ILogger _logger;
-    private readonly ILoggerFactory _loggerFactory;
-    private GameSession _currentSession;
-        
-    public StatTracker(IGame game, IOptions<AppConfig> options, ILoggerFactory loggerFactory)
-    {
-        _loggerFactory = loggerFactory;
-        _logger = loggerFactory.CreateLogger<StatTracker>();
-
-        _currentSession = new(loggerFactory.CreateLogger<GameSession>(), loggerFactory)
+    private readonly Microsoft.Extensions.Logging.ILogger _logger = new LoggerStubT<MockStatTracker>();
+    private MockGameSession _currentSession = new()
         {
-            Version = options.Value.StatVersion,
+            Version = 1,
             Id = game.ID,
             StartTime = DateTime.Now,
             EndTime = null,
-            Winner = null
+            Winner = null,
+            PlayerStats = [
+                new MockPlayerStats()
+                    {
+                        Name = game.Players[0].Name,
+                        Number = game.Players[0].Number,
+                    },
+                new MockPlayerStats()
+                    {
+                        Name = game.Players[1].Name,
+                        Number = game.Players[1].Number,
+                    },
+                ]
         };
-
-        for (int i = 0; i < game.Players.Count; i++)
-        {
-            _currentSession.PlayerStats.Add(
-                new PlayerStats(loggerFactory.CreateLogger<PlayerStats>())
-                {
-                    Name = game.Players[i].Name,
-                    Number = game.Players[i].Number,
-                });
-        }
-    }
 
     public void RecordAttackAction(
         TerrID source,
@@ -58,7 +50,7 @@ public class StatTracker: IStatTracker, IBinarySerializable
         bool retreated,
         bool conquered)
     {
-        var attackStats = new GameSession.AttackAction(_loggerFactory.CreateLogger<GameSession.AttackAction>())
+        var attackStats = new MockGameSession.AttackAction(new LoggerStubT<MockGameSession.AttackAction>())
         {
             Source = source,
             Target = target,
@@ -97,8 +89,9 @@ public class StatTracker: IStatTracker, IBinarySerializable
                     break;
             }
     }
-    public void RecordMoveAction(TerrID source, TerrID target, bool maxAdvanced, int player) {
-        var moveStats = new GameSession.MoveAction(_loggerFactory.CreateLogger<GameSession.MoveAction>())
+    public void RecordMoveAction(TerrID source, TerrID target, bool maxAdvanced, int player)
+    {
+        var moveStats = new MockGameSession.MoveAction(new LoggerStubT<MockGameSession.MoveAction>())
         {
             Source = source,
             Target = target,
@@ -119,7 +112,7 @@ public class StatTracker: IStatTracker, IBinarySerializable
     }
     public void RecordTradeAction(List<TerrID> cardTargets, int tradeValue, int occupiedBonus, int playerNumber)
     {
-        var tradeStats = new GameSession.TradeAction(_loggerFactory.CreateLogger<GameSession.TradeAction>())
+        var tradeStats = new MockGameSession.TradeAction(new LoggerStubT<MockGameSession.TradeAction>())
         {
             CardTargets = [.. cardTargets],
             TradeValue = tradeValue,
@@ -136,6 +129,7 @@ public class StatTracker: IStatTracker, IBinarySerializable
         _currentSession.TradeIns.Add(tradeStats);
     }
 
+
     public async Task<SerializedData[]> GetBinarySerials()
     {
         return await _currentSession.GetBinarySerials();
@@ -146,7 +140,7 @@ public class StatTracker: IStatTracker, IBinarySerializable
         bool loadComplete = true;
         try
         {
-            var readSession = new GameSession(_loggerFactory.CreateLogger<GameSession>(), _loggerFactory);
+            var readSession = new MockGameSession();
             if (!readSession.LoadFromBinary(reader))
                 loadComplete = false;
             _currentSession = readSession;
