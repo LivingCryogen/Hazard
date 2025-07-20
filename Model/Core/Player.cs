@@ -7,11 +7,11 @@ using Shared.Services.Serializer;
 
 namespace Model.Core;
 /// <inheritdoc cref="IPlayer"/>.
-public class Player : IPlayer
+public class Player : IPlayer<TerrID>
 {
     private readonly ILogger _logger;
-    private readonly IRuleValues _values;
-    private readonly IBoard _board;
+    private readonly IRuleValues<ContID> _values;
+    private readonly IBoard<TerrID, ContID> _board;
     private readonly CardFactory _cardFactory;
     private int _armyPool;
     /// <summary>
@@ -23,7 +23,7 @@ public class Player : IPlayer
     /// <param name="board">The game board.</param>
     /// <param name="logger">A logger for logging errors and debug information.</param>  
     /// <param name="cardFactory">A factory for producing <see cref="ICard"/>s; necessary for populating <see cref="Hand"/> via <see cref="LoadFromBinary(BinaryReader)"/>.</param>
-    public Player(int number, int numPlayers, CardFactory cardFactory, IRuleValues values, IBoard board, ILogger<Player> logger)
+    public Player(int number, int numPlayers, CardFactory cardFactory, IRuleValues<ContID> values, IBoard<TerrID, ContID> board, ILogger<Player> logger)
     {
         _logger = logger;
         Name = string.Empty;
@@ -45,7 +45,7 @@ public class Player : IPlayer
     /// <param name="board">The game board.</param>
     /// <param name="logger">A logger for logging errors and debug information.</param>  
     /// <param name="cardFactory">A factory for producing <see cref="ICard"/>s; necessary for populating <see cref="Hand"/> via <see cref="LoadFromBinary(BinaryReader)"/>.</param>
-    public Player(string name, int number, int numPlayers, CardFactory cardFactory, IRuleValues values, IBoard board, ILogger<Player> logger)
+    public Player(string name, int number, int numPlayers, CardFactory cardFactory, IRuleValues<ContID> values, IBoard<TerrID, ContID> board, ILogger<Player> logger)
     {
         _logger = logger;
         Name = name;
@@ -95,7 +95,7 @@ public class Player : IPlayer
     /// <inheritdoc cref="IPlayer.ControlledTerritories"/>.
     public HashSet<TerrID> ControlledTerritories { get; private set; } = [];
     /// <inheritdoc cref="IPlayer.Hand"/>.
-    public List<ICard> Hand { get; set; } = [];
+    public List<ICard<TerrID>> Hand { get; set; } = [];
 
     private int CalculateTotalBonus()
     {
@@ -115,8 +115,8 @@ public class Player : IPlayer
     /// <inheritdoc cref="IPlayer.FindCardSet"/>
     public void FindCardSet()
     {
-        List<ICardSet> setsInHand = [];
-        List<ICard> tradeableCards = [];
+        List<ICardSet<TerrID>> setsInHand = [];
+        List<ICard<TerrID>> tradeableCards = [];
         foreach (var card in Hand)
         {
             if (card.CardSet != null && !setsInHand.Contains(card.CardSet))
@@ -132,9 +132,9 @@ public class Player : IPlayer
             return;
         }
 
-        ICard[] tradeable = [.. tradeableCards];
+        ICard<TerrID>[] tradeable = [.. tradeableCards];
 
-        foreach (ICardSet cardSet in setsInHand)
+        foreach (ICardSet<TerrID> cardSet in setsInHand)
         {
             var matches = cardSet.FindTradeSets(tradeable);
             if (matches == null || matches.Length == 0)
@@ -166,7 +166,7 @@ public class Player : IPlayer
         return true;
     }
     /// <inheritdoc cref="IPlayer.AddCard(ICard)"/>
-    public void AddCard(ICard card)
+    public void AddCard(ICard<TerrID> card)
     {
         Hand.Add(card);
         FindCardSet();
@@ -226,7 +226,7 @@ public class Player : IPlayer
             for (int i = 0; i < numCards; i++)
             {
                 string cardTypeName = reader.ReadString();
-                ICard newCard = _cardFactory.BuildCard(cardTypeName);
+                ICard<TerrID> newCard = _cardFactory.BuildCard(cardTypeName);
                 newCard.LoadFromBinary(reader);
                 Hand.Add(newCard);
             }

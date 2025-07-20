@@ -9,7 +9,7 @@ using ViewModel.SubElements.Cards;
 
 namespace Hazard.ViewModel.SubElements;
 
-public partial class PlayerData : ObservableObject, IPlayerData
+public partial class PlayerData : ObservableObject, IPlayerData<TerrID, ContID>
 {
     [ObservableProperty] private string _name;
     [ObservableProperty] private string _colorName;
@@ -25,9 +25,9 @@ public partial class PlayerData : ObservableObject, IPlayerData
     [ObservableProperty, NotifyPropertyChangedFor(nameof(ContinentNames))]
     private ObservableCollection<ContID> _continents = [];
     [ObservableProperty] private ObservableCollection<string> _continentNames = [];
-    [ObservableProperty] private ObservableCollection<ICardInfo> _hand = [];
+    [ObservableProperty] private ObservableCollection<ICardInfo<TerrID, ContID>> _hand = [];
 
-    public PlayerData(IPlayer player, string colorName, IMainVM vM)
+    public PlayerData(IPlayer<TerrID> player, string colorName, IMainVM<TerrID, ContID> vM)
     {
         Name = player.Name;
         Number = player.Number;
@@ -39,7 +39,7 @@ public partial class PlayerData : ObservableObject, IPlayerData
         {
             for (int i = 0; i < player.Hand.Count; i++)
             {
-                Hand.Add((ICardInfo)CardInfoFactory.BuildCardInfo(player.Hand[i], _number, i));
+                Hand.Add((ICardInfo<TerrID, ContID>)CardInfoFactory.BuildCardInfo(player.Hand[i], _number, i));
             }
         }
         Continents.CollectionChanged += OnContinentsChanged;
@@ -48,7 +48,7 @@ public partial class PlayerData : ObservableObject, IPlayerData
         VMInstance = (MainVM_Base)vM;
     }
 
-    public IMainVM VMInstance { get; init; }
+    public IMainVM<TerrID, ContID> VMInstance { get; init; }
 
     private void OnContinentsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
@@ -62,7 +62,7 @@ public partial class PlayerData : ObservableObject, IPlayerData
     }
     public void HandlePlayerChanged(object? sender, IPlayerChangedEventArgs e)
     {
-        if (sender is not IPlayer player)
+        if (sender is not IPlayer<TerrID> player)
             return;
 
         switch (e.PropertyName)
@@ -81,8 +81,8 @@ public partial class PlayerData : ObservableObject, IPlayerData
                 ArmyBonus = VMInstance.CurrentGame?.Players[Number].ArmyBonus ?? 0;
                 break;
 
-            case "Hand" when e.NewValue is ICard newCard: // item added
-                if (CardInfoFactory.BuildCardInfo(newCard, player!.Number, e.HandIndex ?? -1) is ICardInfo cardInfo)
+            case "Hand" when e.NewValue is ICard<TerrID> newCard: // item added
+                if (CardInfoFactory.BuildCardInfo(newCard, player!.Number, e.HandIndex ?? -1) is ICardInfo<TerrID, ContID> cardInfo)
                     Hand.Add(cardInfo);
                 break;
 

@@ -8,6 +8,7 @@ using Model.Core;
 using Model.DataAccess;
 using Model.Entities;
 using Model.EventArgs;
+using Shared.Geography.Enums;
 using Shared.Interfaces;
 using Shared.Interfaces.Model;
 using Shared.Interfaces.View;
@@ -129,22 +130,22 @@ namespace Bootstrap
                     services.AddTransient<ITypeRelations, TypeRelations>();
                     services.AddSingleton<ITypeRegister<ITypeRelations>, TypeRegister>();
                     services.AddSingleton<IDataProvider, DataProvider>();
-                    services.AddTransient<IAssetFetcher, AssetFetcher>();
+                    services.AddTransient<IAssetFetcher<TerrID>, AssetFetcher>();
                     services.AddTransient<IAssetFactory, AssetFactory>();
                     services.AddSingleton<IBootStrapperService>(serviceProvider =>
                     {
                         var logger = serviceProvider.GetRequiredService<ILogger<BootStrapper>>();
                         return new BootStrapper(logger);
                     });
-                    services.AddTransient<IGameService, ViewModel.Services.GameService>();
-                    services.AddTransient<ITerritoryChangedEventArgs, TerritoryChangedEventArgs>();
-                    services.AddTransient<IContinentOwnerChangedEventArgs, ContinentOwnerChangedEventArgs>();
-                    services.AddTransient<IRuleValues, RuleValues>();
-                    services.AddTransient<IBoard, EarthBoard>();
-                    services.AddTransient<IRegulator, Regulator>();
-                    services.AddTransient<IStatTracker, Model.Stats.Services.StatTracker>();
-                    services.AddTransient<IGame, Game>();
-                    services.AddTransient<IMainVM, MainVM>();
+                    services.AddTransient<IGameService<TerrID, ContID>, ViewModel.Services.GameService>();
+                    services.AddTransient<ITerritoryChangedEventArgs<TerrID>, TerritoryChangedEventArgs>();
+                    services.AddTransient<IContinentOwnerChangedEventArgs<ContID>, ContinentOwnerChangedEventArgs>();
+                    services.AddTransient<IRuleValues<ContID>, RuleValues>();
+                    services.AddTransient<IBoard<TerrID, ContID>, EarthBoard>();
+                    services.AddTransient<IRegulator<TerrID, ContID>, Regulator>();
+                    services.AddTransient<IStatTracker<TerrID, ContID>, Model.Stats.Services.StatTracker>();
+                    services.AddTransient<IGame<TerrID, ContID>, Game>();
+                    services.AddTransient<IMainVM<TerrID, ContID>, MainVM>();
                     services.AddTransient<IDialogState, DialogService>();
                     services.AddTransient<IDispatcherTimer, View.Services.Timer>();
                 })

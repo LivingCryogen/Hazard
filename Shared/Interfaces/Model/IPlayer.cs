@@ -4,7 +4,7 @@ namespace Shared.Interfaces.Model;
 /// <summary>
 /// Represents a player in the game.
 /// </summary>
-public interface IPlayer : IBinarySerializable
+public interface IPlayer<T> : IBinarySerializable where T : struct, Enum
 {
     /// <summary>
     /// Should fire when this IPlayer's property values change.
@@ -19,7 +19,6 @@ public interface IPlayer : IBinarySerializable
      </summary>
      event EventHandler? PlayerWon; Likely to be used with next extension, Secret Missions. */
 
-    #region Properties
     /// <summary>
     /// Gets or sets the name of the player.
     /// </summary>
@@ -65,12 +64,11 @@ public interface IPlayer : IBinarySerializable
     /// <summary>
     /// Gets the territories controlled by the player.
     /// </summary>
-    HashSet<TerrID> ControlledTerritories { get; }
+    HashSet<T> ControlledTerritories { get; }
     /// <summary>
     /// Gets a list of cards in the player's hand.
     /// </summary>
-    List<ICard> Hand { get; }
-    #endregion
+    List<ICard<T>> Hand { get; }
 
     /// <summary>
     /// Adds the trade-in bonus to <see cref="ArmyPool"/> when the player trades in cards.
@@ -82,7 +80,7 @@ public interface IPlayer : IBinarySerializable
     /// </summary>
     /// <param name="targets">The territories to match.</param>
     /// <returns>Those territories from among <paramref name="targets"/> controlled by this player.</returns>
-    TerrID[] GetControlledTargets(TerrID[] targets);
+    T[] GetControlledTargets(T[] targets);
     /// <summary>
     /// Finds trade-in card sets in the player's hand.
     /// </summary>
@@ -96,7 +94,7 @@ public interface IPlayer : IBinarySerializable
     /// </summary>
     /// <param name="territory">The territory to add.</param>
     /// <returns><see langword="true"/> if successfully added; otherwise, <see langword="false"/>.</returns>
-    bool AddTerritory(TerrID territory);
+    bool AddTerritory(T territory);
     /// <summary>
     /// Removes a territory from this player's control.
     /// </summary>
@@ -105,12 +103,12 @@ public interface IPlayer : IBinarySerializable
     /// <remarks>
     /// Also fires <see cref="PlayerLost"/> if the count of <see cref="ControlledTerritories"/> falls to 0.
     /// </remarks>
-    bool RemoveTerritory(TerrID territory);
+    bool RemoveTerritory(T territory);
     /// <summary>
     /// Adds a card to this player's <see cref="Hand"/>.
     /// </summary>
     /// <param name="card">The card to add.</param>
-    void AddCard(ICard card);
+    void AddCard(ICard<T> card);
     /// <summary>
     /// Removes a card from this player's <see cref="Hand"/>.
     /// </summary>

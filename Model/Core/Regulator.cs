@@ -11,11 +11,11 @@ using System.Collections.Immutable;
 namespace Model.Core;
 
 /// <inheritdoc cref="IRegulator"/>
-public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulator
+public class Regulator(ILogger<Regulator> logger, IGame<TerrID, ContID> currentGame) : IRegulator<TerrID, ContID>
 {
-    private readonly IGame _currentGame = currentGame;
+    private readonly IGame<TerrID, ContID> _currentGame = currentGame;
     private readonly StateMachine _machine = currentGame.State;
-    private readonly IStatTracker _statTracker = currentGame.StatTracker;
+    private readonly IStatTracker<TerrID, ContID> _statTracker = currentGame.StatTracker;
     private readonly ILogger _logger = logger;
     private readonly int _numPlayers = currentGame.State.NumPlayers;
     private int _actionsCounter = 0;
@@ -31,7 +31,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     /// <inheritdoc cref="IRegulator.PhaseActions"/>
     public int PhaseActions => _actionsCounter - _prevActionCount;
     /// <inheritdoc cref="IRegulator.Reward"/>
-    public ICard? Reward { get; set; } = null;
+    public ICard<TerrID>? Reward { get; set; } = null;
 
     /// <inheritdoc cref="IRegulator.PromptBonusChoice"/>
     public event EventHandler<TerrID[]>? PromptBonusChoice;
@@ -120,10 +120,10 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
             player.RemoveCard(discardIndex);
         }
     }
-    private ICard[] GetCardsFromHand(int playerNum, int[] handIndices)
+    private ICard<TerrID>[] GetCardsFromHand(int playerNum, int[] handIndices)
     {
         var player = _currentGame.Players[playerNum];
-        List<ICard> selectedCards = [];
+        List<ICard<TerrID>> selectedCards = [];
         if (handIndices.Length > player.Hand.Count)
             throw new IndexOutOfRangeException($"An attempt was made to get {handIndices.Length} cards from {player}'s hand, but they only had {player.Hand.Count}.");
 
@@ -395,7 +395,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         if (selectedCards == null || selectedCards.Length == 0)
             return false;
 
-        List<ICardSet> tradedSets = [];
+        List<ICardSet<TerrID>> tradedSets = [];
         foreach (var card in selectedCards)
         {
             if (card.IsTradeable == false)
@@ -499,7 +499,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
             else
             {
                 string cardTypeName = reader.ReadString();
-                if (_currentGame?.Cards?.CardFactory.BuildCard(cardTypeName) is not ICard rewardCard)
+                if (_currentGame?.Cards?.CardFactory.BuildCard(cardTypeName) is not ICard<TerrID> rewardCard)
                 {
                     throw new InvalidDataException("While loading Regulator, construction of the reward card failed");
                 }

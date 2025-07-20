@@ -16,13 +16,13 @@ using System.Threading.Tasks;
 
 namespace Model.Stats.Services;
 
-public class StatTracker: IStatTracker, IBinarySerializable
+public class StatTracker: IStatTracker<TerrID, ContID>, IBinarySerializable
 {
     private readonly ILogger _logger;
     private readonly ILoggerFactory _loggerFactory;
     private GameSession _currentSession;
         
-    public StatTracker(IGame game, IOptions<AppConfig> options, ILoggerFactory loggerFactory)
+    public StatTracker(IGame<TerrID, ContID> game, IOptions<AppConfig> options, ILoggerFactory loggerFactory)
     {
         _loggerFactory = loggerFactory;
         _logger = loggerFactory.CreateLogger<StatTracker>();

@@ -1,21 +1,22 @@
-﻿using Shared.Interfaces.Model;
+﻿using Shared.Geography.Enums;
+using Shared.Interfaces.Model;
 
 namespace Model.Entities.Cards;
 /// <summary>
 /// The card set for the game's default card type, <see cref="TroopCard"/>.
 /// </summary>
 /// <inheritdoc cref="ICardSet"/>
-public class TroopCardSet : ICardSet
+public class TroopCardSet : ICardSet<TerrID>
 {
     /// <inheritdoc cref="ICardSet.TypeName"/>
     public string TypeName { get; } = nameof(TroopCardSet);
     /// <inheritdoc cref="ICardSet.JData"/>
     public ITroopCardSetData? JData { get; set; } = null;
-    ICardSetData? ICardSet.JData { get => (ICardSetData?)JData; }
+    ICardSetData<TerrID>? ICardSet<TerrID>.JData => JData;
     /// <inheritdoc cref="ICardSet.MemberTypeName"/>
     public string MemberTypeName { get; } = nameof(TroopCard);
     /// <inheritdoc cref="ICardSet.Cards"/>
-    public List<ICard> Cards { get; set; } = [];
+    public List<ICard<TerrID>> Cards { get; set; } = [];
     /// <inheritdoc cref="ICardSet.ForcesTrade"/>
     public bool ForcesTrade { get; } = true;
 
@@ -24,7 +25,7 @@ public class TroopCardSet : ICardSet
     /// optimal solutions if 'n' (number of cards) or 'k' (number in a match) gets large.
     /// </remarks>
     /// <inheritdoc cref="ICardSet.FindTradeSets(ICard[])"/>
-    public ICard[][]? FindTradeSets(ICard[] cards)
+    public ICard<TerrID>[][]? FindTradeSets(ICard<TerrID>[] cards)
     {
         int matchNum = 3;
         if (cards.Length < matchNum)
@@ -33,7 +34,7 @@ public class TroopCardSet : ICardSet
         if (troopCards.Count() < matchNum)
             return null;
 
-        List<ICard[]> tradeSets = [];
+        List<ICard<TerrID>[]> tradeSets = [];
 
         for (int first = 0; first <= cards.Length - matchNum; first++)
         {
@@ -41,7 +42,7 @@ public class TroopCardSet : ICardSet
             {
                 for (int third = second + 1; third <= cards.Length - (matchNum - 2); third++)
                 {
-                    ICard[] testCards = [cards[first], cards[second], cards[third]];
+                    ICard<TerrID>[] testCards = [cards[first], cards[second], cards[third]];
                     if (IsValidTrade(testCards))
                         tradeSets.Add(testCards);
                 }
@@ -60,7 +61,7 @@ public class TroopCardSet : ICardSet
     /// (3) contains <see cref="TroopCard"/>s with all identical OR all different <see cref="TroopInsignia"/> (after wilds).
     /// </remarks>
     /// <inheritdoc cref="ICardSet.IsValidTrade(ICard[])"/>
-    public bool IsValidTrade(ICard[] cards)
+    public bool IsValidTrade(ICard<TerrID>[] cards)
     {
         if (cards.Length != 3)
             return false;

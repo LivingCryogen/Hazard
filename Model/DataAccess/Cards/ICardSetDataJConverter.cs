@@ -1,4 +1,5 @@
-﻿using Shared.Interfaces.Model;
+﻿using Shared.Geography.Enums;
+using Shared.Interfaces.Model;
 using Shared.Services.Registry;
 using System.Text.Json.Serialization;
 
@@ -12,7 +13,7 @@ namespace Model.DataAccess.Cards;
 /// In the <see cref="TypeRegister"/>, each <see cref="ICard"/> used should have a registered <see cref="ICardSet"/>, and vice versa. Then, each <see cref="ICardSet"/> should be associated with an
 /// <br/><see cref="ICardSetData"/> (see <see cref="ICardSet.JData"/>) and an <see cref="ICardSetDataJConverter"/>.
 /// </remarks>
-public interface ICardSetDataJConverter
+public interface ICardSetDataJConverter<T> where T: struct, Enum
 {
     /// <summary>
     /// Wraps <see cref="JsonConverter{T}.Read(ref System.Text.Json.Utf8JsonReader, Type, System.Text.Json.JsonSerializerOptions)"/> so that return type may vary from T.
@@ -23,5 +24,5 @@ public interface ICardSetDataJConverter
     /// <param name="registeredFileName">The object marked <see cref="RegistryRelation.Name"> for the JsonConverter's 'T' in a <see cref="TypeRegister"/>.</see></param>
     /// <returns>The object marked <see cref="RegistryRelation.CollectionType"/> for a keyed <see cref="ICard"/> implemetation in a <see cref="TypeRegister"/>; <br/>
     /// or, if default, <see cref="ICardSet"/>.</returns>
-    ICardSet? ReadCardSetData(string registeredFileName);
+    ICardSet<T>? ReadCardSetData(string registeredFileName);
 }

@@ -3,7 +3,7 @@ using Shared.Interfaces.ViewModel;
 
 namespace ViewModel.EventArgs;
 
-public class TroopsAdvanceEventArgs(TerrID source, TerrID target, int min, int max, bool conquered) : System.EventArgs, ITroopsAdvanceEventArgs
+public class TroopsAdvanceEventArgs(TerrID source, TerrID target, int min, int max, bool conquered) : System.EventArgs, ITroopsAdvanceEventArgs<TerrID>
 {
     public TerrID Source { get; init; } = source;
     public TerrID Target { get; init; } = target;

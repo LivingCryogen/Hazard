@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 namespace Model.Assets;
 
 /// <inheritdoc cref="IRuleValues"/>.
-public class RuleValues(IConfiguration config) : IRuleValues
+public class RuleValues(IConfiguration config) : IRuleValues<ContID>
 {
     /// <inheritdoc cref="IRuleValues.MinimumArmyBonus"/>.
     public int MinimumArmyBonus { get; } = int.Parse(config["MinimumArmyBonus"] ?? "");

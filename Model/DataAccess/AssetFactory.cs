@@ -58,7 +58,7 @@ public class AssetFactory : IAssetFactory
 
         switch (dataObject)
         {
-            case ICardSet cardSet:
+            case ICardSet<TerrID> cardSet:
                 cardSet.Cards = [.. BuildTroopCards(cardSet)];
                 return cardSet;
             case GeographyInitializer geographyInitializer:
@@ -73,7 +73,7 @@ public class AssetFactory : IAssetFactory
     /// within a <see cref="TypeRegister"/> entry for <see cref="TroopCard"/>.<br/> An instance is returned by <see cref="IDataProvider.GetData(string)"/> when passsed the <see cref="object"/> marked <see cref="RegistryRelation.Name"/>
     /// <br/>for <see cref="TroopCard"/> if the entry also includes a proper <see cref="RegistryRelation.DataFileName"/>.</param>
     /// <returns>An array of TroopCards for use by <see cref="Deck"/>.</returns>
-    public TroopCard[] BuildTroopCards(ICardSet troopCardSet)
+    public TroopCard[] BuildTroopCards(ICardSet<TerrID> troopCardSet)
     {
         List<TroopCard> troopCards = [];
         if (troopCardSet.JData == null ||

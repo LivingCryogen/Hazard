@@ -10,7 +10,7 @@ namespace Shared.Interfaces.Model;
 /// <see cref="ICardSetData"/> implementations store the data from step (1). See <see cref="ICardSet.JData"/>. <br/>
 /// For an example, see: <see cref="TroopCardSetData"/>.
 /// </remarks>
-public interface ICardSetData
+public interface ICardSetData<T> where T : struct, Enum
 {
     /// <summary>
     /// Gets or sets the values for each <see cref="ICard.Target"/> as read from the '.json' for their <see cref="ICardSet"/>.
@@ -18,5 +18,5 @@ public interface ICardSetData
     /// <value>
     /// A staggered array of territory targets; each <see cref="ICard.Target"/> will be set to one <see cref="TerrID"/> array.
     /// </value>
-    TerrID[][] Targets { get; set; }
+    T[][] Targets { get; set; }
 }

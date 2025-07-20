@@ -5,7 +5,7 @@ namespace Shared.Interfaces.Model;
 /// <summary>
 /// Encapsulates Data and Actions that directly affect the armies, territories, and continents on the game board.
 /// </summary>
-public interface IBoard : IBinarySerializable
+public interface IBoard<T, U> : IBinarySerializable where T: struct, Enum where U : struct, Enum
 {
     /// <summary>
     /// Notifies <see cref="ViewModel.IMainVM"/> that a territory's owner or armies have changed.
@@ -13,27 +13,27 @@ public interface IBoard : IBinarySerializable
     /// <remarks>
     /// Should be invoked manually when affecting changes on <see cref="Armies"/> or <see cref="TerritoryOwner"/>.
     /// </remarks>
-    event EventHandler<ITerritoryChangedEventArgs> TerritoryChanged;
+    event EventHandler<ITerritoryChangedEventArgs<T>> TerritoryChanged;
     /// <summary>
     /// Notifies <see cref="ViewModel.IMainVM"/> that a continent's owner has changed.
     /// </summary>
     /// <remarks>
     /// Should be invoked manually when affecting changes on <see cref="ContinentOwner"/>.
     /// </remarks>
-    event EventHandler<IContinentOwnerChangedEventArgs>? ContinentOwnerChanged;
+    event EventHandler<IContinentOwnerChangedEventArgs<U>>? ContinentOwnerChanged;
 
     /// <summary>
     /// Contains the number of armies in each territory.
     /// </summary>
-    Dictionary<TerrID, int> Armies { get; }
+    Dictionary<T, int> Armies { get; }
     /// <summary>
     /// Contains the player number of the owner of each territory.
     /// </summary>
-    Dictionary<TerrID, int> TerritoryOwner { get; }
+    Dictionary<T, int> TerritoryOwner { get; }
     /// <summary>
     /// Contains the player number of the owner of each continent.
     /// </summary>
-    Dictionary<ContID, int> ContinentOwner { get; }
+    Dictionary<U, int> ContinentOwner { get; }
     /// <summary>
     /// Gets a list of territories or of continents on the board owned by a specfied player.
     /// </summary>
@@ -49,24 +49,24 @@ public interface IBoard : IBinarySerializable
     /// </remarks>
     /// <param name="newPlayer">The number of the player that takes the territory.<paramref name="newPlayer"/></param>
     /// <param name="territory">The ID of the territory taken control of by <paramref name="newPlayer"/>.</param>
-    void Claims(int newPlayer, TerrID territory);
+    void Claims(int newPlayer, T territory);
     /// <inheritdoc />
     /// <param name="newPlayer"></param>
     /// <param name="territory"></param>
     /// <param name="armies">The number of armies the new owner controls in the territory.</param>
     /// <remarks>This is a variation on <see cref="Claims(int, TerrID)"/> meant to enable overriding the default one army per claim.</remarks>
-    void Claims(int newPlayer, TerrID territory, int armies);
+    void Claims(int newPlayer, T territory, int armies);
     /// <summary>
     /// Increments the armies present within a territory.
     /// </summary>
     /// <param name="territory">The ID of the territory in <see cref="Armies"/> to increment.</param>
-    void Reinforce(TerrID territory);
+    void Reinforce(T territory);
     /// <summary>
     /// Increases the armies present within a territory by a specified amount.
     /// </summary>
     /// <param name="territory">The ID of the territory in <see cref="Armies"/> to increase.</param>
     /// <param name="armies">The value of the increase of armies in the <paramref name="territory"/>.</param>
-    void Reinforce(TerrID territory, int armies);
+    void Reinforce(T territory, int armies);
     /// <summary>
     /// Changes ownership of a territory after a successful attack.
     /// </summary>
@@ -74,7 +74,7 @@ public interface IBoard : IBinarySerializable
     /// <param name="target">The territory that was attacked and is being conquered.</param>
     /// <param name="newOwner">The <see cref="IPlayer.Number"/> of the owner after the attack is completed.</param>
     /// <param name="contFlipped">If a Continent changed hands due to this conquest, its ID; otherwise, <see langword="null"/>.</param>
-    void Conquer(TerrID source, TerrID target, int newOwner, out ContID? contFlipped);
+    void Conquer(T source, T target, int newOwner, out U? contFlipped);
     /// <summary>
     /// Determines whether a continent has changed ownership after a change in territory ownership.
     /// </summary>
@@ -82,5 +82,5 @@ public interface IBoard : IBinarySerializable
     /// <param name="changed">The territory that changed hands.</param>
     /// <param name="previousOwner">The <see cref="IPlayer.Number"/> of the territory's owner before the change.</param>
     /// <returns>The ID of the Continent that flipped, if any; otherwise, <see langword="null"/>.</s</returns>
-    ContID? CheckContinentFlip(TerrID changed, int previousOwner);
+    ContID? CheckContinentFlip(T changed, int previousOwner);
 }

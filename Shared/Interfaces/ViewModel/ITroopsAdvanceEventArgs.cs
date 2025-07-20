@@ -5,7 +5,7 @@ namespace Shared.Interfaces.ViewModel;
 /// <summary>
 /// Contract for EventArgs used by <see cref="IMainVM.AdvanceRequest"/>.
 /// </summary>
-public interface ITroopsAdvanceEventArgs
+public interface ITroopsAdvanceEventArgs<T> where T : struct, Enum
 {
     /// <summary>
     /// Get or inits a flag indicating if the target of the advance was conquered in attack.
@@ -31,9 +31,9 @@ public interface ITroopsAdvanceEventArgs
     /// <summary>
     /// Gets or inits the source territory's Enum ID.
     /// </summary>
-    TerrID Source { get; init; }
+    T Source { get; init; }
     /// <summary>
     /// Gets or inits the target territory's Enum ID.
     /// </summary>
-    TerrID Target { get; init; }
+    T Target { get; init; }
 }

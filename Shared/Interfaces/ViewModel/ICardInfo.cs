@@ -4,7 +4,7 @@ namespace Shared.Interfaces.ViewModel;
 /// <summary>
 /// Defines public data for ViewModel structs representing <see cref="Model.ICard"/>s.
 /// </summary>
-public interface ICardInfo
+public interface ICardInfo<T, U> where T : struct, Enum where U : struct, Enum
 {
     /// <summary>
     /// Gets the owner of the card.
@@ -25,9 +25,9 @@ public interface ICardInfo
     /// <summary>
     /// Gets the territories targeted by the card.
     /// </summary>
-    public TerrID[] TargetTerritory { get; }
+    public T[] TargetTerritory { get; }
     /// <summary>
     /// Gets the continents targeted by the card.
     /// </summary>
-    public ContID[] TargetContinent { get; }
+    public U[] TargetContinent { get; }
 }

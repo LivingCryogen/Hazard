@@ -4,7 +4,7 @@ namespace Shared.Interfaces;
 /// <summary>
 /// Defines public data for ViewModel structs representing <see cref="Model.ITroopCard"/>s.
 /// </summary>
-public interface ITroopCardInfo : ICardInfo
+public interface ITroopCardInfo<T, U> : ICardInfo<T, U> where T : struct, Enum where U : struct, Enum
 {
     /// <summary>
     /// Gets or inits the name to display in the UI for the corresponding <see cref="Model.ITroopCard"/>.

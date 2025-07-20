@@ -10,10 +10,10 @@ namespace Model.DataAccess.Cards;
 /// <summary>
 /// The base card set '.json' converter. 
 /// </summary>
-public class TroopCardSetDataJConverter : JsonConverter<TroopCardSet>, ICardSetDataJConverter
+public class TroopCardSetDataJConverter : JsonConverter<TroopCardSet>, ICardSetDataJConverter<TerrID>
 {
     /// <inheritdoc cref="ICardSetDataJConverter.ReadCardSetData(string)"/>
-    public ICardSet? ReadCardSetData(string registeredFileName)
+    public ICardSet<TerrID>? ReadCardSetData(string registeredFileName)
     {
         ReadOnlySpan<byte> jsonROSpan = File.ReadAllBytes(registeredFileName);
         var reader = new Utf8JsonReader(jsonROSpan);

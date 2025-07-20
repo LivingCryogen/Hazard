@@ -3,7 +3,7 @@ using Shared.Interfaces.Model;
 
 namespace Model.EventArgs;
 /// <inheritdoc cref="ITerritoryChangedEventArgs"/>
-public class TerritoryChangedEventArgs : System.EventArgs, ITerritoryChangedEventArgs
+public class TerritoryChangedEventArgs : System.EventArgs, ITerritoryChangedEventArgs<TerrID>
 {
     /// <summary>
     /// Constructs a TerritoryChangedEventArgs with only territory ID data.

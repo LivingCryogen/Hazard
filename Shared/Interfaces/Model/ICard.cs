@@ -12,7 +12,7 @@ namespace Shared.Interfaces.Model;
 /// <remarks>
 /// Default serialization methods provided use reflection and should be overridden if there are performance concerns.
 /// </remarks>
-public interface ICard : IBinarySerializable
+public interface ICard<T> : IBinarySerializable where T : struct, Enum
 {
     /// <summary>
     /// Gets or sets the logger.
@@ -45,11 +45,11 @@ public interface ICard : IBinarySerializable
     /// <value>
     /// The <see cref="ICardSet"/> containing this <see cref="ICard"/>, if both have been initialized and mapped. Otherwise, <see langword="null"/>.
     /// </value>
-    ICardSet? CardSet { get; set; }
+    ICardSet<T>? CardSet { get; set; }
     /// <summary>
     /// Gets or sets a list of this card's territory 'targets'.
     /// </summary>
-    TerrID[] Target { get; set; }
+    T[] Target { get; set; }
     /// <summary>
     /// Gets a flag indicating this card can be traded in for additional armies.
     /// </summary>

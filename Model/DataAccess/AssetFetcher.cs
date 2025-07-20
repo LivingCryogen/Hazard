@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.Options;
 using Shared.Geography;
+using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Services.Options;
 
 namespace Model.DataAccess;
 
 /// <inheritdoc cref="IAssetFetcher"/>
-public class AssetFetcher(IAssetFactory factory, IOptions<AppConfig> options) : IAssetFetcher
+public class AssetFetcher(IAssetFactory factory, IOptions<AppConfig> options) : IAssetFetcher<TerrID>
 {
     private readonly IAssetFactory _factory = factory;
     private readonly Dictionary<string, string> _dataFileMap = new(options.Value.DataFileMap);
@@ -21,9 +22,9 @@ public class AssetFetcher(IAssetFactory factory, IOptions<AppConfig> options) : 
     /// a "default data file name" to RegistryRelation, or generalizing this class to AssetFetcher{T} and building 
     /// file discovery logic between it and <see cref="Shared.Services.Registry.TypeRegister"/> may be more
     /// functional/elegant.
-    public List<ICardSet> FetchCardSets()
+    public List<ICardSet<TerrID>> FetchCardSets()
     {
-        List<ICardSet> cardSets = [];
+        List<ICardSet<TerrID>> cardSets = [];
         List<string> filePaths = [];
         foreach (string fileName in _dataFileMap.Keys)
             if (fileName.Contains(_cardDataSearchString))
@@ -32,7 +33,7 @@ public class AssetFetcher(IAssetFactory factory, IOptions<AppConfig> options) : 
         {
             string fileName = Path.GetFileNameWithoutExtension(path);
             string typeName = fileName.Replace("Set", "");
-            if (_factory.GetAsset(typeName) is ICardSet cardSetData)
+            if (_factory.GetAsset(typeName) is ICardSet<TerrID> cardSetData)
                 cardSets.Add(cardSetData);
         }
 

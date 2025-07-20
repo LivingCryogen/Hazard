@@ -7,7 +7,7 @@ namespace Model.Entities.Cards;
 /// <summary>
 /// Default card type implementation for the base game.
 /// </summary>
-public class TroopCard : ITroopCard
+public class TroopCard : ITroopCard<TerrID>
 {
     /// <summary>
     /// Constructs a TroopCard with a logger provided by a logger Factory.
@@ -42,12 +42,12 @@ public class TroopCard : ITroopCard
     /// Gets or sets the parent collection containing this <see cref="TroopCard"/> in its <see cref="ICardSet.Cards"/> list.
     /// </summary>
     /// <value>An <see cref="ICardSet"/> instance, if this and it have been initialized and mapped. Otherwise, <see langword="null"/>.</value>
-    public ICardSet? CardSet { get; set; } = null;
+    public ICardSet<TerrID>? CardSet { get; set; } = null;
     /// <inheritdoc cref="ICard.IsTradeable"/>
     public bool IsTradeable { get; set; } = true;
     /// <inheritdoc cref="ICard.Target"/>
     public TerrID[] Target { get; set; } = [];
     /// <inheritdoc cref="ITroopCard.Insigne"/>
     public TroopInsignia Insigne { get; set; }
-    Enum ITroopCard.Insigne { get => Insigne; set { Insigne = (TroopInsignia)value; } }
+    Enum ITroopCard<TerrID>.Insigne { get => Insigne; set { Insigne = (TroopInsignia)value; } }
 }
