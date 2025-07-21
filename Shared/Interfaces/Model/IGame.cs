@@ -49,7 +49,7 @@ public interface IGame<T, U> : IBinarySerializable where T : struct, Enum where 
     /// <summary>
     /// Gets the "card base", containing all <see cref="ICard"/>s, <see cref="ICardSet"/>s, and <see cref="Deck"/>s.
     /// </summary>
-    ICardBase<TerrID> Cards { get; }
+    ICardBase<T> Cards { get; }
     /// <summary>
     /// Gets the list of players in the game.
     /// </summary>

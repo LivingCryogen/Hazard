@@ -1,4 +1,5 @@
-﻿using Shared.Interfaces;
+﻿using Shared.Geography.Enums;
+using Shared.Interfaces;
 using Shared.Interfaces.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,7 +19,7 @@ public partial class TroopCardControl : UserControl
     {
         InitializeComponent();
     }
-    public TroopCardControl(IMainVM vM)
+    public TroopCardControl(IMainVM<TerrID, ContID> vM)
     {
         InitializeComponent();
 
@@ -34,7 +35,6 @@ public partial class TroopCardControl : UserControl
     public required Face CardFace { get; init; }
     public required int Owner { get; init; }
 
-    #region DependencyProperties
     public int PlayerTurn
     {
         get { return (int)GetValue(PlayerTurnProperty); }
@@ -74,11 +74,10 @@ public partial class TroopCardControl : UserControl
     }
     public static readonly DependencyProperty TerritoryProperty =
         DependencyProperty.Register("Territory", typeof(string), typeof(TroopCardControl), new FrameworkPropertyMetadata(defaultValue: string.Empty, flags: FrameworkPropertyMetadataOptions.AffectsRender));
-    #endregion
 
-    public void Build(IMainVM vM)
+    public void Build(IMainVM<TerrID, ContID> vM)
     {
-        if (Content is not ITroopCardInfo cardInfo)
+        if (Content is not ITroopCardInfo<TerrID, ContID> cardInfo)
             throw new NullReferenceException($"The content, {Content}, of TroopCardControl {this} was null or not an ITroopCardInfo.");
 
         string TerritoryName = cardInfo.TargetTerritory[0].ToString();

@@ -1,17 +1,18 @@
-﻿using Shared.Interfaces;
+﻿using Shared.Geography.Enums;
+using Shared.Interfaces;
 using Shared.Interfaces.ViewModel;
 using System.Windows.Controls;
 
 namespace View;
 
-public class CardControlFactory(IMainVM viewModel)
+public class CardControlFactory(IMainVM<TerrID, ContID> viewModel)
 {
-    private readonly IMainVM _viewModel = viewModel;
+    private readonly IMainVM<TerrID, ContID> _viewModel = viewModel;
 
-    public UserControl GetCardControl(ICardInfo card)
+    public UserControl GetCardControl(ICardInfo<TerrID, ContID> card)
     {
         Face newCardFace;
-        if (card is ITroopCardInfo troopCard)
+        if (card is ITroopCardInfo<TerrID, ContID> troopCard)
         {
             if (string.IsNullOrEmpty(troopCard.InsigniaName))
                 throw new ArgumentOutOfRangeException(nameof(card));

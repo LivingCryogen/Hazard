@@ -12,7 +12,7 @@ namespace Model.Entities.Cards;
 /// </remarks>
 /// <param name="typeRegister">The application's type registry, which must have valid entries for the factory to function.</param>
 /// <param name="loggerFactory">The factory for providing loggers to the <see cref="ICard">card</see> instances.</param>
-public class CardFactory(ITypeRegister<ITypeRelations> typeRegister, ILoggerFactory loggerFactory)
+public class CardFactory(ITypeRegister<ITypeRelations> typeRegister, ILoggerFactory loggerFactory) : ICardFactory<TerrID>
 {
     private readonly ITypeRegister<ITypeRelations> _registry = typeRegister;
     private readonly ILoggerFactory _loggerFactory = loggerFactory;

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Microsoft.Testing.Platform.Logging;
 using Model.Stats.StatModels;
+using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Fixtures.Stubs;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Model.Tests.Stats;
 
-public class MockStatTracker(IGame game) : IStatTracker, IBinarySerializable
+public class MockStatTracker(IGame<MockTerrID, MockContID> game) : IStatTracker<MockTerrID, MockContID>, IBinarySerializable
 {
     private readonly Microsoft.Extensions.Logging.ILogger _logger = new LoggerStubT<MockStatTracker>();
     private MockGameSession _currentSession = new()
@@ -40,9 +41,9 @@ public class MockStatTracker(IGame game) : IStatTracker, IBinarySerializable
         };
 
     public void RecordAttackAction(
-        TerrID source,
-        TerrID target,
-        ContID? conqueredcont,
+        MockTerrID source,
+        MockTerrID target,
+        MockContID? conqueredcont,
         int attacker,
         int defender,
         int attackerloss,
@@ -89,7 +90,7 @@ public class MockStatTracker(IGame game) : IStatTracker, IBinarySerializable
                     break;
             }
     }
-    public void RecordMoveAction(TerrID source, TerrID target, bool maxAdvanced, int player)
+    public void RecordMoveAction(MockTerrID source, MockTerrID target, bool maxAdvanced, int player)
     {
         var moveStats = new MockGameSession.MoveAction(new LoggerStubT<MockGameSession.MoveAction>())
         {
@@ -110,7 +111,7 @@ public class MockStatTracker(IGame game) : IStatTracker, IBinarySerializable
 
         _currentSession.Moves.Add(moveStats);
     }
-    public void RecordTradeAction(List<TerrID> cardTargets, int tradeValue, int occupiedBonus, int playerNumber)
+    public void RecordTradeAction(List<MockTerrID> cardTargets, int tradeValue, int occupiedBonus, int playerNumber)
     {
         var tradeStats = new MockGameSession.TradeAction(new LoggerStubT<MockGameSession.TradeAction>())
         {

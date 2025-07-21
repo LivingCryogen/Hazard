@@ -9,19 +9,19 @@ using Shared.Services.Registry;
 namespace ViewModel.Services;
 
 public class GameService (ILoggerFactory loggerFactory,
-    IAssetFetcher assetFetcher,
+    IAssetFetcher<TerrID> assetFetcher,
     IStatTracker<TerrID, ContID> statTracker,
     ITypeRegister<ITypeRelations> registry,
     IConfiguration config)
     : IGameService<TerrID, ContID>
 {
     private readonly ILoggerFactory _loggerFactory = loggerFactory;
-    private readonly IAssetFetcher _assetFetcher = assetFetcher;
+    private readonly IAssetFetcher<TerrID> _assetFetcher = assetFetcher;
     private readonly IStatTracker<TerrID, ContID> _statTracker = statTracker;
     private readonly ITypeRegister<ITypeRelations> _registry = registry;
     private readonly IConfiguration _config = config;
 
-    public (IGame<TerrID, ContID> Game, IRegulator Regulator) CreateGameWithRegulator(int numPlayers)
+    public (IGame<TerrID, ContID> Game, IRegulator<TerrID, ContID> Regulator) CreateGameWithRegulator(int numPlayers)
     {
         var game = new Game(numPlayers, _loggerFactory, _assetFetcher, _statTracker, _registry, _config);
         Regulator regulator = new(_loggerFactory.CreateLogger<Regulator>(), game);

@@ -8,7 +8,7 @@ using Shared.Services.Serializer;
 
 namespace Model.Tests.Entities.Mocks;
 
-internal class MockBoard : IBoard
+internal class MockBoard : IBoard<MockTerrID, MockContID>
 {
     private readonly ILogger<MockBoard> _logger = new LoggerStubT<MockBoard>();
     public List<object> this[int playerNumber, string enumName] => throw new NotImplementedException();
@@ -27,13 +27,9 @@ internal class MockBoard : IBoard
     public Dictionary<MockTerrID, int> TerritoryOwner { get; init; }
     public Dictionary<MockContID, int> ContinentOwner { get; init; }
 
-    Dictionary<TerrID, int> IBoard.Armies { get => Armies.ToDictionary(kvp => (TerrID)(int)(object)kvp.Key, kvp => kvp.Value); }
-    Dictionary<TerrID, int> IBoard.TerritoryOwner { get => TerritoryOwner.ToDictionary(kvp => (TerrID)(int)(object)kvp.Key, kvp => kvp.Value); }
-    Dictionary<ContID, int> IBoard.ContinentOwner { get => ContinentOwner.ToDictionary(kvp => (ContID)(int)(object)kvp.Key, kvp => kvp.Value); }
-
 #pragma warning disable CS0414 // For unit-testing, these are unused. If integration tests are built, they should be, at which time these warnings should be re-enabled.
-    public event EventHandler<ITerritoryChangedEventArgs>? TerritoryChanged = null;
-    public event EventHandler<IContinentOwnerChangedEventArgs>? ContinentOwnerChanged = null;
+    public event EventHandler<ITerritoryChangedEventArgs<MockTerrID>>? TerritoryChanged = null;
+    public event EventHandler<IContinentOwnerChangedEventArgs<MockContID>>? ContinentOwnerChanged = null;
 #pragma warning restore CS0414
 
     public async Task<SerializedData[]> GetBinarySerials()
@@ -88,32 +84,37 @@ internal class MockBoard : IBoard
         }
         return loadComplete;
     }
-    public ContID? CheckContinentFlip(TerrID changed, int previousOwner)
+    public MockContID? CheckContinentFlip(MockTerrID changed, int previousOwner)
     {
         throw new NotImplementedException();
     }
 
-    public void Claims(int newPlayer, TerrID territory)
+    public void Claims(int newPlayer, MockTerrID territory)
     {
         throw new NotImplementedException();
     }
 
-    public void Claims(int newPlayer, TerrID territory, int armies)
+    public void Claims(int newPlayer, MockTerrID territory, int armies)
     {
         throw new NotImplementedException();
     }
 
-    public void Conquer(TerrID source, TerrID target, int newOwner, out ContID? flipped)
+    public void Conquer(MockTerrID source, MockTerrID target, int newOwner, out MockContID? flipped)
     {
         throw new NotImplementedException();
     }
 
-    public void Reinforce(TerrID territory)
+    public void Reinforce(MockTerrID territory)
     {
         throw new NotImplementedException();
     }
 
-    public void Reinforce(TerrID territory, int armies)
+    public void Reinforce(MockTerrID territory, int armies)
+    {
+        throw new NotImplementedException();
+    }
+
+    MockContID? IBoard<MockTerrID, MockContID>.CheckContinentFlip(MockTerrID changed, int previousOwner)
     {
         throw new NotImplementedException();
     }

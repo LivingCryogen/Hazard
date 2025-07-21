@@ -12,7 +12,7 @@ public class Player : IPlayer<TerrID>
     private readonly ILogger _logger;
     private readonly IRuleValues<ContID> _values;
     private readonly IBoard<TerrID, ContID> _board;
-    private readonly CardFactory _cardFactory;
+    private readonly ICardFactory<TerrID> _cardFactory;
     private int _armyPool;
     /// <summary>
     /// Constructs a player when their name is unknown.
@@ -23,7 +23,7 @@ public class Player : IPlayer<TerrID>
     /// <param name="board">The game board.</param>
     /// <param name="logger">A logger for logging errors and debug information.</param>  
     /// <param name="cardFactory">A factory for producing <see cref="ICard"/>s; necessary for populating <see cref="Hand"/> via <see cref="LoadFromBinary(BinaryReader)"/>.</param>
-    public Player(int number, int numPlayers, CardFactory cardFactory, IRuleValues<ContID> values, IBoard<TerrID, ContID> board, ILogger<Player> logger)
+    public Player(int number, int numPlayers, ICardFactory<TerrID> cardFactory, IRuleValues<ContID> values, IBoard<TerrID, ContID> board, ILogger<Player> logger)
     {
         _logger = logger;
         Name = string.Empty;
@@ -45,7 +45,7 @@ public class Player : IPlayer<TerrID>
     /// <param name="board">The game board.</param>
     /// <param name="logger">A logger for logging errors and debug information.</param>  
     /// <param name="cardFactory">A factory for producing <see cref="ICard"/>s; necessary for populating <see cref="Hand"/> via <see cref="LoadFromBinary(BinaryReader)"/>.</param>
-    public Player(string name, int number, int numPlayers, CardFactory cardFactory, IRuleValues<ContID> values, IBoard<TerrID, ContID> board, ILogger<Player> logger)
+    public Player(string name, int number, int numPlayers, ICardFactory<TerrID> cardFactory, IRuleValues<ContID> values, IBoard<TerrID, ContID> board, ILogger<Player> logger)
     {
         _logger = logger;
         Name = name;

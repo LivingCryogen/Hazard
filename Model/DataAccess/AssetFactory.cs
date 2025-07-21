@@ -78,7 +78,7 @@ public class AssetFactory : IAssetFactory
         List<TroopCard> troopCards = [];
         if (troopCardSet.JData == null ||
             troopCardSet.JData.Targets == null ||
-            ((ITroopCardSetData)troopCardSet.JData).Insignia == null)
+            ((ITroopCardSetData<TerrID>)troopCardSet.JData).Insignia == null)
         {
             _logger.LogWarning($"Valid ICardSetData for TroopCards not found by AssetFactory.");
             return [];
@@ -95,7 +95,7 @@ public class AssetFactory : IAssetFactory
             {
                 CardSet = troopCardSet,
                 Target = [.. targets],
-                Insigne = ((ITroopCardSetData)troopCardSet.JData).Insignia[i],
+                Insigne = ((ITroopCardSetData<TerrID>)troopCardSet.JData).Insignia[i],
             });
         }
 

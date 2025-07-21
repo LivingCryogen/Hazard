@@ -8,9 +8,9 @@ using System.Text.Json.Serialization;
 
 namespace Model.Tests.DataAccess.Mocks;
 
-public class MockCardDataJConverter : JsonConverter<MockCardSet>, ICardSetDataJConverter
+public class MockCardDataJConverter : JsonConverter<MockCardSet>, ICardSetDataJConverter<MockTerrID>
 {
-    public ICardSet? ReadCardSetData(string registeredFileName)
+    public ICardSet<MockTerrID>? ReadCardSetData(string registeredFileName)
     {
         ReadOnlySpan<byte> jsonROSpan = FileProcessor.ReadAllBytes(registeredFileName);
         var reader = new Utf8JsonReader(jsonROSpan);

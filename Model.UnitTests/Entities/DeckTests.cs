@@ -1,5 +1,6 @@
 using Model.Entities;
 using Model.Tests.Entities.Mocks;
+using Model.Tests.Fixtures.Mocks;
 using Shared.Interfaces.Model;
 using System.Diagnostics;
 
@@ -9,8 +10,8 @@ namespace Model.Tests.Entities
     public class DeckTests
     {
         private List<MockCard>? _testCards;
-        private readonly ICardSet _mockSet = new MockCardSet();
-        private readonly int _numCards = 41;
+        private readonly ICardSet<MockTerrID> _mockSet = new MockCardSet();
+        private readonly int _numCards = 50;
 
         [TestInitialize]
         public void Setup()
@@ -22,13 +23,13 @@ namespace Model.Tests.Entities
             }
         }
 
-        private Deck InitTestDeck(int lib)
+        private MockDeck InitTestDeck(int lib)
         {
             return InitTestDeck(lib, 0);
         }
-        private Deck InitTestDeck(int lib, int discard)
+        private MockDeck InitTestDeck(int lib, int discard)
         {
-            Deck newDeck = new();
+            MockDeck newDeck = new();
             if (lib + discard > _testCards!.Count)
                 throw new Exception("The combined number of library and discard cards cannot exceed the number of test cards.");
 
@@ -46,7 +47,7 @@ namespace Model.Tests.Entities
         [TestMethod]
         public void Shuffle_IsCalled_LibraryRandomized()
         {
-            Deck testDeck = InitTestDeck(_numCards);
+            MockDeck testDeck = InitTestDeck(_numCards);
             Assert.IsNotNull(testDeck);
             Assert.IsNotNull(testDeck.Library);
             Assert.IsNotNull(testDeck.DiscardPile);
@@ -116,38 +117,37 @@ namespace Model.Tests.Entities
         [TestMethod]
         public void Shuffle_DiscardEmpty_DiscardRemainsEmpty()
         {
-            Deck testDeck = InitTestDeck(_numCards);
+            MockDeck testDeck = InitTestDeck(_numCards);
             Assert.IsNotNull(testDeck);
             Assert.IsNotNull(testDeck.Library);
             Assert.IsNotNull(testDeck.DiscardPile);
             testDeck.Shuffle();
-            Assert.IsTrue(testDeck.DiscardPile.Count == 0);
+            Assert.AreEqual(0, testDeck.DiscardPile.Count);
         }
         [TestMethod]
         public void Shuffle_IsCalledWithDiscards_LibraryTakesDiscards()
         {
-            Deck testDeck = InitTestDeck(_numCards - 10, 10);
+            MockDeck testDeck = InitTestDeck(_numCards - 10, 10);
             Assert.IsNotNull(testDeck);
             Assert.IsNotNull(testDeck.Library);
             Assert.IsNotNull(testDeck.DiscardPile);
             int numLibrary = testDeck.Library.Count;
             int numDiscards = testDeck.DiscardPile.Count;
-            string[] discardIDs = testDeck.DiscardPile
+            string[] discardIDs = [.. testDeck.DiscardPile
                 .Select(card => (MockCard)card)
-                .Select(card => card.ID)
-                .ToArray();
+                .Select(card => card.ID)];
 
             testDeck.Shuffle();
 
-            Assert.IsTrue(testDeck.Library.Count == numLibrary + numDiscards);
-            Assert.IsTrue(testDeck.DiscardPile.Count == 0);
+            Assert.AreEqual(numLibrary + numDiscards, testDeck.Library.Count);
+            Assert.AreEqual(0, testDeck.DiscardPile.Count);
             foreach (var id in discardIDs)
                 Assert.IsTrue(testDeck.Library.Where(item => ((MockCard)item).ID == id).Any());
         }
         [TestMethod]
         public void DrawCard_IsCalled_BottomLibCardReturned()
         {
-            Deck testDeck = InitTestDeck(_numCards);
+            MockDeck testDeck = InitTestDeck(_numCards);
             Assert.IsNotNull(testDeck);
             Assert.IsNotNull(testDeck.Library);
             Assert.IsNotNull(testDeck.DiscardPile);
@@ -156,13 +156,13 @@ namespace Model.Tests.Entities
 
             var drawnCard = testDeck.DrawCard();
 
-            Assert.IsTrue(testDeck.Library.Count == numLib - 1);
-            Assert.IsTrue(((MockCard)drawnCard).ID == bottomCardID);
+            Assert.AreEqual(numLib - 1, testDeck.Library.Count);
+            Assert.AreEqual(bottomCardID, ((MockCard)drawnCard).ID);
         }
         [TestMethod]
         public void DrawCard_EmptyLibrary_LibRenewedAndDrawnFrom()
         {
-            Deck testDeck = InitTestDeck(0, _numCards);
+            MockDeck testDeck = InitTestDeck(0, _numCards);
             Assert.IsNotNull(testDeck);
             Assert.IsNotNull(testDeck.Library);
             Assert.IsNotNull(testDeck.DiscardPile);
@@ -172,12 +172,12 @@ namespace Model.Tests.Entities
             var drawnCard = testDeck.DrawCard();
             MockCard mockCard = (MockCard)drawnCard;
 
-            Assert.IsTrue(testDeck.Library.Count == numDiscards - 1);
-            Assert.IsTrue(testDeck.DiscardPile.Count == 0);
+            Assert.AreEqual(numDiscards - 1, testDeck.Library.Count);
+            Assert.AreEqual(0, testDeck.DiscardPile.Count);
             bool testIDinLibrary = testDeck.Library.Where(card => ((MockCard)card).ID == aDiscardID).Any();
             Assert.IsTrue(testIDinLibrary || mockCard.ID == aDiscardID);
             if (testIDinLibrary)
-                Assert.IsTrue(mockCard.ID != aDiscardID);
+                Assert.AreNotEqual(aDiscardID, mockCard.ID);
         }
     }
 }

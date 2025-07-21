@@ -1,4 +1,5 @@
-﻿using Shared.Interfaces.ViewModel;
+﻿using Shared.Geography.Enums;
+using Shared.Interfaces.ViewModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -14,7 +15,7 @@ public partial class TerritoryChoice : Window
     {
         InitializeComponent();
     }
-    public TerritoryChoice(ValueTuple<int, string>[] territoryData, SolidColorBrush ownerColor, IMainVM vM)
+    public TerritoryChoice(ValueTuple<int, string>[] territoryData, SolidColorBrush ownerColor, IMainVM<TerrID, ContID> vM)
     {
         InitializeComponent();
         BoardVM = vM;
@@ -28,9 +29,8 @@ public partial class TerritoryChoice : Window
                 ownerColor);
     }
 
-    public IMainVM? BoardVM { get; init; }
+    public IMainVM<TerrID, ContID>? BoardVM { get; init; }
 
-    #region DependencyProperties
     public Tuple<int, string, Geometry, SolidColorBrush>[] TerritoryChoiceItems
     {
         get { return (Tuple<int, string, Geometry, SolidColorBrush>[])GetValue(TerritoryChoiceItemsProperty); }
@@ -46,7 +46,6 @@ public partial class TerritoryChoice : Window
     }
     public static readonly DependencyProperty TerritoryChoiceDataProperty =
         DependencyProperty.Register("TerritoryChoiceData", typeof(ValueTuple<int, string>[]), typeof(TerritoryChoice), new PropertyMetadata());
-    #endregion
 
     private void CommandBinding_MakeChoiceCanExecute(object sender, CanExecuteRoutedEventArgs e)
     {

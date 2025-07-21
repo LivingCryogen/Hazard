@@ -25,7 +25,7 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
     /// <remarks>
     /// Used when loading from a save file; see <see cref="LoadFromBinary"/>.
     /// </remarks>
-    public CardFactory CardFactory { get; } = new(registry, loggerFactory);
+    public ICardFactory<TerrID> CardFactory { get; } = new CardFactory(registry, loggerFactory);
     /// <summary>
     /// Gets or sets a list of card sets.
     /// </summary>

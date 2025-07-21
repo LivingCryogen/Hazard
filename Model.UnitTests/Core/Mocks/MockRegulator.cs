@@ -10,7 +10,7 @@ using System.Reflection.PortableExecutable;
 
 namespace Model.Tests.Core.Mocks;
 
-public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
+public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator<MockTerrID, MockContID>
 {
     private MockGame _currentGame = currentGame;
     private readonly MockStatTracker _statTracker = (MockStatTracker)currentGame.StatTracker;
@@ -20,10 +20,10 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
     private int _prevActionCount = 4;
     public int CurrentActionsLimit { get; set; } = 5;
     public int PhaseActions { get; set; } = 1;
-    public ICard? Reward { get; set; }
+    public ICard<MockTerrID>? Reward { get; set; }
 
 #pragma warning disable CS0414 // For unit-testing, these are unused. If integration tests are built, they should be, at which time these warnings should be re-enabled.
-    public event EventHandler<TerrID[]>? PromptBonusChoice = null;
+    public event EventHandler<MockTerrID[]>? PromptBonusChoice = null;
     public event EventHandler<IPromptTradeEventArgs>? PromptTradeIn = null;
 #pragma warning restore CS0414
     public async Task<SerializedData[]> GetBinarySerials()
@@ -61,7 +61,7 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
             else
             {
                 string cardTypeName = reader.ReadString();
-                if (_currentGame?.Cards?.CardFactory.BuildCard(cardTypeName) is not ICard rewardCard)
+                if (_currentGame?.Cards?.CardFactory.BuildCard(cardTypeName) is not ICard<MockTerrID> rewardCard)
                 {
                     throw new InvalidDataException("While loading Regulator, construction of the reward card failed");
                 }
@@ -76,17 +76,17 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
         }
         return loadComplete;
     }
-    public void AwardTradeInBonus(TerrID territory)
+    public void AwardTradeInBonus(MockTerrID territory)
     {
         throw new NotImplementedException();
     }
 
-    public void Battle(TerrID source, TerrID target, (int AttackRoll, int DefenseRoll)[] diceRolls)
+    public void Battle(MockTerrID source, MockTerrID target, (int AttackRoll, int DefenseRoll)[] diceRolls)
     {
         _actionsCounter++;
 
         bool conquered = false;
-        ContID? flipped = null;
+        MockContID? flipped = null;
         int attacker = _currentGame.Board.TerritoryOwner[source];
         int defender = _currentGame.Board.TerritoryOwner[target];
         bool retreated = false;
@@ -156,7 +156,7 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
         }
     }
 
-    public void Initialize(IGame game, object?[] loadedValues)
+    public void Initialize(IGame<TerrID, ContID> game, object?[] loadedValues)
     {
         _currentGame = (MockGame)game;
         _numPlayers = _currentGame.Players!.Count;
@@ -167,11 +167,11 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
             _prevActionCount = (int)(loadedValues?[1] ?? 0);
             CurrentActionsLimit = (int)(loadedValues?[2] ?? 0);
             if (((int?)loadedValues?[3] ?? 0) == 1)
-                Reward = (ICard)loadedValues![4]!;
+                Reward = (ICard<MockTerrID>)loadedValues![4]!;
         }
     }
 
-    public void MoveArmies(TerrID source, TerrID target, int armies)
+    public void MoveArmies(MockTerrID source, MockTerrID target, int armies)
     {
         int player = _currentGame.Board.TerritoryOwner[source];
         int max = _currentGame.Board.Armies[source] - 1;
@@ -182,17 +182,17 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
         _statTracker.RecordMoveAction(source, target, armies == max, player);
     }
 
-    public bool CanSelectTerritory(TerrID newSelected, TerrID oldSelected)
+    public bool CanSelectTerritory(MockTerrID newSelected, MockTerrID oldSelected)
     {
         throw new NotImplementedException();
     }
 
-    public (TerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(TerrID selected, TerrID priorSelected)
+    public (MockTerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(MockTerrID selected, MockTerrID priorSelected)
     {
         throw new NotImplementedException();
     }
 
-    public void ClaimOrReinforce(TerrID territory)
+    public void ClaimOrReinforce(MockTerrID territory)
     {
         throw new NotImplementedException();
     }
@@ -224,10 +224,10 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
         _statTracker.RecordTradeAction([.. tradedTargets], tradebonus, occupyBonus ? 2 : 0, player);
     }
 
-    private ICard[] GetCardsFromHand(int playerNum, int[] handIndices)
+    private ICard<MockTerrID>[] GetCardsFromHand(int playerNum, int[] handIndices)
     {
         var player = _currentGame.Players[playerNum];
-        List<ICard> selectedCards = [];
+        List<ICard<MockTerrID>> selectedCards = [];
         if (handIndices.Length > player.Hand.Count)
             throw new IndexOutOfRangeException($"An attempt was made to get {handIndices.Length} cards from {player}'s hand, but they only had {player.Hand.Count}.");
 

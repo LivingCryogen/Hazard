@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Fixtures.Stubs;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
@@ -19,9 +20,9 @@ public class MockGameSession : IBinarySerializable
     {
         private readonly ILogger _logger = logger;
 
-        public TerrID Source { get; set; }
-        public TerrID Target { get; set; }
-        public ContID? ConqueredCont { get; set; }
+        public MockTerrID Source { get; set; }
+        public MockTerrID Target { get; set; }
+        public MockContID? ConqueredCont { get; set; }
         public int Attacker { get; set; }
         public int Defender { get; set; }
         public int AttackerLoss { get; set; }
@@ -34,13 +35,13 @@ public class MockGameSession : IBinarySerializable
             return await Task.Run(() =>
             {
                 List<SerializedData> saveData = [];
-                saveData.Add(new(typeof(TerrID), Source));
-                saveData.Add(new(typeof(TerrID), Target));
+                saveData.Add(new(typeof(MockTerrID), Source));
+                saveData.Add(new(typeof(MockTerrID), Target));
 
-                if (ConqueredCont is ContID conqueredCont)
+                if (ConqueredCont is MockContID conqueredCont)
                 {
                     saveData.Add(new(typeof(int), 1));
-                    saveData.Add(new(typeof(ContID), conqueredCont));
+                    saveData.Add(new(typeof(MockContID), conqueredCont));
                 }
                 else
                     saveData.Add(new(typeof(int), 0));
@@ -59,11 +60,11 @@ public class MockGameSession : IBinarySerializable
             bool loadComplete = true;
             try
             {
-                Source = (TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID));
-                Target = (TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID));
+                Source = (MockTerrID)BinarySerializer.ReadConvertible(reader, typeof(MockTerrID));
+                Target = (MockTerrID)BinarySerializer.ReadConvertible(reader, typeof(MockTerrID));
                 bool hasConqueredCont = (int)BinarySerializer.ReadConvertible(reader, typeof(int)) == 1;
                 if (hasConqueredCont)
-                    ConqueredCont = (ContID)BinarySerializer.ReadConvertible(reader, typeof(ContID));
+                    ConqueredCont = (MockContID)BinarySerializer.ReadConvertible(reader, typeof(MockContID));
                 Attacker = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
                 Defender = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
                 AttackerLoss = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
@@ -84,8 +85,8 @@ public class MockGameSession : IBinarySerializable
     {
         private readonly ILogger _logger = logger;
 
-        public TerrID Source { get; set; }
-        public TerrID Target { get; set; }
+        public MockTerrID Source { get; set; }
+        public MockTerrID Target { get; set; }
         public int Player { get; set; }
         public bool MaxAdvanced { get; set; }
 
@@ -94,8 +95,8 @@ public class MockGameSession : IBinarySerializable
             return await Task.Run(() =>
             {
                 List<SerializedData> saveData = [];
-                saveData.Add(new(typeof(TerrID), Source));
-                saveData.Add(new(typeof(TerrID), Target));
+                saveData.Add(new(typeof(MockTerrID), Source));
+                saveData.Add(new(typeof(MockTerrID), Target));
                 saveData.Add(new(typeof(int), Player));
                 saveData.Add(new(typeof(bool), MaxAdvanced));
                 return saveData.ToArray();
@@ -107,8 +108,8 @@ public class MockGameSession : IBinarySerializable
             bool loadComplete = true;
             try
             {
-                Source = (TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID));
-                Target = (TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID));
+                Source = (MockTerrID)BinarySerializer.ReadConvertible(reader, typeof(MockTerrID));
+                Target = (MockTerrID)BinarySerializer.ReadConvertible(reader, typeof(MockTerrID));
                 Player = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
                 MaxAdvanced = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool));
             }
@@ -125,7 +126,7 @@ public class MockGameSession : IBinarySerializable
     {
         private readonly ILogger _logger = logger;
 
-        public TerrID[] CardTargets { get; set; } = [];
+        public MockTerrID[] CardTargets { get; set; } = [];
         public int TradeValue { get; set; }
         public int OccupiedBonus { get; set; }
 
@@ -139,7 +140,7 @@ public class MockGameSession : IBinarySerializable
                 foreach (var target in CardTargets)
                     convertTargets.Add(target);
                 saveData.Add(new(typeof(int), convertTargets.Count));
-                saveData.Add(new(typeof(TerrID), [.. convertTargets]));
+                saveData.Add(new(typeof(MockTerrID), [.. convertTargets]));
 
                 saveData.Add(new(typeof(int), TradeValue));
                 saveData.Add(new(typeof(int), OccupiedBonus));
@@ -153,7 +154,7 @@ public class MockGameSession : IBinarySerializable
             try
             {
                 int numCardTargets = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-                CardTargets = (TerrID[])BinarySerializer.ReadConvertibles(reader, typeof(TerrID), numCardTargets);
+                CardTargets = (MockTerrID[])BinarySerializer.ReadConvertibles(reader, typeof(MockTerrID), numCardTargets);
                 TradeValue = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
                 OccupiedBonus = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             }

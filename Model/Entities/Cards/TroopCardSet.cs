@@ -11,7 +11,7 @@ public class TroopCardSet : ICardSet<TerrID>
     /// <inheritdoc cref="ICardSet.TypeName"/>
     public string TypeName { get; } = nameof(TroopCardSet);
     /// <inheritdoc cref="ICardSet.JData"/>
-    public ITroopCardSetData? JData { get; set; } = null;
+    public ITroopCardSetData<TerrID>? JData { get; set; } = null;
     ICardSetData<TerrID>? ICardSet<TerrID>.JData => JData;
     /// <inheritdoc cref="ICardSet.MemberTypeName"/>
     public string MemberTypeName { get; } = nameof(TroopCard);

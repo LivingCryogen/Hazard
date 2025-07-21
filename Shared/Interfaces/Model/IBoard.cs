@@ -82,5 +82,5 @@ public interface IBoard<T, U> : IBinarySerializable where T: struct, Enum where 
     /// <param name="changed">The territory that changed hands.</param>
     /// <param name="previousOwner">The <see cref="IPlayer.Number"/> of the territory's owner before the change.</param>
     /// <returns>The ID of the Continent that flipped, if any; otherwise, <see langword="null"/>.</s</returns>
-    ContID? CheckContinentFlip(T changed, int previousOwner);
+    U? CheckContinentFlip(T changed, int previousOwner);
 }
