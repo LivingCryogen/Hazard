@@ -9,7 +9,7 @@ namespace Shared.Interfaces.Model;
 /// Tracks game session and player statistics via calls parallel to player actions.
 /// </summary>
 /// <remarks>
-/// The calls occur in <see cref="IRegulator"/>.
+/// The calls occur in <see cref="IRegulator{T, U}"/>.
 /// </remarks>
 public interface IStatTracker<T, U> where T : struct, Enum where U : struct, Enum
 {

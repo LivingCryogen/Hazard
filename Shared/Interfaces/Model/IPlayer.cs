@@ -85,7 +85,7 @@ public interface IPlayer<T> : IBinarySerializable where T : struct, Enum
     /// Finds trade-in card sets in the player's hand.
     /// </summary>
     /// <remarks>
-    /// Determines whether the player holds a set of <see cref="ICard"/>s that are a tradeable set according to<br/>
+    /// Determines whether the player holds a set of <see cref="$1ICard{T}$2"/>s that are a tradeable set according to<br/>
     /// <see cref="ICardSet.FindTradeSets(ICard[])"/> and <see cref="ICardSet.IsValidTrade(ICard[])"/>.
     /// </remarks>
     void FindCardSet();

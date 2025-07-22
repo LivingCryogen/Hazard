@@ -2,7 +2,7 @@
 
 namespace Shared.Interfaces.ViewModel;
 /// <summary>
-/// Defines public data for ViewModel structs representing <see cref="Model.ICard"/>s.
+/// Defines public data for ViewModel structs representing <see cref="$1ICard{T}$2"/>s.
 /// </summary>
 public interface ICardInfo<T, U> where T : struct, Enum where U : struct, Enum
 {

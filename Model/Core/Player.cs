@@ -22,7 +22,7 @@ public class Player : IPlayer<TerrID>
     /// <param name="values">Provides game-rule defined values and equations.</param>
     /// <param name="board">The game board.</param>
     /// <param name="logger">A logger for logging errors and debug information.</param>  
-    /// <param name="cardFactory">A factory for producing <see cref="ICard"/>s; necessary for populating <see cref="Hand"/> via <see cref="LoadFromBinary(BinaryReader)"/>.</param>
+    /// <param name="cardFactory">A factory for producing <see cref="$1ICard{T}$2"/>s; necessary for populating <see cref="Hand"/> via <see cref="LoadFromBinary(BinaryReader)"/>.</param>
     public Player(int number, int numPlayers, ICardFactory<TerrID> cardFactory, IRuleValues<ContID> values, IBoard<TerrID, ContID> board, ILogger<Player> logger)
     {
         _logger = logger;
@@ -44,7 +44,7 @@ public class Player : IPlayer<TerrID>
     /// <param name="values">Provides game-rule defined values and equations.</param>
     /// <param name="board">The game board.</param>
     /// <param name="logger">A logger for logging errors and debug information.</param>  
-    /// <param name="cardFactory">A factory for producing <see cref="ICard"/>s; necessary for populating <see cref="Hand"/> via <see cref="LoadFromBinary(BinaryReader)"/>.</param>
+    /// <param name="cardFactory">A factory for producing <see cref="$1ICard{T}$2"/>s; necessary for populating <see cref="Hand"/> via <see cref="LoadFromBinary(BinaryReader)"/>.</param>
     public Player(string name, int number, int numPlayers, ICardFactory<TerrID> cardFactory, IRuleValues<ContID> values, IBoard<TerrID, ContID> board, ILogger<Player> logger)
     {
         _logger = logger;

@@ -10,7 +10,7 @@ namespace Model.DataAccess;
 
 /// <inheritdoc cref="IAssetFactory"/>
 /// Currently only <see cref="TroopCard"/> is loaded from data files. To change this,
-/// by adding, for example, another <see cref="ICard"/>, this class must extend. */
+/// by adding, for example, another <see cref="$1ICard{T}$2"/>, this class must extend. */
 public class AssetFactory : IAssetFactory
 {
     private readonly ILoggerFactory _loggerFactory;

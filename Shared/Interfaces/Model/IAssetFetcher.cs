@@ -8,7 +8,7 @@ namespace Shared.Interfaces.Model;
 public interface IAssetFetcher<T> where T: struct, Enum
 {
     /// <summary>
-    /// Begins the process of data reading, conversion, and object initialization for <see cref="ICard"/>s. 
+    /// Begins the process of data reading, conversion, and object initialization for <see cref="$1ICard{T}$2"/>s. 
     /// </summary>
     /// <returns>A list of card sets whose <see cref="ICardSet.Cards"/>.</returns>
     List<ICardSet<T>> FetchCardSets();

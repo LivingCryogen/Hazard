@@ -26,7 +26,7 @@ public class Game : IGame<TerrID, ContID>
     /// <param name="loggerFactory">Builds configured loggers for various components when and where the DI system does not do so directly.</param>
     /// <param name="assetFetcher">Connects the Model and the DAL through bespoke methods. Provides assets to game properties, eg:<see cref="IAssetFetcher.FetchCardSets"/> for <see cref="Game.Cards"/>.</param>
     /// <param name="statTracker">Increments game and player related stats in response to game events / player actions.</param>
-    /// <param name="typeRegister">Serves as an Application Type Registry. Simplifies asset loading and configuration extension.<br/> Required for operation of <see cref="ICard"/>'s default methods and DAL operations.</param>
+    /// <param name="typeRegister">Serves as an Application Type Registry. Simplifies asset loading and configuration extension.<br/> Required for operation of <see cref="$1ICard{T}$2"/>'s default methods and DAL operations.</param>
     /// <param name="config">Configuration provided by DI. Values derived from "View\appsettings.json."</param>
     public Game(
         int numPlayers,

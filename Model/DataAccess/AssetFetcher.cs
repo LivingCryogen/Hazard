@@ -14,9 +14,9 @@ public class AssetFetcher(IAssetFactory factory, IOptions<AppConfig> options) : 
     private readonly string _cardDataSearchString = options.Value.CardDataSearchString;
 
     /// <summary>
-    /// Discovers local data files that contain <see cref="ICard"/>s and hands off their names to <see cref="AssetFactory"/>.
+    /// Discovers local data files that contain <see cref="$1ICard{T}$2"/>s and hands off their names to <see cref="AssetFactory"/>.
     /// </summary>
-    /// <returns>A list of <see cref="ICard"/> arrays ("card sets") read from local data files containing "CardSet" in thier names. The files must comport with 
+    /// <returns>A list of <see cref="$1ICard{T}$2"/> arrays ("card sets") read from local data files containing "CardSet" in thier names. The files must comport with 
     /// <see cref="Type"/>s, <see cref="Cards.ICardSetDataJConverter"/>s, and conversion target types from <see cref="Shared.Services.Registry.TypeRegister"/>.</returns>
     /// For now, there is a hard-coded default name associated here with the datafile. In the future, adding
     /// a "default data file name" to RegistryRelation, or generalizing this class to AssetFetcher{T} and building 

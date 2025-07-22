@@ -55,9 +55,9 @@ public class TroopCardSet : ICardSet<TerrID>
             return null;
     }
     /// <remarks>
-    /// <see cref="TroopCard"/>, as the default card set, stipulates a matching set of <see cref="ICard"/>: <br/>
+    /// <see cref="TroopCard"/>, as the default card set, stipulates a matching set of <see cref="$1ICard{T}$2"/>: <br/>
     /// (1) contains three cards <br/>
-    /// (2) contains only tradeble cards (see <see cref="ICard.IsTradeable"/>) <br/>
+    /// (2) contains only tradeble cards (see <see cref="$1ICard{T}$2"/>) <br/>
     /// (3) contains <see cref="TroopCard"/>s with all identical OR all different <see cref="TroopInsignia"/> (after wilds).
     /// </remarks>
     /// <inheritdoc cref="ICardSet.IsValidTrade(ICard[])"/>

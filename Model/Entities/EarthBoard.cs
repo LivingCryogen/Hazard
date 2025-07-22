@@ -69,17 +69,15 @@ public class EarthBoard : IBoard<TerrID, ContID>, IBinarySerializable
         {
             if (string.IsNullOrEmpty(enumName)) return [];
             if (enumName == nameof(TerrID))
-                return TerritoryOwner
+                return [.. TerritoryOwner
                     .Where(pair => pair.Value == playerNumber)
                     .Select(pair => pair.Key)
-                    .Cast<object>()
-                    .ToList();
+                    .Cast<object>()];
             if (enumName.Equals(nameof(ContID)))
-                return ContinentOwner
+                return [.. ContinentOwner
                     .Where(pair => pair.Value == playerNumber)
                     .Select(pair => pair.Key)
-                    .Cast<object>()
-                    .ToList();
+                    .Cast<object>()];
             return [];
         }
     }
@@ -114,7 +112,7 @@ public class EarthBoard : IBoard<TerrID, ContID>, IBinarySerializable
         Armies[territory] = Armies[territory] + armies;
         TerritoryChanged?.Invoke(this, new TerritoryChangedEventArgs(territory));
     }
-    /// <inheritdoc cref="IBoard.Conquer(TerrID, TerrID, int, out ContID?)"/>
+    /// <inheritdoc cref="IBoard{T, U}.Conquer"/>
     public void Conquer(TerrID source, TerrID target, int newOwner, out ContID? flipped)
     {
         int previousOwner = TerritoryOwner[target];

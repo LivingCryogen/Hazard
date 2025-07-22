@@ -10,26 +10,65 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Model.Stats.StatModels;
-
+/// <summary>
+/// Statistics model for a game session.
+/// </summary>
+/// <param name="logger">The logger provided by DI.</param>
+/// <param name="loggerFactory">A logger factory provided by DI.</param>
 public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFactory) : IBinarySerializable
 {
     private readonly ILogger _logger = logger;
     private readonly ILoggerFactory _loggerFactory = loggerFactory;
-
+    /// <summary>
+    /// A model for Attack action data.
+    /// </summary>
+    /// <param name="logger">The logger provided by DI or a factory.</param>
     public class AttackAction(ILogger<AttackAction> logger) : IBinarySerializable
     {
         private readonly ILogger _logger = logger;
-
+        /// <summary>
+        /// Gets or sets the source territory of the attack.
+        /// </summary>
         public TerrID Source { get; set; }
+        /// <summary>
+        /// Gets or sets the target territory of the attack.
+        /// </summary>
         public TerrID Target { get; set; }
+        /// <summary>
+        /// Gets or sets the continent ID that was conquered, if any.
+        /// </summary>
+        /// <value>
+        /// <see langword="null"/> if no continent was conquered; otherwise, the ID of the conquered continent.
+        /// </value>
         public ContID? ConqueredCont { get; set; }
+        /// <summary>
+        /// Gets or sets the player ID of the attacker.
+        /// </summary>
+        /// <value>0-5</value>
         public int Attacker { get; set; }
+        /// <summary>
+        /// Gets or sethe player ID of the defender.
+        /// </summary>
+        /// <value>0-5</value>
         public int Defender { get; set; }
+        /// <summary>
+        /// Gets or sets the number of units lost by the attacker.
+        /// </summary>
         public int AttackerLoss { get; set; }
+        /// <summary>
+        /// Gets or sets the number of units lost by the defender.
+        /// </summary>
         public int DefenderLoss { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether the attacker was forced to retreat.
+        /// </summary>
         public bool Retreated { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether the target territory was conquered with this attack.
+        /// </summary>
         public bool Conquered { get; set; }
 
+        /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
         public async Task<SerializedData[]> GetBinarySerials()
         {
             return await Task.Run(() =>
@@ -55,6 +94,7 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
                 return saveData.ToArray();
             });
         }
+        /// <inheritdoc cref="IBinarySerializable.LoadFromBinary"/>/>
         public bool LoadFromBinary(BinaryReader reader)
         {
             bool loadComplete = true;
@@ -81,15 +121,32 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
         }
     }
 
+    /// <summary>
+    /// A model for Move action data.
+    /// </summary>
+    /// <param name="logger">The logger provided by DI or a factory.</param>
     public class MoveAction(ILogger<MoveAction> logger) : IBinarySerializable
     {
         private readonly ILogger _logger = logger;
 
+        /// <summary>
+        /// Gets or sets the source territory of the move.
+        /// </summary>
         public TerrID Source { get; set; }
+        /// <summary>
+        /// Gets or sets the target territory of the move.
+        /// </summary>
         public TerrID Target { get; set; }
+        /// <summary>
+        /// Gets or sets the identifier of the moving player.
+        /// </summary>
         public int Player { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether the maximum possible number of armies moved.
+        /// </summary>
         public bool MaxAdvanced { get; set; }
 
+        /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
         public async Task<SerializedData[]> GetBinarySerials()
         {
             return await Task.Run(() =>
@@ -102,7 +159,7 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
                 return saveData.ToArray();
             });
         }
-
+        /// <inheritdoc cref="IBinarySerializable.LoadFromBinary"/>/>
         public bool LoadFromBinary(BinaryReader reader)
         {
             bool loadComplete = true;
@@ -121,15 +178,27 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
             return loadComplete;
         }
     }
-
+    /// <summary>
+    /// A model for Trade action data.
+    /// </summary>
+    /// <param name="logger">The logger provided by DI or a factory.</param>
     public class TradeAction(ILogger<TradeAction> logger) : IBinarySerializable
     {
         private readonly ILogger _logger = logger;
-
+        /// <summary>
+        /// Gets or sets the array of target territory identifiers associated with the card.
+        /// </summary>
         public TerrID[] CardTargets { get; set; } = [];
+        /// <summary>
+        /// Gets or sets the base trade value (additional armies) of the trade-in.
+        /// </summary>
         public int TradeValue { get; set; }
+        /// <summary>
+        /// Gets or sets the bonus gained for controlling a target territory at the time of trade-in.
+        /// </summary>
+        /// <value>2 if an occupation bonus was gained; otherwise, 0.</value>
         public int OccupiedBonus { get; set; }
-
+        /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
         public async Task<SerializedData[]> GetBinarySerials()
         {
             return await Task.Run(() =>
@@ -147,7 +216,7 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
                 return saveData.ToArray();
             });
         }
-
+        /// <inheritdoc cref="IBinarySerializable.LoadFromBinary"/>/>
         public bool LoadFromBinary(BinaryReader reader)
         {
             bool loadComplete = true;
@@ -166,18 +235,49 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
             return loadComplete;
         }
     }
-
+    /// <summary>
+    /// Gets or sets the version of the game session model.
+    /// </summary>
     public int Version { get; set; }
+    /// <summary>
+    /// Gets or sets the unique identifier of the game session.
+    /// </summary>
     public Guid Id { get; set; }
+    /// <summary>
+    /// Gets or sets the start time of the game session.
+    /// </summary>
     public DateTime StartTime { get; set; }
+    /// <summary>
+    /// Gets or sets the end time of the game session, if applicable.
+    /// </summary>
+    /// <value>
+    /// <see langword="null"/> if the game session is still ongoing; otherwise, the end time of the session.
+    /// </value>
     public DateTime? EndTime { get; set; }
+    /// <summary>
+    /// Gets or sets the identifier of the winning player, if applicable.
+    /// </summary>
+    /// <value>
+    /// <see langword="null"/> if there is no winner (e.g., the game is still ongoing); otherwise, the player ID of the winner."
+    /// </value>
     public int? Winner { get; set; }
-
-    public List<AttackAction> Attacks { get; private set; } = new();
-    public List<MoveAction> Moves { get; private set; } = new();
-    public List<TradeAction> TradeIns { get; private set; } = new();
-    public List<PlayerStats> PlayerStats { get; private set; } = new();
-
+    /// <summary>
+    /// Gets or sets the list of attack actions recorded during the game session.
+    /// </summary>
+    public List<AttackAction> Attacks { get; private set; } = [];
+    /// <summary>
+    /// Gets or sets the list of move actions recorded during the game session.
+    /// </summary>
+    public List<MoveAction> Moves { get; private set; } = [];
+    /// <summary>
+    /// Gets or sets the list of trade-in actions recorded during the game session.
+    /// </summary>
+    public List<TradeAction> TradeIns { get; private set; } = [];
+    /// <summary>
+    /// Gets or sets the list of player statistics recorded during the game session.
+    /// </summary>
+    public List<PlayerStats> PlayerStats { get; private set; } = [];
+    /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;
@@ -240,7 +340,7 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
         }
         return loadComplete;
     }
-
+    /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>/>
     public async Task<SerializedData[]> GetBinarySerials()
     {
         return await Task.Run(async () =>

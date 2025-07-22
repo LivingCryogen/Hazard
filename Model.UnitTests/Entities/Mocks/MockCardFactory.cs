@@ -6,7 +6,7 @@ namespace Model.Tests.Entities.Mocks;
 
 public class MockCardFactory(ICardSet<MockTerrID> mockSet) : ICardFactory<MockTerrID>
 {
-    private readonly ICardSet<MockTerrID> _mockSet;
+    private readonly ICardSet<MockTerrID> _mockSet = mockSet;
 
     public ICard<MockTerrID> BuildCard(string typeName)
     {

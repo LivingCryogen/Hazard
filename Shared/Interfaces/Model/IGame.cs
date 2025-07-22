@@ -47,7 +47,7 @@ public interface IGame<T, U> : IBinarySerializable where T : struct, Enum where 
     /// </summary>
     StateMachine State { get; }
     /// <summary>
-    /// Gets the "card base", containing all <see cref="ICard"/>s, <see cref="ICardSet"/>s, and <see cref="Deck"/>s.
+    /// Gets the "card base", containing all <see cref="$1ICard{T}$2"/>s, <see cref="ICardSet"/>s, and <see cref="Deck"/>s.
     /// </summary>
     ICardBase<T> Cards { get; }
     /// <summary>

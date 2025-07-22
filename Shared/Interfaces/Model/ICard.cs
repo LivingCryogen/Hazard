@@ -43,7 +43,7 @@ public interface ICard<T> : IBinarySerializable where T : struct, Enum
     /// Gets or sets a reference to a parent <see cref="ICardSet"/> containing this card.
     /// </summary>
     /// <value>
-    /// The <see cref="ICardSet"/> containing this <see cref="ICard"/>, if both have been initialized and mapped. Otherwise, <see langword="null"/>.
+    /// The <see cref="ICardSet"/> containing this <see cref="$1ICard{T}$2"/>, if both have been initialized and mapped. Otherwise, <see langword="null"/>.
     /// </value>
     ICardSet<T>? CardSet { get; set; }
     /// <summary>

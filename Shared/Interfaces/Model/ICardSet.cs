@@ -37,7 +37,7 @@ public interface ICardSet<T> where T : struct, Enum
     /// <br/> E.g. "TroopCard", see <see cref="TroopCard"/>.
     /// </summary>
     /// <remarks>
-    /// Relationships between <see cref="ICard"/>s, <see cref="ICardSet"/>, and <see cref="ICardSetData"/> are established by <see cref="Services.Registry.ITypeRegister{T}"/>, which gets initial values from <see cref="Services.Registry.RegistryInitializer"/>.
+    /// Relationships between <see cref="$1ICard{T}$2"/>s, <see cref="ICardSet"/>, and <see cref="ICardSetData"/> are established by <see cref="Services.Registry.ITypeRegister{T}"/>, which gets initial values from <see cref="Services.Registry.RegistryInitializer"/>.
     /// </remarks>
     public string MemberTypeName { get; }
     /// <summary>
@@ -45,7 +45,7 @@ public interface ICardSet<T> where T : struct, Enum
     /// </summary>
     public List<ICard<T>> Cards { get; set; }
     /// <summary>
-    /// Gets a flag indicating if a trade should be forced when a matching set of <see cref="ICard"/>s from this set are obtained.
+    /// Gets a flag indicating if a trade should be forced when a matching set of <see cref="$1ICard{T}$2"/>s from this set are obtained.
     /// </summary>
     /// <value>
     /// <see langword="true"/> if obtaining matching cards (satisfying <see cref="IsValidTrade"/>) should force an <see cref="IPlayer"/> to trade (via <see cref="IRegulator.TradeInCards(int, int[])"/>).
@@ -53,7 +53,7 @@ public interface ICardSet<T> where T : struct, Enum
     /// </value>
     public bool ForcesTrade { get; }
     /// <summary>
-    /// Identifies any number of matching trade sets present in any <see cref="ICard"/>s.
+    /// Identifies any number of matching trade sets present in any <see cref="$1ICard{T}$2"/>s.
     /// </summary>
     /// <param name="cards">An array of cards in which to search for matching trade-sets.</param>
     /// <returns>A staggered array of cards containing each valid trade-set found within <paramref name="cards"/>.</returns>

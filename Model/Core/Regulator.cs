@@ -10,7 +10,7 @@ using System.Collections.Immutable;
 
 namespace Model.Core;
 
-/// <inheritdoc cref="IRegulator"/>
+/// <inheritdoc cref="IRegulator{T, U}"/>
 public class Regulator(ILogger<Regulator> logger, IGame<TerrID, ContID> currentGame) : IRegulator<TerrID, ContID>
 {
     private readonly IGame<TerrID, ContID> _currentGame = currentGame;
@@ -26,16 +26,16 @@ public class Regulator(ILogger<Regulator> logger, IGame<TerrID, ContID> currentG
     private GamePhase CurrentPhase => _machine.CurrentPhase;
     private bool InSetupPhase => _machine.CurrentPhase == GamePhase.DefaultSetup || _machine.CurrentPhase == GamePhase.TwoPlayerSetup;
 
-    /// <inheritdoc cref="IRegulator.CurrentActionsLimit"/>
+    /// <inheritdoc cref="IRegulator{T, U}.CurrentActionsLimit"/>
     public int CurrentActionsLimit { get; set; }
-    /// <inheritdoc cref="IRegulator.PhaseActions"/>
+    /// <inheritdoc cref="IRegulator{T, U}.PhaseActions"/>
     public int PhaseActions => _actionsCounter - _prevActionCount;
-    /// <inheritdoc cref="IRegulator.Reward"/>
+    /// <inheritdoc cref="IRegulator{T, U}.Reward"/>
     public ICard<TerrID>? Reward { get; set; } = null;
 
-    /// <inheritdoc cref="IRegulator.PromptBonusChoice"/>
+    /// <inheritdoc cref="IRegulator{T, U}.PromptBonusChoice"/>
     public event EventHandler<TerrID[]>? PromptBonusChoice;
-    /// <inheritdoc cref="IRegulator.PromptTradeIn"/>
+    /// <inheritdoc cref="IRegulator{T, U}.PromptTradeIn"/>
     public event EventHandler<IPromptTradeEventArgs>? PromptTradeIn;
 
     private bool IsInSecondStage()
@@ -135,7 +135,7 @@ public class Regulator(ILogger<Regulator> logger, IGame<TerrID, ContID> currentG
 
         return [.. selectedCards];
     }
-    /// <inheritdoc cref="IRegulator.Initialize"/>
+    /// <inheritdoc cref="IRegulator{T, U}.Initialize"/>
     public void Initialize()
     {
         if (_actionsCounter == 0 && _currentGame.Values.SetupActionsPerPlayers.TryGetValue(_numPlayers, out int actions))
@@ -151,7 +151,7 @@ public class Regulator(ILogger<Regulator> logger, IGame<TerrID, ContID> currentG
         _machine.StateChanged += HandleStateChanged;
     }
 
-    /// <inheritdoc cref="IRegulator.CanSelectTerritory(TerrID, TerrID)"/>
+    /// <inheritdoc cref="IRegulator{T, U}.CanSelectTerritory"/>
     public bool CanSelectTerritory(TerrID newSelected, TerrID oldSelected)
     {
         bool priorSelection = oldSelected switch
@@ -207,7 +207,7 @@ public class Regulator(ILogger<Regulator> logger, IGame<TerrID, ContID> currentG
             return true;
         return false;
     }
-    /// <inheritdoc cref="IRegulator.SelectTerritory(TerrID, TerrID)"/>
+    /// <inheritdoc cref="IRegulator{T, U}.SelectTerritory"/>
     public (TerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(TerrID selected, TerrID priorSelected)
     {
         var board = _currentGame.Board;
@@ -260,7 +260,7 @@ public class Regulator(ILogger<Regulator> logger, IGame<TerrID, ContID> currentG
 
         return (postSelection, requestInput, maxValue);
     }
-    /// <inheritdoc cref="IRegulator.ClaimOrReinforce(TerrID)"/>
+    /// <inheritdoc cref="IRegulator{T, U}.ClaimOrReinforce"/>
     public void ClaimOrReinforce(TerrID territory)
     {
         switch (CurrentPhase)
@@ -316,7 +316,7 @@ public class Regulator(ILogger<Regulator> logger, IGame<TerrID, ContID> currentG
         }
     }
 
-    /// <inheritdoc cref="IRegulator.MoveArmies(TerrID, TerrID, int)"/>
+    /// <inheritdoc cref="IRegulator{T, U}.MoveArmies"/>
     public void MoveArmies(TerrID source, TerrID target, int armies)
     {
         int player = _currentGame.Board.TerritoryOwner[source];
@@ -330,7 +330,7 @@ public class Regulator(ILogger<Regulator> logger, IGame<TerrID, ContID> currentG
         if (CurrentPhase == GamePhase.Move)
             IncrementAction();
     }
-    /// <inheritdoc cref="IRegulator.Battle(TerrID, TerrID, ValueTuple{int, int}[])"/>
+    /// <inheritdoc cref="IRegulator{T, U}.Battle"/>
     public void Battle(TerrID source, TerrID target, (int AttackRoll, int DefenseRoll)[] diceRolls)
     {
         _actionsCounter++;
@@ -384,7 +384,7 @@ public class Regulator(ILogger<Regulator> logger, IGame<TerrID, ContID> currentG
             retreated,
             conquered);
     }
-    /// <inheritdoc cref="IRegulator.CanTradeInCards(int, int[])"/>
+    /// <inheritdoc cref="IRegulator{T, U}.CanTradeInCards(int, int[])"/>
     public bool CanTradeInCards(int playerNum, int[] handIndices)
     {
         if (playerNum != PlayerTurn)

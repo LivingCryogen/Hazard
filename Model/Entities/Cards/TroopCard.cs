@@ -25,29 +25,29 @@ public class TroopCard : ITroopCard<TerrID>
     {
         Logger = logger;
     }
-    /// <inheritdoc cref="ICard.SerializablePropertyNames"/>
+    /// <inheritdoc cref="ICard{T}.SerializablePropertyNames"/>
     public HashSet<string> SerializablePropertyNames { get; } = [nameof(Target), nameof(Insigne), nameof(ParentTypeName), nameof(IsTradeable)];
-    /// <inheritdoc cref="ICard.Logger"/>
+    /// <inheritdoc cref="ICard{T}.Logger"/>
     public ILogger Logger { get; set; }
-    /// <inheritdoc cref="ICard.TypeName"/>
+    /// <inheritdoc cref="ICard{T}.TypeName"/>
     public string TypeName { get; set; } = nameof(TroopCard);
     /// <summary>
-    /// Gets or sets the name of this card's 'parent': the <see cref="ICardSet"/> that contains it.
+    /// Gets or sets the name of this card's 'parent': the <see cref="ICardSet{T}"/> that contains it.
     /// </summary>
     /// <remarks>
-    /// <see cref="ICardSet.MemberTypeName"/> of the parent should be equal to "TroopCard".
+    /// <see cref="ICardSet{T}.MemberTypeName"/> of the parent should be equal to "TroopCard".
     /// </remarks>
     public string ParentTypeName { get; private set; } = nameof(TroopCardSet);
     /// <summary>
-    /// Gets or sets the parent collection containing this <see cref="TroopCard"/> in its <see cref="ICardSet.Cards"/> list.
+    /// Gets or sets the parent collection containing this <see cref="TroopCard"/> in its <see cref="ICardSet{T}.Cards"/> list.
     /// </summary>
-    /// <value>An <see cref="ICardSet"/> instance, if this and it have been initialized and mapped. Otherwise, <see langword="null"/>.</value>
+    /// <value>An <see cref="ICardSet{T}"/> instance, if this and it have been initialized and mapped. Otherwise, <see langword="null"/>.</value>
     public ICardSet<TerrID>? CardSet { get; set; } = null;
-    /// <inheritdoc cref="ICard.IsTradeable"/>
+    /// <inheritdoc cref="ICard{T}.IsTradeable"/>
     public bool IsTradeable { get; set; } = true;
-    /// <inheritdoc cref="ICard.Target"/>
+    /// <inheritdoc cref="ICard{T}.Target"/>
     public TerrID[] Target { get; set; } = [];
-    /// <inheritdoc cref="ITroopCard.Insigne"/>
+    /// <inheritdoc cref="ITroopCard{T}.Insigne"/>
     public TroopInsignia Insigne { get; set; }
     Enum ITroopCard<TerrID>.Insigne { get => Insigne; set { Insigne = (TroopInsignia)value; } }
 }

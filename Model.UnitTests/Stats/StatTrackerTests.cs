@@ -10,8 +10,8 @@ namespace Model.Tests.Stats;
 [TestClass]
 public class StatTrackerTests
 {
-    private MockGame _testGame;
-    private MockStatTracker _testTracker;
+    private MockGame? _testGame;
+    private MockStatTracker? _testTracker;
 
     [TestInitialize]
     public void Setup()
