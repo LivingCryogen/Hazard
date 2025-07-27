@@ -15,13 +15,18 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Model.Stats.Services;
-
-public class StatTracker: IStatTracker, IBinarySerializable
+/// <inheritdoc cref="IStatTracker"/>
+public class StatTracker : IStatTracker, IBinarySerializable
 {
     private readonly ILogger _logger;
     private readonly ILoggerFactory _loggerFactory;
     private GameSession _currentSession;
-        
+    /// <summary>
+    /// Builds a new <see cref="StatTracker"/> instance for the given game.
+    /// </summary>
+    /// <param name="game">The current game.</param>
+    /// <param name="options">App options for this game.</param>
+    /// <param name="loggerFactory">A factory for creating error loggers, provided by DI.</param>
     public StatTracker(IGame game, IOptions<AppConfig> options, ILoggerFactory loggerFactory)
     {
         _loggerFactory = loggerFactory;
@@ -46,7 +51,7 @@ public class StatTracker: IStatTracker, IBinarySerializable
                 });
         }
     }
-
+    /// <inheritdoc cref="IStatTracker.RecordAttackAction(TerrID, TerrID, ContID?, int, int, int, int, bool, bool)" />
     public void RecordAttackAction(
         TerrID source,
         TerrID target,
@@ -97,7 +102,9 @@ public class StatTracker: IStatTracker, IBinarySerializable
                     break;
             }
     }
-    public void RecordMoveAction(TerrID source, TerrID target, bool maxAdvanced, int player) {
+    /// <inheritdoc cref="IStatTracker.RecordMoveAction(TerrID, TerrID, bool, int)" />
+    public void RecordMoveAction(TerrID source, TerrID target, bool maxAdvanced, int player)
+    {
         var moveStats = new GameSession.MoveAction(_loggerFactory.CreateLogger<GameSession.MoveAction>())
         {
             Source = source,
@@ -117,6 +124,7 @@ public class StatTracker: IStatTracker, IBinarySerializable
 
         _currentSession.Moves.Add(moveStats);
     }
+    /// <inheritdoc cref="IStatTracker.RecordTradeAction(List{TerrID}, int, int, int)" />
     public void RecordTradeAction(List<TerrID> cardTargets, int tradeValue, int occupiedBonus, int playerNumber)
     {
         var tradeStats = new GameSession.TradeAction(_loggerFactory.CreateLogger<GameSession.TradeAction>())
@@ -135,12 +143,12 @@ public class StatTracker: IStatTracker, IBinarySerializable
 
         _currentSession.TradeIns.Add(tradeStats);
     }
-
+    /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>/>
     public async Task<SerializedData[]> GetBinarySerials()
     {
         return await _currentSession.GetBinarySerials();
     }
-
+    /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;
