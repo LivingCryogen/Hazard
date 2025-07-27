@@ -15,8 +15,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Model.Stats.Services;
-/// <inheritdoc cref="IStatTracker{T, U}"/>
-public class StatTracker: IStatTracker<TerrID, ContID>, IBinarySerializable
+
+public class StatTracker: IStatTracker, IBinarySerializable
 {
     private readonly ILogger _logger;
     private readonly ILoggerFactory _loggerFactory;
@@ -51,7 +51,7 @@ public class StatTracker: IStatTracker<TerrID, ContID>, IBinarySerializable
                 });
         }
     }
-    /// <inheritdoc cref="IStatTracker{T, U}.RecordAttackAction(T, T, U?, int, int, int, int, bool, bool)" />
+
     public void RecordAttackAction(
         TerrID source,
         TerrID target,
@@ -145,24 +145,11 @@ public class StatTracker: IStatTracker<TerrID, ContID>, IBinarySerializable
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>/>
     public async Task<SerializedData[]> GetBinarySerials()
     {
-        return await _currentSession.GetBinarySerials();
+        throw new NotImplementedException();
     }
     /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     public bool LoadFromBinary(BinaryReader reader)
     {
-        bool loadComplete = true;
-        try
-        {
-            var readSession = new GameSession(_loggerFactory.CreateLogger<GameSession>(), _loggerFactory);
-            if (!readSession.LoadFromBinary(reader))
-                loadComplete = false;
-            _currentSession = readSession;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("StatTracker encountered an exception when attempting to load from binary: {Message} {InnerEx}", ex.Message, ex.InnerException);
-            loadComplete = false;
-        }
-        return loadComplete;
+        throw new NotImplementedException();
     }
 }
