@@ -102,7 +102,7 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
         }
     }
 
-    public void Initialize(IGame<TerrID, ContID> game, object?[] loadedValues)
+    public void Initialize(IGame game, object?[] loadedValues)
     {
         _currentGame = (MockGame)game;
         _numPlayers = _currentGame.Players!.Count;
@@ -113,26 +113,26 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
             _prevActionCount = (int)(loadedValues?[1] ?? 0);
             CurrentActionsLimit = (int)(loadedValues?[2] ?? 0);
             if (((int?)loadedValues?[3] ?? 0) == 1)
-                Reward = (ICard<MockTerrID>)loadedValues![4]!;
+                Reward = (ICard)loadedValues![4]!;
         }
     }
 
-    public void MoveArmies(MockTerrID source, MockTerrID target, int armies)
+    public void MoveArmies(TerrID source, TerrID target, int armies)
     {
         throw new NotImplementedException();
     }
 
-    public bool CanSelectTerritory(MockTerrID newSelected, MockTerrID oldSelected)
+    public bool CanSelectTerritory(TerrID newSelected, TerrID oldSelected)
     {
         throw new NotImplementedException();
     }
 
-    public (MockTerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(MockTerrID selected, MockTerrID priorSelected)
+    public (TerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(TerrID selected, TerrID priorSelected)
     {
         throw new NotImplementedException();
     }
 
-    public void ClaimOrReinforce(MockTerrID territory)
+    public void ClaimOrReinforce(TerrID territory)
     {
         throw new NotImplementedException();
     }

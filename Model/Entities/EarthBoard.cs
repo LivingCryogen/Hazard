@@ -113,8 +113,8 @@ public class EarthBoard : IBoard<TerrID, ContID>, IBinarySerializable
         Armies[territory] = Armies[territory] + armies;
         TerritoryChanged?.Invoke(this, new TerritoryChangedEventArgs(territory));
     }
-    /// <inheritdoc cref="IBoard.Conquer(TerrID, TerrID, int, out ContID?)"/>
-    public void Conquer(TerrID source, TerrID target, int newOwner, out ContID? flipped)
+    /// <inheritdoc cref="IBoard.Conquer(TerrID, TerrID, int)"/>
+    public void Conquer(TerrID source, TerrID target, int newOwner)
     {
         int previousOwner = TerritoryOwner[target];
         TerritoryOwner[target] = newOwner;
