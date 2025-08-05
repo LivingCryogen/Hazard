@@ -1,13 +1,9 @@
-﻿using Shared.Interfaces.Model;
+﻿using Shared.Geography.Enums;
+using Shared.Interfaces.Model;
 
 namespace Model.Entities;
-/// <summary>
-/// A deck of cards.
-/// </summary>
-/// <remarks>
-/// Each <see cref="ICard">card</see> targets at minimum one territory: see <see cref="ICard.Target"/>.
-/// </remarks>
-public class Deck
+/// <inheritdoc cref="IDeck{T}"/>
+public class Deck : IDeck<TerrID>
 {
     /// <summary>
     /// Constructs an empty deck.
@@ -21,7 +17,7 @@ public class Deck
     /// Constructs a deck from a group of cards, placing them all in the <see cref="Library"/>.
     /// </summary>
     /// <param name="cards">The cards that will constitute the deck.</param>
-    public Deck(ICard[] cards)
+    public Deck(ICard<TerrID>[] cards)
     {
         Library = [.. cards];
         DiscardPile = [];
@@ -30,85 +26,58 @@ public class Deck
     /// <remarks>
     /// This constructor is useful when a <see cref="Deck"/> is to be built from multiple <see cref="ICardSet.Cards"/> values.
     /// </remarks>
-    public Deck(ICard[][] cards)
+    public Deck(ICard<TerrID>[][] cards)
     {
         Library = [.. cards.SelectMany(set => set.Select(card => card))];
         DiscardPile = [];
     }
-    /// <param name="cardSet">A card set, whose property <see cref="ICardSet.Cards"/> contains the <see cref="ICard"/>s that will constitute the deck.</param>
-    /// <inheritdoc cref="Deck(ICard[])"/>
-    public Deck(ICardSet cardSet)
+    /// <param name="cardSet">A card set, whose property <see cref="ICardSet{T}.Cards"/> contains the <see cref="Card{T}"/>s that will constitute the deck.</param>
+    /// <inheritdoc cref="Deck(ICard{TerrID}[])"/>
+    public Deck(ICardSet<TerrID> cardSet)
     {
-        Library = [.. cardSet?.Cards ?? Enumerable.Empty<ICard>()];
+        Library = [.. cardSet?.Cards ?? Enumerable.Empty<ICard<TerrID>>()];
         DiscardPile = [];
     }
-    /// <param name="cardSets">An array of card sets, each of whose property <see cref="ICardSet.Cards"/> contains <see cref="ICard"/>s that will constitute the deck.</param>
-    /// <inheritdoc cref="Deck(ICard[])"/>
-    public Deck(ICardSet[] cardSets)
+    /// <param name="cardSets">An array of card sets, each of whose property <see cref="ICardSet{T}.Cards"/> contains <see cref="ICard{T}"/>s that will constitute the deck.</param>
+    /// <inheritdoc cref="Deck(ICard{TerrID}[])"/>
+    public Deck(ICardSet<TerrID>[] cardSets)
     {
         Library =
             [..
                 cardSets?.SelectMany(item =>
-                    (item?.Cards ?? Enumerable.Empty<ICard>()))
+                    (item?.Cards ?? Enumerable.Empty<ICard<TerrID>>()))
                 ??
                 []
             ];
         DiscardPile = [];
     }
-    /// <summary>
-    /// Gets or sets the library.
-    /// </summary>
-    /// <remarks>
-    /// A library is the collection of cards from which players draw (see <see cref="DrawCard"/>).
-    /// </remarks>
-    public List<ICard> Library { get; set; }
-    /// <summary>
-    /// Gets or sets the discard pile.
-    /// </summary>
-    /// <remarks>
-    /// A discard pile is the collection to which cards are discarded when traded in; see <see cref="Discard(ICard)"/> and <see cref="IRegulator.TradeInCards(int, int[])"/>.
-    /// </remarks>
-    public List<ICard> DiscardPile { get; set; }
-    /// <summary>
-    /// Draws a card from the bottom of the <see cref="Library"/>.
-    /// </summary>
-    /// <remarks>
-    /// If <see cref="Library"/> is empty, <see cref="Shuffle"/> is called.
-    /// </remarks>
-    /// <returns>The drawn card.</returns>
-    public ICard DrawCard()
+    /// <inheritdoc cref="IDeck{T}.Library"/>/>
+    public List<ICard<TerrID>> Library { get; set; }
+    /// <inheritdoc cref="IDeck{T}.DiscardPile"/>
+    public List<ICard<TerrID>> DiscardPile { get; set; }
+    /// <inheritdoc cref="IDeck{T}.DrawCard"/>
+    public ICard<TerrID> DrawCard()
     {
         if (Library.Count + DiscardPile.Count <= 0)
             throw new InvalidOperationException("An attempt was made to draw a card from an empty deck.");
         if (Library.Count <= 0)
             Shuffle();
 
-        ICard drawn = Library[^1];
+        ICard<TerrID> drawn = Library[^1];
         Library.Remove(Library[^1]);
         return drawn;
     }
-    /// <summary>
-    /// Adds a card to the discard pile.
-    /// </summary>
-    /// <param name="card">The discarded card.</param>
-    public void Discard(ICard card)
+    /// <inheritdoc cref="IDeck{T}.Discard(ICard{T})"/>
+    public void Discard(ICard<TerrID> card)
     {
         DiscardPile.Add(card);
     }
-    /// <summary>
-    /// Adds a collection of cards to the discard pile.
-    /// </summary>
-    /// <param name="cards">The discarded cards.</param>
-    public void Discard(ICard[] cards)
+    /// <inheritdoc cref="IDeck{T}.Discard(ICard{T}[])"/>/>
+    public void Discard(ICard<TerrID>[] cards)
     {
         DiscardPile.AddRange(cards);
     }
-    /// <summary>
-    /// Shuffles the deck.
-    /// </summary>
-    /// <remarks>
-    /// Resulting <see cref="Library"/> order is generated by a Fisher-Yates shuffle algorithm. 
-    /// </remarks>
+    /// <inheritdoc cref="IDeck{T}.Shuffle"/>
     public void Shuffle()
     {
         if (DiscardPile.Count > 0)

@@ -6,9 +6,9 @@ using ViewModel.Services;
 
 namespace ViewModel.SubElements.Cards;
 
-public struct TroopCardInfo : ICardInfo, ITroopCardInfo
+public struct TroopCardInfo : ICardInfo<TerrID, ContID>, ITroopCardInfo<TerrID, ContID>
 {
-    public TroopCardInfo(ITroopCard troopCard)
+    public TroopCardInfo(ITroopCard<TerrID> troopCard)
     {
         BaseInfo = new(troopCard);
         InsigniaName = troopCard.Insigne.ToString();
@@ -19,7 +19,7 @@ public struct TroopCardInfo : ICardInfo, ITroopCardInfo
             DisplayName = DisplayNameBuilder.MakeDisplayName(BaseInfo.TargetTerritory[0].ToString());
     }
 
-    public TroopCardInfo(ITroopCard troopCard, int owner, int ownerHandIndex)
+    public TroopCardInfo(ITroopCard<TerrID> troopCard, int owner, int ownerHandIndex)
     {
         BaseInfo = new(troopCard, owner, ownerHandIndex);
         InsigniaName = troopCard.Insigne.ToString();
@@ -30,10 +30,10 @@ public struct TroopCardInfo : ICardInfo, ITroopCardInfo
             DisplayName = DisplayNameBuilder.MakeDisplayName(BaseInfo.TargetTerritory[0].ToString());
     }
     public CardInfo BaseInfo { get; init; }
-    readonly int? ICardInfo.Owner { get => BaseInfo.Owner; }
-    readonly int? ICardInfo.OwnerHandIndex { get => BaseInfo.OwnerHandIndex; }
-    readonly TerrID[] ICardInfo.TargetTerritory { get => BaseInfo.TargetTerritory; }
-    readonly ContID[] ICardInfo.TargetContinent { get => BaseInfo.TargetContinent; }
+    readonly int? ICardInfo<TerrID, ContID>.Owner { get => BaseInfo.Owner; }
+    readonly int? ICardInfo<TerrID, ContID>.OwnerHandIndex { get => BaseInfo.OwnerHandIndex; }
+    readonly TerrID[] ICardInfo<TerrID, ContID>.TargetTerritory { get => BaseInfo.TargetTerritory; }
+    readonly ContID[] ICardInfo<TerrID, ContID>.TargetContinent { get => BaseInfo.TargetContinent; }
     public string DisplayName { get; init; }
     public string InsigniaName { get; set; }
     public int InsigniaValue { get; set; }

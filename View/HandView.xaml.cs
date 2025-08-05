@@ -1,4 +1,5 @@
-﻿using Shared.Interfaces.ViewModel;
+﻿using Shared.Geography.Enums;
+using Shared.Interfaces.ViewModel;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
@@ -15,7 +16,7 @@ namespace View
         private readonly ListBox? _handBox;
         private bool _isShuttingDown = false;
 
-        public HandView(IMainVM vM)
+        public HandView(IMainVM<TerrID, ContID> vM)
         {
             ViewModel = vM;
 
@@ -35,7 +36,7 @@ namespace View
         public string PlayerOwnerName { get; init; } = string.Empty;
         public bool ForceTrade { get; set; } = false;
         public RoutedCommand TradeIn { get; } = new();
-        public IMainVM ViewModel;
+        public IMainVM<TerrID, ContID> ViewModel;
 
         public string Message
         {
@@ -58,9 +59,9 @@ namespace View
             switch (e.NewItems, e.OldItems)
             {
                 case (not null, null): // item added
-                    if (e.NewItems[0] is not ICardInfo)
+                    if (e.NewItems[0] is not ICardInfo<TerrID, ContID>)
                         return;
-                    foreach (ICardInfo item in e.NewItems)
+                    foreach (ICardInfo<TerrID, ContID> item in e.NewItems)
                     {
                         AddCard(item);
 
@@ -69,7 +70,7 @@ namespace View
                     }
                     break;
                 case (null, not null): // item removed
-                    if (e.OldItems[0] is ICardInfo)
+                    if (e.OldItems[0] is ICardInfo<TerrID, ContID>)
                         RemoveCard(e.OldStartingIndex);
                     break;
                 case (null, null): // items cleared
@@ -122,7 +123,7 @@ namespace View
             ForceTrade = false;
             Close();
         }
-        public void AddCard(ICardInfo cardInfo)
+        public void AddCard(ICardInfo<TerrID, ContID> cardInfo)
         {
             var newControl = CardFactory.GetCardControl(cardInfo);
             CardControls.Add(newControl);

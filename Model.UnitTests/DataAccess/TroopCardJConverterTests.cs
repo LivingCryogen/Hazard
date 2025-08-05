@@ -2,6 +2,7 @@
 using Model.Tests.DataAccess.Mocks;
 using Model.Tests.Entities.Mocks;
 using Model.Tests.Fixtures.Mocks;
+using Shared.Geography.Enums;
 
 namespace Model.Tests.DataAccess;
 
@@ -14,7 +15,7 @@ public class TroopCardJConverterTests
     public void ReadData_JsonValid_ReturnTroopCardSetData()
     {
         MockCardDataJConverter testConverter = new();
-        var data = ((ICardSetDataJConverter)testConverter).ReadCardSetData(_dataFiles.CardSetPath!);
+        var data = ((ICardSetDataJConverter<MockTerrID>)testConverter).ReadCardSetData(_dataFiles.CardSetPath!);
 
         Assert.IsInstanceOfType(data, typeof(MockCardSet));
 

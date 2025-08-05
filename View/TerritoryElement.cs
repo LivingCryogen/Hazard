@@ -99,7 +99,6 @@ class TerritoryElement : ButtonBase
     public static readonly DependencyProperty? IsSelectedProperty = DependencyProperty.Register("IsSelected", typeof(bool), typeof(TerritoryElement),
         new FrameworkPropertyMetadata(false, flags: FrameworkPropertyMetadataOptions.AffectsRender));
 
-    #region Methods
     protected override void OnRender(DrawingContext drawingContext)
     {
         base.OnRender(drawingContext);
@@ -236,5 +235,4 @@ class TerritoryElement : ButtonBase
             InvalidateVisual();
         }
     }
-    #endregion
 }

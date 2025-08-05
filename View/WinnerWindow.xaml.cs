@@ -8,7 +8,6 @@ namespace View;
 /// </summary>
 public partial class WinnerWindow : Window
 {
-    #region Constructors
     public WinnerWindow()
     {
         InitializeComponent();
@@ -23,9 +22,7 @@ public partial class WinnerWindow : Window
         WinnerColor = winnerColor;
         this.Height = height;
     }
-    #endregion
 
-    #region DependencyProperties
     public SolidColorBrush WinnerColor
     {
         get { return (SolidColorBrush)GetValue(WinnerColorProperty); }
@@ -41,5 +38,4 @@ public partial class WinnerWindow : Window
     }
     public static readonly DependencyProperty WinnerNameProperty =
         DependencyProperty.Register("WinnerName", typeof(string), typeof(WinnerWindow), new PropertyMetadata(defaultValue: ""));
-    #endregion
 }

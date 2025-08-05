@@ -14,7 +14,7 @@ namespace Model.Core;
 /// <summary>
 /// The top-level class for an individual Game.
 /// </summary>
-public class Game : IGame
+public class Game : IGame<TerrID, ContID>
 {
     private readonly ITypeRegister<ITypeRelations> _typeRegister;
     private readonly ILoggerFactory _loggerFactory;
@@ -26,13 +26,13 @@ public class Game : IGame
     /// <param name="loggerFactory">Builds configured loggers for various components when and where the DI system does not do so directly.</param>
     /// <param name="assetFetcher">Connects the Model and the DAL through bespoke methods. Provides assets to game properties, eg:<see cref="IAssetFetcher.FetchCardSets"/> for <see cref="Game.Cards"/>.</param>
     /// <param name="statTracker">Increments game and player related stats in response to game events / player actions.</param>
-    /// <param name="typeRegister">Serves as an Application Type Registry. Simplifies asset loading and configuration extension.<br/> Required for operation of <see cref="ICard"/>'s default methods and DAL operations.</param>
+    /// <param name="typeRegister">Serves as an Application Type Registry. Simplifies asset loading and configuration extension.<br/> Required for operation of <see cref="$1ICard{T}$2"/>'s default methods and DAL operations.</param>
     /// <param name="config">Configuration provided by DI. Values derived from "View\appsettings.json."</param>
     public Game(
         int numPlayers,
         ILoggerFactory loggerFactory,
-        IAssetFetcher assetFetcher,
-        IStatTracker statTracker,
+        IAssetFetcher<TerrID> assetFetcher,
+        IStatTracker<TerrID, ContID> statTracker,
         ITypeRegister<ITypeRelations> typeRegister,
         IConfiguration config)
     {
@@ -45,7 +45,7 @@ public class Game : IGame
         Board = new EarthBoard(config, loggerFactory.CreateLogger<EarthBoard>());
         Values = new RuleValues(config);
         State = new(numPlayers, loggerFactory.CreateLogger<StateMachine>());
-        Cards = new(loggerFactory, typeRegister);
+        Cards = new CardBase(loggerFactory, typeRegister);
         Cards.InitializeFromAssets(AssetFetcher, DefaultCardMode);
         Players = [];
         for (int i = 0; i < numPlayers; i++)
@@ -63,7 +63,7 @@ public class Game : IGame
     public event EventHandler<int>? PlayerWon;
 
     /// <inheritdoc cref="IGame.AssetFetcher"/>
-    public IAssetFetcher AssetFetcher { get; }
+    public IAssetFetcher<TerrID> AssetFetcher { get; }
     /// <inheritdoc cref="IGame.ID"/>.
     public Guid ID { get; private set; }
     /// <inheritdoc cref="IGame.DefaultCardMode"/>
@@ -74,13 +74,13 @@ public class Game : IGame
     /// <value>An implementation of <see cref="ILogger{T}"/>.</value>
     public ILogger Logger { get; private set; }
     /// <inheritdoc cref="IGame.Values"/>.
-    public IRuleValues Values { get; private set; }
+    public IRuleValues<ContID> Values { get; private set; }
     /// <inheritdoc cref="IGame.Board"/>
-    public IBoard Board { get; private set; }
+    public IBoard<TerrID, ContID> Board { get; private set; }
     /// <inheritdoc cref="IGame.State"/>.
     public StateMachine State { get; private set; }
     /// <inheritdoc cref="IGame.Cards"/>.
-    public CardBase Cards { get; private set; }
+    public ICardBase<TerrID> Cards { get; private set; }
     /// <inheritdoc cref="IGame.Players"/>.
     public List<IPlayer> Players { get; private set; }
     /// <inheritdoc cref="IGame.StatTracker"/>
@@ -90,10 +90,10 @@ public class Game : IGame
 
     private void OnPlayerLost(object? sender, System.EventArgs e)
     {
-        if (sender is IPlayer loser)
+        if (sender is IPlayer<TerrID> loser)
         {
             State?.DisablePlayer(loser.Number);
-            foreach (ICard card in loser.Hand)
+            foreach (ICard<TerrID> card in loser.Hand)
                 Cards?.GameDeck?.Discard(card);
             loser.Hand.Clear();
             PlayerLost?.Invoke(this, loser.Number);
@@ -107,16 +107,16 @@ public class Game : IGame
                 PlayerWon?.Invoke(this, activePlayerIndex[0]);
 
         }
-        else throw new ArgumentException($"{PlayerLost} was fired but the sender was not an {nameof(IPlayer)}.", nameof(sender));
+        else throw new ArgumentException($"{PlayerLost} was fired but the sender was not an {nameof(IPlayer<TerrID>)}.", nameof(sender));
     }
     private void OnPlayerWin(object? sender, System.EventArgs e)
     {
-        if (sender is IPlayer winner)
+        if (sender is IPlayer<TerrID> winner)
         {
             PlayerWon?.Invoke(this, (winner.Number));
             State?.DisablePlayer(winner.Number);
         }
-        else throw new ArgumentException($"{PlayerWon} was fired but the sender was not an {nameof(IPlayer)}.", nameof(sender));
+        else throw new ArgumentException($"{PlayerWon} was fired but the sender was not an {nameof(IPlayer<TerrID>)}.", nameof(sender));
     }
     /// <inheritdoc cref="IGame.UpdatePlayerNames(string[])"/>
     public void UpdatePlayerNames(string[] names)
@@ -213,7 +213,7 @@ public class Game : IGame
             saveData.AddRange(Board?.GetBinarySerials().Result ?? []);
             saveData.AddRange(Cards?.GetBinarySerials().Result ?? []);
             saveData.Add(new(typeof(int), Players.Count));
-            foreach (IPlayer player in Players)
+            foreach (IPlayer<TerrID> player in Players)
                 saveData.AddRange(player?.GetBinarySerials().Result ?? []);
             saveData.AddRange(State?.GetBinarySerials().Result ?? []);
 

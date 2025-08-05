@@ -72,7 +72,7 @@ public class DataProviderTests
     {
         try
         {
-            var data = _testDataProvider!.GetData(nameof(ICard));
+            var data = _testDataProvider!.GetData(nameof(ICard<MockTerrID>));
         }
         catch (Exception ex)
         {
@@ -84,7 +84,7 @@ public class DataProviderTests
     {
         try
         {
-            var data = _testDataProvider!.GetData(nameof(ICard));
+            var data = _testDataProvider!.GetData(nameof(ICard<MockTerrID>));
         }
         catch (Exception ex)
         {

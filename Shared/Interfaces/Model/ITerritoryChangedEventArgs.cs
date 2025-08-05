@@ -4,12 +4,12 @@ namespace Shared.Interfaces.Model;
 /// <summary>
 /// A contract for EventArgs used by <see cref="IBoard.TerritoryChanged"/>.
 /// </summary>
-public interface ITerritoryChangedEventArgs
+public interface ITerritoryChangedEventArgs<T> where T : struct, Enum
 {
     /// <summary>
     /// Gets or inits the ID of the territory that changed.
     /// </summary>
-    public TerrID Changed { get; init; }
+    public T Changed { get; init; }
     /// <summary>
     /// Gets or inits the number of the player now associated with the changed territory.
     /// </summary>

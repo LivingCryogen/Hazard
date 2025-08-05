@@ -6,8 +6,9 @@ using Shared.Interfaces.Model;
 
 namespace Model.Tests.Entities.Mocks;
 
-public class MockCard : ITroopCard
+public class MockCard : ITroopCard<MockTerrID>
 {
+    private readonly ILogger _logger = new LoggerStubT<MockCard>();
     public enum Insignia
     {
         Null = -1,
@@ -15,28 +16,18 @@ public class MockCard : ITroopCard
         FighterJet = 1,
         Tank = 2
     }
-    public MockCard()
-    {
-    }
-    public MockCard(ILoggerFactory loggerFactory)
-    {
-        Logger = loggerFactory.CreateLogger<MockCard>();
-    }
-    public MockCard(ILogger<MockCard> logger)
-    {
-        IsTradeable = true;
-        Logger = logger;
-    }
-    public MockCard(ICardSet cardSet)
+
+    public MockCard(ICardSet<MockTerrID> cardSet)
     {
         CardSet = cardSet;
         IsTradeable = true;
         ParentTypeName = cardSet.GetType().Name;
     }
+
     public string TypeName { get; set; } = nameof(MockCard);
     public string ParentTypeName { get; private set; } = nameof(MockCardSet);
     public Insignia Insigne { get; set; }
-    Enum ITroopCard.Insigne { get => Insigne; set { Insigne = (Insignia)Convert.ToInt32(value); } }
+    Enum ITroopCard<MockTerrID>.Insigne { get => Insigne; set { Insigne = (Insignia)Convert.ToInt32(value); } }
 
     public HashSet<string> SerializablePropertyNames { get; } = [
         nameof(ID),
@@ -53,9 +44,9 @@ public class MockCard : ITroopCard
 
     public string ID { get; set; } = Guid.NewGuid().ToString();
     public ILogger Logger { get; set; } = new LoggerStubT<MockCard>();
-    public ICardSet? CardSet { get; set; }
+    public ICardSet<MockTerrID>? CardSet { get; set; }
     public MockTerrID[] Target { get; set; } = [];
-    TerrID[] ICard.Target { get => Target.Select(item => (TerrID)(int)item).ToArray(); set { Target = value.Select(item => (MockTerrID)(int)item).ToArray(); } }
+    MockTerrID[] ICard<MockTerrID>.Target { get => [.. Target.Select(item => (MockTerrID)(int)item)]; set { Target = [.. value.Select(item => (MockTerrID)(int)item)]; } }
     public bool IsTradeable { get; set; } = true;
     public int[] TestInts { get; set; } = [];
     public bool[] TestBools { get; set; } = [];

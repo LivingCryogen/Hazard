@@ -25,15 +25,15 @@ public interface IBoard : IBinarySerializable
     /// <summary>
     /// Contains the number of armies in each territory.
     /// </summary>
-    Dictionary<TerrID, int> Armies { get; }
+    Dictionary<TerrID, int> Armies { get; init; }
     /// <summary>
     /// Contains the player number of the owner of each territory.
     /// </summary>
-    Dictionary<TerrID, int> TerritoryOwner { get; }
+    Dictionary<TerrID, int> TerritoryOwner { get; init; }
     /// <summary>
     /// Contains the player number of the owner of each continent.
     /// </summary>
-    Dictionary<ContID, int> ContinentOwner { get; }
+    Dictionary<ContID, int> ContinentOwner { get; init; }
     /// <summary>
     /// Gets a list of territories or of continents on the board owned by a specfied player.
     /// </summary>
@@ -73,14 +73,12 @@ public interface IBoard : IBinarySerializable
     /// <param name="source">The territory from which the attack originated.</param>
     /// <param name="target">The territory that was attacked and is being conquered.</param>
     /// <param name="newOwner">The <see cref="IPlayer.Number"/> of the owner after the attack is completed.</param>
-    /// <param name="contFlipped">If a Continent changed hands due to this conquest, its ID; otherwise, <see langword="null"/>.</param>
-    void Conquer(TerrID source, TerrID target, int newOwner, out ContID? contFlipped);
+    void Conquer(TerrID source, TerrID target, int newOwner);
     /// <summary>
     /// Determines whether a continent has changed ownership after a change in territory ownership.
     /// </summary>
     /// <remarks>The new owner is not needed here so long as <see cref="TerritoryOwner"/> is changed properly before this method is called.</remarks>
     /// <param name="changed">The territory that changed hands.</param>
     /// <param name="previousOwner">The <see cref="IPlayer.Number"/> of the territory's owner before the change.</param>
-    /// <returns>The ID of the Continent that flipped, if any; otherwise, <see langword="null"/>.</s</returns>
-    ContID? CheckContinentFlip(TerrID changed, int previousOwner);
+    void CheckContinentFlip(TerrID changed, int previousOwner);
 }

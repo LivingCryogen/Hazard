@@ -10,12 +10,12 @@ using System.Collections.Immutable;
 
 namespace Model.Core;
 
-/// <inheritdoc cref="IRegulator"/>
-public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulator
+/// <inheritdoc cref="IRegulator{T, U}"/>
+public class Regulator(ILogger<Regulator> logger, IGame<TerrID, ContID> currentGame) : IRegulator<TerrID, ContID>
 {
-    private readonly IGame _currentGame = currentGame;
+    private readonly IGame<TerrID, ContID> _currentGame = currentGame;
     private readonly StateMachine _machine = currentGame.State;
-    private readonly IStatTracker _statTracker = currentGame.StatTracker;
+    private readonly IStatTracker<TerrID, ContID> _statTracker = currentGame.StatTracker;
     private readonly ILogger _logger = logger;
     private readonly int _numPlayers = currentGame.State.NumPlayers;
     private int _actionsCounter = 0;
@@ -26,16 +26,16 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     private GamePhase CurrentPhase => _machine.CurrentPhase;
     private bool InSetupPhase => _machine.CurrentPhase == GamePhase.DefaultSetup || _machine.CurrentPhase == GamePhase.TwoPlayerSetup;
 
-    /// <inheritdoc cref="IRegulator.CurrentActionsLimit"/>
+    /// <inheritdoc cref="IRegulator{T, U}.CurrentActionsLimit"/>
     public int CurrentActionsLimit { get; set; }
-    /// <inheritdoc cref="IRegulator.PhaseActions"/>
+    /// <inheritdoc cref="IRegulator{T, U}.PhaseActions"/>
     public int PhaseActions => _actionsCounter - _prevActionCount;
-    /// <inheritdoc cref="IRegulator.Reward"/>
-    public ICard? Reward { get; set; } = null;
+    /// <inheritdoc cref="IRegulator{T, U}.Reward"/>
+    public ICard<TerrID>? Reward { get; set; } = null;
 
-    /// <inheritdoc cref="IRegulator.PromptBonusChoice"/>
+    /// <inheritdoc cref="IRegulator{T, U}.PromptBonusChoice"/>
     public event EventHandler<TerrID[]>? PromptBonusChoice;
-    /// <inheritdoc cref="IRegulator.PromptTradeIn"/>
+    /// <inheritdoc cref="IRegulator{T, U}.PromptTradeIn"/>
     public event EventHandler<IPromptTradeEventArgs>? PromptTradeIn;
 
     private bool IsInSecondStage()
@@ -120,10 +120,10 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
             player.RemoveCard(discardIndex);
         }
     }
-    private ICard[] GetCardsFromHand(int playerNum, int[] handIndices)
+    private ICard<TerrID>[] GetCardsFromHand(int playerNum, int[] handIndices)
     {
         var player = _currentGame.Players[playerNum];
-        List<ICard> selectedCards = [];
+        List<ICard<TerrID>> selectedCards = [];
         if (handIndices.Length > player.Hand.Count)
             throw new IndexOutOfRangeException($"An attempt was made to get {handIndices.Length} cards from {player}'s hand, but they only had {player.Hand.Count}.");
 
@@ -135,7 +135,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
 
         return [.. selectedCards];
     }
-    /// <inheritdoc cref="IRegulator.Initialize"/>
+    /// <inheritdoc cref="IRegulator{T, U}.Initialize"/>
     public void Initialize()
     {
         if (_actionsCounter == 0 && _currentGame.Values.SetupActionsPerPlayers.TryGetValue(_numPlayers, out int actions))
@@ -151,7 +151,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         _machine.StateChanged += HandleStateChanged;
     }
 
-    /// <inheritdoc cref="IRegulator.CanSelectTerritory(TerrID, TerrID)"/>
+    /// <inheritdoc cref="IRegulator{T, U}.CanSelectTerritory"/>
     public bool CanSelectTerritory(TerrID newSelected, TerrID oldSelected)
     {
         bool priorSelection = oldSelected switch
@@ -207,7 +207,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
             return true;
         return false;
     }
-    /// <inheritdoc cref="IRegulator.SelectTerritory(TerrID, TerrID)"/>
+    /// <inheritdoc cref="IRegulator{T, U}.SelectTerritory"/>
     public (TerrID Selection, bool RequestInput, int? MaxValue) SelectTerritory(TerrID selected, TerrID priorSelected)
     {
         var board = _currentGame.Board;
@@ -260,7 +260,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
 
         return (postSelection, requestInput, maxValue);
     }
-    /// <inheritdoc cref="IRegulator.ClaimOrReinforce(TerrID)"/>
+    /// <inheritdoc cref="IRegulator{T, U}.ClaimOrReinforce"/>
     public void ClaimOrReinforce(TerrID territory)
     {
         switch (CurrentPhase)
@@ -316,30 +316,21 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         }
     }
 
-    /// <inheritdoc cref="IRegulator.MoveArmies(TerrID, TerrID, int)"/>
+    /// <inheritdoc cref="IRegulator{T, U}.MoveArmies"/>
     public void MoveArmies(TerrID source, TerrID target, int armies)
     {
-        int player = _currentGame.Board.TerritoryOwner[source];
-        int max = _currentGame.Board.Armies[source] - 1;
-
         _currentGame.Board.Reinforce(source, -armies);
         _currentGame.Board.Reinforce(target, armies);
 
-        _statTracker.RecordMoveAction(source, target, armies == max, player);
+
 
         if (CurrentPhase == GamePhase.Move)
             IncrementAction();
     }
-    /// <inheritdoc cref="IRegulator.Battle(TerrID, TerrID, ValueTuple{int, int}[])"/>
+    /// <inheritdoc cref="IRegulator{T, U}.Battle"/>
     public void Battle(TerrID source, TerrID target, (int AttackRoll, int DefenseRoll)[] diceRolls)
     {
         _actionsCounter++;
-
-        bool conquered = false;
-        ContID? flipped = null;
-        int attacker = _currentGame.Board.TerritoryOwner[source];
-        int defender = _currentGame.Board.TerritoryOwner[target];
-        bool retreated = false;
 
         int sourceLoss = 0;
         int targetLoss = 0;
@@ -357,34 +348,16 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
                 _currentGame.Players[conqueredOwner].RemoveTerritory(target);
             _currentGame.Players[newOwner].AddTerritory(target);
 
-            _currentGame.Board.Conquer(source, target, _currentGame.Board.TerritoryOwner[source], out flipped);
-            conquered = true;
+            _currentGame.Board.Conquer(source, target, _currentGame.Board.TerritoryOwner[source]);
 
             Reward ??= _currentGame.Cards.GameDeck.DrawCard();
         }
-        if (sourceLoss > 0) 
-        {
+        if (sourceLoss > 0)
             _currentGame.Board.Reinforce(source, -sourceLoss);
-            if (_currentGame.Board.Armies[source] <= 1)
-                retreated = true;
-        }
-        if (targetLoss > 0) 
-        {
+        if (targetLoss > 0)
             _currentGame.Board.Reinforce(target, -targetLoss);
-        }
-
-        _statTracker.RecordAttackAction(
-            source,
-            target,
-            flipped,
-            attacker,
-            defender,
-            sourceLoss,
-            targetLoss,
-            retreated,
-            conquered);
     }
-    /// <inheritdoc cref="IRegulator.CanTradeInCards(int, int[])"/>
+    /// <inheritdoc cref="IRegulator{T, U}.CanTradeInCards(int, int[])"/>
     public bool CanTradeInCards(int playerNum, int[] handIndices)
     {
         if (playerNum != PlayerTurn)
@@ -395,7 +368,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         if (selectedCards == null || selectedCards.Length == 0)
             return false;
 
-        List<ICardSet> tradedSets = [];
+        List<ICardSet<TerrID>> tradedSets = [];
         foreach (var card in selectedCards)
         {
             if (card.IsTradeable == false)
@@ -436,17 +409,11 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         ForceDiscard((Player)currentPlayer, handIndices);
 
         var tradedTargets = selectedCards.SelectMany(item => item.Target);
-        var controlledTargets = currentPlayer.GetControlledTargets([.. tradedTargets]);
-        bool occupyBonus = false;
+        var controlledTargets = currentPlayer.GetControlledTargets(tradedTargets.ToArray());
         if (controlledTargets.Length == 1)
             _currentGame.Board.Reinforce(controlledTargets[0], _currentGame.Values.TerritoryTradeInBonus);
-        else if (controlledTargets.Length > 1) 
-        {
+        else if (controlledTargets.Length > 1)
             PromptBonusChoice?.Invoke(this, [.. controlledTargets]);
-            occupyBonus = true;
-        }
-
-        _statTracker.RecordTradeAction([.. tradedTargets], tradebonus, occupyBonus ? 2 : 0, playerNum);
     }
     /// <inheritdoc cref="IRegulator.AwardTradeInBonus(TerrID)"/>
     public void AwardTradeInBonus(TerrID territory)
@@ -499,7 +466,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
             else
             {
                 string cardTypeName = reader.ReadString();
-                if (_currentGame?.Cards?.CardFactory.BuildCard(cardTypeName) is not ICard rewardCard)
+                if (_currentGame?.Cards?.CardFactory.BuildCard(cardTypeName) is not ICard<TerrID> rewardCard)
                 {
                     throw new InvalidDataException("While loading Regulator, construction of the reward card failed");
                 }

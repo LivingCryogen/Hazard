@@ -10,7 +10,7 @@ using Shared.Services.Serializer;
 namespace Model.Entities;
 /// <remarks>The default board of the base game is based on Earth circa 1800.</remarks>
 /// <inheritdoc cref="IBoard"/>
-public class EarthBoard : IBoard, IBinarySerializable
+public class EarthBoard : IBoard<TerrID, ContID>, IBinarySerializable
 {
     private readonly ILogger<EarthBoard> _logger;
     /// <summary>
@@ -37,13 +37,14 @@ public class EarthBoard : IBoard, IBinarySerializable
     /// Gives notice that a territory has changed.
     /// </summary>  
     /// <remarks>Manually fired when a territory is changed (owner or armies) in an <see cref="EarthBoard"/> method.</remarks>    
-    public event EventHandler<ITerritoryChangedEventArgs>? TerritoryChanged;
+    public event EventHandler<ITerritoryChangedEventArgs<TerrID>>? TerritoryChanged;
     /// <summary>
     /// Gives notice that a continent has changed.
     /// </summary>  
     /// <remarks>Manually fired when a continent is changed (owner) in an <see cref="EarthBoard"/> method.</remarks>  
-    public event EventHandler<IContinentOwnerChangedEventArgs>? ContinentOwnerChanged;
+    public event EventHandler<IContinentOwnerChangedEventArgs<ContID>>? ContinentOwnerChanged;
 
+    #region Properties
     /// <summary>
     /// Gets or inits the territory to armies map.
     /// </summary>
@@ -56,7 +57,7 @@ public class EarthBoard : IBoard, IBinarySerializable
     /// Gets or inits the continent to owner (player number) map.
     /// </summary>
     public Dictionary<ContID, int> ContinentOwner { get; init; }
-
+    #endregion
     /// <summary>
     /// Gets a list of territories or continents owned by a player.
     /// </summary>
@@ -69,17 +70,15 @@ public class EarthBoard : IBoard, IBinarySerializable
         {
             if (string.IsNullOrEmpty(enumName)) return [];
             if (enumName == nameof(TerrID))
-                return TerritoryOwner
+                return [.. TerritoryOwner
                     .Where(pair => pair.Value == playerNumber)
                     .Select(pair => pair.Key)
-                    .Cast<object>()
-                    .ToList();
+                    .Cast<object>()];
             if (enumName.Equals(nameof(ContID)))
-                return ContinentOwner
+                return [.. ContinentOwner
                     .Where(pair => pair.Value == playerNumber)
                     .Select(pair => pair.Key)
-                    .Cast<object>()
-                    .ToList();
+                    .Cast<object>()];
             return [];
         }
     }
@@ -114,16 +113,16 @@ public class EarthBoard : IBoard, IBinarySerializable
         Armies[territory] = Armies[territory] + armies;
         TerritoryChanged?.Invoke(this, new TerritoryChangedEventArgs(territory));
     }
-    /// <inheritdoc cref="IBoard.Conquer(TerrID, TerrID, int, out ContID?)"/>
-    public void Conquer(TerrID source, TerrID target, int newOwner, out ContID? flipped)
+    /// <inheritdoc cref="IBoard.Conquer(TerrID, TerrID, int)"/>
+    public void Conquer(TerrID source, TerrID target, int newOwner)
     {
         int previousOwner = TerritoryOwner[target];
         TerritoryOwner[target] = newOwner;
-        flipped = CheckContinentFlip(target, previousOwner);
+        CheckContinentFlip(target, previousOwner);
         TerritoryChanged?.Invoke(this, new TerritoryChangedEventArgs(target, newOwner));
     }
     /// <inheritdoc cref="IBoard.CheckContinentFlip(TerrID, int)"/>
-    public ContID? CheckContinentFlip(TerrID changed, int previousOwner)
+    public void CheckContinentFlip(TerrID changed, int previousOwner)
     {
         if (changed == TerrID.Null)
             throw new ArgumentException("Non-null TerrID required.", nameof(changed));
@@ -132,7 +131,7 @@ public class EarthBoard : IBoard, IBinarySerializable
         var changedHomeContinent = BoardGeography.TerritoryToContinent(changed);
         var continentTerritories = BoardGeography.GetContinentMembers(changedHomeContinent);
         if (continentTerritories == null || continentTerritories.Count <= 0)
-            return null;
+            return;
 
         if (ContinentOwner[changedHomeContinent] == previousOwner && previousOwner > -1)
         {
@@ -141,15 +140,12 @@ public class EarthBoard : IBoard, IBinarySerializable
                 ContinentOwner[changedHomeContinent] = newOwner;
 
             ContinentOwnerChanged?.Invoke(this, new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
-            return changedHomeContinent;
         }
         else if (continentTerritories.All(item => TerritoryOwner[item] == newOwner))
         {
             ContinentOwner[changedHomeContinent] = newOwner;
             ContinentOwnerChanged?.Invoke(this, new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
-            return changedHomeContinent;
         }
-        return null;
     }
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
     public async Task<SerializedData[]> GetBinarySerials()

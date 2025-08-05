@@ -10,7 +10,7 @@ namespace Model.DataAccess;
 
 /// <inheritdoc cref="IAssetFactory"/>
 /// Currently only <see cref="TroopCard"/> is loaded from data files. To change this,
-/// by adding, for example, another <see cref="ICard"/>, this class must extend. */
+/// by adding, for example, another <see cref="$1ICard{T}$2"/>, this class must extend. */
 public class AssetFactory : IAssetFactory
 {
     private readonly ILoggerFactory _loggerFactory;
@@ -58,7 +58,7 @@ public class AssetFactory : IAssetFactory
 
         switch (dataObject)
         {
-            case ICardSet cardSet:
+            case ICardSet<TerrID> cardSet:
                 cardSet.Cards = [.. BuildTroopCards(cardSet)];
                 return cardSet;
             case GeographyInitializer geographyInitializer:
@@ -73,12 +73,12 @@ public class AssetFactory : IAssetFactory
     /// within a <see cref="TypeRegister"/> entry for <see cref="TroopCard"/>.<br/> An instance is returned by <see cref="IDataProvider.GetData(string)"/> when passsed the <see cref="object"/> marked <see cref="RegistryRelation.Name"/>
     /// <br/>for <see cref="TroopCard"/> if the entry also includes a proper <see cref="RegistryRelation.DataFileName"/>.</param>
     /// <returns>An array of TroopCards for use by <see cref="Deck"/>.</returns>
-    public TroopCard[] BuildTroopCards(ICardSet troopCardSet)
+    public TroopCard[] BuildTroopCards(ICardSet<TerrID> troopCardSet)
     {
         List<TroopCard> troopCards = [];
         if (troopCardSet.JData == null ||
             troopCardSet.JData.Targets == null ||
-            ((ITroopCardSetData)troopCardSet.JData).Insignia == null)
+            ((ITroopCardSetData<TerrID>)troopCardSet.JData).Insignia == null)
         {
             _logger.LogWarning($"Valid ICardSetData for TroopCards not found by AssetFactory.");
             return [];
@@ -95,7 +95,7 @@ public class AssetFactory : IAssetFactory
             {
                 CardSet = troopCardSet,
                 Target = [.. targets],
-                Insigne = ((ITroopCardSetData)troopCardSet.JData).Insignia[i],
+                Insigne = ((ITroopCardSetData<TerrID>)troopCardSet.JData).Insignia[i],
             });
         }
 

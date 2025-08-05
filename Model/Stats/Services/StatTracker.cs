@@ -158,24 +158,11 @@ public class StatTracker : IStatTracker, IBinarySerializable
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>/>
     public async Task<SerializedData[]> GetBinarySerials()
     {
-        return await _currentSession.GetBinarySerials();
+        throw new NotImplementedException();
     }
     /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     public bool LoadFromBinary(BinaryReader reader)
     {
-        bool loadComplete = true;
-        try
-        {
-            var readSession = new GameSession(_loggerFactory.CreateLogger<GameSession>(), _loggerFactory);
-            if (!readSession.LoadFromBinary(reader))
-                loadComplete = false;
-            _currentSession = readSession;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("StatTracker encountered an exception when attempting to load from binary: {Message} {InnerEx}", ex.Message, ex.InnerException);
-            loadComplete = false;
-        }
-        return loadComplete;
+        throw new NotImplementedException();
     }
 }

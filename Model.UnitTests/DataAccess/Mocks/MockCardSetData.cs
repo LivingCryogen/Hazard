@@ -6,21 +6,21 @@ using Shared.Interfaces.Model;
 
 namespace Model.Tests.DataAccess.Mocks;
 
-public class MockCardSetData : ITroopCardSetData
+public class MockCardSetData : ITroopCardSetData<MockTerrID>
 {
     public MockCard.Insignia[] Insignia { get; set; } = [];
     public MockTerrID[][] Targets { get; set; } = [];
-    TroopInsignia[] ITroopCardSetData.Insignia { get => Insignia.Select(insigne => ((TroopInsignia)((int)insigne))).ToArray(); set { } }
-    TerrID[][] ICardSetData.Targets
+    TroopInsignia[] ITroopCardSetData<MockTerrID>.Insignia { get => Insignia.Select(insigne => ((TroopInsignia)((int)insigne))).ToArray(); set { } }
+    MockTerrID[][] ICardSetData<MockTerrID>.Targets
     {
         get
         {
-            List<TerrID[]> castList = [];
+            List<MockTerrID[]> castList = [];
             foreach (MockTerrID[] targetList in Targets)
             {
-                List<TerrID> innerCastList = [];
+                List<MockTerrID> innerCastList = [];
                 foreach (MockTerrID id in targetList)
-                    innerCastList.Add((TerrID)(int)id);
+                    innerCastList.Add((MockTerrID)(int)id);
 
                 castList.Add([.. innerCastList]);
             }

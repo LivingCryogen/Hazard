@@ -13,7 +13,7 @@ namespace Shared.Interfaces.Model;
 /// (1) By <see cref="ICardSetDataJConverter"/>. See also <see cref="ICardSetData"/> and <see cref="IDataProvider"/>.
 /// (2) By <see cref="AssetFactory.BuildTroopCards(ICardSet)"/>.
 /// </remarks>
-public interface ICardSet
+public interface ICardSet<T> where T : struct, Enum
 {
     /// <summary>
     /// Gets the name of this card set's type.
@@ -31,21 +31,21 @@ public interface ICardSet
     /// <value>
     /// A card set if it has been loaded by the DAL; otherwise, <see langword="null"/>.
     /// </value>
-    public ICardSetData? JData { get; }
+    public ICardSetData<T>? JData { get; }
     /// <summary>
     /// Gets the name of the type which is the intended member of this collection.
     /// <br/> E.g. "TroopCard", see <see cref="TroopCard"/>.
     /// </summary>
     /// <remarks>
-    /// Relationships between <see cref="ICard"/>s, <see cref="ICardSet"/>, and <see cref="ICardSetData"/> are established by <see cref="Services.Registry.ITypeRegister{T}"/>, which gets initial values from <see cref="Services.Registry.RegistryInitializer"/>.
+    /// Relationships between <see cref="$1ICard{T}$2"/>s, <see cref="ICardSet"/>, and <see cref="ICardSetData"/> are established by <see cref="Services.Registry.ITypeRegister{T}"/>, which gets initial values from <see cref="Services.Registry.RegistryInitializer"/>.
     /// </remarks>
     public string MemberTypeName { get; }
     /// <summary>
     /// Gets or sets a list of cards in this card set.
     /// </summary>
-    public List<ICard> Cards { get; set; }
+    public List<ICard<T>> Cards { get; set; }
     /// <summary>
-    /// Gets a flag indicating if a trade should be forced when a matching set of <see cref="ICard"/>s from this set are obtained.
+    /// Gets a flag indicating if a trade should be forced when a matching set of <see cref="$1ICard{T}$2"/>s from this set are obtained.
     /// </summary>
     /// <value>
     /// <see langword="true"/> if obtaining matching cards (satisfying <see cref="IsValidTrade"/>) should force an <see cref="IPlayer"/> to trade (via <see cref="IRegulator.TradeInCards(int, int[])"/>).
@@ -53,23 +53,23 @@ public interface ICardSet
     /// </value>
     public bool ForcesTrade { get; }
     /// <summary>
-    /// Identifies any number of matching trade sets present in any <see cref="ICard"/>s.
+    /// Identifies any number of matching trade sets present in any <see cref="$1ICard{T}$2"/>s.
     /// </summary>
     /// <param name="cards">An array of cards in which to search for matching trade-sets.</param>
     /// <returns>A staggered array of cards containing each valid trade-set found within <paramref name="cards"/>.</returns>
-    public ICard[][]? FindTradeSets(ICard[] cards);
+    public ICard<T>[][]? FindTradeSets(ICard<T>[] cards);
     /// <summary>
     /// Determines whether a group of cards is a valid set for trade-in.
     /// </summary>
     /// <param name="cards">An array of cards to test.</param>
     /// <returns><see langword="true"/> if the collection <paramref name="cards"/> qualifies exactly as a valid trade-set. Otherwise, <see langword="false"/>.</returns>
-    public bool IsValidTrade(ICard[] cards);
+    public bool IsValidTrade(ICard<T>[] cards);
     /// <summary>
     /// Validates a card as a member of this set. 
     /// </summary>
     /// <param name="card">The card that may be a member of this card set.</param>
     /// <returns><see langword="true"/> if <paramref name="card"/>'s relevant properties verify it belongs to this set; otherwise, <see langword="false"/>.</returns>
-    public bool IsParent(ICard card)
+    public bool IsParent(ICard<T> card)
     {
         if (MemberTypeName != card.TypeName)
             return false;

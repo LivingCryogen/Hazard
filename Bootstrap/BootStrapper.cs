@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Shared.Geography.Enums;
 using Shared.Interfaces.View;
 using Shared.Interfaces.ViewModel;
 using Shared.Services.Options;
@@ -20,7 +21,7 @@ public class BootStrapper(ILogger<BootStrapper> logger) : IBootStrapperService
     {
         if (MainApp == null)
             return;
-        var viewModel = MainApp.Host.Services.GetRequiredService<IMainVM>();
+        var viewModel = MainApp.Host.Services.GetRequiredService<IMainVM<TerrID, ContID>>();
         MainWindow mainWindow = new()
         {
             AppOptions = MainApp.Host.Services.GetRequiredService<IOptions<AppConfig>>()
@@ -52,7 +53,7 @@ public class BootStrapper(ILogger<BootStrapper> logger) : IBootStrapperService
             window.Close();
         }
 
-        var viewModel = MainApp.Host.Services.GetRequiredService<IMainVM>();
+        var viewModel = MainApp.Host.Services.GetRequiredService<IMainVM<TerrID, ContID>>();
         _logger.LogInformation("Initializing game from source: {FileName}.", fileName);
         viewModel.Initialize([], [], fileName);
         ((MainWindow)MainApp.MainWindow).Initialize(viewModel);
@@ -80,7 +81,7 @@ public class BootStrapper(ILogger<BootStrapper> logger) : IBootStrapperService
             window.Close();
         }
 
-        var viewModel = MainApp.Host.Services.GetRequiredService<IMainVM>();
+        var viewModel = MainApp.Host.Services.GetRequiredService<IMainVM<TerrID, ContID>>();
         viewModel.Initialize(playerNames, playerColors, null);
         ((MainWindow)(MainApp.MainWindow)).Initialize(viewModel);
         MainApp.MainWindow.Show();

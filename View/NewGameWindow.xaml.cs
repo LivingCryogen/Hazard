@@ -66,7 +66,6 @@ public partial class NewGameWindow : Window
         DataContext = this;
     }
 
-    #region Properties
     public ObservableCollection<Tuple<ArmyColor, SolidColorBrush>>[] ColorsRemaining { get; set; }
     public ObservableCollection<Tuple<ArmyColor, SolidColorBrush?>?> NewPlayerColor { get; set; }
     public List<string>? NewPlayerName { get; set; }
@@ -77,8 +76,7 @@ public partial class NewGameWindow : Window
         ToList();
 
     public List<WrapPanel> WrapPanels { get; private set; } = [];
-    #endregion
-    #region Methods
+
     private static void TogglePlayerWrapPanels(int numSelection, List<WrapPanel> wrapList)
     {
         int nameNum;
@@ -185,5 +183,4 @@ public partial class NewGameWindow : Window
             ColorsRemaining[i].Add(colorInfo);
         }
     }
-    #endregion
 }

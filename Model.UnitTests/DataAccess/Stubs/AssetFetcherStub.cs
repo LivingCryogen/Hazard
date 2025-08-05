@@ -1,16 +1,17 @@
-﻿using Shared.Geography;
+﻿using Model.Tests.Fixtures.Mocks;
+using Shared.Geography;
 using Shared.Interfaces.Model;
 
 namespace Model.Tests.DataAccess.Stubs;
 
-public class AssetFetcherStub : IAssetFetcher
+public class AssetFetcherStub : IAssetFetcher<MockTerrID>
 {
-    List<ICardSet> IAssetFetcher.FetchCardSets()
+    List<ICardSet<MockTerrID>> IAssetFetcher<MockTerrID>.FetchCardSets()
     {
         throw new NotImplementedException();
     }
 
-    GeographyInitializer IAssetFetcher.FetchGeography()
+    GeographyInitializer IAssetFetcher<MockTerrID>.FetchGeography()
     {
         throw new NotImplementedException();
     }

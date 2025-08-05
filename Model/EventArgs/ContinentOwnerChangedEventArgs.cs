@@ -6,7 +6,7 @@ namespace Model.EventArgs;
 /// <summary>
 /// Packages identification data for <see cref="Entities.EarthBoard.ContinentOwnerChanged"/> and its handlers.
 /// </summary>
-public class ContinentOwnerChangedEventArgs : System.EventArgs, IContinentOwnerChangedEventArgs
+public class ContinentOwnerChangedEventArgs : System.EventArgs, IContinentOwnerChangedEventArgs<ContID>
 {
     /// <summary>
     /// Constructs a new ContinentOwnerChangedEventArgs when only the Continent ID is required.
