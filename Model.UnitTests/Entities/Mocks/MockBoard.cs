@@ -18,7 +18,8 @@ internal class MockBoard : IBoard
         Armies = [];
         Armies.Add(MockTerrID.Alabama, 10);
         TerritoryOwner = [];
-        TerritoryOwner.Add(MockTerrID.Alabama, 1);
+        TerritoryOwner.Add(MockTerrID.Alabama, 0);
+        TerritoryOwner.Add(MockTerrID.Alaska, 1);
         ContinentOwner = [];
         ContinentOwner.Add(MockContID.UnitedStates, -1);
     }

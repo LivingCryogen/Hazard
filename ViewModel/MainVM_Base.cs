@@ -178,6 +178,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         if (fileName != null)
         {
             BinarySerializer.Load([this, CurrentGame, Regulator], fileName);
+            CurrentGame.SavePath = Path.Combine(AppPath, fileName);
             colors = ParseColorNames();
         }
         else

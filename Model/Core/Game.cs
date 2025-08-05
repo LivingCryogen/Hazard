@@ -83,8 +83,10 @@ public class Game : IGame
     public CardBase Cards { get; private set; }
     /// <inheritdoc cref="IGame.Players"/>.
     public List<IPlayer> Players { get; private set; }
+    /// <inheritdoc cref="IGame.StatTracker"/>
     public IStatTracker StatTracker { get; init; }
-
+    /// <inheritdoc cref="IGame.SavePath"/>
+    public string? SavePath { get; set; }
 
     private void OnPlayerLost(object? sender, System.EventArgs e)
     {

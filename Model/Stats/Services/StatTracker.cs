@@ -21,6 +21,14 @@ public class StatTracker : IStatTracker, IBinarySerializable
     private readonly ILogger _logger;
     private readonly ILoggerFactory _loggerFactory;
     private GameSession _currentSession;
+
+    /// <inheritdoc cref="IStatTracker.AwaitsUpdate"/>
+    public bool AwaitsUpdate { get; private set; } = false;
+    /// <inheritdoc cref="IStatTracker.GameID"/>
+    public Guid GameID => _currentSession.Id;
+    /// <inheritdoc cref="IStatTracker.LastSavePath"/>
+    public string? LastSavePath { get; init; }
+
     /// <summary>
     /// Builds a new <see cref="StatTracker"/> instance for the given game.
     /// </summary>
@@ -31,7 +39,7 @@ public class StatTracker : IStatTracker, IBinarySerializable
     {
         _loggerFactory = loggerFactory;
         _logger = loggerFactory.CreateLogger<StatTracker>();
-
+        LastSavePath = game.SavePath;
         _currentSession = new(loggerFactory.CreateLogger<GameSession>(), loggerFactory)
         {
             Version = options.Value.StatVersion,
@@ -101,6 +109,8 @@ public class StatTracker : IStatTracker, IBinarySerializable
                         playerStat.ForcedRetreats++;
                     break;
             }
+
+        AwaitsUpdate = true;
     }
     /// <inheritdoc cref="IStatTracker.RecordMoveAction(TerrID, TerrID, bool, int)" />
     public void RecordMoveAction(TerrID source, TerrID target, bool maxAdvanced, int player)
@@ -123,6 +133,7 @@ public class StatTracker : IStatTracker, IBinarySerializable
         }
 
         _currentSession.Moves.Add(moveStats);
+        AwaitsUpdate = true;
     }
     /// <inheritdoc cref="IStatTracker.RecordTradeAction(List{TerrID}, int, int, int)" />
     public void RecordTradeAction(List<TerrID> cardTargets, int tradeValue, int occupiedBonus, int playerNumber)
@@ -142,6 +153,7 @@ public class StatTracker : IStatTracker, IBinarySerializable
         }
 
         _currentSession.TradeIns.Add(tradeStats);
+        AwaitsUpdate = true;
     }
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>/>
     public async Task<SerializedData[]> GetBinarySerials()

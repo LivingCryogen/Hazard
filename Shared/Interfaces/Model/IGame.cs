@@ -17,7 +17,6 @@ public interface IGame : IBinarySerializable
     /// </summary>
     event EventHandler<int>? PlayerWon;
 
-    #region Properties
     /// <summary>
     /// Gets the facade of the DAL.
     /// </summary>
@@ -57,10 +56,13 @@ public interface IGame : IBinarySerializable
     /// </value>
     List<IPlayer> Players { get; }
     /// <summary>
-    /// Gets the stat tracker.
+    /// Gets the Stat Tracker for this game.
     /// </summary>
-    IStatTracker StatTracker { get; }
-    #endregion
+    public IStatTracker StatTracker { get; }
+    /// <summary>
+    /// Gets or sets the path to the last used save file path for this game.
+    /// </summary>
+    public string? SavePath { get; set; }
 
     /// <summary>
     /// Updates player names.
