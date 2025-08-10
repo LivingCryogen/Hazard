@@ -11,7 +11,7 @@ namespace Shared.Interfaces.Model;
 /// <remarks>
 /// The calls occur in <see cref="IRegulator"/>.
 /// </remarks>
-public interface IStatTracker
+public interface IStatTracker : IBinarySerializable
 {
     /// <summary>
     /// Gets a flag indicating whether the associated Game Session stats have changed (requiring an update).

@@ -9,6 +9,7 @@ using Model.Tests.Entities.Mocks;
 using Model.Tests.Fixtures;
 using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Fixtures.Stubs;
+using Shared.Geography;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Services.Serializer;
@@ -66,13 +67,13 @@ public class MockGame : IGame
         if (Players.Count != 2) return;
 
         // Distribute all initial territories between the two players and a "dummy AI" player randomly
-        int numTerritories = MockGeography.NumTerritories / 3;
+        int numTerritories = BoardGeography.NumTerritories / 3;
         int[] playerPool = [numTerritories, numTerritories, numTerritories];
         Random rand = new();
         byte poolsEmpty = 0b000; // bitwise flags
         byte[] masks = [0b001, 0b010, 0b100]; // flag bitwise manipulators
 
-        for (int i = 0; i < MockGeography.NumTerritories; i++)
+        for (int i = 0; i < BoardGeography.NumTerritories; i++)
         {
             // select the random player, making sure not to select a player without any selections left
             int player;

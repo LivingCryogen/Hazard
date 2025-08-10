@@ -6,7 +6,7 @@ using Shared.Interfaces.Model;
 
 namespace Model.Tests.Entities.Mocks;
 
-public class MockCard : ITroopCard
+public class MockCard(ICardSet cardSet) : ITroopCard
 {
     private readonly ILogger _logger = new LoggerStubT<MockCard>();
     public enum Insignia
@@ -17,15 +17,8 @@ public class MockCard : ITroopCard
         Tank = 2
     }
 
-    public MockCard(ICardSet cardSet)
-    {
-        CardSet = cardSet;
-        IsTradeable = true;
-        ParentTypeName = cardSet.GetType().Name;
-    }
-
     public string TypeName { get; set; } = nameof(MockCard);
-    public string ParentTypeName { get; private set; } = nameof(MockCardSet);
+    public string ParentTypeName { get; private set; } = cardSet.GetType().Name;
     public Insignia Insigne { get; set; }
     Enum ITroopCard.Insigne { get => Insigne; set { Insigne = (Insignia)Convert.ToInt32(value); } }
 
@@ -44,9 +37,8 @@ public class MockCard : ITroopCard
 
     public string ID { get; set; } = Guid.NewGuid().ToString();
     public ILogger Logger { get; set; } = new LoggerStubT<MockCard>();
-    public ICardSet? CardSet { get; set; }
+    public ICardSet? CardSet { get; set; } = cardSet;
     public TerrID[] Target { get; set; } = [];
-    TerrID[] ICard.Target { get => [.. Target.Select(item => (TerrID)(int)item)]; set { Target = [.. value.Select(item => (TerrID)(int)item)]; } }
     public bool IsTradeable { get; set; } = true;
     public int[] TestInts { get; set; } = [];
     public bool[] TestBools { get; set; } = [];

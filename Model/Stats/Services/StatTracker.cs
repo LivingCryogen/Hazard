@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Model.Stats.Services;
 /// <inheritdoc cref="IStatTracker"/>
-public class StatTracker : IStatTracker, IBinarySerializable
+public class StatTracker : IStatTracker
 {
     private readonly ILogger _logger;
     private readonly ILoggerFactory _loggerFactory;

@@ -37,7 +37,7 @@ internal class MockPlayer : IPlayer
     public int ArmyBonus { get; }
     public int ArmyPool { get; set; } = 10;
     public int ContinentBonus { get; set; } = 6;
-    public HashSet<Enum> ControlledTerritories { get; set; }
+    public HashSet<TerrID> ControlledTerritories { get; set; }
     public List<ICard> Hand { get; set; } = [];
     public string Name { get; set; } = "YourFatherSmeltOfElderBerries!";
     public int Number { get; set; }
@@ -106,11 +106,11 @@ internal class MockPlayer : IPlayer
     {
         throw new NotImplementedException();
     }
-    public bool AddTerritory(Enum territory)
+    public bool AddTerritory(TerrID territory)
     {
         throw new NotImplementedException();
     }
-    public Enum[] GetControlledTargets(Enum[] targets)
+    public TerrID[] GetControlledTargets(TerrID[] targets)
     {
         throw new NotImplementedException();
     }
@@ -122,7 +122,7 @@ internal class MockPlayer : IPlayer
     {
         throw new NotImplementedException();
     }
-    public bool RemoveTerritory(Enum territory)
+    public bool RemoveTerritory(TerrID territory)
     {
         throw new NotImplementedException();
     }

@@ -52,7 +52,6 @@ public class Game : IGame
         {
             Players.Add(new Player(i, State.NumPlayers, Cards.CardFactory, Values, Board, _loggerFactory.CreateLogger<Player>()));
             Players.Last().PlayerLost += OnPlayerLost;
-            // Players.Last().PlayerWon += OnPlayerWin;
         }
         StatTracker = statTracker; 
     }
@@ -200,7 +199,7 @@ public class Game : IGame
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
     public async Task<SerializedData[]> GetBinarySerials()
     {
-        return await Task.Run(() =>
+        return await Task.Run(async () =>
         {
             List<SerializedData> saveData = [];
             if (this.ID is Guid gameID)
@@ -210,12 +209,17 @@ public class Game : IGame
             }
             else
                 saveData.Add(new(typeof(int), 0));
-            saveData.AddRange(Board?.GetBinarySerials().Result ?? []);
-            saveData.AddRange(Cards?.GetBinarySerials().Result ?? []);
+            if (Board != null)
+                saveData.AddRange(await Board.GetBinarySerials());
+            if (Cards != null)
+                saveData.AddRange(await Cards.GetBinarySerials());
             saveData.Add(new(typeof(int), Players.Count));
             foreach (IPlayer player in Players)
-                saveData.AddRange(player?.GetBinarySerials().Result ?? []);
-            saveData.AddRange(State?.GetBinarySerials().Result ?? []);
+                if (player != null)
+                    saveData.AddRange(await player.GetBinarySerials());
+            if (State != null)
+                saveData.AddRange(await State.GetBinarySerials());
+            saveData.AddRange(await StatTracker.GetBinarySerials());
 
             return saveData.ToArray();
         });
@@ -239,10 +243,10 @@ public class Game : IGame
                 newPlayer.LoadFromBinary(reader);
                 Cards.MapCardsToSets([.. newPlayer.Hand]);
                 newPlayer.PlayerLost += OnPlayerLost;
-                // newPlayer.PlayerWon += OnPlayerWin;
                 Players.Add(newPlayer);
             }
             State.LoadFromBinary(reader);
+            StatTracker.LoadFromBinary(reader);
         }
         catch (Exception ex)
         {

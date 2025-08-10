@@ -7,6 +7,7 @@ using Shared.Enums;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Services.Serializer;
+using System.Net.Sockets;
 
 namespace Model.Tests.DataAccess;
 
@@ -20,6 +21,56 @@ public class BinarySerializerTests
     public BinarySerializerTests()
     {
         BinarySerializer.InitializeLogger(new LoggerStub());
+    }
+
+    public static void PopulateMockPlayers(MockGame game)
+    {
+        var mockSet = game.Cards.Sets[0];
+        game.Players.Clear();
+        game.Players.Add(new MockPlayer(0, game.Cards.CardFactory, new LoggerStubT<MockPlayer>())
+        {
+            Name = "TestPlayer1",
+            ArmyPool = 50,
+            ControlledTerritories = [TerrID.Afghanistan, TerrID.Iceland, TerrID.Scandinavia],
+            Hand = [new MockCard(mockSet)],
+        });
+        game.Players.Add(new MockPlayer(1, game.Cards.CardFactory, new LoggerStubT<MockPlayer>())
+        {
+            Name = "TestPlayer2",
+            ArmyPool = 40,
+            ControlledTerritories = [TerrID.Siam, TerrID.Ontario, TerrID.Madagascar],
+            Hand = [new MockCard(mockSet), new MockCard(mockSet)],
+        });
+        game.Players.Add(new MockPlayer(2, game.Cards.CardFactory, new LoggerStubT<MockPlayer>())
+        {
+            Name = "TestPlayer3",
+            ArmyPool = 30,
+            ControlledTerritories = [TerrID.MiddleEast],
+            Hand = [],
+        });
+        game.Players.Add(new MockPlayer(3, game.Cards.CardFactory, new LoggerStubT<MockPlayer>())
+        {
+            Name = "TestPlayer4",
+            ArmyPool = 20,
+            ControlledTerritories = [],
+            Hand = [new MockCard(mockSet), new MockCard(mockSet), new MockCard(mockSet)],
+            HasCardSet = true
+        });
+        game.Players.Add(new MockPlayer(4, game.Cards.CardFactory, new LoggerStubT<MockPlayer>())
+        {
+            Name = "TestPlayer5",
+            ArmyPool = 10,
+            ControlledTerritories = [TerrID.CentralAmerica, TerrID.Alberta, TerrID.China],
+            Hand = [new MockCard(mockSet), new MockCard(mockSet)],
+        });
+        game.Players.Add(new MockPlayer(5, game.Cards.CardFactory, new LoggerStubT<MockPlayer>())
+        {
+            Name = "TestPlayer6",
+            ArmyPool = 0,
+            ControlledTerritories = [TerrID.Congo, TerrID.EastAfrica, TerrID.GreatBritain, TerrID.India, TerrID.Indonesia],
+            Hand = [new MockCard(mockSet), new MockCard(mockSet), new MockCard(mockSet), new MockCard(mockSet)],
+            HasCardSet = true
+        });
     }
 
     [TestInitialize]
@@ -51,59 +102,15 @@ public class BinarySerializerTests
     [TestMethod]
     public async Task Players_RoundTrip_Match()
     {
-        var mockSet = _toSerialGame.Cards.Sets[0];
-        _toSerialGame.Players.Clear();
-        _toSerialGame.Players.Add(new MockPlayer(0, _toSerialGame.Cards.CardFactory, _toSerialGame.Board, new LoggerStubT<MockPlayer>())
-        {
-            Name = "TestPlayer1",
-            ArmyPool = 50,
-            ControlledTerritories = [TerrID.Alabama, TerrID.Idaho, TerrID.SouthCarolina],
-            Hand = [new MockCard(mockSet)],
-        });
-        _toSerialGame.Players.Add(new MockPlayer(1, _toSerialGame.Cards.CardFactory, _toSerialGame.Board, new LoggerStubT<MockPlayer>())
-        {
-            Name = "TestPlayer2",
-            ArmyPool = 40,
-            ControlledTerritories = [TerrID.SouthDakota, TerrID.Oklahoma, TerrID.Montana],
-            Hand = [new MockCard(mockSet), new MockCard(mockSet)],
-        });
-        _toSerialGame.Players.Add(new MockPlayer(2, _toSerialGame.Cards.CardFactory, _toSerialGame.Board, new LoggerStubT<MockPlayer>())
-        {
-            Name = "TestPlayer3",
-            ArmyPool = 30,
-            ControlledTerritories = [TerrID.Mississippi],
-            Hand = [],
-        });
-        _toSerialGame.Players.Add(new MockPlayer(3, _toSerialGame.Cards.CardFactory, _toSerialGame.Board, new LoggerStubT<MockPlayer>())
-        {
-            Name = "TestPlayer4",
-            ArmyPool = 20,
-            ControlledTerritories = [],
-            Hand = [new MockCard(mockSet), new MockCard(mockSet), new MockCard(mockSet)],
-            HasCardSet = true
-        });
-        _toSerialGame.Players.Add(new MockPlayer(4, _toSerialGame.Cards.CardFactory, _toSerialGame.Board, new LoggerStubT<MockPlayer>())
-        {
-            Name = "TestPlayer5",
-            ArmyPool = 10,
-            ControlledTerritories = [TerrID.California, TerrID.Arkansas, TerrID.Colorado],
-            Hand = [new MockCard(mockSet), new MockCard(mockSet)],
-        });
-        _toSerialGame.Players.Add(new MockPlayer(5, _toSerialGame.Cards.CardFactory, _toSerialGame.Board, new LoggerStubT<MockPlayer>())
-        {
-            Name = "TestPlayer6",
-            ArmyPool = 0,
-            ControlledTerritories = [TerrID.Connecticut, TerrID.Delaware, TerrID.Florida, TerrID.Hawaii, TerrID.Indiana],
-            Hand = [new MockCard(mockSet), new MockCard(mockSet), new MockCard(mockSet), new MockCard(mockSet)],
-            HasCardSet = true
-        });
+        PopulateMockPlayers(_toSerialGame);
+        
         _deserialGame.Players.Clear();
         ((MockCardBase)_deserialGame.Cards).Wipe();
 
         for (int i = 0; i < _toSerialGame.Players.Count; i++)
         {
             await BinarySerializer.Save([_toSerialGame.Players[i]], _testFileName, true);
-            _deserialGame.Players.Add(new MockPlayer(i, _deserialGame.Cards.CardFactory, _deserialGame.Board, new LoggerStubT<MockPlayer>()));
+            _deserialGame.Players.Add(new MockPlayer(i, _deserialGame.Cards.CardFactory, new LoggerStubT<MockPlayer>()));
             if (BinarySerializer.Load([_deserialGame.Players[i]], _testFileName))
             {
                 Assert.AreEqual(_toSerialGame.Players[i].Number, _deserialGame.Players[i].Number);
@@ -245,7 +252,7 @@ public class BinarySerializerTests
     {
         MockCard rewardCard = new(new MockCardSet())
         {
-            Target = [TerrID.Idaho],
+            Target = [TerrID.Irkutsk],
             Insigne = MockCard.Insignia.FighterJet
         };
         rewardCard.FillTestValues();
@@ -276,7 +283,7 @@ public class BinarySerializerTests
 
         MockCard rewardCard = new(new MockCardSet())
         {
-            Target = [TerrID.Idaho],
+            Target = [TerrID.Ural],
             Insigne = MockCard.Insignia.FighterJet
         };
         rewardCard.FillTestValues();
@@ -284,51 +291,7 @@ public class BinarySerializerTests
         _toSerialGame.Regulator.CurrentActionsLimit = 7;
 
         _toSerialGame.Players.Clear();
-        var mockSet = _toSerialGame.Cards.Sets[0];
-        _toSerialGame.Players.Add(new MockPlayer(0, _toSerialGame.Cards.CardFactory, _toSerialGame.Board, new LoggerStubT<MockPlayer>())
-        {
-            Name = "TestPlayer1",
-            ArmyPool = 50,
-            ControlledTerritories = [TerrID.Alabama, TerrID.Idaho, TerrID.SouthCarolina],
-            Hand = [new MockCard(mockSet)],
-        });
-        _toSerialGame.Players.Add(new MockPlayer(1, _toSerialGame.Cards.CardFactory, _toSerialGame.Board, new LoggerStubT<MockPlayer>())
-        {
-            Name = "TestPlayer2",
-            ArmyPool = 40,
-            ControlledTerritories = [TerrID.SouthDakota, TerrID.Oklahoma, TerrID.Montana],
-            Hand = [new MockCard(mockSet), new MockCard(mockSet)],
-        });
-        _toSerialGame.Players.Add(new MockPlayer(2, _toSerialGame.Cards.CardFactory, _toSerialGame.Board, new LoggerStubT<MockPlayer>())
-        {
-            Name = "TestPlayer3",
-            ArmyPool = 30,
-            ControlledTerritories = [TerrID.Mississippi],
-            Hand = [],
-        });
-        _toSerialGame.Players.Add(new MockPlayer(3, _toSerialGame.Cards.CardFactory, _toSerialGame.Board, new LoggerStubT<MockPlayer>())
-        {
-            Name = "TestPlayer4",
-            ArmyPool = 20,
-            ControlledTerritories = [],
-            Hand = [new MockCard(mockSet), new MockCard(mockSet), new MockCard(mockSet)],
-            HasCardSet = true
-        });
-        _toSerialGame.Players.Add(new MockPlayer(4, _toSerialGame.Cards.CardFactory, _toSerialGame.Board, new LoggerStubT<MockPlayer>())
-        {
-            Name = "TestPlayer5",
-            ArmyPool = 10,
-            ControlledTerritories = [TerrID.California, TerrID.Arkansas, TerrID.Colorado],
-            Hand = [new MockCard(mockSet), new MockCard(mockSet)],
-        });
-        _toSerialGame.Players.Add(new MockPlayer(5, _toSerialGame.Cards.CardFactory, _toSerialGame.Board, new LoggerStubT<MockPlayer>())
-        {
-            Name = "TestPlayer6",
-            ArmyPool = 0,
-            ControlledTerritories = [TerrID.Connecticut, TerrID.Delaware, TerrID.Florida, TerrID.Hawaii, TerrID.Indiana],
-            Hand = [new MockCard(mockSet), new MockCard(mockSet), new MockCard(mockSet), new MockCard(mockSet)],
-            HasCardSet = true
-        });
+        PopulateMockPlayers(_toSerialGame);
         _deserialGame.Players.Clear();
         ((MockCardBase)_deserialGame.Cards).Wipe();
 
@@ -337,7 +300,7 @@ public class BinarySerializerTests
         if (BinarySerializer.Load([_deserialGame], _testFileName))
         {
 
-            #region BoardAsserts
+            // BoardAsserts
             Assert.IsNotNull(_toSerialGame.Board);
             Assert.IsNotNull(_deserialGame.Board);
             foreach (var contKey in _toSerialGame.Board.ContinentOwner.Keys)
@@ -347,8 +310,7 @@ public class BinarySerializerTests
                 Assert.AreEqual(_toSerialGame.Board.TerritoryOwner[terrKey], _deserialGame.Board.TerritoryOwner[terrKey]);
                 Assert.AreEqual(_toSerialGame.Board.Armies[terrKey], _deserialGame.Board.Armies[terrKey]);
             }
-            #endregion
-            #region PlayersAsserts
+            // PlayersAsserts
             for (int i = 0; i < _toSerialGame.Players.Count; i++)
             {
                 Assert.AreEqual(_toSerialGame.Players[i].Number, _deserialGame.Players[i].Number);
@@ -383,8 +345,7 @@ public class BinarySerializerTests
                     }
                 }
             }
-            #endregion
-            #region CardBaseAsserts
+            // CardBaseAsserts
             Assert.IsNotNull(_toSerialGame.Cards.Sets);
             Assert.IsNotNull(_deserialGame.Cards.Sets);
             Assert.AreEqual(_toSerialGame.Cards.Sets.Count, _deserialGame.Cards.Sets.Count);
@@ -448,19 +409,17 @@ public class BinarySerializerTests
 #pragma warning restore CS8602
                 Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].Target[0], _deserialGame.Cards.GameDeck.DiscardPile[j].Target[0]); // could test the entire array but the default Targets are always length 1
             }
-            #endregion
-            #region StateAsserts
+            // StateAsserts
             Assert.AreEqual(_toSerialGame.State.NumTrades, _deserialGame.State.NumTrades);
             Assert.AreEqual(_toSerialGame.State.CurrentPhase, _deserialGame.State.CurrentPhase);
             Assert.AreEqual(_toSerialGame.State.Round, _deserialGame.State.Round);
             Assert.AreEqual(_toSerialGame.State.PlayerTurn, _deserialGame.State.PlayerTurn);
             Assert.AreEqual(_toSerialGame.State.PhaseStageTwo, _deserialGame.State.PhaseStageTwo);
-            #endregion
-            #region RegulatorAsserts
+
+            // RegulatorAsserts
             Assert.IsNotNull(_toSerialGame.Regulator.Reward);
             Assert.IsNotNull(_deserialGame.Regulator.Reward);
             Assert.AreEqual(_toSerialGame.Regulator.Reward.Target[0], _deserialGame.Regulator.Reward.Target[0]);
-            #endregion
         }
         else Assert.Fail();
     }
