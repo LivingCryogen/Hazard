@@ -6,7 +6,7 @@ using Shared.Interfaces.Model;
 
 namespace Model.Tests.Entities.Mocks;
 
-public class MockCard : ITroopCard<MockTerrID>
+public class MockCard : ITroopCard
 {
     private readonly ILogger _logger = new LoggerStubT<MockCard>();
     public enum Insignia
@@ -17,7 +17,7 @@ public class MockCard : ITroopCard<MockTerrID>
         Tank = 2
     }
 
-    public MockCard(ICardSet<MockTerrID> cardSet)
+    public MockCard(ICardSet cardSet)
     {
         CardSet = cardSet;
         IsTradeable = true;
@@ -27,7 +27,7 @@ public class MockCard : ITroopCard<MockTerrID>
     public string TypeName { get; set; } = nameof(MockCard);
     public string ParentTypeName { get; private set; } = nameof(MockCardSet);
     public Insignia Insigne { get; set; }
-    Enum ITroopCard<MockTerrID>.Insigne { get => Insigne; set { Insigne = (Insignia)Convert.ToInt32(value); } }
+    Enum ITroopCard.Insigne { get => Insigne; set { Insigne = (Insignia)Convert.ToInt32(value); } }
 
     public HashSet<string> SerializablePropertyNames { get; } = [
         nameof(ID),
@@ -44,9 +44,9 @@ public class MockCard : ITroopCard<MockTerrID>
 
     public string ID { get; set; } = Guid.NewGuid().ToString();
     public ILogger Logger { get; set; } = new LoggerStubT<MockCard>();
-    public ICardSet<MockTerrID>? CardSet { get; set; }
-    public MockTerrID[] Target { get; set; } = [];
-    MockTerrID[] ICard<MockTerrID>.Target { get => [.. Target.Select(item => (MockTerrID)(int)item)]; set { Target = [.. value.Select(item => (MockTerrID)(int)item)]; } }
+    public ICardSet? CardSet { get; set; }
+    public TerrID[] Target { get; set; } = [];
+    TerrID[] ICard.Target { get => [.. Target.Select(item => (TerrID)(int)item)]; set { Target = [.. value.Select(item => (TerrID)(int)item)]; } }
     public bool IsTradeable { get; set; } = true;
     public int[] TestInts { get; set; } = [];
     public bool[] TestBools { get; set; } = [];

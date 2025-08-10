@@ -15,7 +15,7 @@ public partial class TerritoryChoice : Window
     {
         InitializeComponent();
     }
-    public TerritoryChoice(ValueTuple<int, string>[] territoryData, SolidColorBrush ownerColor, IMainVM<TerrID, ContID> vM)
+    public TerritoryChoice(ValueTuple<int, string>[] territoryData, SolidColorBrush ownerColor, IMainVM vM)
     {
         InitializeComponent();
         BoardVM = vM;
@@ -29,7 +29,7 @@ public partial class TerritoryChoice : Window
                 ownerColor);
     }
 
-    public IMainVM<TerrID, ContID>? BoardVM { get; init; }
+    public IMainVM? BoardVM { get; init; }
 
     public Tuple<int, string, Geometry, SolidColorBrush>[] TerritoryChoiceItems
     {

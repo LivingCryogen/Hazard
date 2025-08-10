@@ -10,7 +10,7 @@ using Shared.Services.Serializer;
 namespace Model.Entities;
 /// <remarks>The default board of the base game is based on Earth circa 1800.</remarks>
 /// <inheritdoc cref="IBoard"/>
-public class EarthBoard : IBoard<TerrID, ContID>, IBinarySerializable
+public class EarthBoard : IBoard, IBinarySerializable
 {
     private readonly ILogger<EarthBoard> _logger;
     /// <summary>
@@ -37,14 +37,13 @@ public class EarthBoard : IBoard<TerrID, ContID>, IBinarySerializable
     /// Gives notice that a territory has changed.
     /// </summary>  
     /// <remarks>Manually fired when a territory is changed (owner or armies) in an <see cref="EarthBoard"/> method.</remarks>    
-    public event EventHandler<ITerritoryChangedEventArgs<TerrID>>? TerritoryChanged;
+    public event EventHandler<ITerritoryChangedEventArgs>? TerritoryChanged;
     /// <summary>
     /// Gives notice that a continent has changed.
     /// </summary>  
     /// <remarks>Manually fired when a continent is changed (owner) in an <see cref="EarthBoard"/> method.</remarks>  
-    public event EventHandler<IContinentOwnerChangedEventArgs<ContID>>? ContinentOwnerChanged;
+    public event EventHandler<IContinentOwnerChangedEventArgs>? ContinentOwnerChanged;
 
-    #region Properties
     /// <summary>
     /// Gets or inits the territory to armies map.
     /// </summary>
@@ -57,7 +56,7 @@ public class EarthBoard : IBoard<TerrID, ContID>, IBinarySerializable
     /// Gets or inits the continent to owner (player number) map.
     /// </summary>
     public Dictionary<ContID, int> ContinentOwner { get; init; }
-    #endregion
+
     /// <summary>
     /// Gets a list of territories or continents owned by a player.
     /// </summary>

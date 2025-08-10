@@ -24,7 +24,7 @@ namespace View;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private IMainVM<TerrID, ContID>? _vM;
+    private IMainVM? _vM;
     private TerritoryElement[]? _territoryButtons;
     private TabControl[] _playerTabs = [];
     private HandView[] _handViews = [];
@@ -66,7 +66,7 @@ public partial class MainWindow : Window
     public static readonly DependencyProperty ConfirmNoticeVisibilityProperty =
         DependencyProperty.Register("ConfirmNoticeVisibility", typeof(Visibility), typeof(MainWindow), new(defaultValue: Visibility.Visible));
 
-    public void Initialize(IMainVM<TerrID, ContID> viewModel)
+    public void Initialize(IMainVM viewModel)
     {
         _vM = viewModel;
         DataContext = viewModel;
@@ -291,7 +291,7 @@ public partial class MainWindow : Window
         {
             SoundFileMap = _soundFileMap,
         };
-        newAttackWindow.Initialize((int)sourceTerritory, targetTerritory, sourceColor, targetColor, (IMainVM<TerrID, ContID>)DataContext);
+        newAttackWindow.Initialize((int)sourceTerritory, targetTerritory, sourceColor, targetColor, (IMainVM)DataContext);
         newAttackWindow.ShowDialog();
         CommandManager.InvalidateRequerySuggested();
     }

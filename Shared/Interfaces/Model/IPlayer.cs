@@ -4,7 +4,7 @@ namespace Shared.Interfaces.Model;
 /// <summary>
 /// Represents a player in the game.
 /// </summary>
-public interface IPlayer<T> : IBinarySerializable where T : struct, Enum
+public interface IPlayer : IBinarySerializable
 {
     /// <summary>
     /// Should fire when this IPlayer's property values change.
@@ -64,11 +64,11 @@ public interface IPlayer<T> : IBinarySerializable where T : struct, Enum
     /// <summary>
     /// Gets the territories controlled by the player.
     /// </summary>
-    HashSet<T> ControlledTerritories { get; }
+    HashSet<TerrID> ControlledTerritories { get; }
     /// <summary>
     /// Gets a list of cards in the player's hand.
     /// </summary>
-    List<ICard<T>> Hand { get; }
+    List<ICard> Hand { get; }
 
     /// <summary>
     /// Adds the trade-in bonus to <see cref="ArmyPool"/> when the player trades in cards.
@@ -80,12 +80,12 @@ public interface IPlayer<T> : IBinarySerializable where T : struct, Enum
     /// </summary>
     /// <param name="targets">The territories to match.</param>
     /// <returns>Those territories from among <paramref name="targets"/> controlled by this player.</returns>
-    T[] GetControlledTargets(T[] targets);
+    TerrID[] GetControlledTargets(TerrID[] targets);
     /// <summary>
     /// Finds trade-in card sets in the player's hand.
     /// </summary>
     /// <remarks>
-    /// Determines whether the player holds a set of <see cref="$1ICard{T}$2"/>s that are a tradeable set according to<br/>
+    /// Determines whether the player holds a set of <see cref="ICard"/>s that are a tradeable set according to<br/>
     /// <see cref="ICardSet.FindTradeSets(ICard[])"/> and <see cref="ICardSet.IsValidTrade(ICard[])"/>.
     /// </remarks>
     void FindCardSet();
@@ -94,7 +94,7 @@ public interface IPlayer<T> : IBinarySerializable where T : struct, Enum
     /// </summary>
     /// <param name="territory">The territory to add.</param>
     /// <returns><see langword="true"/> if successfully added; otherwise, <see langword="false"/>.</returns>
-    bool AddTerritory(T territory);
+    bool AddTerritory(TerrID territory);
     /// <summary>
     /// Removes a territory from this player's control.
     /// </summary>
@@ -103,12 +103,12 @@ public interface IPlayer<T> : IBinarySerializable where T : struct, Enum
     /// <remarks>
     /// Also fires <see cref="PlayerLost"/> if the count of <see cref="ControlledTerritories"/> falls to 0.
     /// </remarks>
-    bool RemoveTerritory(T territory);
+    bool RemoveTerritory(TerrID territory);
     /// <summary>
     /// Adds a card to this player's <see cref="Hand"/>.
     /// </summary>
     /// <param name="card">The card to add.</param>
-    void AddCard(ICard<T> card);
+    void AddCard(ICard card);
     /// <summary>
     /// Removes a card from this player's <see cref="Hand"/>.
     /// </summary>

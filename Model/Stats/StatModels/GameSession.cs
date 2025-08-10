@@ -14,11 +14,12 @@ namespace Model.Stats.StatModels;
 /// Statistics model for a game session.
 /// </summary>
 /// <param name="logger">The logger provided by DI.</param>
-/// <param name="loggerFactory">A logger factory provided by DI.</param>
+/// <param name="loggerFactory">The logger factory provided by DI.</param>
 public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFactory) : IBinarySerializable
 {
-    private readonly ILogger _logger = logger;
     private readonly ILoggerFactory _loggerFactory = loggerFactory;
+    private readonly ILogger _logger = logger;
+
     /// <summary>
     /// A model for Attack action data.
     /// </summary>

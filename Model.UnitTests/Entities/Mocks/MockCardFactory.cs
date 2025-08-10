@@ -4,11 +4,11 @@ using Shared.Interfaces.Model;
 
 namespace Model.Tests.Entities.Mocks;
 
-public class MockCardFactory(ICardSet<MockTerrID> mockSet) : ICardFactory<MockTerrID>
+public class MockCardFactory(ICardSet mockSet) : ICardFactory
 {
-    private readonly ICardSet<MockTerrID> _mockSet = mockSet;
+    private readonly ICardSet _mockSet = mockSet;
 
-    public ICard<MockTerrID> BuildCard(string typeName)
+    public ICard BuildCard(string typeName)
     {
         return new MockCard(_mockSet);
     }

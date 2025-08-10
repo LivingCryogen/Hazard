@@ -8,12 +8,12 @@ using Shared.Services.Serializer;
 
 namespace Model.Tests.Core.Mocks;
 
-internal class MockPlayer : IPlayer<MockTerrID>
+internal class MockPlayer : IPlayer
 {
     private readonly ILogger _logger;
     private readonly MockCardFactory _cardFactory;
 
-    public MockPlayer(int number, ICardFactory<MockTerrID> cardFactory, IBoard<MockTerrID, MockContID> board, ILogger<MockPlayer> logger)
+    public MockPlayer(int number, ICardFactory cardFactory, ILogger<MockPlayer> logger)
     {
         _logger = logger;
         Number = number;
@@ -22,7 +22,7 @@ internal class MockPlayer : IPlayer<MockTerrID>
         _cardFactory = (MockCardFactory)cardFactory;
     }
 
-    public MockPlayer(string name, int number, ICardFactory<MockTerrID> cardFactory, IBoard<MockTerrID, MockContID> board, ILogger<MockPlayer> logger)
+    public MockPlayer(string name, int number, ICardFactory cardFactory, ILogger<MockPlayer> logger)
     {
         _logger = logger;
         Name = name;
@@ -37,8 +37,8 @@ internal class MockPlayer : IPlayer<MockTerrID>
     public int ArmyBonus { get; }
     public int ArmyPool { get; set; } = 10;
     public int ContinentBonus { get; set; } = 6;
-    public HashSet<MockTerrID> ControlledTerritories { get; set; }
-    public List<ICard<MockTerrID>> Hand { get; set; } = [];
+    public HashSet<Enum> ControlledTerritories { get; set; }
+    public List<ICard> Hand { get; set; } = [];
     public string Name { get; set; } = "YourFatherSmeltOfElderBerries!";
     public int Number { get; set; }
     public bool HasCardSet { get; set; } = false;
@@ -82,13 +82,13 @@ internal class MockPlayer : IPlayer<MockTerrID>
             int numControlledTerritories = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             ControlledTerritories = [];
             for (int i = 0; i < numControlledTerritories; i++)
-                ControlledTerritories.Add((MockTerrID)BinarySerializer.ReadConvertible(reader, typeof(MockTerrID)));
+                ControlledTerritories.Add((TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID)));
             int numCards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             Hand = [];
             for (int i = 0; i < numCards; i++)
             {
                 string cardTypeName = reader.ReadString();
-                ICard<MockTerrID> newCard = _cardFactory.BuildCard(cardTypeName);
+                ICard newCard = _cardFactory.BuildCard(cardTypeName);
                 newCard.LoadFromBinary(reader);
                 Hand.Add(newCard);
             }
@@ -102,15 +102,15 @@ internal class MockPlayer : IPlayer<MockTerrID>
         return loadComplete;
     }
 
-    public void AddCard(ICard<MockTerrID> card)
+    public void AddCard(ICard card)
     {
         throw new NotImplementedException();
     }
-    public bool AddTerritory(MockTerrID territory)
+    public bool AddTerritory(Enum territory)
     {
         throw new NotImplementedException();
     }
-    public MockTerrID[] GetControlledTargets(MockTerrID[] targets)
+    public Enum[] GetControlledTargets(Enum[] targets)
     {
         throw new NotImplementedException();
     }
@@ -122,14 +122,14 @@ internal class MockPlayer : IPlayer<MockTerrID>
     {
         throw new NotImplementedException();
     }
-    public bool RemoveTerritory(MockTerrID territory)
+    public bool RemoveTerritory(Enum territory)
     {
         throw new NotImplementedException();
     }
     public void FindCardSet()
     {
-        List<ICardSet<MockTerrID>> setsInHand = [];
-        List<ICard<MockTerrID>> tradeableCards = [];
+        List<ICardSet> setsInHand = [];
+        List<ICard> tradeableCards = [];
         foreach (var card in Hand)
         {
             if (card.CardSet != null && !setsInHand.Contains(card.CardSet))
@@ -142,9 +142,9 @@ internal class MockPlayer : IPlayer<MockTerrID>
         if (setsInHand.Count == 0 || tradeableCards.Count == 0)
             HasCardSet = false;
 
-        ICard<MockTerrID>[] tradeable = [.. tradeableCards];
+        ICard[] tradeable = [.. tradeableCards];
 
-        foreach (ICardSet<MockTerrID> cardSet in setsInHand)
+        foreach (ICardSet cardSet in setsInHand)
         {
             if ((cardSet?.FindTradeSets(tradeable) ?? []).Length != 0)
                 HasCardSet = true;

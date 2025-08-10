@@ -2,7 +2,7 @@
 
 namespace Model.Entities.Cards;
 /// <inheritdoc cref="ITroopCardSetData"/>
-public class TroopCardSetData : ITroopCardSetData<TerrID>
+public class TroopCardSetData : ITroopCardSetData
 {
     /// <inheritdoc cref="ITroopCardSetData.Insignia"/>
     public TroopInsignia[] Insignia { get; set; } = [];

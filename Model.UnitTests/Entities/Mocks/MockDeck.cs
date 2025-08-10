@@ -9,22 +9,22 @@ using System.Threading.Tasks;
 
 namespace Model.Tests.Entities.Mocks;
 
-public class MockDeck : IDeck<MockTerrID>
+public class MockDeck : IDeck
 {
-    public List<ICard<MockTerrID>> DiscardPile { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public List<ICard<MockTerrID>> Library { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public List<ICard> DiscardPile { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public List<ICard> Library { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-    public void Discard(ICard<MockTerrID> card)
+    public void Discard(ICard card)
     {
         throw new NotImplementedException();
     }
 
-    public void Discard(ICard<MockTerrID>[] cards)
+    public void Discard(ICard[] cards)
     {
         throw new NotImplementedException();
     }
 
-    public ICard<MockTerrID> DrawCard()
+    public ICard DrawCard()
     {
         throw new NotImplementedException();
     }

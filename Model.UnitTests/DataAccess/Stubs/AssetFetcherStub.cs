@@ -4,14 +4,14 @@ using Shared.Interfaces.Model;
 
 namespace Model.Tests.DataAccess.Stubs;
 
-public class AssetFetcherStub : IAssetFetcher<MockTerrID>
+public class AssetFetcherStub : IAssetFetcher
 {
-    List<ICardSet<MockTerrID>> IAssetFetcher<MockTerrID>.FetchCardSets()
+    List<ICardSet> IAssetFetcher.FetchCardSets()
     {
         throw new NotImplementedException();
     }
 
-    GeographyInitializer IAssetFetcher<MockTerrID>.FetchGeography()
+    GeographyInitializer IAssetFetcher.FetchGeography()
     {
         throw new NotImplementedException();
     }

@@ -10,8 +10,8 @@ using System.Text.Json.Serialization;
 namespace Shared.Services.Registry;
 
 /** <inheritdoc cref="IRegistryInitializer"/>
- * <see cref="CardRegistryRecord"/> and <see cref="CardSetRegistryRecord"/> provides a stable pattern for adding more <see cref="$1ICard{T}$2"/> types in the future.
- * For now we work only with the default, base set of <see cref="$1ICard{T}$2"/>s implemented by <see cref="TroopCard"/> and <see cref="TroopCardSet"/>.*/
+ * <see cref="CardRegistryRecord"/> and <see cref="CardSetRegistryRecord"/> provides a stable pattern for adding more <see cref="ICard"/> types in the future.
+ * For now we work only with the default, base set of <see cref="ICard"/>s implemented by <see cref="TroopCard"/> and <see cref="TroopCardSet"/>.*/
 public class RegistryInitializer(IOptions<AppConfig> options) : IRegistryInitializer
 {
     private string _geographyFilePath = options.Value.DataFileMap[nameof(BoardGeography) + ".json"];
@@ -57,7 +57,7 @@ public class RegistryInitializer(IOptions<AppConfig> options) : IRegistryInitial
         ];
 
     /** <inheritdoc cref="IRegistryInitializer"/>
-     * Extending the program to initialize with data from files other that those for <see cref="$1ICard{T}$2"/>s will
+     * Extending the program to initialize with data from files other that those for <see cref="ICard"/>s will
      * require adding additional structs/records and population logic. */
     public void PopulateRegistry(ITypeRegister<ITypeRelations> registry)
     {

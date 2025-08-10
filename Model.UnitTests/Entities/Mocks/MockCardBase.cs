@@ -10,7 +10,7 @@ using Shared.Services.Serializer;
 
 namespace Model.Tests.Entities.Mocks;
 
-public class MockCardBase : ICardBase<MockTerrID>
+public class MockCardBase : ICardBase
 {
     private readonly MockCardSetData mockData = new();
     public MockCardBase(ITypeRegister<ITypeRelations> registry)
@@ -34,9 +34,9 @@ public class MockCardBase : ICardBase<MockTerrID>
         CardFactory = new MockCardFactory(mockSet);
     }
 
-    public ICardFactory<MockTerrID> CardFactory { get; set; }
-    public IDeck<MockTerrID> GameDeck { get; set; } = new MockDeck();
-    public List<ICardSet<MockTerrID>> Sets { get; set; } = [];
+    public ICardFactory CardFactory { get; set; }
+    public IDeck GameDeck { get; set; } = new MockDeck();
+    public List<ICardSet> Sets { get; set; } = [];
 
 
     public Task<SerializedData[]> GetBinarySerials()
@@ -44,17 +44,17 @@ public class MockCardBase : ICardBase<MockTerrID>
         throw new NotImplementedException();
     }
 
-    public void InitializeDiscardPile(ICard<MockTerrID>[] cards)
+    public void InitializeDiscardPile(ICard[] cards)
     {
         throw new NotImplementedException();
     }
 
-    public void InitializeFromAssets(IAssetFetcher<MockTerrID> assetFetcher, bool defaultMode)
+    public void InitializeFromAssets(IAssetFetcher assetFetcher, bool defaultMode)
     {
         throw new NotImplementedException();
     }
 
-    public void InitializeLibrary(ICard<MockTerrID>[] cards)
+    public void InitializeLibrary(ICard[] cards)
     {
         throw new NotImplementedException();
     }
@@ -64,7 +64,7 @@ public class MockCardBase : ICardBase<MockTerrID>
         throw new NotImplementedException();
     }
 
-    public void MapCardsToSets(ICard<MockTerrID>[] cards)
+    public void MapCardsToSets(ICard[] cards)
     {
         throw new NotImplementedException();
     }
@@ -76,22 +76,22 @@ public class MockCardBase : ICardBase<MockTerrID>
         GameDeck.DiscardPile.Clear();
     }
 
-    void ICardBase<MockTerrID>.InitializeDiscardPile(ICard<MockTerrID>[] cards)
+    void ICardBase.InitializeDiscardPile(ICard[] cards)
     {
         throw new NotImplementedException();
     }
 
-    void ICardBase<MockTerrID>.InitializeFromAssets(IAssetFetcher<MockTerrID> assetFetcher, bool defaultMode)
+    void ICardBase.InitializeFromAssets(IAssetFetcher assetFetcher, bool defaultMode)
     {
         throw new NotImplementedException();
     }
 
-    void ICardBase<MockTerrID>.InitializeLibrary(ICard<MockTerrID>[] cards)
+    void ICardBase.InitializeLibrary(ICard[] cards)
     {
         throw new NotImplementedException();
     }
 
-    void ICardBase<MockTerrID>.MapCardsToSets(ICard<MockTerrID>[] cards)
+    void ICardBase.MapCardsToSets(ICard[] cards)
     {
         throw new NotImplementedException();
     }

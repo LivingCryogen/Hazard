@@ -6,7 +6,7 @@ namespace Shared.Interfaces.Model;
 /// <summary>
 /// Provides constants and equations derived from game rules.
 /// </summary>
-public interface IRuleValues<U> where U : struct, Enum
+public interface IRuleValues 
 {
     /// <summary>
     /// Gets the minimum number to add to a player's army count on their turn.
@@ -27,7 +27,7 @@ public interface IRuleValues<U> where U : struct, Enum
     /// <summary>
     /// Gets map of the number of bonus armies granted for controlling a given continent (see <see cref="ContID"/>).
     /// </summary>
-    ReadOnlyDictionary<U, int> ContinentBonus { get; }
+    ReadOnlyDictionary<ContID, int> ContinentBonus { get; }
     /// <summary>
     /// Gets a map of the number of actions allowed a player in the Setup phase given the total number of players.
     /// </summary>
@@ -54,7 +54,7 @@ public interface IRuleValues<U> where U : struct, Enum
     /// <param name="numTerritories">The number of territories controlled by a player.</param>
     /// <param name="continents">A list of continents controlled by a player.</param>
     /// <returns>The number of armies granted.</returns>
-    public int CalculateArmyBonus(int numTerritories, List<U> continents)
+    public int CalculateArmyBonus(int numTerritories, List<ContID> continents)
     {
         return MinimumArmyBonus + CalculateTerritoryBonus(numTerritories);
     }

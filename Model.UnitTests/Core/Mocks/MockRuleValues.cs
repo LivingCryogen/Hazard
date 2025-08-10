@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 
 namespace Model.Tests.Core.Mocks;
 
-public class MockRuleValues : IRuleValues<MockContID>
+public class MockRuleValues : IRuleValues
 {
     public int MinimumArmyBonus => 1;
 
@@ -15,7 +15,7 @@ public class MockRuleValues : IRuleValues<MockContID>
 
     public int DefendersLimit => 2;
 
-    public ReadOnlyDictionary<MockContID, int> ContinentBonus { get; } = new(new Dictionary<MockContID, int>());
+    public ReadOnlyDictionary<ContID, int> ContinentBonus { get; } = new(new Dictionary<ContID, int>());
 
     public ReadOnlyDictionary<int, int> SetupActionsPerPlayers { get; } =
         new(new Dictionary<int, int>([new(0, 13), new(1, 14), new(2, 15), new(3, 16), new(4, 17), new(5, 18), new(6, 19)]));

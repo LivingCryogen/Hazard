@@ -19,7 +19,7 @@ public partial class TroopCardControl : UserControl
     {
         InitializeComponent();
     }
-    public TroopCardControl(IMainVM<TerrID, ContID> vM)
+    public TroopCardControl(IMainVM vM)
     {
         InitializeComponent();
 
@@ -75,7 +75,7 @@ public partial class TroopCardControl : UserControl
     public static readonly DependencyProperty TerritoryProperty =
         DependencyProperty.Register("Territory", typeof(string), typeof(TroopCardControl), new FrameworkPropertyMetadata(defaultValue: string.Empty, flags: FrameworkPropertyMetadataOptions.AffectsRender));
 
-    public void Build(IMainVM<TerrID, ContID> vM)
+    public void Build(IMainVM vM)
     {
         if (Content is not ITroopCardInfo<TerrID, ContID> cardInfo)
             throw new NullReferenceException($"The content, {Content}, of TroopCardControl {this} was null or not an ITroopCardInfo.");

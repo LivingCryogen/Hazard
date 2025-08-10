@@ -2,6 +2,8 @@
 using Microsoft.Testing.Platform.Logging;
 using Model.Core;
 using Model.Entities;
+using Model.Stats.Services;
+using Model.Tests.Core.Stubs;
 using Model.Tests.DataAccess.Stubs;
 using Model.Tests.Entities.Mocks;
 using Model.Tests.Fixtures;
@@ -13,7 +15,7 @@ using Shared.Services.Serializer;
 
 namespace Model.Tests.Core.Mocks;
 
-public class MockGame : IGame<MockTerrID, MockContID>
+public class MockGame : IGame
 {
     private readonly LoggerStubT<MockGame> _logger = new();
 
@@ -21,8 +23,8 @@ public class MockGame : IGame<MockTerrID, MockContID>
     {
         ID = new Guid();
         Players = [
-            new MockPlayer(0, Cards.CardFactory, Board, new LoggerStubT<MockPlayer>()),
-            new MockPlayer(1, Cards.CardFactory, Board, new LoggerStubT<MockPlayer>())
+            new MockPlayer(0, Cards.CardFactory, new LoggerStubT<MockPlayer>()),
+            new MockPlayer(1, Cards.CardFactory, new LoggerStubT<MockPlayer>())
         ];
         State = new StateMachine(Players.Count, new LoggerStubT<StateMachine>());
         Regulator = new MockRegulator(new LoggerStubT<MockRegulator>(), this);
@@ -31,19 +33,20 @@ public class MockGame : IGame<MockTerrID, MockContID>
     }
 
     public Microsoft.Extensions.Logging.ILogger<MockGame> Logger { get => _logger; }
-    public IAssetFetcher<MockTerrID> AssetFetcher { get; }
-    public IBoard<MockTerrID, MockContID> Board { get; set; } = new MockBoard();
-    public IRegulator<MockTerrID, MockContID> Regulator { get; set; }
-    public IRuleValues<MockContID> Values { get; set; } = new MockRuleValues();
-    public IStatTracker<MockTerrID, MockContID> StatTracker { get; set; }
+    public IAssetFetcher AssetFetcher { get; }
+    public IBoard Board { get; set; } = new MockBoard();
+    public IRegulator Regulator { get; set; }
+    public IRuleValues Values { get; set; } = new MockRuleValues();
+    public IStatTracker StatTracker { get; set; } = new StatTrackerStub();
     public Guid ID { get; set; }
     public bool DefaultCardMode { get; set; } = true;
-    public List<IPlayer<MockTerrID>> Players { get; set; }
+    public List<IPlayer> Players { get; set; }
     public StateMachine State { get; set; } = new(2, new LoggerStubT<StateMachine>());
-    public ICardBase<MockTerrID> Cards { get; set; } = new MockCardBase(SharedRegister.Registry);
+    public ICardBase Cards { get; set; } = new MockCardBase(SharedRegister.Registry);
+    public string? SavePath { get; set; } = null;
 
 
-#pragma warning disable CS0414 // For unit-testing, these are unused. If integration tests are built, they should be, at which time these warnings should be re-enabled.
+#pragma warning disable CS0414 // For unit-testing, these are unused.
     public event EventHandler<int>? PlayerLost = null;
     public event EventHandler<int>? PlayerWon = null;
 #pragma warning restore CS0414
@@ -105,15 +108,15 @@ public class MockGame : IGame<MockTerrID, MockContID>
 
             if (player < 2 && player > -1)
             {
-                Board.Claims(player, (MockTerrID)i, 1);
-                Players[player].AddTerritory((MockTerrID)i);
+                Board.Claims(player, (TerrID)i, 1);
+                Players[player].AddTerritory((TerrID)i);
                 playerPool[player]--;
                 if (playerPool[player] <= 0)
                     poolsEmpty |= masks[player];  // If a player's pool is emptied, trip the PoolsEmpty flag at the appropriate bit 
             }
             else if (player == 2)
             {
-                Board.Claims(-1, (MockTerrID)i, 1);
+                Board.Claims(-1, (TerrID)i, 1);
                 playerPool[player]--;
                 if (playerPool[player] <= 0)
                     poolsEmpty |= masks[player];  // If a player's pool is emptied, trip the PoolsEmpty flag at the appropriate bit 
@@ -141,7 +144,7 @@ public class MockGame : IGame<MockTerrID, MockContID>
             saveData.AddRange(Board?.GetBinarySerials().Result ?? []);
             saveData.AddRange(Cards?.GetBinarySerials().Result ?? []);
             saveData.Add(new(typeof(int), [Players.Count]));
-            foreach (IPlayer<MockTerrID> player in Players)
+            foreach (IPlayer player in Players)
                 saveData.AddRange(player?.GetBinarySerials().Result ?? []);
             saveData.AddRange(State?.GetBinarySerials().Result ?? []);
             saveData.AddRange(Regulator?.GetBinarySerials().Result ?? []);
@@ -161,7 +164,7 @@ public class MockGame : IGame<MockTerrID, MockContID>
             Players.Clear();
             for (int i = 0; i < numPlayers; i++)
             {
-                MockPlayer newPlayer = new(i, Cards.CardFactory, Board, new LoggerStubT<MockPlayer>());
+                MockPlayer newPlayer = new(i, Cards.CardFactory, new LoggerStubT<MockPlayer>());
                 newPlayer.LoadFromBinary(reader);
                 Cards.MapCardsToSets([.. newPlayer.Hand]);
                 Players.Add(newPlayer);
@@ -169,7 +172,7 @@ public class MockGame : IGame<MockTerrID, MockContID>
             State = new(numPlayers, new LoggerStubT<StateMachine>());
             State.LoadFromBinary(reader);
             Regulator.LoadFromBinary(reader);
-            if (Regulator.Reward is ICard<MockTerrID> rewardCard)
+            if (Regulator.Reward is ICard rewardCard)
                 Cards.MapCardsToSets([rewardCard]);
         }
         catch (Exception ex)
@@ -180,7 +183,7 @@ public class MockGame : IGame<MockTerrID, MockContID>
         return loadComplete;
     }
 
-    void IGame<MockTerrID, MockContID>.UpdatePlayerNames(string[] names)
+    void IGame.UpdatePlayerNames(string[] names)
     {
         throw new NotImplementedException();
     }

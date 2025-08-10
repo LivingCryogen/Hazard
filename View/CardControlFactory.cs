@@ -5,11 +5,11 @@ using System.Windows.Controls;
 
 namespace View;
 
-public class CardControlFactory(IMainVM<TerrID, ContID> viewModel)
+public class CardControlFactory(IMainVM viewModel)
 {
-    private readonly IMainVM<TerrID, ContID> _viewModel = viewModel;
+    private readonly IMainVM _viewModel = viewModel;
 
-    public UserControl GetCardControl(ICardInfo<TerrID, ContID> card)
+    public UserControl GetCardControl(ICardInfo card)
     {
         Face newCardFace;
         if (card is ITroopCardInfo<TerrID, ContID> troopCard)

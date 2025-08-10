@@ -7,34 +7,34 @@ namespace Model.Entities
     /// A deck of cards.
     /// </summary>
     /// <remarks>
-    /// Each <see cref="ICard{T}">card</see> targets at minimum one territory.
+    /// Each <see cref="ICard">card</see> targets at minimum one territory.
     /// </remarks>
     public interface IDeck
     {
         /// <summary>
-        /// Gets or sets the library of <see cref="ICard{T}"/>.
+        /// Gets or sets the library of <see cref="ICard"/>.
         /// </summary>
         /// <remarks>
         /// A library is the collection of cards from which players draw (see <see cref="DrawCard"/>).
         /// </remarks>
-        List<ICard<TerrID>> Library { get; set; }
+        List<ICard> Library { get; set; }
         /// <summary>
         /// Gets or sets the discard pile.
         /// </summary>
         /// <remarks>
-        /// A discard pile is the collection to which cards are discarded when traded in; see <see cref="ICard{T}"/> and <see cref="IRegulator{T, U}.TradeInCards(int, int[])"/>.
+        /// A discard pile is the collection to which cards are discarded when traded in; see <see cref="ICard"/> and <see cref="IRegulator.TradeInCards(int, int[])"/>.
         /// </remarks>
-        List<ICard<TerrID>> DiscardPile { get; set; }
+        List<ICard> DiscardPile { get; set; }
         /// <summary>
         /// Adds a card to the discard pile.
         /// </summary>
         /// <param name="card">The discarded card.</param>
-        void Discard(ICard<TerrID> card);
+        void Discard(ICard card);
         /// <summary>
         /// Adds a collection of cards to the discard pile.
         /// </summary>
         /// <param name="cards">The discarded cards.</param>
-        void Discard(ICard<TerrID>[] cards);
+        void Discard(ICard[] cards);
         /// <summary>
         /// Draws a card from the bottom of the <see cref="Library"/>.
         /// </summary>
@@ -42,7 +42,7 @@ namespace Model.Entities
         /// If <see cref="Library"/> is empty, <see cref="Shuffle"/> is called.
         /// </remarks>
         /// <returns>The drawn card.</returns>
-        ICard<TerrID> DrawCard();
+        ICard DrawCard();
         /// <summary>
         /// Shuffles the deck.
         /// </summary>

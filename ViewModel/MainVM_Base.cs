@@ -22,15 +22,15 @@ namespace ViewModel;
 /// Base class for the principal ViewModel. Should contain anything that must be common accross implementations.
 /// </remarks>
 /// <inheritdoc cref="IMainVM"/>
-public partial class MainVM_Base : ObservableObject, IMainVM<TerrID, ContID>
+public partial class MainVM_Base : ObservableObject, IMainVM
 {
     private readonly IBootStrapperService _bootStrapper;
-    private readonly IGameService<TerrID, ContID> _gameService;
+    private readonly IGameService _gameService;
     private readonly ILogger _logger;
     internal readonly CardInfoFactory? _cardInfoFactory = null;
     private string? _colorNames;
 
-    public MainVM_Base(IGameService<TerrID, ContID> gameService, IBootStrapperService bootStrapper, ILogger<MainVM_Base> logger)
+    public MainVM_Base(IGameService gameService, IBootStrapperService bootStrapper, ILogger<MainVM_Base> logger)
     {
         _bootStrapper = bootStrapper;
         _gameService = gameService;
@@ -44,8 +44,8 @@ public partial class MainVM_Base : ObservableObject, IMainVM<TerrID, ContID>
     }
 
     public required string AppPath { get; set; }
-    public IGame<TerrID, ContID>? CurrentGame { get; set; }
-    public IRegulator<TerrID, ContID>? Regulator { get; set; }
+    public IGame? CurrentGame { get; set; }
+    public IRegulator? Regulator { get; set; }
     /// <inheritdoc cref="IMainVM.CurrentPhase"/>
     [ObservableProperty] private GamePhase _currentPhase;
     /// <inheritdoc cref="IMainVM.PlayerTurn"/>
@@ -74,7 +74,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM<TerrID, ContID>
     /// <inheritdoc cref="IMainVM.Territories"/>
     [ObservableProperty] private ObservableCollection<ITerritoryInfo> _territories;
     /// <inheritdoc cref="IMainVM.PlayerDetails"/>
-    [ObservableProperty] private ObservableCollection<IPlayerData<TerrID, ContID>> _playerDetails;
+    [ObservableProperty] private ObservableCollection<IPlayerData> _playerDetails;
     /// <summary>
     /// Gets the army bonuses granted if a player controls each territory, in order of the underlying int value of <see cref="ContID"/>.
     /// </summary>
@@ -232,7 +232,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM<TerrID, ContID>
     /// <param name="sender">An <see cref="IBoard"/> from <see cref="IGame.Board"/>.</param>
     /// <param name="propName">The <see cref="string">name</see> of the property that changed within <paramref name="sender"/>.</param>
     /// <exception cref="NotImplementedException">Thrown if no implementation is provided by an inheriting class.</exception>
-    public virtual void HandleTerritoryChanged(object? sender, ITerritoryChangedEventArgs<TerrID> e) { throw new NotImplementedException(); }
+    public virtual void HandleTerritoryChanged(object? sender, ITerritoryChangedEventArgs e) { throw new NotImplementedException(); }
     /// <summary>
     /// Invokes <see cref="PlayerTurnChanging"/>.
     /// </summary>
@@ -270,9 +270,9 @@ public partial class MainVM_Base : ObservableObject, IMainVM<TerrID, ContID>
     {
         AdvanceRequest?.Invoke(this, new TroopsAdvanceEventArgs(source, target, min, max, conquered));
     }
-    private void OnContinentFlip(object? sender, IContinentOwnerChangedEventArgs<ContID> e)
+    private void OnContinentFlip(object? sender, IContinentOwnerChangedEventArgs e)
     {
-        if (sender is not IBoard<TerrID, ContID> board) throw new ArgumentException($"{sender} was not an IBoard implementation.", nameof(sender));
+        if (sender is not IBoard board) throw new ArgumentException($"{sender} was not an IBoard implementation.", nameof(sender));
         if (e.OldPlayer == null) throw new ArgumentNullException($"A continent somehow changed owner without including {e.OldPlayer} in {e}.", nameof(e.OldPlayer));
 
         int previousOwner = (int)e.OldPlayer;
@@ -472,7 +472,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM<TerrID, ContID>
             else
                 PlayerDetails[i].Hand.Clear();
             for (int j = 0; j < CurrentGame.Players[i].Hand.Count; j++)
-                PlayerDetails[i].Hand.Add((ICardInfo<TerrID, ContID>)CardInfoFactory.BuildCardInfo(CurrentGame.Players[i].Hand[j], i, j));
+                PlayerDetails[i].Hand.Add((ICardInfo)CardInfoFactory.BuildCardInfo(CurrentGame.Players[i].Hand[j], i, j));
             PlayerDetails[i].NumTerritories = PlayerDetails[i].Realm.Count;
             PlayerDetails[i].NumArmies = SumArmies(i);
         }

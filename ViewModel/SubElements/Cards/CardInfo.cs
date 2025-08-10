@@ -5,9 +5,9 @@ using Shared.Interfaces.ViewModel;
 
 namespace ViewModel.SubElements.Cards;
 
-public readonly struct CardInfo : ICardInfo<TerrID, ContID>
+public readonly struct CardInfo : ICardInfo
 {
-    public CardInfo(ICard<TerrID> card)
+    public CardInfo(ICard card)
     {
         TargetTerritory = new TerrID[card.Target.Length];
         card.Target.CopyTo(TargetTerritory, 0);
@@ -26,7 +26,7 @@ public readonly struct CardInfo : ICardInfo<TerrID, ContID>
         TargetContinent = [];
     }
 
-    public CardInfo(ICard<TerrID> card, int owner, int ownerHandIndex)
+    public CardInfo(ICard card, int owner, int ownerHandIndex)
     {
         TargetTerritory = new TerrID[card.Target.Length];
         card.Target.CopyTo(TargetTerritory, 0);

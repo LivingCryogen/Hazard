@@ -5,7 +5,7 @@ namespace Shared.Interfaces.ViewModel;
 /// <summary>
 /// Defines public data for ViewModels that present <see cref="Model.IPlayer"/> data.
 /// </summary>
-public interface IPlayerData<T, U> where T : struct, Enum where U : struct, Enum
+public interface IPlayerData
 {
     /// <summary>
     /// Gets or sets the player's name.
@@ -41,11 +41,11 @@ public interface IPlayerData<T, U> where T : struct, Enum where U : struct, Enum
     /// <summary>
     /// Gets or sets the territories controlled by the player.
     /// </summary>
-    public ObservableCollection<T> Realm { get; set; }
+    public ObservableCollection<TerrID> Realm { get; set; }
     /// <summary>
     /// Gets or sets the continents controlled by the player.
     /// </summary>
-    public ObservableCollection<U> Continents { get; set; }
+    public ObservableCollection<ContID> Continents { get; set; }
     /// <summary>
     /// Gets or sets the names of the continents controlled by the player.
     /// </summary>
@@ -53,5 +53,5 @@ public interface IPlayerData<T, U> where T : struct, Enum where U : struct, Enum
     /// <summary>
     /// Gets or sets the cards held by the player.
     /// </summary>
-    public ObservableCollection<ICardInfo<T, U>> Hand { get; set; }
+    public ObservableCollection<ICardInfo> Hand { get; set; }
 }

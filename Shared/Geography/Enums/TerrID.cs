@@ -180,7 +180,7 @@ public enum TerrID : int
     /// <summary>
     /// ID for the Territory of Eastern Australia.
     /// </summary>
-    EasternAustralia = 41
+    EasternAustralia = 41,
 }
 
 

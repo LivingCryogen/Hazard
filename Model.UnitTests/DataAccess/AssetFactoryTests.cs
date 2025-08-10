@@ -41,6 +41,6 @@ public class AssetFactoryTests
         var castObjects = (MockCardSet)returnedObjects;
         Assert.IsNotNull(castObjects.Cards);
         Assert.IsTrue(castObjects.Cards.Count == 50);
-        Assert.IsTrue(castObjects.Cards.Where(card => Enum.IsDefined(typeof(TerrID), (int)card.Target[0])).Count() == 42); // MockTerrID has a Count of 50, so there are 8 undefined when cast to TerrID
+        Assert.IsTrue(castObjects.Cards.Where(card => Enum.IsDefined(typeof(TerrID), (int)card.Target[0])).Count() == 42); // TerrID has a Count of 50, so there are 8 undefined when cast to TerrID
     }
 }

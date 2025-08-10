@@ -41,7 +41,7 @@ public partial class AttackWindow : Window
         Defense = 1
     }
 
-    private IMainVM<TerrID, ContID>? _vM = null;
+    private IMainVM? _vM = null;
     private readonly ObjectAnimationUsingKeyFrames[] _attackDiceAnimations = new ObjectAnimationUsingKeyFrames[3];
     private readonly ObjectAnimationUsingKeyFrames[] _defenseDiceAnimations = new ObjectAnimationUsingKeyFrames[2];
     private readonly Storyboard? _lossIndicatorActiveAnimation;
@@ -217,7 +217,7 @@ public partial class AttackWindow : Window
     public static readonly DependencyProperty TargetLossProperty =
         DependencyProperty.Register("TargetLoss", typeof(int), typeof(AttackWindow), new PropertyMetadata(defaultValue: 0));
 
-    public void Initialize(int source, int target, SolidColorBrush sourceColor, SolidColorBrush targetColor, IMainVM<TerrID, ContID> vM)
+    public void Initialize(int source, int target, SolidColorBrush sourceColor, SolidColorBrush targetColor, IMainVM vM)
     {
         DataContext = vM;
         _vM = vM;

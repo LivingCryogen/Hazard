@@ -7,7 +7,7 @@ namespace Shared.Interfaces.Model;
 /// <summary>
 /// Encapsulates the current game for injection into <see cref="ViewModel.IMainVM"/>.
 /// </summary>
-public interface IGame<T, U> : IBinarySerializable where T : struct, Enum where U : struct, Enum
+public interface IGame: IBinarySerializable
 {
     /// <summary>
     /// Fires when a player loses, carrying their <see cref="IPlayer.Number"/>.
@@ -21,7 +21,7 @@ public interface IGame<T, U> : IBinarySerializable where T : struct, Enum where 
     /// <summary>
     /// Gets the facade of the DAL.
     /// </summary>
-    public IAssetFetcher<T> AssetFetcher { get; }
+    public IAssetFetcher AssetFetcher { get; }
     /// <summary>
     /// Gets the unique ID of the game.
     /// </summary>
@@ -36,26 +36,26 @@ public interface IGame<T, U> : IBinarySerializable where T : struct, Enum where 
     /// <summary>
     /// Gets a data object containing game-specific rules values, like continent bonuses or equations for bonus armies.
     /// </summary>
-    IRuleValues<U> Values { get; }
+    IRuleValues Values { get; }
     /// <summary>
     /// Gets an instance describing the Game board; stores both data and relations between Board objects.
     /// </summary>
-    IBoard<T, U> Board { get; }
+    IBoard Board { get; }
     /// <summary>
     /// Gets the game's state machine, which tracks player count and status, turns, etc.
     /// </summary>
     StateMachine State { get; }
     /// <summary>
-    /// Gets the "card base", containing all <see cref="$1ICard{T}$2"/>s, <see cref="ICardSet"/>s, and <see cref="Deck"/>s.
+    /// Gets the "card base", containing all <see cref="ICard"/>s, <see cref="ICardSet"/>s, and <see cref="Deck"/>s.
     /// </summary>
-    ICardBase<T> Cards { get; }
+    ICardBase Cards { get; }
     /// <summary>
     /// Gets the list of players in the game.
     /// </summary>
     /// <value>
     /// After initialization and/or loading, should have a count of 2-6.
     /// </value>
-    List<IPlayer<T>> Players { get; }
+    List<IPlayer> Players { get; }
     /// <summary>
     /// Gets the Stat Tracker for this game.
     /// </summary>

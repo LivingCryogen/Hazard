@@ -5,18 +5,18 @@ using System.Collections.ObjectModel;
 
 namespace Model.Assets;
 
-/// <inheritdoc cref="IRuleValues{U}"/>.
-public class RuleValues(IConfiguration config) : IRuleValues<ContID>
+/// <inheritdoc cref="IRuleValues"/>.
+public class RuleValues(IConfiguration config) : IRuleValues
 {
-    /// <inheritdoc cref="IRuleValues{U}.MinimumArmyBonus"/>.
+    /// <inheritdoc cref="IRuleValues.MinimumArmyBonus"/>.
     public int MinimumArmyBonus { get; } = int.Parse(config["MinimumArmyBonus"] ?? "");
-    /// <inheritdoc cref="IRuleValues{U}.TerritoryTradeInBonus"/>.
+    /// <inheritdoc cref="IRuleValues.TerritoryTradeInBonus"/>.
     public int TerritoryTradeInBonus { get; } = int.Parse(config["TerritoryTradeInBonus"] ?? "");
-    /// <inheritdoc cref="IRuleValues{U}.AttackersLimit"/>.
+    /// <inheritdoc cref="IRuleValues.AttackersLimit"/>.
     public int AttackersLimit { get; } = int.Parse(config["AttackersLimit"] ?? "");
-    /// <inheritdoc cref="IRuleValues{U}.DefendersLimit"/>.
+    /// <inheritdoc cref="IRuleValues.DefendersLimit"/>.
     public int DefendersLimit { get; } = int.Parse(config["DefendersLimit"] ?? "");
-    /// <inheritdoc cref="IRuleValues{U}.ContinentBonus"/>.
+    /// <inheritdoc cref="IRuleValues.ContinentBonus"/>.
     public ReadOnlyDictionary<ContID, int> ContinentBonus { get; } =
         new(new Dictionary<ContID, int>() {
                 { ContID.Null, -1 },
@@ -28,7 +28,7 @@ public class RuleValues(IConfiguration config) : IRuleValues<ContID>
                 { ContID.Oceania, int.Parse(config.GetSection("ContinentBonuses")["OceaniaBonus"] ?? "") }
             }
         );
-    /// <inheritdoc cref="IRuleValues{U}.SetupActionsPerPlayers"/>.
+    /// <inheritdoc cref="IRuleValues.SetupActionsPerPlayers"/>.
     public ReadOnlyDictionary<int, int> SetupActionsPerPlayers { get; } =
         new(new Dictionary<int, int>() {
                 { 2, int.Parse(config.GetSection("SetupActionsPerPlayers")["Two"] ?? "") },
@@ -38,7 +38,7 @@ public class RuleValues(IConfiguration config) : IRuleValues<ContID>
                 { 6, int.Parse(config.GetSection("SetupActionsPerPlayers")["Six"] ?? "") }
             }
         );
-    /// <inheritdoc cref="IRuleValues{U}.SetupStartingPool"/>.
+    /// <inheritdoc cref="IRuleValues.SetupStartingPool"/>.
     public ReadOnlyDictionary<int, int> SetupStartingPool { get; } =
         new(new Dictionary<int, int>() {
                 { 2, int.Parse(config.GetSection("SetupStartingPool")["Two"] ?? "") },
@@ -48,7 +48,7 @@ public class RuleValues(IConfiguration config) : IRuleValues<ContID>
                 { 6, int.Parse(config.GetSection("SetupStartingPool")["Six"] ?? "") }
             }
         );
-    /// <inheritdoc cref="IRuleValues{U}.CalculateTerritoryBonus(int)"/>.
+    /// <inheritdoc cref="IRuleValues.CalculateTerritoryBonus(int)"/>.
     public int CalculateTerritoryBonus(int numTerritories)
     {
         if (numTerritories < 0)
@@ -58,7 +58,7 @@ public class RuleValues(IConfiguration config) : IRuleValues<ContID>
             return numTerritories / 3;
         }
     }
-    /// <inheritdoc cref="IRuleValues{U}.CalculateArmyBonus"/>.
+    /// <inheritdoc cref="IRuleValues.CalculateArmyBonus"/>.
     public int CalculateArmyBonus(int numTerritories, List<ContID> continents)
     {
         int bonus = CalculateTerritoryBonus(numTerritories);
@@ -70,7 +70,7 @@ public class RuleValues(IConfiguration config) : IRuleValues<ContID>
 
         return bonus;
     }
-    /// <inheritdoc cref="IRuleValues{U}.CalculateBaseTradeInBonus(int)"/>.
+    /// <inheritdoc cref="IRuleValues.CalculateBaseTradeInBonus(int)"/>.
     public int CalculateBaseTradeInBonus(int numTrades) => numTrades switch
     {
         < 0 => 0,

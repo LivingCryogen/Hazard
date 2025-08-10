@@ -16,14 +16,14 @@ namespace ViewModel;
 /// <param name="dialogService">Determines whether a dialog window is open in the View.</param>
 /// <param name="wpfTimer">Exposes a UI timer class.</param>
 /// <param name="bootStrapper">A persistent application boot service.</param>
-public partial class MainVM(IGameService<TerrID, ContID> gameService,
+public partial class MainVM(IGameService gameService,
     IDialogState dialogService,
     IDispatcherTimer wpfTimer,
     IBootStrapperService bootStrapper,
     ILogger<MainVM_Base> logger)
     : MainVM_Base(gameService, bootStrapper, logger)
 {
-    private readonly IGameService<TerrID, ContID> _gameService = gameService;
+    private readonly IGameService _gameService = gameService;
     private readonly IDialogState _dialogService = dialogService;
     private readonly IDispatcherTimer _dispatcherTimer = wpfTimer;
 
@@ -52,7 +52,7 @@ public partial class MainVM(IGameService<TerrID, ContID> gameService,
         }
     }
     /// <inheritdoc cref="MainVM_Base.HandleTerritoryChanged(object?, ITerritoryChangedEventArgs)"/>
-    public override void HandleTerritoryChanged(object? sender, ITerritoryChangedEventArgs<TerrID> e)
+    public override void HandleTerritoryChanged(object? sender, ITerritoryChangedEventArgs e)
     {
         if (e is not TerritoryChangedEventArgs || Territories == null || PlayerDetails == null)
             return;

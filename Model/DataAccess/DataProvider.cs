@@ -95,9 +95,9 @@ public class DataProvider(ITypeRegister<ITypeRelations> typeRegister, ILogger<Da
     }
     private object? ReadData(object converter, Type conversionTargetType, string filePath)
     {
-        if (converter is ICardSetDataJConverter<TerrID> jConverter)
+        if (converter is ICardSetDataJConverter jConverter)
         {
-            if (!typeof(ICardSetData<TerrID>).IsAssignableFrom(conversionTargetType) && !typeof(ICardSet<TerrID>).IsAssignableFrom(conversionTargetType))
+            if (!typeof(ICardSetData).IsAssignableFrom(conversionTargetType) && !typeof(ICardSet).IsAssignableFrom(conversionTargetType))
                 throw new ArgumentException($"The provided target Type is not valid. Converter {converter} requires a target Type which implements ICardSetData or ICardSet.");
 
             try

@@ -10,7 +10,7 @@ namespace Model.Tests.Entities
     public class DeckTests
     {
         private List<MockCard>? _testCards;
-        private readonly ICardSet<MockTerrID> _mockSet = new MockCardSet();
+        private readonly ICardSet _mockSet = new MockCardSet();
         private readonly int _numCards = 50;
 
         [TestInitialize]

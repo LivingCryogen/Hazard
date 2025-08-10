@@ -3,15 +3,15 @@ using Shared.Interfaces.Model;
 
 namespace Model.Tests.Entities.Mocks;
 
-public class MockCardSet : ICardSet<MockTerrID>
+public class MockCardSet : ICardSet
 {
     public string TypeName { get; } = nameof(MockCardSet);
     public string MemberTypeName { get; } = nameof(MockCard);
-    public ICardSetData<MockTerrID>? JData { get; set; } = null;
-    public List<ICard<MockTerrID>> Cards { get; set; } = [];
+    public ICardSetData? JData { get; set; } = null;
+    public List<ICard> Cards { get; set; } = [];
     public bool ForcesTrade { get; } = true;
 
-    public ICard<MockTerrID>[][]? FindTradeSets(ICard<MockTerrID>[] cards)
+    public ICard[][]? FindTradeSets(ICard[] cards)
     {
 
         int matchNum = 3;
@@ -19,7 +19,7 @@ public class MockCardSet : ICardSet<MockTerrID>
         if (troopCards.Count() < matchNum)
             return null;
 
-        List<ICard<MockTerrID>[]> tradeSets = [];
+        List<ICard[]> tradeSets = [];
 
         for (int first = 0; first < cards.Length - matchNum; first++)
         {
@@ -27,7 +27,7 @@ public class MockCardSet : ICardSet<MockTerrID>
             {
                 for (int third = second + 1; third < cards.Length - (matchNum - 2); third++)
                 {
-                    ICard<MockTerrID>[] testCards = [cards[first], cards[second], cards[third]];
+                    ICard[] testCards = [cards[first], cards[second], cards[third]];
                     if (IsValidTrade(testCards))
                         tradeSets.Add(testCards);
                 }
@@ -40,7 +40,7 @@ public class MockCardSet : ICardSet<MockTerrID>
             return null;
     }
 
-    public bool IsValidTrade(ICard<MockTerrID>[] cards)
+    public bool IsValidTrade(ICard[] cards)
     {
         throw new NotImplementedException();
     }

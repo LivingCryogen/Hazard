@@ -27,7 +27,7 @@ public class StatTracker : IStatTracker, IBinarySerializable
     /// <inheritdoc cref="IStatTracker.GameID"/>
     public Guid GameID => _currentSession.Id;
     /// <inheritdoc cref="IStatTracker.LastSavePath"/>
-    public string? LastSavePath { get; init; }
+    public string? LastSavePath { get; set; }
 
     /// <summary>
     /// Builds a new <see cref="StatTracker"/> instance for the given game.
@@ -158,11 +158,39 @@ public class StatTracker : IStatTracker, IBinarySerializable
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>/>
     public async Task<SerializedData[]> GetBinarySerials()
     {
-        throw new NotImplementedException();
+        return await Task.Run(async () =>
+        {
+            List<SerializedData> saveData = [];
+            saveData.Add(new SerializedData(typeof(bool), AwaitsUpdate));
+            bool hasSavePath = LastSavePath is not null;
+            saveData.Add(new SerializedData(typeof(int), hasSavePath ? 1 : 0));
+            if (hasSavePath)
+                saveData.Add(new SerializedData(typeof(string), LastSavePath!));
+            saveData.AddRange(await _currentSession.GetBinarySerials());
+            return saveData.ToArray();
+        });
     }
     /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     public bool LoadFromBinary(BinaryReader reader)
     {
-        throw new NotImplementedException();
+        bool loadComplete = true;
+        try
+        {
+            AwaitsUpdate = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool));
+            bool loadSavePath = (int)BinarySerializer.ReadConvertible(reader, typeof(int)) == 1;
+            if (loadSavePath)
+                LastSavePath = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+            else
+                LastSavePath = null;
+            GameSession loadedSession = new(_loggerFactory.CreateLogger<GameSession>(), _loggerFactory);
+            loadedSession.LoadFromBinary(reader);
+            _currentSession = loadedSession;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("An exception was thrown while loading {StatTracker}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+            loadComplete = false;
+        }
+        return loadComplete;
     }
 }

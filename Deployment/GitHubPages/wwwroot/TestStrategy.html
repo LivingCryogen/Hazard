@@ -62,7 +62,7 @@ public async Task EntireGame_RoundTrip_Match()
     // Add reward card to regulator
     MockCard rewardCard = new(new MockCardSet()) 
     {
-        Target = [MockTerrID.Idaho],
+        Target = [TerrID.Idaho],
         Insigne = MockCard.Insignia.FighterJet
     };
     rewardCard.FillTestValues();
@@ -197,10 +197,10 @@ public void GetData_RegisteredNameMockCard_ReturnMockCardSet()
     Assert.IsTrue(returnedCardSetData.Targets.Length &gt; 0);
     
     // Verify all mock territories represented
-    foreach (MockTerrID mockID in Enum.GetValues(typeof(MockTerrID))) 
+    foreach (TerrID mockID in Enum.GetValues(typeof(TerrID))) 
     {
-        var mockTargets = returnedCardSetData.Targets.SelectMany(array =&gt; array).Cast&lt;MockTerrID&gt;();
-        if (mockID != MockTerrID.Null)
+        var mockTargets = returnedCardSetData.Targets.SelectMany(array =&gt; array).Cast&lt;TerrID&gt;();
+        if (mockID != TerrID.Null)
             Assert.IsTrue(mockTargets.Contains(mockID));
     }
 }

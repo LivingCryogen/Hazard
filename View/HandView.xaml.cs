@@ -16,7 +16,7 @@ namespace View
         private readonly ListBox? _handBox;
         private bool _isShuttingDown = false;
 
-        public HandView(IMainVM<TerrID, ContID> vM)
+        public HandView(IMainVM vM)
         {
             ViewModel = vM;
 
@@ -36,7 +36,7 @@ namespace View
         public string PlayerOwnerName { get; init; } = string.Empty;
         public bool ForceTrade { get; set; } = false;
         public RoutedCommand TradeIn { get; } = new();
-        public IMainVM<TerrID, ContID> ViewModel;
+        public IMainVM ViewModel;
 
         public string Message
         {
@@ -59,9 +59,9 @@ namespace View
             switch (e.NewItems, e.OldItems)
             {
                 case (not null, null): // item added
-                    if (e.NewItems[0] is not ICardInfo<TerrID, ContID>)
+                    if (e.NewItems[0] is not ICardInfo)
                         return;
-                    foreach (ICardInfo<TerrID, ContID> item in e.NewItems)
+                    foreach (ICardInfo item in e.NewItems)
                     {
                         AddCard(item);
 
@@ -70,7 +70,7 @@ namespace View
                     }
                     break;
                 case (null, not null): // item removed
-                    if (e.OldItems[0] is ICardInfo<TerrID, ContID>)
+                    if (e.OldItems[0] is ICardInfo)
                         RemoveCard(e.OldStartingIndex);
                     break;
                 case (null, null): // items cleared
@@ -123,7 +123,7 @@ namespace View
             ForceTrade = false;
             Close();
         }
-        public void AddCard(ICardInfo<TerrID, ContID> cardInfo)
+        public void AddCard(ICardInfo cardInfo)
         {
             var newControl = CardFactory.GetCardControl(cardInfo);
             CardControls.Add(newControl);

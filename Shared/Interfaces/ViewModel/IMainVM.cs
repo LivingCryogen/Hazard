@@ -8,7 +8,7 @@ namespace Shared.Interfaces.ViewModel;
 /// <summary>
 /// Defines public exposures of the main ViewModel. Enables decoupled DI injection into the primary View.
 /// </summary>
-public interface IMainVM<T, U> : IBinarySerializable where T : struct, Enum where U : struct, Enum
+public interface IMainVM : IBinarySerializable
 {
     /// <summary>
     /// Gets or sets the current Game.
@@ -16,7 +16,7 @@ public interface IMainVM<T, U> : IBinarySerializable where T : struct, Enum wher
     /// <value>
     /// The current <see cref="IGame"/> instance if both it and the <see cref="IMainVM"/> have been initialized; otherwise <see langword="null"/>.
     /// </value>
-    IGame<T, U>? CurrentGame { get; set; }
+    IGame? CurrentGame { get; set; }
     /// <summary>
     /// Gets or sets the current game phase.
     /// </summary>
@@ -24,7 +24,7 @@ public interface IMainVM<T, U> : IBinarySerializable where T : struct, Enum wher
     /// <summary>
     /// Gets or sets the currently selected territory.
     /// </summary>
-    T TerritorySelected { get; set; }
+    TerrID TerritorySelected { get; set; }
     /// <summary>
     /// Gets or sets a collection of territory information for display.
     /// </summary>
@@ -32,14 +32,14 @@ public interface IMainVM<T, U> : IBinarySerializable where T : struct, Enum wher
     /// <summary>
     /// Gets or sets a collection of player information for display.
     /// </summary>
-    ObservableCollection<IPlayerData<T, U>> PlayerDetails { get; set; }
+    ObservableCollection<IPlayerData> PlayerDetails { get; set; }
     /// <summary>
     /// Gets a map of <see cref="ContID"/> to their names.
     /// </summary>
     /// <remarks>
     /// A cache that helps avoid multiple <see cref="Enum"/> method calls.
     /// </remarks>
-    ReadOnlyDictionary<U, string> ContNameMap { get; }
+    ReadOnlyDictionary<ContID, string> ContNameMap { get; }
     /// <summary>
     /// Gets or sets the Path to the directory of the Application.
     /// </summary>
@@ -133,11 +133,11 @@ public interface IMainVM<T, U> : IBinarySerializable where T : struct, Enum wher
     /// is given in the ViewModel, which then passes those results on to the Model for it to execute logic with them. This might need <br/>
     /// to be changed in the future, but would require rethinking how to give a player a "real" view of the "roll."
     /// </remarks>
-    event EventHandler<T>? AttackRequest;
+    event EventHandler<TerrID>? AttackRequest;
     /// <summary>
     /// Fires when user input is needed to determine how many armies will move after a successful attack.
     /// </summary>
-    event EventHandler<ITroopsAdvanceEventArgs<T>>? AdvanceRequest;
+    event EventHandler<ITroopsAdvanceEventArgs<TerrID>>? AdvanceRequest;
     /// <summary>
     /// Fires when the "dice rolling" process has concluded.
     /// </summary>

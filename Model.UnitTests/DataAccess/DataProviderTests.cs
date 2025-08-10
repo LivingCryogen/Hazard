@@ -72,7 +72,7 @@ public class DataProviderTests
     {
         try
         {
-            var data = _testDataProvider!.GetData(nameof(ICard<MockTerrID>));
+            var data = _testDataProvider!.GetData(nameof(ICard));
         }
         catch (Exception ex)
         {
@@ -84,7 +84,7 @@ public class DataProviderTests
     {
         try
         {
-            var data = _testDataProvider!.GetData(nameof(ICard<MockTerrID>));
+            var data = _testDataProvider!.GetData(nameof(ICard));
         }
         catch (Exception ex)
         {
@@ -118,10 +118,10 @@ public class DataProviderTests
         Assert.IsTrue(returnedCardSetData.Targets.Length > 0);
         foreach (var targetList in returnedCardSetData.Targets)
             Assert.IsTrue(targetList.Length > 0);
-        foreach (MockTerrID mockID in Enum.GetValues(typeof(MockTerrID)))
+        foreach (TerrID mockID in Enum.GetValues(typeof(TerrID)))
         {
-            var mockTargets = returnedCardSetData.Targets.SelectMany(array => array).Cast<MockTerrID>();
-            if (mockID != MockTerrID.Null)
+            var mockTargets = returnedCardSetData.Targets.SelectMany(array => array).Cast<TerrID>();
+            if (mockID != TerrID.Null)
                 Assert.IsTrue(mockTargets.Contains(mockID));
         }
     }

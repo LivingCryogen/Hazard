@@ -16,7 +16,7 @@ public class CardControlContentTemplateSelector(MainVM_Base vM) : DataTemplateSe
 
     public override DataTemplate? SelectTemplate(object item, DependencyObject container)
     {
-        if (container is not FrameworkElement control || item is not ICardInfo<TerrID, ContID> cardInfo)
+        if (container is not FrameworkElement control || item is not ICardInfo cardInfo)
             return null;
 
         if (cardInfo is ITroopCardInfo<TerrID, ContID> troopCardInfo)

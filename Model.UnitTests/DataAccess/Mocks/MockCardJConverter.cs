@@ -1,16 +1,18 @@
 ﻿using Model.DataAccess.Cards;
+using Model.Entities.Cards;
 using Model.Tests.Entities.Mocks;
 using Model.Tests.Fixtures;
 using Model.Tests.Fixtures.Mocks;
+using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Model.Tests.DataAccess.Mocks;
 
-public class MockCardDataJConverter : JsonConverter<MockCardSet>, ICardSetDataJConverter<MockTerrID>
+public class MockCardDataJConverter : JsonConverter<MockCardSet>, ICardSetDataJConverter
 {
-    public ICardSet<MockTerrID>? ReadCardSetData(string registeredFileName)
+    public ICardSet? ReadCardSetData(string registeredFileName)
     {
         ReadOnlySpan<byte> jsonROSpan = FileProcessor.ReadAllBytes(registeredFileName);
         var reader = new Utf8JsonReader(jsonROSpan);
@@ -34,7 +36,7 @@ public class MockCardDataJConverter : JsonConverter<MockCardSet>, ICardSetDataJC
                         if (reader.TokenType != JsonTokenType.StartArray)
                             throw new JsonException($"TroopCardSetData converter expects an Array for value of 'TroopCards' property but the first token in the property value was not a StartArray token.");
 
-                        List<MockTerrID[]> cardSetTargets = [];
+                        List<TerrID[]> cardSetTargets = [];
                         List<MockCard.Insignia> cardSetInsignia = [];
 
                         while (reader.Read())
@@ -64,10 +66,10 @@ public class MockCardDataJConverter : JsonConverter<MockCardSet>, ICardSetDataJC
                                                                select target.Replace(" ", "");
 
                                     var targetIDs = from target in targetsWithoutBlanks
-                                                    select Enum.Parse<MockTerrID>(target, false);
+                                                    select Enum.Parse<TerrID>(target, false);
 
 
-                                    cardSetTargets.Add(targetIDs.ToArray());
+                                    cardSetTargets.Add([.. targetIDs]);
                                 }
                                 else if (reader.ValueTextEquals("Insignia"))
                                 {
@@ -79,8 +81,8 @@ public class MockCardDataJConverter : JsonConverter<MockCardSet>, ICardSetDataJC
                                 }
                             }
                         }
-                        // MockTerrID must be cast to the Interface's defined type of TerrID -- recall there is not perfect overlap
-                        ((MockCardSetData)newMockCardSet.JData).Targets = [.. cardSetTargets];
+
+                        newMockCardSet.JData.Targets = [.. cardSetTargets];
                         ((MockCardSetData)newMockCardSet.JData).Insignia = [.. cardSetInsignia];
                     }
                     break;

@@ -68,7 +68,7 @@ public class TypeRegisterTests
         Assert.IsNotNull(_testRegister);
 
         TypeRelations icardRelations = new([("I C A R D", RegistryRelation.Name)]);
-        _testRegister.Register(typeof(ICard<MockTerrID>), icardRelations);
+        _testRegister.Register(typeof(ICard), icardRelations);
 
         TypeRelations troopCardRelations = new([("I T R O O P", RegistryRelation.Name)]);
         _testRegister.Register(typeof(TroopCard), troopCardRelations);
@@ -77,7 +77,7 @@ public class TypeRegisterTests
         Assert.IsNotNull(indexOut);
         Assert.AreEqual(indexOut.Length, 3);
         Assert.AreEqual(indexOut[0].KeyType, typeof(TypeRegisterTests));
-        Assert.AreEqual(indexOut[1].KeyType, typeof(ICard<MockTerrID>));
+        Assert.AreEqual(indexOut[1].KeyType, typeof(ICard));
         Assert.AreEqual(indexOut[2].KeyType, typeof(TroopCard));
         Assert.AreEqual(indexOut[0].RelatedObject, "TypeRegisterTests");
         Assert.AreEqual(indexOut[1].RelatedObject, "I C A R D");

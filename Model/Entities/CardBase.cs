@@ -7,45 +7,45 @@ using Shared.Services.Serializer;
 
 namespace Model.Entities;
 
-/// <inheritdoc cref="ICardBase{TerrID}"/>
+/// <inheritdoc cref="ICardBase"/>
 /// <param name="loggerFactory">Instantiates loggers for logging debug information and errors (provided by DI).</param>
 /// <param name="registry">The application's type registry.</param>
-public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations> registry) : ICardBase<TerrID>, IBinarySerializable
+public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations> registry) : ICardBase, IBinarySerializable
 {
     private readonly ILogger _logger = loggerFactory.CreateLogger<CardBase>();
     private readonly ILoggerFactory _loggerFactory = loggerFactory;
     /// <summary>
-    /// Gets a factory for making <see cref="ICard{T}"/>s.
+    /// Gets a factory for making <see cref="ICard"/>s.
     /// </summary>
     /// <remarks>
     /// Used when loading from a save file; see <see cref="LoadFromBinary"/>.
     /// </remarks>
-    public ICardFactory<TerrID> CardFactory { get; } = new CardFactory(registry, loggerFactory);
+    public ICardFactory CardFactory { get; } = new CardFactory(registry, loggerFactory);
     /// <summary>
     /// Gets or sets a list of card sets.
     /// </summary>
-    public List<ICardSet<TerrID>> Sets { get; set; } = [];
+    public List<ICardSet> Sets { get; set; } = [];
     /// <summary>
     /// Gets or sets the deck of cards to be used for this game.
     /// </summary>
-    public IDeck<TerrID> GameDeck { get; set; } = new Deck();
-    /// <inheritdoc cref="ICardBase{T}.InitializeFromAssets(IAssetFetcher{T}, bool)"/>
-    public void InitializeFromAssets(IAssetFetcher<TerrID> assetFetcher, bool defaultMode)
+    public IDeck GameDeck { get; set; } = new Deck();
+    /// <inheritdoc cref="ICardBase.InitializeFromAssets(IAssetFetcher, bool)"/>
+    public void InitializeFromAssets(IAssetFetcher assetFetcher, bool defaultMode)
     {
         Sets = assetFetcher.FetchCardSets();
         if (Sets.Count == 0)
             return;
 
-        List<ICard<TerrID>> defaultCards = [];
+        List<ICard> defaultCards = [];
         foreach (var set in Sets)
         {
             if (set.Cards.Count == 0)
                 continue;
-            if (set.Cards.OfType<ITroopCard<TerrID>>().Count() == set.Cards.Count)
+            if (set.Cards.OfType<ITroopCard>().Count() == set.Cards.Count)
             {
                 defaultCards.AddRange(set.Cards);
                 var setTypeName = set.GetType().Name;
-                foreach (ICard<TerrID> card in defaultCards)
+                foreach (ICard card in defaultCards)
                     if (card.CardSet == null && set.IsParent(card))
                         card.CardSet = set;
             }
@@ -57,30 +57,30 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
 
         GameDeck.Shuffle();
     }
-    /// <inheritdoc cref="ICardBase{T}.InitializeLibrary(ICard{T}[])"/>
-    public void InitializeLibrary(ICard<TerrID>[] cards)
+    /// <inheritdoc cref="ICardBase.InitializeLibrary(ICard[])"/>
+    public void InitializeLibrary(ICard[] cards)
     {
         MapCardsToSets(cards);
         GameDeck.Library.AddRange(cards);
     }
-    /// <inheritdoc cref="ICardBase{T}.InitializeDiscardPile(ICard{T}[])"/>/>
-    public void InitializeDiscardPile(ICard<TerrID>[] cards)
+    /// <inheritdoc cref="ICardBase.InitializeDiscardPile(ICard[])"/>/>
+    public void InitializeDiscardPile(ICard[] cards)
     {
         MapCardsToSets(cards);
         GameDeck.DiscardPile.AddRange(cards);
     }
-    /// <inheritdoc cref="ICardBase{T}.MapCardsToSets(ICard{T}[])"/>
-    public void MapCardsToSets(ICard<TerrID>[] cards)
+    /// <inheritdoc cref="ICardBase.MapCardsToSets(ICard[])"/>
+    public void MapCardsToSets(ICard[] cards)
     {
         Sets ??= [];
 
-        Dictionary<string, ICardSet<TerrID>> cardSetToTypeNameMap = [];
-        foreach (ICardSet<TerrID> set in Sets)
+        Dictionary<string, ICardSet> cardSetToTypeNameMap = [];
+        foreach (ICardSet set in Sets)
             cardSetToTypeNameMap.Add(set.TypeName, set);
 
-        foreach (ICard<TerrID> card in cards)
+        foreach (ICard card in cards)
         {
-            if (cardSetToTypeNameMap.TryGetValue(card.ParentTypeName, out ICardSet<TerrID>? parentSet))
+            if (cardSetToTypeNameMap.TryGetValue(card.ParentTypeName, out ICardSet? parentSet))
             {
                 if (parentSet?.MemberTypeName != card.TypeName)
                 {
@@ -105,7 +105,7 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
                 continue;
             }
             var setObject = Activator.CreateInstance(parentType);
-            if (setObject is not ICardSet<TerrID> parentSetObject)
+            if (setObject is not ICardSet parentSetObject)
             {
                 _logger?.LogWarning("Activation of type {Type}, which was registered as parent of {Card}, failed.", parentType, card);
                 continue;
@@ -120,7 +120,7 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
             cardSetToTypeNameMap.Add(parentType.Name, parentSetObject);
         }
         if (Sets.Count < cardSetToTypeNameMap.Values.Count)
-            foreach (ICardSet<TerrID> loadedSet in cardSetToTypeNameMap.Values)
+            foreach (ICardSet loadedSet in cardSetToTypeNameMap.Values)
                 if (!Sets.Contains(loadedSet))
                     Sets.Add(loadedSet);
     }
@@ -134,7 +134,7 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
             serials.Add(new(typeof(int), [numLibrary]));
             for (int i = 0; i < numLibrary; i++)
             {
-                ICard<TerrID> currentCard = GameDeck.Library[i];
+                ICard currentCard = GameDeck.Library[i];
                 IEnumerable<SerializedData> cardSerials = await currentCard.GetBinarySerials();
                 serials.AddRange(cardSerials ?? []);
             }
@@ -142,7 +142,7 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
             serials.Add(new(typeof(int), [numDiscard]));
             for (int i = 0; i < numDiscard; i++)
             {
-                ICard<TerrID> currentCard = GameDeck.DiscardPile[i];
+                ICard currentCard = GameDeck.DiscardPile[i];
                 IEnumerable<SerializedData> cardSerials = await currentCard.GetBinarySerials();
                 serials.AddRange(cardSerials ?? []);
             }
@@ -160,11 +160,11 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
         try
         {
             int numLibrary = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-            List<ICard<TerrID>> newLibrary = [];
+            List<ICard> newLibrary = [];
             for (int i = 0; i < numLibrary; i++)
             {
                 string typeName = reader.ReadString();
-                if (CardFactory.BuildCard(typeName) is not ICard<TerrID> newCard)
+                if (CardFactory.BuildCard(typeName) is not ICard newCard)
                 {
                     _logger?.LogWarning("{CardFactory} failed to construct a card of type {name} during loading of {base}.", CardFactory, typeName, this);
                     loadComplete = false;
@@ -174,12 +174,12 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
                 newCard.LoadFromBinary(reader);
                 newLibrary.Add(newCard);
             }
-            List<ICard<TerrID>> newDiscard = [];
+            List<ICard> newDiscard = [];
             int numDiscard = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             for (int i = 0; i < numDiscard; i++)
             {
                 string typeName = reader.ReadString();
-                if (CardFactory.BuildCard(typeName) is not ICard<TerrID> newCard)
+                if (CardFactory.BuildCard(typeName) is not ICard newCard)
                 {
                     _logger?.LogWarning("{CardFactory} failed to construct a card of type {name} during loading of {base}.", CardFactory, typeName, this);
                     loadComplete = false;
