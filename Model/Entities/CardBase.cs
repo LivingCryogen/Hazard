@@ -29,6 +29,8 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
     /// Gets or sets the deck of cards to be used for this game.
     /// </summary>
     public IDeck GameDeck { get; set; } = new Deck();
+    /// <inheritdoc cref="ICardBase.Reward"/>
+    public ICard? Reward { get; set; } = null;
     /// <inheritdoc cref="ICardBase.InitializeFromAssets(IAssetFetcher, bool)"/>
     public void InitializeFromAssets(IAssetFetcher assetFetcher, bool defaultMode)
     {
@@ -68,6 +70,34 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
     {
         MapCardsToSets(cards);
         GameDeck.DiscardPile.AddRange(cards);
+    }
+    /// <inheritdoc cref="ICardBase.SetReward"/>
+    public bool SetReward()
+    {
+        try
+        {
+            Reward = GameDeck.DrawCard();
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger?.LogError("Failed to set reward: {Message}", ex.Message);
+            return false;
+        }
+
+        if (Reward == null)
+        {
+            _logger?.LogError("Cardbase failed to set reward on request.");
+            return false;
+        }
+
+        return true;
+    }
+    /// <inheritdoc cref="ICardBase.FetchReward"/>
+    public ICard? FetchReward()
+    {
+        ICard? rewardCard = Reward;
+        Reward = null;
+        return rewardCard;
     }
     /// <inheritdoc cref="ICardBase.MapCardsToSets(ICard[])"/>
     public void MapCardsToSets(ICard[] cards)
@@ -135,18 +165,22 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
             for (int i = 0; i < numLibrary; i++)
             {
                 ICard currentCard = GameDeck.Library[i];
-                IEnumerable<SerializedData> cardSerials = await currentCard.GetBinarySerials();
-                serials.AddRange(cardSerials ?? []);
+                serials.AddRange(await currentCard.GetBinarySerials());
             }
             int numDiscard = GameDeck.DiscardPile.Count;
             serials.Add(new(typeof(int), [numDiscard]));
             for (int i = 0; i < numDiscard; i++)
             {
                 ICard currentCard = GameDeck.DiscardPile[i];
-                IEnumerable<SerializedData> cardSerials = await currentCard.GetBinarySerials();
-                serials.AddRange(cardSerials ?? []);
+                serials.AddRange(await currentCard.GetBinarySerials());
             }
-
+            if (Reward != null)
+            {
+                serials.Add(new(typeof(int), 1));
+                serials.AddRange(await Reward.GetBinarySerials());
+            }
+            else                 
+                serials.Add(new(typeof(int), 0));
             return serials.ToArray();
         });
     }
@@ -163,32 +197,23 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
             List<ICard> newLibrary = [];
             for (int i = 0; i < numLibrary; i++)
             {
-                string typeName = reader.ReadString();
-                if (CardFactory.BuildCard(typeName) is not ICard newCard)
-                {
-                    _logger?.LogWarning("{CardFactory} failed to construct a card of type {name} during loading of {base}.", CardFactory, typeName, this);
-                    loadComplete = false;
+                if (LoadCard(reader) is not ICard loadedCard)
                     continue;
-                }
-                newCard.Logger = _loggerFactory.CreateLogger<TroopCard>();
-                newCard.LoadFromBinary(reader);
-                newLibrary.Add(newCard);
+                else
+                    newLibrary.Add(loadedCard);
             }
             List<ICard> newDiscard = [];
             int numDiscard = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             for (int i = 0; i < numDiscard; i++)
             {
-                string typeName = reader.ReadString();
-                if (CardFactory.BuildCard(typeName) is not ICard newCard)
-                {
-                    _logger?.LogWarning("{CardFactory} failed to construct a card of type {name} during loading of {base}.", CardFactory, typeName, this);
-                    loadComplete = false;
+                if (LoadCard(reader) is not ICard loadedCard)
                     continue;
-                }
-                newCard.LoadFromBinary(reader);
-                newDiscard.Add(newCard);
+                else
+                    newDiscard.Add(loadedCard);
             }
-
+            bool hasReward = (int)BinarySerializer.ReadConvertible(reader, typeof(int)) == 1;
+            if (hasReward)
+                Reward = LoadCard(reader);
             InitializeLibrary([.. newLibrary]);
             InitializeDiscardPile([.. newDiscard]);
         }
@@ -198,5 +223,18 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
             loadComplete = false;
         }
         return loadComplete;
+    }
+
+    private ICard? LoadCard(BinaryReader reader)
+    {
+        string typeName = reader.ReadString();
+        if (CardFactory.BuildCard(typeName) is not ICard newCard)
+        {
+            _logger?.LogWarning("{CardFactory} failed to construct a card of type {name} during loading of {base}.", CardFactory, typeName, this);
+            return null;
+        }
+        newCard.Logger = _loggerFactory.CreateLogger<TroopCard>();
+        newCard.LoadFromBinary(reader);
+        return newCard;
     }
 }

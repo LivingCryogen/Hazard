@@ -35,6 +35,8 @@ public class MockCardBase : ICardBase
         }
         mockSet.Cards = [.. mockCards];
         Sets.Add(mockSet);
+        Reward = mockCards.Last();
+        mockCards.RemoveAt(mockCards.Count - 1); // Remove the last card from the library, as it is the reward.
         GameDeck.Library.AddRange(mockCards);
         CardFactory = new MockCardFactory(mockSet);
     }
@@ -42,6 +44,7 @@ public class MockCardBase : ICardBase
     public ICardFactory CardFactory { get; set; }
     public IDeck GameDeck { get; set; } = new Deck();
     public List<ICardSet> Sets { get; set; } = [];
+    public ICard? Reward { get; set; } = null;
 
     public void InitializeDiscardPile(ICard[] cards)
     {
@@ -201,5 +204,15 @@ public class MockCardBase : ICardBase
             loadComplete = false;
         }
         return loadComplete;
+    }
+
+    public ICard? FetchReward()
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool SetReward()
+    {
+        throw new NotImplementedException();
     }
 }

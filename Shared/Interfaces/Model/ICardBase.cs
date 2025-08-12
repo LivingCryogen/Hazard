@@ -28,6 +28,24 @@ public interface ICardBase : IBinarySerializable
     /// </summary>
     List<ICardSet> Sets { get; set; }
     /// <summary>
+    /// Gets or sets a card reward for when a player has successfully conquered a territory or completed a mission, etc.
+    /// </summary>
+    /// <value>
+    /// An <see cref="ICard"/> reward, if any; otherwise <see langword="null"/>.
+    /// </value>
+    ICard? Reward { get; set; }
+    /// <summary>
+    /// Retrieves an awaiting reward card, if any.
+    /// </summary>
+    /// <returns>An <see cref="ICard"/> instance representing the reward card, or <see langword="null"/> if no reward is
+    /// pending.</returns>
+    ICard? FetchReward();
+    /// <summary>
+    /// Prompts the Base to set a reward for the player who has just conquered a territory or completed a mission, etc.
+    /// </summary>
+    /// <returns><see langword="true"/> if the reward was successfully set; otherwise, <see langword="false"/>.</returns>
+    bool SetReward();
+    /// <summary>
     /// Initializes a discard pile when loading the game from a save file.
     /// </summary>
     /// <param name="cards">The discard pile's cards built during <see cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>.</param>

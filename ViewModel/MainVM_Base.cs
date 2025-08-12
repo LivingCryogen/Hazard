@@ -418,7 +418,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// <returns><see langword="true"/> if a card reward can be deliverd to the <see cref="IPlayer"/> at end of turn. See <see cref="IRegulator.Reward"/>.</returns>
     public bool CanDeliverAttackReward()
     {
-        if (Regulator?.Reward is null)
+        if (Regulator == null || !Regulator.RewardPending)
             return false;
         if (CurrentGame?.State.CurrentPhase != GamePhase.Move)
             return false;

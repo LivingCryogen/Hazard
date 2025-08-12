@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Model.Entities;
 using Model.EventArgs;
 using Model.Stats.Services;
 using Shared.Enums;
@@ -15,7 +16,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
 {
     private readonly IGame _currentGame = currentGame;
     private readonly StateMachine _machine = currentGame.State;
-    private readonly IStatTracker _statTracker = currentGame.StatTracker;
+    private readonly ICardBase _cards = currentGame.Cards;
     private readonly ILogger _logger = logger;
     private readonly int _numPlayers = currentGame.State.NumPlayers;
     private int _actionsCounter = 0;
@@ -30,8 +31,8 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     public int CurrentActionsLimit { get; set; }
     /// <inheritdoc cref="IRegulator.PhaseActions"/>
     public int PhaseActions => _actionsCounter - _prevActionCount;
-    /// <inheritdoc cref="IRegulator.Reward"/>
-    public ICard? Reward { get; set; } = null;
+    /// <inheritdoc cref="IRegulator.RewardPending"/>
+    public bool RewardPending { get; set; } = false;
 
     /// <inheritdoc cref="IRegulator.PromptBonusChoice"/>
     public event EventHandler<TerrID[]>? PromptBonusChoice;
@@ -350,7 +351,8 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
 
             _currentGame.Board.Conquer(source, target, _currentGame.Board.TerritoryOwner[source]);
 
-            Reward ??= _currentGame.Cards.GameDeck.DrawCard();
+            if (_cards.SetReward())
+                RewardPending = true;
         }
         if (sourceLoss > 0)
             _currentGame.Board.Reinforce(source, -sourceLoss);
@@ -423,33 +425,34 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     /// <inheritdoc cref="IRegulator.DeliverCardReward"/>
     public void DeliverCardReward()
     {
-        if (Reward == null)
+        if (!RewardPending)
             return;
 
-        _currentGame.Players[PlayerTurn].AddCard(Reward);
-        Reward = null;
+        if (_cards.FetchReward() is not ICard reward)
+        {
+            _logger.LogError("A card reward was flagged as pending, but no reward card was found.");
+            RewardPending = false;
+            return;
+        }
+        RewardPending = false;
+
+        _currentGame.Players[PlayerTurn].AddCard(reward);
+        RewardPending = false;
     }
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
-    public async Task<SerializedData[]> GetBinarySerials()
+    public Task<SerializedData[]> GetBinarySerials()
     {
-        int numRewards = 0;
         List<SerializedData> rewardData = [];
-        if (Reward != null)
-        {
-            rewardData.AddRange(await Reward.GetBinarySerials());
-            numRewards = 1;
-        }
-        else rewardData = [];
 
         SerializedData[] saveData = [
             new(typeof(int), [_actionsCounter]),
             new(typeof(int), [_prevActionCount]),
             new(typeof(int), [CurrentActionsLimit]),
-            new(typeof(int), [numRewards]),
+            new(typeof(bool), [RewardPending]),
             ..rewardData
         ];
 
-        return saveData;
+        return Task.FromResult(saveData);
     }
     /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     public bool LoadFromBinary(BinaryReader reader)
@@ -460,19 +463,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
             _actionsCounter = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             _prevActionCount = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             CurrentActionsLimit = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-            int numRewards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-            if (numRewards == 0)
-                Reward = null;
-            else
-            {
-                string cardTypeName = reader.ReadString();
-                if (_currentGame?.Cards?.CardFactory.BuildCard(cardTypeName) is not ICard rewardCard)
-                {
-                    throw new InvalidDataException("While loading Regulator, construction of the reward card failed");
-                }
-                rewardCard.LoadFromBinary(reader);
-                Reward = rewardCard;
-            }
+            RewardPending = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool));
         }
         catch (Exception ex)
         {

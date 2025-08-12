@@ -15,33 +15,28 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
     private int _prevActionCount = 4;
     public int CurrentActionsLimit { get; set; } = 5;
     public int PhaseActions { get; set; } = 1;
-    public ICard? Reward { get; set; }
+    public bool RewardPending { get; set; } = true;
 
 #pragma warning disable CS0414 // For unit-testing, these are unused. If integration tests are built, they should be, at which time these warnings should be re-enabled.
     public event EventHandler<TerrID[]>? PromptBonusChoice = null;
     public event EventHandler<IPromptTradeEventArgs>? PromptTradeIn = null;
 #pragma warning restore CS0414
-    public async Task<SerializedData[]> GetBinarySerials()
+    /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
+    public Task<SerializedData[]> GetBinarySerials()
     {
-        int numRewards = 0;
         List<SerializedData> rewardData = [];
-        if (Reward != null)
-        {
-            rewardData.AddRange(await Reward.GetBinarySerials());
-            numRewards = 1;
-        }
-        else rewardData = [];
 
         SerializedData[] saveData = [
             new(typeof(int), [_actionsCounter]),
             new(typeof(int), [_prevActionCount]),
             new(typeof(int), [CurrentActionsLimit]),
-            new(typeof(int), [numRewards]),
+            new(typeof(bool), [RewardPending]),
             ..rewardData
         ];
 
-        return saveData;
+        return Task.FromResult(saveData);
     }
+    /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;
@@ -50,19 +45,7 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
             _actionsCounter = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             _prevActionCount = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             CurrentActionsLimit = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-            int numRewards = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-            if (numRewards == 0)
-                Reward = null;
-            else
-            {
-                string cardTypeName = reader.ReadString();
-                if (_currentGame?.Cards?.CardFactory.BuildCard(cardTypeName) is not ICard rewardCard)
-                {
-                    throw new InvalidDataException("While loading Regulator, construction of the reward card failed");
-                }
-                rewardCard.LoadFromBinary(reader);
-                Reward = rewardCard;
-            }
+            RewardPending = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool));
         }
         catch (Exception ex)
         {
@@ -112,8 +95,7 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
             _actionsCounter = (int)(loadedValues?[0] ?? 0);
             _prevActionCount = (int)(loadedValues?[1] ?? 0);
             CurrentActionsLimit = (int)(loadedValues?[2] ?? 0);
-            if (((int?)loadedValues?[3] ?? 0) == 1)
-                Reward = (ICard)loadedValues![4]!;
+            RewardPending = (bool?)loadedValues?[3] ?? false;
         }
     }
 
@@ -147,6 +129,6 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
         _actionsCounter = 0;
         _prevActionCount = 0;
         CurrentActionsLimit = 0;
-        Reward = null;
+        RewardPending = false;
     }
 }

@@ -76,7 +76,7 @@ public partial class MainVM(IGameService gameService,
     /// <inheritdoc cref="MainVM_Base.CanTerritorySelect(int)"/>
     public override bool CanTerritorySelect(int selected)
     {
-        if (CurrentGame?.State is not StateMachine stateMachine || CurrentGame?.Board == null || Regulator == null)
+        if (CurrentGame?.State is null || CurrentGame?.Board == null || Regulator == null)
             return false;
 
         TerrID territory = (TerrID)selected;

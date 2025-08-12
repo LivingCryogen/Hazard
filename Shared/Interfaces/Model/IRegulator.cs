@@ -19,10 +19,13 @@ public interface IRegulator : IBinarySerializable
     /// </summary>
     int PhaseActions { get; }
     /// <summary>
-    /// Gets or sets a card rewarded to a player for a successful attack.
+    /// Gets or sets a flag indicating whether an ICard reward is waiting to be delivered at end of turn.
     /// </summary>
+    /// <remarks>
+    /// See <see cref="ICardBase.Reward"/>.
+    /// </remarks>
     /// <value>If the current player made a successful attack, an <see cref="ICard"/>. Otherwise, <see langword="null"/>.</value>
-    ICard? Reward { get; set; }
+    bool RewardPending { get; set; }
     /// <summary>
     /// Fires when a player must choose between two or more territories they control to receive a bonus upon card trade-in.
     /// </summary>
@@ -92,7 +95,7 @@ public interface IRegulator : IBinarySerializable
     /// <param name="territory">The territory awarded the bonus armies.</param>
     void AwardTradeInBonus(TerrID territory);
     /// <summary>
-    /// Delivers the <see cref="ICard"/> held in <see cref="Reward"/>, if any, to the appropriate <see cref="IPlayer"/>.
+    /// Delivers the <see cref="ICard"/> held in <see cref="ICardBase.Reward"/>, if any, to the appropriate <see cref="IPlayer"/>.
     /// </summary>
     void DeliverCardReward();
     /// <summary>
