@@ -10,7 +10,7 @@ public class MockFileData
     {
         List<MockCard.Insignia> newInsignia = [];
         int enumCounter = 0;
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < 42; i++)
         {
             newInsignia.Add((MockCard.Insignia)enumCounter);
             enumCounter++;
@@ -19,9 +19,17 @@ public class MockFileData
         }
 
         Insignia = [.. newInsignia];
+
+        var values = Enum.GetValues(typeof(TerrID));
+        int numRealValues = values.Length - 1;
+        Targets = new TerrID [numRealValues][];
+        for (int i = 0; i < numRealValues; i++)
+        {
+            Targets[i] = [(TerrID)i];
+        }
     }
 
     public MockCard.Insignia[] Insignia { get; set; }
 
-    public TerrID[][] Targets { get; set; } = [.. Enum.GetValues<TerrID>().Select(t => new[] { t })];
+    public TerrID[][] Targets { get; set; } 
 }

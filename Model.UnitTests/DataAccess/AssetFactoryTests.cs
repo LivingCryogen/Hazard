@@ -4,6 +4,7 @@ using Model.Tests.DataAccess.Mocks;
 using Model.Tests.Entities.Mocks;
 using Model.Tests.Fixtures;
 using Model.Tests.Fixtures.Stubs;
+using Shared.Geography;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Services.Registry;
@@ -17,6 +18,7 @@ public class AssetFactoryTests
     private readonly LoggerStubT<AssetFactory> _logger = new();
     private readonly LoggerFactory _loggerFactory = new();
     private readonly IDataProvider? _dataProvider;
+    private readonly int numTerritories = 42;
 
     public AssetFactory TestFactory { get; private set; }
 
@@ -40,7 +42,7 @@ public class AssetFactoryTests
 
         var castObjects = (MockCardSet)returnedObjects;
         Assert.IsNotNull(castObjects.Cards);
-        Assert.IsTrue(castObjects.Cards.Count == 50);
-        Assert.IsTrue(castObjects.Cards.Where(card => Enum.IsDefined(typeof(TerrID), (int)card.Target[0])).Count() == 42); // TerrID has a Count of 50, so there are 8 undefined when cast to TerrID
+        Assert.AreEqual(numTerritories, castObjects.Cards.Count);
+        Assert.AreEqual(numTerritories, castObjects.Cards.Where(card => Enum.IsDefined(typeof(TerrID), (int)card.Target[0])).Count());
     }
 }

@@ -58,6 +58,7 @@ public class MockGame : IGame
         ((MockCardBase)Cards).Wipe();
         State = new StateMachine(2, new LoggerStubT<StateMachine>());
         Board.Armies.Clear();
+        Board.TerritoryOwner.Clear();
         Board.ContinentOwner.Clear();
         ((MockRegulator)Regulator).Wipe();
     }
@@ -137,44 +138,53 @@ public class MockGame : IGame
 
     public async Task<SerializedData[]> GetBinarySerials()
     {
-        return await Task.Run(() =>
+        return await Task.Run(async () =>
         {
             List<SerializedData> saveData = [];
             if (this.ID is Guid gameID)
-                saveData.Add(new(typeof(string), [gameID.ToString()]));
-            saveData.AddRange(Board?.GetBinarySerials().Result ?? []);
-            saveData.AddRange(Cards?.GetBinarySerials().Result ?? []);
-            saveData.Add(new(typeof(int), [Players.Count]));
+            {
+                saveData.Add(new(typeof(int), 1));
+                saveData.Add(new(typeof(string), gameID.ToString()));
+            }
+            else
+                saveData.Add(new(typeof(int), 0));
+            if (Board != null)
+                saveData.AddRange(await Board.GetBinarySerials());
+            if (Cards != null)
+                saveData.AddRange(await Cards.GetBinarySerials());
+            saveData.Add(new(typeof(int), Players.Count));
             foreach (IPlayer player in Players)
-                saveData.AddRange(player?.GetBinarySerials().Result ?? []);
-            saveData.AddRange(State?.GetBinarySerials().Result ?? []);
-            saveData.AddRange(Regulator?.GetBinarySerials().Result ?? []);
+                if (player != null)
+                    saveData.AddRange(await player.GetBinarySerials());
+            if (State != null)
+                saveData.AddRange(await State.GetBinarySerials());
+            saveData.AddRange(await StatTracker.GetBinarySerials());
 
             return saveData.ToArray();
         });
     }
+    /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     public bool LoadFromBinary(BinaryReader reader)
     {
         bool loadComplete = true;
         try
         {
-            this.ID = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
+            bool hasGuid = (int)BinarySerializer.ReadConvertible(reader, typeof(int)) == 1;
+            if (hasGuid)
+                this.ID = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
             Board.LoadFromBinary(reader);
             Cards.LoadFromBinary(reader);
             int numPlayers = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             Players.Clear();
             for (int i = 0; i < numPlayers; i++)
             {
-                MockPlayer newPlayer = new(i, Cards.CardFactory, new LoggerStubT<MockPlayer>());
+                Player newPlayer = new(i, numPlayers, Cards.CardFactory, Values, Board, LoggerFactoryStub.CreateLogger<Player>());
                 newPlayer.LoadFromBinary(reader);
                 Cards.MapCardsToSets([.. newPlayer.Hand]);
                 Players.Add(newPlayer);
             }
-            State = new(numPlayers, new LoggerStubT<StateMachine>());
             State.LoadFromBinary(reader);
-            Regulator.LoadFromBinary(reader);
-            if (Regulator.Reward is ICard rewardCard)
-                Cards.MapCardsToSets([rewardCard]);
+            StatTracker.LoadFromBinary(reader);
         }
         catch (Exception ex)
         {

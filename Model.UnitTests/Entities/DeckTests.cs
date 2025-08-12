@@ -23,13 +23,13 @@ namespace Model.Tests.Entities
             }
         }
 
-        private MockDeck InitTestDeck(int lib)
+        private Deck InitTestDeck(int lib)
         {
             return InitTestDeck(lib, 0);
         }
-        private MockDeck InitTestDeck(int lib, int discard)
+        private Deck InitTestDeck(int lib, int discard)
         {
-            MockDeck newDeck = new();
+            Deck newDeck = new();
             if (lib + discard > _testCards!.Count)
                 throw new Exception("The combined number of library and discard cards cannot exceed the number of test cards.");
 
@@ -47,7 +47,7 @@ namespace Model.Tests.Entities
         [TestMethod]
         public void Shuffle_IsCalled_LibraryRandomized()
         {
-            MockDeck testDeck = InitTestDeck(_numCards);
+            Deck testDeck = InitTestDeck(_numCards);
             Assert.IsNotNull(testDeck);
             Assert.IsNotNull(testDeck.Library);
             Assert.IsNotNull(testDeck.DiscardPile);
@@ -117,7 +117,7 @@ namespace Model.Tests.Entities
         [TestMethod]
         public void Shuffle_DiscardEmpty_DiscardRemainsEmpty()
         {
-            MockDeck testDeck = InitTestDeck(_numCards);
+            Deck testDeck = InitTestDeck(_numCards);
             Assert.IsNotNull(testDeck);
             Assert.IsNotNull(testDeck.Library);
             Assert.IsNotNull(testDeck.DiscardPile);
@@ -127,7 +127,7 @@ namespace Model.Tests.Entities
         [TestMethod]
         public void Shuffle_IsCalledWithDiscards_LibraryTakesDiscards()
         {
-            MockDeck testDeck = InitTestDeck(_numCards - 10, 10);
+            Deck testDeck = InitTestDeck(_numCards - 10, 10);
             Assert.IsNotNull(testDeck);
             Assert.IsNotNull(testDeck.Library);
             Assert.IsNotNull(testDeck.DiscardPile);
@@ -147,7 +147,7 @@ namespace Model.Tests.Entities
         [TestMethod]
         public void DrawCard_IsCalled_BottomLibCardReturned()
         {
-            MockDeck testDeck = InitTestDeck(_numCards);
+            Deck testDeck = InitTestDeck(_numCards);
             Assert.IsNotNull(testDeck);
             Assert.IsNotNull(testDeck.Library);
             Assert.IsNotNull(testDeck.DiscardPile);
@@ -162,7 +162,7 @@ namespace Model.Tests.Entities
         [TestMethod]
         public void DrawCard_EmptyLibrary_LibRenewedAndDrawnFrom()
         {
-            MockDeck testDeck = InitTestDeck(0, _numCards);
+            Deck testDeck = InitTestDeck(0, _numCards);
             Assert.IsNotNull(testDeck);
             Assert.IsNotNull(testDeck.Library);
             Assert.IsNotNull(testDeck.DiscardPile);

@@ -8,7 +8,6 @@ namespace Model.Tests.Entities.Mocks;
 
 public class MockCard(ICardSet cardSet) : ITroopCard
 {
-    private readonly ILogger _logger = new LoggerStubT<MockCard>();
     public enum Insignia
     {
         Null = -1,
