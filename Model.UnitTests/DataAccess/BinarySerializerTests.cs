@@ -221,6 +221,18 @@ public class BinarySerializerTests
 #pragma warning restore CS8602
                 Assert.AreEqual(_toSerialGame.Cards.GameDeck.DiscardPile[j].Target[0], _deserialGame.Cards.GameDeck.DiscardPile[j].Target[0]); // could test the entire array but the default Targets are always length 1
             }
+            // Reward Card
+            Assert.IsNotNull(_toSerialGame.Cards.Reward);
+            Assert.IsNotNull(_deserialGame.Cards.Reward);
+            Assert.AreEqual(_toSerialGame.Cards.Reward, _deserialGame!.Cards.Reward);
+            Assert.IsNotNull(_toSerialGame.Cards.Reward.SerializablePropertyNames);
+            Assert.IsNotNull(_deserialGame.Cards.Reward.SerializablePropertyNames);
+            Assert.AreEqual(_toSerialGame.Cards.Reward.SerializablePropertyNames.Count, _deserialGame.Cards.Reward.SerializablePropertyNames.Count);
+            Assert.AreEqual(_toSerialGame.Cards.Reward.IsTradeable, _deserialGame.Cards.Reward.IsTradeable);
+            Assert.IsNotNull(_toSerialGame.Cards.Reward.CardSet);
+            Assert.IsNotNull(_deserialGame.Cards.Reward.CardSet);
+            Assert.AreEqual(_toSerialGame.Cards.Reward.CardSet.TypeName, _deserialGame.Cards.Reward.CardSet.TypeName);
+            Assert.AreEqual(_toSerialGame.Cards.Reward.Target[0], _deserialGame.Cards.Reward.Target[0]); // could test the entire array but the default Targets are always length 1
         }
         else Assert.Fail();
     }
@@ -250,13 +262,6 @@ public class BinarySerializerTests
     [TestMethod]
     public async Task Regulator_RoundTrip_Match()
     {
-        MockCard rewardCard = new(new MockCardSet())
-        {
-            Target = [TerrID.Irkutsk],
-            Insigne = MockCard.Insignia.FighterJet
-        };
-        rewardCard.FillTestValues();
-        _toSerialGame.Regulator.Reward = rewardCard;
         _toSerialGame.Regulator.CurrentActionsLimit = 7;
         _deserialGame.Regulator.Initialize();
 
@@ -264,9 +269,9 @@ public class BinarySerializerTests
 
         if (BinarySerializer.Load([_deserialGame.Regulator], _testFileName))
         {
-            Assert.IsNotNull(_toSerialGame.Regulator.Reward);
-            Assert.IsNotNull(_deserialGame.Regulator.Reward);
-            Assert.AreEqual(_toSerialGame.Regulator.Reward.Target[0], _deserialGame.Regulator.Reward.Target[0]);
+            Assert.AreEqual(_toSerialGame.Regulator.RewardPending, _deserialGame.Regulator.RewardPending);
+            Assert.AreEqual(_toSerialGame.Regulator.CurrentActionsLimit, _deserialGame.Regulator.CurrentActionsLimit);
+            Assert.AreEqual(_toSerialGame.Regulator.PhaseActions, _deserialGame.Regulator.PhaseActions);
         }
         else Assert.Fail();
     }
@@ -281,13 +286,6 @@ public class BinarySerializerTests
         _toSerialGame.State.PhaseStageTwo = true;
         _toSerialGame.State.Winner = 1;
 
-        MockCard rewardCard = new(new MockCardSet())
-        {
-            Target = [TerrID.Ural],
-            Insigne = MockCard.Insignia.FighterJet
-        };
-        rewardCard.FillTestValues();
-        _toSerialGame.Regulator.Reward = rewardCard;
         _toSerialGame.Regulator.CurrentActionsLimit = 7;
 
         _toSerialGame.Players.Clear();
@@ -417,9 +415,9 @@ public class BinarySerializerTests
             Assert.AreEqual(_toSerialGame.State.PhaseStageTwo, _deserialGame.State.PhaseStageTwo);
 
             // RegulatorAsserts
-            Assert.IsNotNull(_toSerialGame.Regulator.Reward);
-            Assert.IsNotNull(_deserialGame.Regulator.Reward);
-            Assert.AreEqual(_toSerialGame.Regulator.Reward.Target[0], _deserialGame.Regulator.Reward.Target[0]);
+            Assert.AreEqual(_toSerialGame.Regulator.RewardPending, _deserialGame.Regulator.RewardPending);
+            Assert.AreEqual(_toSerialGame.Regulator.CurrentActionsLimit, _deserialGame.Regulator.CurrentActionsLimit);
+            Assert.AreEqual(_toSerialGame.Regulator.PhaseActions, _deserialGame.Regulator.PhaseActions);
         }
         else Assert.Fail();
     }

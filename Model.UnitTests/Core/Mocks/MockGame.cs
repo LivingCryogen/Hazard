@@ -43,7 +43,7 @@ public class MockGame : IGame
     public bool DefaultCardMode { get; set; } = true;
     public List<IPlayer> Players { get; set; }
     public StateMachine State { get; set; } = new(2, new LoggerStubT<StateMachine>());
-    public ICardBase Cards { get; set; } = new MockCardBase(SharedRegister.Registry);
+    public ICardBase Cards { get; set; } = new MockCardBase();
     public string? SavePath { get; set; } = null;
 
 

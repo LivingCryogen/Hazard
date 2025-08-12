@@ -18,7 +18,7 @@ public class MockCardBase : ICardBase
     private readonly Microsoft.Extensions.Logging.ILogger _logger = new LoggerStubT<MockCardBase>();
     private readonly MockCardSetData mockData = new();
 
-    public MockCardBase(ITypeRegister<ITypeRelations> registry)
+    public MockCardBase()
     {
         Sets = [];
         mockData.BuildFromMockData();
@@ -123,6 +123,7 @@ public class MockCardBase : ICardBase
         Sets.Clear();
         GameDeck.Library.Clear();
         GameDeck.DiscardPile.Clear();
+        Reward = null;
     }
 
     void ICardBase.InitializeFromAssets(IAssetFetcher assetFetcher, bool defaultMode)
