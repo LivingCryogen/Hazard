@@ -29,7 +29,6 @@ public class MockGame : IGame
         ];
         State = new StateMachine(Players.Count, new LoggerStubT<StateMachine>());
         Regulator = new MockRegulator(new LoggerStubT<MockRegulator>(), this);
-        Regulator.Initialize();
         AssetFetcher = new AssetFetcherStub();
     }
 

@@ -24,14 +24,11 @@ public class MockRegulator(ILogger logger, MockGame currentGame) : IRegulator
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
     public Task<SerializedData[]> GetBinarySerials()
     {
-        List<SerializedData> rewardData = [];
-
         SerializedData[] saveData = [
             new(typeof(int), [_actionsCounter]),
             new(typeof(int), [_prevActionCount]),
             new(typeof(int), [CurrentActionsLimit]),
             new(typeof(bool), [RewardPending]),
-            ..rewardData
         ];
 
         return Task.FromResult(saveData);

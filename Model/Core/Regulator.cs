@@ -442,14 +442,11 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
     public Task<SerializedData[]> GetBinarySerials()
     {
-        List<SerializedData> rewardData = [];
-
         SerializedData[] saveData = [
             new(typeof(int), [_actionsCounter]),
             new(typeof(int), [_prevActionCount]),
             new(typeof(int), [CurrentActionsLimit]),
             new(typeof(bool), [RewardPending]),
-            ..rewardData
         ];
 
         return Task.FromResult(saveData);
