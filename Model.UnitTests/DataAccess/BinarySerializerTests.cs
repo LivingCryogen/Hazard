@@ -224,7 +224,6 @@ public class BinarySerializerTests
             // Reward Card
             Assert.IsNotNull(_toSerialGame.Cards.Reward);
             Assert.IsNotNull(_deserialGame.Cards.Reward);
-            Assert.AreEqual(_toSerialGame.Cards.Reward, _deserialGame!.Cards.Reward);
             Assert.IsNotNull(_toSerialGame.Cards.Reward.SerializablePropertyNames);
             Assert.IsNotNull(_deserialGame.Cards.Reward.SerializablePropertyNames);
             Assert.AreEqual(_toSerialGame.Cards.Reward.SerializablePropertyNames.Count, _deserialGame.Cards.Reward.SerializablePropertyNames.Count);

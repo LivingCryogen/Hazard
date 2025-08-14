@@ -213,9 +213,15 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
             }
             bool hasReward = (int)BinarySerializer.ReadConvertible(reader, typeof(int)) == 1;
             if (hasReward)
+            {
                 Reward = LoadCard(reader);
+            }
             InitializeLibrary([.. newLibrary]);
             InitializeDiscardPile([.. newDiscard]);
+            if (Reward == null)
+                _logger.LogWarning("Reward card should be present but failed to load.");
+            else
+                MapCardsToSets([Reward]);
         }
         catch (Exception ex)
         {
