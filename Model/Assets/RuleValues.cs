@@ -1,53 +1,42 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Options;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
+using Shared.Services.Configuration;
 using System.Collections.ObjectModel;
 
 namespace Model.Assets;
 
 /// <inheritdoc cref="IRuleValues"/>.
-public class RuleValues(IConfiguration config) : IRuleValues
+public class RuleValues(IOptions<AppConfig> options) : IRuleValues
 {
+    /// <inheritdoc cref="IRuleValues.StartingArmies"/>.
+    public int StartingArmies { get; init; } = options.Value.RuleValues?.StartingArmies ?? 0;
     /// <inheritdoc cref="IRuleValues.MinimumArmyBonus"/>.
-    public int MinimumArmyBonus { get; } = int.Parse(config["MinimumArmyBonus"] ?? "");
+    public int MinimumArmyBonus { get; } = options.Value.RuleValues?.MinimumArmyBonus ?? 0;
     /// <inheritdoc cref="IRuleValues.TerritoryTradeInBonus"/>.
-    public int TerritoryTradeInBonus { get; } = int.Parse(config["TerritoryTradeInBonus"] ?? "");
+    public int TerritoryTradeInBonus { get; } = options.Value.RuleValues?.TerritoryTradeInBonus ?? 0;
     /// <inheritdoc cref="IRuleValues.AttackersLimit"/>.
-    public int AttackersLimit { get; } = int.Parse(config["AttackersLimit"] ?? "");
+    public int AttackersLimit { get; } = options.Value.RuleValues?.AttackersLimit ?? 0;
     /// <inheritdoc cref="IRuleValues.DefendersLimit"/>.
-    public int DefendersLimit { get; } = int.Parse(config["DefendersLimit"] ?? "");
+    public int DefendersLimit { get; } = options.Value.RuleValues?.DefendersLimit ?? 0;
     /// <inheritdoc cref="IRuleValues.ContinentBonus"/>.
     public ReadOnlyDictionary<ContID, int> ContinentBonus { get; } =
-        new(new Dictionary<ContID, int>() {
-                { ContID.Null, -1 },
-                { ContID.NorthAmerica, int.Parse(config.GetSection("ContinentBonuses")["NorthAmericaBonus"] ?? "") },
-                { ContID.SouthAmerica, int.Parse(config.GetSection("ContinentBonuses")["SouthAmericaBonus"] ?? "") },
-                { ContID.Europe, int.Parse(config.GetSection("ContinentBonuses")["EuropeBonus"] ?? "") },
-                { ContID.Africa, int.Parse(config.GetSection("ContinentBonuses")["AfricaBonus"] ?? "") },
-                { ContID.Asia, int.Parse(config.GetSection("ContinentBonuses")["AsiaBonus"] ?? "") },
-                { ContID.Oceania, int.Parse(config.GetSection("ContinentBonuses")["OceaniaBonus"] ?? "") }
-            }
-        );
+        new(new Dictionary<ContID, int>(
+            options.Value.RuleValues?.ContinentBonuses.Select((keypairs) =>
+                KeyValuePair.Create(Enum.Parse<ContID>(keypairs.Key, ignoreCase: true), keypairs.Value)) ?? []));
+
     /// <inheritdoc cref="IRuleValues.SetupActionsPerPlayers"/>.
     public ReadOnlyDictionary<int, int> SetupActionsPerPlayers { get; } =
-        new(new Dictionary<int, int>() {
-                { 2, int.Parse(config.GetSection("SetupActionsPerPlayers")["Two"] ?? "") },
-                { 3, int.Parse(config.GetSection("SetupActionsPerPlayers")["Three"] ?? "") },
-                { 4, int.Parse(config.GetSection("SetupActionsPerPlayers")["Four"] ?? "") },
-                { 5, int.Parse(config.GetSection("SetupActionsPerPlayers")["Five"] ?? "") },
-                { 6, int.Parse(config.GetSection("SetupActionsPerPlayers")["Six"] ?? "") }
-            }
-        );
+        new(new Dictionary<int, int>(
+            options.Value.RuleValues?.SetupActionsPerPlayers.Select((keypairs) =>
+                KeyValuePair.Create(int.Parse(keypairs.Key), keypairs.Value)) ?? []));
+
     /// <inheritdoc cref="IRuleValues.SetupStartingPool"/>.
     public ReadOnlyDictionary<int, int> SetupStartingPool { get; } =
-        new(new Dictionary<int, int>() {
-                { 2, int.Parse(config.GetSection("SetupStartingPool")["Two"] ?? "") },
-                { 3, int.Parse(config.GetSection("SetupStartingPool")["Three"] ?? "") },
-                { 4, int.Parse(config.GetSection("SetupStartingPool")["Four"] ?? "") },
-                { 5, int.Parse(config.GetSection("SetupStartingPool")["Five"] ?? "") },
-                { 6, int.Parse(config.GetSection("SetupStartingPool")["Six"] ?? "") }
-            }
-        );
+        new(new Dictionary<int, int>(
+            options.Value.RuleValues?.SetupStartingPool.Select((keypairs) =>
+                KeyValuePair.Create(int.Parse(keypairs.Key), keypairs.Value)) ?? []));
+
     /// <inheritdoc cref="IRuleValues.CalculateTerritoryBonus(int)"/>.
     public int CalculateTerritoryBonus(int numTerritories)
     {

@@ -1,6 +1,5 @@
 using Model.Entities;
 using Model.Tests.Entities.Mocks;
-using Model.Tests.Fixtures.Mocks;
 using Shared.Interfaces.Model;
 using System.Diagnostics;
 

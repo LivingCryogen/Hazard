@@ -3,10 +3,9 @@ using Microsoft.Win32;
 using Shared.Enums;
 using Shared.Geography.Enums;
 using Shared.Interfaces.ViewModel;
-using Shared.Services.Options;
+using Shared.Services.Configuration;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
@@ -76,13 +75,13 @@ public partial class MainWindow : Window
         if (AppOptions.Value.SoundFileMap.Count > 0)
             _soundFileMap = new(AppOptions.Value.SoundFileMap);
 
-        string saveFolder = Path.Combine(AppOptions.Value.AppPath, "Saves"); 
+        string saveFolder = Path.Combine(AppOptions.Value.AppPath, "Saves");
         if (Directory.Exists(saveFolder))
             _defaultSaveFolder = saveFolder;
         else
             _defaultSaveFolder = AppOptions.Value.AppPath;
 
-            var app = (App)Application.Current;
+        var app = (App)Application.Current;
         for (int i = 0; i < numPlayers; i++)
             PlayerColors.Add((SolidColorBrush)app.FindResource($"Army.{_vM.PlayerDetails[i].ColorName}"));
 

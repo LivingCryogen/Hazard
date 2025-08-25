@@ -4,7 +4,7 @@ using Model.DataAccess.Cards;
 using Model.Entities.Cards;
 using Shared.Geography;
 using Shared.Interfaces.Model;
-using Shared.Services.Options;
+using Shared.Services.Configuration;
 using System.Text.Json.Serialization;
 
 namespace Shared.Services.Registry;

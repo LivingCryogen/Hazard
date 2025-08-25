@@ -2,9 +2,8 @@
 using Microsoft.Extensions.Options;
 using Model.DataAccess.Cards;
 using Shared.Geography;
-using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
-using Shared.Services.Options;
+using Shared.Services.Configuration;
 using Shared.Services.Registry;
 using System.Collections.ObjectModel;
 using System.Text.Json;

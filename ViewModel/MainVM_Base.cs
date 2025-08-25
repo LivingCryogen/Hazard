@@ -24,16 +24,16 @@ namespace ViewModel;
 /// <inheritdoc cref="IMainVM"/>
 public partial class MainVM_Base : ObservableObject, IMainVM
 {
-    private readonly IBootStrapperService _bootStrapper;
     private readonly IGameService _gameService;
+    private readonly IAppCommander _gameCommander;
     private readonly ILogger _logger;
     internal readonly CardInfoFactory? _cardInfoFactory = null;
     private string? _colorNames;
 
-    public MainVM_Base(IGameService gameService, IBootStrapperService bootStrapper, ILogger<MainVM_Base> logger)
+    public MainVM_Base(IAppCommander gameCommander, IGameService gameService, ILogger<MainVM_Base> logger)
     {
-        _bootStrapper = bootStrapper;
         _gameService = gameService;
+        _gameCommander = gameCommander;
         _logger = logger;
         Territories = [];
         PlayerDetails = [];
@@ -194,7 +194,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         {
             PlayerData newPlayerData = new(CurrentGame.Players[i], colors[i], this);
             PlayerDetails.Add(newPlayerData);
-            
+
         }
         for (int i = 0; i < CurrentGame.Values.ContinentBonus.Count - 1; i++) // Count needs -1 because of Null entry
             ContinentBonuses[i] = CurrentGame.Values.ContinentBonus[(ContID)i];
@@ -322,7 +322,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     public void NewGame(ValueTuple<string, string>[] namesAndColors)
     {
         var shuffledParam = ShuffleOrder(namesAndColors ?? [(string.Empty, string.Empty)]);
-        _bootStrapper.InitializeGame(shuffledParam);
+        _gameCommander.InitializeGame(shuffledParam);
     }
     /// <summary>
     /// "CanExecute" logic for the <see cref="SaveGameCommand"/>.
@@ -331,7 +331,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// <returns><see langword="true"/> if the save game command can be completed given <paramref name="saveParams"/>"/>; otherwise, <see langword="false"/></returns>
     public bool CanSaveGame((string FileName, bool NewFile) saveParams)
     {
-        if (saveParams.NewFile == false && string.IsNullOrEmpty(_bootStrapper.SaveFileName))
+        if (saveParams.NewFile == false && string.IsNullOrEmpty(_gameCommander.SaveFileName))
             return false;
 
         return true;
@@ -342,11 +342,11 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     {
         string fileName;
         if (!saveParams.NewFile)
-            fileName = _bootStrapper.SaveFileName;
+            fileName = _gameCommander.SaveFileName;
         else
         {
             fileName = saveParams.FileName;
-            _bootStrapper.SaveFileName = fileName;
+            _gameCommander.SaveFileName = fileName;
         }
 
         if (CurrentGame != null && Regulator != null)
@@ -359,7 +359,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     public void LoadGame(string fileName)
     {
         if (!string.IsNullOrEmpty(fileName))
-            _bootStrapper.InitializeGame(fileName);
+            _gameCommander.InitializeGame(fileName);
     }
     /// <summary>
     /// "CanExecute" logic for the <see cref="AdvanceCommand"/>.

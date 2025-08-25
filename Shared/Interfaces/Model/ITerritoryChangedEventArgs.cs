@@ -4,7 +4,7 @@ namespace Shared.Interfaces.Model;
 /// <summary>
 /// A contract for EventArgs used by <see cref="IBoard.TerritoryChanged"/>.
 /// </summary>
-public interface ITerritoryChangedEventArgs 
+public interface ITerritoryChangedEventArgs
 {
     /// <summary>
     /// Gets or inits the ID of the territory that changed.

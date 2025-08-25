@@ -1,5 +1,4 @@
-﻿using Shared.Geography.Enums;
-using Shared.Interfaces.Model;
+﻿using Shared.Interfaces.Model;
 using Shared.Services.Registry;
 using System.Text.Json.Serialization;
 

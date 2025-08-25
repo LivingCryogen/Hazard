@@ -5,7 +5,7 @@ namespace Shared.Interfaces;
 /// <summary>
 /// EventArgs contract as used by <see cref="Model.IBoard.ContinentOwnerChanged"/>.
 /// </summary>
-public interface IContinentOwnerChangedEventArgs 
+public interface IContinentOwnerChangedEventArgs
 {
     /// <summary>
     /// Gets or inits a value representing the the Continent that changed.

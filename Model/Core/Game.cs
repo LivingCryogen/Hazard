@@ -1,11 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Model.Assets;
 using Model.Entities;
 using Model.Stats.Services;
 using Shared.Geography;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
+using Shared.Services.Configuration;
 using Shared.Services.Registry;
 using Shared.Services.Serializer;
 
@@ -25,16 +26,14 @@ public class Game : IGame
     /// <br/>When loading from a file, this will be 0, and components update after calling <see cref="LoadFromBinary(BinaryReader)"/>.</param>
     /// <param name="loggerFactory">Builds configured loggers for various components when and where the DI system does not do so directly.</param>
     /// <param name="assetFetcher">Connects the Model and the DAL through bespoke methods. Provides assets to game properties, eg:<see cref="IAssetFetcher.FetchCardSets"/> for <see cref="Game.Cards"/>.</param>
-    /// <param name="statTracker">Increments game and player related stats in response to game events / player actions.</param>
     /// <param name="typeRegister">Serves as an Application Type Registry. Simplifies asset loading and configuration extension.<br/> Required for operation of <see cref="ICard"/>'s default methods and DAL operations.</param>
     /// <param name="config">Configuration provided by DI. Values derived from "View\appsettings.json."</param>
     public Game(
         int numPlayers,
         ILoggerFactory loggerFactory,
         IAssetFetcher assetFetcher,
-        IStatTracker statTracker,
         ITypeRegister<ITypeRelations> typeRegister,
-        IConfiguration config)
+        IOptions<AppConfig> options)
     {
         AssetFetcher = assetFetcher;
         _typeRegister = typeRegister;
@@ -42,8 +41,8 @@ public class Game : IGame
         BoardGeography.Initialize(AssetFetcher.FetchGeography());
         ID = Guid.NewGuid();
         Logger = loggerFactory.CreateLogger<Game>();
-        Board = new EarthBoard(config, loggerFactory.CreateLogger<EarthBoard>());
-        Values = new RuleValues(config);
+        Board = new EarthBoard(options, loggerFactory.CreateLogger<EarthBoard>());
+        Values = new RuleValues(options);
         State = new(numPlayers, loggerFactory.CreateLogger<StateMachine>());
         Cards = new CardBase(loggerFactory, typeRegister);
         Cards.InitializeFromAssets(AssetFetcher, DefaultCardMode);
@@ -53,7 +52,7 @@ public class Game : IGame
             Players.Add(new Player(i, State.NumPlayers, Cards.CardFactory, Values, Board, _loggerFactory.CreateLogger<Player>()));
             Players.Last().PlayerLost += OnPlayerLost;
         }
-        StatTracker = statTracker; 
+        StatTracker = new StatTracker(this, options, loggerFactory);
     }
 
     /// <inheritdoc cref="IGame.PlayerLost"/>.

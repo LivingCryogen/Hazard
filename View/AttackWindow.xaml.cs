@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Shared.Geography.Enums;
 using Shared.Interfaces.ViewModel;
-using Shared.Services.Options;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
@@ -85,9 +84,6 @@ public partial class AttackWindow : Window
         _defenseDiceVisuals[1] = DefenseDieVisual2;
         _lossIndicatorActiveAnimation = FindResource("LossIndicatorActiveAnimation") as Storyboard;
 
-        var appConfig = ((App)Application.Current).Host.Services.GetRequiredService(typeof(IOptions<AppConfig>));
-
-
         for (int i = 0; i < 3; i++)
         {
             _attackDiceVisuals[i].Visibility = Visibility.Hidden;
@@ -112,7 +108,6 @@ public partial class AttackWindow : Window
         ConfirmAttackButton.Focus();
     }
 
-    #region Properties
     public required ReadOnlyDictionary<string, string> SoundFileMap { get; init; }
 
     public int MaxAttackDice => CalcMaxAttackDice();
@@ -127,7 +122,7 @@ public partial class AttackWindow : Window
         get { return (bool)GetValue(AttackEnabledProperty); }
         set { SetValue(AttackEnabledProperty, value); }
     }
-    #endregion
+
     // Using a DependencyProperty as the backing store for AttackEnabled.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty AttackEnabledProperty =
         DependencyProperty.Register("AttackEnabled", typeof(bool), typeof(AttackWindow), new PropertyMetadata(defaultValue: false));

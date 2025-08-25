@@ -1,5 +1,4 @@
-﻿using Model.Tests.Fixtures.Mocks;
-using Shared.Geography.Enums;
+﻿using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using System.Collections.ObjectModel;
 
@@ -7,6 +6,8 @@ namespace Model.Tests.Core.Mocks;
 
 public class MockRuleValues : IRuleValues
 {
+    public int StartingArmies => 0;
+
     public int MinimumArmyBonus => 1;
 
     public int TerritoryTradeInBonus => 10;

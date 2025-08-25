@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Model.Entities.Cards;
-using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Services.Registry;
 using Shared.Services.Serializer;
@@ -179,7 +178,7 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
                 serials.Add(new(typeof(int), 1));
                 serials.AddRange(await Reward.GetBinarySerials());
             }
-            else                 
+            else
                 serials.Add(new(typeof(int), 0));
             return serials.ToArray();
         });

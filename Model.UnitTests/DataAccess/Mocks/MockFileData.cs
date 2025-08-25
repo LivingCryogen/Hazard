@@ -1,5 +1,4 @@
 ﻿using Model.Tests.Entities.Mocks;
-using Model.Tests.Fixtures.Mocks;
 using Shared.Geography.Enums;
 
 namespace Model.Tests.DataAccess.Mocks;
@@ -22,7 +21,7 @@ public class MockFileData
 
         var values = Enum.GetValues(typeof(TerrID));
         int numRealValues = values.Length - 1;
-        Targets = new TerrID [numRealValues][];
+        Targets = new TerrID[numRealValues][];
         for (int i = 0; i < numRealValues; i++)
         {
             Targets[i] = [(TerrID)i];
@@ -31,5 +30,5 @@ public class MockFileData
 
     public MockCard.Insignia[] Insignia { get; set; }
 
-    public TerrID[][] Targets { get; set; } 
+    public TerrID[][] Targets { get; set; }
 }

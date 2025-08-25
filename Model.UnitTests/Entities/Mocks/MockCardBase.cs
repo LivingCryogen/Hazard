@@ -4,11 +4,8 @@ using Model.Entities;
 using Model.Entities.Cards;
 using Model.Tests.DataAccess.Mocks;
 using Model.Tests.Fixtures;
-using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Fixtures.Stubs;
-using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
-using Shared.Services.Registry;
 using Shared.Services.Serializer;
 
 namespace Model.Tests.Entities.Mocks;

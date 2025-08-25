@@ -1,15 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Model.Stats.StatModels;
-using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Fixtures.Stubs;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Services.Serializer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Model.Tests.Core.Stubs;
 

@@ -10,7 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Geography\Enums\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Services\Options\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Geography\Enums\ContID.cs" />
@@ -46,11 +45,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ViewModel\ITerritoryInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ViewModel\ITroopCardInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ViewModel\ITroopsAdvanceEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\View\IBootStrapperService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\View\IDialogState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\View\IDispatcherTimer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\View\IAppCommander.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Configuration\RuleValuesData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Helpers\DataFileFinder.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\Options\AppConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Configuration\AppConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Registry\IRegistryInitializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Registry\ITypeRegister.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Registry\ITypeRelations.cs" />

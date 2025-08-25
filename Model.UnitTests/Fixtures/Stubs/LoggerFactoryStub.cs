@@ -1,9 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Model.Tests.Fixtures.Stubs;
 
@@ -26,5 +21,5 @@ public class LoggerFactoryStub : ILoggerFactory
     public static ILogger<T> CreateLogger<T>() where T : class
     {
         return new LoggerStubT<T>();
-    }   
+    }
 }

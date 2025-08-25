@@ -92,7 +92,7 @@ public partial class PlayerData : ObservableObject, IPlayerData
                 break;
 
             case "Hand" when e.OldValue is null && e.NewValue is null: // cards cleared
-                    Hand.Clear();
+                Hand.Clear();
                 break;
 
             case "ArmyPool": ArmyPool = player.ArmyPool; break;

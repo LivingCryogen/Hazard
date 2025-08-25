@@ -8,7 +8,7 @@ namespace Shared.Interfaces.Model;
 /// Enforces the game rules -- "regulates" player actions; that is, after the ViewModel interprets player actions based on game state, this enforces <br/>
 /// game rule logic in response, updating the state and readying the model for the next input.
 /// </remarks>
-public interface IRegulator : IBinarySerializable 
+public interface IRegulator : IBinarySerializable
 {
     /// <summary>
     /// Gets or sets the limit on player actions during this <see cref="Enums.GamePhase"/>.

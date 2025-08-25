@@ -12,18 +12,16 @@ namespace ViewModel;
 /// <summary>
 /// The full implementation of the principal ViewModel. Prepares data and commands for binding and use by the View based on the Model's state.
 /// </summary>
-/// <param name="game">The game from which to derive data. Provided by DI system.</param>
+/// <param name="appCommander"></param>
 /// <param name="dialogService">Determines whether a dialog window is open in the View.</param>
 /// <param name="wpfTimer">Exposes a UI timer class.</param>
-/// <param name="bootStrapper">A persistent application boot service.</param>
-public partial class MainVM(IGameService gameService,
+public partial class MainVM(IAppCommander appCommander,
+    IGameService gameService,
     IDialogState dialogService,
     IDispatcherTimer wpfTimer,
-    IBootStrapperService bootStrapper,
     ILogger<MainVM_Base> logger)
-    : MainVM_Base(gameService, bootStrapper, logger)
+    : MainVM_Base(appCommander, gameService, logger)
 {
-    private readonly IGameService _gameService = gameService;
     private readonly IDialogState _dialogService = dialogService;
     private readonly IDispatcherTimer _dispatcherTimer = wpfTimer;
 

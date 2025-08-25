@@ -1,18 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Model.Core;
 using Model.Stats.StatModels;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
-using Shared.Services.Options;
+using Shared.Services.Configuration;
 using Shared.Services.Serializer;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Model.Stats.Services;
 /// <inheritdoc cref="IStatTracker"/>

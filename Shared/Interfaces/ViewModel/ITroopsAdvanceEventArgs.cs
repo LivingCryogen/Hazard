@@ -1,6 +1,4 @@
-﻿using Shared.Geography.Enums;
-
-namespace Shared.Interfaces.ViewModel;
+﻿namespace Shared.Interfaces.ViewModel;
 
 /// <summary>
 /// Contract for EventArgs used by <see cref="IMainVM.AdvanceRequest"/>.

@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using Model.Entities;
 using Model.EventArgs;
-using Model.Stats.Services;
 using Shared.Enums;
 using Shared.Geography;
 using Shared.Geography.Enums;
@@ -116,7 +114,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         Array.Sort(handIndices);
         Array.Reverse(handIndices);
         foreach (int discardIndex in handIndices)
-        { 
+        {
             _currentGame.Cards.GameDeck.Discard(player.Hand[discardIndex]);
             player.RemoveCard(discardIndex);
         }

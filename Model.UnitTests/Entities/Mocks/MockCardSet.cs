@@ -1,5 +1,4 @@
-﻿using Model.Tests.Fixtures.Mocks;
-using Shared.Interfaces.Model;
+﻿using Shared.Interfaces.Model;
 
 namespace Model.Tests.Entities.Mocks;
 

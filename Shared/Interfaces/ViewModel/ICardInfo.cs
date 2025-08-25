@@ -4,7 +4,7 @@ namespace Shared.Interfaces.ViewModel;
 /// <summary>
 /// Defines public data for ViewModel structs representing <see cref="Model.ICard"/>s.
 /// </summary>
-public interface ICardInfo 
+public interface ICardInfo
 {
     /// <summary>
     /// Gets the owner of the card.

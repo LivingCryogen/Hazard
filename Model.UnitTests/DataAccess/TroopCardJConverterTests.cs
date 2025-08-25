@@ -1,7 +1,6 @@
 ﻿using Model.DataAccess.Cards;
 using Model.Tests.DataAccess.Mocks;
 using Model.Tests.Entities.Mocks;
-using Model.Tests.Fixtures.Mocks;
 using Shared.Geography.Enums;
 
 namespace Model.Tests.DataAccess;

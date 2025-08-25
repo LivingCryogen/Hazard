@@ -1,13 +1,11 @@
 ﻿using Model.Tests.Core.Mocks;
 using Model.Tests.Entities.Mocks;
 using Model.Tests.Fixtures;
-using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Fixtures.Stubs;
 using Shared.Enums;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Services.Serializer;
-using System.Net.Sockets;
 
 namespace Model.Tests.DataAccess;
 
@@ -108,7 +106,7 @@ public class BinarySerializerTests
     public async Task Players_RoundTrip_Match()
     {
         PopulateMockPlayers(_toSerialGame);
-        
+
         _deserialGame.Players.Clear();
         ((MockCardBase)_deserialGame.Cards).Wipe();
 
@@ -336,7 +334,9 @@ public class BinarySerializerTests
                         Assert.AreEqual(((ITroopCard)(_toSerialGame.Players[i].Hand[j])).Insigne, ((ITroopCard)_deserialGame.Players[i].Hand[j]).Insigne);
                         Assert.IsNotNull(_toSerialGame.Players[i].Hand[j].CardSet);
                         Assert.IsNotNull(_deserialGame.Players[i].Hand[j].CardSet);
+#pragma warning disable CS8602 // for some reason the compiler doesn't recognize that the previous two null checks should affect this next Assert.
                         Assert.AreEqual(_toSerialGame.Players[i].Hand[j].CardSet.TypeName, _deserialGame.Players[i].Hand[j].CardSet.TypeName);
+#pragma warning restore CS8602
                         Assert.AreEqual(_toSerialGame.Players[i].Hand[j].IsTradeable, _deserialGame.Players[i].Hand[j].IsTradeable);
                         Assert.AreEqual(_toSerialGame.Players[i].Hand[j].IsTradeable, _deserialGame.Players[i].Hand[j].IsTradeable);
                         Assert.IsInstanceOfType(_toSerialGame.Players[i].Hand[j], typeof(MockCard));
@@ -426,7 +426,7 @@ public class BinarySerializerTests
             Assert.IsNotNull(_deserialGame.Cards.Reward.CardSet);
             Assert.AreEqual(_toSerialGame.Cards.Reward.CardSet.TypeName, _deserialGame.Cards.Reward.CardSet.TypeName);
             Assert.AreEqual(_toSerialGame.Cards.Reward.Target[0], _deserialGame.Cards.Reward.Target[0]); // could test the entire array but the default Targets are always length 1
-        
+
             // StateAsserts
             Assert.AreEqual(_toSerialGame.State.NumTrades, _deserialGame.State.NumTrades);
             Assert.AreEqual(_toSerialGame.State.CurrentPhase, _deserialGame.State.CurrentPhase);

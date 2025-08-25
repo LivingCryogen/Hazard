@@ -1,13 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Testing.Platform.Logging;
 using Model.Core;
-using Model.Entities;
-using Model.Stats.Services;
 using Model.Tests.Core.Stubs;
 using Model.Tests.DataAccess.Stubs;
 using Model.Tests.Entities.Mocks;
-using Model.Tests.Fixtures;
-using Model.Tests.Fixtures.Mocks;
 using Model.Tests.Fixtures.Stubs;
 using Shared.Geography;
 using Shared.Geography.Enums;

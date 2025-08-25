@@ -1,5 +1,4 @@
-﻿using Model.Tests.Fixtures.Mocks;
-using Shared.Geography;
+﻿using Shared.Geography;
 using Shared.Interfaces.Model;
 
 namespace Model.Tests.DataAccess.Stubs;

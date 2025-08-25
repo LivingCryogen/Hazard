@@ -6,8 +6,12 @@ namespace Shared.Interfaces.Model;
 /// <summary>
 /// Provides constants and equations derived from game rules.
 /// </summary>
-public interface IRuleValues 
+public interface IRuleValues
 {
+    /// <summary>
+    /// Gets the starting number of armies for each territory.
+    /// </summary>
+    int StartingArmies { get; }
     /// <summary>
     /// Gets the minimum number to add to a player's army count on their turn.
     /// </summary>

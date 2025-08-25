@@ -1,13 +1,12 @@
 ﻿using Model.Core;
 using Model.Entities;
-using Shared.Geography.Enums;
 
 namespace Shared.Interfaces.Model;
 
 /// <summary>
 /// Encapsulates the current game for injection into <see cref="ViewModel.IMainVM"/>.
 /// </summary>
-public interface IGame: IBinarySerializable
+public interface IGame : IBinarySerializable
 {
     /// <summary>
     /// Fires when a player loses, carrying their <see cref="IPlayer.Number"/>.

@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Model.EventArgs;
 using Shared.Geography;
 using Shared.Geography.Enums;
 using Shared.Interfaces;
 using Shared.Interfaces.Model;
+using Shared.Services.Configuration;
 using Shared.Services.Serializer;
 
 namespace Model.Entities;
@@ -16,16 +17,16 @@ public class EarthBoard : IBoard, IBinarySerializable
     /// <summary>
     /// Builds an Earth board using configuration '.json' values.
     /// </summary>
-    /// <param name="config">An <see cref="IConfiguration"/>. Typically injected by the DI system.</param>
+    /// <param name="options">Appication options from configuration.</param>
     /// <param name="logger">A logger for debug information and errors.</param>
-    public EarthBoard(IConfiguration config, ILogger<EarthBoard> logger)
+    public EarthBoard(IOptions<AppConfig> options, ILogger<EarthBoard> logger)
     {
         _logger = logger;
         Armies = [];
         TerritoryOwner = [];
         for (int i = 0; i < BoardGeography.NumTerritories; i++)
         {
-            Armies.Add((TerrID)i, int.Parse(config["StartingArmies"] ?? "0"));
+            Armies.Add((TerrID)i, options.Value.RuleValues?.StartingArmies ?? 0);
             TerritoryOwner.Add((TerrID)i, -1);
         }
 

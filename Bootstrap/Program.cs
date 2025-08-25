@@ -2,19 +2,16 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Model.Assets;
 using Model.Core;
 using Model.DataAccess;
 using Model.Entities;
 using Model.EventArgs;
-using Shared.Geography.Enums;
 using Shared.Interfaces;
 using Shared.Interfaces.Model;
 using Shared.Interfaces.View;
 using Shared.Interfaces.ViewModel;
-using Shared.Services.Helpers;
-using Shared.Services.Options;
+using Shared.Services.Configuration;
 using Shared.Services.Registry;
 using Shared.Services.Serializer;
 using System.IO;
@@ -30,8 +27,6 @@ namespace Bootstrap
 {
     public class Program
     {
-        public static BootStrapper? BootService { get; private set; } = null;
-
         [STAThread]
         static void Main()
         {
@@ -41,10 +36,9 @@ namespace Bootstrap
             string appPath = DetermineAppPath();
 
             using var appHost = BuildAppHost(devMode, environmentName, appPath);
-            BootService = (BootStrapper)appHost.Services.GetRequiredService<IBootStrapperService>();
             InitializeStaticLoggers(appHost);
-            var app = new App(appHost, devMode, appHost.Services.GetRequiredService<IOptions<AppConfig>>());
-            BootService.MainApp = app;
+            var app = appHost.Services.GetRequiredService<App>();
+            app.Host = appHost;
             app.InitializeComponent();
             app.Run();
         }
@@ -63,94 +57,66 @@ namespace Bootstrap
                 return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)!;
             }
         }
+
         private static protected IHost BuildAppHost(bool devMode, string environmentName, string appPath)
         {
             var host = Host.CreateDefaultBuilder();
-            string statFileName = string.Empty;
-            int statVersionNo = 0;
-            List<string> settingDataFileNames = [];
-            List<string> settingSoundFileNames = [];
-            Dictionary<string, string> dataFileLocations = [];
-            Dictionary<string, string> soundFileLocations = [];
-            string cardDataSearchString = string.Empty;
-            return
-                host.ConfigureAppConfiguration((hostingContext, config) =>
-                {
-                    config.SetBasePath(appPath);
-                    config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                        .AddJsonFile($"appsettings.{environmentName}.json", optional: true, reloadOnChange: true);
 
-                    var builtConfig = config.Build();
-
-                    statFileName = (string?)builtConfig.GetValue(typeof(string), "StatRepoFileName") ?? string.Empty;
-                    statVersionNo = (int?)builtConfig.GetValue(typeof(int), "StatVersionNo") ?? 1;
-                    settingDataFileNames.AddRange(builtConfig.GetSection("DataFileNames").Get<string[]>() ?? []);
-                    settingSoundFileNames.AddRange(builtConfig.GetSection("SoundFileNames").Get<string[]>() ?? []);
-                    cardDataSearchString = (string?)(builtConfig.GetValue(typeof(string), "CardDataSearchString")) ?? string.Empty;
-
-                    for (int i = 0; i < settingDataFileNames.Count; i++)
-                    {
-                        // Appconfig should only have 1 path discovered per file name, so we take only the first in the returned collection.
-                        dataFileLocations.Add(
-                            settingDataFileNames[i],
-                            DataFileFinder.FindFiles(appPath, settingDataFileNames[i])[0]);
-                    }
-                    for (int i = 0; i < settingSoundFileNames.Count; i++)
-                    {
-                        // Appconfig should only have 1 path discovered per file name, so we take only the first in the returned collection.
-                        soundFileLocations.Add(
-                            settingSoundFileNames[i],
-                            DataFileFinder.FindFiles(appPath, settingSoundFileNames[i])[0]);
-                    }
-                })
-                .ConfigureLogging(logging =>
-                {
-                    logging.ClearProviders();
-                    logging.AddConsole();
-                    logging.AddDebug();
-                    if (devMode)
-                        logging.AddFilter(logLevel => logLevel >= LogLevel.Trace);
-                    else
-                        logging.AddFilter(logLevel => logLevel >= LogLevel.Information);
-                })
-                .ConfigureServices(services =>
-                {
-                    services.Configure<AppConfig>(options =>
-                    {
-                        options.AppPath = appPath;
-                        options.StatRepoFilePath = Path.Combine(statFileName, appPath);
-                        options.StatVersion = statVersionNo;
-                        if (dataFileLocations.Count > 0)
-                            options.DataFileMap = dataFileLocations;
-                        if (soundFileLocations.Count > 0)
-                            options.SoundFileMap = soundFileLocations;
-                        options.CardDataSearchString = cardDataSearchString;
-                    });
-                    services.AddSingleton<IRegistryInitializer, RegistryInitializer>();
-                    services.AddTransient<ITypeRelations, TypeRelations>();
-                    services.AddSingleton<ITypeRegister<ITypeRelations>, TypeRegister>();
-                    services.AddSingleton<IDataProvider, DataProvider>();
-                    services.AddTransient<IAssetFetcher, AssetFetcher>();
-                    services.AddTransient<IAssetFactory, AssetFactory>();
-                    services.AddSingleton<IBootStrapperService>(serviceProvider =>
-                    {
-                        var logger = serviceProvider.GetRequiredService<ILogger<BootStrapper>>();
-                        return new BootStrapper(logger);
-                    });
-                    services.AddTransient<IGameService, ViewModel.Services.GameService>();
-                    services.AddTransient<ITerritoryChangedEventArgs, TerritoryChangedEventArgs>();
-                    services.AddTransient<IContinentOwnerChangedEventArgs, ContinentOwnerChangedEventArgs>();
-                    services.AddTransient<IRuleValues, RuleValues>();
-                    services.AddTransient<IBoard, EarthBoard>();
-                    services.AddTransient<IRegulator, Regulator>();
-                    services.AddTransient<IStatTracker, Model.Stats.Services.StatTracker>();
-                    services.AddTransient<IGame, Game>();
-                    services.AddTransient<IMainVM, MainVM>();
-                    services.AddTransient<IDialogState, DialogService>();
-                    services.AddTransient<IDispatcherTimer, View.Services.Timer>();
-                })
-                .Build();
+            return host.ConfigureAppConfiguration((context, config) =>
+                   {
+                       config.SetBasePath(appPath);
+                       config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                           .AddJsonFile($"appsettings.{environmentName}.json", optional: true, reloadOnChange: true);
+                   })
+                   .ConfigureServices((context, services) =>
+                   {
+                       services.Configure<AppConfig>(context.Configuration);
+                       services.PostConfigure<AppConfig>(options =>
+                       {
+                           options.AppPath = appPath;
+                           options.DevMode = devMode;
+                           options.StatRepoFilePath = Path.Combine(options.StatRepoFileName, appPath);
+                           foreach (string dataFileName in options.DataFileNames)
+                           {
+                               options.DataFileMap.Add(dataFileName, Path.Combine(dataFileName, appPath));
+                           }
+                           foreach (string soundFileName in options.SoundFileNames)
+                           {
+                               options.SoundFileMap.Add(soundFileName, Path.Combine(soundFileName, appPath));
+                           }
+                       });
+                       services.AddSingleton<IRegistryInitializer, RegistryInitializer>();
+                       services.AddTransient<ITypeRelations, TypeRelations>();
+                       services.AddSingleton<ITypeRegister<ITypeRelations>, TypeRegister>();
+                       services.AddSingleton<IDataProvider, DataProvider>();
+                       services.AddTransient<IAssetFetcher, AssetFetcher>();
+                       services.AddTransient<IAssetFactory, AssetFactory>();
+                       services.AddTransient<IGameService, ViewModel.Services.GameService>();
+                       services.AddTransient<ITerritoryChangedEventArgs, TerritoryChangedEventArgs>();
+                       services.AddTransient<IContinentOwnerChangedEventArgs, ContinentOwnerChangedEventArgs>();
+                       services.AddTransient<IRuleValues, RuleValues>();
+                       services.AddTransient<IBoard, EarthBoard>();
+                       services.AddTransient<IRegulator, Regulator>();
+                       services.AddTransient<IStatTracker, Model.Stats.Services.StatTracker>();
+                       services.AddTransient<IMainVM, MainVM>();
+                       services.AddTransient<IDialogState, DialogService>();
+                       services.AddTransient<IDispatcherTimer, View.Services.Timer>();
+                       services.AddSingleton<App>();
+                       services.AddSingleton<IAppCommander>(provider => provider.GetRequiredService<App>());
+                   })
+                   .ConfigureLogging(logging =>
+                   {
+                       logging.ClearProviders();
+                       logging.AddConsole();
+                       logging.AddDebug();
+                       if (devMode)
+                           logging.AddFilter(logLevel => logLevel >= LogLevel.Trace);
+                       else
+                           logging.AddFilter(logLevel => logLevel >= LogLevel.Information);
+                   })
+                   .Build();
         }
+
         private static protected void InitializeStaticLoggers(IHost host)
         {
             var loggerFactory = host.Services.GetRequiredService<ILoggerFactory>();

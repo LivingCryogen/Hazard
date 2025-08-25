@@ -1,10 +1,5 @@
 ﻿using Model.Entities;
 using Model.Entities.Cards;
-using Shared.Geography.Enums;
-using Shared.Services.Serializer;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Shared.Interfaces.Model;
 /// <summary>
