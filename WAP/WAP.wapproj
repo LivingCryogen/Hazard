@@ -79,6 +79,9 @@
     <Content Include="..\Bootstrap\appsettings.json">
       <Link>appsettings.json</Link>
     </Content>
+    <Content Include="..\Model\Stats\GameStatistics.hzd">
+      <Link>StatRepo\GameStatistics.hzd</Link>
+    </Content>
     <Content Include="..\Saves\100AcreWood.hzd">
       <Link>Saves\100AcreWood.hzd</Link>
     </Content>
@@ -167,5 +170,6 @@
   <ItemGroup>
     <Folder Include="Audio\" />
     <Folder Include="Saves\" />
+    <Folder Include="StatRepo\" />
   </ItemGroup>
 </Project>

@@ -8,6 +8,9 @@
 *HazardPublishSAS/bin/
 *HazardPublishSAS/obj/
 
+# Hazard! Game Save files
+*.hzd
+
 #GIMP image files
 *.xcf
 

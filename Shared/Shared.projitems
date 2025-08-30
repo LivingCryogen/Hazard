@@ -60,5 +60,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\Registry\TypeRelations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Serializer\BinarySerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Serializer\SerializedData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\StatRepo\StatRepo.cs" />
   </ItemGroup>
 </Project>

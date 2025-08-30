@@ -11,7 +11,9 @@ namespace ViewModel.Services;
 public class GameService(ILoggerFactory loggerFactory,
     IAssetFetcher assetFetcher,
     ITypeRegister<ITypeRelations> registry,
-    IOptions<AppConfig> options)
+    IOptions<AppConfig> options,
+    IRuleValues ruleValues)
+
     : IGameService
 {
     private readonly ILoggerFactory _loggerFactory = loggerFactory;
@@ -21,7 +23,7 @@ public class GameService(ILoggerFactory loggerFactory,
 
     public (IGame Game, IRegulator Regulator) CreateGameWithRegulator(int numPlayers)
     {
-        var game = new Game(numPlayers, _loggerFactory, _assetFetcher, _registry, _options);
+        var game = new Game(numPlayers, _loggerFactory, _assetFetcher, _registry, _options, ruleValues);
         Regulator regulator = new(_loggerFactory.CreateLogger<Regulator>(), game);
         regulator.Initialize();
         return (game, regulator);

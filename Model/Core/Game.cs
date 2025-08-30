@@ -28,12 +28,14 @@ public class Game : IGame
     /// <param name="assetFetcher">Connects the Model and the DAL through bespoke methods. Provides assets to game properties, eg:<see cref="IAssetFetcher.FetchCardSets"/> for <see cref="Game.Cards"/>.</param>
     /// <param name="typeRegister">Serves as an Application Type Registry. Simplifies asset loading and configuration extension.<br/> Required for operation of <see cref="ICard"/>'s default methods and DAL operations.</param>
     /// <param name="options">Configuration options provided by DI. Values derived from "View\appsettings.json."</param>
+    /// <param name="ruleValues">The rule values as determine by game options/settings and injected by DI.</param>
     public Game(
         int numPlayers,
         ILoggerFactory loggerFactory,
         IAssetFetcher assetFetcher,
         ITypeRegister<ITypeRelations> typeRegister,
-        IOptions<AppConfig> options)
+        IOptions<AppConfig> options,
+        IRuleValues ruleValues)
     {
         AssetFetcher = assetFetcher;
         _typeRegister = typeRegister;
@@ -42,7 +44,7 @@ public class Game : IGame
         ID = Guid.NewGuid();
         Logger = loggerFactory.CreateLogger<Game>();
         Board = new EarthBoard(options, loggerFactory.CreateLogger<EarthBoard>());
-        Values = new RuleValues(options);
+        Values = ruleValues;
         State = new(numPlayers, loggerFactory.CreateLogger<StateMachine>());
         Cards = new CardBase(loggerFactory, typeRegister);
         Cards.InitializeFromAssets(AssetFetcher, DefaultCardMode);

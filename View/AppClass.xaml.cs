@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Model.Stats.Repository;
 using Shared.Interfaces.View;
 using Shared.Interfaces.ViewModel;
+using Shared.Services;
 using Shared.Services.Configuration;
 using System.Collections.ObjectModel;
 using System.Windows;

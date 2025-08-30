@@ -14,8 +14,8 @@ public class StatTracker : IStatTracker
     private readonly ILoggerFactory _loggerFactory;
     private GameSession _currentSession;
 
-    /// <inheritdoc cref="IStatTracker.AwaitsUpdate"/>
-    public bool AwaitsUpdate { get; private set; } = false;
+    /// <inheritdoc cref="IStatTracker.TrackedActions"/>
+    public int TrackedActions { get => _currentSession.NumActions; }
     /// <inheritdoc cref="IStatTracker.GameID"/>
     public Guid GameID => _currentSession.Id;
     /// <inheritdoc cref="IStatTracker.LastSavePath"/>
@@ -101,8 +101,6 @@ public class StatTracker : IStatTracker
                         playerStat.ForcedRetreats++;
                     break;
             }
-
-        AwaitsUpdate = true;
     }
     /// <inheritdoc cref="IStatTracker.RecordMoveAction(TerrID, TerrID, bool, int)" />
     public void RecordMoveAction(TerrID source, TerrID target, bool maxAdvanced, int player)
@@ -125,7 +123,6 @@ public class StatTracker : IStatTracker
         }
 
         _currentSession.Moves.Add(moveStats);
-        AwaitsUpdate = true;
     }
     /// <inheritdoc cref="IStatTracker.RecordTradeAction(List{TerrID}, int, int, int)" />
     public void RecordTradeAction(List<TerrID> cardTargets, int tradeValue, int occupiedBonus, int playerNumber)
@@ -145,7 +142,6 @@ public class StatTracker : IStatTracker
         }
 
         _currentSession.TradeIns.Add(tradeStats);
-        AwaitsUpdate = true;
     }
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>/>
     public async Task<SerializedData[]> GetBinarySerials()
@@ -153,7 +149,6 @@ public class StatTracker : IStatTracker
         return await Task.Run(async () =>
         {
             List<SerializedData> saveData = [];
-            saveData.Add(new SerializedData(typeof(bool), AwaitsUpdate));
             bool hasSavePath = LastSavePath is not null;
             saveData.Add(new SerializedData(typeof(int), hasSavePath ? 1 : 0));
             if (hasSavePath)
@@ -168,7 +163,6 @@ public class StatTracker : IStatTracker
         bool loadComplete = true;
         try
         {
-            AwaitsUpdate = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool));
             bool loadSavePath = (int)BinarySerializer.ReadConvertible(reader, typeof(int)) == 1;
             if (loadSavePath)
                 LastSavePath = (string)BinarySerializer.ReadConvertible(reader, typeof(string));

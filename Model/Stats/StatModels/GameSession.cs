@@ -239,13 +239,12 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
     /// </summary>
     public Guid Id { get; set; }
     /// <summary>
-    /// Gets or sets the number of Updates that have been made to this Game Session.
+    /// Gets the number of tracked actions.
     /// </summary>
     /// <remarks>
-    /// By checking against the Repository's Update counts, this is used to determine if a Game Session should be syncd/updated.
-    /// <br/>See <see cref="Stats.Repository.StatRepo"/>.
+    /// Allows <see cref="Repository.StatRepo"/> to easily determine which is the most up-to-date game file for a given game ID.
     /// </remarks>
-    public int NumUpdates { get; set; }
+    public int NumActions { get => Attacks.Count + Moves.Count + TradeIns.Count; }
     /// <summary>
     /// Gets or sets the start time of the game session.
     /// </summary>
@@ -295,7 +294,6 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
 
             Id = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
             StartTime = DateTime.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
-            NumUpdates = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
 
             bool hasEndTime = (int)BinarySerializer.ReadConvertible(reader, typeof(int)) == 1;
             if (hasEndTime)
@@ -353,7 +351,6 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
             saveData.Add(new(typeof(int), Version));
             saveData.Add(new(typeof(string), Id.ToString()));
             saveData.Add(new(typeof(string), StartTime.ToString()));
-            saveData.Add(new(typeof(int), NumUpdates));
 
             if (EndTime is DateTime endTime)
             {

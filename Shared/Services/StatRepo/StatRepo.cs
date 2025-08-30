@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using Model.Stats.Services;
 using Shared.Services.Configuration;
 
-namespace Model.Stats.Repository;
+namespace Shared.Services;
 
 public class StatRepo(IOptions<AppConfig> options, ILogger<StatRepo> logger)
 {
@@ -11,6 +11,7 @@ public class StatRepo(IOptions<AppConfig> options, ILogger<StatRepo> logger)
     private readonly string StatFilePath = options.Value.StatRepoFilePath;
     private readonly Dictionary<Guid, string> _gamePaths = [];
     private readonly Dictionary<Guid, int> _gameUpdateCounts = [];
+    private readonly HashSet<Guid> _gamesToUpdate = [];
 
     /// <summary>
     /// Adds Game persistence mappings, or updates them if they already exist, using a Game's Stat Tracker.
@@ -31,19 +32,19 @@ public class StatRepo(IOptions<AppConfig> options, ILogger<StatRepo> logger)
 
         }
 
-        if (_gamePaths.TryAdd(tracker.GameID, tracker.LastSavePath))
-        {
-            if (!_gameUpdateCounts.TryAdd(tracker.GameID, 1))
-            {
-                _logger.LogWarning("{Repo} attempted to add a new Update Count entry for Game {ID}, but it already had one!", this, tracker.GameID);
-            }
-            else if (!tracker.AwaitsUpdate)
-            {
-                _logger.LogWarning("{Repo} was called to AddOrUpdate {tracker}, but its AwaitsUpdate flag was set to false. Update skipped.", this, tracker);
-                _gameUpdateCounts[tracker.GameID]++;
-            }
-            else
-            { }
-        }
+        //if (_gamePaths.TryAdd(tracker.GameID, tracker.LastSavePath))
+        //{
+        //    if (!_gameUpdateCounts.TryAdd(tracker.GameID, 1))
+        //    {
+        //        _logger.LogWarning("{Repo} attempted to add a new Update Count entry for Game {ID}, but it already had one!", this, tracker.GameID);
+        //    }
+        //    else if (!tracker.AwaitsUpdate)
+        //    {
+        //        _logger.LogWarning("{Repo} was called to AddOrUpdate {tracker}, but its AwaitsUpdate flag was set to false. Update skipped.", this, tracker);
+        //        _gameUpdateCounts[tracker.GameID]++;
+        //    }
+        //    else
+        //    { }
+        //}
     }
 }

@@ -11,9 +11,12 @@ namespace Shared.Interfaces.Model;
 public interface IStatTracker : IBinarySerializable
 {
     /// <summary>
-    /// Gets a flag indicating whether the associated Game Session stats have changed (requiring an update).
+    /// Gets the number of actions tracked.
     /// </summary>
-    public bool AwaitsUpdate { get; }
+    /// <remarks>
+    /// Allows <see cref="Services.StatRepo"/> to easily determine which is the most up-to-date game file for a given game ID.
+    /// </remarks>
+    public int TrackedActions { get; }
     /// <summary>
     /// Gets the Game Id of the tracker's current game session.
     /// </summary>

@@ -51,7 +51,7 @@ public class StatTrackerStub : IStatTracker, IBinarySerializable
             OccupiedBonus = 0,
         });
     }
-    public bool AwaitsUpdate => throw new NotImplementedException();
+    public int TrackedActions { get => _currentSession.NumActions; }
 
     public Guid GameID => throw new NotImplementedException();
 

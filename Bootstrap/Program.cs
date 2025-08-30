@@ -11,7 +11,9 @@ using Shared.Interfaces;
 using Shared.Interfaces.Model;
 using Shared.Interfaces.View;
 using Shared.Interfaces.ViewModel;
+using Shared.Services;
 using Shared.Services.Configuration;
+using Shared.Services.Helpers;
 using Shared.Services.Registry;
 using Shared.Services.Serializer;
 using System.IO;
@@ -75,14 +77,16 @@ namespace Bootstrap
                        {
                            options.AppPath = appPath;
                            options.DevMode = devMode;
-                           options.StatRepoFilePath = Path.Combine(options.StatRepoFileName, appPath);
+                           options.StatRepoFilePath = DataFileFinder.FindFiles(appPath, options.StatRepoFileName)[0];
                            foreach (string dataFileName in options.DataFileNames)
                            {
-                               options.DataFileMap.Add(dataFileName, Path.Combine(dataFileName, appPath));
+                               string dataFile = DataFileFinder.FindFiles(appPath, dataFileName)[0];
+                               options.DataFileMap.Add(dataFileName, dataFile);
                            }
                            foreach (string soundFileName in options.SoundFileNames)
                            {
-                               options.SoundFileMap.Add(soundFileName, Path.Combine(soundFileName, appPath));
+                               string soundFile = DataFileFinder.FindFiles(appPath, soundFileName)[0];
+                               options.SoundFileMap.Add(soundFileName, soundFile);
                            }
                        });
                        services.AddSingleton<IRegistryInitializer, RegistryInitializer>();
@@ -91,6 +95,7 @@ namespace Bootstrap
                        services.AddSingleton<IDataProvider, DataProvider>();
                        services.AddTransient<IAssetFetcher, AssetFetcher>();
                        services.AddTransient<IAssetFactory, AssetFactory>();
+                       services.AddTransient<IRuleValues, RuleValues>();
                        services.AddTransient<IGameService, ViewModel.Services.GameService>();
                        services.AddTransient<ITerritoryChangedEventArgs, TerritoryChangedEventArgs>();
                        services.AddTransient<IContinentOwnerChangedEventArgs, ContinentOwnerChangedEventArgs>();
@@ -103,6 +108,7 @@ namespace Bootstrap
                        services.AddTransient<IDispatcherTimer, View.Services.Timer>();
                        services.AddSingleton<App>();
                        services.AddSingleton<IAppCommander>(provider => provider.GetRequiredService<App>());
+                       services.AddSingleton<StatRepo>();
                    })
                    .ConfigureLogging(logging =>
                    {
