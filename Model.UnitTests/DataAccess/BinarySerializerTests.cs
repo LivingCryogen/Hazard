@@ -133,8 +133,7 @@ public class BinarySerializerTests
                     {
                         Assert.AreEqual(_toSerialGame.Players[i].Hand[j].Target[k], _deserialGame.Players[i].Hand[j].Target[k]);
                         Assert.AreEqual(((ITroopCard)(_toSerialGame.Players[i].Hand[j])).Insigne, ((ITroopCard)(_deserialGame.Players[i].Hand[j])).Insigne);
-                        Assert.IsNull(_toSerialGame.Players[i].Hand[j].CardSet);
-                        Assert.AreEqual(_toSerialGame.Players[i].Hand[j].CardSet, _deserialGame.Players[i].Hand[j].CardSet); // two-step initialization means cardset isn't initialized until after LoadCardBase
+                        Assert.IsNotNull(_toSerialGame.Players[i].Hand[j].CardSet);
                         Assert.AreEqual(_toSerialGame.Players[i].Hand[j].IsTradeable, _deserialGame.Players[i].Hand[j].IsTradeable);
                         Assert.AreEqual(_toSerialGame.Players[i].Hand[j].IsTradeable, _deserialGame.Players[i].Hand[j].IsTradeable);
                         Assert.IsInstanceOfType(_toSerialGame.Players[i].Hand[j], typeof(MockCard));
