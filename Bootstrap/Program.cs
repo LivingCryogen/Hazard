@@ -2,11 +2,13 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Model.Assets;
 using Model.Core;
 using Model.DataAccess;
 using Model.Entities;
 using Model.EventArgs;
+using Model.Stats;
 using Shared.Interfaces;
 using Shared.Interfaces.Model;
 using Shared.Interfaces.View;
@@ -18,6 +20,7 @@ using Shared.Services.Registry;
 using Shared.Services.Serializer;
 using System.IO;
 using System.Runtime.Versioning;
+using System.Text.Json;
 using View;
 using View.Services;
 using ViewModel;
@@ -75,6 +78,30 @@ namespace Bootstrap
                        services.Configure<AppConfig>(context.Configuration);
                        services.PostConfigure<AppConfig>(options =>
                        {
+                           // Generate and store install-unique information on first run (or if otherwise missing the file). To be used as identifier in Azure DataBase
+                           string installInfoPath = Path.Combine(appPath, "installation.json"); 
+                           InstallationInfo installationInfo;
+                           
+                           if (File.Exists(installInfoPath))
+                           {
+                               string json = File.ReadAllText(installInfoPath);
+                               installationInfo = JsonSerializer.Deserialize<InstallationInfo>(json) ?? new InstallationInfo();
+                           }
+                           else
+                           {
+                               installationInfo = new InstallationInfo()
+                               {
+                                   InstallID = Guid.NewGuid(),
+                                   FirstRun = DateTime.UtcNow
+                               };
+                           
+                                   string installJson = JsonSerializer.Serialize(installationInfo, 
+                                       new JsonSerializerOptions() { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+                                   File.WriteAllText(installInfoPath, installJson);
+                           }
+
+                           options.InstallInfo.InstallID = installationInfo.InstallID;
+                           options.InstallInfo.FirstRun = installationInfo.FirstRun;
                            options.AppPath = appPath;
                            options.DevMode = devMode;
                            options.StatRepoFilePath = DataFileFinder.FindFiles(appPath, options.StatRepoFileName)[0];
@@ -96,7 +123,7 @@ namespace Bootstrap
                        services.AddTransient<IAssetFetcher, AssetFetcher>();
                        services.AddTransient<IAssetFactory, AssetFactory>();
                        services.AddTransient<IRuleValues, RuleValues>();
-                       services.AddTransient<IGameService, ViewModel.Services.GameService>();
+                       services.AddTransient<IGameService, GameService>();
                        services.AddTransient<ITerritoryChangedEventArgs, TerritoryChangedEventArgs>();
                        services.AddTransient<IContinentOwnerChangedEventArgs, ContinentOwnerChangedEventArgs>();
                        services.AddTransient<IRuleValues, RuleValues>();
@@ -108,7 +135,15 @@ namespace Bootstrap
                        services.AddTransient<IDispatcherTimer, View.Services.Timer>();
                        services.AddSingleton<App>();
                        services.AddSingleton<IAppCommander>(provider => provider.GetRequiredService<App>());
-                       services.AddSingleton<StatRepo>();
+                       services.AddTransient<WebConnectionHandler>();
+                       services.AddSingleton<IStatRepo>(provider => 
+                       {
+                           var connectionHandler = provider.GetRequiredService<WebConnectionHandler>();
+                           var gameService = provider.GetRequiredService<IGameService>();
+                           var options = provider.GetRequiredService<IOptions<AppConfig>>();
+                           var logger = provider.GetRequiredService<ILogger<StatRepo>>();
+                           return new StatRepo(connectionHandler, numPlayers => gameService.CreateGame(numPlayers), options, logger);
+                       });
                    })
                    .ConfigureLogging(logging =>
                    {

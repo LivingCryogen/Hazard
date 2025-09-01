@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Model.EventArgs;
+using Model.Stats;
 using Shared.Enums;
 using Shared.Geography;
 using Shared.Geography.Enums;
@@ -19,6 +20,8 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     private readonly int _numPlayers = currentGame.State.NumPlayers;
     private int _actionsCounter = 0;
     private int _prevActionCount = 0;
+
+
 
     // State Check Properties
     private int PlayerTurn => _machine.PlayerTurn;

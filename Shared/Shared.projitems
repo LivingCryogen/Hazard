@@ -34,12 +34,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IPromptTradeEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IRegulator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IRuleValues.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IStatRepo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IStatTracker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\ITerritoryChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\ITroopCard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ViewModel\ICardInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ViewModel\IDiceThrownEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ViewModel\IGameService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IGameService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ViewModel\IMainVM.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ViewModel\IPlayerData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ViewModel\ITerritoryInfo.cs" />
@@ -48,6 +49,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\View\IDialogState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\View\IDispatcherTimer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\View\IAppCommander.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Configuration\AzureConnectData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Configuration\InstallationInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Configuration\RuleValuesData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Helpers\DataFileFinder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Configuration\AppConfig.cs" />
@@ -60,6 +63,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\Registry\TypeRelations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Serializer\BinarySerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Serializer\SerializedData.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\StatRepo\StatRepo.cs" />
   </ItemGroup>
 </Project>

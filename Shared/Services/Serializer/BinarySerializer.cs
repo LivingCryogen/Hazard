@@ -162,7 +162,7 @@ public static class BinarySerializer
     /// Serializes <see cref="IBinarySerializable"/> objects and writes them to a file. 
     /// </summary>
     /// <param name="serializableObjects">The objects to serialize and save.</param>
-    /// <param name="fileName">The name of the save file.</param>
+    /// <param name="fileName">The full name (path) of the save file.</param>
     /// <param name="newFile">A flag indicating whether the file is a new file.</param>
     /// <returns>A <see cref="Task"/>.</returns>
     /// <remarks>

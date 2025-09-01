@@ -1,4 +1,7 @@
-﻿namespace AzProxy;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+namespace AzProxy;
 
 public class BanService(ILogger<BanService> logger, IConfiguration config, IBanCache cache)
 {
@@ -15,16 +18,30 @@ public class BanService(ILogger<BanService> logger, IConfiguration config, IBanC
             TimeSpan.FromDays(thirdBanDays) :
             TimeSpan.FromDays(7)
         ];
-    private readonly int _maxRequests =
-        int.TryParse(config["MaxRequests"], out var maxRequests) ?
-            maxRequests : 25;
+    private readonly int _maxVerifyRequests =
+        int.TryParse(config["MaxVerifyRequests"], out var maxRequests) ?
+            maxRequests : 50;
+    private readonly int _maxGenSASRequests =
+      int.TryParse(config["MaxGenSASRequests"], out var maxRequests) ?
+          maxRequests : 25;
+    private readonly int _maxSyncRequests =
+      int.TryParse(config["MaxSyncRequests"], out var maxRequests) ?
+          maxRequests : 35;
 
     public bool CacheInitialized => _cache.Initialized;
 
-    public bool Allow(string address, int requests)
+    public bool Allow(string address, RequestType requestType, int requests)
     {
+        int maxRequests = requestType switch
+        {
+            RequestType.Verify => _maxVerifyRequests,
+            RequestType.GenSAS => _maxGenSASRequests,
+            RequestType.Sync => _maxSyncRequests,
+            _ => 100
+        };
+
         // Check request limit, issue ban and reject if so
-        if (requests > _maxRequests)
+        if (requests > maxRequests)
         {
             IssueBan(address);
             return false;

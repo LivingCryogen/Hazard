@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace AzProxy
@@ -37,7 +38,7 @@ namespace AzProxy
                         }
 
                         // reject if banned
-                        if (!requestHandler.ValidateRequest(clientIP))
+                        if (!requestHandler.ValidateRequest(clientIP, RequestType.GenSAS))
                         {
                             logger.LogInformation("Request from address {clientIP} was rejected due to ban or rate restriction.", clientIP);
                             context.Response.StatusCode = StatusCodes.Status403Forbidden;
@@ -123,6 +124,34 @@ namespace AzProxy
                         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                         await context.Response.WriteAsync("An unexpected server error occurred.");
                     }
+                });
+            app.MapPost("/sync-stats",
+                async (HttpContext context, 
+                    RequestHandler requestHandler, 
+                    IHttpClientFactory httpClientFactory, 
+                    IConfiguration config, 
+                    ILogger<ProxyServer> logger) =>
+                {
+                    // get client IP
+                    string? clientIP = context.Connection.RemoteIpAddress?.ToString();
+                    if (string.IsNullOrEmpty(clientIP))
+                    {
+                        logger.LogWarning("Request received without IP address");
+                        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                        await context.Response.WriteAsync("Invalid request.");
+                        return;
+                    }
+
+                    if (!requestHandler.ValidateRequest(clientIP, RequestType.Sync))
+                    {
+                        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                        await context.Response.WriteAsync("Request denied.");
+                        return;
+                    }
+
+                    // TODO: 1. GET/DESERIALIZE DATA(?)
+                    //       2. DATABASE INTEGRATION
+
                 });
             app.Run();
         }

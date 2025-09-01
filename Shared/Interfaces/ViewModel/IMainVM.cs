@@ -18,6 +18,10 @@ public interface IMainVM : IBinarySerializable
     /// </value>
     IGame? CurrentGame { get; set; }
     /// <summary>
+    /// Gets the Statistics Repository if any has been initialized.
+    /// </summary>
+    IStatRepo? StatRepo { get; }
+    /// <summary>
     /// Gets or sets the current game phase.
     /// </summary>
     GamePhase CurrentPhase { get; set; }

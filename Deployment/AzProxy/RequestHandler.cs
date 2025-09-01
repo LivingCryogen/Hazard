@@ -9,10 +9,10 @@ public class RequestHandler(ILogger<RequestHandler> logger, IConfiguration confi
     private readonly TimeSpan _requestReset = TimeSpan.FromMinutes(
             double.TryParse(config["RequestResetMinutes"], out double minutes) ? minutes : 15);
 
-    private readonly ConcurrentDictionary<string, (DateTime LastReset, int Count)> _requestCounters = new();
+    private readonly ConcurrentDictionary<(string, RequestType), (DateTime LastReset, int Count)> _requestCounters = new();
 
 
-    public bool ValidateRequest(string iPaddress)
+    public bool ValidateRequest(string iPaddress, RequestType requestType)
     {
         if (!_banService.CacheInitialized)
         {
@@ -34,12 +34,12 @@ public class RequestHandler(ILogger<RequestHandler> logger, IConfiguration confi
         }
 
         // Create a request entry, or update one using concurrent-safe method
-        var (LastReset, Count) = _requestCounters.AddOrUpdate(iPaddress,
+        var (LastReset, Count) = _requestCounters.AddOrUpdate((iPaddress, requestType),
             _ => (DateTime.UtcNow, 1),  // all new entries get this value
             (_, oldValue) => // old entries reset or updated
                 (DateTime.UtcNow - oldValue.LastReset > _requestReset) ? (DateTime.UtcNow, 1) : (oldValue.LastReset, oldValue.Count + 1));
 
-        if (!_banService.Allow(iPaddress, Count))
+        if (!_banService.Allow(iPaddress, requestType, Count))
             return false;
 
         return true;

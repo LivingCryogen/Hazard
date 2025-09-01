@@ -5,6 +5,7 @@ using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Services.Configuration;
 using Shared.Services.Serializer;
+using System.Text.Json;
 
 namespace Model.Stats.Services;
 /// <inheritdoc cref="IStatTracker"/>
@@ -12,7 +13,13 @@ public class StatTracker : IStatTracker
 {
     private readonly ILogger _logger;
     private readonly ILoggerFactory _loggerFactory;
+    private readonly JsonSerializerOptions _jsonOptions = new()
+        {
+            WriteIndented = false,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
     private GameSession _currentSession;
+    
 
     /// <inheritdoc cref="IStatTracker.TrackedActions"/>
     public int TrackedActions { get => _currentSession.NumActions; }
@@ -142,6 +149,18 @@ public class StatTracker : IStatTracker
         }
 
         _currentSession.TradeIns.Add(tradeStats);
+    }
+    public async Task<string> JSONFromGameSession()
+    {
+        try
+        {
+            return await Task.Run(() => { return JsonSerializer.Serialize(_currentSession, _jsonOptions); });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to serialize {session} to JSON: {message}", _currentSession, ex.Message);
+            throw;
+        }
     }
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>/>
     public async Task<SerializedData[]> GetBinarySerials()

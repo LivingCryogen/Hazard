@@ -7,6 +7,7 @@ using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Interfaces.View;
 using Shared.Interfaces.ViewModel;
+using Shared.Services;
 
 namespace ViewModel;
 /// <summary>
@@ -16,14 +17,18 @@ namespace ViewModel;
 /// <param name="dialogService">Determines whether a dialog window is open in the View.</param>
 /// <param name="wpfTimer">Exposes a UI timer class.</param>
 public partial class MainVM(IAppCommander appCommander,
+    IStatRepo statRepo,
     IGameService gameService,
     IDialogState dialogService,
     IDispatcherTimer wpfTimer,
     ILogger<MainVM_Base> logger)
-    : MainVM_Base(appCommander, gameService, logger)
+    : MainVM_Base(appCommander, gameService, statRepo, logger)
 {
     private readonly IDialogState _dialogService = dialogService;
     private readonly IDispatcherTimer _dispatcherTimer = wpfTimer;
+    private readonly IStatRepo _statRepo = statRepo;
+
+    public string SyncButtonText { get => _statRepo.SyncStatusMessage; }
 
     /// <inheritdoc cref="MainVM_Base.HandleStateChanged(object?, string)"/>.
     public override void HandleStateChanged(object? sender, string propName)
@@ -291,4 +296,19 @@ public partial class MainVM(IAppCommander appCommander,
         CurrentGame?.State.IncrementPlayerTurn();
     }
 
+    private bool CanSync()
+    {
+        if (_statRepo == null || !_statRepo.SyncPending)
+            return false;
+
+        return true;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanSync))]
+    private async Task SyncCommand()
+    {
+        await _statRepo.Sync
+
+        SyncCommandCommand.NotifyCanExecuteChanged();
+    }
 }

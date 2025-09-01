@@ -1,11 +1,16 @@
 ﻿using Shared.Interfaces.Model;
 
+
 namespace Shared.Services.Configuration;
 /// <summary>
 /// Contains values needed for run-time Options to be set and configured by the DI system.
 /// </summary>
 public class AppConfig
 {
+    /// <summary>
+    /// Gets or sets identifying installation data.
+    /// </summary>
+    public InstallationInfo InstallInfo { get; set; } = new();
     /// <summary>
     /// Gets or sets the path of the current running Application's root folder.
     /// </summary>
@@ -64,6 +69,9 @@ public class AppConfig
     /// See <see cref="Model.DataAccess.AssetFetcher.FetchCardSets"/>
     /// </remarks>
     public string CardDataSearchString { get; set; } = string.Empty;
+
+    public AzureConnectData AzConnectInfo { get; set; } = new();
+
     /// <summary>
     /// Gets or sets the collection of rules-based values drawn from appsettings.
     /// </summary>

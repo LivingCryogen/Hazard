@@ -480,4 +480,9 @@ public partial class MainWindow : Window
         else
             _isShuttingDown = false;
     }
+
+    private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+    {
+
+    }
 }

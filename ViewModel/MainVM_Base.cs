@@ -30,11 +30,12 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     internal readonly CardInfoFactory? _cardInfoFactory = null;
     private string? _colorNames;
 
-    public MainVM_Base(IAppCommander gameCommander, IGameService gameService, ILogger<MainVM_Base> logger)
+    public MainVM_Base(IAppCommander gameCommander, IGameService gameService, IStatRepo statRepo, ILogger<MainVM_Base> logger)
     {
         _gameService = gameService;
         _gameCommander = gameCommander;
         _logger = logger;
+        StatRepo = statRepo;
         Territories = [];
         PlayerDetails = [];
         ContinentBonuses = [];
@@ -46,6 +47,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     public required string AppPath { get; set; }
     public IGame? CurrentGame { get; set; }
     public IRegulator? Regulator { get; set; }
+    public IStatRepo StatRepo { get; }
     /// <inheritdoc cref="IMainVM.CurrentPhase"/>
     [ObservableProperty] private GamePhase _currentPhase;
     /// <inheritdoc cref="IMainVM.PlayerTurn"/>

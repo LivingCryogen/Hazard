@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Model.Stats;
+using Shared.Interfaces.Model;
 using Shared.Interfaces.View;
 using Shared.Interfaces.ViewModel;
 using Shared.Services;
@@ -15,11 +17,14 @@ namespace View;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App(IOptions<AppConfig> options, ILogger<App> logger, StatRepo statRepo) : Application, IAppCommander
+public partial class App(IOptions<AppConfig> options, ILogger<App> logger) : Application, IAppCommander
 {
     private readonly IOptions<AppConfig> _options = options;
     private readonly ILogger<App> _logger = logger;
-    private readonly StatRepo _statRepo = statRepo;
+    private IStatRepo? _statRepo;
+    private readonly object _shutdownLock = new();
+    private bool _readyShutdown = false;
+
     public IHost? Host { get; set; }
     public bool DevMode { get; init; } = options.Value.DevMode;
     public string InstallPath { get; init; } = options.Value.AppPath;
@@ -35,7 +40,40 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger, StatR
 
         InitializeGame();
     }
-    protected void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+
+    protected override async void OnSessionEnding(SessionEndingCancelEventArgs e)
+    {
+        await ReadyShutdown();
+        base.OnSessionEnding(e);
+    }
+
+    protected override async void OnExit(ExitEventArgs e)
+    {
+        await ReadyShutdown();
+        base.OnExit(e);
+    }
+
+    private async Task ReadyShutdown()
+    {
+        lock (_shutdownLock)
+        {
+            if (_readyShutdown)
+                return;
+            _readyShutdown = true;
+        }
+
+        try
+        {
+            if (_statRepo != null)
+                await _statRepo.Shutdown();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Statistics Repository did not properly shut down, and current Tracker/Session data may be lost: {Message}", ex.Message);
+        }
+    }
+
+    protected async void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
         if (DevMode)
             return;
@@ -45,6 +83,7 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger, StatR
             e.Exception.Message, e.Exception.Source, e.Exception.InnerException, e.Exception.Data, e.Exception.HResult, e.Exception.StackTrace);
         MessageBox.Show(errorMsg, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         e.Handled = true;
+        await ReadyShutdown();
         Shutdown();
     }
 
@@ -62,6 +101,7 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger, StatR
         };
         mainWindow.Initialize(viewModel);
         MainWindow = mainWindow;
+        _statRepo = viewModel.StatRepo;
         MainWindow.Show();
     }
     public void InitializeGame(string fileName)
@@ -94,6 +134,7 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger, StatR
         _logger.LogInformation("Initializing game from source: {FileName}.", fileName);
         viewModel.Initialize([], [], fileName);
         ((MainWindow)MainWindow).Initialize(viewModel);
+        _statRepo = viewModel.StatRepo;
         MainWindow.Show();
     }
     public void InitializeGame((string Name, string Color)[] namesAndColors)
@@ -124,6 +165,7 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger, StatR
         var viewModel = Host.Services.GetRequiredService<IMainVM>();
         viewModel.Initialize(playerNames, playerColors, null);
         ((MainWindow)MainWindow).Initialize(viewModel);
+        _statRepo = viewModel.StatRepo;
         MainWindow.Show();
     }
 }

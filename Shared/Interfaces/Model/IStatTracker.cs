@@ -14,7 +14,7 @@ public interface IStatTracker : IBinarySerializable
     /// Gets the number of actions tracked.
     /// </summary>
     /// <remarks>
-    /// Allows <see cref="Services.StatRepo"/> to easily determine which is the most up-to-date game file for a given game ID.
+    /// Allows <see cref="Model.IStatRepo"/> to easily determine which is the most up-to-date game file for a given game ID.
     /// </remarks>
     public int TrackedActions { get; }
     /// <summary>
@@ -71,4 +71,10 @@ public interface IStatTracker : IBinarySerializable
         int tradeValue,
         int occupiedBonus,
         int playerNumber);
+
+    /// <summary>
+    /// Returns a JSON serialized object version of the underlying statistics data model object.
+    /// </summary>
+    /// <returns>A JSON string.</returns>
+    public Task<string> JSONFromGameSession();
 }

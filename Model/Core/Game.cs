@@ -88,6 +88,7 @@ public class Game : IGame
     /// <inheritdoc cref="IGame.SavePath"/>
     public string? SavePath { get; set; }
 
+
     private void OnPlayerLost(object? sender, System.EventArgs e)
     {
         if (sender is IPlayer loser)
@@ -195,6 +196,7 @@ public class Game : IGame
     /// <inheritdoc cref="IGame.Save"/>.
     public async Task Save(bool isNewFile, string fileName)
     {
+        SavePath = fileName;
         await BinarySerializer.Save([this], fileName, isNewFile);
     }
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
@@ -210,6 +212,10 @@ public class Game : IGame
             }
             else
                 saveData.Add(new(typeof(int), 0));
+            bool hasSavePath = SavePath is not null;
+            saveData.Add(new SerializedData(typeof(int), hasSavePath ? 1 : 0));
+            if (hasSavePath)
+                saveData.Add(new SerializedData(typeof(string), SavePath!));
             if (Board != null)
                 saveData.AddRange(await Board.GetBinarySerials());
             if (Cards != null)
@@ -234,6 +240,11 @@ public class Game : IGame
             bool hasGuid = (int)BinarySerializer.ReadConvertible(reader, typeof(int)) == 1;
             if (hasGuid)
                 this.ID = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
+            bool loadSavePath = (int)BinarySerializer.ReadConvertible(reader, typeof(int)) == 1;
+            if (loadSavePath)
+                SavePath = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+            else
+                SavePath = null;
             Board.LoadFromBinary(reader);
             Cards.LoadFromBinary(reader);
             int numPlayers = (int)BinarySerializer.ReadConvertible(reader, typeof(int));

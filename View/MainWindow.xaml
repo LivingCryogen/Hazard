@@ -499,6 +499,9 @@
                 <MenuItem Command="SaveAs" />
                 <MenuItem Command="Close" />
             </MenuItem>
+            <MenuItem Header="Statistics" AllowDrop="True" Foreground="{StaticResource OceanHighlight}">
+                <MenuItem Header="{Binding SyncButtonText}" Command="{Binding SyncCommand}"/>
+            </MenuItem>
             <MenuItem Header="Help" AllowDrop="True" Foreground="{StaticResource OceanHighlight}">
                 <MenuItem Header="Rules" AllowDrop="True">
                     <TextBlock Text="Hazard! follows the rules of Hasbro, Inc.'s Risk board game, which can be referenced via the following link : https://instructions.hasbro.com/en-us/instruction/Risk-Game" Foreground="Black"/>
