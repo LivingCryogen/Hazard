@@ -12,7 +12,7 @@ public class WebConnectionHandler(IOptions<AppConfig> options, ILogger<WebConnec
 {
     private readonly ILogger<WebConnectionHandler> _logger = logger;
     private readonly string _baseUrl = options.Value.AzConnectInfo.BaseURL;
-    private readonly Guid _installID = options.Value.InstallInfo.InstallID;
+    private readonly Guid _installID = options.Value.InstallInfo.InstallId;
     private readonly HttpClient _syncClient = new();
 
     public async Task<bool> VerifyInternetConnection()

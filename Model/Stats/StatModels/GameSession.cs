@@ -46,6 +46,10 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
         /// </summary>
         /// <value>0-5</value>
         public int Defender { get; set; }
+        public int AttackerInitialArmies { get; set; }
+        public int DefenderInitialArmies { get; set; }
+        public int AttackerDice { get; set; }
+        public int DefenderDice { get; set; }
         /// <summary>
         /// Gets or sets the number of units lost by the attacker.
         /// </summary>

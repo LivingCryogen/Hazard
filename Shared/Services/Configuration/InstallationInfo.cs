@@ -13,9 +13,9 @@ public class InstallationInfo
     /// Gets or sets a unique identifier naming this machine/installation.
     /// </summary>
     /// <remarks>
-    /// Generated on first run. Used by Azure Database; (Player Name + InstallID) will form Table Key.
+    /// Generated on first run. Used by Azure Database; (Player Name + InstallId) will form Table Key.
     /// </remarks>
-    public Guid InstallID { get; set; }
+    public Guid InstallId { get; set; }
     /// <summary>
     /// Gets or sets the Date and Time the application is first run.
     /// </summary>

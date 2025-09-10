@@ -91,7 +91,7 @@ namespace Bootstrap
                            {
                                installationInfo = new InstallationInfo()
                                {
-                                   InstallID = Guid.NewGuid(),
+                                   InstallId = Guid.NewGuid(),
                                    FirstRun = DateTime.UtcNow
                                };
                            
@@ -100,7 +100,7 @@ namespace Bootstrap
                                    File.WriteAllText(installInfoPath, installJson);
                            }
 
-                           options.InstallInfo.InstallID = installationInfo.InstallID;
+                           options.InstallInfo.InstallId = installationInfo.InstallId;
                            options.InstallInfo.FirstRun = installationInfo.FirstRun;
                            options.AppPath = appPath;
                            options.DevMode = devMode;

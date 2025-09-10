@@ -149,6 +149,19 @@ namespace AzProxy
                         return;
                     }
 
+                    var responseBody = new StreamReader(context.Response.Body).ReadToEnd(); 
+
+                    if (responseBody == null)
+                    {
+                        logger.LogWarning("Sync request received without body.");
+                        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                        await context.Response.WriteAsync("Invalid request.");
+                        return;
+                    }
+
+
+
+
                     // TODO: 1. GET/DESERIALIZE DATA(?)
                     //       2. DATABASE INTEGRATION
 
