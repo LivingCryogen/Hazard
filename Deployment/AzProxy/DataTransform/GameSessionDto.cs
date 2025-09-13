@@ -2,5 +2,13 @@
 
 public class GameSessionDto
 {
-
+    public int Version { get; set; }
+    public Guid Id { get; set; }
+    public DateTime StartTime { get; set; }
+    public DateTime? EndTime { get; set; }
+    public int? Winner { get; set; }
+    public List<PlayerStatsDto> PlayerStats { get; set; } = [];
+    public List<AttackActionDto> Attacks { get; set; } = [];
+    public List<MoveActionDto> Moves { get; set; } = [];
+    public List<TradeActionDto> Trades { get; set; } = [];
 }

@@ -24,24 +24,36 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
         /// <summary>
         /// Gets or sets the source territory of the attack.
         /// </summary>
-        public TerrID Source { get; set; }
+        public TerrID SourceTerritory { get; set; }
         /// <summary>
         /// Gets or sets the target territory of the attack.
         /// </summary>
-        public TerrID Target { get; set; }
+        public TerrID TargetTerritory { get; set; }
         /// <summary>
         /// Gets or sets the player ID of the attacker.
         /// </summary>
         /// <value>0-5</value>
         public int Attacker { get; set; }
         /// <summary>
-        /// Gets or sethe player ID of the defender.
+        /// Gets or sets player ID of the defender.
         /// </summary>
         /// <value>0-5</value>
         public int Defender { get; set; }
+        /// <summary>
+        /// Gets or sets the number of armies the attacker had at the beginning of the attack.
+        /// </summary>
         public int AttackerInitialArmies { get; set; }
+        /// <summary>
+        /// Gets or sets the number of armies the defender had at the beginning of the attack.
+        /// </summary>
         public int DefenderInitialArmies { get; set; }
+        /// <summary>
+        /// Gets or sets the number of dice the attacker rolled.
+        /// </summary>
         public int AttackerDice { get; set; }
+        /// <summary>
+        /// Gets or sets the number of dice the defender rolled.
+        /// </summary>
         public int DefenderDice { get; set; }
         /// <summary>
         /// Gets or sets the number of units lost by the attacker.
@@ -66,8 +78,8 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
             return await Task.Run(() =>
             {
                 List<SerializedData> saveData = [];
-                saveData.Add(new(typeof(TerrID), Source));
-                saveData.Add(new(typeof(TerrID), Target));
+                saveData.Add(new(typeof(TerrID), SourceTerritory));
+                saveData.Add(new(typeof(TerrID), TargetTerritory));
 
                 saveData.Add(new(typeof(int), Attacker));
                 saveData.Add(new(typeof(int), Defender));
@@ -84,8 +96,8 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
             bool loadComplete = true;
             try
             {
-                Source = (TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID));
-                Target = (TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID));
+                SourceTerritory = (TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID));
+                TargetTerritory = (TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID));
                 Attacker = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
                 Defender = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
                 AttackerLoss = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
@@ -113,11 +125,11 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
         /// <summary>
         /// Gets or sets the source territory of the move.
         /// </summary>
-        public TerrID Source { get; set; }
+        public TerrID SourceTerritory{ get; set; }
         /// <summary>
         /// Gets or sets the target territory of the move.
         /// </summary>
-        public TerrID Target { get; set; }
+        public TerrID TargetTerritory { get; set; }
         /// <summary>
         /// Gets or sets the identifier of the moving player.
         /// </summary>
@@ -133,8 +145,8 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
             return await Task.Run(() =>
             {
                 List<SerializedData> saveData = [];
-                saveData.Add(new(typeof(TerrID), Source));
-                saveData.Add(new(typeof(TerrID), Target));
+                saveData.Add(new(typeof(TerrID), SourceTerritory));
+                saveData.Add(new(typeof(TerrID), TargetTerritory));
                 saveData.Add(new(typeof(int), Player));
                 saveData.Add(new(typeof(bool), MaxAdvanced));
                 return saveData.ToArray();
@@ -146,8 +158,8 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
             bool loadComplete = true;
             try
             {
-                Source = (TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID));
-                Target = (TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID));
+                SourceTerritory = (TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID));
+                TargetTerritory = (TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID));
                 Player = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
                 MaxAdvanced = (bool)BinarySerializer.ReadConvertible(reader, typeof(bool));
             }
@@ -169,7 +181,7 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
         /// <summary>
         /// Gets or sets the array of target territory identifiers associated with the card.
         /// </summary>
-        public TerrID[] CardTargets { get; set; } = [];
+        public TerrID[] CardTargetTerritories { get; set; } = [];
         /// <summary>
         /// Gets or sets the base trade value (additional armies) of the trade-in.
         /// </summary>
@@ -186,11 +198,11 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
             {
                 List<SerializedData> saveData = [];
 
-                List<IConvertible> convertTargets = [];
-                foreach (var target in CardTargets)
-                    convertTargets.Add(target);
-                saveData.Add(new(typeof(int), convertTargets.Count));
-                saveData.Add(new(typeof(TerrID), [.. convertTargets]));
+                List<IConvertible> convertTargetTerritorys = [];
+                foreach (var target in CardTargetTerritories)
+                    convertTargetTerritorys.Add(target);
+                saveData.Add(new(typeof(int), convertTargetTerritorys.Count));
+                saveData.Add(new(typeof(TerrID), [.. convertTargetTerritorys]));
 
                 saveData.Add(new(typeof(int), TradeValue));
                 saveData.Add(new(typeof(int), OccupiedBonus));
@@ -203,8 +215,8 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
             bool loadComplete = true;
             try
             {
-                int numCardTargets = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-                CardTargets = (TerrID[])BinarySerializer.ReadConvertibles(reader, typeof(TerrID), numCardTargets);
+                int numCardTargetTerritorys = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+                CardTargetTerritories = (TerrID[])BinarySerializer.ReadConvertibles(reader, typeof(TerrID), numCardTargetTerritorys);
                 TradeValue = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
                 OccupiedBonus = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             }

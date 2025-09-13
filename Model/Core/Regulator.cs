@@ -340,7 +340,7 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         _statTracker.RecordMoveAction(moveData);
     }
     /// <inheritdoc cref="IRegulator.Battle"/>
-    public void Battle(TerrID source, TerrID target, (int AttackRoll, int DefenseRoll)[] diceRolls)
+    public void Battle(TerrID source, TerrID target, (int AttackRoll, int DefenseRoll)[] diceRolls, int numAttackDice)
     {
         _actionsCounter++;
 
@@ -348,6 +348,8 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         int targetLoss = 0;
         int targetOwner = _currentGame.Board.TerritoryOwner[target];
         int sourceOwner = _currentGame.Board.TerritoryOwner[source];
+        int sourceInitialArmies = _currentGame.Board.Armies[source];
+        int targetInitialArmies = _currentGame.Board.Armies[target];
         bool conquered = false;
         bool retreated = false;
         
@@ -382,6 +384,10 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         {
             Player = sourceOwner,
             Defender = targetOwner,
+            AttackerInitialArmies = sourceInitialArmies,
+            DefenderInitialArmies = targetInitialArmies,
+            AttackerDice = numAttackDice,
+            DefenderDice = diceRolls.Length,
             AttackerLoss = sourceLoss,
             DefenderLoss = targetLoss,
             SourceTerritory = source,

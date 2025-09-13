@@ -13,6 +13,11 @@ public class AttackActionEntity
     public string PlayerName { get; set; } = string.Empty;
     public string DefenderName { get; set; } = string.Empty;
 
+    public int AttackerInitialArmies { get; set; }
+    public int DefenderInitialArmies { get; set; }
+    public int AttackerDice { get; set; }
+    public int DefenderDice { get; set; }
+
     public int AttackerLoss { get; set;} = 0;
     public int DefenderLoss { get; set;} = 0;
     public bool Conquered { get; set; } = false;

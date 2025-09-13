@@ -208,7 +208,7 @@ public partial class MainVM(IAppCommander appCommander,
         int[] defenseRolls = [.. defenseDice.OrderDescending()];
         var results = attackRolls.Zip(defenseRolls);
 
-        Regulator?.Battle((TerrID)source, (TerrID)target, [.. results]);
+        Regulator?.Battle((TerrID)source, (TerrID)target, [.. results], numAttackDice);
 
         RaiseDiceThrown(attackDice, defenseDice);
 

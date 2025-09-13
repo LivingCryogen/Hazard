@@ -82,10 +82,11 @@ public interface IRegulator : IBinarySerializable
     /// <param name="source">The source of the attack (attacker).</param>
     /// <param name="target">The target of the attack (defender).</param>
     /// <param name="diceRolls">Dice rolls paired together according to game rules.</param>
+    /// <param name="numAttackDice">Number of attack dice rolled.</param>
     /// <remarks>
     /// By default, rolls for attacker and defender should be put in descending order, then paired (unpaired remainders are ignored).
     /// </remarks>
-    void Battle(TerrID source, TerrID target, (int AttackRoll, int DefenseRoll)[] diceRolls);
+    void Battle(TerrID source, TerrID target, (int AttackRoll, int DefenseRoll)[] diceRolls, int numAttackDice);
     /// <summary>
     /// Executes game-rule logic for awarding bonus armies to a territory due to card trade-in.
     /// </summary>

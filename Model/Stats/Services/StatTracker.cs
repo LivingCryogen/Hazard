@@ -6,6 +6,7 @@ using Shared.Interfaces.Model;
 using Shared.Services.Configuration;
 using Shared.Services.Serializer;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Model.Stats.Services;
 /// <inheritdoc cref="IStatTracker"/>
@@ -16,7 +17,8 @@ public class StatTracker : IStatTracker
     private readonly JsonSerializerOptions _jsonOptions = new()
         {
             WriteIndented = false,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Converters = { new JsonStringEnumConverter() },
         };
     private GameSession _currentSession;
     
@@ -63,8 +65,8 @@ public class StatTracker : IStatTracker
     {
         var attackStats = new GameSession.AttackAction(_loggerFactory.CreateLogger<GameSession.AttackAction>())
         {
-            Source = attackData.SourceTerritory,
-            Target = attackData.TargetTerritory,
+            SourceTerritory = attackData.SourceTerritory,
+            TargetTerritory = attackData.TargetTerritory,
             Attacker = attackData.Attacker,
             Defender = attackData.Defender,
             AttackerLoss = attackData.AttackerLoss,
@@ -101,8 +103,8 @@ public class StatTracker : IStatTracker
     {
         var moveStats = new GameSession.MoveAction(_loggerFactory.CreateLogger<GameSession.MoveAction>())
         {
-            Source = moveData.SourceTerritory,
-            Target = moveData.TargetTerritory,
+            SourceTerritory = moveData.SourceTerritory,
+            TargetTerritory = moveData.TargetTerritory,
             Player = moveData.Player,
             MaxAdvanced = moveData.MaxAdvanced
         };
@@ -123,7 +125,7 @@ public class StatTracker : IStatTracker
     {
         var tradeStats = new GameSession.TradeAction(_loggerFactory.CreateLogger<GameSession.TradeAction>())
         {
-            CardTargets = [.. tradeData.CardTargets],
+            CardTargetTerritories = [.. tradeData.CardTargets],
             TradeValue = tradeData.TradeValue,
             OccupiedBonus = tradeData.OccupiedBonus
         };
