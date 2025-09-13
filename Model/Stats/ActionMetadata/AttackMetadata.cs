@@ -1,0 +1,22 @@
+﻿using Shared.Geography.Enums;
+using Shared.Interfaces.Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Model.Stats.ActionMetadata;
+
+public class AttackMetadata : IAttackData
+{
+    public TerrID SourceTerritory { get; set; } = TerrID.Null;
+    public TerrID TargetTerritory { get; set; } = TerrID.Null;
+    public ContID? ConqueredTerritory { get; set; }
+    public int Defender { get; set; } = -2; // -1 represents AI player, -2 represents uninitialized
+    public int AttackerLoss { get; set; } = 0;
+    public int DefenderLoss { get; set; } = 0;
+    public bool Retreated { get; set; } = false;
+    public bool Conquered { get; set; } = false;
+    public int Player { get; set; } = -2; // -1 represents AI player, -2 represents uninitialized
+}

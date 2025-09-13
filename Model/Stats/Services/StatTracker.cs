@@ -58,29 +58,20 @@ public class StatTracker : IStatTracker
                 });
         }
     }
-    /// <inheritdoc cref="IStatTracker.RecordAttackAction(TerrID, TerrID, ContID?, int, int, int, int, bool, bool)" />
-    public void RecordAttackAction(
-        TerrID source,
-        TerrID target,
-        ContID? conqueredcont,
-        int attacker,
-        int defender,
-        int attackerloss,
-        int defenderloss,
-        bool retreated,
-        bool conquered)
+    /// <inheritdoc cref="IStatTracker.RecordAttackAction(IAttackData)" />
+    public void RecordAttackAction(IAttackData attackData)
     {
         var attackStats = new GameSession.AttackAction(_loggerFactory.CreateLogger<GameSession.AttackAction>())
         {
-            Source = source,
-            Target = target,
-            ConqueredCont = conqueredcont,
-            Attacker = attacker,
-            Defender = defender,
-            AttackerLoss = attackerloss,
-            DefenderLoss = defenderloss,
-            Retreated = retreated,
-            Conquered = conquered
+            Source = attackData.SourceTerritory,
+            Target = attackData.TargetTerritory,
+            ConqueredCont = attackData.ConqueredTerritory,
+            Attacker = attackData.Attacker,
+            Defender = attackData.Defender,
+            AttackerLoss = attackData.AttackerLoss,
+            DefenderLoss = attackData.DefenderLoss,
+            Retreated = attackData.Retreated,
+            Conquered = attackData.Conquered
         };
 
         _currentSession.Attacks.Add(attackStats);
@@ -109,18 +100,18 @@ public class StatTracker : IStatTracker
                     break;
             }
     }
-    /// <inheritdoc cref="IStatTracker.RecordMoveAction(TerrID, TerrID, bool, int)" />
-    public void RecordMoveAction(TerrID source, TerrID target, bool maxAdvanced, int player)
+    /// <inheritdoc cref="IStatTracker.RecordMoveAction(IMoveData)" />
+    public void RecordMoveAction(IMoveData moveData)
     {
         var moveStats = new GameSession.MoveAction(_loggerFactory.CreateLogger<GameSession.MoveAction>())
         {
-            Source = source,
-            Target = target,
-            Player = player,
-            MaxAdvanced = maxAdvanced
+            Source = moveData.SourceTerritory,
+            Target = moveData.TargetTerritory,
+            Player = moveData.Player,
+            MaxAdvanced = moveData.MaxAdvanced
         };
 
-        var matchedPlayer = _currentSession.PlayerStats.Where(p => p.Number == player);
+        var matchedPlayer = _currentSession.PlayerStats.Where(p => p.Number == moveData.Player);
         if (matchedPlayer is PlayerStats playerStat)
         {
             if (moveStats.MaxAdvanced)
@@ -131,17 +122,17 @@ public class StatTracker : IStatTracker
 
         _currentSession.Moves.Add(moveStats);
     }
-    /// <inheritdoc cref="IStatTracker.RecordTradeAction(List{TerrID}, int, int, int)" />
-    public void RecordTradeAction(List<TerrID> cardTargets, int tradeValue, int occupiedBonus, int playerNumber)
+    /// <inheritdoc cref="IStatTracker.RecordTradeAction(ITradeData tradeData)" />
+    public void RecordTradeAction(ITradeData tradeData)
     {
         var tradeStats = new GameSession.TradeAction(_loggerFactory.CreateLogger<GameSession.TradeAction>())
         {
-            CardTargets = [.. cardTargets],
-            TradeValue = tradeValue,
-            OccupiedBonus = occupiedBonus
+            CardTargets = [.. tradeData.CardTargets],
+            TradeValue = tradeData.TradeValue,
+            OccupiedBonus = tradeData.OccupiedBonus
         };
 
-        var player = _currentSession.PlayerStats.Where(p => p.Number == playerNumber);
+        var player = _currentSession.PlayerStats.Where(p => p.Number == tradeData.Player);
         if (player is PlayerStats playerStat)
         {
             playerStat.TradeIns++;

@@ -17,8 +17,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Geography\Enums\TerrID.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Geography\BoardGeography.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Geography\GeographyInitializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IActionData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IAssetFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IAssetFetcher.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IAttackData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IBinarySerializable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IBoard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\ICard.cs" />
@@ -29,6 +31,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IDataProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IDeck.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IGame.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IMoveData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IPlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IPlayerChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IPromptTradeEventArgs.cs" />
@@ -37,6 +40,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IStatRepo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\IStatTracker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\ITerritoryChangedEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\ITradeData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Model\ITroopCard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ViewModel\ICardInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ViewModel\IDiceThrownEventArgs.cs" />
