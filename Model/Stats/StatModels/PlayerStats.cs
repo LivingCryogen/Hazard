@@ -19,10 +19,6 @@ public class PlayerStats(ILogger<PlayerStats> logger) : IBinarySerializable
     /// </summary>
     public int Number { get; set; } = 0;
     /// <summary>
-    /// Gets or sets the number of continents conquered by the player.
-    /// </summary>
-    public int ContinentsConquered { get; set; } = 0;
-    /// <summary>
     /// Gets or sets the number of attacks won by the player.
     /// </summary>
     public int AttacksWon { get; set; } = 0;
@@ -31,7 +27,7 @@ public class PlayerStats(ILogger<PlayerStats> logger) : IBinarySerializable
     /// </summary>
     public int AttacksLost { get; set; } = 0;
     /// <summary>
-    /// Gets or sets the number of conquests made by the player.
+    /// Gets or sets the number of territory conquests made by the player.
     /// </summary>
     public int Conquests { get; set; } = 0;
     /// <summary>
@@ -67,7 +63,6 @@ public class PlayerStats(ILogger<PlayerStats> logger) : IBinarySerializable
             List<SerializedData> saveData = [];
             saveData.Add(new(typeof(string), Name));
             saveData.Add(new(typeof(int), Number));
-            saveData.Add(new(typeof(int), ContinentsConquered));
             saveData.Add(new(typeof(int), AttacksWon));
             saveData.Add(new(typeof(int), AttacksLost));
             saveData.Add(new(typeof(int), Conquests));
@@ -88,7 +83,6 @@ public class PlayerStats(ILogger<PlayerStats> logger) : IBinarySerializable
         {
             Name = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
             Number = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-            ContinentsConquered = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             AttacksWon = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             AttacksLost = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             Conquests = (int)BinarySerializer.ReadConvertible(reader, typeof(int));

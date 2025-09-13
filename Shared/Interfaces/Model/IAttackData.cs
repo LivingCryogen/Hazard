@@ -22,10 +22,6 @@ public interface IAttackData : IActionData
     /// </summary>
     TerrID TargetTerritory { get; }
     /// <summary>
-    /// Gets the identifier of the territory that has been conquered, if any.
-    /// </summary>
-    ContID? ConqueredTerritory { get; }
-    /// <summary>
     /// Gets the identifier of the player who is currently the attacker.
     /// </summary>
     int Attacker { get => Player; }

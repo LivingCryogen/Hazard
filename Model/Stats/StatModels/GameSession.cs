@@ -30,13 +30,6 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
         /// </summary>
         public TerrID Target { get; set; }
         /// <summary>
-        /// Gets or sets the continent ID that was conquered, if any.
-        /// </summary>
-        /// <value>
-        /// <see langword="null"/> if no continent was conquered; otherwise, the ID of the conquered continent.
-        /// </value>
-        public ContID? ConqueredCont { get; set; }
-        /// <summary>
         /// Gets or sets the player ID of the attacker.
         /// </summary>
         /// <value>0-5</value>
@@ -76,14 +69,6 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
                 saveData.Add(new(typeof(TerrID), Source));
                 saveData.Add(new(typeof(TerrID), Target));
 
-                if (ConqueredCont is ContID conqueredCont)
-                {
-                    saveData.Add(new(typeof(int), 1));
-                    saveData.Add(new(typeof(ContID), conqueredCont));
-                }
-                else
-                    saveData.Add(new(typeof(int), 0));
-
                 saveData.Add(new(typeof(int), Attacker));
                 saveData.Add(new(typeof(int), Defender));
                 saveData.Add(new(typeof(int), AttackerLoss));
@@ -101,9 +86,6 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
             {
                 Source = (TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID));
                 Target = (TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID));
-                bool hasConqueredCont = (int)BinarySerializer.ReadConvertible(reader, typeof(int)) == 1;
-                if (hasConqueredCont)
-                    ConqueredCont = (ContID)BinarySerializer.ReadConvertible(reader, typeof(ContID));
                 Attacker = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
                 Defender = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
                 AttackerLoss = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
@@ -246,7 +228,7 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
     /// Gets the number of tracked actions.
     /// </summary>
     /// <remarks>
-    /// Allows <see cref="Repository.StatRepo"/> to easily determine which is the most up-to-date game file for a given game ID.
+    /// Allows <see cref="StatRepo"/> to easily determine which is the most up-to-date game file for a given game ID.
     /// </remarks>
     public int NumActions { get => Attacks.Count + Moves.Count + TradeIns.Count; }
     /// <summary>

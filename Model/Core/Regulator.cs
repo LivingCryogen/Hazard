@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Model.EventArgs;
 using Model.Stats;
+using Model.Stats.ActionMetadata;
 using Shared.Enums;
 using Shared.Geography;
 using Shared.Geography.Enums;
@@ -14,6 +15,7 @@ namespace Model.Core;
 public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulator
 {
     private readonly IGame _currentGame = currentGame;
+    private readonly IStatTracker _statTracker = currentGame.StatTracker;
     private readonly StateMachine _machine = currentGame.State;
     private readonly ICardBase _cards = currentGame.Cards;
     private readonly ILogger _logger = logger;
@@ -321,13 +323,21 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
     /// <inheritdoc cref="IRegulator.MoveArmies"/>
     public void MoveArmies(TerrID source, TerrID target, int armies)
     {
+        bool maxAdvanced = armies == _currentGame.Board.Armies[source] - 1;
         _currentGame.Board.Reinforce(source, -armies);
         _currentGame.Board.Reinforce(target, armies);
 
-
-
         if (CurrentPhase == GamePhase.Move)
             IncrementAction();
+
+        MoveMetadata moveData = new()
+        {
+            Player = _currentGame.Board.TerritoryOwner[source],
+            TargetTerritory = target,
+            SourceTerritory = source,
+            MaxAdvanced = maxAdvanced
+        };
+        _statTracker.RecordMoveAction(moveData);
     }
     /// <inheritdoc cref="IRegulator.Battle"/>
     public void Battle(TerrID source, TerrID target, (int AttackRoll, int DefenseRoll)[] diceRolls)
@@ -336,6 +346,11 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
 
         int sourceLoss = 0;
         int targetLoss = 0;
+        int targetOwner = _currentGame.Board.TerritoryOwner[target];
+        int sourceOwner = _currentGame.Board.TerritoryOwner[source];
+        bool conquered = false;
+        bool retreated = false;
+        
         foreach (var (AttackRoll, DefenseRoll) in diceRolls)
             if (AttackRoll > DefenseRoll)
                 targetLoss++;
@@ -344,11 +359,11 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
 
         if (targetLoss >= _currentGame.Board.Armies[target])
         {
-            int conqueredOwner = _currentGame.Board.TerritoryOwner[target];
-            int newOwner = _currentGame.Board.TerritoryOwner[source];
-            if (conqueredOwner > -1)
-                _currentGame.Players[conqueredOwner].RemoveTerritory(target);
-            _currentGame.Players[newOwner].AddTerritory(target);
+            conquered = true;
+
+            if (targetOwner > -1)
+                _currentGame.Players[targetOwner].RemoveTerritory(target);
+            _currentGame.Players[sourceOwner].AddTerritory(target);
 
             _currentGame.Board.Conquer(source, target, _currentGame.Board.TerritoryOwner[source]);
 
@@ -359,6 +374,22 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
             _currentGame.Board.Reinforce(source, -sourceLoss);
         if (targetLoss > 0)
             _currentGame.Board.Reinforce(target, -targetLoss);
+
+        if (_currentGame.Board.Armies[source] < 2)
+            retreated = true;
+
+        AttackMetadata attackData = new()
+        {
+            Player = sourceOwner,
+            Defender = targetOwner,
+            AttackerLoss = sourceLoss,
+            DefenderLoss = targetLoss,
+            SourceTerritory = source,
+            TargetTerritory = target,
+            Conquered = conquered,
+            Retreated = retreated
+        };
+        _statTracker.RecordAttackAction(attackData);
     }
     /// <inheritdoc cref="IRegulator.CanTradeInCards(int, int[])"/>
     public bool CanTradeInCards(int playerNum, int[] handIndices)
@@ -405,6 +436,8 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
             return;
 
         var currentPlayer = _currentGame.Players[playerNum];
+        bool occupied = false;
+
         _machine.IncrementNumTrades(1);
         int tradebonus = _currentGame.Values.CalculateBaseTradeInBonus(_machine.NumTrades);
         currentPlayer.GetsTradeBonus(tradebonus);
@@ -414,9 +447,21 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
         var tradedTargets = selectedCards.SelectMany(item => item.Target);
         var controlledTargets = currentPlayer.GetControlledTargets([.. tradedTargets]);
         if (controlledTargets.Length == 1)
+        {
             _currentGame.Board.Reinforce(controlledTargets[0], _currentGame.Values.TerritoryTradeInBonus);
+            occupied = true;
+        }
         else if (controlledTargets.Length > 1)
             PromptBonusChoice?.Invoke(this, [.. controlledTargets]);
+
+        TradeMetadata tradeData = new()
+        {
+            Player = playerNum,
+            TradeValue = tradebonus,
+            OccupiedBonus = occupied ? 2 : 0,
+            CardTargets = [.. tradedTargets]
+        };
+        _statTracker.RecordTradeAction(tradeData);
     }
     /// <inheritdoc cref="IRegulator.AwardTradeInBonus(TerrID)"/>
     public void AwardTradeInBonus(TerrID territory)

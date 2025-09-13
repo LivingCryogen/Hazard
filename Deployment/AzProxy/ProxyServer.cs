@@ -1,3 +1,6 @@
+using AzProxy.Context;
+using AzProxy.DataTransform;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -127,7 +130,8 @@ namespace AzProxy
                 });
             app.MapPost("/sync-stats",
                 async (HttpContext context, 
-                    RequestHandler requestHandler, 
+                    RequestHandler requestHandler,
+                    DbTransformer transformer,
                     IHttpClientFactory httpClientFactory, 
                     IConfiguration config, 
                     ILogger<ProxyServer> logger) =>
@@ -149,9 +153,9 @@ namespace AzProxy
                         return;
                     }
 
-                    var responseBody = new StreamReader(context.Response.Body).ReadToEnd(); 
+                    var requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync(); 
 
-                    if (responseBody == null)
+                    if (string.IsNullOrEmpty(requestBody))
                     {
                         logger.LogWarning("Sync request received without body.");
                         context.Response.StatusCode = StatusCodes.Status400BadRequest;
@@ -159,8 +163,25 @@ namespace AzProxy
                         return;
                     }
 
+                    // get Query strings
+                    string? installID = context.Request.Query["installID"];
+                    string? trackedActions = context.Request.Query["trackedActions"];
+                    
+                    if (string.IsNullOrEmpty(installID))
+                    {
+                        logger.LogWarning("Sync request received without Install Id query parameter");
+                        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                        await context.Response.WriteAsync("Invalid request.");
+                        return;
+                    }
 
 
+                    int actions = 0;
+                    if (!string.IsNullOrEmpty(trackedActions))
+                        if (int.TryParse(trackedActions, out int parsed))
+                            actions = parsed;
+
+                    transformer.TransformFromJson(requestBody, installID, actions);
 
                     // TODO: 1. GET/DESERIALIZE DATA(?)
                     //       2. DATABASE INTEGRATION
@@ -187,6 +208,8 @@ namespace AzProxy
             builder.Services.AddHostedService<BanListTableManager>();
             builder.Services.AddSingleton<BanService>();
             builder.Services.AddSingleton<RequestHandler>();
+            builder.Services.AddDbContext<GameStatsDbContext>(options => options.UseAzureSql(builder.Configuration.GetConnectionString("AzDbConnectionString")));
+            builder.Services.AddScoped<DbTransformer>();
             builder.Services.AddLogging();
             return builder.Build();
         }

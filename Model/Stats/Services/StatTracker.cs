@@ -65,7 +65,6 @@ public class StatTracker : IStatTracker
         {
             Source = attackData.SourceTerritory,
             Target = attackData.TargetTerritory,
-            ConqueredCont = attackData.ConqueredTerritory,
             Attacker = attackData.Attacker,
             Defender = attackData.Defender,
             AttackerLoss = attackData.AttackerLoss,
@@ -84,9 +83,6 @@ public class StatTracker : IStatTracker
                         playerStat.AttacksLost++;
                     else
                         playerStat.AttacksWon++;
-
-                    if (attackStats.ConqueredCont is ContID)
-                        playerStat.ContinentsConquered++;
 
                     if (attackStats.Conquered)
                         playerStat.Conquests++;
@@ -122,7 +118,7 @@ public class StatTracker : IStatTracker
 
         _currentSession.Moves.Add(moveStats);
     }
-    /// <inheritdoc cref="IStatTracker.RecordTradeAction(ITradeData tradeData)" />
+    /// <inheritdoc cref="IStatTracker.RecordTradeAction(ITradeData)" />
     public void RecordTradeAction(ITradeData tradeData)
     {
         var tradeStats = new GameSession.TradeAction(_loggerFactory.CreateLogger<GameSession.TradeAction>())
@@ -141,6 +137,7 @@ public class StatTracker : IStatTracker
 
         _currentSession.TradeIns.Add(tradeStats);
     }
+    /// <inheritdoc cref="IStatTracker.JSONFromGameSession"/>
     public async Task<string> JSONFromGameSession()
     {
         try
