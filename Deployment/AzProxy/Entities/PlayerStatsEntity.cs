@@ -17,7 +17,6 @@ public class PlayerStatsEntity
     public DateTime LastGameStarted { get; set; } = DateTime.MinValue;
     public DateTime? LastGameCompleted { get; set; }
     public TimeSpan TotalGamesDuration { get; set; } = TimeSpan.MinValue;
-    public int ContinentsConquered { get; set; } = 0;
     public int AttacksWon { get; set; } = 0;
     public int AttacksLost { get; set; } = 0;
     public int Conquests { get; set; } = 0;
