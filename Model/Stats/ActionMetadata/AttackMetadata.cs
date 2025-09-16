@@ -10,6 +10,7 @@ namespace Model.Stats.ActionMetadata;
 
 public class AttackMetadata : IAttackData
 {
+    public int Player { get; set; } = -2; // -1 represents AI player, -2 represents uninitialized
     public TerrID SourceTerritory { get; set; } = TerrID.Null;
     public TerrID TargetTerritory { get; set; } = TerrID.Null;
     public int Defender { get; set; } = -2; // -1 represents AI player, -2 represents uninitialized
@@ -21,5 +22,4 @@ public class AttackMetadata : IAttackData
     public int DefenderLoss { get; set; } = 0;
     public bool Retreated { get; set; } = false;
     public bool Conquered { get; set; } = false;
-    public int Player { get; set; } = -2; // -1 represents AI player, -2 represents uninitialized
 }

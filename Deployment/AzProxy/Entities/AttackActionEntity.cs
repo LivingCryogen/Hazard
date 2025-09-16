@@ -20,6 +20,7 @@ public class AttackActionEntity
 
     public int AttackerLoss { get; set;} = 0;
     public int DefenderLoss { get; set;} = 0;
+    public bool Retreated { get; set; } = false;
     public bool Conquered { get; set; } = false;
 
     public GameSessionEntity GameSession { get; set; } = null!; // Navigation property for EF

@@ -30,11 +30,6 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
         /// </summary>
         public TerrID TargetTerritory { get; set; }
         /// <summary>
-        /// Gets or sets the player ID of the attacker.
-        /// </summary>
-        /// <value>0-5</value>
-        public int Attacker { get; set; }
-        /// <summary>
         /// Gets or sets player ID of the defender.
         /// </summary>
         /// <value>0-5</value>
