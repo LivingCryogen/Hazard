@@ -6,10 +6,11 @@ namespace AzProxy.Context;
 public class GameStatsDbContext(DbContextOptions<GameStatsDbContext> options) : DbContext(options)
 {
     public DbSet<GameSessionEntity> GameSessions { get; set; }
+    public DbSet<GamePlayerEntity> GamePlayers { get; set; }
     public DbSet<AttackActionEntity> AttackActions { get; set; }
     public DbSet<MoveActionEntity> MoveActions { get; set; }
     public DbSet<TradeActionEntity> TradeActions { get; set; }
-
+    
     public DbSet<PlayerStatsEntity> PlayerStats { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

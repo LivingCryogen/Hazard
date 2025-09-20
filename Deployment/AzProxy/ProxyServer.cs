@@ -181,10 +181,47 @@ namespace AzProxy
                         if (int.TryParse(trackedActions, out int parsed))
                             actions = parsed;
 
-                    transformer.TransformFromJson(requestBody, installID, actions);
+                    try
+                    {
+                        await transformer.TransformFromJson(requestBody, installID, actions);
 
-                    // TODO: 1. GET/DESERIALIZE DATA(?)
-                    //       2. DATABASE INTEGRATION
+                        context.Response.StatusCode = StatusCodes.Status200OK;
+                        await context.Response.WriteAsync("Sync completed successfully!");
+                    }
+                    catch (ArgumentException argEx)
+                    {
+                        // Client sent bad data
+                        logger.LogWarning("Bad request for sync from {installId}: {Message}", installID, argEx.Message);
+                        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                        await context.Response.WriteAsync("Invalid request data.");
+                    }
+                    catch (InvalidDataException dataEx)
+                    {
+                        // JSON deserialization failed or data integrity issues
+                        logger.LogWarning("Invalid data in sync request from {installId}: {Message}", installID, dataEx.Message);
+                        context.Response.StatusCode = StatusCodes.Status422UnprocessableEntity;
+                        await context.Response.WriteAsync("Unable to process the provided data.");
+                    }
+                    catch (DbUpdateException dbEx)
+                    {
+                        // Database constraint violations, connection issues
+                        logger.LogError("Database error during sync for {installId}: {Message}", installID, dbEx.Message);
+                        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                        await context.Response.WriteAsync("Database error occurred.");
+                    }
+                    catch (PartialFailureException partialEx)
+                    {
+                        logger.LogWarning("Partial sync failure for {installID}: {failures}", installID, partialEx.Message);
+                        context.Response.StatusCode = StatusCodes.Status207MultiStatus;
+                        await context.Response.WriteAsync("Sync completed with warnings.");
+                    }
+                    catch (Exception ex)
+                    {
+                        // Unexpected errors
+                        logger.LogError("Unexpected error during sync for {installId}: {Message}", installID, ex.Message);
+                        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                        await context.Response.WriteAsync("An unexpected error occurred.");
+                    }
 
                 });
             app.Run();

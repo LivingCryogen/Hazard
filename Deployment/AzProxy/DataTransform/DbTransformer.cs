@@ -1,9 +1,11 @@
 ﻿using AzProxy.Context;
 using AzProxy.Entities;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace AzProxy.DataTransform;
 
@@ -39,13 +41,17 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             trackedActions = actualActions;
         }
 
-        /* Before updating, check if there is already a GameSessionEntity for this session. If the incoming number of actions 
-         * (real SessionDto actions) is greater than the current Sessions action count, Update. Otherwise, don't. */
-
         // Player Name lookup
         Dictionary<int, string> playerNumToNameMap = sessionData.PlayerStats.ToDictionary(p => p.Number, p => p.Name);
         HashSet<string> sessionPlayerNames = [.. sessionData.PlayerStats.Select(p => p.Name)];
 
+        // Errors collection, allowing logs and responses to accumulate and report all back when errors aren't fatal
+        List<string> errorList = [];
+
+        /* Before updating, check if there is already a GameSessionEntity for this session. If the incoming number of actions 
+        * (real SessionDto actions) is greater than the current Sessions action count, Update. Otherwise, don't. */
+        
+        // no previous Session found with this ID, create one
         if (await _context.GameSessions
             .Where(gs => gs.GameId == sessionData.Id && gs.InstallId == installGuid)
             .FirstOrDefaultAsync() 
@@ -89,20 +95,13 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
                 newTradeActions.Add(newTradeAction);
             }
 
-            //// 1. Create all entities with proper relationships
-            //// 2. Then add everything to context at once
-            //_context.GameSessions.Add(newSession);
-            //_context.AttackActions.AddRange(newAttackActions);
-            //_context.MoveActions.AddRange(newMoveActions);
-            //_context.TradeActions.AddRange(newTradeActions);
-            //_context.GamePlayers.AddRange(newGamePlayers);
-
-            //// 3. Save everything
-            //await _context.SaveChangesAsync();
-
-            await _context.GameSessions.AddAsync();
+            _context.GameSessions.Add(newSession);
+            _context.AttackActions.AddRange(newAttackActions);
+            _context.MoveActions.AddRange(newMoveActions);
+            _context.TradeActions.AddRange(newTradeActions);
+            _context.GamePlayers.AddRange(newGamePlayers);
         }
-        else
+        else // previous session found; if sync data is more up-to-date, update session
         {
             int previousSessionActions = previousSession.AttackActions.Count + previousSession.MoveActions.Count + previousSession.TradeActions.Count;
             if (previousSessionActions >= trackedActions)
@@ -112,20 +111,18 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
                 return;
             }
 
-            if (!UpdateGameSession(previousSession, sessionData))
+            if (!UpdateGameSession(previousSession, sessionData, playerNumToNameMap))
             {
-
+                throw new InvalidOperationException($"Game Session {previousSession.GameId} with install {previousSession.InstallId} failed to update! Aborting...");
             }
         }
-
-
 
         var installPlayerList = await GetPlayerStats(installGuid);
 
         if (installPlayerList == null || installPlayerList.Count == 0) // no PlayerStats for this Install
         {
             string winnerName = string.Empty;
-            if (sessionData.Winner is int winner && _playerNumToNameMap.TryGetValue(winner, out var mappedName))
+            if (sessionData.Winner is int winner && playerNumToNameMap.TryGetValue(winner, out var mappedName))
                 winnerName = mappedName;
             
             foreach (var plyrStatsDto in sessionData.PlayerStats)
@@ -135,8 +132,8 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         {
             HashSet<string> installPlayerNames = [.. installPlayerList.Select(p => p.Name)];
             // new players
-            var newPlayerNames = _sessionPlayerNames.ExceptBy(installPlayerNames, name => name);
-            var previousPlayerNames = _sessionPlayerNames.IntersectBy(installPlayerNames, name => name);
+            var newPlayerNames = sessionPlayerNames.ExceptBy(installPlayerNames, name => name);
+            var previousPlayerNames = sessionPlayerNames.IntersectBy(installPlayerNames, name => name);
 
             var newPlayerStats = sessionData.PlayerStats.Where(ps => newPlayerNames.Contains(ps.Name));
             foreach (var playerStats in newPlayerStats)
@@ -155,10 +152,29 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
 
                 if (!UpdatePlayerStats(playerStats, sessionData, updatingPlayerDto))
                 {
+                    errorList.Add($"Failed to Update stats for {playerStats.Name} with install ID {playerStats.InstallId}.");
                     _logger.LogWarning("Update failed for Player {plyrName} on install {installID}", playerStats.Name, playerStats.InstallId);
                     continue;
                 }
             }
+        }
+
+        if (errorList.Count != 0)
+        {
+            throw new PartialFailureException($"Sync completed, but with {errorList.Count} errors: {string.Join("; ", errorList)}", errorList);
+        }
+
+        try
+        {
+            await _context.SaveChangesAsync();
+            _logger.LogInformation("Successfully synced game session {gameId} for install {installId}",
+                sessionData.Id, installGuid);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to save changes for game session {gameId}: {Message}",
+                sessionData.Id, ex.Message);
+            throw; // Re-throw so the caller knows the operation failed
         }
     }
 
@@ -175,7 +191,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         };
     }
 
-    private bool UpdateGameSession(GameSessionEntity oldSession, GameSessionDto sessionDto)
+    private bool UpdateGameSession(GameSessionEntity oldSession, GameSessionDto sessionDto, Dictionary<int, string> playerNumToNameMap)
     {
         if (oldSession.GameId != sessionDto.Id)
         {
@@ -186,10 +202,52 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
 
         try
         {
-            oldSession.Players.Clear();
-            
+            LogDataChanges(oldSession, sessionDto);
 
-            
+            oldSession.Version = sessionDto.Version;
+            oldSession.StartTime = sessionDto.StartTime;
+            oldSession.EndTime = sessionDto.EndTime;
+            oldSession.Winner = sessionDto.Winner;
+
+            // Updating by clearing / repopulating is cleaner than attempting granular updates (no need to worry about colleciton order, etc)
+            // And we do this on dbContext level to avoid any change tracking confusions
+            _context.RemoveRange(oldSession.Players);
+            _context.RemoveRange(oldSession.AttackActions);
+            _context.RemoveRange(oldSession.MoveActions);
+            _context.RemoveRange(oldSession.TradeActions);
+
+            // Create GamePlayers
+            foreach (var playerStat in sessionDto.PlayerStats)
+            {
+                var newGamePlayer = CreateNewGamePlayer(oldSession.GameId, playerStat.Name);
+                newGamePlayer.GameSession = oldSession;
+                _context.GamePlayers.Add(newGamePlayer);
+            }
+
+            // Create AttackActions
+            foreach (var attackAction in sessionDto.Attacks)
+            {
+                var newAttackAction = CreateAttackAction(sessionDto.Id, attackAction, playerNumToNameMap);
+                newAttackAction.GameSession = oldSession;
+                _context.AttackActions.Add(newAttackAction);
+            }
+
+            // Create MoveActions
+            foreach (var moveAction in sessionDto.Moves)
+            {
+                var newMoveAction = CreateMoveAction(sessionDto.Id, moveAction, playerNumToNameMap);
+                newMoveAction.GameSession = oldSession;
+                _context.MoveActions.Add(newMoveAction);
+            }
+
+            // Create TradeActions
+            foreach (var tradeAction in sessionDto.Trades)
+            {
+                var newTradeAction = CreateTradeAction(sessionDto.Id, tradeAction, playerNumToNameMap);
+                newTradeAction.GameSession = oldSession;
+                _context.TradeActions.Add(newTradeAction);
+            }
+
             return true;
         }
         catch (Exception ex)
@@ -197,6 +255,55 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             _logger.LogError("An unexpected error occurred while attempting to update Game Session Entity with Game ID '{gameID}': {Message}", oldSession.GameId, ex.Message);
             return false;
         }
+    }
+    private void LogDataChanges(GameSessionEntity oldSession, GameSessionDto sessionDto)
+    {
+        // Log warnings for unexpected data changes; log information for typical/expected data updates
+        if (sessionDto.Version != oldSession.Version)
+        {
+            _logger.LogWarning("Game {gameId} version changed from {oldVer} to {newVer}.",
+                sessionDto.Id, oldSession.Version, sessionDto.Version);
+        }
+        if (sessionDto.StartTime != oldSession.StartTime)
+        {
+            _logger.LogWarning("Game {gameId} Start Time changed from {oldTime} to {newTime}.",
+                sessionDto.Id, oldSession.StartTime, sessionDto.StartTime);
+        }
+        if (sessionDto.EndTime != oldSession.EndTime)
+        {
+            if (oldSession.EndTime != null)
+            {
+                _logger.LogWarning("Game {gameId} End Time unexpectedly changed from {oldTime} to {newTime}.",
+                    sessionDto.Id, oldSession.EndTime, sessionDto.EndTime);
+            }
+            else
+                _logger.LogInformation("Game {gameId} End Time updated from {oldTime} to {newTime}.",
+                    sessionDto.Id, oldSession.EndTime, sessionDto.EndTime);
+        }
+        if (sessionDto.Winner != oldSession.Winner)
+        {
+            if (oldSession.Winner != null)
+            {
+                _logger.LogWarning("Game {gameId} Winner unexpectedly changed from {oldWinner} to {newWinner}.",
+                    sessionDto.Id, oldSession.Winner, sessionDto.Winner);
+            }
+            else
+                _logger.LogInformation("Game {gameId} Winner updated to {newWinner}.",
+                    sessionDto.Id, sessionDto.Winner);
+        }
+
+        // Action count reduction has already been checked against, but plausibly a Dto could come in with different playerstats
+        var oldPlayerCount = oldSession.Players.Count;
+        var newPlayerCount = sessionDto.PlayerStats.Count;
+        if (oldPlayerCount != newPlayerCount)
+        {
+            _logger.LogWarning("Game {gameId} player count unexpectedly changed from {oldCount} to {newCount}.",
+                sessionDto.Id, oldPlayerCount, newPlayerCount);
+        }
+    }
+    private void LogDataChanges(PlayerStatsEntity oldPlayerStats, PlayerStatsDto)
+    {
+
     }
     private static GamePlayerEntity CreateNewGamePlayer(Guid gameID, string playerName)
     {
@@ -303,9 +410,6 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         };
     }
 
-
-
-
     private bool UpdatePlayerStats(PlayerStatsEntity playerStats, GameSessionDto sessionDto, PlayerStatsDto statsDto)
     {
         if (playerStats.Name != statsDto.Name)
@@ -336,7 +440,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             }
             else
             {
-                if (playerStats.)
+                playerStats.
             }
 
 
