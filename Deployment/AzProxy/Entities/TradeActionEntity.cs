@@ -2,13 +2,13 @@
 
 public class TradeActionEntity
 {
-    public int Id { get; set; } // Auto-increment, primary key (since collected)
-
-    // foreign key for GameSession
+    // Key
     public Guid GameId { get; set; }
-
+    public int ActionId { get; set; }
+    
+    // Data
+    public bool IsDemo { get; set; } = false;
     public string PlayerName { get; set; } = string.Empty;
-
     public string CardTargets { get; set; } = string.Empty;
     public int TradeValue { get; set; } = 0;
     public int OccupiedBonus = 0;

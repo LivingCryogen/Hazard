@@ -21,6 +21,7 @@ public class StatTracker : IStatTracker
             Converters = { new JsonStringEnumConverter() },
         };
     private GameSession _currentSession;
+    private int _nextActionId = 1;
     
 
     /// <inheritdoc cref="IStatTracker.TrackedActions"/>
@@ -50,21 +51,17 @@ public class StatTracker : IStatTracker
             Winner = null
         };
 
-        for (int i = 0; i < game.Players.Count; i++)
-        {
-            _currentSession.PlayerStats.Add(
-                new PlayerStats(loggerFactory.CreateLogger<PlayerStats>())
-                {
-                    Name = game.Players[i].Name,
-                    Number = game.Players[i].Number,
-                });
-        }
+        List<(int, string)> playerNumNameList = [];
+        foreach(var player in game.Players)
+            playerNumNameList.Add((player.Number, player.Name));
+        _currentSession.PlayerNumsAndNames = playerNumNameList.ToDictionary<int, string>();
     }
     /// <inheritdoc cref="IStatTracker.RecordAttackAction(IAttackData)" />
     public void RecordAttackAction(IAttackData attackData)
     {
         var attackStats = new GameSession.AttackAction(_loggerFactory.CreateLogger<GameSession.AttackAction>())
         {
+            ActionId = _nextActionId++,
             SourceTerritory = attackData.SourceTerritory,
             TargetTerritory = attackData.TargetTerritory,
             Attacker = attackData.Attacker,
@@ -76,48 +73,18 @@ public class StatTracker : IStatTracker
         };
 
         _currentSession.Attacks.Add(attackStats);
-
-        foreach (var playerStat in _currentSession.PlayerStats)
-            switch (playerStat)
-            {
-                case { Number: var n } when n == attackStats.Attacker:
-                    if (attackStats.AttackerLoss > attackStats.DefenderLoss)
-                        playerStat.AttacksLost++;
-                    else
-                        playerStat.AttacksWon++;
-
-                    if (attackStats.Conquered)
-                        playerStat.Conquests++;
-
-                    if (attackStats.Retreated)
-                        playerStat.Retreats++;
-                    break;
-                case { Number: var n } when n == attackStats.Defender:
-                    if (attackStats.Retreated)
-                        playerStat.ForcedRetreats++;
-                    break;
-            }
     }
     /// <inheritdoc cref="IStatTracker.RecordMoveAction(IMoveData)" />
     public void RecordMoveAction(IMoveData moveData)
     {
         var moveStats = new GameSession.MoveAction(_loggerFactory.CreateLogger<GameSession.MoveAction>())
         {
+            ActionId = _nextActionId++,
             SourceTerritory = moveData.SourceTerritory,
             TargetTerritory = moveData.TargetTerritory,
             Player = moveData.Player,
             MaxAdvanced = moveData.MaxAdvanced
         };
-
-        var matchedPlayer = _currentSession.PlayerStats.Where(p => p.Number == moveData.Player);
-        if (matchedPlayer is PlayerStats playerStat)
-        {
-            if (moveStats.MaxAdvanced)
-                playerStat.MaxAdvances++;
-
-            playerStat.Moves++;
-        }
-
         _currentSession.Moves.Add(moveStats);
     }
     /// <inheritdoc cref="IStatTracker.RecordTradeAction(ITradeData)" />
@@ -125,18 +92,11 @@ public class StatTracker : IStatTracker
     {
         var tradeStats = new GameSession.TradeAction(_loggerFactory.CreateLogger<GameSession.TradeAction>())
         {
+            ActionId = _nextActionId++,
             CardTargetTerritories = [.. tradeData.CardTargets],
             TradeValue = tradeData.TradeValue,
             OccupiedBonus = tradeData.OccupiedBonus
         };
-
-        var player = _currentSession.PlayerStats.Where(p => p.Number == tradeData.Player);
-        if (player is PlayerStats playerStat)
-        {
-            playerStat.TradeIns++;
-            playerStat.TotalOccupationBonus += tradeStats.OccupiedBonus;
-        }
-
         _currentSession.TradeIns.Add(tradeStats);
     }
     /// <inheritdoc cref="IStatTracker.JSONFromGameSession"/>
@@ -162,6 +122,7 @@ public class StatTracker : IStatTracker
             saveData.Add(new SerializedData(typeof(int), hasSavePath ? 1 : 0));
             if (hasSavePath)
                 saveData.Add(new SerializedData(typeof(string), LastSavePath!));
+            saveData.Add(new(typeof(int), _nextActionId));
             saveData.AddRange(await _currentSession.GetBinarySerials());
             return saveData.ToArray();
         });
@@ -177,6 +138,7 @@ public class StatTracker : IStatTracker
                 LastSavePath = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
             else
                 LastSavePath = null;
+            _nextActionId = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             GameSession loadedSession = new(_loggerFactory.CreateLogger<GameSession>(), _loggerFactory);
             loadedSession.LoadFromBinary(reader);
             _currentSession = loadedSession;

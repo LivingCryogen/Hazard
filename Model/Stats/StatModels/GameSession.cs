@@ -22,6 +22,10 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
     {
         private readonly ILogger _logger = logger;
         /// <summary>
+        /// Gets or sets the id for this action (should be sequential/incremental).
+        /// </summary>
+        public int ActionId { get; set; }
+        /// <summary>
         /// Gets or sets the source territory of the attack.
         /// </summary>
         public TerrID SourceTerritory { get; set; }
@@ -29,6 +33,11 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
         /// Gets or sets the target territory of the attack.
         /// </summary>
         public TerrID TargetTerritory { get; set; }
+        /// <summary>
+        /// Gets or sets player ID of the attacker.
+        /// </summary>
+        /// <value>0-5</value>
+        public int Attacker { get; set; }
         /// <summary>
         /// Gets or sets player ID of the defender.
         /// </summary>
@@ -116,7 +125,10 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
     public class MoveAction(ILogger<MoveAction> logger) : IBinarySerializable
     {
         private readonly ILogger _logger = logger;
-
+        /// <summary>
+        /// Gets or sets the id for this action (should be sequential/incremental).
+        /// </summary>
+        public int ActionId { get; set; }
         /// <summary>
         /// Gets or sets the source territory of the move.
         /// </summary>
@@ -173,6 +185,10 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
     public class TradeAction(ILogger<TradeAction> logger) : IBinarySerializable
     {
         private readonly ILogger _logger = logger;
+        /// <summary>
+        /// Gets or sets the id for this action (should be sequential/incremental).
+        /// </summary>
+        public int ActionId { get; set; }
         /// <summary>
         /// Gets or sets the array of target territory identifiers associated with the card.
         /// </summary>
@@ -269,9 +285,10 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
     /// </summary>
     public List<TradeAction> TradeIns { get; private set; } = [];
     /// <summary>
-    /// Gets or sets the list of player statistics recorded during the game session.
+    /// Gets or sets a map of player numbers to their names in this game.
     /// </summary>
-    public List<PlayerStats> PlayerStats { get; private set; } = [];
+    public Dictionary<int, string> PlayerNumsAndNames { get; set; } = [];
+
     /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     public bool LoadFromBinary(BinaryReader reader)
     {
@@ -320,13 +337,15 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
                 TradeIns.Add(readTrade);
             }
 
-            int numPlayerStats = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-            for (int i = 0; i < numPlayerStats; i++)
+            List<(int, string)> ReadPlayerNumsNames = [];
+            int numMappedPlayers = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            for (int i = 0; i < numMappedPlayers; i++)
             {
-                var readPlayerStat = new PlayerStats(_loggerFactory.CreateLogger<PlayerStats>());
-                readPlayerStat.LoadFromBinary(reader);
-                PlayerStats.Add(readPlayerStat);
+                int playerNum = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+                string playerName = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
+                ReadPlayerNumsNames.Add((playerNum, playerName));
             }
+            PlayerNumsAndNames = ReadPlayerNumsNames.ToDictionary<int, string>();
         }
         catch (Exception ex)
         {
@@ -364,14 +383,12 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
             var attackSaveTasks = Attacks.Select(a => a.GetBinarySerials());
             var moveSaveTasks = Moves.Select(m => m.GetBinarySerials());
             var tradeSaveTasks = TradeIns.Select(t => t.GetBinarySerials());
-            var playerSaveTasks = PlayerStats.Select(s => s.GetBinarySerials());
 
             var saveTasks = new[]
             {
                 Task.WhenAll(attackSaveTasks),
                 Task.WhenAll(moveSaveTasks),
                 Task.WhenAll(tradeSaveTasks),
-                Task.WhenAll(playerSaveTasks)
             };
 
             var innerSaveData = await Task.WhenAll(saveTasks);
@@ -388,9 +405,13 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
             saveData.Add(new(typeof(int), numTrades));
             saveData.AddRange(innerSaveData[2].SelectMany(t => t));
 
-            int numPlayerStats = PlayerStats.Count;
-            saveData.Add(new(typeof(int), numPlayerStats));
-            saveData.AddRange(innerSaveData[3].SelectMany(p => p));
+            int numMappedPlayers = PlayerNumsAndNames.Count;
+            saveData.Add(new(typeof(int), numMappedPlayers));
+            for(int i = 0; i < numMappedPlayers; i++)
+            {
+                saveData.Add(new(typeof(int), PlayerNumsAndNames.Keys.ToArray()[i]));
+                saveData.Add(new(typeof(string), PlayerNumsAndNames[i]));
+            }
 
             return saveData.ToArray();
         });

@@ -2,6 +2,7 @@
 {
     public class MoveActionDto
     {
+        public int ActionId { get; set; }
         public int Player { get; set; }
         public string SourceTerritory { get; set; } = string.Empty;
         public string TargetTerritory { get; set;} = string.Empty;

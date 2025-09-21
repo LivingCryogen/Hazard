@@ -4,8 +4,10 @@ public class GameSessionEntity
 {
     // Composite Key
     public Guid InstallId { get; set; }
-    public Guid GameId { get; set; } 
-   
+    public Guid GameId { get; set; }
+
+    public bool IsDemo { get; set; } = false;
+
     // Properties from GameSession model
     public int Version { get; set; }
     public DateTime StartTime { get; set; }

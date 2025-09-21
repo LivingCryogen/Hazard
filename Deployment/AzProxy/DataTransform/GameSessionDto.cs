@@ -7,8 +7,8 @@ public class GameSessionDto
     public DateTime StartTime { get; set; }
     public DateTime? EndTime { get; set; }
     public int? Winner { get; set; }
-    public List<PlayerStatsDto> PlayerStats { get; set; } = [];
     public List<AttackActionDto> Attacks { get; set; } = [];
     public List<MoveActionDto> Moves { get; set; } = [];
     public List<TradeActionDto> Trades { get; set; } = [];
+    public Dictionary<string, string> PlayerNumsAndNames { get; set; } = [];
 }

@@ -13,6 +13,7 @@ public class AttackMetadata : IAttackData
     public int Player { get; set; } = -2; // -1 represents AI player, -2 represents uninitialized
     public TerrID SourceTerritory { get; set; } = TerrID.Null;
     public TerrID TargetTerritory { get; set; } = TerrID.Null;
+    public int Attacker => Player;
     public int Defender { get; set; } = -2; // -1 represents AI player, -2 represents uninitialized
     public int AttackerInitialArmies { get; set; } = 0;
     public int DefenderInitialArmies { get; set; } = 0;

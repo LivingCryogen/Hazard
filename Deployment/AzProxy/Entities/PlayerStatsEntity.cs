@@ -8,6 +8,8 @@ public class PlayerStatsEntity
     public Guid InstallId { get; set; }
     public string Name { get; set; } = string.Empty;
 
+    public bool IsDemo { get; set; } = false;
+
     // Aggregate Player Stats
     public int GamesStarted { get; set; } = 0;
     public int GamesCompleted { get; set; } = 0;
@@ -19,6 +21,7 @@ public class PlayerStatsEntity
     public TimeSpan TotalGamesDuration { get; set; } = TimeSpan.MinValue;
     public int AttacksWon { get; set; } = 0;
     public int AttacksLost { get; set; } = 0;
+    public int AttacksTied { get; set; } = 0;
     public int Conquests { get; set; } = 0;
     public int Retreats { get; set; } = 0;
     public int ForcedRetreats { get; set; } = 0;
