@@ -136,82 +136,28 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             }
         }
 
-        var installPlayerList = await GetPlayerStats(installGuid, errorList);
-
-        if (installPlayerList == null || installPlayerList.Count == 0) // no PlayerStats for this Install
+        // Create or Update PlayerStats for each Player in this new or updated Session
+        foreach(var playerData in playerNumToNameMap)
         {
-            string winnerName = string.Empty;
-            if (sessionData.Winner is int winner && playerNumToNameMap.TryGetValue(winner, out var mappedName))
-                winnerName = mappedName;
-
-            foreach (var playerData in playerNumToNameMap)
+            if (await GetPlayerStats(installGuid, playerData.Value, errorList) is PlayerStatsEntity prevPlayerStats)
             {
-                await _context.PlayerStats.AddAsync(CreateNewPlayerStats(installGuid, sessionData, playerData.Key, playerData.Value));
-                await _context.PlayerSessionProcesses.AddAsync(CreateProcessingRecord(installGuid, sessionData.Id, plyrStatsDto.Name, actualActions));
-            }
-        }
-        else 
-        {
-            HashSet<string> installPlayerNames = [.. installPlayerList.Select(p => p.Name)];
-            // new players
-            var newPlayerNames = sessionPlayerNames.ExceptBy(installPlayerNames, name => name);
-            var previousPlayerNames = sessionPlayerNames.IntersectBy(installPlayerNames, name => name);
-
-            var newPlayerStats = sessionData.PlayerStats.Where(ps => newPlayerNames.Contains(ps.Name));
-            foreach (var playerStats in newPlayerStats) {
-                await _context.PlayerStats.AddAsync(CreateNewPlayerStats(installGuid, sessionData, playerStats));
-                await _context.PlayerSessionProcesses.AddAsync(CreateProcessingRecord(installGuid, sessionData.Id, playerStats.Name, actualActions));
-            }
-
-            var updatingPlayerStats = installPlayerList.Where(ps => previousPlayerNames.Contains(ps.Name));
-
-            foreach (var playerStats in updatingPlayerStats)
-            {
-                var updatingPlayerDto = sessionData.PlayerStats.FirstOrDefault(ps => ps.Name == playerStats.Name);
-                if (updatingPlayerDto == null)
+                if (!UpdatePlayerStats(prevPlayerStats, sessionData, playerNumToNameMap, errorList))
                 {
-                    _logger.LogWarning("Failed to find the PlayerStatsDto expected for Player {name}. Skipping update.", playerStats.Name);
-                    errorList.Add($"Failed to find the PlayerStatsDto expected for Player {playerStats.Name}.");
+                    errorList.Add($"Failed to Update stats for {prevPlayerStats.Name} with install ID {prevPlayerStats.InstallId}.");
+                    _logger.LogWarning("Update failed for Player {plyrName} on install {installID}", prevPlayerStats.Name, prevPlayerStats.InstallId);
                     continue;
                 }
 
-                // Fetch Processing Record for Update
-                var processingRecord = await GetProcessingRecord(sessionData.Id, playerStats.Name, errorList);
-
-                // If none is found, proceed with Update and create new Process Record
-                if (processingRecord == null)
-                {
-                    if (!UpdatePlayerStats(playerStats, sessionData, updatingPlayerDto, playerNumToNameMap, errorList))
-                    {
-                        errorList.Add($"Failed to Update stats for {playerStats.Name} with install ID {playerStats.InstallId}.");
-                        _logger.LogWarning("Update failed for Player {plyrName} on install {installID}", playerStats.Name, playerStats.InstallId);
-                        continue;
-                    }
-                    await _context.PlayerSessionProcesses.AddAsync(CreateProcessingRecord(installGuid, sessionData.Id, playerStats.Name, actualActions));
-                }
-                // Otherwise, check if this Player Stat is as-or-more-up-to-date as incoming sync Data, and Update. Otherwise, Don't
-                else if (processingRecord.ProcessedActions < actualActions)
-                {
-                    if (!UpdatePlayerStats(playerStats, sessionData, updatingPlayerDto, playerNumToNameMap, errorList))
-                    {
-                        errorList.Add($"Failed to Update stats for {playerStats.Name} with install ID {playerStats.InstallId}.");
-                        _logger.LogWarning("Update failed for Player {plyrName} on install {installID}", playerStats.Name, playerStats.InstallId);
-                        continue;
-                    }
-                    UpdateProcessingRecord(processingRecord, installGuid, actualActions);
-                }
-                else
-                {
-                    _logger.LogInformation("Player Stats update was skipped for player {name} from {gameID} because their PSE was already up-to-date.", playerStats.Name, sessionData.Id);
-                }
+                _logger.LogInformation("PSE for player {name} succesfully updated.", prevPlayerStats.Name);
             }
+            else
+                await _context.PlayerStats.AddAsync(CreateNewPlayerStats(installGuid, sessionData, playerData.Key, playerData.Value));
         }
 
         if (errorList.Count != 0)
-        {
-            throw new PartialFailureException($"Sync partially completed, with {errorList.Count} errors: {string.Join("; ", errorList)}", errorList);
-        }
-
+            throw new PartialFailureException(
+                $"Sync partially completed, with {errorList.Count} errors: {string.Join("; ", errorList)}", errorList);
+        
         try
         {
             await _context.SaveChangesAsync();
@@ -239,7 +185,6 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             Winner = sessionDto.Winner,
         };
     }
-
     private bool UpdateGameSession(GameSessionEntity oldSession, GameSessionDto sessionDto, Dictionary<int, string> playerNumToNameMap, List<string> errors)
     {
         if (oldSession.GameId != sessionDto.Id)
@@ -350,7 +295,6 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
                 sessionDto.Id, oldPlayerCount, newPlayerCount);
         }
     }
-
     private static GamePlayerEntity CreateNewGamePlayer(Guid gameID, int playerNumber, string playerName)
     {
         return new GamePlayerEntity()
@@ -361,7 +305,6 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             IsDemo = false
         };
     }
-
     private static AttackActionEntity CreateAttackAction(Guid gameID, AttackActionDto dto, Dictionary<int, string> playerNumToNameMap)
     {
         return new AttackActionEntity()
@@ -387,7 +330,6 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             Conquered = dto.Conquered,
         };
     }
-
     private static MoveActionEntity CreateMoveAction(Guid gameID, MoveActionDto dto, Dictionary<int, string> playerNumToNameMap)
     {
         return new MoveActionEntity()
@@ -403,7 +345,6 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             MaxAdvanced = dto.MaxAdvanced
         };
     }
-
     private static TradeActionEntity CreateTradeAction(Guid gameID, TradeActionDto dto, Dictionary<int, string> playerNumToNameMap)
     {
         return new TradeActionEntity()
@@ -419,12 +360,11 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             OccupiedBonus = dto.OccupiedBonus,
         };
     }
-
-    private async Task<List<PlayerStatsEntity>> GetPlayerStats(Guid installId, List<string> errors)
+    private async Task<PlayerStatsEntity?> GetPlayerStats(Guid installId, string name, List<string> errors)
     {
         try
         {
-            return await _context.PlayerStats.Where(p => p.InstallId == installId).ToListAsync();
+            return await _context.PlayerStats.Where(p => p.InstallId == installId && p.Name == name).FirstOrDefaultAsync();
         }
         catch (Exception ex)
         {
@@ -433,7 +373,6 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             throw;
         }
     }
-
     private static PlayerStatsEntity CreateNewPlayerStats(Guid installId, GameSessionDto sessionDto, int playerNumber, string playerName)
     {
         return new PlayerStatsEntity()
@@ -463,7 +402,6 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             TotalOccupationBonus = sessionDto.Trades.Where(trade => trade.Player == playerNumber).Sum(t => t.OccupiedBonus)
         };
     }
-
     private bool UpdatePlayerStats(PlayerStatsEntity playerStats, GameSessionDto sessionDto, Dictionary<int, string> playerNumToNameMap, List<string> errors)
     {
         if (playerStats.Name != statsDto.Name)
