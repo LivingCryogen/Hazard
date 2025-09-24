@@ -45,6 +45,9 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         // Errors collection, allowing logs and responses to accumulate and report all back when errors aren't fatal
         List<string> errorList = [];
         Dictionary<int, string> playerNumToNameMap;
+        bool newGame = false; // Used to determine if PlayerStats should increment games started
+        int prevLastAction = 0; // Used to determine the last action recorded for a player, to avoid double-counting
+
         try
         {
             playerNumToNameMap = sessionData.PlayerNumsAndNames.ToDictionary(
@@ -73,9 +76,10 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         // no previous Session found with this ID, create one
         if (await _context.GameSessions
             .Where(gs => gs.GameId == sessionData.Id && gs.InstallId == installGuid)
-            .FirstOrDefaultAsync() 
+            .FirstOrDefaultAsync()
             is not GameSessionEntity previousSession)
         {
+            newGame = true;
             var newSession = CreateNewGameSession(installGuid, sessionData);
 
             // Create GamePlayers
@@ -134,6 +138,19 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             {
                 throw new InvalidOperationException($"Game Session {previousSession.GameId} with install {previousSession.InstallId} failed to update! Aborting...");
             }
+
+            _logger.LogInformation("GSE for game {gameID} on install {installID} successfully updated.", previousSession.GameId, previousSession.InstallId);
+
+            // More memory-efficient: avoids allocating a combined sequence via SelectMany.
+            // Slightly more CPU work (3 Max calls), but better for large datasets or tight memory constraints.
+            var lastActionIds = new int[3]
+            {
+                sessionData.Attacks.Select(t => t.ActionId).DefaultIfEmpty().Max(),
+                sessionData.Trades.Select(t => t.ActionId).DefaultIfEmpty().Max(),
+                sessionData.Moves.Select(t => t.ActionId).DefaultIfEmpty().Max()
+            };
+
+            prevLastAction = lastActionIds.Max();
         }
 
         // Create or Update PlayerStats for each Player in this new or updated Session
@@ -141,7 +158,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         {
             if (await GetPlayerStats(installGuid, playerData.Value, errorList) is PlayerStatsEntity prevPlayerStats)
             {
-                if (!UpdatePlayerStats(prevPlayerStats, sessionData, playerNumToNameMap, errorList))
+                if (!UpdatePlayerStats(prevPlayerStats, sessionData, playerData.Key, playerData.Value, newGame, prevLastAction, errorList))
                 {
                     errorList.Add($"Failed to Update stats for {prevPlayerStats.Name} with install ID {prevPlayerStats.InstallId}.");
                     _logger.LogWarning("Update failed for Player {plyrName} on install {installID}", prevPlayerStats.Name, prevPlayerStats.InstallId);
@@ -396,18 +413,20 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             Conquests = sessionDto.Attacks.Count(attack => attack.Player == playerNumber && attack.Conquered),
             Retreats = sessionDto.Attacks.Count(attack => attack.Player == playerNumber && attack.Retreated),
             ForcedRetreats = sessionDto.Attacks.Count(attack => attack.Defender == playerNumber && attack.Retreated),
+            AttackDiceRolled = sessionDto.Attacks.Where(attack => attack.Player == playerNumber).Sum(a => a.AttackerDice),
+            DefenseDiceRolled = sessionDto.Attacks.Where(attack => attack.Defender == playerNumber).Sum(a => a.DefenderDice),
             Moves = sessionDto.Moves.Count(move => move.Player == playerNumber),
             MaxAdvances = sessionDto.Moves.Count(move => move.Player == playerNumber && move.MaxAdvanced),
             TradeIns = sessionDto.Trades.Count(trade => trade.Player == playerNumber),
             TotalOccupationBonus = sessionDto.Trades.Where(trade => trade.Player == playerNumber).Sum(t => t.OccupiedBonus)
         };
     }
-    private bool UpdatePlayerStats(PlayerStatsEntity playerStats, GameSessionDto sessionDto, Dictionary<int, string> playerNumToNameMap, List<string> errors)
+    private bool UpdatePlayerStats(PlayerStatsEntity playerStats, GameSessionDto sessionDto, int playerNumber, string playerName, bool newGame, int prevLastAction, List<string> errors)
     {
-        if (playerStats.Name != statsDto.Name)
+        if (playerStats.Name != playerName)
         {
-            _logger.LogError("Player Stats Update failed. Provided Player Name ID {dtoName} did not match existing Player Stats name {pseName}.",
-                statsDto.Name, playerStats.Name);
+            _logger.LogError("Player Stats Update failed. Provided Player Name ID {name} did not match existing Player Stats name {pseName}.",
+                playerName, playerStats.Name);
             errors.Add($"Fetch Error for PSE. PSE with name {playerStats.Name} and install ID '{playerStats.InstallId}' was not found.");
             return false;
         }
@@ -416,17 +435,19 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         {
             _logger.LogWarning("Player Stats Update was called on a demo Entity: {name} on install {install}", playerStats.Name, playerStats.InstallId);
             errors.Add($"PSE Updated a Demo Entity with name {playerStats.Name} and install ID '{playerStats.InstallId}'.");
-            return false;
         }
 
         try
         {
+            if (newGame)
+                playerStats.GamesStarted++;
+
             if (playerStats.LastGameStarted < sessionDto.StartTime)
             {
                 playerStats.LastGameStarted = sessionDto.StartTime;
             }
 
-            // If synced session was a completed game, check if it's already been received, then if not update game completion tracking data
+            // If synced session was a completed game, update game completion tracking data
             if (sessionDto.EndTime.HasValue)
             {
                 if (playerStats.LastGameCompleted == null || sessionDto.EndTime > playerStats.LastGameCompleted)
@@ -440,47 +461,61 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
 
                 playerStats.TotalGamesDuration += sessionDto.EndTime.Value - sessionDto.StartTime;
                 playerStats.GamesCompleted++;
-                if (sessionDto.Winner is int winnerNum)
+                if (sessionDto.Winner == playerNumber)
+                    playerStats.GamesWon++;
+            }
+
+            // Stat increases must be calculated using unique Action IDs, since we allow partial updates
+            
+            // Attack Stat Deltas
+            var newAttacks = sessionDto.Attacks.Where(a => a.ActionId > prevLastAction);
+
+            foreach(var attack in newAttacks)
+            {
+                if (attack.Player == playerNumber)
                 {
-                    if (playerNumToNameMap.TryGetValue(winnerNum, out string? winnerName) && !string.IsNullOrEmpty(winnerName))
+                    switch (attack.AttackerLoss - attack.DefenderLoss)
                     {
-                        if (winnerName == playerStats.Name)
-                            playerStats.GamesWon++;
+                        case 0: playerStats.AttacksTied++; break;
+                        case < 0: playerStats.AttacksLost++; break;
+                        case > 0: playerStats.AttacksWon++; break;
                     }
+
+                    if (attack.Conquered)
+                        playerStats.Conquests++;
+                    if (attack.Retreated)
+                        playerStats.Retreats++;
+
+                    playerStats.AttackDiceRolled += attack.AttackerDice;
+                    playerStats.DefenseDiceRolled += attack.DefenderDice;
+                }
+
+                if (attack.Defender == playerNumber && attack.Retreated)
+                {
+                    playerStats.ForcedRetreats++;
                 }
             }
-            // Aggregate stat deltas from last update (not absolute values!)
-            else
+
+            // Trade Stat Deltas
+            var newTrades = sessionDto.Trades.Where(t => t.ActionId > prevLastAction && t.Player == playerNumber);
+
+            foreach(var trade in newTrades)
             {
-                playerStats.AttacksWon += statsDto.AttacksWon - playerStats.AttacksWon >= 0
-                    ? statsDto.AttacksWon - playerStats.AttacksWon
-                    : throw new InvalidDataException($"Player {playerStats.Name} attempted to decrease AttacksWon property.");
-                playerStats.AttacksLost += statsDto.AttacksLost - playerStats.AttacksLost >= 0
-                    ? statsDto.AttacksLost - playerStats.AttacksLost
-                    : throw new InvalidDataException($"Player {playerStats.Name} attempted to decrease AttacksLost property.");
-                playerStats.Retreats += statsDto.Retreats - playerStats.Retreats >= 0
-                    ? statsDto.Retreats - playerStats.Retreats
-                    : throw new InvalidDataException($"Player {playerStats.Name} attempted to decrease Retreats property.");
-                playerStats.ForcedRetreats += statsDto.ForcedRetreats - playerStats.ForcedRetreats >= 0
-                    ? statsDto.ForcedRetreats - playerStats.ForcedRetreats
-                    : throw new InvalidDataException($"Player {playerStats.Name} attempted to decrease ForcedRetreats property.");
-                playerStats.Conquests += statsDto.Conquests - playerStats.Conquests >= 0
-                    ? statsDto.Conquests - playerStats.Conquests
-                    : throw new InvalidDataException($"Player {playerStats.Name} attempted to decrease Conquests property.");
-                playerStats.TotalOccupationBonus += statsDto.TotalOccupationBonus - playerStats.TotalOccupationBonus >= 0
-                    ? statsDto.TotalOccupationBonus - playerStats.TotalOccupationBonus
-                    : throw new InvalidDataException($"Player {playerStats.Name} attempted to decrease TotalOccupationBonus property.");
-                playerStats.TradeIns += statsDto.TradeIns - playerStats.TradeIns >= 0
-                    ? statsDto.TradeIns - playerStats.TradeIns
-                    : throw new InvalidDataException($"Player {playerStats.Name} attempted to decrease TradeIns property.");
-                playerStats.Moves += statsDto.Moves - playerStats.Moves >= 0
-                    ? statsDto.Moves - playerStats.Moves
-                    : throw new InvalidDataException($"Player {playerStats.Name} attempted to decrease Moves property.");
-                playerStats.MaxAdvances += statsDto.MaxAdvances - playerStats.MaxAdvances >= 0
-                    ? statsDto.MaxAdvances - playerStats.MaxAdvances
-                    : throw new InvalidDataException($"Player {playerStats.Name} attempted to decrease MaxAdvances property.");
+                playerStats.TradeIns++;
+                playerStats.TotalOccupationBonus += trade.OccupiedBonus;
             }
-                
+
+            // Move Stat Deltas
+            var newMoves = sessionDto.Moves.Where(m => m.ActionId > prevLastAction && m.Player == playerNumber);
+
+            foreach(var move in newMoves)
+            {
+                playerStats.Moves++;
+                if (move.MaxAdvanced)
+                    playerStats.MaxAdvances++;
+            }
+
+
             return true;
         }
         catch (Exception ex)
