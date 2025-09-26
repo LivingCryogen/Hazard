@@ -21,7 +21,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         Converters = { new JsonStringEnumConverter() }
     };
 
-    public async Task TransformFromJson(string json, string installId, int trackedActions)
+    public async Task TransformFromJson(string json, string installId, int expectedActionCount)
     {
         if (string.IsNullOrEmpty(json))
             throw new ArgumentException("Invalid JSON.");
@@ -34,12 +34,12 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
 
         var sessionData = JsonSerializer.Deserialize<GameSessionDto>(json, _jsonSerializerOptions) ?? throw new InvalidDataException("Failed to deserialize GameSession from json.");
 
-        int actualActions = sessionData.Attacks.Count + sessionData.Moves.Count + sessionData.Trades.Count;
-        if (trackedActions > 0 && actualActions != trackedActions)
+        int actualActionCount = sessionData.Attacks.Count + sessionData.Moves.Count + sessionData.Trades.Count;
+        if (expectedActionCount > 0 && actualActionCount != expectedActionCount)
         {
             _logger.LogWarning("Action count mismatch for game {id} from install {inst}. Expected: {expect}, Actual {actual}.",
-                sessionData.Id, installGuid, trackedActions, actualActions);
-            trackedActions = actualActions;
+                sessionData.Id, installGuid, expectedActionCount, actualActionCount);
+            expectedActionCount = actualActionCount;
         }
 
         // Errors collection, allowing logs and responses to accumulate and report all back when errors aren't fatal
@@ -127,10 +127,10 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         else // previous session found; if sync data is more up-to-date, update session
         {
             int previousSessionActions = previousSession.AttackActions.Count + previousSession.MoveActions.Count + previousSession.TradeActions.Count;
-            if (previousSessionActions >= trackedActions)
+            if (previousSessionActions >= expectedActionCount)
             {
                 _logger.LogInformation("Game Session {gameID} on install {installID} already has {prevActions}, while sync has {syncActions} actions. Skipping.",
-                    sessionData.Id, installGuid, previousSessionActions, trackedActions);
+                    sessionData.Id, installGuid, previousSessionActions, expectedActionCount);
                 return;
             }
 

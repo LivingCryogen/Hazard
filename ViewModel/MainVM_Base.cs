@@ -352,9 +352,21 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         }
 
         if (CurrentGame != null && Regulator != null)
+        {
             await BinarySerializer.Save([this, CurrentGame, Regulator], fileName, saveParams.NewFile);
 
-
+            if (await StatRepo.Update() is string trackedSavePath)
+            {
+                if (trackedSavePath != fileName)
+                    _logger.LogWarning("StatRepo updated but is tracking a different save file ({TrackedSavePath}) than the one just saved ({FileName}).", trackedSavePath, fileName);
+                else
+                    _logger.LogInformation("StatRepo successfully updated after saving game.");
+            }
+            else
+            {
+                _logger.LogInformation("StatRepo skipped update after saving game.");
+            }
+        }
     }
     [RelayCommand]
     /// <inheritdoc cref="IMainVM.LoadGame(string)">

@@ -7,7 +7,6 @@ public interface IStatRepo
     bool SyncPending { get; }
     string SyncStatusMessage { get; }
 
-    Task Shutdown();
-    void Update();
-    Task Save();
+    Task<string?> Update();
+    Task<bool> SyncToAzureDB();
 }
