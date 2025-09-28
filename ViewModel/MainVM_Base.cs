@@ -2,6 +2,8 @@
 using CommunityToolkit.Mvvm.Input;
 using Hazard.ViewModel.SubElements;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Model.Stats.Services;
 using Shared.Enums;
 using Shared.Geography;
 using Shared.Geography.Enums;
@@ -9,6 +11,7 @@ using Shared.Interfaces;
 using Shared.Interfaces.Model;
 using Shared.Interfaces.View;
 using Shared.Interfaces.ViewModel;
+using Shared.Services.Configuration;
 using Shared.Services.Serializer;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
@@ -30,11 +33,12 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     internal readonly CardInfoFactory? _cardInfoFactory = null;
     private string? _colorNames;
 
-    public MainVM_Base(IAppCommander gameCommander, IGameService gameService, IStatRepo statRepo, ILogger<MainVM_Base> logger)
+    public MainVM_Base(IAppCommander gameCommander, IGameService gameService, IStatRepo statRepo, IOptions<AppConfig> options, ILogger<MainVM_Base> logger)
     {
         _gameService = gameService;
         _gameCommander = gameCommander;
         _logger = logger;
+        AppPath = options.Value.AppPath;
         StatRepo = statRepo;
         Territories = [];
         PlayerDetails = [];
@@ -353,9 +357,9 @@ public partial class MainVM_Base : ObservableObject, IMainVM
 
         if (CurrentGame != null && Regulator != null)
         {
-            await BinarySerializer.Save([this, CurrentGame, Regulator], fileName, saveParams.NewFile);
-
-            if (await StatRepo.Update() is string trackedSavePath)
+            var saveResult = await BinarySerializer.Save([this, CurrentGame, Regulator], fileName, saveParams.NewFile);
+          
+            if (await StatRepo.Update(saveResult) is string trackedSavePath)
             {
                 if (trackedSavePath != fileName)
                     _logger.LogWarning("StatRepo updated but is tracking a different save file ({TrackedSavePath}) than the one just saved ({FileName}).", trackedSavePath, fileName);

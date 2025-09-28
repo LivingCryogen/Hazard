@@ -139,10 +139,10 @@ namespace Bootstrap
                        services.AddSingleton<IStatRepo>(provider => 
                        {
                            var connectionHandler = provider.GetRequiredService<WebConnectionHandler>();
-                           var gameService = provider.GetRequiredService<IGameService>();
+                           Func<IStatTracker> statTrackerFactory = () => provider.GetRequiredService<IStatTracker>();
                            var options = provider.GetRequiredService<IOptions<AppConfig>>();
                            var logger = provider.GetRequiredService<ILogger<StatRepo>>();
-                           return new StatRepo(connectionHandler, numPlayers => gameService.CreateGame(numPlayers), options, logger);
+                           return new StatRepo(connectionHandler, statTrackerFactory, options, logger);
                        });
                    })
                    .ConfigureLogging(logging =>

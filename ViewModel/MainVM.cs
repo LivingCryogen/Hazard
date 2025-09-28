@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Model.Core;
 using Model.EventArgs;
 using Shared.Enums;
@@ -8,6 +9,7 @@ using Shared.Interfaces.Model;
 using Shared.Interfaces.View;
 using Shared.Interfaces.ViewModel;
 using Shared.Services;
+using Shared.Services.Configuration;
 
 namespace ViewModel;
 /// <summary>
@@ -21,8 +23,9 @@ public partial class MainVM(IAppCommander appCommander,
     IGameService gameService,
     IDialogState dialogService,
     IDispatcherTimer wpfTimer,
+    IOptions<AppConfig> options,
     ILogger<MainVM_Base> logger)
-    : MainVM_Base(appCommander, gameService, statRepo, logger)
+    : MainVM_Base(appCommander, gameService, statRepo, options, logger)
 {
     private readonly IDialogState _dialogService = dialogService;
     private readonly IDispatcherTimer _dispatcherTimer = wpfTimer;
@@ -307,7 +310,7 @@ public partial class MainVM(IAppCommander appCommander,
     [RelayCommand(CanExecute = nameof(CanSync))]
     private async Task SyncCommand()
     {
-        await _statRepo.Sync
+        await _statRepo.SyncToAzureDB();
 
         SyncCommandCommand.NotifyCanExecuteChanged();
     }

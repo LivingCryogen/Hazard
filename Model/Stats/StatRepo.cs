@@ -10,24 +10,27 @@ using System.Text.Json;
 
 namespace Model.Stats;
 
-public class StatRepo(WebConnectionHandler connectionHandler, Func<int, IGame> gameFactory, IOptions<AppConfig> options, ILogger<StatRepo> logger) : IBinarySerializable, IStatRepo
+public class StatRepo(WebConnectionHandler connectionHandler, Func<IStatTracker> statFactory, IOptions<AppConfig> options, ILogger<StatRepo> logger) : IBinarySerializable, IStatRepo
 {
     private readonly ILogger<StatRepo> _logger = logger;
-    private readonly Func<int, IGame> _gameFactory = gameFactory; // for deserialzing old Games and fetching their StatTrackers
     private readonly string StatFilePath = options.Value.StatRepoFilePath;
-    private readonly Dictionary<Guid, string> _gamePaths = [];
+    private readonly Dictionary<Guid, (string, long)> _gameStatLocs = [];
     private readonly Dictionary<Guid, int> _gameActionCounts = [];
     private readonly HashSet<Guid> _gamesToUpdate = [];
     private readonly WebConnectionHandler _connectionHandler = connectionHandler;
+    private readonly Func<IStatTracker> _statTrackerFactory = statFactory;
 
+    /// <inheritdoc cref="IStatRepo.CurrentTracker" />
     public IStatTracker? CurrentTracker { get; set; }
+    /// <inheritdoc cref="IStatRepo.SyncPending"/>
     public string SyncStatusMessage { get; private set; } = "Sync";
     /// <summary>
     /// Gets a flag indicating whether there are any syncs (game statistics updates) pending.
     /// </summary>
     public bool SyncPending { get => _gamesToUpdate.Count > 0; }
 
-    public async Task<string?> Update()
+    /// <inheritdoc cref="IStatRepo.Update(ValueTuple{string, long}[])"/>
+    public async Task<string?> Update((string, long)[] objNamesAndPositions)
     {
         try
         {
@@ -37,6 +40,15 @@ public class StatRepo(WebConnectionHandler connectionHandler, Func<int, IGame> g
             Guid gameID = CurrentTracker.GameID;
             int trackerNumber = CurrentTracker.TrackedActions;
             string? path = CurrentTracker.LastSavePath;
+
+            // parse Save result for the streamPosition of StatTracker
+            var statTrackerResult = objNamesAndPositions.Where(np => np.Item1 == nameof(StatTracker)).FirstOrDefault();
+            if (statTrackerResult == default)
+            {
+                _logger.LogWarning("StatTracker not found in save results");
+                return null;
+            }
+            long trackerPosition = statTrackerResult.Item2;
 
             if (string.IsNullOrEmpty(path))
                 return null;
@@ -62,7 +74,7 @@ public class StatRepo(WebConnectionHandler connectionHandler, Func<int, IGame> g
             // (If a game is saved to multiple files, we only care about the one most recently updated)
             if (path != null)
             {
-                _gamePaths.TryAdd(gameID, path);
+                _gameStatLocs.TryAdd(gameID, (path, trackerPosition));
             }
 
             await Save();
@@ -75,6 +87,7 @@ public class StatRepo(WebConnectionHandler connectionHandler, Func<int, IGame> g
         }   
     }
 
+    /// <inheritdoc cref="IStatRepo.SyncToAzureDB"/>
     public async Task<bool> SyncToAzureDB()
     {
         if (!SyncPending)
@@ -157,24 +170,31 @@ public class StatRepo(WebConnectionHandler connectionHandler, Func<int, IGame> g
         try
         {
             string sessionJSON = string.Empty;
+            int trackedActions;
             if (CurrentTracker == null || CurrentTracker.GameID != gameID)
             {
-                var savedTracker = GetSavedStatTracker(gameID) ?? throw new InvalidDataException(gameID.ToString());
+                var savedTracker = GetSavedStatTracker(gameID);
                 if (savedTracker == null)
                 {
                     _logger.LogError("Failed to load Stat Tracker for {game}.", gameID);
                     return false;
                 }
                 sessionJSON = await savedTracker.JSONFromGameSession();
+                trackedActions = savedTracker.TrackedActions;
             }
             else
+            {
                 sessionJSON = await CurrentTracker.JSONFromGameSession();
+                trackedActions = CurrentTracker.TrackedActions;
+            }
 
-            //2. TODO: HTTP POST TO PROXY
-            //3. TODO: HANDLE RESPONSE
-            //4. TODO: RETURN PASS/FAIL
+            bool synced = await _connectionHandler.PostGameSession(sessionJSON, trackedActions);
+            if (synced)
+                _logger.LogInformation("Successfully posted game session stats for {gameId}", gameID);
+            else
+                _logger.LogWarning("Failed to post game session stats for {gameId}", gameID);
 
-
+            return synced;
         }
         catch (Exception ex)
         {
@@ -185,11 +205,9 @@ public class StatRepo(WebConnectionHandler connectionHandler, Func<int, IGame> g
 
     }
 
-    private IStatTracker? GetSavedStatTracker(Guid gameID) /// TODO!! : FIX STARTING POINT FOR FILESTREAM - normal saves have values from View and ViewModel first in the stream, currently this doesn't compensate!!
+    private IStatTracker? GetSavedStatTracker(Guid gameID) 
     {
-        IGame savedGame = _gameFactory(0);
-
-        if (!_gamePaths.TryGetValue(gameID, out var path))
+        if (!_gameStatLocs.TryGetValue(gameID, out var pathLoc))
         {
             _logger.LogWarning("Stat Repo attempted to load saved Stats data from game {id}, but no path was found.", gameID);
             return null;
@@ -197,8 +215,9 @@ public class StatRepo(WebConnectionHandler connectionHandler, Func<int, IGame> g
 
         try
         {
-            BinarySerializer.Load([savedGame], path);
-            return savedGame.StatTracker;
+            IStatTracker newTracker = _statTrackerFactory();
+            BinarySerializer.Load([newTracker], pathLoc.Item1, pathLoc.Item2, out _);
+            return newTracker;
         }
         catch (Exception ex)
         {
@@ -207,16 +226,18 @@ public class StatRepo(WebConnectionHandler connectionHandler, Func<int, IGame> g
         }
     }
 
+    /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
     public async Task<SerializedData[]> GetBinarySerials()
     {
         return await Task.Run(() =>
         {
             List<SerializedData> saveData = [];
-            saveData.Add(new(typeof(int), _gamePaths.Count));
-            foreach (var keypair in _gamePaths)
+            saveData.Add(new(typeof(int), _gameStatLocs.Count));
+            foreach (var keypair in _gameStatLocs)
             {
                 saveData.Add(new(typeof(string), keypair.Key.ToString()));
-                saveData.Add(new(typeof(string), keypair.Value));
+                saveData.Add(new(typeof(string), keypair.Value.Item1));
+                saveData.Add(new(typeof(long), keypair.Value.Item2));
             }
             saveData.Add(new(typeof(int), _gameActionCounts.Count));
             foreach (var keypair in _gameActionCounts)
@@ -231,6 +252,7 @@ public class StatRepo(WebConnectionHandler connectionHandler, Func<int, IGame> g
         });
     }
 
+    /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     public bool LoadFromBinary(BinaryReader reader)
     {
         if (!File.Exists(StatFilePath))
@@ -244,10 +266,11 @@ public class StatRepo(WebConnectionHandler connectionHandler, Func<int, IGame> g
         bool loadComplete;
         try
         {
-            int numGamePathPairs = (int)BinarySerializer.ReadConvertible(newReader, typeof(int));
-            for (int i = 0; i < numGamePathPairs; i++)
-                _gamePaths.Add(Guid.Parse((string)BinarySerializer.ReadConvertible(newReader, typeof(string))),
-                    (string)BinarySerializer.ReadConvertible(newReader, typeof(string)));
+            int numGameLocPairs = (int)BinarySerializer.ReadConvertible(newReader, typeof(int));
+            for (int i = 0; i < numGameLocPairs; i++)
+                _gameStatLocs.Add(Guid.Parse((string)BinarySerializer.ReadConvertible(newReader, typeof(string))),
+                    ((string)BinarySerializer.ReadConvertible(newReader, typeof(string)),
+                    (long)BinarySerializer.ReadConvertible(newReader, typeof(long))));
             int numGameTrackNumPairs = (int)BinarySerializer.ReadConvertible(newReader, typeof(int));
             for (int i = 0; i < numGameTrackNumPairs; i++)
                 _gameActionCounts.Add(Guid.Parse((string)BinarySerializer.ReadConvertible(newReader, typeof(string))),
@@ -266,6 +289,9 @@ public class StatRepo(WebConnectionHandler connectionHandler, Func<int, IGame> g
         return loadComplete;
     }
 
+    /// <summary>
+    /// Saves the current Repo to <see cref="StatFilePath"/>.
+    /// </summary>
     public async Task Save()
     {
         bool newStatFile = !File.Exists(StatFilePath);

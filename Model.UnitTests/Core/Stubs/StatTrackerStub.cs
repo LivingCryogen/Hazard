@@ -25,9 +25,8 @@ public class StatTrackerStub : IStatTracker, IBinarySerializable
 
         _currentSession.Attacks.Add(new GameSession.AttackAction(new LoggerStubT<GameSession.AttackAction>())
         {
-            Source = TerrID.SouthernEurope,
-            Target = TerrID.NorthAfrica,
-            ConqueredCont = ContID.Africa,
+            SourceTerritory = TerrID.SouthernEurope,
+            TargetTerritory = TerrID.NorthAfrica,
             Attacker = 0,
             Defender = 1,
             AttackerLoss = 2,
@@ -38,15 +37,15 @@ public class StatTrackerStub : IStatTracker, IBinarySerializable
 
         _currentSession.Moves.Add(new GameSession.MoveAction(new LoggerStubT<GameSession.MoveAction>())
         {
-            Source = TerrID.NorthAfrica,
-            Target = TerrID.SouthernEurope,
+            SourceTerritory = TerrID.NorthAfrica,
+            TargetTerritory = TerrID.SouthernEurope,
             MaxAdvanced = true,
             Player = 0
         });
 
         _currentSession.TradeIns.Add(new GameSession.TradeAction(new LoggerStubT<GameSession.TradeAction>())
         {
-            CardTargets = [TerrID.Alberta, TerrID.Congo, TerrID.Japan],
+            CardTargetTerritories = [TerrID.Alberta, TerrID.Congo, TerrID.Japan],
             TradeValue = 3,
             OccupiedBonus = 0,
         });
@@ -67,6 +66,11 @@ public class StatTrackerStub : IStatTracker, IBinarySerializable
         });
     }
 
+    public Task<string> JSONFromGameSession()
+    {
+        throw new NotImplementedException();
+    }
+
     /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     public bool LoadFromBinary(BinaryReader reader)
     {
@@ -85,17 +89,17 @@ public class StatTrackerStub : IStatTracker, IBinarySerializable
         return loadComplete;
     }
 
-    public void RecordAttackAction(TerrID source, TerrID target, ContID? conqueredcont, int attacker, int defender, int attackerloss, int defenderloss, bool retreated, bool conquered)
+    public void RecordAttackAction(IAttackData attackData)
     {
         throw new NotImplementedException();
     }
 
-    public void RecordMoveAction(TerrID source, TerrID target, bool maxAdvanced, int player)
+    public void RecordMoveAction(IMoveData moveData)
     {
         throw new NotImplementedException();
     }
 
-    public void RecordTradeAction(List<TerrID> cardTargets, int tradeValue, int occupiedBonus, int playerNumber)
+    public void RecordTradeAction(ITradeData tradeData)
     {
         throw new NotImplementedException();
     }

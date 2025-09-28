@@ -41,38 +41,6 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger) : App
         InitializeGame();
     }
 
-    protected override async void OnSessionEnding(SessionEndingCancelEventArgs e)
-    {
-        await ReadyShutdown();
-        base.OnSessionEnding(e);
-    }
-
-    protected override async void OnExit(ExitEventArgs e)
-    {
-        await ReadyShutdown();
-        base.OnExit(e);
-    }
-
-    private async Task ReadyShutdown()
-    {
-        lock (_shutdownLock)
-        {
-            if (_readyShutdown)
-                return;
-            _readyShutdown = true;
-        }
-
-        try
-        {
-            if (_statRepo != null)
-                await _statRepo.Shutdown();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Statistics Repository did not properly shut down, and current Tracker/Session data may be lost: {Message}", ex.Message);
-        }
-    }
-
     protected async void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
         if (DevMode)
@@ -83,7 +51,6 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger) : App
             e.Exception.Message, e.Exception.Source, e.Exception.InnerException, e.Exception.Data, e.Exception.HResult, e.Exception.StackTrace);
         MessageBox.Show(errorMsg, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         e.Handled = true;
-        await ReadyShutdown();
         Shutdown();
     }
 

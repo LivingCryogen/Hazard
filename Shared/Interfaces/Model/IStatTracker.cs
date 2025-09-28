@@ -25,7 +25,6 @@ public interface IStatTracker : IBinarySerializable
     /// Gets the path of the save file last used with this Game.
     /// </summary>
     public string? LastSavePath { get; }
-
     /// <summary>
     /// Record relevant statistics for an attack.
     /// </summary>

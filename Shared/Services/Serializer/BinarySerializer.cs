@@ -168,44 +168,36 @@ public static class BinarySerializer
     /// <remarks>
     /// See <see cref="WriteSerializableObject"/> and <see cref="IBinarySerializable.GetBinarySerials()"/>.
     /// </remarks>
-    public async static Task Save(IBinarySerializable[] serializableObjects, string fileName, bool newFile)
+    /// <returns>A Task whose results contain an array of string/long tuples containing the name and starting stream position for each saved object.</returns>
+    public async static Task<(string, long)[]> Save(IBinarySerializable[] serializableObjects, string fileName, bool newFile)
     {
+
+        List<(string, long)> objNamesAndPositions = [];
+
         await Task.Run(() =>
         {
-            if (newFile)
-            {
-                using FileStream fileStream = new(fileName, FileMode.Create, FileAccess.Write);
-                using BinaryWriter writer = new(fileStream);
+            var fileMode = newFile ? FileMode.Create : FileMode.Truncate;
 
-                foreach (var obj in serializableObjects)
-                    try
-                    {
-                        if (!WriteSerializableObject(obj, writer).Result)
-                            _logger?.LogWarning("BinarySerializer failed to write {Object}.", obj);
-                    }
-                    catch (Exception e)
-                    {
-                        _logger?.LogError("An exception was thrown when attempting to write {obj}: {Message}.", obj, e.Message);
-                    }
-            }
-            else
-            {
-                using FileStream fileStream = new(fileName, FileMode.Truncate, FileAccess.Write);
-                using BinaryWriter writer = new(fileStream);
+            using FileStream fileStream = new(fileName, fileMode, FileAccess.Write);
+            using BinaryWriter writer = new(fileStream);
 
-                foreach (var obj in serializableObjects)
-                    try
-                    {
-                        if (!WriteSerializableObject(obj, writer).Result)
-                            _logger?.LogWarning("BinarySerializer failed to write {Object}.", obj);
-                    }
-                    catch (Exception e)
-                    {
-                        _logger?.LogError("An exception was thrown when attempting to write {obj}: {Message}.", obj, e.Message);
-                    }
-            }
+            foreach (var obj in serializableObjects)
+                try
+                {
+                    string objTypeName = obj.GetType().Name;
+                    objNamesAndPositions.Add((objTypeName, fileStream.Position));
+                    if (!WriteSerializableObject(obj, writer).Result)
+                        _logger?.LogWarning("BinarySerializer failed to write {Object}.", obj);
+                }
+                catch (Exception e)
+                {
+                    _logger?.LogError("An exception was thrown when attempting to write {obj}: {Message}.", obj, e.Message);
+                }
         });
+
+        return [.. objNamesAndPositions];
     }
+
     /// <summary>
     /// Loads <see cref="IBinarySerializable"/> objects with deserialized values previously written by <see cref="BinarySerializer"/>.
     /// </summary>
@@ -259,6 +251,7 @@ public static class BinarySerializer
         endStreamPosition = fileStream.Position;
         return !errors;
     }
+
     private async static Task<bool> WriteSerializableObject(IBinarySerializable serializableObject, BinaryWriter writer)
     {
         try
