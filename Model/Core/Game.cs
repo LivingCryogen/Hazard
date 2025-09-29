@@ -200,6 +200,9 @@ public class Game : IGame
         await BinarySerializer.Save([this], fileName, isNewFile);
     }
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
+    /// <remarks>
+    /// For now, StatTracker must be saved independently, so it is ommitted here.
+    /// </remarks>
     public async Task<SerializedData[]> GetBinarySerials()
     {
         return await Task.Run(async () =>
@@ -226,7 +229,6 @@ public class Game : IGame
                     saveData.AddRange(await player.GetBinarySerials());
             if (State != null)
                 saveData.AddRange(await State.GetBinarySerials());
-            saveData.AddRange(await StatTracker.GetBinarySerials());
 
             return saveData.ToArray();
         });
@@ -258,7 +260,6 @@ public class Game : IGame
                 Players.Add(newPlayer);
             }
             State.LoadFromBinary(reader);
-            StatTracker.LoadFromBinary(reader);
         }
         catch (Exception ex)
         {

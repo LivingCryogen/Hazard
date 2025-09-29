@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Hazard.ViewModel.SubElements;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Model.Stats;
 using Model.Stats.Services;
 using Shared.Enums;
 using Shared.Geography;
@@ -123,6 +124,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     public ICommand DeliverAttackReward_Command { get => DeliverAttackRewardCommand; }
     public ICommand UndoConfirmInput_Command { get => UndoConfirmInputCommand; }
     public ICommand ChooseTerritoryBonus_Command { get => ChooseTerritoryBonusCommand; }
+    public ICommand Sync_Command { get => SyncCommand; }
 
     /// <inheritdoc cref="IMainVM.PlayerTurnChanging"/>
     public event EventHandler<int>? PlayerTurnChanging;
@@ -183,7 +185,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
 
         if (fileName != null)
         {
-            BinarySerializer.Load([this, CurrentGame, Regulator], fileName);
+            BinarySerializer.Load([this, CurrentGame, CurrentGame.StatTracker, Regulator], fileName);
             CurrentGame.SavePath = Path.Combine(AppPath, fileName);
             colors = ParseColorNames();
         }
@@ -357,14 +359,17 @@ public partial class MainVM_Base : ObservableObject, IMainVM
 
         if (CurrentGame != null && Regulator != null)
         {
-            var saveResult = await BinarySerializer.Save([this, CurrentGame, Regulator], fileName, saveParams.NewFile);
+            var saveResult = await BinarySerializer.Save([this, CurrentGame, CurrentGame.StatTracker, Regulator], fileName, saveParams.NewFile);
           
             if (await StatRepo.Update(saveResult) is string trackedSavePath)
             {
                 if (trackedSavePath != fileName)
                     _logger.LogWarning("StatRepo updated but is tracking a different save file ({TrackedSavePath}) than the one just saved ({FileName}).", trackedSavePath, fileName);
                 else
+                {
                     _logger.LogInformation("StatRepo successfully updated after saving game.");
+                    SyncCommand.NotifyCanExecuteChanged();
+                }
             }
             else
             {
@@ -461,6 +466,23 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     {
         Regulator?.AwardTradeInBonus((TerrID)target);
     }
+
+    private bool CanSync()
+    {
+        if (StatRepo == null || !StatRepo.SyncPending)
+            return false;
+
+        return true;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanSync))]
+    private async Task Sync()
+    {
+        await StatRepo.SyncToAzureDB();
+
+        SyncCommand.NotifyCanExecuteChanged();
+    }
+
 
     internal void Refresh()
     {

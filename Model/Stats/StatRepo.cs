@@ -14,11 +14,11 @@ public class StatRepo(WebConnectionHandler connectionHandler, Func<IStatTracker>
 {
     private readonly ILogger<StatRepo> _logger = logger;
     private readonly string StatFilePath = options.Value.StatRepoFilePath;
-    private readonly Dictionary<Guid, (string, long)> _gameStatLocs = [];
-    private readonly Dictionary<Guid, int> _gameActionCounts = [];
-    private readonly HashSet<Guid> _gamesToUpdate = [];
+    private readonly Dictionary<Guid, SavedStatMetadata> _gameStats = [];
     private readonly WebConnectionHandler _connectionHandler = connectionHandler;
     private readonly Func<IStatTracker> _statTrackerFactory = statFactory;
+    private readonly 
+    private int _pendingSyncs = 0;
 
     /// <inheritdoc cref="IStatRepo.CurrentTracker" />
     public IStatTracker? CurrentTracker { get; set; }
@@ -27,10 +27,10 @@ public class StatRepo(WebConnectionHandler connectionHandler, Func<IStatTracker>
     /// <summary>
     /// Gets a flag indicating whether there are any syncs (game statistics updates) pending.
     /// </summary>
-    public bool SyncPending { get => _gamesToUpdate.Count > 0; }
+    public bool SyncPending { get => _pendingSyncs > 0; }
 
     /// <inheritdoc cref="IStatRepo.Update(ValueTuple{string, long}[])"/>
-    public async Task<string?> Update((string, long)[] objNamesAndPositions)
+    public async Task<string?> Update(string lastSavePath, (string, long)[] objNamesAndPositions)
     {
         try
         {
@@ -38,8 +38,6 @@ public class StatRepo(WebConnectionHandler connectionHandler, Func<IStatTracker>
                 return null;
 
             Guid gameID = CurrentTracker.GameID;
-            int trackerNumber = CurrentTracker.TrackedActions;
-            string? path = CurrentTracker.LastSavePath;
 
             // parse Save result for the streamPosition of StatTracker
             var statTrackerResult = objNamesAndPositions.Where(np => np.Item1 == nameof(StatTracker)).FirstOrDefault();
@@ -50,35 +48,37 @@ public class StatRepo(WebConnectionHandler connectionHandler, Func<IStatTracker>
             }
             long trackerPosition = statTrackerResult.Item2;
 
-            if (string.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(lastSavePath))
                 return null;
 
-            bool needsUpdate = false;
-            if (!_gameActionCounts.TryAdd(gameID, trackerNumber)) // If not already tracked, add it
+            // If not already tracked, add it
+            bool newAdd = _gameStats.TryAdd(gameID, new()
             {
-                if (_gameActionCounts.TryGetValue(gameID, out var value) // If it is tracked, compare number of tracked stats to determine whether an update is needed
-                    && value is int oldNumber
-                    && trackerNumber > oldNumber)
-                    needsUpdate = true;
-            }
-            else
-                needsUpdate = true;
+                SavePath = lastSavePath,
+                ActionCount = CurrentTracker.TrackedActions,
+                StreamPosition = trackerPosition,
+                SyncPending = true
+            });
 
-            if (!needsUpdate)
-                return null;
-
-
-            _gamesToUpdate.Add(gameID);
-
-            // Only update the path mapping if there is a path to map and the game is further ahead;
-            // (If a game is saved to multiple files, we only care about the one most recently updated)
-            if (path != null)
+            if (!newAdd) // if it is already tracked, check to see if the Current Tracker is more up to date (contains more Actions)
             {
-                _gameStatLocs.TryAdd(gameID, (path, trackerPosition));
+                if (_gameStats.TryGetValue(gameID, out var value) // If it is tracked, compare number of tracked stats to determine whether an update is needed
+                        && value is SavedStatMetadata oldData
+                        && oldData.ActionCount < CurrentTracker.TrackedActions)
+                {
+                    var updatedData = new SavedStatMetadata()
+                    {
+                        SavePath = lastSavePath,
+                        ActionCount = CurrentTracker.TrackedActions,
+                        StreamPosition = trackerPosition,
+                        SyncPending = true
+                    };
+                    _gameStats[gameID] = updatedData;
+                }  
             }
-
+            
             await Save();
-            return path;
+            return lastSavePath;
         }
         catch (Exception ex)
         {
@@ -229,25 +229,16 @@ public class StatRepo(WebConnectionHandler connectionHandler, Func<IStatTracker>
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
     public async Task<SerializedData[]> GetBinarySerials()
     {
-        return await Task.Run(() =>
+        return await Task.Run(async () =>
         {
             List<SerializedData> saveData = [];
-            saveData.Add(new(typeof(int), _gameStatLocs.Count));
-            foreach (var keypair in _gameStatLocs)
+            saveData.Add(new(typeof(int), _pendingSyncs));
+            saveData.Add(new(typeof(int), _gameStats.Count));
+            foreach (var keypair in _gameStats)
             {
                 saveData.Add(new(typeof(string), keypair.Key.ToString()));
-                saveData.Add(new(typeof(string), keypair.Value.Item1));
-                saveData.Add(new(typeof(long), keypair.Value.Item2));
+                saveData.AddRange(await keypair.Value.GetBinarySerials());
             }
-            saveData.Add(new(typeof(int), _gameActionCounts.Count));
-            foreach (var keypair in _gameActionCounts)
-            {
-                saveData.Add(new(typeof(string), keypair.Key.ToString()));
-                saveData.Add(new(typeof(int), keypair.Value));
-            }
-            saveData.Add(new(typeof(int), _gamesToUpdate.Count));
-            foreach (Guid gameID in _gamesToUpdate)
-                saveData.Add(new(typeof(string), gameID.ToString()));
             return saveData.ToArray();
         });
     }
@@ -266,8 +257,14 @@ public class StatRepo(WebConnectionHandler connectionHandler, Func<IStatTracker>
         bool loadComplete;
         try
         {
-            int numGameLocPairs = (int)BinarySerializer.ReadConvertible(newReader, typeof(int));
-            for (int i = 0; i < numGameLocPairs; i++)
+            _pendingSyncs = (int)BinarySerializer.ReadConvertible(newReader, typeof(int));
+            int numGameStats = (int)BinarySerializer.ReadConvertible(newReader, typeof(int));
+            List<(Guid, SavedStatMetadata)> loadedEntries = [];
+            for (int i = 0; i < numGameStats; i++)
+            {
+                Guid id = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
+
+            }
                 _gameStatLocs.Add(Guid.Parse((string)BinarySerializer.ReadConvertible(newReader, typeof(string))),
                     ((string)BinarySerializer.ReadConvertible(newReader, typeof(string)),
                     (long)BinarySerializer.ReadConvertible(newReader, typeof(long))));

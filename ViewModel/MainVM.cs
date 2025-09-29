@@ -298,20 +298,4 @@ public partial class MainVM(IAppCommander appCommander,
             CancelSelect();
         CurrentGame?.State.IncrementPlayerTurn();
     }
-
-    private bool CanSync()
-    {
-        if (_statRepo == null || !_statRepo.SyncPending)
-            return false;
-
-        return true;
-    }
-
-    [RelayCommand(CanExecute = nameof(CanSync))]
-    private async Task SyncCommand()
-    {
-        await _statRepo.SyncToAzureDB();
-
-        SyncCommandCommand.NotifyCanExecuteChanged();
-    }
 }

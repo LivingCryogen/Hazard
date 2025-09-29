@@ -106,6 +106,10 @@ public interface IMainVM : IBinarySerializable
     /// Gets the choose territory bonus command.
     /// </summary>
     ICommand ChooseTerritoryBonus_Command { get; }
+    /// <summary>
+    /// Gets the database sync command.
+    /// </summary>
+    ICommand Sync_Command { get; }
 
     /// <summary>
     /// Fires if the turn is changing control between players.

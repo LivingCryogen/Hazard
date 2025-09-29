@@ -23,13 +23,8 @@ public class StatTracker : IStatTracker
     private GameSession _currentSession;
     private int _nextActionId = 1;
     
-
-    /// <inheritdoc cref="IStatTracker.TrackedActions"/>
-    public int TrackedActions { get => _currentSession.NumActions; }
     /// <inheritdoc cref="IStatTracker.GameID"/>
     public Guid GameID => _currentSession.Id;
-    /// <inheritdoc cref="IStatTracker.LastSavePath"/>
-    public string? LastSavePath { get; set; }
 
     /// <summary>
     /// Builds a new <see cref="StatTracker"/> instance for the given game.

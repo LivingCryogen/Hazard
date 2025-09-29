@@ -11,7 +11,7 @@ namespace Shared.Interfaces.Model;
 public interface IStatTracker : IBinarySerializable
 {
     /// <summary>
-    /// Gets the number of actions tracked.
+    /// Gets the number of actions currently tracked.
     /// </summary>
     /// <remarks>
     /// Allows <see cref="Model.IStatRepo"/> to easily determine which is the most up-to-date game file for a given game ID.
