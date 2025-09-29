@@ -7,6 +7,6 @@ public interface IStatRepo
     bool SyncPending { get; }
     string SyncStatusMessage { get; }
 
-    Task<string?> Update((string, long)[] objNamesAndPositions);
+    Task<string?> Update(string path, (string, long)[] objNamesAndPositions);
     Task<bool> SyncToAzureDB();
 }

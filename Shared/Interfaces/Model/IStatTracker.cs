@@ -22,10 +22,6 @@ public interface IStatTracker : IBinarySerializable
     /// </summary>
     public Guid GameID { get; }
     /// <summary>
-    /// Gets the path of the save file last used with this Game.
-    /// </summary>
-    public string? LastSavePath { get; }
-    /// <summary>
     /// Record relevant statistics for an attack.
     /// </summary>
     /// <param name="attackData">Attack metadata to be recorded.</param>

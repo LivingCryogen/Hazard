@@ -6,12 +6,12 @@
 public interface IAppCommander
 {
     /// <summary>
-    /// The save file name of the current Game, if any.
+    /// The save file path of the current Game, if any.
     /// </summary>
     /// <value>
-    /// If the current Game was saved to or loaded from a save file, its name; otherwise, <see cref="string.Empty"/>.
+    /// If the current Game was saved to or loaded from a save file, its path; otherwise, <see cref="string.Empty"/>.
     /// </value>
-    public string SaveFileName { get; set; }
+    public string SaveFilePath { get; set; }
     /// <summary>
     /// Initializes an empty game.
     /// </summary>

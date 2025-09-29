@@ -21,14 +21,11 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger) : App
 {
     private readonly IOptions<AppConfig> _options = options;
     private readonly ILogger<App> _logger = logger;
-    private IStatRepo? _statRepo;
-    private readonly object _shutdownLock = new();
-    private bool _readyShutdown = false;
 
     public IHost? Host { get; set; }
     public bool DevMode { get; init; } = options.Value.DevMode;
     public string InstallPath { get; init; } = options.Value.AppPath;
-    public string SaveFileName { get; set; } = string.Empty;
+    public string SaveFilePath { get; set; } = string.Empty;
     public ReadOnlyDictionary<string, string> DataFileMap { get; } = new(options.Value.DataFileMap);
 
     protected override void OnStartup(StartupEventArgs e)
@@ -41,7 +38,7 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger) : App
         InitializeGame();
     }
 
-    protected async void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+    protected void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
         if (DevMode)
             return;
@@ -68,7 +65,6 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger) : App
         };
         mainWindow.Initialize(viewModel);
         MainWindow = mainWindow;
-        _statRepo = viewModel.StatRepo;
         MainWindow.Show();
     }
     public void InitializeGame(string fileName)
@@ -80,7 +76,7 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger) : App
         }
         if (string.IsNullOrEmpty(fileName))
             return;
-        SaveFileName = fileName;
+        SaveFilePath = fileName;
         MainWindow mainWindow = new()
         {
             AppOptions = _options
@@ -101,7 +97,6 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger) : App
         _logger.LogInformation("Initializing game from source: {FileName}.", fileName);
         viewModel.Initialize([], [], fileName);
         ((MainWindow)MainWindow).Initialize(viewModel);
-        _statRepo = viewModel.StatRepo;
         MainWindow.Show();
     }
     public void InitializeGame((string Name, string Color)[] namesAndColors)
@@ -113,7 +108,7 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger) : App
         }
         var playerNames = namesAndColors.Select(item => item.Name).ToArray();
         var playerColors = namesAndColors.Select(item => item.Color).ToArray();
-        SaveFileName = string.Empty;
+        SaveFilePath = string.Empty;
 
         MainWindow mainWindow = new()
         {
@@ -132,7 +127,6 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger) : App
         var viewModel = Host.Services.GetRequiredService<IMainVM>();
         viewModel.Initialize(playerNames, playerColors, null);
         ((MainWindow)MainWindow).Initialize(viewModel);
-        _statRepo = viewModel.StatRepo;
         MainWindow.Show();
     }
 }

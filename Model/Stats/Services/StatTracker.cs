@@ -24,7 +24,8 @@ public class StatTracker : IStatTracker
     private int _nextActionId = 1;
     
     /// <inheritdoc cref="IStatTracker.GameID"/>
-    public Guid GameID => _currentSession.Id;
+    public Guid GameID { get => _currentSession.Id; }
+    public int TrackedActions { get => _currentSession.NumActions; }
 
     /// <summary>
     /// Builds a new <see cref="StatTracker"/> instance for the given game.
@@ -36,7 +37,6 @@ public class StatTracker : IStatTracker
     {
         _loggerFactory = loggerFactory;
         _logger = loggerFactory.CreateLogger<StatTracker>();
-        LastSavePath = game.SavePath;
         _currentSession = new(loggerFactory.CreateLogger<GameSession>(), loggerFactory)
         {
             Version = options.Value.StatVersion,
@@ -113,10 +113,6 @@ public class StatTracker : IStatTracker
         return await Task.Run(async () =>
         {
             List<SerializedData> saveData = [];
-            bool hasSavePath = LastSavePath is not null;
-            saveData.Add(new SerializedData(typeof(int), hasSavePath ? 1 : 0));
-            if (hasSavePath)
-                saveData.Add(new SerializedData(typeof(string), LastSavePath!));
             saveData.Add(new(typeof(int), _nextActionId));
             saveData.AddRange(await _currentSession.GetBinarySerials());
             return saveData.ToArray();
@@ -128,11 +124,6 @@ public class StatTracker : IStatTracker
         bool loadComplete = true;
         try
         {
-            bool loadSavePath = (int)BinarySerializer.ReadConvertible(reader, typeof(int)) == 1;
-            if (loadSavePath)
-                LastSavePath = (string)BinarySerializer.ReadConvertible(reader, typeof(string));
-            else
-                LastSavePath = null;
             _nextActionId = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             GameSession loadedSession = new(_loggerFactory.CreateLogger<GameSession>(), _loggerFactory);
             loadedSession.LoadFromBinary(reader);

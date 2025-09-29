@@ -339,7 +339,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     /// <returns><see langword="true"/> if the save game command can be completed given <paramref name="saveParams"/>"/>; otherwise, <see langword="false"/></returns>
     public bool CanSaveGame((string FileName, bool NewFile) saveParams)
     {
-        if (saveParams.NewFile == false && string.IsNullOrEmpty(_gameCommander.SaveFileName))
+        if (saveParams.NewFile == false && string.IsNullOrEmpty(_gameCommander.SaveFilePath))
             return false;
 
         return true;
@@ -350,18 +350,18 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     {
         string fileName;
         if (!saveParams.NewFile)
-            fileName = _gameCommander.SaveFileName;
+            fileName = _gameCommander.SaveFilePath;
         else
         {
             fileName = saveParams.FileName;
-            _gameCommander.SaveFileName = fileName;
+            _gameCommander.SaveFilePath = fileName;
         }
 
         if (CurrentGame != null && Regulator != null)
         {
             var saveResult = await BinarySerializer.Save([this, CurrentGame, CurrentGame.StatTracker, Regulator], fileName, saveParams.NewFile);
           
-            if (await StatRepo.Update(saveResult) is string trackedSavePath)
+            if (await StatRepo.Update(fileName, saveResult) is string trackedSavePath)
             {
                 if (trackedSavePath != fileName)
                     _logger.LogWarning("StatRepo updated but is tracking a different save file ({TrackedSavePath}) than the one just saved ({FileName}).", trackedSavePath, fileName);
