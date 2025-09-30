@@ -141,8 +141,9 @@ namespace Bootstrap
                            var connectionHandler = provider.GetRequiredService<WebConnectionHandler>();
                            Func<IStatTracker> statTrackerFactory = () => provider.GetRequiredService<IStatTracker>();
                            var options = provider.GetRequiredService<IOptions<AppConfig>>();
+                           var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
                            var logger = provider.GetRequiredService<ILogger<StatRepo>>();
-                           return new StatRepo(connectionHandler, statTrackerFactory, options, logger);
+                           return new StatRepo(connectionHandler, statTrackerFactory, options, loggerFactory, logger);
                        });
                    })
                    .ConfigureLogging(logging =>

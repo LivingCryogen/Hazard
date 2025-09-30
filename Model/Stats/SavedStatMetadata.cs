@@ -26,7 +26,7 @@ public class SavedStatMetadata(ILogger<SavedStatMetadata> logger) : IBinarySeria
             int numPath = string.IsNullOrEmpty(SavePath) ? 0 : 1;
             saveData.Add(new(typeof(int), numPath));
             if (numPath > 0)
-                saveData.Add(new(typeof(string), numPath));
+                saveData.Add(new(typeof(string), SavePath!));
             int numStreamLoc = StreamPosition == null || StreamPosition == 0 ? 0 : 1;
             saveData.Add(new(typeof(int), numStreamLoc));
             if (numStreamLoc > 0)
