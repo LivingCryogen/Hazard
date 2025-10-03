@@ -5,6 +5,10 @@ using System.Text;
 
 namespace Shared.Interfaces.Model;
 
+/// <summary>
+/// Represents move action data, including the source and target territories and whether the maximum
+/// allowable armies were moved.
+/// </summary>
 public interface IMoveData : IActionData
 {
     /// <summary>

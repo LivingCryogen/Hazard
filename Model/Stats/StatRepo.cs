@@ -9,7 +9,14 @@ using Shared.Services.Serializer;
 using System.Text.Json;
 
 namespace Model.Stats;
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="connectionHandler"></param>
+/// <param name="statFactory"></param>
+/// <param name="options"></param>
+/// <param name="loggerFactory"></param>
+/// <param name="logger"></param>
 public class StatRepo(WebConnectionHandler connectionHandler,
     Func<IStatTracker> statFactory,
     IOptions<AppConfig> options,

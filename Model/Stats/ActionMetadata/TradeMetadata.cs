@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Model.Stats.ActionMetadata;
 
+/// <summary>
+/// 
+/// </summary>
 public class TradeMetadata : ITradeData
 {
     public List<TerrID> CardTargets { get; set; } = [];
