@@ -16,7 +16,6 @@ public class StatTrackerStub : IStatTracker, IBinarySerializable
     {
         _currentSession = new(new LoggerStubT<GameSession>(), new LoggerFactoryStub())
         {
-            Version = 1,
             Id = Guid.NewGuid(),
             StartTime = DateTime.Now,
             EndTime = null,

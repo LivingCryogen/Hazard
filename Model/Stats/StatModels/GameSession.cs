@@ -240,10 +240,6 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
         }
     }
     /// <summary>
-    /// Gets or sets the version of the game session model.
-    /// </summary>
-    public int Version { get; set; }
-    /// <summary>
     /// Gets or sets the unique identifier of the game session.
     /// </summary>
     public Guid Id { get; set; }
@@ -295,13 +291,6 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
         bool loadComplete = true;
         try
         {
-            int readVersion = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
-            if (Version != readVersion)
-            {
-                _logger.LogError("Version mismatch! {GameSession} expected version {Number}, but instead tried to load version {readNumber}.", this, Version, readVersion);
-                return false;
-            }
-
             Id = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
             StartTime = DateTime.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
 
@@ -360,7 +349,6 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
         return await Task.Run(async () =>
         {
             List<SerializedData> saveData = [];
-            saveData.Add(new(typeof(int), Version));
             saveData.Add(new(typeof(string), Id.ToString()));
             saveData.Add(new(typeof(string), StartTime.ToString()));
 

@@ -23,10 +23,6 @@ public class AppConfig
     /// </summary>
     public bool DevMode { get; set; } = false;
     /// <summary>
-    /// Gets or sets the Version Number of the Statistics records to be used.
-    /// </summary>
-    public int StatVersion { get; set; }
-    /// <summary>
     /// Gets the name of the statistics repository file to be used.
     /// </summary>
     public string StatRepoFileName { get; set; } = string.Empty;

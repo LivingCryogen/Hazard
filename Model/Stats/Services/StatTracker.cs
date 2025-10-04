@@ -39,7 +39,6 @@ public class StatTracker : IStatTracker
         _logger = loggerFactory.CreateLogger<StatTracker>();
         _currentSession = new(loggerFactory.CreateLogger<GameSession>(), loggerFactory)
         {
-            Version = options.Value.StatVersion,
             Id = game.ID,
             StartTime = DateTime.Now,
             EndTime = null,
