@@ -51,6 +51,9 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger) : App
         Shutdown();
     }
 
+    /// <summary>
+    /// Initialize without save game or new game parameters, this is the default state (no game running).
+    /// </summary>  
     public void InitializeGame()
     {
         if (Host == null)

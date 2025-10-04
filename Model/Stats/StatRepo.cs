@@ -288,25 +288,17 @@ public class StatRepo(WebConnectionHandler connectionHandler,
     /// <inheritdoc cref="IBinarySerializable.LoadFromBinary(BinaryReader)"/>
     public bool LoadFromBinary(BinaryReader reader)
     {
-        if (!File.Exists(StatFilePath))
-        {
-            _logger.LogError("{StatRepo} failed to load from {path}.", this, StatFilePath);
-            return false;
-        }
-
-        using BinaryReader newReader = new(new FileStream(StatFilePath, FileMode.Open, FileAccess.Read));
-
         bool loadComplete;
         try
         {
-            _pendingSyncs = (int)BinarySerializer.ReadConvertible(newReader, typeof(int));
-            int numGameStats = (int)BinarySerializer.ReadConvertible(newReader, typeof(int));
+            _pendingSyncs = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            int numGameStats = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             List<(Guid, SavedStatMetadata)> loadedEntries = [];
             for (int i = 0; i < numGameStats; i++)
             {
-                Guid newID = Guid.Parse((string)BinarySerializer.ReadConvertible(newReader, typeof(string)));
+                Guid newID = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
                 var newMetaData = new SavedStatMetadata(_loggerFactory.CreateLogger<SavedStatMetadata>());
-                newMetaData.LoadFromBinary(newReader);
+                newMetaData.LoadFromBinary(reader);
                 loadedEntries.Add((newID, newMetaData));
             }
             _gameStats = loadedEntries.ToDictionary(t => t.Item1, t => t.Item2);
@@ -337,5 +329,18 @@ public class StatRepo(WebConnectionHandler connectionHandler,
             _logger.LogError("{StatRepo} encountered an unexpected error during deserialization: {Message}.", this, ex.Message);
             throw;
         }
+    }
+
+    /// <inheritdoc cref="IStatRepo.Load">
+    public bool Load()
+    {
+        if (!File.Exists(StatFilePath))
+        {
+            _logger.LogError("The Statistics File Path provided for loading StatRepo was invalid: {StatFilePath}.", StatFilePath);
+            return false;
+        }
+
+        using BinaryReader newReader = new(new FileStream(StatFilePath, FileMode.Open, FileAccess.Read));
+        return LoadFromBinary(newReader);
     }
 }

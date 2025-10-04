@@ -37,4 +37,19 @@ public interface IStatRepo
     /// <returns>A task whose result is <see langword="true"/> if the synchronization completes successfully, whether full or partial success;
     /// otherwise, <see langword="false"/>.</returns>
     Task<bool> SyncToAzureDB();
+
+    /// <summary>
+    /// Saves the Repo to its configured file path.
+    /// </summary>
+    /// <remarks> 
+    /// For configuration property, see <see cref="Services.Configuration.AppConfig.StatRepoFilePath"/>.
+    /// </remarks>
+    public Task Save();
+    /// <summary>
+    /// Loads the Repo from its configured file path.
+    /// </summary>
+    /// <remarks>
+    /// For configuration property, see <see cref="Services.Configuration.AppConfig.StatRepoFilePath"/>.
+    /// </remarks>
+    public bool Load();
 }
