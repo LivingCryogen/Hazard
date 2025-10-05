@@ -45,11 +45,6 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         PlayerDetails = [];
         ContinentBonuses = [];
 
-        if (!StatRepo.Load())
-            _logger.LogWarning("StatRepo failed to load from configured file path ({StatRepoFilePath}). Starting with empty repository.", options.Value.StatRepoFilePath);
-        else
-            _logger.LogInformation("StatRepo successfully loaded from configured file path ({StatRepoFilePath}).", options.Value.StatRepoFilePath);
-
         for (int i = 0; i < Enum.GetValues(typeof(ContID)).Length; i++)
                 ContinentBonuses.Add(0);
         ContNameMap = MakeContIDDisplayNameMap();
@@ -336,7 +331,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     public void NewGame(ValueTuple<string, string>[] namesAndColors)
     {
         var shuffledParam = ShuffleOrder(namesAndColors ?? [(string.Empty, string.Empty)]);
-        _gameCommander.InitializeGame(shuffledParam);
+        _gameCommander.Initialize(null, shuffledParam);
     }
     /// <summary>
     /// "CanExecute" logic for the <see cref="SaveGameCommand"/>.
@@ -388,7 +383,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     public void LoadGame(string fileName)
     {
         if (!string.IsNullOrEmpty(fileName))
-            _gameCommander.InitializeGame(fileName);
+            _gameCommander.Initialize(fileName, null);
     }
     /// <summary>
     /// "CanExecute" logic for the <see cref="AdvanceCommand"/>.

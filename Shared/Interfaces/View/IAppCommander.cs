@@ -13,17 +13,12 @@ public interface IAppCommander
     /// </value>
     public string SaveFilePath { get; set; }
     /// <summary>
-    /// Initializes an empty game.
+    /// Initializes the Application 's Main Window and its ViewModel, either from a save file or from new game user selections, if any. Defaults to an uninitialized ViewModel.
     /// </summary>
-    public void InitializeGame();
-    /// <summary>
-    /// Initializes a new Game from a save file (loads a game).
-    /// </summary>
-    /// <param name="fileName"></param>
-    public void InitializeGame(string fileName);
-    /// <summary>
-    /// Initializes a new Game with new game settings.
-    /// </summary>
-    /// <param name="namesAndColors"></param>
-    public void InitializeGame((string Name, string Color)[] namesAndColors);
+    /// <remarks>
+    /// Unitialized ViewModel still allows access to Options and Statistics, but not to game functionality.
+    /// </remarks>
+    /// <param name="fileName">The path to the save file, if any.</param>
+    /// <param name="userSelections">A list of player name and color pairs provided by the user, if any.</param>
+    public void Initialize(string? fileName, (string Name, string Color)[]? userSelections);
 }

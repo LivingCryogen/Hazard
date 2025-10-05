@@ -17,16 +17,25 @@ namespace View;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App(IOptions<AppConfig> options, ILogger<App> logger) : Application, IAppCommander
+public partial class App : Application, IAppCommander
 {
-    private readonly IOptions<AppConfig> _options = options;
-    private readonly ILogger<App> _logger = logger;
+    private readonly IOptions<AppConfig> _options;
+    private readonly ILogger<App> _logger;
 
     public IHost? Host { get; set; }
-    public bool DevMode { get; init; } = options.Value.DevMode;
-    public string InstallPath { get; init; } = options.Value.AppPath;
+    public bool DevMode { get; init; }
+    public string InstallPath { get; init; }
     public string SaveFilePath { get; set; } = string.Empty;
-    public ReadOnlyDictionary<string, string> DataFileMap { get; } = new(options.Value.DataFileMap);
+    public ReadOnlyDictionary<string, string> DataFileMap { get; }
+
+    public App(IOptions<AppConfig> options, ILogger<App> logger)
+    {
+        _options = options;
+        _logger = logger;
+        DevMode = _options.Value.DevMode;
+        InstallPath = _options.Value.AppPath;
+        DataFileMap = new(_options.Value.DataFileMap);
+    }
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -35,7 +44,7 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger) : App
         /// Unhandled Exception catcher for production
         DispatcherUnhandledException += OnDispatcherUnhandledException;
 
-        InitializeGame();
+        Initialize(null, null); // Default to no parameters
     }
 
     protected void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -51,10 +60,8 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger) : App
         Shutdown();
     }
 
-    /// <summary>
-    /// Initialize without save game or new game parameters, this is the default state (no game running).
-    /// </summary>  
-    public void InitializeGame()
+    /// <inheritdoc cref="IAppCommander.Initialize(string?, (string Name, string Color)[]?)"/>/>
+    public void Initialize(string? fileName, (string Name, string Color)[]? userSelections)
     {
         if (Host == null)
         {
@@ -62,29 +69,23 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger) : App
             return;
         }
         var viewModel = Host.Services.GetRequiredService<IMainVM>();
-        MainWindow mainWindow = new()
+        if (viewModel.StatRepo == null)
         {
-            AppOptions = _options
-        };
-        mainWindow.Initialize(viewModel);
-        MainWindow = mainWindow;
-        MainWindow.Show();
-    }
-    public void InitializeGame(string fileName)
-    {
-        if (Host == null)
-        {
-            _logger.LogError("The App's AppHost was null when attempting to initialize Game.");
+            _logger.LogWarning("The IMainVM's StatRepo was null when attempting initialization.");
             return;
         }
-        if (string.IsNullOrEmpty(fileName))
-            return;
-        SaveFilePath = fileName;
+        else
+        {
+            if (!viewModel.StatRepo.Load())
+                _logger.LogWarning("StatRepo failed to load from configured file path ({StatRepoFilePath}). Starting with empty repository.", _options.Value.StatRepoFilePath);
+            else
+                _logger.LogInformation("StatRepo successfully loaded from configured file path ({StatRepoFilePath}).", _options.Value.StatRepoFilePath);
+        }
+
         MainWindow mainWindow = new()
         {
             AppOptions = _options
         };
-        MainWindow = mainWindow;
 
         _logger.LogInformation($"Closing old Windows...");
         foreach (Window window in Current.Windows)
@@ -96,40 +97,21 @@ public partial class App(IOptions<AppConfig> options, ILogger<App> logger) : App
             window.Close();
         }
 
-        var viewModel = Host.Services.GetRequiredService<IMainVM>();
-        _logger.LogInformation("Initializing game from source: {FileName}.", fileName);
-        viewModel.Initialize([], [], fileName);
-        ((MainWindow)MainWindow).Initialize(viewModel);
-        MainWindow.Show();
-    }
-    public void InitializeGame((string Name, string Color)[] namesAndColors)
-    {
-        if (Host == null)
+        // Initialize ViewModel from Save, or initialize from New Game Window user selections
+        if (!string.IsNullOrEmpty(fileName))
         {
-            _logger.LogError("The App's AppHost was null when attempting to initialize Game.");
-            return;
+            SaveFilePath = fileName;
+            _logger.LogInformation("Initializing game from source: {FileName}.", fileName);
+            viewModel.Initialize([], [], fileName);
         }
-        var playerNames = namesAndColors.Select(item => item.Name).ToArray();
-        var playerColors = namesAndColors.Select(item => item.Color).ToArray();
-        SaveFilePath = string.Empty;
+        else if (userSelections != null && userSelections.Length > 0)
+            viewModel.Initialize(
+                [.. userSelections.Select(item => item.Name)],
+                [.. userSelections.Select(item => item.Color)],
+                null);
 
-        MainWindow mainWindow = new()
-        {
-            AppOptions = _options
-        };
+        mainWindow.Initialize(viewModel);
         MainWindow = mainWindow;
-        foreach (Window window in Current.Windows)
-        {
-            if (window == mainWindow)
-                continue;
-            if (window is MainWindow oldWindow)
-                oldWindow.SetShutDown(false);
-            window.Close();
-        }
-
-        var viewModel = Host.Services.GetRequiredService<IMainVM>();
-        viewModel.Initialize(playerNames, playerColors, null);
-        ((MainWindow)MainWindow).Initialize(viewModel);
         MainWindow.Show();
     }
 }
