@@ -9,6 +9,7 @@ using Shared.Interfaces.ViewModel;
 using Shared.Services;
 using Shared.Services.Configuration;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -43,6 +44,28 @@ public partial class App : Application, IAppCommander
 
         /// Unhandled Exception catcher for production
         DispatcherUnhandledException += OnDispatcherUnhandledException;
+
+        if (Host == null)
+            throw new InvalidOperationException("The App's AppHost was null when attempting construction.");
+
+        // Generate 'GameStatistics.hzd' if missing or empty (as on first run)
+        try
+        {
+            if (!File.Exists(_options.Value.StatRepoFilePath) || new FileInfo(_options.Value.StatRepoFilePath).Length == 0)
+            {
+                var repo = Host.Services.GetRequiredService<IStatRepo>();
+                Task.Run(async () =>
+                {
+                    var logger = Host.Services.GetRequiredService<ILogger<App>>();
+                    logger.LogInformation("Saving initial empty statistics repository...");
+                    await repo.Save();
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to create initial StatRepo file at path {StatRepoFilePath}.", _options.Value.StatRepoFilePath);
+        }
 
         Initialize(null, null); // Default to no parameters
     }

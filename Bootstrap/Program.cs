@@ -139,7 +139,7 @@ namespace Bootstrap
                        services.AddSingleton<IStatRepo>(provider => 
                        {
                            var connectionHandler = provider.GetRequiredService<WebConnectionHandler>();
-                           Func<IStatTracker> statTrackerFactory = () => provider.GetRequiredService<IStatTracker>();
+                           IStatTracker statTrackerFactory() => provider.GetRequiredService<IStatTracker>();
                            var options = provider.GetRequiredService<IOptions<AppConfig>>();
                            var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
                            var logger = provider.GetRequiredService<ILogger<StatRepo>>();

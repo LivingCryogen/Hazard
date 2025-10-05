@@ -331,7 +331,7 @@ public class StatRepo(WebConnectionHandler connectionHandler,
         }
     }
 
-    /// <inheritdoc cref="IStatRepo.Load">
+    /// <inheritdoc cref="IStatRepo.Load"/>
     public bool Load()
     {
         if (!File.Exists(StatFilePath))

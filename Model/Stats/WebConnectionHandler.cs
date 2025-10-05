@@ -13,17 +13,27 @@ public class WebConnectionHandler(IOptions<AppConfig> options, ILogger<WebConnec
     private readonly ILogger<WebConnectionHandler> _logger = logger;
     private readonly string _baseUrl = options.Value.AzConnectInfo.BaseURL;
     private readonly Guid _installID = options.Value.InstallInfo.InstallId;
-    private readonly HttpClient _syncClient = new() { Timeout = TimeSpan.FromSeconds(30) };
+    private readonly HttpClient _syncClient = new(
+        new HttpClientHandler() 
+        {
+            AllowAutoRedirect = true,
+            UseProxy = true,
+            AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate
+        }) 
+            {
+                Timeout = TimeSpan.FromSeconds(30) 
+            };
 
     public async Task<bool> VerifyInternetConnection()
     {
         try
         {
-            using var response = await _syncClient.GetAsync("http://neverssl.com/", HttpCompletionOption.ResponseHeadersRead);
+            using var response = await _syncClient.GetAsync("http://clients3.google.com/generate_204", HttpCompletionOption.ResponseHeadersRead);
             return response.IsSuccessStatusCode;
         }
-        catch
+        catch (Exception ex)
         {
+            _logger.LogWarning("Internet connection verification failed: {Message}", ex.Message);
             return false;
         }
     }
