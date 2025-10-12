@@ -3,11 +3,20 @@ using AzProxy.DataTransform;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace AzProxy
 {
     public class ProxyServer
     {
+        private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            PropertyNameCaseInsensitive = true,
+            Converters = { new JsonStringEnumConverter() }
+        };
+
         private class FunctionResponse
         {
             public string Uri { get; init; } = string.Empty;
@@ -163,27 +172,38 @@ namespace AzProxy
                         return;
                     }
 
-                    // get Query strings
-                    string? installID = context.Request.Query["installID"];
-                    string? trackedActions = context.Request.Query["trackedActions"];
-                    
-                    if (string.IsNullOrEmpty(installID))
+                    // Deserialize payload early. This lets us have data (like InstallID etc) for logging
+                    GameSessionDto sessionData;
+                    try
                     {
-                        logger.LogWarning("Sync request received without Install Id query parameter");
+                        if (string.IsNullOrEmpty(requestBody))
+                            throw new ArgumentException("Invalid RequestBody.");
+
+                        sessionData = System.Text.Json.JsonSerializer.Deserialize<GameSessionDto>(requestBody, _jsonSerializerOptions) ?? throw new InvalidDataException("Failed to deserialize GameSession from json.");
+                    }
+                    catch (System.Text.Json.JsonException jsonEx)
+                    {
+                        logger.LogWarning("JSON deserialization error: {Message}", jsonEx.Message);
+                        context.Response.StatusCode = StatusCodes.Status422UnprocessableEntity;
+                        await context.Response.WriteAsync("Unable to process the provided data.");
+                        return;
+                    }
+                    catch (ArgumentException argEx)
+                    {
+                        logger.LogWarning("Bad request for sync: {Message}", argEx.Message);
                         context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                        await context.Response.WriteAsync("Invalid request.");
+                        await context.Response.WriteAsync("Invalid request data.");
                         return;
                     }
 
-
-                    int actions = 0;
-                    if (!string.IsNullOrEmpty(trackedActions))
-                        if (int.TryParse(trackedActions, out int parsed))
-                            actions = parsed;
-
+                    Guid installID = sessionData.InstallId;
                     try
                     {
-                        await transformer.TransformFromJson(requestBody, installID, actions);
+
+
+                        int actualActionCount = sessionData.Attacks.Count + sessionData.Moves.Count + sessionData.Trades.Count;
+
+                        await transformer.TransformFromSessionDto(sessionData);
 
                         context.Response.StatusCode = StatusCodes.Status200OK;
                         await context.Response.WriteAsync("Sync completed successfully!");

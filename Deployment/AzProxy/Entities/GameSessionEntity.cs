@@ -15,7 +15,6 @@ public class GameSessionEntity
     public int? Winner { get; set; }        // Nullable for ongoing games
 
     // Navigation properties (EF will create the relationships)
-    public ICollection<GamePlayerEntity> Players { get; set; } = [];
     public ICollection<AttackActionEntity> AttackActions { get; set; } = [];
     public ICollection<MoveActionEntity> MoveActions { get; set; } = [];
     public ICollection<TradeActionEntity> TradeActions { get; set; } = [];

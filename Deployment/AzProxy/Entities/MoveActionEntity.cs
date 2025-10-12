@@ -6,8 +6,11 @@ public class MoveActionEntity
     public Guid GameId { get; set; }
     public int ActionId { get; set; }
 
-    // Data
+    // Foreign composite key to PlayerStatsEntity
     public string PlayerName { get; set; } = string.Empty;
+    public Guid InstallID { get; set; }
+
+    // Data
     public bool IsDemo { get; set; } = false;
     public string SourceTerritory { get; set; } = string.Empty;
     public string TargetTerritory { get; set; } = string.Empty;

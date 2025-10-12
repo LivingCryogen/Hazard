@@ -244,6 +244,10 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
     /// </summary>
     public Guid Id { get; set; }
     /// <summary>
+    /// Gets or sets the unique identifier of the installation where the game session took place.
+    /// </summary>
+    public Guid InstallId { get; set; }
+    /// <summary>
     /// Gets the number of tracked actions.
     /// </summary>
     /// <remarks>
@@ -292,6 +296,7 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
         try
         {
             Id = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
+            InstallId = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
             StartTime = DateTime.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
 
             bool hasEndTime = (int)BinarySerializer.ReadConvertible(reader, typeof(int)) == 1;
@@ -350,6 +355,7 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
         {
             List<SerializedData> saveData = [];
             saveData.Add(new(typeof(string), Id.ToString()));
+            saveData.Add(new(typeof(string), InstallId.ToString()));
             saveData.Add(new(typeof(string), StartTime.ToString()));
 
             if (EndTime is DateTime endTime)

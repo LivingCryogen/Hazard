@@ -25,6 +25,7 @@ public class StatTracker : IStatTracker
     
     /// <inheritdoc cref="IStatTracker.GameID"/>
     public Guid GameID { get => _currentSession.Id; }
+    /// <inheritdoc cref="IStatTracker.TrackedActions"/>
     public int TrackedActions { get => _currentSession.NumActions; }
 
     /// <summary>
@@ -40,6 +41,7 @@ public class StatTracker : IStatTracker
         _currentSession = new(loggerFactory.CreateLogger<GameSession>(), loggerFactory)
         {
             Id = game.ID,
+            InstallId = options.Value.InstallInfo.InstallId,
             StartTime = DateTime.Now,
             EndTime = null,
             Winner = null

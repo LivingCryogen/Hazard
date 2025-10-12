@@ -6,7 +6,6 @@ namespace AzProxy.Context;
 public class GameStatsDbContext(DbContextOptions<GameStatsDbContext> options) : DbContext(options)
 {
     public DbSet<GameSessionEntity> GameSessions { get; set; }
-    public DbSet<GamePlayerEntity> GamePlayers { get; set; }
     public DbSet<AttackActionEntity> AttackActions { get; set; }
     public DbSet<MoveActionEntity> MoveActions { get; set; }
     public DbSet<TradeActionEntity> TradeActions { get; set; }
@@ -18,10 +17,7 @@ public class GameStatsDbContext(DbContextOptions<GameStatsDbContext> options) : 
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<GameSessionEntity>()
-            .HasKey(entity => new { entity.GameId, entity.InstallId });
-
-        modelBuilder.Entity<GamePlayerEntity>()
-            .HasKey(entity => new { entity.GameId, entity.PlayerNumber });
+            .HasKey(entity => entity.GameId);
 
         modelBuilder.Entity<PlayerStatsEntity>()
             .HasKey(entity => new { entity.Name, entity.InstallId });
@@ -39,16 +35,40 @@ public class GameStatsDbContext(DbContextOptions<GameStatsDbContext> options) : 
             .HasOne(attack => attack.GameSession)
             .WithMany(game => game.AttackActions);
 
+        modelBuilder.Entity<AttackActionEntity>()
+            .HasOne<PlayerStatsEntity>()
+            .WithMany() // No navigation property in PlayerStatsEntity, doesn't track back to actions
+            .HasForeignKey(a => new { a.PlayerName, a.InstallID })
+            .HasPrincipalKey(p => new { p.Name, p.InstallId })
+            .OnDelete(DeleteBehavior.Restrict); // Prevent cascading deletes
+
+        modelBuilder.Entity<AttackActionEntity>()
+            .HasOne<PlayerStatsEntity>()
+            .WithMany() // No navigation property in PlayerStatsEntity, doesn't track back to actions
+            .HasForeignKey(a => new { a.DefenderName, a.InstallID })
+            .HasPrincipalKey(p => new { p.Name, p.InstallId })
+            .OnDelete(DeleteBehavior.Restrict); // Prevent cascading deletes
+
         modelBuilder.Entity<MoveActionEntity>()
             .HasOne(move => move.GameSession)
             .WithMany(game => game.MoveActions);
+
+        modelBuilder.Entity<MoveActionEntity>()
+            .HasOne<PlayerStatsEntity>()
+            .WithMany() // No navigation property in PlayerStatsEntity, doesn't track back to actions
+            .HasForeignKey(m => new { m.PlayerName, m.InstallID })
+            .HasPrincipalKey(m => new { m.Name, m.InstallId })
+            .OnDelete(DeleteBehavior.Restrict); // Prevent cascading deletes
 
         modelBuilder.Entity<TradeActionEntity>()
             .HasOne(trade => trade.GameSession)
             .WithMany(game => game.TradeActions);
 
-        modelBuilder.Entity<GamePlayerEntity>()
-            .HasOne(player => player.GameSession)
-            .WithMany(game => game.Players);
+        modelBuilder.Entity<TradeActionEntity>()
+            .HasOne<PlayerStatsEntity>()
+            .WithMany() // No navigation property in PlayerStatsEntity, doesn't track back to actions
+            .HasForeignKey(t => new { t.PlayerName, t.InstallID })
+            .HasPrincipalKey(t => new { t.Name, t.InstallId })
+            .OnDelete(DeleteBehavior.Restrict); // Prevent cascading deletes
     }
 }
