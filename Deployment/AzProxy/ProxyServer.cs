@@ -1,7 +1,9 @@
 using AzProxy.Context;
 using AzProxy.DataTransform;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Configuration;
 using Newtonsoft.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -281,6 +283,9 @@ namespace AzProxy
         private static WebApplication GetBuiltApp(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole();
+            builder.Logging.SetMinimumLevel(LogLevel.Information);
             builder.Configuration.AddEnvironmentVariables();
             builder.Services.AddCors(options =>
             {
