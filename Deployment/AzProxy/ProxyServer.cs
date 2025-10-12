@@ -26,6 +26,37 @@ namespace AzProxy
         public static void Main(string[] args)
         {
             var app = GetBuiltApp(args);
+
+            // Apply any pending database migrations
+            using (var scope = app.Services.CreateScope())
+            {
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger<ProxyServer>>();
+                var dbContext = scope.ServiceProvider.GetRequiredService<GameStatsDbContext>();
+
+                try
+                {
+                    var pendingMigrations = dbContext.Database.GetPendingMigrations();
+
+                    if (pendingMigrations.Any())
+                    {
+                        logger.LogInformation("Applying {Count} pending migrations: {Migrations}",
+                            pendingMigrations.Count(),
+                            string.Join(", ", pendingMigrations));
+                        dbContext.Database.Migrate();
+                        logger.LogInformation("Database migrations applied successfully");
+                    }
+                    else
+                    {
+                        logger.LogInformation("Database is up to date - no migrations needed");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Failed to check/apply database migrations: {Message}", ex.Message);
+                    // Don't crash on first-time connection issues, but log clearly
+                }
+            }
+
             app.UseHttpsRedirection();
             app.UseCors("FromGitHubPages");
 
