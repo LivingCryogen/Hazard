@@ -239,6 +239,9 @@ public partial class MainVM(IAppCommander appCommander,
     {
         Territories[(int)TerritorySelected].IsSelected = false;
         TerritorySelected = TerrID.Null;
+        bool inSecondStage = CurrentGame?.State.PhaseStageTwo ?? false;
+        if (CurrentPhase == GamePhase.Move || CurrentPhase == GamePhase.Attack && inSecondStage)
+            CurrentGame!.State.PhaseStageTwo = false;
         TerritorySelectCommand.NotifyCanExecuteChanged();
     }
     private bool CanConfirmInput()

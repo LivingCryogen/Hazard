@@ -217,9 +217,9 @@ public class CardBase(ILoggerFactory loggerFactory, ITypeRegister<ITypeRelations
             }
             InitializeLibrary([.. newLibrary]);
             InitializeDiscardPile([.. newDiscard]);
-            if (Reward == null)
+            if (Reward == null && hasReward)
                 _logger.LogWarning("Reward card should be present but failed to load.");
-            else
+            else if (Reward != null)
                 MapCardsToSets([Reward]);
         }
         catch (Exception ex)
