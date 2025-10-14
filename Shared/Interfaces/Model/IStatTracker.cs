@@ -22,6 +22,10 @@ public interface IStatTracker : IBinarySerializable
     /// </summary>
     public Guid GameID { get; }
     /// <summary>
+    /// Gets a value indicating whether the tracked game has been completed.
+    /// </summary>
+    public bool Completed { get; }
+    /// <summary>
     /// Record relevant statistics for an attack.
     /// </summary>
     /// <param name="attackData">Attack metadata to be recorded.</param>
@@ -38,6 +42,13 @@ public interface IStatTracker : IBinarySerializable
     /// </summary>
     /// <param name="tradeData">Trade metadata to be recorded.</param>
     public void RecordTradeAction(ITradeData tradeData);
+
+    /// <summary>
+    /// Marks the game as complete, finalizing its state.
+    /// </summary>
+    /// <remarks>This method should be called when the game has reached its conclusion, and mark the internal state as complete and ready for <see cref="IStatRepo.FinalizeCurrentGame"/></remarks>
+    /// <param name="winningPlayerNumber">Number of the player who has won the completed game.</param>
+    public void CompleteGame(int winningPlayerNumber);
 
     /// <summary>
     /// Returns a JSON serialized object version of the underlying statistics data model object.

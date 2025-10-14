@@ -29,6 +29,13 @@ public interface IStatRepo
     /// <returns></returns>
     Task<string?> Update(string path, (string, long)[] objNamesAndPositions);
     /// <summary>
+    /// Finalizes the current completed game and performs any necessary post-game operations.
+    /// </summary>
+    /// <remarks>This method should be called after a game has been completed to ensure all post-game
+    /// processes are executed.  The caller is responsible for providing a valid game identifier.</remarks>
+    /// <returns>A task whose result is <see langword="true"/> if the game was successfully finalized;  otherwise, <see langword="false"/>.</returns>
+    Task<bool> FinalizeCurrentGame();
+    /// <summary>
     /// Synchronizes the local statistics repository with the Azure database.
     /// </summary>
     /// <remarks>

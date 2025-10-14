@@ -26,6 +26,7 @@ public class StatRepo(WebConnectionHandler connectionHandler,
     private readonly ILoggerFactory _loggerFactory = loggerFactory;
     private readonly ILogger<StatRepo> _logger = logger;
     private readonly string StatFilePath = options.Value.StatRepoFilePath;
+    private readonly string StatsFolderName = Path.GetDirectoryName(options.Value.StatRepoFilePath) ?? "/";
     private readonly WebConnectionHandler _connectionHandler = connectionHandler;
     private readonly Func<IStatTracker> _statTrackerFactory = statFactory;
     private Dictionary<Guid, SavedStatMetadata> _gameStats = [];
@@ -99,6 +100,79 @@ public class StatRepo(WebConnectionHandler connectionHandler,
             _logger.LogError("There was an unexpected error when attempting to update Stat Repo: {Message}", ex.Message);
             return null;
         }   
+    }
+
+    /// <inheritdoc cref="IStatRepo.FinalizeCurrentGame"/>
+    public async Task<bool> FinalizeCurrentGame()
+    {
+        if (CurrentTracker == null)
+        {
+            _logger.LogWarning("Stat Repo was asked to finalize a game, but no current Stat Tracker was set.");
+            return false;
+        }
+
+        if (!CurrentTracker.Completed)
+        {
+            _logger.LogWarning("Stat Repo was asked to finalize a game, but the current Stat Tracker was not marked as completed.");
+            return false;
+        }
+
+        string completedPath = GetCompletedStatPath(CurrentTracker.GameID);
+        try
+        {
+            await BinarySerializer.Save([CurrentTracker], completedPath, true);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("There was an unexpected error when attempting to write final stat file for game {id}: {message}", CurrentTracker.GameID, ex.Message);
+            return false;
+        }
+
+        var completedMetaData = new SavedStatMetadata(_loggerFactory.CreateLogger<SavedStatMetadata>())
+        {
+            SavePath = completedPath,
+            StreamPosition = 0,
+            ActionCount = CurrentTracker.TrackedActions,
+            SyncPending = true
+        };
+
+        // Try to find previous metadata for this game
+        if (_gameStats.TryGetValue(CurrentTracker.GameID, out var prevMetaData))
+        {
+            if (prevMetaData == null)
+            {
+                _logger.LogWarning("Stat Repo was asked to finalize a game with a valid game ID key, but SavedMetaData for game {gameID} could not be found.", CurrentTracker.GameID);
+                _pendingSyncs++;
+            }
+            else if (!prevMetaData.SyncPending)
+            { 
+                _pendingSyncs++;
+            }
+            // else : previous metadata was already pending sync, so no need to increment
+        }
+        else
+            _pendingSyncs++;
+
+        _gameStats[CurrentTracker.GameID] = completedMetaData;
+
+        try
+        {
+            await Save();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("There was an unexpected error when attempting to write Stat Repo after finalizing game {id}: {message}", CurrentTracker.GameID, ex.Message);
+            return false;
+        }
+
+        CurrentTracker = null;
+
+        return true;
+    }
+
+    private string GetCompletedStatPath(Guid gameID)
+    {
+        return Path.Combine(StatsFolderName, "completegame" + gameID.ToString() + ".stat");
     }
 
     /// <inheritdoc cref="IStatRepo.SyncToAzureDB"/>

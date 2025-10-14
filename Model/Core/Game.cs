@@ -114,6 +114,7 @@ public class Game : IGame
     {
         if (sender is IPlayer winner)
         {
+            StatTracker.CompleteGame(winner.Number); // Must come before invoking PlayerWon, as that event announces finalization (eg to StatRepo)
             PlayerWon?.Invoke(this, (winner.Number));
             State?.DisablePlayer(winner.Number);
         }

@@ -50,6 +50,7 @@ public class StatTrackerStub : IStatTracker, IBinarySerializable
         });
     }
     public int TrackedActions { get => _currentSession.NumActions; }
+    public bool Completed => _currentSession.EndTime.HasValue;
 
     public Guid GameID => throw new NotImplementedException();
 
@@ -99,6 +100,11 @@ public class StatTrackerStub : IStatTracker, IBinarySerializable
     }
 
     public void RecordTradeAction(ITradeData tradeData)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void CompleteGame(int winningPlayerNumber)
     {
         throw new NotImplementedException();
     }

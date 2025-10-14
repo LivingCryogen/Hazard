@@ -27,6 +27,8 @@ public class StatTracker : IStatTracker
     public Guid GameID { get => _currentSession.Id; }
     /// <inheritdoc cref="IStatTracker.TrackedActions"/>
     public int TrackedActions { get => _currentSession.NumActions; }
+    /// <inheritdoc cref="IStatTracker.Completed"/>
+    public bool Completed { get => _currentSession.EndTime.HasValue; }
 
     /// <summary>
     /// Builds a new <see cref="StatTracker"/> instance for the given game.
@@ -94,6 +96,26 @@ public class StatTracker : IStatTracker
             OccupiedBonus = tradeData.OccupiedBonus
         };
         _currentSession.TradeIns.Add(tradeStats);
+    }
+    /// <inheritdoc cref="IStatTracker.CompleteGame(int)"/>
+    public void CompleteGame(int winningPlayerNumber)
+    {
+        if (winningPlayerNumber < 1 || winningPlayerNumber > 5)
+            throw new ArgumentOutOfRangeException(nameof(winningPlayerNumber), $"Invalid winning player number. Expected: 0-5. Actual: {winningPlayerNumber}");
+
+        if (Completed)
+        {
+            _logger.LogWarning("Attempted to complete stat tracker for game {gameId}, but it is already completed. No EndTime or Winner changes will be made to the current tracker.", GameID);
+            return;
+        }
+
+        if (_currentSession.Winner.HasValue)
+        {
+            _logger.LogWarning("Attempted to complete stats for game {gameId}, but Player {winner} was already marked as its winner. Now recording Player {overwrite} as the winner.", GameID, _currentSession.Winner, winningPlayerNumber);
+        }
+
+        _currentSession.EndTime = DateTime.Now;
+        _currentSession.Winner = winningPlayerNumber;
     }
     /// <inheritdoc cref="IStatTracker.JSONFromGameSession"/>
     public async Task<string> JSONFromGameSession()

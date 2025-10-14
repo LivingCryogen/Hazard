@@ -322,6 +322,7 @@ public partial class MainVM_Base : ObservableObject, IMainVM
     {
         CurrentPhase = GamePhase.GameOver;
         PlayerWon?.Invoke(this, e);
+        StatRepo.FinalizeCurrentGame();
     }
     /// <summary>
     /// Executes logic for the <see cref="NewGameCommand"/>.
