@@ -165,6 +165,9 @@ public class StatRepo(WebConnectionHandler connectionHandler,
             return false;
         }
 
+
+        _logger.LogInformation("Game {id} was finalized and marked for sync at {path}.", CurrentTracker.GameID, completedPath);
+
         CurrentTracker = null;
 
         return true;
