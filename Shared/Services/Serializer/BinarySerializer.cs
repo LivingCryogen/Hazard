@@ -37,6 +37,10 @@ public static class BinarySerializer
         _logger = logger;
     }
 
+    /* Note: All numeric types are converted to double for uniform handling.
+    * This trades storage efficiency for simplicity and consistency.
+    * For systems with large datasets, move to direct serialization
+    * of value types to reduce overhead (e.g., int as 4 bytes vs 8 bytes). */
     private static byte[] ConvertibleToBytes(Type type, IConvertible value)
     {
         if (type == typeof(byte))
@@ -166,7 +170,8 @@ public static class BinarySerializer
     /// <param name="newFile">A flag indicating whether the file is a new file.</param>
     /// <returns>A <see cref="Task"/>.</returns>
     /// <remarks>
-    /// See <see cref="WriteSerializableObject"/> and <see cref="IBinarySerializable.GetBinarySerials()"/>.
+    /// See <see cref="WriteSerializableObject"/> and <see cref="IBinarySerializable.GetBinarySerials()"/>.<br/>
+    /// Note! This is not a truly asynchronous process: we're merely offloading sequential work to a background thread. This is fine for our purposes (small desktop files with no parallelism requirements).
     /// </remarks>
     /// <returns>A Task whose results contain an array of string/long tuples containing the name and starting stream position for each saved object.</returns>
     public async static Task<(string, long)[]> Save(IBinarySerializable[] serializableObjects, string fileName, bool newFile)
@@ -252,6 +257,7 @@ public static class BinarySerializer
         return !errors;
     }
 
+    /// Note! This is not a truly asynchronous process! We're merely offloading sequential work to a background thread. This is fine for our purposes (small desktop files with no parallelism requirements).
     private async static Task<bool> WriteSerializableObject(IBinarySerializable serializableObject, BinaryWriter writer)
     {
         try
@@ -295,6 +301,9 @@ public static class BinarySerializer
     /// <summary>
     /// Determines whether objects of a given Type are serializable.
     /// </summary>
+    /// <remarks>
+    /// Certain IConvertibles are not compatible: eg <see cref="DateTime"/> and <see cref="Decimal"/>.<br/>
+    /// </remarks>
     /// <param name="type">The type to test.</param>
     /// <returns><see langword="true"/> if objects of type <paramref name="type"/> are serializable by <see cref="BinarySerializer"/>.</returns>
     public static bool IsSerializable(Type type)
@@ -302,7 +311,7 @@ public static class BinarySerializer
         return type switch
         {
             Type t when t == typeof(string) => true,
-            Type t when t.IsEnum => t.GetEnumUnderlyingType() == typeof(int),
+            Type t when t.IsEnum => true,
             Type t when t.IsPrimitive => true,
             Type t when IsIConvertibleCollection(t, out _) => true,
             _ => false
@@ -311,6 +320,9 @@ public static class BinarySerializer
     /// <summary>
     /// Determines whether a Type is a collection type of IConvertibles.
     /// </summary>
+    /// <remarks>Supports arrays and generic collections (List{T}, IEnumerable{T}, etc.).
+    /// Does NOT support non-generic collections (ArrayList, Queue, Stack, etc.) as as they lack type information about their elements.
+    /// </remarks>
     /// <param name="type">The type to test.</param>
     /// <param name="memberType">If <paramref name="type"/> is a collection of IConvertibles, the type of its members; otherwise, <see langword="null"/>.</param>
     /// <returns><see langword="true"/> if the collection is a collection of IConvertibles; otherwise, <see langword="false"/>.</returns>
@@ -328,31 +340,6 @@ public static class BinarySerializer
             var elementType = type.GetElementType();
             memberType = elementType;
             return typeof(IConvertible).IsAssignableFrom(elementType);
-        }
-
-        // test if a non-generic IEnumerable contains IConvertible elements
-        if (!type.IsGenericType)
-        {
-
-            if (Activator.CreateInstance(type) is not IEnumerable testInstance)
-            {
-                memberType = null;
-                return false;
-            }
-            Type? elementType = null;
-            foreach (var element in testInstance)
-            {
-                if (element is not IConvertible)
-                {
-                    memberType = null;
-                    return false;
-                }
-
-                elementType ??= element.GetType();
-            }
-
-            memberType = elementType;
-            return true;
         }
 
         // test if a generic IEnumerable -- that must implement IEnumerable<T> -- has IConvertible T

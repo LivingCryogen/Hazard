@@ -5,7 +5,9 @@ namespace Shared.Services.Serializer;
 /// A collection of serialized data and metadata gathered from an <see cref="IBinarySerializable"/>.
 /// </summary>
 /// <remarks>
-/// Used by <see cref="BinarySerializer"/> via <see cref="IBinarySerializable.GetBinarySerials"/>. 
+/// Used by *reflection-dependent* paths of <see cref="BinarySerializer"/> via <see cref="IBinarySerializable.GetBinarySerials"/>.<br/>
+/// If you are implementing custom serialization (rather than using default interface methods), 
+/// consider using the generic <see cref="BinarySerializer"/> methods directly instead of this struct.
 /// </remarks>
 public readonly struct SerializedData
 {
