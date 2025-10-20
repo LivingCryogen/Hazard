@@ -77,6 +77,9 @@ public static class BinarySerializer
     }
     private static void WriteConvertibles(BinaryWriter writer, Type type, IConvertible[] values)
     {
+        if (IsIConvertibleCollection(type, out var innerType) && innerType is Type memberType)
+            type = memberType;
+
         foreach (IConvertible value in values)
             WriteConvertible(writer, type, value);
     }
@@ -111,7 +114,10 @@ public static class BinarySerializer
     /// <exception cref="ArgumentException">.</exception>
     public static Array ReadConvertibles(BinaryReader reader, Type type, int numValues)
     {
-        if (!typeof(IConvertible).IsAssignableFrom(type) || type.IsEnum || type == typeof(string))
+        if (IsIConvertibleCollection(type, out var value) && value is Type memberType)
+            type = memberType;
+
+        if (!typeof(IConvertible).IsAssignableFrom(type) && !type.IsEnum && type != typeof(string))
             throw new ArgumentException("ReadConvertibles accepts only IConvertible types, excluding strings and Enums.", nameof(type));
 
         Array returnArray = Array.CreateInstance(type, numValues);

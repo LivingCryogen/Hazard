@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Testing.Platform.Logging;
 using Model.Core;
-using Model.Tests.Core.Stubs;
 using Model.Tests.DataAccess.Stubs;
 using Model.Tests.Entities.Mocks;
 using Model.Tests.Fixtures.Stubs;
@@ -26,6 +25,7 @@ public class MockGame : IGame
         State = new StateMachine(Players.Count, new LoggerStubT<StateMachine>());
         Regulator = new MockRegulator(new LoggerStubT<MockRegulator>(), this);
         AssetFetcher = new AssetFetcherStub();
+        StatTracker = new MockStatTracker(this);
     }
 
     public Microsoft.Extensions.Logging.ILogger<MockGame> Logger { get => _logger; }
@@ -33,7 +33,7 @@ public class MockGame : IGame
     public IBoard Board { get; set; } = new MockBoard();
     public IRegulator Regulator { get; set; }
     public IRuleValues Values { get; set; } = new MockRuleValues();
-    public IStatTracker StatTracker { get; set; } = new StatTrackerStub();
+    public IStatTracker StatTracker { get; set; }
     public Guid ID { get; set; }
     public bool DefaultCardMode { get; set; } = true;
     public List<IPlayer> Players { get; set; }

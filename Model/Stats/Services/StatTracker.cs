@@ -90,6 +90,7 @@ public class StatTracker : IStatTracker
     {
         var tradeStats = new GameSession.TradeAction(_loggerFactory.CreateLogger<GameSession.TradeAction>())
         {
+            Player = tradeData.Player,
             ActionId = _nextActionId++,
             CardTargetTerritories = [.. tradeData.CardTargets],
             TradeValue = tradeData.TradeValue,
@@ -137,7 +138,8 @@ public class StatTracker : IStatTracker
         {
             List<SerializedData> saveData = [];
             saveData.Add(new(typeof(int), _nextActionId));
-            saveData.AddRange(await _currentSession.GetBinarySerials());
+            if (_currentSession != null)
+                saveData.AddRange(await _currentSession.GetBinarySerials());
             return saveData.ToArray();
         });
     }

@@ -1,4 +1,6 @@
-﻿using Model.Tests.Core.Mocks;
+﻿using Model.Stats.Services;
+using Model.Stats.StatModels;
+using Model.Tests.Core.Mocks;
 using Model.Tests.Entities.Mocks;
 using Model.Tests.Fixtures;
 using Model.Tests.Fixtures.Stubs;
@@ -278,6 +280,76 @@ public class BinarySerializerTests
     }
 
     [TestMethod]
+    public async Task StatTracker_RoundTrip_Match()
+    {
+        await BinarySerializer.Save([_toSerialGame.StatTracker], _testFileName, true);
+        MockStatTracker testTracker = new(null);
+
+        if (BinarySerializer.Load([testTracker], _testFileName))
+        {
+            Assert.AreEqual(_toSerialGame.StatTracker.GameID, testTracker.GameID);
+            Assert.AreEqual(_toSerialGame.StatTracker.Completed, testTracker.Completed);
+            Assert.AreEqual(_toSerialGame.StatTracker.TrackedActions, testTracker.TrackedActions);
+
+            Assert.IsNotNull(testTracker.CurrentSession);
+            GameSession loadedSession = testTracker.CurrentSession;
+            Assert.IsNotNull(((MockStatTracker)_toSerialGame.StatTracker).CurrentSession);
+            GameSession originalSession = ((MockStatTracker)_toSerialGame.StatTracker).CurrentSession!;
+
+            int numAttacks = loadedSession.Attacks.Count;
+            Assert.AreEqual(numAttacks, originalSession.Attacks.Count);
+            for (int i = 0; i < numAttacks; i++)
+            {
+                var loadedAttack = loadedSession.Attacks[i];
+                var originalAttack = originalSession.Attacks[i];
+                Assert.AreEqual(loadedAttack.ActionId, originalAttack.ActionId);
+                Assert.AreEqual(loadedAttack.Attacker, originalAttack.Attacker);
+                Assert.AreEqual(loadedAttack.SourceTerritory, originalAttack.SourceTerritory);
+                Assert.AreEqual(loadedAttack.TargetTerritory, originalAttack.TargetTerritory);
+                Assert.AreEqual(loadedAttack.AttackerDice, originalAttack.AttackerDice);
+                Assert.AreEqual(loadedAttack.DefenderDice, originalAttack.DefenderDice);
+                Assert.AreEqual(loadedAttack.AttackerLoss, originalAttack.AttackerLoss);
+                Assert.AreEqual(loadedAttack.DefenderLoss, originalAttack.DefenderLoss);
+                Assert.AreEqual(loadedAttack.Conquered, originalAttack.Conquered);
+                Assert.AreEqual(loadedAttack.Retreated, originalAttack.Retreated);
+                Assert.AreEqual(loadedAttack.AttackerInitialArmies, originalAttack.AttackerInitialArmies);
+                Assert.AreEqual(loadedAttack.DefenderInitialArmies, originalAttack.DefenderInitialArmies);
+            }
+
+            int numMoves = loadedSession.Moves.Count;
+            Assert.AreEqual(numMoves, originalSession.Moves.Count);
+            for (int i = 0; i < numMoves; i++)
+            {
+                var loadedMove = loadedSession.Moves[i];
+                var originalMove = originalSession.Moves[i];
+                Assert.AreEqual(loadedMove.ActionId, originalMove.ActionId);
+                Assert.AreEqual(loadedMove.Player, originalMove.Player);
+                Assert.AreEqual(loadedMove.SourceTerritory, originalMove.SourceTerritory);
+                Assert.AreEqual(loadedMove.TargetTerritory, originalMove.TargetTerritory);
+                Assert.AreEqual(loadedMove.MaxAdvanced, originalMove.MaxAdvanced);
+            }
+
+            int numTrades = loadedSession.TradeIns.Count;
+            Assert.AreEqual(numTrades, originalSession.TradeIns.Count);
+            for (int i = 0; i < numTrades; i++)
+            {
+                var loadedTrade = loadedSession.TradeIns[i];
+                var originalTrade = originalSession.TradeIns[i];
+                Assert.AreEqual(loadedTrade.ActionId, originalTrade.ActionId);
+                Assert.AreEqual(loadedTrade.Player, originalTrade.Player);
+                Assert.AreEqual(loadedTrade.TradeValue, originalTrade.TradeValue);
+                Assert.AreEqual(loadedTrade.OccupiedBonus, originalTrade.OccupiedBonus);
+                Assert.AreEqual(loadedTrade.CardTargetTerritories.Length, originalTrade.CardTargetTerritories.Length);
+                for (int j = 0; j < loadedTrade.CardTargetTerritories.Length; j++)
+                {
+                    Assert.AreEqual(loadedTrade.CardTargetTerritories[j], originalTrade.CardTargetTerritories[j]);
+                }
+            }
+        }
+        else Assert.Fail();
+    }
+
+    [TestMethod]
     public async Task EntireGame_RoundTrip_Match()
     {
         _toSerialGame.State.NumTrades = 4;
@@ -432,6 +504,67 @@ public class BinarySerializerTests
             Assert.AreEqual(_toSerialGame.State.Round, _deserialGame.State.Round);
             Assert.AreEqual(_toSerialGame.State.PlayerTurn, _deserialGame.State.PlayerTurn);
             Assert.AreEqual(_toSerialGame.State.PhaseStageTwo, _deserialGame.State.PhaseStageTwo);
+
+            // StatTracker Asserts
+            MockStatTracker testTracker = (MockStatTracker)_deserialGame.StatTracker;
+            Assert.AreEqual(_toSerialGame.StatTracker.GameID, testTracker.GameID);
+            Assert.AreEqual(_toSerialGame.StatTracker.Completed, testTracker.Completed);
+            Assert.AreEqual(_toSerialGame.StatTracker.TrackedActions, testTracker.TrackedActions);
+
+            Assert.IsNotNull(testTracker.CurrentSession);
+            GameSession loadedSession = testTracker.CurrentSession;
+            Assert.IsNotNull(((MockStatTracker)_toSerialGame.StatTracker).CurrentSession);
+            GameSession originalSession = ((MockStatTracker)_toSerialGame.StatTracker).CurrentSession!;
+
+            int numAttacks = loadedSession.Attacks.Count;
+            Assert.AreEqual(numAttacks, originalSession.Attacks.Count);
+            for (int i = 0; i < numAttacks; i++)
+            {
+                var loadedAttack = loadedSession.Attacks[i];
+                var originalAttack = originalSession.Attacks[i];
+                Assert.AreEqual(loadedAttack.ActionId, originalAttack.ActionId);
+                Assert.AreEqual(loadedAttack.Attacker, originalAttack.Attacker);
+                Assert.AreEqual(loadedAttack.SourceTerritory, originalAttack.SourceTerritory);
+                Assert.AreEqual(loadedAttack.TargetTerritory, originalAttack.TargetTerritory);
+                Assert.AreEqual(loadedAttack.AttackerDice, originalAttack.AttackerDice);
+                Assert.AreEqual(loadedAttack.DefenderDice, originalAttack.DefenderDice);
+                Assert.AreEqual(loadedAttack.AttackerLoss, originalAttack.AttackerLoss);
+                Assert.AreEqual(loadedAttack.DefenderLoss, originalAttack.DefenderLoss);
+                Assert.AreEqual(loadedAttack.Conquered, originalAttack.Conquered);
+                Assert.AreEqual(loadedAttack.Retreated, originalAttack.Retreated);
+                Assert.AreEqual(loadedAttack.AttackerInitialArmies, originalAttack.AttackerInitialArmies);
+                Assert.AreEqual(loadedAttack.DefenderInitialArmies, originalAttack.DefenderInitialArmies);
+            }
+
+            int numMoves = loadedSession.Moves.Count;
+            Assert.AreEqual(numMoves, originalSession.Moves.Count);
+            for (int i = 0; i < numMoves; i++)
+            {
+                var loadedMove = loadedSession.Moves[i];
+                var originalMove = originalSession.Moves[i];
+                Assert.AreEqual(loadedMove.ActionId, originalMove.ActionId);
+                Assert.AreEqual(loadedMove.Player, originalMove.Player);
+                Assert.AreEqual(loadedMove.SourceTerritory, originalMove.SourceTerritory);
+                Assert.AreEqual(loadedMove.TargetTerritory, originalMove.TargetTerritory);
+                Assert.AreEqual(loadedMove.MaxAdvanced, originalMove.MaxAdvanced);
+            }
+
+            int numTrades = loadedSession.TradeIns.Count;
+            Assert.AreEqual(numTrades, originalSession.TradeIns.Count);
+            for (int i = 0; i < numTrades; i++)
+            {
+                var loadedTrade = loadedSession.TradeIns[i];
+                var originalTrade = originalSession.TradeIns[i];
+                Assert.AreEqual(loadedTrade.ActionId, originalTrade.ActionId);
+                Assert.AreEqual(loadedTrade.Player, originalTrade.Player);
+                Assert.AreEqual(loadedTrade.TradeValue, originalTrade.TradeValue);
+                Assert.AreEqual(loadedTrade.OccupiedBonus, originalTrade.OccupiedBonus);
+                Assert.AreEqual(loadedTrade.CardTargetTerritories.Length, originalTrade.CardTargetTerritories.Length);
+                for (int j = 0; j < loadedTrade.CardTargetTerritories.Length; j++)
+                {
+                    Assert.AreEqual(loadedTrade.CardTargetTerritories[j], originalTrade.CardTargetTerritories[j]);
+                }
+            }
         }
         else Assert.Fail();
     }

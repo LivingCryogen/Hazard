@@ -11,7 +11,7 @@ public class LoggerFactoryStub : ILoggerFactory
 
     public ILogger CreateLogger(string categoryName)
     {
-        throw new NotImplementedException();
+        return new LoggerStubT<object>();
     }
 
     public void Dispose()
