@@ -55,6 +55,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\View\IAppCommander.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Configuration\AzureConnectData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Configuration\InstallationInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Configuration\PostConfigurer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Configuration\RuleValuesData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Helpers\DataFileFinder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Configuration\AppConfig.cs" />

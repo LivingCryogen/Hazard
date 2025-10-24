@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
   <PropertyGroup>
+	<FunctionsSkipExtensionBuild>true</FunctionsSkipExtensionBuild>
     <TargetFramework>net8.0</TargetFramework>
 	<Platform>x86</Platform>
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
@@ -7,8 +8,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Configurations>Debug;Release;Pages</Configurations>
-	<GenerateFunctionsMetadata>true</GenerateFunctionsMetadata>
-	<ExtensionsCsProj>DummyExtensions\DummyExtensions.csproj</ExtensionsCsProj>
   </PropertyGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

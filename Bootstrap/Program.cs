@@ -35,12 +35,9 @@ namespace Bootstrap
         [STAThread]
         static void Main()
         {
-            string environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
-            bool devMode = environmentName == Environments.Development;
-
             string appPath = DetermineAppPath();
 
-            using var appHost = BuildAppHost(devMode, environmentName, appPath);
+            using var appHost = BuildAppHost(appPath);
             InitializeStaticLoggers(appHost);
             var app = appHost.Services.GetRequiredService<App>();
             app.Host = appHost;
@@ -63,7 +60,7 @@ namespace Bootstrap
             }
         }
 
-        private static protected IHost BuildAppHost(bool devMode, string environmentName, string appPath)
+        private static protected IHost BuildAppHost(string appPath)
         {
             var host = Host.CreateDefaultBuilder();
 
@@ -71,51 +68,22 @@ namespace Bootstrap
                    {
                        config.SetBasePath(appPath);
                        config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                           .AddJsonFile($"appsettings.{environmentName}.json", optional: true, reloadOnChange: true);
+                           .AddJsonFile($"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true);
+                   })
+                   .ConfigureLogging((context, logging) =>
+                   {
+                       logging.ClearProviders();
+                       logging.AddConsole();
+                       logging.AddDebug();
+                       if (context.HostingEnvironment.IsDevelopment())
+                           logging.AddFilter(logLevel => logLevel >= LogLevel.Trace);
+                       else
+                           logging.AddFilter(logLevel => logLevel >= LogLevel.Information);
                    })
                    .ConfigureServices((context, services) =>
                    {
+                       services.AddSingleton<IPostConfigureOptions<AppConfig>, PostConfigurer>();
                        services.Configure<AppConfig>(context.Configuration);
-                       services.PostConfigure<AppConfig>(options =>
-                       {
-                           // Generate and store install-unique information on first run (or if otherwise missing the file). To be used as identifier in Azure DataBase
-                           string installInfoPath = Path.Combine(appPath, "installation.json"); 
-                           InstallationInfo installationInfo;
-                           
-                           if (File.Exists(installInfoPath))
-                           {
-                               string json = File.ReadAllText(installInfoPath);
-                               installationInfo = JsonSerializer.Deserialize<InstallationInfo>(json) ?? new InstallationInfo();
-                           }
-                           else
-                           {
-                               installationInfo = new InstallationInfo()
-                               {
-                                   InstallId = Guid.NewGuid(),
-                                   FirstRun = DateTime.UtcNow
-                               };
-                           
-                                   string installJson = JsonSerializer.Serialize(installationInfo, 
-                                       new JsonSerializerOptions() { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-                                   File.WriteAllText(installInfoPath, installJson);
-                           }
-
-                           options.InstallInfo.InstallId = installationInfo.InstallId;
-                           options.InstallInfo.FirstRun = installationInfo.FirstRun;
-                           options.AppPath = appPath;
-                           options.DevMode = devMode;
-                           options.StatRepoFilePath = DataFileFinder.FindFiles(appPath, options.StatRepoFileName)[0];
-                           foreach (string dataFileName in options.DataFileNames)
-                           {
-                               string dataFile = DataFileFinder.FindFiles(appPath, dataFileName)[0];
-                               options.DataFileMap.Add(dataFileName, dataFile);
-                           }
-                           foreach (string soundFileName in options.SoundFileNames)
-                           {
-                               string soundFile = DataFileFinder.FindFiles(appPath, soundFileName)[0];
-                               options.SoundFileMap.Add(soundFileName, soundFile);
-                           }
-                       });
                        services.AddSingleton<IRegistryInitializer, RegistryInitializer>();
                        services.AddTransient<ITypeRelations, TypeRelations>();
                        services.AddSingleton<ITypeRegister<ITypeRelations>, TypeRegister>();
@@ -145,16 +113,6 @@ namespace Bootstrap
                            var logger = provider.GetRequiredService<ILogger<StatRepo>>();
                            return new StatRepo(connectionHandler, statTrackerFactory, options, loggerFactory, logger);
                        });
-                   })
-                   .ConfigureLogging(logging =>
-                   {
-                       logging.ClearProviders();
-                       logging.AddConsole();
-                       logging.AddDebug();
-                       if (devMode)
-                           logging.AddFilter(logLevel => logLevel >= LogLevel.Trace);
-                       else
-                           logging.AddFilter(logLevel => logLevel >= LogLevel.Information);
                    })
                    .Build();
         }
