@@ -79,21 +79,6 @@
     <Content Include="..\Bootstrap\appsettings.json">
       <Link>appsettings.json</Link>
     </Content>
-    <Content Include="..\Model\Stats\GameStatistics.hzd">
-      <Link>StatRepo\GameStatistics.hzd</Link>
-    </Content>
-    <Content Include="..\Saves\100AcreWood.hzd">
-      <Link>Saves\100AcreWood.hzd</Link>
-    </Content>
-    <Content Include="..\Saves\ForTheAmericas.hzd">
-      <Link>Saves\ForTheAmericas.hzd</Link>
-    </Content>
-    <Content Include="..\Saves\FoxVJosh.hzd">
-      <Link>Saves\FoxVJosh.hzd</Link>
-    </Content>
-    <Content Include="..\Saves\Scrum.hzd">
-      <Link>Saves\Scrum.hzd</Link>
-    </Content>
     <Content Include="..\View\Audio\roll03.wav">
       <Link>Audio\roll03.wav</Link>
     </Content>
