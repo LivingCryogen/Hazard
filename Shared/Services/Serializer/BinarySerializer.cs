@@ -174,7 +174,6 @@ public static class BinarySerializer
     /// <param name="serializableObjects">The objects to serialize and save.</param>
     /// <param name="fileName">The full name (path) of the save file.</param>
     /// <param name="newFile">A flag indicating whether the file is a new file.</param>
-    /// <returns>A <see cref="Task"/>.</returns>
     /// <remarks>
     /// See <see cref="WriteSerializableObject"/> and <see cref="IBinarySerializable.GetBinarySerials()"/>.<br/>
     /// Note! This is not a truly asynchronous process: we're merely offloading sequential work to a background thread. This is fine for our purposes (small desktop files with no parallelism requirements).

@@ -363,15 +363,10 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         {
             var saveResult = await BinarySerializer.Save([this, CurrentGame, CurrentGame.StatTracker, Regulator], fileName, saveParams.NewFile);
           
-            if (await StatRepo.Update(fileName, saveResult) is string trackedSavePath)
+            if (await StatRepo.Update(fileName, saveResult))
             {
-                if (trackedSavePath != fileName)
-                    _logger.LogWarning("StatRepo updated but is tracking a different save file ({TrackedSavePath}) than the one just saved ({FileName}).", trackedSavePath, fileName);
-                else
-                {
-                    _logger.LogInformation("StatRepo successfully updated after saving game.");
-                    SyncCommand.NotifyCanExecuteChanged();
-                }
+                _logger.LogInformation("StatRepo successfully updated after saving game.");
+                SyncCommand.NotifyCanExecuteChanged();
             }
             else
             {

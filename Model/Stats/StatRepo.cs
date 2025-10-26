@@ -42,12 +42,12 @@ public class StatRepo(WebConnectionHandler connectionHandler,
     public bool SyncPending { get => _pendingSyncs > 0; }
 
     /// <inheritdoc cref="IStatRepo.Update(string, ValueTuple{string, long}[])"/>
-    public async Task<string?> Update(string lastSavePath, (string, long)[] objNamesAndPositions)
+    public async Task<bool> Update(string lastSavePath, (string, long)[] objNamesAndPositions)
     {
         try
         {
             if (CurrentTracker == null)
-                return null;
+                return false;
 
             Guid gameID = CurrentTracker.GameID;
 
@@ -56,12 +56,12 @@ public class StatRepo(WebConnectionHandler connectionHandler,
             if (statTrackerResult == default)
             {
                 _logger.LogWarning("StatTracker not found in save results");
-                return null;
+                return false;
             }
             long trackerPosition = statTrackerResult.Item2;
 
             if (string.IsNullOrEmpty(lastSavePath))
-                return null;
+                return false;
 
             // If not already tracked, add it
             bool newAdd = _gameStats.TryAdd(gameID, new(_loggerFactory.CreateLogger<SavedStatMetadata>())
@@ -87,18 +87,18 @@ public class StatRepo(WebConnectionHandler connectionHandler,
                     };
                     _gameStats[gameID] = updatedData;
                     _pendingSyncs++;
-                }  
+                }
             }
             else
                 _pendingSyncs++;
 
             await Save();
-            return lastSavePath;
+            return true;
         }
         catch (Exception ex)
         {
             _logger.LogError("There was an unexpected error when attempting to update Stat Repo: {Message}", ex.Message);
-            return null;
+            return false;
         }   
     }
 

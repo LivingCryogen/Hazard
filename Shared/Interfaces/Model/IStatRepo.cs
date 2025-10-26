@@ -26,8 +26,8 @@ public interface IStatRepo
     /// </summary>
     /// <param name="path">Path of the saved game that may update the repository.</param>
     /// <param name="objNamesAndPositions">Save result. See <see cref="Services.Serializer.BinarySerializer.Save(IBinarySerializable[], string, bool)"/>.</param>
-    /// <returns></returns>
-    Task<string?> Update(string path, (string, long)[] objNamesAndPositions);
+    /// <returns><see langword="true"/> if the Update to the repository was successful; otherwise, <see langword="false"/></returns>
+    Task<bool> Update(string path, (string, long)[] objNamesAndPositions);
     /// <summary>
     /// Finalizes the current completed game and performs any necessary post-game operations.
     /// </summary>
