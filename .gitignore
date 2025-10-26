@@ -8,6 +8,9 @@
 *HazardPublishSAS/bin/
 *HazardPublishSAS/obj/
 
+# Dummy Extensions
+*DummyExtensions*
+
 # Hazard! Game Save files
 *.hzd
 

@@ -19,10 +19,6 @@ public class AppConfig
     /// </remarks>
     public string AppPath { get; set; } = string.Empty;
     /// <summary>
-    /// Gets or sets a flag indicating whether the program is running in a development environment.
-    /// </summary>
-    public bool DevMode { get; set; } = false;
-    /// <summary>
     /// Gets the name of the statistics repository file to be used.
     /// </summary>
     public string StatRepoFileName { get; set; } = string.Empty;
