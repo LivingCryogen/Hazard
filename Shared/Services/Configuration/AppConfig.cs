@@ -19,6 +19,10 @@ public class AppConfig
     /// </remarks>
     public string AppPath { get; set; } = string.Empty;
     /// <summary>
+    /// Gets or sets a value indicating whether the application is running in Developer Mode.
+    /// </summary>
+    public bool DevMode { get; set; } = false;
+    /// <summary>
     /// Gets the name of the statistics repository file to be used.
     /// </summary>
     public string StatRepoFileName { get; set; } = string.Empty;

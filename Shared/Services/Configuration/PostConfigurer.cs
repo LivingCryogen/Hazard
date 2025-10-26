@@ -20,6 +20,9 @@ public class PostConfigurer(ILogger<IPostConfigureOptions<AppConfig>> logger, IH
         string installInfoPath = Path.Combine(_appPath, "installation.json");
         InstallationInfo installationInfo;
 
+        if (env.IsDevelopment())
+            options.DevMode = true;
+
         if (File.Exists(installInfoPath))
         {
             string json = File.ReadAllText(installInfoPath);
