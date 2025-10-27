@@ -23,7 +23,12 @@ public class WebConnectionHandler(IOptions<AppConfig> options, ILogger<WebConnec
             {
                 Timeout = TimeSpan.FromSeconds(30) 
             };
-
+    /// <summary>
+    /// Verifies the availability of an internet connection by attempting to access a known URL.
+    /// </summary>
+    /// <remarks>Sends a request to a Google server and checks if the response indicates success.
+    /// Logs a warning if the verification fails due to an exception.</remarks>
+    /// <returns><see langword="true"/> if the internet connection is verified successfully; otherwise, <see langword="false"/>.</returns>
     public async Task<bool> VerifyInternetConnection()
     {
         try
@@ -37,7 +42,12 @@ public class WebConnectionHandler(IOptions<AppConfig> options, ILogger<WebConnec
             return false;
         }
     }
-
+    /// <summary>
+    /// Verifies the connection to an Azure Web App.
+    /// </summary>
+    /// <remarks>Attempts to connect to the Azure Web App using the configured base URL. It logs a
+    /// warning if the connection fails or times out.</remarks>
+    /// <returns><see langword="true"/> if the connection to the Azure Web App is successful; otherwise, <see langword="false"/>.</returns>
     public async Task<bool> VerifyAzureWebAppConnection()
     {
         try
@@ -60,8 +70,12 @@ public class WebConnectionHandler(IOptions<AppConfig> options, ILogger<WebConnec
             return false;
         }
     }
-
-    public async Task<bool> PostGameSession(string gameSessionJson, int trackedActions)
+    /// <summary>
+    /// Attempt to POST a game session's stats to the Azure Web App.
+    /// </summary>
+    /// <param name="gameSessionJson">A properly formed JSON (should match GameSessionDto).</param>
+    /// <returns><see langword="true"/> if the POST was successful (Web App returned Code 200); otherwise, <see langword="false"/></returns>
+    public async Task<bool> PostGameSession(string gameSessionJson)
     {
         if (!await VerifyInternetConnection())
         {
@@ -77,9 +91,7 @@ public class WebConnectionHandler(IOptions<AppConfig> options, ILogger<WebConnec
 
         try
         {
-            //  build request URL with Query Parameters
-            var queryParams = $"?installID={_installID}&trackedActions={trackedActions}";
-            var requestURL = $"{_baseUrl}/sync-stats{queryParams}";
+            var requestURL = $"{_baseUrl}/sync-stats";
 
             // format string Content for HTTP Body
             StringContent bodyContent = new(gameSessionJson, System.Text.Encoding.UTF8, "application/json");

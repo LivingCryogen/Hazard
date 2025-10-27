@@ -9,11 +9,31 @@ using System.Text.Json;
 
 namespace Shared.Services.Configuration;
 
+/// <summary>
+/// Post-configures AppConfig options after initial binding.
+/// </summary>
+/// <remarks>
+/// Essential for runtime configuration (e.g., file paths, install info) that cannot be set during initial binding.
+/// This custom class and method is necessary to enable logging during post-configuration.
+/// </remarks>
+/// <param name="logger">A logger from DI.</param>
+/// <param name="env">Host environment from DI.</param>
 public class PostConfigurer(ILogger<IPostConfigureOptions<AppConfig>> logger, IHostEnvironment env) : IPostConfigureOptions<AppConfig>
 {
     private readonly ILogger<IPostConfigureOptions<AppConfig>> _logger = logger;
     private readonly string _appPath = env.ContentRootPath;
 
+    /// <summary>
+    /// Post-configures the AppConfig options.
+    /// </summary>
+    /// <remarks>
+    /// Should be automatically called by the options framework after initial configuration binding.
+    /// </remarks>
+    /// <param name="name">The name of the options instance being configured. <c>null</c> for default options.</param>
+    /// <param name="options">The options instance to be post-configured.</param>
+    /// <exception cref="FileNotFoundException">
+    /// Thrown if a required file is missing or inaccessible during post-configuration.
+    /// </exception>
     public void PostConfigure(string? name, AppConfig options)
     {
         // Generate and store install-unique information on first run (or if otherwise missing the file). To be used as identifier in Azure DataBase
