@@ -73,7 +73,7 @@ public class PostConfigurer(ILogger<IPostConfigureOptions<AppConfig>> logger, IH
                 Directory.CreateDirectory(statsDir);
 
             var statRepoPath = Path.Combine(statsDir, options.StatRepoFileName);
-            File.Create(statRepoPath);
+            using (File.Create(statRepoPath)) { }
             options.StatRepoFilePath = statRepoPath;
         }
         else
