@@ -280,7 +280,6 @@ public class StatRepo(WebConnectionHandler connectionHandler,
         try
         {
             string sessionJSON = string.Empty;
-            int trackedActions;
             if (CurrentTracker == null || CurrentTracker.GameID != gameID)
             {
                 var savedTracker = GetSavedStatTracker(gameID);
@@ -290,16 +289,14 @@ public class StatRepo(WebConnectionHandler connectionHandler,
                     return false;
                 }
                 sessionJSON = await savedTracker.JSONFromGameSession();
-                trackedActions = savedTracker.TrackedActions;
             }
             else
             {
                 _logger.LogInformation("Statistics are being synced for an unsaved game session: {gameId}", gameID);
                 sessionJSON = await CurrentTracker.JSONFromGameSession();
-                trackedActions = CurrentTracker.TrackedActions;
             }
 
-            bool synced = await _connectionHandler.PostGameSession(sessionJSON, trackedActions);
+            bool synced = await _connectionHandler.PostGameSession(sessionJSON);
             if (synced)
             {
                 _logger.LogInformation("Successfully posted game session stats for {gameId}", gameID);

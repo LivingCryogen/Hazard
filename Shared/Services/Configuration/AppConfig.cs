@@ -65,9 +65,10 @@ public class AppConfig
     /// See <see cref="Model.DataAccess.AssetFetcher.FetchCardSets"/>
     /// </remarks>
     public string CardDataSearchString { get; set; } = string.Empty;
-
+    /// <summary>
+    /// Gets or sets the connection information for the Azure Web App.
+    /// </summary>
     public AzureConnectData AzConnectInfo { get; set; } = new();
-
     /// <summary>
     /// Gets or sets the collection of rules-based values drawn from appsettings.
     /// </summary>
