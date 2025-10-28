@@ -1,14 +1,17 @@
 ﻿using Microsoft.Extensions.Logging;
 using Model.Stats.StatModels;
-using Shared.Interfaces.Model;
-using Shared.Services.Serializer;
 using Model.Tests.Fixtures.Stubs;
+using Shared.Geography.Enums;
+using Shared.Interfaces.Model;
+using Shared.Services.Helpers;
+using Shared.Services.Serializer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Shared.Geography.Enums;
 
 namespace Model.Tests.Core.Mocks;
 
@@ -17,10 +20,21 @@ public class MockStatTracker : IStatTracker
     private ILogger _logger = LoggerFactoryStub.CreateLogger<MockStatTracker>();
     private ILoggerFactory _loggerFactory = new LoggerFactoryStub();
     private int _actionId = 0;
+    private readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        WriteIndented = false,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters = { new JsonStringEnumConverter() },
+    };
 
     private GameSession? _currentSession;
 
-    public MockStatTracker(IGame? mockGame)
+    public MockStatTracker()
+    {
+        _currentSession = null;
+    }
+
+    public MockStatTracker(IGame? mockGame, Guid installID)
     {
         if (mockGame == null)
         {
@@ -31,10 +45,10 @@ public class MockStatTracker : IStatTracker
         _currentSession = new GameSession(LoggerFactoryStub.CreateLogger<GameSession>(), _loggerFactory) 
         {
             Id = mockGame.ID,
-            InstallId = Guid.NewGuid(),
+            InstallId = installID,
             PlayerNumsAndNames = mockGame.Players.ToDictionary(p => p.Number, p => p.Name),
-            StartTime = DateTime.UtcNow - TimeSpan.FromDays(3),
-            EndTime = DateTime.UtcNow,
+            StartTime = UtcDateTimeFormatter.Normalize(DateTime.UtcNow - TimeSpan.FromDays(3)),
+            EndTime = UtcDateTimeFormatter.Normalize(DateTime.UtcNow),
             Winner = 0,
         };
 
@@ -118,9 +132,20 @@ public class MockStatTracker : IStatTracker
         });
     }
 
-    public Task<string> JSONFromGameSession()
+    public async Task<string> JSONFromGameSession()
     {
-        throw new NotImplementedException();
+        if (_currentSession == null)
+            return string.Empty;
+
+        try
+        {
+            return await Task.Run(() => { return JsonSerializer.Serialize(_currentSession, _jsonOptions); });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to serialize {session} to JSON: {message}", _currentSession, ex.Message);
+            throw;
+        }
     }
 
     public bool LoadFromBinary(BinaryReader reader)

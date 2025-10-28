@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
+using Shared.Services.Helpers;
 using Shared.Services.Serializer;
 
 namespace Model.Stats.StatModels;
@@ -315,11 +316,14 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
         {
             Id = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
             InstallId = Guid.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
-            StartTime = DateTime.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
+            StartTime = UtcDateTimeFormatter.Normalize(
+                DateTime.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string))));
+                
 
             bool hasEndTime = (int)BinarySerializer.ReadConvertible(reader, typeof(int)) == 1;
             if (hasEndTime)
-                EndTime = DateTime.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string)));
+                EndTime = UtcDateTimeFormatter.Normalize(
+                    DateTime.Parse((string)BinarySerializer.ReadConvertible(reader, typeof(string))));
 
             bool hasWinner = (int)BinarySerializer.ReadConvertible(reader, typeof(int)) == 1;
             if (hasWinner)
@@ -374,12 +378,13 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
             List<SerializedData> saveData = [];
             saveData.Add(new(typeof(string), Id.ToString()));
             saveData.Add(new(typeof(string), InstallId.ToString()));
-            saveData.Add(new(typeof(string), StartTime.ToString()));
+            saveData.Add(new(typeof(string), StartTime.ToString("o"))); 
 
             if (EndTime is DateTime endTime)
             {
                 saveData.Add(new(typeof(int), 1));
-                saveData.Add(new(typeof(string), endTime.ToString()));
+                saveData.Add(new(typeof(string),
+                endTime.ToString("o")));
             }
             else
                 saveData.Add(new(typeof(int), 0));

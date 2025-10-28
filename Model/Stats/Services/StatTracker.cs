@@ -4,6 +4,7 @@ using Model.Stats.StatModels;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
 using Shared.Services.Configuration;
+using Shared.Services.Helpers;
 using Shared.Services.Serializer;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -44,7 +45,7 @@ public class StatTracker : IStatTracker
         {
             Id = game.ID,
             InstallId = options.Value.InstallInfo.InstallId,
-            StartTime = DateTime.Now,
+            StartTime = UtcDateTimeFormatter.Normalize(DateTime.Now),
             EndTime = null,
             Winner = null
         };
@@ -115,7 +116,7 @@ public class StatTracker : IStatTracker
             _logger.LogWarning("Attempted to complete stats for game {gameId}, but Player {winner} was already marked as its winner. Now recording Player {overwrite} as the winner.", GameID, _currentSession.Winner, winningPlayerNumber);
         }
 
-        _currentSession.EndTime = DateTime.Now;
+        _currentSession.EndTime = UtcDateTimeFormatter.Normalize(DateTime.Now);
         _currentSession.Winner = winningPlayerNumber;
     }
     /// <inheritdoc cref="IStatTracker.JSONFromGameSession"/>

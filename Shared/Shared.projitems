@@ -59,6 +59,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\Configuration\RuleValuesData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Helpers\DataFileFinder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Configuration\AppConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Helpers\UtcDateTimeFormatter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Registry\IRegistryInitializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Registry\ITypeRegister.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Registry\ITypeRelations.cs" />

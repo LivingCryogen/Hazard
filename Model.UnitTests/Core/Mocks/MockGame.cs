@@ -25,7 +25,20 @@ public class MockGame : IGame
         State = new StateMachine(Players.Count, new LoggerStubT<StateMachine>());
         Regulator = new MockRegulator(new LoggerStubT<MockRegulator>(), this);
         AssetFetcher = new AssetFetcherStub();
-        StatTracker = new MockStatTracker(this);
+        StatTracker = new MockStatTracker(this, new Guid());
+    }
+
+    public MockGame(Guid installID)
+    {
+        ID = new Guid();
+        Players = [
+            new MockPlayer(0, Cards.CardFactory, new LoggerStubT<MockPlayer>()),
+            new MockPlayer(1, Cards.CardFactory, new LoggerStubT<MockPlayer>())
+        ];
+        State = new StateMachine(Players.Count, new LoggerStubT<StateMachine>());
+        Regulator = new MockRegulator(new LoggerStubT<MockRegulator>(), this);
+        AssetFetcher = new AssetFetcherStub();
+        StatTracker = new MockStatTracker(this, installID);
     }
 
     public Microsoft.Extensions.Logging.ILogger<MockGame> Logger { get => _logger; }

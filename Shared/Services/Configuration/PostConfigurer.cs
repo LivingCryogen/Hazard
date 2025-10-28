@@ -53,7 +53,7 @@ public class PostConfigurer(ILogger<IPostConfigureOptions<AppConfig>> logger, IH
             installationInfo = new InstallationInfo()
             {
                 InstallId = Guid.NewGuid(),
-                FirstRun = DateTime.UtcNow
+                FirstRun = UtcDateTimeFormatter.Normalize(DateTime.UtcNow)
             };
 
             string installJson = JsonSerializer.Serialize(installationInfo,

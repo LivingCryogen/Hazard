@@ -9,11 +9,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Model.Tests.Core;
 [TestClass]
 public class StatRepositoryTests
 {
+    private readonly Guid _testInstallId = Guid.NewGuid();
+
     [TestInitialize]
     public void Setup()
     {
@@ -22,7 +25,7 @@ public class StatRepositoryTests
     [TestMethod]
     public async Task Repo_SerializeRoundTrip_Match()
     {
-        MockStatTracker testTracker = new(new MockGame());
+        MockStatTracker testTracker = new(new MockGame(_testInstallId), _testInstallId);
         MockStatRepo repoToSerialize = new(testTracker);
 
         string tempStatPath = FileProcessor.GetTempFile();
@@ -63,10 +66,46 @@ public class StatRepositoryTests
     [TestMethod]
     public async Task Repo_Finalize_TrackerFinalized()
     {
-        MockStatRepo testRepo = new(new MockStatTracker(new MockGame()));
+        MockGame testGame = new();
+        Guid testGameID = testGame.ID;
+        Guid testInstallID = new();
+        MockStatRepo testRepo = new(new MockStatTracker(testGame, testInstallID));
+        var testJSON = await testGame.StatTracker.JSONFromGameSession();
+
+        Assert.IsNotNull(testRepo.CurrentTracker);
+        Assert.IsNotNull(testRepo.StatFilePath);
+        int testActionCount = testRepo.CurrentTracker.TrackedActions;
+        string? testDirectory = Path.GetDirectoryName(testRepo.StatFilePath);
+        Assert.IsNotNull(testDirectory);
+        string expectedFinalPath = Path.Combine(
+            testDirectory,
+            "completegame" + testGameID.ToString() + ".stat");
+
         var finalized = await testRepo.FinalizeCurrentGame();
 
         Assert.IsTrue(finalized);
+        Assert.IsNull(testRepo.CurrentTracker);
+        Assert.IsNotNull(testRepo.GameStats);
+        Assert.AreEqual(1, testRepo.GameStats.Count);
+        var finalizedStatPair = testRepo.GameStats.First();
+        Assert.AreEqual(testGameID, finalizedStatPair.Key);
+        SavedStatMetadata finalizedMetaData = finalizedStatPair.Value;
+        Assert.AreEqual(testActionCount, finalizedMetaData.ActionCount);
+        Assert.AreEqual(0, finalizedMetaData.StreamPosition);
+        Assert.IsTrue(finalizedMetaData.SyncPending);
+        Assert.AreEqual(expectedFinalPath, finalizedMetaData.SavePath);
+        Assert.IsTrue(File.Exists(expectedFinalPath));
 
+        // Load finalized file and verify contents
+        MockStatTracker verifyTracker = new();
+        bool loadedTracker = BinarySerializer.Load([verifyTracker], expectedFinalPath, 0, out _);
+        Assert.IsTrue(loadedTracker);
+        Assert.AreEqual(testGameID, verifyTracker.GameID);
+        Assert.AreEqual(testActionCount, verifyTracker.TrackedActions);
+        Assert.IsTrue(verifyTracker.Completed);
+        Assert.IsNotNull(verifyTracker.CurrentSession);
+
+        var verifyJSON = await verifyTracker.JSONFromGameSession();
+        Assert.AreEqual(testJSON, verifyJSON);
     }
 }

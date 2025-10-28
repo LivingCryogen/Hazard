@@ -14,13 +14,16 @@ namespace Model.Tests.DataAccess;
 [TestClass]
 public class BinarySerializerTests
 {
-    private readonly MockGame _toSerialGame = new();
-    private readonly MockGame _deserialGame = new();
+    private readonly MockGame _toSerialGame;
+    private readonly MockGame _deserialGame;
+    private readonly Guid _testInstallId = Guid.NewGuid();
     private string _testFileName = string.Empty;
 
     public BinarySerializerTests()
     {
         BinarySerializer.InitializeLogger(new LoggerStub());
+        _toSerialGame = new(_testInstallId);
+        _deserialGame = new(_testInstallId);
     }
 
     public static void PopulateMockPlayers(MockGame game)
@@ -283,7 +286,7 @@ public class BinarySerializerTests
     public async Task StatTracker_RoundTrip_Match()
     {
         await BinarySerializer.Save([_toSerialGame.StatTracker], _testFileName, true);
-        MockStatTracker testTracker = new(null);
+        MockStatTracker testTracker = new(null, _testInstallId);
 
         if (BinarySerializer.Load([testTracker], _testFileName))
         {
