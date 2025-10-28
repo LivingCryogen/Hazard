@@ -92,9 +92,7 @@ public class StatRepo(WebConnectionHandler connectionHandler,
                     _pendingSyncs++;
                 }
             }
-
-            // If not already tracked, and there are actions to track, add it
-            if (_gameStats.TryAdd(gameID, new(_loggerFactory.CreateLogger<SavedStatMetadata>())
+            else if (_gameStats.TryAdd(gameID, new(_loggerFactory.CreateLogger<SavedStatMetadata>())
                 {
                     SavePath = lastSavePath,
                     ActionCount = CurrentTracker.TrackedActions,
