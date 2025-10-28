@@ -441,6 +441,13 @@ public class StatRepo(WebConnectionHandler connectionHandler,
         }
 
         using BinaryReader newReader = new(new FileStream(StatFilePath, FileMode.Open, FileAccess.Read));
-        return LoadFromBinary(newReader);
+        if (LoadFromBinary(newReader))
+        {
+            _pendingSyncs = _gameStats.Values
+                .Count(stat => stat is SavedStatMetadata metadata && metadata.SyncPending);
+            return true;
+        }
+        else
+            return false;
     }
 }
