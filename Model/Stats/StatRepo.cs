@@ -61,22 +61,25 @@ public class StatRepo(WebConnectionHandler connectionHandler,
             long trackerPosition = statTrackerResult.Item2;
 
             if (string.IsNullOrEmpty(lastSavePath))
+            {
+                _logger.LogWarning("Stat Repo was asked to update stats, but was provided an invalid save path.");
                 return false;
-
-            // If not already tracked, add it
-            bool newAdd = _gameStats.TryAdd(gameID, new(_loggerFactory.CreateLogger<SavedStatMetadata>())
+            }
+            
+            if (CurrentTracker.TrackedActions <= 0)
             {
-                SavePath = lastSavePath,
-                ActionCount = CurrentTracker.TrackedActions,
-                StreamPosition = trackerPosition,
-                SyncPending = true
-            });
+                _logger.LogInformation("Stat Repo skipped update for game {id}, because it had no tracked actions.", gameID);
+                return false;
+            }
 
-            if (!newAdd) // if it is already tracked, check to see if the Current Tracker is more up to date (contains more Actions)
+            if (_gameStats.TryGetValue(gameID, out var value) && value is SavedStatMetadata oldData)
             {
-                if (_gameStats.TryGetValue(gameID, out var value)
-                        && value is SavedStatMetadata oldData
-                        && oldData.ActionCount < CurrentTracker.TrackedActions)
+                if (oldData.ActionCount >= CurrentTracker.TrackedActions)
+                {
+                    _logger.LogInformation("Stat Repo skipped update for game {id}, because it had no new tracked actions: {old} vs {new}.", gameID, oldData.ActionCount, CurrentTracker.TrackedActions);
+                    return false;
+                }
+                else
                 {
                     var updatedData = new SavedStatMetadata(_loggerFactory.CreateLogger<SavedStatMetadata>())
                     {
@@ -89,10 +92,35 @@ public class StatRepo(WebConnectionHandler connectionHandler,
                     _pendingSyncs++;
                 }
             }
-            else
-                _pendingSyncs++;
 
-            await Save();
+            // If not already tracked, and there are actions to track, add it
+            if (_gameStats.TryAdd(gameID, new(_loggerFactory.CreateLogger<SavedStatMetadata>())
+                {
+                    SavePath = lastSavePath,
+                    ActionCount = CurrentTracker.TrackedActions,
+                    StreamPosition = trackerPosition,
+                    SyncPending = true
+                })) 
+            {
+                _pendingSyncs++;
+                _logger.LogInformation("Stat Repo added new tracked game {id} with {actions} actions.", gameID, CurrentTracker.TrackedActions);
+            }
+            else
+            {
+                _logger.LogWarning("Stat repo failed to add stats for game: {id}. Aborting update.", gameID);
+                return false;
+            }
+
+            try
+            {
+                await Save();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("There was an unexpected error when attempting to write Stat Repo after updating game {id}: {message}", gameID, ex.Message);
+                return false;
+            }
+
             return true;
         }
         catch (Exception ex)
