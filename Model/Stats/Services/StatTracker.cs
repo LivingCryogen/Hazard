@@ -18,6 +18,7 @@ public class StatTracker : IStatTracker
     private readonly JsonSerializerOptions _jsonOptions = new()
         {
             WriteIndented = false,
+            PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             Converters = { new JsonStringEnumConverter() },
         };

@@ -20,7 +20,7 @@ public class WebConnectionHandler(IOptions<AppConfig> options, ILogger<WebConnec
             AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate
         }) 
             {
-                Timeout = TimeSpan.FromSeconds(30) 
+                Timeout = TimeSpan.FromSeconds(180) 
             };
     /// <summary>
     /// Verifies the availability of an internet connection by attempting to access a known URL.
