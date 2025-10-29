@@ -20,6 +20,12 @@ namespace Shared.Services.Configuration;
 public class PostConfigurer(ILogger<IPostConfigureOptions<AppConfig>> logger) : IPostConfigureOptions<AppConfig>
 {
     private readonly ILogger<IPostConfigureOptions<AppConfig>> _logger = logger;
+    private readonly JsonSerializerOptions _jsonSerializerOptions = new() 
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        WriteIndented = true,
+        PropertyNameCaseInsensitive = true
+    };
 
     /// <summary>
     /// Post-configures the AppConfig options.
@@ -41,7 +47,7 @@ public class PostConfigurer(ILogger<IPostConfigureOptions<AppConfig>> logger) : 
         if (File.Exists(installInfoPath))
         {
             string json = File.ReadAllText(installInfoPath);
-            installationInfo = JsonSerializer.Deserialize<InstallationInfo>(json) ?? new InstallationInfo();
+            installationInfo = JsonSerializer.Deserialize<InstallationInfo>(json, _jsonSerializerOptions) ?? new InstallationInfo();
         }
         else
         {
@@ -51,8 +57,7 @@ public class PostConfigurer(ILogger<IPostConfigureOptions<AppConfig>> logger) : 
                 FirstRun = UtcDateTimeFormatter.Normalize(DateTime.UtcNow)
             };
 
-            string installJson = JsonSerializer.Serialize(installationInfo,
-                new JsonSerializerOptions() { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            string installJson = JsonSerializer.Serialize(installationInfo, _jsonSerializerOptions);
             File.WriteAllText(installInfoPath, installJson);
         }
 
