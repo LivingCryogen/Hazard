@@ -17,11 +17,9 @@ namespace Shared.Services.Configuration;
 /// This custom class and method is necessary to enable logging during post-configuration.
 /// </remarks>
 /// <param name="logger">A logger from DI.</param>
-/// <param name="env">Host environment from DI.</param>
-public class PostConfigurer(ILogger<IPostConfigureOptions<AppConfig>> logger, IHostEnvironment env) : IPostConfigureOptions<AppConfig>
+public class PostConfigurer(ILogger<IPostConfigureOptions<AppConfig>> logger) : IPostConfigureOptions<AppConfig>
 {
     private readonly ILogger<IPostConfigureOptions<AppConfig>> _logger = logger;
-    private readonly string _appPath = env.ContentRootPath;
 
     /// <summary>
     /// Post-configures the AppConfig options.
@@ -37,11 +35,8 @@ public class PostConfigurer(ILogger<IPostConfigureOptions<AppConfig>> logger, IH
     public void PostConfigure(string? name, AppConfig options)
     {
         // Generate and store install-unique information on first run (or if otherwise missing the file). To be used as identifier in Azure DataBase
-        string installInfoPath = Path.Combine(_appPath, "installation.json");
+        string installInfoPath = Path.Combine(options.AppPath, "installation.json");
         InstallationInfo installationInfo;
-
-        if (env.IsDevelopment())
-            options.DevMode = true;
 
         if (File.Exists(installInfoPath))
         {
@@ -63,12 +58,11 @@ public class PostConfigurer(ILogger<IPostConfigureOptions<AppConfig>> logger, IH
 
         options.InstallInfo.InstallId = installationInfo.InstallId;
         options.InstallInfo.FirstRun = installationInfo.FirstRun;
-        options.AppPath = _appPath;
 
-        var findRepoPaths = DataFileFinder.FindFiles(_appPath, options.StatRepoFileName);
+        var findRepoPaths = DataFileFinder.FindFiles(options.AppPath, options.StatRepoFileName);
         if (findRepoPaths == null || findRepoPaths.Length == 0)
         {
-            var statsDir = Path.Combine(_appPath, "Stats");
+            var statsDir = Path.Combine(options.AppPath, "Stats");
             if (!Directory.Exists(statsDir))
                 Directory.CreateDirectory(statsDir);
 
@@ -83,7 +77,7 @@ public class PostConfigurer(ILogger<IPostConfigureOptions<AppConfig>> logger, IH
 
         foreach (string dataFileName in options.DataFileNames)
         {
-            var dataFileLocations = DataFileFinder.FindFiles(_appPath, dataFileName);
+            var dataFileLocations = DataFileFinder.FindFiles(options.AppPath, dataFileName);
             if (dataFileLocations == null || dataFileLocations.Length == 0)
                 throw new FileNotFoundException($"Required data file '{dataFileName}' not found in application directory or subdirectories.");
             if (dataFileLocations.Length > 1)
@@ -94,7 +88,7 @@ public class PostConfigurer(ILogger<IPostConfigureOptions<AppConfig>> logger, IH
         }
         foreach (string soundFileName in options.SoundFileNames)
         {
-            var soundFileLocations = DataFileFinder.FindFiles(_appPath, soundFileName);
+            var soundFileLocations = DataFileFinder.FindFiles(options.AppPath, soundFileName);
             if (soundFileLocations == null || soundFileLocations.Length == 0)
             {
                 _logger.LogWarning("Required sound file '{soundFileName}' not found in application directory or subdirectories.", soundFileName);

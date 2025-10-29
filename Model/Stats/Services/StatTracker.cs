@@ -22,15 +22,25 @@ public class StatTracker : IStatTracker
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             Converters = { new JsonStringEnumConverter() },
         };
-    private GameSession _currentSession;
+    private GameSession? _currentSession;
     private int _nextActionId = 1;
     
     /// <inheritdoc cref="IStatTracker.GameID"/>
-    public Guid GameID { get => _currentSession.Id; }
+    public Guid GameID { get => _currentSession?.Id ?? Guid.Empty; }
     /// <inheritdoc cref="IStatTracker.TrackedActions"/>
-    public int TrackedActions { get => _currentSession.NumActions; }
+    public int TrackedActions { get => _currentSession?.NumActions ?? 0; }
     /// <inheritdoc cref="IStatTracker.Completed"/>
-    public bool Completed { get => _currentSession.EndTime.HasValue; }
+    public bool Completed { get => _currentSession?.EndTime.HasValue ?? false; }
+
+    /// <summary>
+    /// Builds an empty <see cref="StatTracker"/> instance for deserialization purposes.
+    /// </summary>
+    /// <param name="loggerFactory">Logger Factory from DI.</param>
+    public StatTracker(ILoggerFactory loggerFactory)
+    {
+        _loggerFactory = loggerFactory;
+        _logger = loggerFactory.CreateLogger<StatTracker>();
+    }
 
     /// <summary>
     /// Builds a new <see cref="StatTracker"/> instance for the given game.
@@ -59,6 +69,12 @@ public class StatTracker : IStatTracker
     /// <inheritdoc cref="IStatTracker.RecordAttackAction(IAttackData)" />
     public void RecordAttackAction(IAttackData attackData)
     {
+        if (_currentSession == null)
+        {
+            _logger.LogError("Attempted to record an attack action for game {gameId}, but no current session exists.", GameID);
+            throw new InvalidOperationException("No current game session exists to record attack action.");
+        }
+
         var attackStats = new GameSession.AttackAction(_loggerFactory.CreateLogger<GameSession.AttackAction>())
         {
             ActionId = _nextActionId++,
@@ -77,6 +93,12 @@ public class StatTracker : IStatTracker
     /// <inheritdoc cref="IStatTracker.RecordMoveAction(IMoveData)" />
     public void RecordMoveAction(IMoveData moveData)
     {
+        if (_currentSession == null)
+        {
+            _logger.LogError("Attempted to record a move action for game {gameId}, but no current session exists.", GameID);
+            throw new InvalidOperationException("No current game session exists to record move action.");
+        }
+
         var moveStats = new GameSession.MoveAction(_loggerFactory.CreateLogger<GameSession.MoveAction>())
         {
             ActionId = _nextActionId++,
@@ -90,6 +112,12 @@ public class StatTracker : IStatTracker
     /// <inheritdoc cref="IStatTracker.RecordTradeAction(ITradeData)" />
     public void RecordTradeAction(ITradeData tradeData)
     {
+        if (_currentSession == null)
+        {
+            _logger.LogError("Attempted to record a trade action for game {gameId}, but no current session exists.", GameID);
+            throw new InvalidOperationException("No current game session exists to record trade action.");
+        }
+
         var tradeStats = new GameSession.TradeAction(_loggerFactory.CreateLogger<GameSession.TradeAction>())
         {
             Player = tradeData.Player,
@@ -103,6 +131,12 @@ public class StatTracker : IStatTracker
     /// <inheritdoc cref="IStatTracker.CompleteGame(int)"/>
     public void CompleteGame(int winningPlayerNumber)
     {
+        if (_currentSession == null)
+        {
+            _logger.LogError("Attempted to complete stat tracker for game {gameId}, but no current session exists.", GameID);
+            throw new InvalidOperationException("No current game session exists to complete.");
+        }
+
         if (winningPlayerNumber < 1 || winningPlayerNumber > 5)
             throw new ArgumentOutOfRangeException(nameof(winningPlayerNumber), $"Invalid winning player number. Expected: 0-5. Actual: {winningPlayerNumber}");
 

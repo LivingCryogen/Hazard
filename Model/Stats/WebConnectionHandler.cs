@@ -96,6 +96,9 @@ public class WebConnectionHandler(IOptions<AppConfig> options, ILogger<WebConnec
             StringContent bodyContent = new(gameSessionJson, System.Text.Encoding.UTF8, "application/json");
 
             _logger.LogInformation("Posting game session stats to {url}", requestURL);
+            if (options.Value.DevMode)
+                _logger.LogInformation("Game Session JSON: {json}", gameSessionJson);
+
             var response = await _syncClient.PostAsync(requestURL, bodyContent);
 
             if (response.IsSuccessStatusCode)
