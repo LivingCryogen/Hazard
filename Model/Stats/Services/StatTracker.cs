@@ -66,8 +66,8 @@ public class StatTracker : IStatTracker
             playerNumNameList.Add((player.Number, player.Name));
         _currentSession.PlayerNumsAndNames = playerNumNameList.ToDictionary<int, string>();
     }
-    /// <inheritdoc cref="IStatTracker.RecordAttackAction(IAttackData)" />
-    public void RecordAttackAction(IAttackData attackData)
+    /// <inheritdoc cref="IStatTracker.RecordAttackAction(IAttackData)" />  
+    public void RecordAttackAction(IAttackData attackData)  // TODO : ADD NEW DATA FIELDS HERE (EG DICE NUMBER)
     {
         if (_currentSession == null)
         {
@@ -82,6 +82,10 @@ public class StatTracker : IStatTracker
             TargetTerritory = attackData.TargetTerritory,
             Attacker = attackData.Attacker,
             Defender = attackData.Defender,
+            AttackerInitialArmies = attackData.AttackerInitialArmies,
+            DefenderInitialArmies = attackData.DefenderInitialArmies,
+            AttackerDice = attackData.AttackerDice,
+            DefenderDice = attackData.DefenderDice,
             AttackerLoss = attackData.AttackerLoss,
             DefenderLoss = attackData.DefenderLoss,
             Retreated = attackData.Retreated,

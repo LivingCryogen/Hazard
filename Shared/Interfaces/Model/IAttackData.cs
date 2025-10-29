@@ -30,6 +30,22 @@ public interface IAttackData : IActionData
     /// </summary>
     int Defender { get; }
     /// <summary>
+    /// Gets or sets the number of armies the attacker had prior to the attack.
+    /// </summary>
+    int AttackerInitialArmies { get; set; }
+    /// <summary>
+    /// Gets or sets the number of armies the defender had prior to the attack.
+    /// </summary>
+    int DefenderInitialArmies { get; set; }
+    /// <summary>
+    /// Gets or sets the number of dice rolled by the attacker.
+    /// </summary>
+    public int AttackerDice { get; set; }
+    /// <summary>
+    /// Gets or sets the number of dice rolled by the defender.
+    /// </summary>
+    public int DefenderDice { get; set; }
+    /// <summary>
     /// Gets the number of units lost by the attacker.
     /// </summary>
     int AttackerLoss { get; }
