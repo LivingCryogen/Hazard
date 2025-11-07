@@ -1,4 +1,4 @@
-﻿namespace AzProxy;
+﻿namespace AzProxy.BanList;
 
 public record Ban
 {

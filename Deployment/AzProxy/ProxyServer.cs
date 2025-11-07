@@ -1,5 +1,7 @@
+using AzProxy.BanList;
 using AzProxy.Context;
 using AzProxy.DataTransform;
+using AzProxy.Requests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -172,11 +174,11 @@ namespace AzProxy
                     }
                 });
             app.MapPost("/sync-stats",
-                async (HttpContext context, 
+                async (HttpContext context,
                     RequestHandler requestHandler,
                     DbTransformer transformer,
-                    IHttpClientFactory httpClientFactory, 
-                    IConfiguration config, 
+                    IHttpClientFactory httpClientFactory,
+                    IConfiguration config,
                     ILogger<ProxyServer> logger) =>
                 {
                     // get client IP
@@ -196,7 +198,7 @@ namespace AzProxy
                         return;
                     }
 
-                    var requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync(); 
+                    var requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
 
                     if (string.IsNullOrEmpty(requestBody))
                     {
@@ -299,7 +301,7 @@ namespace AzProxy
             });
             builder.Services.AddHttpClient();
             builder.Services.AddSingleton<IBanCache, BanListCache>();
-            builder.Services.AddHostedService<BanListTableManager>();
+            builder.Services.AddHostedService<StorageManager>();
             builder.Services.AddSingleton<BanService>();
             builder.Services.AddSingleton<RequestHandler>();
             builder.Services.AddDbContext<GameStatsDbContext>(options => options.UseAzureSql(builder.Configuration.GetConnectionString("AzDbConnectionString")));

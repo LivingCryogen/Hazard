@@ -1,4 +1,4 @@
-﻿namespace AzProxy
+﻿namespace AzProxy.Requests
 {
     public class RequestMetaData
     {

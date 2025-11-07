@@ -1,6 +1,7 @@
-﻿using System.Collections.Concurrent;
+﻿using AzProxy.BanList;
+using System.Collections.Concurrent;
 
-namespace AzProxy;
+namespace AzProxy.Requests;
 
 public class RequestHandler(ILogger<RequestHandler> logger, IConfiguration config, BanService banService)
 {
@@ -37,7 +38,7 @@ public class RequestHandler(ILogger<RequestHandler> logger, IConfiguration confi
         var (LastReset, Count) = _requestCounters.AddOrUpdate((iPaddress, requestType),
             _ => (DateTime.UtcNow, 1),  // all new entries get this value
             (_, oldValue) => // old entries reset or updated
-                (DateTime.UtcNow - oldValue.LastReset > _requestReset) ? (DateTime.UtcNow, 1) : (oldValue.LastReset, oldValue.Count + 1));
+                DateTime.UtcNow - oldValue.LastReset > _requestReset ? (DateTime.UtcNow, 1) : (oldValue.LastReset, oldValue.Count + 1));
 
         if (!_banService.Allow(iPaddress, requestType, Count))
             return false;

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace AzProxy;
+namespace AzProxy.BanList;
 
 public interface IBanCache
 {

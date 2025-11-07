@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using AzProxy.Requests;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace AzProxy;
+namespace AzProxy.BanList;
 
 public class BanService(ILogger<BanService> logger, IConfiguration config, IBanCache cache)
 {

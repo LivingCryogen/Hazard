@@ -1,22 +1,26 @@
-﻿using Azure;
+﻿using AzProxy.BanList;
+using Azure;
 using Azure.Data.Tables;
 using System.Collections.Concurrent;
 
 namespace AzProxy;
 
-public class BanListTableManager : IHostedService
+public class StorageManager : IHostedService
 {
     private readonly IHostApplicationLifetime _appLife;
     private readonly DateTimeOffset _bootTime = DateTimeOffset.UtcNow;
     private readonly ILogger _logger;
     private readonly IBanCache _cache;
-    private readonly TableClient _tableClient;
-    private readonly string _partitionKey;
+    private readonly TableClient _banTableClient;
+    private readonly TableClient _appVarsTableClient;
+    private readonly string _banListPartitionKey;
+    private readonly string _appVarsPartitionKey;
+    private readonly string _dbPruneFlagRowKey;
     private readonly TimeSpan _entryDuration;
     private readonly ConcurrentDictionary<string, ETag> _tagCache = new(); // needed for easy updates
     private readonly SemaphoreSlim _tableSemaphore = new(1, 1);
 
-    public BanListTableManager(IConfiguration config, IHostApplicationLifetime appLife, ILogger<BanListTableManager> logger, IBanCache cache)
+    public StorageManager(IConfiguration config, IHostApplicationLifetime appLife, ILogger<StorageManager> logger, IBanCache cache)
     {
         _appLife = appLife;
         _logger = logger;
@@ -34,21 +38,40 @@ public class BanListTableManager : IHostedService
         {
             TableServiceClient serviceClient = new(storageConnection);
 
-            string? tableName = config["TableName"];
-            if (string.IsNullOrEmpty(tableName))
-                throw new ArgumentException("TableName was null or empty. Check configuration (App settings).");
-            _tableClient = serviceClient.GetTableClient(tableName);
+            string? banTableName = config["BanTableName"];
+            if (string.IsNullOrEmpty(banTableName))
+                throw new ArgumentException("BanTableName was null or empty. Check configuration (App settings).");
+            _banTableClient = serviceClient.GetTableClient(banTableName);
+
+            string? varsTableName = config["VariablesTableName"];
+            if (string.IsNullOrEmpty(varsTableName))
+                throw new ArgumentException("VarsTableName was null or empty. Check configuration (App settings).");
+            _appVarsTableClient = serviceClient.GetTableClient(varsTableName);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to construct TableClient due to an error: {message}", ex.Message);
+            _logger.LogError(ex, "Failed to construct TableClients due to an error: {message}", ex.Message);
         }
-        if (_tableClient == null)
+        if (_banTableClient == null)
         {
             throw new NullReferenceException("Failed to construct TableClient.");
         }
+        if (_appVarsTableClient == null)
+        {
+            throw new NullReferenceException("Failed to construct AppVars TableClient.");
+        }
 
-        _partitionKey = config["PartitionKey"] ?? string.Empty;
+        _banListPartitionKey = config["BanlistPartitionKey"] ?? string.Empty;
+        _appVarsPartitionKey = config["AppVarsPartitionKey"] ?? string.Empty;
+        _dbPruneFlagRowKey = config["DBPruneFlagRowKey"] ?? string.Empty;
+
+        if (_banListPartitionKey == string.Empty)
+            logger.LogWarning("Banlist partition key empty.");
+        if (_appVarsPartitionKey == string.Empty)
+            logger.LogWarning("AppVars partition key empty.");
+        if (_dbPruneFlagRowKey == string.Empty)
+            logger.LogWarning("DB prune flag row key empty.");
+
         _entryDuration = int.TryParse(config["EntryDurationDays"], out int result) ? TimeSpan.FromDays(result) : TimeSpan.FromDays(365);
     }
 
@@ -57,6 +80,7 @@ public class BanListTableManager : IHostedService
         _appLife.ApplicationStopping.Register(OnAppStopping);
 
         await PopulateCache();
+        await GetOrCreateVars();
 
         return;
     }
@@ -65,6 +89,11 @@ public class BanListTableManager : IHostedService
     {
         var recordedBans = await GetRecordsAsync((entry) => entry.NowBanned);
         _cache.Initialize(recordedBans);
+    }
+
+    private async Task GetOrCreateVars()
+    {
+
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
@@ -89,7 +118,7 @@ public class BanListTableManager : IHostedService
 
                 BanListEntry updatedEntry = new()
                 {
-                    PartitionKey = _partitionKey,
+                    PartitionKey = _banListPartitionKey,
                     RowKey = address,
                     Timestamp = DateTime.UtcNow,
                     NowBanned = ban.Type != Ban.BanType.Unbanned,
@@ -114,7 +143,7 @@ public class BanListTableManager : IHostedService
     {
         filter ??= _ => true;
 
-        if (string.IsNullOrEmpty(_partitionKey))
+        if (string.IsNullOrEmpty(_banListPartitionKey))
         {
             _logger.LogWarning("The partition key for querying the banlist table was invalid. Cache was not populated.");
             return [];
@@ -122,7 +151,7 @@ public class BanListTableManager : IHostedService
         try
         {
             List<BanListEntry> recordList = [];
-            var tableEntities = _tableClient.QueryAsync<BanListEntry>(e => e.PartitionKey == _partitionKey);
+            var tableEntities = _banTableClient.QueryAsync<BanListEntry>(e => e.PartitionKey == _banListPartitionKey);
             await foreach (var tableEntity in tableEntities)
                 recordList.Add(tableEntity);
 
@@ -160,12 +189,12 @@ public class BanListTableManager : IHostedService
     {
         try
         {
-            entry.PartitionKey ??= _partitionKey;
+            entry.PartitionKey ??= _banListPartitionKey;
             entry.RowKey ??= ipAddress;
             await _tableSemaphore.WaitAsync();
             try
             {
-                var response = await _tableClient.AddEntityAsync(entry);
+                var response = await _banTableClient.AddEntityAsync(entry);
             }
             finally
             {
@@ -186,14 +215,14 @@ public class BanListTableManager : IHostedService
     {
         try
         {
-            updatedEntry.PartitionKey ??= _partitionKey;
+            updatedEntry.PartitionKey ??= _banListPartitionKey;
             updatedEntry.RowKey ??= ipAddress;
             bool tagCached = _tagCache.TryGetValue(ipAddress, out ETag entryTag);
 
             await _tableSemaphore.WaitAsync();
             try
             {
-                var response = await _tableClient.UpdateEntityAsync(
+                var response = await _banTableClient.UpdateEntityAsync(
                     updatedEntry,
                     tagCached ? entryTag :
                         updatedEntry.ETag != default ? updatedEntry.ETag : default,
@@ -225,7 +254,7 @@ public class BanListTableManager : IHostedService
             await _tableSemaphore.WaitAsync();
             try
             {
-                var response = await _tableClient.DeleteEntityAsync(_partitionKey, ipAddress);
+                var response = await _banTableClient.DeleteEntityAsync(_banListPartitionKey, ipAddress);
             }
             finally
             {
@@ -257,5 +286,22 @@ public class BanListTableManager : IHostedService
     {
         foreach (var entry in entries)
             _ = Task.Run(() => RemoveEntry(entry.RowKey));
+    }
+
+    private async Task<bool> ShouldPruneDataBase(IConfiguration config)
+    {
+        var pruneTimeStr = config["PruneDBAfterDays"] ?? "7";
+        if (!int.TryParse(pruneTimeStr, out int pruneTime))
+            pruneTime = 7;
+        var pruneDuration = TimeSpan.FromDays(pruneTime);
+
+        try
+        {
+            await _tableSemaphore.WaitAsync();
+            var lastPrune = _appVarsTableClient.GetEntityIfExistsAsync
+        }
+
+
+        var incompleteCutOff = config["PruneIncompleteGamesAfterDays"];
     }
 }
