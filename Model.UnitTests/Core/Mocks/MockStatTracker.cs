@@ -180,4 +180,9 @@ public class MockStatTracker : IStatTracker
     {
         throw new NotImplementedException();
     }
+
+    public bool UpdatePlayerData(IPlayer[] players)
+    {
+        throw new NotImplementedException();
+    }
 }

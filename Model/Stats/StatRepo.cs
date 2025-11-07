@@ -72,6 +72,26 @@ public class StatRepo(WebConnectionHandler connectionHandler,
                 return false;
             }
 
+            // Check if another game is already using this save path, and remove it if so
+            var existingGameUsingPath = _gameStats
+                .Where(kvp => kvp.Value.SavePath == lastSavePath && kvp.Key != gameID)
+                .FirstOrDefault();
+            if (existingGameUsingPath.Key != default)
+            {
+                _logger.LogWarning("Stat Repo detected that save path {path} is already in use by game {otherGameID}. Overwriting with data for game {gameID}!", lastSavePath, existingGameUsingPath.Key, gameID);
+                if (existingGameUsingPath.Value.SyncPending)
+                {
+                    _pendingSyncs--;
+                    if (_pendingSyncs < 0)
+                    {
+                        _logger.LogWarning("Pending syncs counter dropped below zero. Resetting to zero.");
+                        _pendingSyncs = 0;
+                    }
+                }
+                _gameStats.Remove(existingGameUsingPath.Key);
+            }
+
+
             if (_gameStats.TryGetValue(gameID, out var value) && value is SavedStatMetadata oldData)
             {
                 if (oldData.ActionCount >= CurrentTracker.TrackedActions)
