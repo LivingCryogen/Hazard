@@ -49,7 +49,15 @@ public interface IStatTracker : IBinarySerializable
     /// <remarks>This method should be called when the game has reached its conclusion, and mark the internal state as complete and ready for <see cref="IStatRepo.FinalizeCurrentGame"/></remarks>
     /// <param name="winningPlayerNumber">Number of the player who has won the completed game.</param>
     public void CompleteGame(int winningPlayerNumber);
-
+    /// <summary>
+    /// Updates player data for the internal game session model.
+    /// </summary>
+    /// <remarks>
+    /// This is needed for new games, since player names are provided by the user, and are not be known at construction time.
+    /// </remarks>
+    /// <param name="players">The players of the new <see cref="IGame"/>.</param>
+    /// <returns><see langword="true"/> if the session data was successfully updated; otherwise, <see langword="false"/>.</returns>
+    public bool UpdatePlayerData(IPlayer[] players);
     /// <summary>
     /// Returns a JSON serialized object version of the underlying statistics data model object.
     /// </summary>

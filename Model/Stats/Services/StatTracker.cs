@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Model.Core;
 using Model.Stats.StatModels;
 using Shared.Geography.Enums;
 using Shared.Interfaces.Model;
@@ -62,10 +63,10 @@ public class StatTracker : IStatTracker
         };
 
         List<(int, string)> playerNumNameList = [];
-        foreach(var player in game.Players)
-            playerNumNameList.Add((player.Number, player.Name));
-        _currentSession.PlayerNumsAndNames = playerNumNameList.ToDictionary<int, string>();
+        if (!PopulatePlayerNumsAndNames([..game.Players]))
+            _logger.LogWarning("Failed to populate player numbers and names for game {gameId} during StatTracker initialization.", GameID);
     }
+
     /// <inheritdoc cref="IStatTracker.RecordAttackAction(IAttackData)" />  
     public void RecordAttackAction(IAttackData attackData)  // TODO : ADD NEW DATA FIELDS HERE (EG DICE NUMBER)
     {
@@ -170,6 +171,33 @@ public class StatTracker : IStatTracker
             _logger.LogError("Failed to serialize {session} to JSON: {message}", _currentSession, ex.Message);
             throw;
         }
+    }
+    private bool PopulatePlayerNumsAndNames(IPlayer[] players)
+    {
+        if (_currentSession == null)
+        {
+            _logger.LogError("Attempted to populate player numbers and names for game {gameId}, but no current session exists.", GameID);
+            return false;
+        }
+
+        try
+        {
+            List<(int, string)> playerNumNameList = [];
+            foreach (var player in players)
+                playerNumNameList.Add((player.Number, player.Name));
+            _currentSession.PlayerNumsAndNames = playerNumNameList.ToDictionary<int, string>();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("An exception was thrown while populating player numbers and names for game {gameId}. Message: {Message} InnerException: {Exception}", GameID, ex.Message, ex.InnerException);
+            return false;
+        }
+        return true;
+    }
+    /// <inheritdoc cref="IStatTracker.UpdatePlayerData(IPlayer[])"/>
+    public bool UpdatePlayerData(IPlayer[] players)
+    {
+        return PopulatePlayerNumsAndNames(players); 
     }
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>/>
     public async Task<SerializedData[]> GetBinarySerials()

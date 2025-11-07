@@ -193,7 +193,9 @@ public partial class MainVM_Base : ObservableObject, IMainVM
         else
         {
             _colorNames = string.Concat(colors);
-            CurrentGame.UpdatePlayerNames(playerNames);
+            CurrentGame.UpdatePlayerNames(playerNames); // Update names after getting user input
+            if (!CurrentGame.StatTracker.UpdatePlayerData([.. CurrentGame.Players])) // Update names in GameSession of CurrentGame.StatTracker ! - without this, new games will have default names in stats
+                _logger.LogWarning("StatTracker player data update failed during MainVM Initialization for new game.");
         }
 
         for (int i = 0; i < BoardGeography.NumTerritories; i++)
