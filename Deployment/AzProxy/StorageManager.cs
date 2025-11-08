@@ -1,7 +1,9 @@
 ﻿using AzProxy.BanList;
 using Azure;
 using Azure.Data.Tables;
+using Microsoft.EntityFrameworkCore.Storage.Json;
 using System.Collections.Concurrent;
+using System.Text.Json;
 
 namespace AzProxy;
 
@@ -15,10 +17,11 @@ public class StorageManager : IHostedService
     private readonly TableClient _appVarsTableClient;
     private readonly string _banListPartitionKey;
     private readonly string _appVarsPartitionKey;
-    private readonly string _dbPruneFlagRowKey;
+    private readonly string _defaultAppVarsJson;
     private readonly TimeSpan _entryDuration;
     private readonly ConcurrentDictionary<string, ETag> _tagCache = new(); // needed for easy updates
     private readonly SemaphoreSlim _tableSemaphore = new(1, 1);
+    private readonly List<AppVarEntry> _appVars = [];
 
     public StorageManager(IConfiguration config, IHostApplicationLifetime appLife, ILogger<StorageManager> logger, IBanCache cache)
     {
@@ -63,15 +66,15 @@ public class StorageManager : IHostedService
 
         _banListPartitionKey = config["BanlistPartitionKey"] ?? string.Empty;
         _appVarsPartitionKey = config["AppVarsPartitionKey"] ?? string.Empty;
-        _dbPruneFlagRowKey = config["DBPruneFlagRowKey"] ?? string.Empty;
-
+        _defaultAppVarsJson = config["AppVarsJSONDefinitions"] ?? string.Empty;
+        
         if (_banListPartitionKey == string.Empty)
             logger.LogWarning("Banlist partition key empty.");
         if (_appVarsPartitionKey == string.Empty)
             logger.LogWarning("AppVars partition key empty.");
-        if (_dbPruneFlagRowKey == string.Empty)
-            logger.LogWarning("DB prune flag row key empty.");
-
+        if (_defaultAppVarsJson == string.Empty)
+            logger.LogWarning("Default App Variable definitions empty.");
+        
         _entryDuration = int.TryParse(config["EntryDurationDays"], out int result) ? TimeSpan.FromDays(result) : TimeSpan.FromDays(365);
     }
 
@@ -80,7 +83,7 @@ public class StorageManager : IHostedService
         _appLife.ApplicationStopping.Register(OnAppStopping);
 
         await PopulateCache();
-        await GetOrCreateVars();
+        await GetOrSetDefaultVars();
 
         return;
     }
@@ -91,10 +94,124 @@ public class StorageManager : IHostedService
         _cache.Initialize(recordedBans);
     }
 
-    private async Task GetOrCreateVars()
+    private async Task GetOrSetDefaultVars()
     {
+        var queryResults = new List<AppVarEntry>();
+        await foreach (AppVarEntry varEntity in
+            _appVarsTableClient
+                .QueryAsync<AppVarEntry>(e => e.PartitionKey == _appVarsPartitionKey))
+            queryResults.Add(varEntity);
+        if (queryResults.Count > 0)
+        {
+            foreach (var varEntry in queryResults)
+                if (ValidateAppVarEntry(varEntry))
+                    _appVars.Add(varEntry);
+                else
+                    _logger.LogWarning("Failed to validate an app variable entry with rowkey {name}, value {val}.", varEntry.RowKey, varEntry.Value);
 
+            _logger.LogInformation("Loaded {count} App Variables from Azure Table entries.", _appVars.Count);
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_defaultAppVarsJson))
+        {
+            _logger.LogWarning("No App variables were found in either Azure Table or Azure Configuration variable. Using hard-coded defaults when possible.");
+            return;
+        }
+
+        // SET TO DEFAULT FROM CONFIG
+        Dictionary<string, JsonElement>? variableCollection;
+        try
+        {
+            variableCollection = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(_defaultAppVarsJson);
+            if (variableCollection == null)
+            {
+                throw new InvalidDataException($"Json deserialized variable collection was null. Json : {_defaultAppVarsJson}.");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning("Unexpected error when deserializing default JSON App Variable definitions: {message}. Using hard-coded defaults when possible.", ex.Message);
+            return;
+        }
+
+        foreach (var kvp in variableCollection)
+        {
+            if (_appVars.Any(entry => entry.RowKey == kvp.Key))
+            {
+                _logger.LogWarning("A variable with duplicate rowkey/name {name} was found; ignoring...", kvp.Key);
+                continue;
+            }
+
+            var newDefaultVarEntry = GetAppVarEntryFromJsonElement(kvp.Key, kvp.Value);
+
+            if (ValidateAppVarEntry(newDefaultVarEntry))
+            {
+                _appVars.Add(newDefaultVarEntry);
+
+                try
+                {
+                    var tableResponse = await _appVarsTableClient.AddEntityAsync(newDefaultVarEntry);
+                    if (tableResponse.Status == 204)
+                        _logger.LogInformation("Successfully added entry {name}.", newDefaultVarEntry.RowKey);
+                    else
+                        _logger.LogWarning("Unexpected status {status} when adding entry {name}.", tableResponse.Status, newDefaultVarEntry.RowKey);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError("Failed to persist entry {name} to Azure Table: {message}", newDefaultVarEntry.RowKey, ex.Message);
+                }
+            }
+            else
+            {
+                _logger.LogWarning("Failed to validate an app variable entry with rowkey {name}, value {val}.", newDefaultVarEntry.RowKey, newDefaultVarEntry.Value);
+            }
+        }
+
+        _logger.LogInformation("Loaded {count} App Variables from Configuration defaults.", _appVars.Count);
     }
+
+    private AppVarEntry GetAppVarEntryFromJsonElement(string varNameAndKey, JsonElement jsonElement)
+    {
+        return new()
+        {
+            PartitionKey = _appVarsPartitionKey,
+            RowKey = varNameAndKey,
+            TypeName = jsonElement.GetProperty("Type").GetString() ?? throw new InvalidDataException(),
+            Description = jsonElement.GetProperty("Description").GetString() ?? string.Empty,
+            Timestamp = DateTime.UtcNow,
+            Value = jsonElement.GetProperty("Value").GetString() ?? throw new InvalidDataException()
+        };
+    }
+
+    // App Vars do NOT support nested objects or custom Types!
+    private bool ValidateAppVarEntry(AppVarEntry entry)
+    {
+        string typeName = entry.TypeName.Trim().ToLowerInvariant();
+        try
+        {
+            return typeName switch
+            {
+                "int" => int.TryParse(entry.Value, out _),
+                "string" => !string.IsNullOrEmpty(entry.Value),
+                "bool" => bool.TryParse(entry.Value, out _),
+                "datetime" => DateTime.TryParse(entry.Value, out _),
+                "double" => double.TryParse(entry.Value, out _),
+                "string[]" => JsonSerializer.Deserialize<string[]>(entry.Value) is string[] stringValues
+                                && (!stringValues.Any(str => string.IsNullOrEmpty(str))),
+                "int[]" => JsonSerializer.Deserialize<int[]>(entry.Value) is int[] intValues
+                            && intValues.Length != 0,
+                _ => false,
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("An error occured when attempting to validate app variable {name}: {message}.", entry.RowKey, ex.Message);
+            _logger.LogWarning("Failed to validate app variable entry {name} of type {typename} and value {val}. This variable will be ignored.", entry.RowKey, entry.TypeName, entry.Value);
+            return false;
+        }
+    }
+
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
@@ -136,6 +253,15 @@ public class StorageManager : IHostedService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Table Update failed: {message}", ex.Message);
+        }
+
+        try
+        {
+            if (ShouldPruneDataBase())
+        }
+        catch (Exception ex)
+        {
+
         }
     }
 
