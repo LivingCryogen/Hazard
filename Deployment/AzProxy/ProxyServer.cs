@@ -357,6 +357,7 @@ namespace AzProxy
             builder.Services.AddHttpClient();
             builder.Services.AddSingleton<IBanCache, BanListCache>();
             builder.Services.AddHostedService<StorageManager>();
+            builder.Services.AddSingleton<StorageManager>();
             builder.Services.AddSingleton<BanService>();
             builder.Services.AddSingleton<RequestHandler>();
             builder.Services.AddDbContext<GameStatsDbContext>(options => options.UseAzureSql(builder.Configuration.GetConnectionString("AzDbConnectionString")));
