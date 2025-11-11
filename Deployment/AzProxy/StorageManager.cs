@@ -306,7 +306,7 @@ public class StorageManager : IHostedService
             if (await ShouldPruneDataBase())
             {
                 _logger.LogInformation("Pruning incomplete Game database entries.... Next prune will occur after {duration}.", _pruneAfterDuration);
-                await PruneDataBase();
+                await PruneDataBase(false);
             }    
         }
         catch (Exception ex)
