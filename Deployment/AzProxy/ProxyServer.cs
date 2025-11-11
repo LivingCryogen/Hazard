@@ -2,6 +2,7 @@ using AzProxy.BanList;
 using AzProxy.Context;
 using AzProxy.DataTransform;
 using AzProxy.Requests;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -67,11 +68,12 @@ namespace AzProxy
 
             app.MapGet("/", () => "Proxy is up.");
             app.MapGet("/secure-link",
-                async (HttpContext context,
-                    RequestHandler requestHandler,
-                    IHttpClientFactory httpClientFactory,
-                    IConfiguration config,
-                    ILogger<ProxyServer> logger) =>
+                async (
+                    HttpContext context,
+                    [FromServices] RequestHandler requestHandler,
+                    [FromServices] IHttpClientFactory httpClientFactory,
+                    [FromServices] IConfiguration config,
+                    [FromServices] ILogger<ProxyServer> logger) =>
                 {
                     try
                     {
@@ -175,9 +177,9 @@ namespace AzProxy
                 });
             app.MapGet("/prune", 
                 async (HttpContext context,
-                    StorageManager storageManager,
-                    ILogger<ProxyServer> logger,
-                    IConfiguration config
+                    [FromServices] StorageManager storageManager,
+                    [FromServices] ILogger<ProxyServer> logger,
+                    [FromServices] IConfiguration config
                     ) =>
             {
                 try { 
@@ -230,11 +232,11 @@ namespace AzProxy
 
             app.MapPost("/sync-stats",
                 async (HttpContext context,
-                    RequestHandler requestHandler,
-                    DbTransformer transformer,
-                    IHttpClientFactory httpClientFactory,
-                    IConfiguration config,
-                    ILogger<ProxyServer> logger) =>
+                    [FromServices] RequestHandler requestHandler,
+                    [FromServices] DbTransformer transformer,
+                    [FromServices] IHttpClientFactory httpClientFactory,
+                    [FromServices] IConfiguration config,
+                    [FromServices] ILogger<ProxyServer> logger) =>
                 {
                     // get client IP
                     string? clientIP = context.Connection.RemoteIpAddress?.ToString();
