@@ -204,7 +204,11 @@ public class StorageManager : IHostedService
     {
         try
         {
-            var response = await _appVarsTableClient.UpdateEntityAsync(entry, entry.ETag, TableUpdateMode.Replace);
+            var response = await _appVarsTableClient.UpdateEntityAsync(entry, 
+                entry.ETag != default 
+                    ? entry.ETag 
+                    : ETag.All, 
+                TableUpdateMode.Replace);
             if (response.Status == 204)
                 _logger.LogInformation("Successfully added App Variable entry {name}.", entry.RowKey);
             else
@@ -527,6 +531,7 @@ public class StorageManager : IHostedService
             var dbContext = scope.ServiceProvider.GetRequiredService<GameStatsDbContext>();
 
             var now = DateTime.UtcNow;
+            var cutoffDate = now - _pruneAfterDuration;
             _logger.LogInformation("Pruning incomplete games older than {duration}...", _pruneIncompleteGamesAfterDuration);
 
             List<GameSessionEntity>? staleGames;
@@ -534,14 +539,14 @@ public class StorageManager : IHostedService
             {
                 staleGames = [.. dbContext.Set<GameSessionEntity>()
                     .Where(entry => !entry.EndTime.HasValue
-                        && (now - entry.StartTime) > _pruneIncompleteGamesAfterDuration
+                        && entry.StartTime < cutoffDate
                         && !entry.IsDemo)];
             }
             else
             {
                 staleGames = [.. dbContext.Set<GameSessionEntity>()
                     .Where(entry => !entry.EndTime.HasValue
-                        && (now - entry.StartTime) > _pruneIncompleteGamesAfterDuration)];
+                        && entry.StartTime < cutoffDate)];
             }
 
             _logger.LogInformation("Pruning {count} incomplete games...", staleGames.Count);
