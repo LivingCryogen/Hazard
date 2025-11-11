@@ -1,7 +1,12 @@
 ﻿using AzProxy.BanList;
+using AzProxy.Context;
+using AzProxy.Entities;
 using Azure;
 using Azure.Data.Tables;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage.Json;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Concurrent;
 using System.Text.Json;
 
@@ -9,6 +14,7 @@ namespace AzProxy;
 
 public class StorageManager : IHostedService
 {
+    private readonly IServiceProvider _serviceProvider;
     private readonly IHostApplicationLifetime _appLife;
     private readonly DateTimeOffset _bootTime = DateTimeOffset.UtcNow;
     private readonly ILogger _logger;
@@ -19,15 +25,18 @@ public class StorageManager : IHostedService
     private readonly string _appVarsPartitionKey;
     private readonly string _defaultAppVarsJson;
     private readonly TimeSpan _entryDuration;
+    private readonly TimeSpan _pruneAfterDuration;
+    private readonly TimeSpan _pruneIncompleteGamesAfterDuration;
     private readonly ConcurrentDictionary<string, ETag> _tagCache = new(); // needed for easy updates
     private readonly SemaphoreSlim _tableSemaphore = new(1, 1);
     private readonly List<AppVarEntry> _appVars = [];
 
-    public StorageManager(IConfiguration config, IHostApplicationLifetime appLife, ILogger<StorageManager> logger, IBanCache cache)
+    public StorageManager(IConfiguration config, IHostApplicationLifetime appLife, ILogger<StorageManager> logger, IBanCache cache, IServiceProvider serviceProvider)
     {
         _appLife = appLife;
         _logger = logger;
         _cache = cache;
+        _serviceProvider = serviceProvider;
 
         string? storageConnection = config["StorageConnectionString"];
 
@@ -67,6 +76,21 @@ public class StorageManager : IHostedService
         _banListPartitionKey = config["BanlistPartitionKey"] ?? string.Empty;
         _appVarsPartitionKey = config["AppVarsPartitionKey"] ?? string.Empty;
         _defaultAppVarsJson = config["AppVarsJSONDefinitions"] ?? string.Empty;
+        if (!double.TryParse(config["PruneDBAfterDays"], out double pruneDays))
+        {
+            _logger.LogWarning("PruneDBAfterDays configuration invalid or missing; defaulting to 7 days.");
+            pruneDays = 7;
+        }
+        else
+            _pruneAfterDuration = TimeSpan.FromDays(pruneDays);
+        if (!double.TryParse(config["PruneIncompleteGamesAfterDays"], out double incGamePruneDays))
+        {
+            _logger.LogWarning("PruneIncompleteGamesAfterDays configuration invalid or missing; defaulting to 90 days.");
+            incGamePruneDays = 90;
+        }
+        else
+            _pruneIncompleteGamesAfterDuration = TimeSpan.FromDays(incGamePruneDays);
+
         
         if (_banListPartitionKey == string.Empty)
             logger.LogWarning("Banlist partition key empty.");
@@ -149,18 +173,7 @@ public class StorageManager : IHostedService
             {
                 _appVars.Add(newDefaultVarEntry);
 
-                try
-                {
-                    var tableResponse = await _appVarsTableClient.AddEntityAsync(newDefaultVarEntry);
-                    if (tableResponse.Status == 204)
-                        _logger.LogInformation("Successfully added entry {name}.", newDefaultVarEntry.RowKey);
-                    else
-                        _logger.LogWarning("Unexpected status {status} when adding entry {name}.", tableResponse.Status, newDefaultVarEntry.RowKey);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError("Failed to persist entry {name} to Azure Table: {message}", newDefaultVarEntry.RowKey, ex.Message);
-                }
+                await AddAppVarTableEntry(newDefaultVarEntry);
             }
             else
             {
@@ -171,6 +184,38 @@ public class StorageManager : IHostedService
         _logger.LogInformation("Loaded {count} App Variables from Configuration defaults.", _appVars.Count);
     }
 
+    private async Task AddAppVarTableEntry(AppVarEntry entry)
+    {
+        try
+        {
+            var response = await _appVarsTableClient.AddEntityAsync(entry);
+            if (response.Status == 204)
+                _logger.LogInformation("Successfully added App Variable entry {name}.", entry.RowKey);
+            else
+                _logger.LogWarning("Unexpected status {status} when adding App Variable entry {name}.", response.Status, entry.RowKey);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to persist App Variable entry {name} to Azure Table: {message}", entry.RowKey, ex.Message);
+        }
+    }
+
+    private async Task UpdateAppVarTableEntry(AppVarEntry entry)
+    {
+        try
+        {
+            var response = await _appVarsTableClient.UpdateEntityAsync(entry, entry.ETag, TableUpdateMode.Replace);
+            if (response.Status == 204)
+                _logger.LogInformation("Successfully added App Variable entry {name}.", entry.RowKey);
+            else
+                _logger.LogWarning("Unexpected status {status} when adding App Variable entry {name}.", response.Status, entry.RowKey);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to persist App Variable entry {name} to Azure Table: {message}", entry.RowKey, ex.Message);
+        }
+    }
+
     private AppVarEntry GetAppVarEntryFromJsonElement(string varNameAndKey, JsonElement jsonElement)
     {
         return new()
@@ -179,8 +224,8 @@ public class StorageManager : IHostedService
             RowKey = varNameAndKey,
             TypeName = jsonElement.GetProperty("Type").GetString() ?? throw new InvalidDataException(),
             Description = jsonElement.GetProperty("Description").GetString() ?? string.Empty,
-            Timestamp = DateTime.UtcNow,
-            Value = jsonElement.GetProperty("Value").GetString() ?? throw new InvalidDataException()
+            Timestamp = DateTimeOffset.UtcNow,
+            Value = jsonElement.GetProperty("Value").GetString() ?? ""
         };
     }
 
@@ -218,7 +263,7 @@ public class StorageManager : IHostedService
         return Task.CompletedTask;
     }
 
-    private void OnAppStopping()
+    private async void OnAppStopping()
     {
         List<Ban> updatedBans = [];
         _logger.LogInformation("Beginning Table Update....");
@@ -255,13 +300,18 @@ public class StorageManager : IHostedService
             _logger.LogError(ex, "Table Update failed: {message}", ex.Message);
         }
 
+        _logger.LogInformation("Checking if the Az Database should be pruned....");
         try
         {
-            if (ShouldPruneDataBase())
+            if (await ShouldPruneDataBase())
+            {
+                _logger.LogInformation("Pruning incomplete Game database entries.... Next prune will occur after {duration}.", _pruneAfterDuration);
+                await PruneDataBase();
+            }    
         }
         catch (Exception ex)
         {
-
+            _logger.LogError(ex, "Database prune check or prune failed unexpectedly: {message}", ex.Message);
         }
     }
 
@@ -414,20 +464,105 @@ public class StorageManager : IHostedService
             _ = Task.Run(() => RemoveEntry(entry.RowKey));
     }
 
-    private async Task<bool> ShouldPruneDataBase(IConfiguration config)
+    private async Task<bool> ShouldPruneDataBase()
     {
-        var pruneTimeStr = config["PruneDBAfterDays"] ?? "7";
-        if (!int.TryParse(pruneTimeStr, out int pruneTime))
-            pruneTime = 7;
-        var pruneDuration = TimeSpan.FromDays(pruneTime);
-
         try
         {
-            await _tableSemaphore.WaitAsync();
-            var lastPrune = _appVarsTableClient.GetEntityIfExistsAsync
+            var lastDBPruneDateEntry = _appVars.FirstOrDefault(entry => entry.RowKey == "LastDBPruneDate");
+            var now = DateTime.UtcNow;
+
+            if (lastDBPruneDateEntry == null)
+            {
+                _logger.LogWarning("No LastDBPruneDate app variable found; pruning and setting new prune date: {duration} from now.", _pruneAfterDuration);
+
+                await PruneDataBase(false);
+
+                var newPruneDateEntry = new AppVarEntry()
+                {
+                    PartitionKey = _appVarsPartitionKey,
+                    RowKey = "LastDBPruneDate",
+                    TypeName = "DateTime",
+                    Description = "The last date the database was pruned of old entries.",
+                    Timestamp = DateTime.UtcNow,
+                    Value = now.ToString("o")
+                };
+
+                await AddAppVarTableEntry(newPruneDateEntry);
+
+                return false;
+            }
+
+            if (!DateTime.TryParse(lastDBPruneDateEntry.Value, out DateTime lastPruneDate))
+            {
+                _logger.LogWarning("LastDBPruneDate app variable value invalid; pruning and setting new prune date: {duration} from now.", _pruneAfterDuration);
+                await PruneDataBase(false);
+                lastDBPruneDateEntry.Value = now.ToString("o");
+                await UpdateAppVarTableEntry(lastDBPruneDateEntry);
+                return false;
+            }
+
+            if (DateTime.UtcNow - lastPruneDate >= _pruneAfterDuration)
+            {
+                lastDBPruneDateEntry.Value = now.ToString("o");
+                await UpdateAppVarTableEntry(lastDBPruneDateEntry);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred when checking if database prune is needed: {message}", ex.Message);
+            throw;
+        }
+    }
 
+    public async Task<bool> PruneDataBase(bool pruneDemos)
+    {
+        try
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<GameStatsDbContext>();
 
-        var incompleteCutOff = config["PruneIncompleteGamesAfterDays"];
+            var now = DateTime.UtcNow;
+            _logger.LogInformation("Pruning incomplete games older than {duration}...", _pruneIncompleteGamesAfterDuration);
+
+            List<GameSessionEntity>? staleGames;
+            if (!pruneDemos)
+            {
+                staleGames = [.. dbContext.Set<GameSessionEntity>()
+                    .Where(entry => !entry.EndTime.HasValue
+                        && (now - entry.StartTime) > _pruneIncompleteGamesAfterDuration
+                        && !entry.IsDemo)];
+            }
+            else
+            {
+                staleGames = [.. dbContext.Set<GameSessionEntity>()
+                    .Where(entry => !entry.EndTime.HasValue
+                        && (now - entry.StartTime) > _pruneIncompleteGamesAfterDuration)];
+            }
+
+            _logger.LogInformation("Pruning {count} incomplete games...", staleGames.Count);
+            
+            foreach (var game in staleGames)
+            {
+                _logger.LogInformation("Pruning incomplete game (Demo = {demo}) with ID {gameId} from install {installID}, started on {startTime}.",
+                    game.IsDemo,
+                    game.GameId,  
+                    game.InstallId, 
+                    game.StartTime);
+            }
+
+            dbContext.RemoveRange(staleGames);
+            await dbContext.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred when pruning the database: {message}", ex.Message);
+            return false;
+        }
+        return true;
     }
 }

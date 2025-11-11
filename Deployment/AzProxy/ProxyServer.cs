@@ -68,10 +68,10 @@ namespace AzProxy
             app.MapGet("/", () => "Proxy is up.");
             app.MapGet("/secure-link",
                 async (HttpContext context,
-                        RequestHandler requestHandler,
-                        IHttpClientFactory httpClientFactory,
-                        IConfiguration config,
-                        ILogger<ProxyServer> logger) =>
+                    RequestHandler requestHandler,
+                    IHttpClientFactory httpClientFactory,
+                    IConfiguration config,
+                    ILogger<ProxyServer> logger) =>
                 {
                     try
                     {
@@ -173,6 +173,61 @@ namespace AzProxy
                         await context.Response.WriteAsync("An unexpected server error occurred.");
                     }
                 });
+            app.MapGet("/prune", 
+                async (HttpContext context,
+                    StorageManager storageManager,
+                    ILogger<ProxyServer> logger,
+                    IConfiguration config
+                    ) =>
+            {
+                try { 
+                    // Get and validate admin token from query
+                    var query = context.Request.Query;
+                    if (!query.TryGetValue("adminPass", out var passValue) || !Guid.TryParse(passValue, out var givenPass))
+                    {
+                        logger.LogWarning("Missing or invalid admin token.");
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        await context.Response.WriteAsync("Unauthorized.");
+                        return;
+                    }
+
+                    if (givenPass != Guid.Parse(config["AdminPass"] ?? string.Empty))
+                    {
+                        logger.LogWarning("Unauthorized prune attempt detected.");
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        await context.Response.WriteAsync("Unauthorized.");
+                        return;
+                    }
+
+                    // Get pruneDemos flag from query
+                    bool pruneDemos = false;
+                    if (query.TryGetValue("pruneDemos", out var demoValue))
+                    {
+                        if (bool.TryParse(demoValue, out bool parsedDemosFlag))
+                            pruneDemos = parsedDemosFlag;
+                    }
+
+                    if (await storageManager.PruneDataBase(pruneDemos))
+                    {
+                        logger.LogInformation("Prune successful; demos included = {demoflag}.", pruneDemos);
+                        context.Response.StatusCode = StatusCodes.Status200OK;
+                        await context.Response.WriteAsync("Prune completed.");
+                    }
+                    else
+                    {
+                        logger.LogInformation("Prune skipped or failed; demos included = {demoflag}.", pruneDemos);
+                        context.Response.StatusCode = StatusCodes.Status202Accepted;
+                        await context.Response.WriteAsync("Prune skipped or failed.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "An error occurred during the prune operation: {Message}", ex.Message);
+                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                    await context.Response.WriteAsync("An unexpected server error occurred.");
+                }
+            });
+
             app.MapPost("/sync-stats",
                 async (HttpContext context,
                     RequestHandler requestHandler,
