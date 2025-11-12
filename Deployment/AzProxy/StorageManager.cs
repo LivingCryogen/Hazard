@@ -104,13 +104,13 @@ public class StorageManager : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        _appLife.ApplicationStopping.Register(OnAppStopping);
-
         await PopulateCache();
         await GetOrSetDefaultVars();
 
         return;
     }
+
+    public async Task StopAsync(CancellationToken cancellationToken) => await OnAppStopping();
 
     private async Task PopulateCache()
     {
@@ -200,7 +200,7 @@ public class StorageManager : IHostedService
         }
     }
 
-    private async Task UpdateAppVarTableEntry(AppVarEntry entry)
+    public async Task UpdateAppVarTableEntry(AppVarEntry entry)
     {
         try
         {
@@ -210,7 +210,7 @@ public class StorageManager : IHostedService
                     : ETag.All, 
                 TableUpdateMode.Replace);
             if (response.Status == 204)
-                _logger.LogInformation("Successfully added App Variable entry {name}.", entry.RowKey);
+                _logger.LogInformation("Successfully updated App Variable entry {name}.", entry.RowKey);
             else
                 _logger.LogWarning("Unexpected status {status} when adding App Variable entry {name}.", response.Status, entry.RowKey);
         }
@@ -261,13 +261,7 @@ public class StorageManager : IHostedService
         }
     }
 
-
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
-    }
-
-    private async void OnAppStopping()
+    private async Task OnAppStopping()
     {
         List<Ban> updatedBans = [];
         _logger.LogInformation("Beginning Table Update....");
@@ -294,9 +288,9 @@ public class StorageManager : IHostedService
                 };
 
                 if (ban.TimeStamp > _bootTime && ban.BanCount == 1)
-                    _ = NewEntry(address, updatedEntry);
+                    _ = await NewEntry(address, updatedEntry);
                 else
-                    _ = UpdateEntry(address, updatedEntry);
+                    _ = await UpdateEntry(address, updatedEntry);
             }
         }
         catch (Exception ex)
@@ -307,10 +301,14 @@ public class StorageManager : IHostedService
         _logger.LogInformation("Checking if the Az Database should be pruned....");
         try
         {
-            if (await ShouldPruneDataBase())
+            var lastPruneDate = ShouldPruneDataBase(false);
+            if (lastPruneDate != null)
             {
                 _logger.LogInformation("Pruning incomplete Game database entries.... Next prune will occur after {duration}.", _pruneAfterDuration);
-                await PruneDataBase(false);
+                var prunedTime = await PruneDataBase(false, false);
+                if (prunedTime != null)
+                    lastPruneDate.Value = ((DateTime)prunedTime).ToString("o");
+                await UpdateAppVarTableEntry(lastPruneDate);
             }    
         }
         catch (Exception ex)
@@ -468,7 +466,8 @@ public class StorageManager : IHostedService
             _ = Task.Run(() => RemoveEntry(entry.RowKey));
     }
 
-    private async Task<bool> ShouldPruneDataBase()
+    // If return is null, prune should be skipped. Otherwise, return object's "Value" property should be updated to current time once pruning is successful.
+    public AppVarEntry? ShouldPruneDataBase(bool forcedPrune)
     {
         try
         {
@@ -477,11 +476,9 @@ public class StorageManager : IHostedService
 
             if (lastDBPruneDateEntry == null)
             {
-                _logger.LogWarning("No LastDBPruneDate app variable found; pruning and setting new prune date: {duration} from now.", _pruneAfterDuration);
+                _logger.LogWarning("No LastDBPruneDate app variable found.");
 
-                await PruneDataBase(false);
-
-                var newPruneDateEntry = new AppVarEntry()
+                return new AppVarEntry()
                 {
                     PartitionKey = _appVarsPartitionKey,
                     RowKey = "LastDBPruneDate",
@@ -490,31 +487,27 @@ public class StorageManager : IHostedService
                     Timestamp = DateTime.UtcNow,
                     Value = now.ToString("o")
                 };
-
-                await AddAppVarTableEntry(newPruneDateEntry);
-
-                return false;
             }
 
             if (!DateTime.TryParse(lastDBPruneDateEntry.Value, out DateTime lastPruneDate))
             {
-                _logger.LogWarning("LastDBPruneDate app variable value invalid; pruning and setting new prune date: {duration} from now.", _pruneAfterDuration);
-                await PruneDataBase(false);
-                lastDBPruneDateEntry.Value = now.ToString("o");
-                await UpdateAppVarTableEntry(lastDBPruneDateEntry);
-                return false;
+                _logger.LogWarning("Previous LastDBPruneDate app variable value invalid; pruning and setting new prune date.");
+
+                lastDBPruneDateEntry.Value = DateTime.UtcNow.ToString("o");
+
+                return lastDBPruneDateEntry;
+            }
+
+            if (forcedPrune == true)
+            {
+                _logger.LogInformation("Forced prune requested; pruning database.");
+                return lastDBPruneDateEntry;
             }
 
             if (DateTime.UtcNow - lastPruneDate >= _pruneAfterDuration)
-            {
-                lastDBPruneDateEntry.Value = now.ToString("o");
-                await UpdateAppVarTableEntry(lastDBPruneDateEntry);
-                return true;
-            }
+                return lastDBPruneDateEntry;
             else
-            {
-                return false;
-            }
+                return null;
         }
         catch (Exception ex)
         {
@@ -523,16 +516,18 @@ public class StorageManager : IHostedService
         }
     }
 
-    public async Task<bool> PruneDataBase(bool pruneDemos)
+    // If pruning is successful, returns the DateTime the prune was run. Otherwise, returns null.
+    public async Task<DateTime?> PruneDataBase(bool pruneDemos, bool forcedPrune)
     {
+        var now = DateTime.UtcNow;
         try
         {
             using var scope = _serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<GameStatsDbContext>();
 
-            var now = DateTime.UtcNow;
-            var cutoffDate = now - _pruneAfterDuration;
-            _logger.LogInformation("Pruning incomplete games older than {duration}...", _pruneIncompleteGamesAfterDuration);
+
+            var cutoffDate = forcedPrune ? now : now - _pruneIncompleteGamesAfterDuration;
+            _logger.LogInformation("Pruning incomplete games older than {duration}...", cutoffDate);
 
             List<GameSessionEntity>? staleGames;
             if (!pruneDemos)
@@ -566,8 +561,8 @@ public class StorageManager : IHostedService
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred when pruning the database: {message}", ex.Message);
-            return false;
+            return null;
         }
-        return true;
+        return now;
     }
 }

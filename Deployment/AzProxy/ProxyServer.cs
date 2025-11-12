@@ -209,15 +209,28 @@ namespace AzProxy
                             pruneDemos = parsedDemosFlag;
                     }
 
-                    if (await storageManager.PruneDataBase(pruneDemos))
+                    // Get forcePrune flag from query
+                    bool forcedPrune = false;
+                    if (query.TryGetValue("force", out var force))
                     {
-                        logger.LogInformation("Prune successful; demos included = {demoflag}.", pruneDemos);
+                        if (bool.TryParse(force, out bool forced))
+                            forcedPrune = forced;
+                    }
+
+                    AppVarEntry appVarLastPrune = storageManager.ShouldPruneDataBase(forcedPrune) 
+                        ?? throw new InvalidOperationException("ShouldPrune method returned null even during manual prune flow!");
+                    var prunedTime = await storageManager.PruneDataBase(pruneDemos, forcedPrune);
+                    if (prunedTime != null) {
+                        appVarLastPrune.Value = ((DateTime)prunedTime).ToString("o");
+                        await storageManager.UpdateAppVarTableEntry(appVarLastPrune);
+                   
+                        logger.LogInformation("Prune successful; Demos : {demoflag}. Forced : {forcedPrune}.", pruneDemos, forcedPrune);
                         context.Response.StatusCode = StatusCodes.Status200OK;
                         await context.Response.WriteAsync("Prune completed.");
                     }
                     else
                     {
-                        logger.LogInformation("Prune skipped or failed; demos included = {demoflag}.", pruneDemos);
+                        logger.LogInformation("Prune skipped or failed; Demos : {demoflag}. Forced : {forcedPrune}.", pruneDemos, forcedPrune);
                         context.Response.StatusCode = StatusCodes.Status202Accepted;
                         await context.Response.WriteAsync("Prune skipped or failed.");
                     }
