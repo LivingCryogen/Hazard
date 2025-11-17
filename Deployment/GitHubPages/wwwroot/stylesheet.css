@@ -1239,6 +1239,19 @@ centered-p {
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
+/* STATISTICS PAGE */
+.stats-card {}
+
+.card-header {}
+
+.header-stat {}
+
+.card-details {}
+
+.detailed-stat {}
+
+.expand-indicator {}
+
 /* MOBILE-SPECIFIC */
 @media (max-width: 1023px) {
     body::before {
