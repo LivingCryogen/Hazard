@@ -11,22 +11,76 @@
     <template id="player-stat-card">
         <div class="stats-card">
             <div class="card-header">
-                <span class="header-stat player-name">Player Name</span>
-                <span class="header-stat player-gameswon">0</span>
-                <span class="header-stat player-winpercent">(0%)</span>
-                <span class="header-stat player-lastplayed">Never</span>
+                <div class="card-stat-grid">
+                    <span class="col-1">Player Name</span>
+                    <span class="col-2 player-name">Name</span>
+                </div>
+                <div class="card-stat-grid">
+                    <span class="col-1">Games Won</span>
+                    <span class="col-2 player-gameswon">0</span>
+                </div>
+                <div class="card-stat-grid">
+                    <span class="col-1">Win %</span>
+                    <span class="col-2 player-winpercent">(0%)</span>
+                </div>
+                <div class="card-stat-grid">
+                    <span class="col-1">Last Played</span>
+                    <span class="col-2 player-lastplayed">Never</span>
+                </div>
+            </div>
+            <div class="card-details">
+                <div class="card-stat-grid">
+                    <span class="col-1">Games Started</span>
+                    <span class="col-2 player-gamesstarted">0</span>
+
+                    <span class="col-1">Games Completed</span>
+                    <span class="col-2 player-gamescompleted">0</span>
+
+                    <span class="col-1">Games Won</span>
+                    <span class="col-2 player-gameswon">0</span>
+
+                    <span class="col-1">Games Lost</span>
+                    <span class="col-2 player-gameslost">0</span>
+                </div>
+                <div class="card-stat-grid">
+                    <span class="col-1">First Started</span>
+                    <span class="col-2 player-firststarted">Never</span>
+
+                    <span class="col-1">Last Completed</span>
+                    <span class="col-2 player-lastcompleted">Never</span>
+
+                    <span class="col-1">Total Game Duration</span>
+                    <span class="col-2 player-totalgameduration">Never</span>
+                </div>
+                <div class="card-detail-footer">
+                    <span class="player-isdemo">No</span>
+                </div>
             </div>
         </div>
     </template>
     <template id="game-stat-card">
         <div class="stats-card">
             <div class="card-header">
-                <span class="header-stat game-id">Game Id</span>
-                <span class="header-stat game-numplayers">0</span>
-                <span class="header-stat game-winner">Nobody</span>
-                <span class="header-stat game-duration"></span>
-                <span class="header-stat game-completiondate"></span>
-
+                <div class="card-stat-grid">
+                    <span class="col-1">Game ID</span>
+                    <span class="col-2 game-id">ID</span>
+                </div>
+                <div class="card-stat-grid">
+                    <span class="col-1">Players</span>
+                    <span class="col-2 game-numplayers">0</span>
+                </div>
+                <div class="card-stat-grid">
+                    <span class="col-1">Winner</span>
+                    <span class="col-2 game-winner">Nobody</span>
+                </div>
+                <div class="card-stat-grid">
+                    <span class="col-1">Duration</span>
+                    <span class="col-2 game-duration"></span>
+                </div>
+                <div class="card-stat-grid">
+                    <span class="col-1">Completed On</span>
+                    <span class="col-2 game-completiondate">Never</span>
+                </div>
             </div>
         </div>
     </template>
