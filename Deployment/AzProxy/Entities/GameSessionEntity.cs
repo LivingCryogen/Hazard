@@ -13,8 +13,9 @@ public class GameSessionEntity
     public DateTime StartTime { get; set; }
     public DateTime? EndTime { get; set; }  // Nullable for ongoing games
     public int? Winner { get; set; }        // Nullable for ongoing games
+    public string PlayerNames { get; set; } = string.Empty; // CSV of player names
 
-    // Navigation properties (EF will create the relationships)
+    // Navigation properties
     public ICollection<AttackActionEntity> AttackActions { get; set; } = [];
     public ICollection<MoveActionEntity> MoveActions { get; set; } = [];
     public ICollection<TradeActionEntity> TradeActions { get; set; } = [];
