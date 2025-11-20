@@ -174,6 +174,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             Version = sessionDto.Version,
             StartTime = sessionDto.StartTime,
             EndTime = sessionDto.EndTime,
+            PlayerNames = string.Join(",", sessionDto.PlayerNumsAndNames.Values),
             Winner = sessionDto.Winner,
         };
     }
