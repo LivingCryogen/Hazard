@@ -1,4 +1,6 @@
-     document.addEventListener('DOMContentLoaded', async () => {
+const API_BASE_URL = '';
+
+document.addEventListener('DOMContentLoaded', async () => {
         // Load Features.html by default
         try {
             const defaultSource = await fetch('Features.html');
@@ -138,14 +140,63 @@
             galleryImages[index].classList.add('active');
         });
         });
+     });
+
+// Run when window is resized
+window.addEventListener('resize', function () {
+    // Check if Features.html is loaded
+    if (document.querySelector('.code-with-text')) {
+        balanceHeights();
+    }
+});
+
+// Initialize StatisticsView / Database Viewer
+function initializeStatisticsView() {
+    const contentArea = document.getElementById('content-area');
+
+    // Get tab buttons and panes
+    const tabButtons = contentArea.querySelectorAll('.tab-button');
+    const tabPanes = contentArea.querySelectorAll('.tab-pane');
+
+    // Add click handlers to tab buttons
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Get tab target
+            const targetTab = button.dataset.tab;
+
+            // Deactivate buttons and panes
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabPanes.forEach(pane => pane.classList.remove('active'));
+
+            // Add active to clicked button
+            button.classList.add('active');
+
+            // Activate corresponding tab pane
+            const targetPane = contentArea.querySelector(`#${targetTab}`);
+            if (targetPane) {
+                targetPane.classList.add('active');
+            }
+
+            // Clear stat content area when switching tabs
+            const statsContainer = contentArea.querySelector('#statsContainer');
+            statsContainer.innerHTML = '';
+        })
     });
 
-    // Function to balance heights for code snippets and text
-    function balanceHeights() {
-        const containers = document.querySelectorAll('#content-area .code-with-text');
+    // Load default leaderboard on page-load (helps with cold-start of WebApp proxy)
+    loadLeaderboard('top-players');
+}
 
-        containers.forEach(container => {
-            const codeElement = container.querySelector('.code-snippet') || container.querySelector('pre');
+function loadLeaderboard(leaderboardName) {
+
+}
+
+// Function to balance heights for code snippets and text
+function balanceHeights() {
+    const containers = document.querySelectorAll('#content-area .code-with-text');
+    
+    containers.forEach(container => {
+        const codeElement = container.querySelector('.code-snippet') || container.querySelector('pre');
     const textElement = container.querySelector('.image-text');
 
     if (!codeElement || !textElement) return;
@@ -167,9 +218,9 @@
         });
     }
 
-    // Add tooltips to download buttons
-    function setupDownloadTooltips() {
-        const x64Button = document.querySelector('.download-button[href*="x64"]');
+// Add tooltips to download buttons
+function setupDownloadTooltips() {
+    const x64Button = document.querySelector('.download-button[href*="x64"]');
     const armButton = document.querySelector('.download-button[href*="ARM"]');
 
     if (x64Button) {
@@ -273,11 +324,70 @@ function setupCodeModals() {
     });
 }
 
+// Generic API request function, returning parsed JSON response
+async function apiRequest(path, {
+    method = 'GET',
+    headers = {},
+    query = undefined,
+    body = undefined,
+    timeoutMs = 15000
+} = {}) {
+    const abortController = new AbortController();
+    const timeout = setTimeout(() => abortController.abort(), timeoutMs);
 
-    // Run when window is resized
-    window.addEventListener('resize', function () {
-        // Check if Features.html is loaded
-        if (document.querySelector('.code-with-text')) {
-        balanceHeights();
+    try {
+        const requestURL = new URL(API_BASE_URL + path);
+
+        // Check option parameter query prop for type validity, then set key-value pairs to searchParams
+        if (query && typeof (query) === 'object') {
+            Object.entries(query).forEach(([key, value]) => {
+                if (value !== undefined && value !== null)
+                    requestURL.searchParams.set(key, String(value));
+            });
         }
-    });
+
+        const fetchOptions = {
+            method,
+            headers: {
+                "Accept": "application/json",
+                ...(body ? { 'Content-Type': 'application/json' } : {}),
+                ...headers
+            },
+            signal: abortController.signal,
+            body: body ? JSON.stringify(body) : undefined
+        };
+
+        const response = await fetch(requestURL, fetchOptions);
+        const parsedResponse = await parseJSONResponse(response);
+
+        if (!response.ok) {
+            const message =
+                (parsedResponse && parsedResponse.error) ||
+                (parsedResponse && parsedResponse.message) ||
+                response.statusText;
+
+            const err = new Error(`HTTP ${response.status}: ${message}`);
+            err.status = response.status;
+            err.parsedResponse = parsedResponse;
+            throw err;
+        }
+
+        return parsedResponse;
+    }
+    finally {
+        clearTimeout(timeout);
+    }
+}
+
+async function parseJSONResponse(response) {
+    const contentType = response.headers.get('Content-Type') || '';
+    const isJson = contentType.includes('application/json');
+
+    if (isJson) {
+        return response.json().catch(() => {
+            throw new Error("Invalid JSON in response.")
+        });
+    }
+
+    return response.text(); // Fallback to text
+}

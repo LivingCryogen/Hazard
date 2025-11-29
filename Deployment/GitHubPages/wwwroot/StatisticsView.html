@@ -6,7 +6,34 @@
     <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body class="dynamic-content-body">
+    <h2>Game and Player Statistics</h2>
+    <p class="indented-p">
+        Browse game and player statistics from all synced games.
+    </p>
 
+    <div class="stats-board">
+        <div class="nav-sidebar">
+            <div class="tab-nav">
+                <button class="tab-button" data-tab="searchstats-controls"></button>
+                <button class="tab-button active" data-tab="leaderboard-controls"></button>
+            </div>
+        </div>
+        <div class="stats-board-content">
+            <div class="stats-board-content-header">
+                <div id="searchstats-controls" class="tab-pane">
+
+                </div>
+                <div id="leaderboard-controls" class="tab-pane active">
+                    <button class="quick-button" data-endpoint="/api/leaderboard/top-players">Top</button>
+                    <button class="quick-button" data-endpoint="/api/leaderboard/active-players">Most Active</button>
+                    <button class="quick-button" data-endpoint="/api/leaderboard/recent-games">Recent</button>
+                </div>
+            </div>
+            <div class="stats-container">
+
+            </div>
+        </div>
+    </div>
 
     <template id="player-stat-card">
         <div class="stats-card">
