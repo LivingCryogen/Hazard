@@ -13,7 +13,7 @@ public class RequestHandler(ILogger<RequestHandler> logger, IConfiguration confi
     private readonly ConcurrentDictionary<(string, RequestType), (DateTime LastReset, int Count)> _requestCounters = new();
 
 
-    public bool ValidateRequest(string iPaddress, RequestType requestType)
+    public async Task<bool> ValidateRequest(string iPaddress, RequestType requestType)
     {
         if (!_banService.CacheInitialized)
         {
@@ -23,7 +23,7 @@ public class RequestHandler(ILogger<RequestHandler> logger, IConfiguration confi
 
             while (!_banService.CacheInitialized)
             {
-                Thread.Sleep(checkInterval);
+                await Task.Delay(checkInterval);
                 timeSpent += checkInterval;
 
                 if (timeSpent > timeOut)

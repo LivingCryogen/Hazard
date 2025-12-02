@@ -1,6 +1,7 @@
 using AzProxy.BanList;
 using AzProxy.Context;
 using AzProxy.DataTransform;
+using AzProxy.Middleware;
 using AzProxy.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Configuration;
 using Newtonsoft.Json;
+using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -65,6 +67,7 @@ namespace AzProxy
 
             app.UseHttpsRedirection();
             app.UseCors("FromGitHubPages");
+            app.UseMiddleware<RequestValidator>();  // TODO : ~SEPERATE REQUEST VALIDATION MIDDLEWARE!
 
             app.MapGet("/", () => "Proxy is up.");
             app.MapGet("/secure-link",
@@ -88,7 +91,7 @@ namespace AzProxy
                         }
 
                         // reject if banned
-                        if (!requestHandler.ValidateRequest(clientIP, RequestType.GenSAS))
+                        if (!await requestHandler.ValidateRequest(clientIP, RequestType.GenSAS))
                         {
                             logger.LogInformation("Request from address {clientIP} was rejected due to ban or rate restriction.", clientIP);
                             context.Response.StatusCode = StatusCodes.Status403Forbidden;
@@ -242,6 +245,16 @@ namespace AzProxy
                     await context.Response.WriteAsync("An unexpected server error occurred.");
                 }
             });
+            //app.MapGet("leaderboard/", async (
+            //        HttpContext context,
+            //        [FromServices] RequestHandler requestHandler,
+            //        [FromServices] StorageManager storageManager,
+            //        [FromServices] IHttpClientFactory httpClientFactory,
+            //        [FromServices] IConfiguration config,
+            //        [FromServices] ILogger<ProxyServer> logger) =>
+            //{
+                
+            //});
 
             app.MapPost("/sync-stats",
                 async (HttpContext context,
@@ -261,7 +274,7 @@ namespace AzProxy
                         return;
                     }
 
-                    if (!requestHandler.ValidateRequest(clientIP, RequestType.Sync))
+                    if (!await requestHandler.ValidateRequest(clientIP, RequestType.Sync))
                     {
                         context.Response.StatusCode = StatusCodes.Status403Forbidden;
                         await context.Response.WriteAsync("Request denied.");
@@ -379,6 +392,29 @@ namespace AzProxy
             builder.Services.AddScoped<DbTransformer>();
             builder.Services.AddLogging();
             return builder.Build();
+        }
+        private async static Task<bool> VerifyRequest(HttpContext context, ILogger logger, RequestHandler requestHandler)
+        {
+            // get client IP
+            string? clientIP = context.Connection.RemoteIpAddress?.ToString();
+            if (string.IsNullOrEmpty(clientIP))
+            {
+                logger.LogWarning("Request received without IP address");
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                await context.Response.WriteAsync("Invalid request.");
+                return false;
+            }
+
+            // reject if banned
+            if (!await requestHandler.ValidateRequest(clientIP, RequestType.GenSAS))
+            {
+                logger.LogInformation("Request from address {clientIP} was rejected due to ban or rate restriction.", clientIP);
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                await context.Response.WriteAsync("Request denied. This has been rate restricted or banned.");
+                return false;
+            }
+
+            return true;
         }
     }
 }

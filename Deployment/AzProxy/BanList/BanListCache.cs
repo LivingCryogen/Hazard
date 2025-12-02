@@ -21,16 +21,7 @@ public class BanListCache(ILogger<BanListCache> logger) : IBanCache
 
     public bool Initialized { get; private set; } = false;
 
-    public bool TryGetBan(string address, out Ban? ban)
-    {
-        if (_bans.TryGetValue(address, out Ban? value) && value != null)
-        {
-            ban = value;
-            return true;
-        }
-        ban = value;
-        return false;
-    }
+    public bool TryGetBan(string address, out Ban? ban) => _bans.TryGetValue(address, out ban);
 
     public void AddOrUpdateBan(string address, Func<string, Ban> addFactory, Func<string, Ban, Ban> updateFactory)
     {
@@ -65,6 +56,12 @@ public class BanListCache(ILogger<BanListCache> logger) : IBanCache
 
     public void Initialize(HashSet<BanListEntry> banRecords)
     {
+        if (Initialized)
+        {
+            _logger.LogWarning("BanListCache is already initialized.");
+            return;
+        }
+
         foreach (BanListEntry entry in banRecords)
         {
             if (!entry.NowBanned)

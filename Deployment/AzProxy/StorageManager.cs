@@ -372,7 +372,7 @@ public class StorageManager : IHostedService
             await _tableSemaphore.WaitAsync();
             try
             {
-                var response = await _banTableClient.AddEntityAsync(entry);
+                var response = await _banTableClient.AddEntityAsync(entry).ConfigureAwait(false);
             }
             finally
             {
@@ -404,7 +404,7 @@ public class StorageManager : IHostedService
                     updatedEntry,
                     tagCached ? entryTag :
                         updatedEntry.ETag != default ? updatedEntry.ETag : default,
-                    TableUpdateMode.Merge);
+                    TableUpdateMode.Merge).ConfigureAwait(false);
             }
             finally
             {
@@ -432,7 +432,7 @@ public class StorageManager : IHostedService
             await _tableSemaphore.WaitAsync();
             try
             {
-                var response = await _banTableClient.DeleteEntityAsync(_banListPartitionKey, ipAddress);
+                var response = await _banTableClient.DeleteEntityAsync(_banListPartitionKey, ipAddress).ConfigureAwait(false);
             }
             finally
             {
@@ -460,10 +460,10 @@ public class StorageManager : IHostedService
         };
     }
 
-    private void Prune(BanListEntry[] entries)
+    private async Task Prune(BanListEntry[] entries)
     {
         foreach (var entry in entries)
-            _ = Task.Run(() => RemoveEntry(entry.RowKey));
+            await RemoveEntry(entry.RowKey);
     }
 
     // If return is null, prune should be skipped. Otherwise, return object's "Value" property should be updated to current time once pruning is successful.
