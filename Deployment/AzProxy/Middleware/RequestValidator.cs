@@ -15,7 +15,14 @@ public class RequestValidator
 
     public async Task InvokeAsync(HttpContext context)
     {
+        if (context.User?.Identity?.IsAuthenticated ?? false
+            && context.User.IsInRole("Admin"))
+        {
+            // Admins bypass validation
+            await _next(context);
+            return;
+        }
+
         
-        await _next(context);
     }
 }

@@ -3,6 +3,7 @@ using AzProxy.Context;
 using AzProxy.DataTransform;
 using AzProxy.Middleware;
 using AzProxy.Requests;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -67,6 +68,9 @@ namespace AzProxy
 
             app.UseHttpsRedirection();
             app.UseCors("FromGitHubPages");
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseMiddleware<RequestValidator>();  // TODO : ~SEPERATE REQUEST VALIDATION MIDDLEWARE!
 
             app.MapGet("/", () => "Proxy is up.");
@@ -382,6 +386,15 @@ namespace AzProxy
                         .AllowAnyMethod();
                 });
             });
+            // Add custom Authentication Scheme for Admin access
+            builder.Services.AddAuthentication("ApiKeyScheme")
+                .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticator>("ApiKeyScheme", null);
+            // Add Authorization policy for Admin role
+            builder.Services.AddAuthorizationBuilder()
+                .AddPolicy("AdminOnly", policy =>
+                {
+                    policy.RequireRole("Admin");
+                });
             builder.Services.AddHttpClient();
             builder.Services.AddSingleton<IBanCache, BanListCache>();
             builder.Services.AddHostedService<StorageManager>();
