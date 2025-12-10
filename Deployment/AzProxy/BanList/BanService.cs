@@ -20,14 +20,17 @@ public class BanService(ILogger<BanService> logger, IConfiguration config, IBanC
             TimeSpan.FromDays(7)
         ];
     private readonly int _maxVerifyRequests =
-        int.TryParse(config["MaxVerifyRequests"], out var maxRequests) ?
-            maxRequests : 50;
+        int.TryParse(config["MaxVerifyRequests"], out var maxVerify) ?
+            maxVerify : 50;
     private readonly int _maxGenSASRequests =
-      int.TryParse(config["MaxGenSASRequests"], out var maxRequests) ?
-          maxRequests : 25;
+      int.TryParse(config["MaxGenSASRequests"], out var maxGenSAS) ?
+          maxGenSAS : 25;
     private readonly int _maxSyncRequests =
-      int.TryParse(config["MaxSyncRequests"], out var maxRequests) ?
-          maxRequests : 35;
+      int.TryParse(config["MaxSyncRequests"], out var maxSync) ?
+          maxSync : 35;
+    private readonly int _maxUnknownRequests =
+        int.TryParse(config["MaxUnknownRequests"], out var maxUnknown) ?
+            maxUnknown : 10;
 
     public bool CacheInitialized => _cache.Initialized;
 
@@ -38,7 +41,8 @@ public class BanService(ILogger<BanService> logger, IConfiguration config, IBanC
             RequestType.Verify => _maxVerifyRequests,
             RequestType.GenSAS => _maxGenSASRequests,
             RequestType.Sync => _maxSyncRequests,
-            _ => 100
+            RequestType.None => _maxUnknownRequests,
+            _ => 10
         };
 
         // Check request limit, issue ban and reject if so

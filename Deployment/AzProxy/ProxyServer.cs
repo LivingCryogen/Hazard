@@ -4,6 +4,7 @@ using AzProxy.DataTransform;
 using AzProxy.Middleware;
 using AzProxy.Requests;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -70,8 +71,7 @@ namespace AzProxy
             app.UseCors("FromGitHubPages");
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseMiddleware<RequestValidator>();  // TODO : ~SEPERATE REQUEST VALIDATION MIDDLEWARE!
+            app.UseMiddleware<RequestValidator>();  
 
             app.MapGet("/", () => "Proxy is up.");
             app.MapGet("/secure-link",
@@ -182,7 +182,8 @@ namespace AzProxy
                         await context.Response.WriteAsync("An unexpected server error occurred.");
                     }
                 });
-            app.MapGet("/prune", 
+            app.MapGet("/prune",
+                [Authorize(Policy = "AdminOnly")]
                 async (HttpContext context,
                     [FromServices] StorageManager storageManager,
                     [FromServices] ILogger<ProxyServer> logger,
