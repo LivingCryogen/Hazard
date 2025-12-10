@@ -407,28 +407,5 @@ namespace AzProxy
             builder.Services.AddLogging();
             return builder.Build();
         }
-        private async static Task<bool> VerifyRequest(HttpContext context, ILogger logger, RequestHandler requestHandler)
-        {
-            // get client IP
-            string? clientIP = context.Connection.RemoteIpAddress?.ToString();
-            if (string.IsNullOrEmpty(clientIP))
-            {
-                logger.LogWarning("Request received without IP address");
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                await context.Response.WriteAsync("Invalid request.");
-                return false;
-            }
-
-            // reject if banned
-            if (!await requestHandler.ValidateRequest(clientIP, RequestType.GenSAS))
-            {
-                logger.LogInformation("Request from address {clientIP} was rejected due to ban or rate restriction.", clientIP);
-                context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                await context.Response.WriteAsync("Request denied. This has been rate restricted or banned.");
-                return false;
-            }
-
-            return true;
-        }
     }
 }
