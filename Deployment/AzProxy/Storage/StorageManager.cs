@@ -1,6 +1,7 @@
-﻿using AzProxy.BanList;
-using AzProxy.Context;
-using AzProxy.Entities;
+﻿using AzProxy.Storage.AzureDB.Context;
+using AzProxy.Storage.AzureDB.Entities;
+using AzProxy.Storage.AzureTables;
+using AzProxy.Storage.AzureTables.BanList;
 using Azure;
 using Azure.Data.Tables;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Concurrent;
 using System.Text.Json;
 
-namespace AzProxy;
+namespace AzProxy.Storage;
 
 public class StorageManager : IHostedService
 {
@@ -111,14 +112,16 @@ public class StorageManager : IHostedService
     }
 
     // Note: This is reliably called in a low-traffic, cold-start scenario (like Azure Free Tier Web App) - if moved to always-on, a background service must be implemented instead.
-    public async Task StopAsync(CancellationToken cancellationToken) => await OnAppStopping(); 
+    public async Task StopAsync(CancellationToken cancellationToken) => await OnAppStopping();
 
+    // Initialize the in-memory cache from the Azure Table storage
     private async Task PopulateCache()
     {
         var recordedBans = await GetRecordsAsync((entry) => entry.NowBanned);
         _cache.Initialize(recordedBans);
     }
 
+    // Load App Variables from Azure Table storage, or set to defaults from configuration if none exist
     private async Task GetOrSetDefaultVars()
     {
         var queryResults = new List<AppVarEntry>();
@@ -185,6 +188,7 @@ public class StorageManager : IHostedService
         _logger.LogInformation("Loaded {count} App Variables from Configuration defaults.", _appVars.Count);
     }
 
+    // Add a new App Variable entry to Azure Table storage
     private async Task AddAppVarTableEntry(AppVarEntry entry)
     {
         try
@@ -201,6 +205,7 @@ public class StorageManager : IHostedService
         }
     }
 
+    // Update an existing App Variable entry in Azure Table storage
     public async Task UpdateAppVarTableEntry(AppVarEntry entry)
     {
         try
@@ -221,6 +226,7 @@ public class StorageManager : IHostedService
         }
     }
 
+    // Construct an AppVarEntry from a JsonElement definition
     private AppVarEntry GetAppVarEntryFromJsonElement(string varNameAndKey, JsonElement jsonElement)
     {
         return new()
@@ -234,6 +240,7 @@ public class StorageManager : IHostedService
         };
     }
 
+    // Validate that an App Variable entry's value matches its declared type
     // App Vars do NOT support nested objects or custom Types!
     private bool ValidateAppVarEntry(AppVarEntry entry)
     {
@@ -248,7 +255,7 @@ public class StorageManager : IHostedService
                 "datetime" => DateTime.TryParse(entry.Value, out _),
                 "double" => double.TryParse(entry.Value, out _),
                 "string[]" => JsonSerializer.Deserialize<string[]>(entry.Value) is string[] stringValues
-                                && (!stringValues.Any(str => string.IsNullOrEmpty(str))),
+                                && !stringValues.Any(str => string.IsNullOrEmpty(str)),
                 "int[]" => JsonSerializer.Deserialize<int[]>(entry.Value) is int[] intValues
                             && intValues.Length != 0,
                 _ => false,
@@ -262,6 +269,7 @@ public class StorageManager : IHostedService
         }
     }
 
+    // On application stopping, persist any updated bans to Azure Table storage
     private async Task OnAppStopping()
     {
         List<Ban> updatedBans = [];
@@ -318,6 +326,7 @@ public class StorageManager : IHostedService
         }
     }
 
+    // Fetch banlist records from Azure Table storage, applying an optional filter
     private async Task<HashSet<BanListEntry>> GetRecordsAsync(Func<BanListEntry, bool>? filter)
     {
         filter ??= _ => true;
@@ -364,6 +373,7 @@ public class StorageManager : IHostedService
     //    }
     //}
 
+    // Add a new banlist entry to Azure Table storage
     private async Task<bool> NewEntry(string ipAddress, BanListEntry entry)
     {
         try
@@ -390,6 +400,7 @@ public class StorageManager : IHostedService
         }
     }
 
+    // Update an existing banlist entry in Azure Table storage
     private async Task<bool> UpdateEntry(string ipAddress, BanListEntry updatedEntry)
     {
         try
@@ -426,6 +437,7 @@ public class StorageManager : IHostedService
         }
     }
 
+    // Remove a banlist entry from Azure Table storage
     private async Task<bool> RemoveEntry(string ipAddress)
     {
         try
@@ -449,6 +461,7 @@ public class StorageManager : IHostedService
         return true;
     }
 
+    // Determine if a banlist entry should be pruned based on its age and ban status
     private bool ShouldPrune(BanListEntry entry)
     {
         return entry switch
@@ -461,12 +474,14 @@ public class StorageManager : IHostedService
         };
     }
 
+    // Prune a collection of banlist entries from Azure Table storage
     private async Task Prune(BanListEntry[] entries)
     {
         foreach (var entry in entries)
             await RemoveEntry(entry.RowKey);
     }
 
+    // Determine if the database should be pruned of old entries
     // If return is null, prune should be skipped. Otherwise, return object's "Value" property should be updated to current time once pruning is successful.
     public AppVarEntry? ShouldPruneDataBase(bool forcedPrune)
     {
@@ -517,6 +532,7 @@ public class StorageManager : IHostedService
         }
     }
 
+    // Prune old/incomplete game session entries from the database
     // If pruning is successful, returns the DateTime the prune was run. Otherwise, returns null.
     public async Task<DateTime?> PruneDataBase(bool pruneDemos, bool forcedPrune)
     {

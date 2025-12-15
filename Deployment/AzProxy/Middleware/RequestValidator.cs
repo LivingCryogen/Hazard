@@ -59,6 +59,8 @@ public class RequestValidator
             _ when requestPath == "/" => RequestType.Verify,
             _ when requestPath.StartsWithSegments("/secure-link") => RequestType.GenSAS,
             _ when requestPath.StartsWithSegments("/sync-stats") => RequestType.Sync,
+            _ when requestPath.StartsWithSegments("/leaderboard") => RequestType.Leaderboard,
+            _ when requestPath.StartsWithSegments("/search-stats") => RequestType.Search,
             _ => RequestType.None,
         };
     }

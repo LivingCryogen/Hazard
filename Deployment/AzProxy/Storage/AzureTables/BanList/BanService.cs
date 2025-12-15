@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace AzProxy.BanList;
+namespace AzProxy.Storage.AzureTables.BanList;
 
 public class BanService(ILogger<BanService> logger, IConfiguration config, IBanCache cache)
 {
@@ -31,6 +31,13 @@ public class BanService(ILogger<BanService> logger, IConfiguration config, IBanC
     private readonly int _maxUnknownRequests =
         int.TryParse(config["MaxUnknownRequests"], out var maxUnknown) ?
             maxUnknown : 10;
+    private readonly int _maxLeaderboardRequests =
+        int.TryParse(config["MaxLeaderboardRequests"], out var maxLeaderboards) ?
+            maxLeaderboards : 50;
+    private readonly int _maxSearchRequests =
+        int.TryParse(config["MaxSearchRequests"], out var maxSearches) ?
+            maxSearches : 35;
+
 
     public bool CacheInitialized => _cache.Initialized;
 
@@ -40,6 +47,8 @@ public class BanService(ILogger<BanService> logger, IConfiguration config, IBanC
         {
             RequestType.Verify => _maxVerifyRequests,
             RequestType.GenSAS => _maxGenSASRequests,
+            RequestType.Leaderboard => _maxLeaderboardRequests,
+            RequestType.Search => _maxSearchRequests,
             RequestType.Sync => _maxSyncRequests,
             RequestType.None => _maxUnknownRequests,
             _ => 10

@@ -1,7 +1,7 @@
-﻿using AzProxy.Entities;
+﻿using AzProxy.Storage.AzureDB.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace AzProxy.Context;
+namespace AzProxy.Storage.AzureDB.Context;
 
 public class GameStatsDbContext(DbContextOptions<GameStatsDbContext> options) : DbContext(options)
 {

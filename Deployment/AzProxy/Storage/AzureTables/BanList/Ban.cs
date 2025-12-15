@@ -1,4 +1,4 @@
-﻿namespace AzProxy.BanList;
+﻿namespace AzProxy.Storage.AzureTables.BanList;
 
 public record Ban
 {

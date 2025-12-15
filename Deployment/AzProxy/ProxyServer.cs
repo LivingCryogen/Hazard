@@ -1,8 +1,10 @@
-using AzProxy.BanList;
-using AzProxy.Context;
-using AzProxy.DataTransform;
 using AzProxy.Middleware;
 using AzProxy.Requests;
+using AzProxy.Storage;
+using AzProxy.Storage.AzureDB.Context;
+using AzProxy.Storage.AzureDB.DataTransform;
+using AzProxy.Storage.AzureTables;
+using AzProxy.Storage.AzureTables.BanList;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,34 +40,7 @@ namespace AzProxy
             var app = GetBuiltApp(args);
 
             // Apply any pending database migrations
-            using (var scope = app.Services.CreateScope())
-            {
-                var logger = scope.ServiceProvider.GetRequiredService<ILogger<ProxyServer>>();
-                var dbContext = scope.ServiceProvider.GetRequiredService<GameStatsDbContext>();
-
-                try
-                {
-                    var pendingMigrations = dbContext.Database.GetPendingMigrations();
-
-                    if (pendingMigrations.Any())
-                    {
-                        logger.LogInformation("Applying {Count} pending migrations: {Migrations}",
-                            pendingMigrations.Count(),
-                            string.Join(", ", pendingMigrations));
-                        dbContext.Database.Migrate();
-                        logger.LogInformation("Database migrations applied successfully");
-                    }
-                    else
-                    {
-                        logger.LogInformation("Database is up to date - no migrations needed");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError(ex, "Failed to check/apply database migrations: {Message}", ex.Message);
-                    // Don't crash on first-time connection issues, but log clearly
-                }
-            }
+            GetAndApplyMigrations(app);
 
             app.UseHttpsRedirection();
             app.UseCors("FromGitHubPages");
@@ -250,16 +225,16 @@ namespace AzProxy
                     await context.Response.WriteAsync("An unexpected server error occurred.");
                 }
             });
-            //app.MapGet("leaderboard/", async (
-            //        HttpContext context,
-            //        [FromServices] RequestHandler requestHandler,
-            //        [FromServices] StorageManager storageManager,
-            //        [FromServices] IHttpClientFactory httpClientFactory,
-            //        [FromServices] IConfiguration config,
-            //        [FromServices] ILogger<ProxyServer> logger) =>
-            //{
+            app.MapGet("/leaderboard", async (
+                    HttpContext context,
+                    [FromServices] RequestHandler requestHandler,
+                    [FromServices] StorageManager storageManager,
+                    [FromServices] IHttpClientFactory httpClientFactory,
+                    [FromServices] IConfiguration config,
+                    [FromServices] ILogger<ProxyServer> logger) =>
+            {
                 
-            //});
+            });
 
             app.MapPost("/sync-stats",
                 async (HttpContext context,
@@ -323,8 +298,6 @@ namespace AzProxy
                     Guid installID = sessionData.InstallId;
                     try
                     {
-
-
                         int actualActionCount = sessionData.Attacks.Count + sessionData.Moves.Count + sessionData.Trades.Count;
 
                         await transformer.TransformFromSessionDto(sessionData);
@@ -407,5 +380,37 @@ namespace AzProxy
             builder.Services.AddLogging();
             return builder.Build();
         }
-    }
+
+        // Apply any pending database migrations
+        private static void GetAndApplyMigrations(WebApplication app)
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger<ProxyServer>>();
+                var dbContext = scope.ServiceProvider.GetRequiredService<GameStatsDbContext>();
+
+                try
+                {
+                    var pendingMigrations = dbContext.Database.GetPendingMigrations();
+
+                    if (pendingMigrations.Any())
+                    {
+                        logger.LogInformation("Applying {Count} pending migrations: {Migrations}",
+                            pendingMigrations.Count(),
+                            string.Join(", ", pendingMigrations));
+                        dbContext.Database.Migrate();
+                        logger.LogInformation("Database migrations applied successfully");
+                    }
+                    else
+                    {
+                        logger.LogInformation("Database is up to date - no migrations needed");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Failed to check/apply database migrations: {Message}", ex.Message);
+                    // Don't crash on first-time connection issues, but log clearly
+                }
+            }
+        }
 }

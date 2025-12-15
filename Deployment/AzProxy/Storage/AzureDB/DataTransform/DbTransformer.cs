@@ -1,5 +1,5 @@
-﻿using AzProxy.Context;
-using AzProxy.Entities;
+﻿using AzProxy.Storage.AzureDB.Context;
+using AzProxy.Storage.AzureDB.Entities;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace AzProxy.DataTransform;
+namespace AzProxy.Storage.AzureDB.DataTransform;
 
 public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> logger)
 {

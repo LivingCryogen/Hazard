@@ -1,4 +1,4 @@
-﻿namespace AzProxy.DataTransform;
+﻿namespace AzProxy.Storage.AzureDB.DataTransform;
 
 public class GameSessionDto
 {

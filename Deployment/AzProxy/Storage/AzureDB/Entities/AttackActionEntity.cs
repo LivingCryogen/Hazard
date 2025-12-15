@@ -1,4 +1,4 @@
-﻿namespace AzProxy.Entities;
+﻿namespace AzProxy.Storage.AzureDB.Entities;
 
 public class AttackActionEntity
 {

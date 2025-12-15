@@ -1,4 +1,4 @@
-﻿using AzProxy.BanList;
+﻿using AzProxy.Storage.AzureTables.BanList;
 using System.Collections.Concurrent;
 
 namespace AzProxy.Requests;

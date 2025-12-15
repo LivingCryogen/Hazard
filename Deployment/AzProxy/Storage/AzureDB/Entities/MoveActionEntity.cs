@@ -1,6 +1,6 @@
-﻿namespace AzProxy.Entities;
+﻿namespace AzProxy.Storage.AzureDB.Entities;
 
-public class TradeActionEntity
+public class MoveActionEntity
 {
     // Key
     public Guid GameId { get; set; }
@@ -12,9 +12,9 @@ public class TradeActionEntity
 
     // Data
     public bool IsDemo { get; set; } = false;
-    public string CardTargets { get; set; } = string.Empty;
-    public int TradeValue { get; set; } = 0;
-    public int OccupiedBonus { get; set; } = 0;
+    public string SourceTerritory { get; set; } = string.Empty;
+    public string TargetTerritory { get; set; } = string.Empty;
+    public bool MaxAdvanced { get; set; } = false;
 
     public GameSessionEntity GameSession { get; set; } = null!; // Navigation property for EF
 }

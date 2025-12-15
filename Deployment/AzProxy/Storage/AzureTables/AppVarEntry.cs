@@ -1,6 +1,6 @@
 ﻿using Azure.Data.Tables;
 
-namespace AzProxy;
+namespace AzProxy.Storage.AzureTables;
 
 public class AppVarEntry : ITableEntity
 {

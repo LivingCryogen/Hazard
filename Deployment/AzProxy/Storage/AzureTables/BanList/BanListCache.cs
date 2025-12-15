@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace AzProxy.BanList;
+namespace AzProxy.Storage.AzureTables.BanList;
 
 public interface IBanCache
 {
