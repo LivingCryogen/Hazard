@@ -110,7 +110,8 @@ public class StorageManager : IHostedService
         return;
     }
 
-    public async Task StopAsync(CancellationToken cancellationToken) => await OnAppStopping();
+    // Note: This is reliably called in a low-traffic, cold-start scenario (like Azure Free Tier Web App) - if moved to always-on, a background service must be implemented instead.
+    public async Task StopAsync(CancellationToken cancellationToken) => await OnAppStopping(); 
 
     private async Task PopulateCache()
     {
