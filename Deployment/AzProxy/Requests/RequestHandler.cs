@@ -12,7 +12,6 @@ public class RequestHandler(ILogger<RequestHandler> logger, IConfiguration confi
 
     private readonly ConcurrentDictionary<(string, RequestType), (DateTime LastReset, int Count)> _requestCounters = new();
 
-
     public async Task<bool> ValidateRequest(string iPaddress, RequestType requestType)
     {
         if (!_banService.CacheInitialized)

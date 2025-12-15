@@ -3,6 +3,8 @@ using AzProxy.Context;
 using AzProxy.DataTransform;
 using AzProxy.Middleware;
 using AzProxy.Requests;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -67,7 +69,9 @@ namespace AzProxy
 
             app.UseHttpsRedirection();
             app.UseCors("FromGitHubPages");
-            app.UseMiddleware<RequestValidator>();  // TODO : ~SEPERATE REQUEST VALIDATION MIDDLEWARE!
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseMiddleware<RequestValidator>();  
 
             app.MapGet("/", () => "Proxy is up.");
             app.MapGet("/secure-link",
@@ -178,7 +182,8 @@ namespace AzProxy
                         await context.Response.WriteAsync("An unexpected server error occurred.");
                     }
                 });
-            app.MapGet("/prune", 
+            app.MapGet("/prune",
+                [Authorize(Policy = "AdminOnly")]
                 async (HttpContext context,
                     [FromServices] StorageManager storageManager,
                     [FromServices] ILogger<ProxyServer> logger,
@@ -382,6 +387,15 @@ namespace AzProxy
                         .AllowAnyMethod();
                 });
             });
+            // Add custom Authentication Scheme for Admin access
+            builder.Services.AddAuthentication("ApiKeyScheme")
+                .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticator>("ApiKeyScheme", null);
+            // Add Authorization policy for Admin role
+            builder.Services.AddAuthorizationBuilder()
+                .AddPolicy("AdminOnly", policy =>
+                {
+                    policy.RequireRole("Admin");
+                });
             builder.Services.AddHttpClient();
             builder.Services.AddSingleton<IBanCache, BanListCache>();
             builder.Services.AddHostedService<StorageManager>();
@@ -392,29 +406,6 @@ namespace AzProxy
             builder.Services.AddScoped<DbTransformer>();
             builder.Services.AddLogging();
             return builder.Build();
-        }
-        private async static Task<bool> VerifyRequest(HttpContext context, ILogger logger, RequestHandler requestHandler)
-        {
-            // get client IP
-            string? clientIP = context.Connection.RemoteIpAddress?.ToString();
-            if (string.IsNullOrEmpty(clientIP))
-            {
-                logger.LogWarning("Request received without IP address");
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                await context.Response.WriteAsync("Invalid request.");
-                return false;
-            }
-
-            // reject if banned
-            if (!await requestHandler.ValidateRequest(clientIP, RequestType.GenSAS))
-            {
-                logger.LogInformation("Request from address {clientIP} was rejected due to ban or rate restriction.", clientIP);
-                context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                await context.Response.WriteAsync("Request denied. This has been rate restricted or banned.");
-                return false;
-            }
-
-            return true;
         }
     }
 }
