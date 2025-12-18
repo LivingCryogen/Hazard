@@ -59,25 +59,6 @@ namespace AzProxy
                 {
                     try
                     {
-                        // get client IP
-                        string? clientIP = context.Connection.RemoteIpAddress?.ToString();
-                        if (string.IsNullOrEmpty(clientIP))
-                        {
-                            logger.LogWarning("Request received without IP address");
-                            context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                            await context.Response.WriteAsync("Invalid request.");
-                            return;
-                        }
-
-                        // reject if banned
-                        if (!await requestHandler.ValidateRequest(clientIP, RequestType.GenSAS))
-                        {
-                            logger.LogInformation("Request from address {clientIP} was rejected due to ban or rate restriction.", clientIP);
-                            context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                            await context.Response.WriteAsync("Request denied. This has been rate restricted or banned.");
-                            return;
-                        }
-
                         // get az function key
                         var azFuncURL = config["AzureFunctionURL"];
                         var azFuncKey = config["AzureFunctionKey"];
@@ -225,16 +206,24 @@ namespace AzProxy
                     await context.Response.WriteAsync("An unexpected server error occurred.");
                 }
             });
-            app.MapGet("/leaderboard", async (
+            app.MapGet("/leaderboard", 
+                async (
                     HttpContext context,
                     [FromServices] RequestHandler requestHandler,
                     [FromServices] StorageManager storageManager,
                     [FromServices] IHttpClientFactory httpClientFactory,
                     [FromServices] IConfiguration config,
                     [FromServices] ILogger<ProxyServer> logger) =>
-            {
-                
-            });
+                {
+                    try
+                    {
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                });
 
             app.MapPost("/sync-stats",
                 async (HttpContext context,
@@ -244,23 +233,6 @@ namespace AzProxy
                     [FromServices] IConfiguration config,
                     [FromServices] ILogger<ProxyServer> logger) =>
                 {
-                    // get client IP
-                    string? clientIP = context.Connection.RemoteIpAddress?.ToString();
-                    if (string.IsNullOrEmpty(clientIP))
-                    {
-                        logger.LogWarning("Request received without IP address");
-                        context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                        await context.Response.WriteAsync("Invalid request.");
-                        return;
-                    }
-
-                    if (!await requestHandler.ValidateRequest(clientIP, RequestType.Sync))
-                    {
-                        context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                        await context.Response.WriteAsync("Request denied.");
-                        return;
-                    }
-
                     var requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
 
                     if (string.IsNullOrEmpty(requestBody))
