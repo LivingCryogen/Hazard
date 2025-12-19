@@ -1,5 +1,6 @@
 using AzProxy.Middleware;
 using AzProxy.Requests;
+using AzProxy.Services;
 using AzProxy.Storage;
 using AzProxy.Storage.AzureDB.Context;
 using AzProxy.Storage.AzureDB.DataTransform;
@@ -29,11 +30,7 @@ namespace AzProxy
             Converters = { new JsonStringEnumConverter() }
         };
 
-        private class FunctionResponse
-        {
-            public string Uri { get; init; } = string.Empty;
-            public string SasToken { get; init; } = string.Empty;
-        }
+
 
         public static void Main(string[] args)
         {
@@ -49,95 +46,8 @@ namespace AzProxy
             app.UseMiddleware<RequestValidator>();  
 
             app.MapGet("/", () => "Proxy is up.");
-            app.MapGet("/secure-link",
-                async (
-                    HttpContext context,
-                    [FromServices] RequestHandler requestHandler,
-                    [FromServices] IHttpClientFactory httpClientFactory,
-                    [FromServices] IConfiguration config,
-                    [FromServices] ILogger<ProxyServer> logger) =>
-                {
-                    try
-                    {
-                        // get az function key
-                        var azFuncURL = config["AzureFunctionURL"];
-                        var azFuncKey = config["AzureFunctionKey"];
+            app.MapGet("/secure-link", GenSasRequest);
 
-                        if (string.IsNullOrEmpty(azFuncURL) || string.IsNullOrEmpty(azFuncKey))
-                        {
-                            logger.LogInformation("Azure function forwarding incorrectly configured. Request failed.");
-                            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                            await context.Response.WriteAsync("Server configuration error.");
-                            return;
-                        }
-
-                        // forward to az function
-                        try
-                        {
-                            // use Query string 
-                            string clientQuery = context.Request.QueryString.Value ?? string.Empty;
-                            string azTarget = $"{azFuncURL}{clientQuery}";
-
-                            using var azClient = httpClientFactory.CreateClient();
-                            azClient.DefaultRequestHeaders.Add("x-functions-key", azFuncKey);
-
-                            var azResponse = await azClient.GetAsync(azTarget);
-
-                            if (!azResponse.IsSuccessStatusCode)
-                            {
-                                logger.LogError("Azure Function returned an error: {StatusCode}", azResponse.StatusCode);
-                                context.Response.StatusCode = (int)azResponse.StatusCode;
-                                await context.Response.WriteAsync("External dependency failed.");
-                                return;
-                            }
-
-                            var funcContent = await azResponse.Content.ReadAsStringAsync();
-                            var funcJson = JsonConvert.DeserializeObject<FunctionResponse>(funcContent);
-                            if (funcJson == null)
-                            {
-                                logger.LogError("Azure Function did not return a valid response.");
-                                context.Response.StatusCode = StatusCodes.Status417ExpectationFailed;
-                                await context.Response.WriteAsync("External dependency failed.");
-                                return;
-                            }
-
-                            string redirectURL = $"{funcJson.Uri}?{funcJson.SasToken}";
-                            context.Response.StatusCode = 302;
-                            context.Response.Headers.Append("Location", redirectURL);
-                            await context.Response.CompleteAsync();
-
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.LogError(ex, "There was an error while forwarding request to Azure function: {message}.", ex.Message);
-                            context.Response.StatusCode = StatusCodes.Status502BadGateway;
-                            await context.Response.WriteAsync("Error processing request while trying to fetch an SAS token for secure connection to storage.");
-                        }
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        logger.LogWarning("Request was canceled by client.");
-                        context.Response.StatusCode = StatusCodes.Status499ClientClosedRequest;
-                    }
-                    catch (ArgumentException argEx)
-                    {
-                        logger.LogWarning(argEx, "A configuration or argument error occurred: {Message}", argEx.Message);
-                        context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                        await context.Response.WriteAsync("Bad request: invalid configuration or input.");
-                    }
-                    catch (HttpRequestException httpEx)
-                    {
-                        logger.LogError(httpEx, "An error occurred while making an HTTP request: {Message}", httpEx.Message);
-                        context.Response.StatusCode = StatusCodes.Status502BadGateway;
-                        await context.Response.WriteAsync("Failed to process the request due to an external service error.");
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.LogError(ex, "An unexpected error occurred: {Message}", ex.Message);
-                        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                        await context.Response.WriteAsync("An unexpected server error occurred.");
-                    }
-                });
             app.MapGet("/prune",
                 [Authorize(Policy = "AdminOnly")]
                 async (HttpContext context,
@@ -351,6 +261,11 @@ namespace AzProxy
             builder.Services.AddScoped<DbTransformer>();
             builder.Services.AddLogging();
             return builder.Build();
+        }
+
+        private static async Task<IResult> GenSasRequest(HttpContext context, SASGenerator sasGenerator)
+        {
+            return await sasGenerator.GenerateAsync(context);
         }
 
         // Apply any pending database migrations
