@@ -4,6 +4,7 @@ using AzProxy.Services;
 using AzProxy.Storage;
 using AzProxy.Storage.AzureDB.Context;
 using AzProxy.Storage.AzureDB.DataTransform;
+using AzProxy.Storage.AzureDB.Services;
 using AzProxy.Storage.AzureTables;
 using AzProxy.Storage.AzureTables.BanList;
 using Microsoft.AspNetCore.Authentication;
@@ -43,80 +44,13 @@ namespace AzProxy
             app.UseCors("FromGitHubPages");
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseMiddleware<RequestValidator>();  
+            app.UseMiddleware<RequestValidator>();
 
             app.MapGet("/", () => "Proxy is up.");
             app.MapGet("/secure-link", GenSasRequest);
-
             app.MapGet("/prune",
-                [Authorize(Policy = "AdminOnly")]
-                async (HttpContext context,
-                    [FromServices] StorageManager storageManager,
-                    [FromServices] ILogger<ProxyServer> logger,
-                    [FromServices] IConfiguration config
-                    ) =>
-            {
-                try { 
-                    // Get and validate admin token from query
-                    var query = context.Request.Query;
-                    if (!query.TryGetValue("adminPass", out var passValue) || !Guid.TryParse(passValue, out var givenPass))
-                    {
-                        logger.LogWarning("Missing or invalid admin token.");
-                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                        await context.Response.WriteAsync("Unauthorized.");
-                        return;
-                    }
 
-                    if (givenPass != Guid.Parse(config["AdminPass"] ?? string.Empty))
-                    {
-                        logger.LogWarning("Unauthorized prune attempt detected.");
-                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                        await context.Response.WriteAsync("Unauthorized.");
-                        return;
-                    }
-
-                    // Get pruneDemos flag from query
-                    bool pruneDemos = false;
-                    if (query.TryGetValue("pruneDemos", out var demoValue))
-                    {
-                        if (bool.TryParse(demoValue, out bool parsedDemosFlag))
-                            pruneDemos = parsedDemosFlag;
-                    }
-
-                    // Get forcePrune flag from query
-                    bool forcedPrune = false;
-                    if (query.TryGetValue("force", out var force))
-                    {
-                        if (bool.TryParse(force, out bool forced))
-                            forcedPrune = forced;
-                    }
-
-                    AppVarEntry appVarLastPrune = storageManager.ShouldPruneDataBase(forcedPrune) 
-                        ?? throw new InvalidOperationException("ShouldPrune method returned null even during manual prune flow!");
-                    var prunedTime = await storageManager.PruneDataBase(pruneDemos, forcedPrune);
-                    if (prunedTime != null) {
-                        appVarLastPrune.Value = ((DateTime)prunedTime).ToString("o");
-                        await storageManager.UpdateAppVarTableEntry(appVarLastPrune);
-                   
-                        logger.LogInformation("Prune successful; Demos : {demoflag}. Forced : {forcedPrune}.", pruneDemos, forcedPrune);
-                        context.Response.StatusCode = StatusCodes.Status200OK;
-                        await context.Response.WriteAsync("Prune completed.");
-                    }
-                    else
-                    {
-                        logger.LogInformation("Prune skipped or failed; Demos : {demoflag}. Forced : {forcedPrune}.", pruneDemos, forcedPrune);
-                        context.Response.StatusCode = StatusCodes.Status202Accepted;
-                        await context.Response.WriteAsync("Prune skipped or failed.");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError(ex, "An error occurred during the prune operation: {Message}", ex.Message);
-                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                    await context.Response.WriteAsync("An unexpected server error occurred.");
-                }
-            });
-            app.MapGet("/leaderboard", 
+            app.MapGet("/leaderboard",
                 async (
                     HttpContext context,
                     [FromServices] RequestHandler requestHandler,
@@ -255,17 +189,13 @@ namespace AzProxy
             builder.Services.AddSingleton<IBanCache, BanListCache>();
             builder.Services.AddHostedService<StorageManager>();
             builder.Services.AddSingleton<StorageManager>();
+            builder.Services.AddScoped<SASGenerator>();
             builder.Services.AddSingleton<BanService>();
             builder.Services.AddSingleton<RequestHandler>();
             builder.Services.AddDbContext<GameStatsDbContext>(options => options.UseAzureSql(builder.Configuration.GetConnectionString("AzDbConnectionString")));
             builder.Services.AddScoped<DbTransformer>();
             builder.Services.AddLogging();
             return builder.Build();
-        }
-
-        private static async Task<IResult> GenSasRequest(HttpContext context, SASGenerator sasGenerator)
-        {
-            return await sasGenerator.GenerateAsync(context);
         }
 
         // Apply any pending database migrations
@@ -300,4 +230,15 @@ namespace AzProxy
                 }
             }
         }
+
+        private static async Task<IResult> GenSasRequest(HttpContext context, SASGenerator sasGenerator)
+        {
+            return await sasGenerator.GenerateAsync(context.Request);
+        }
+
+        private static async Task<IResult> PruneAzDB(HttpContext context)
+        {
+            return await AzDBPruner.PruneAsync(context.Request.Query);
+        }
+    }
 }
