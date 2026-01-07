@@ -92,7 +92,25 @@ public class StorageManager : IHostedService
         _logger.LogInformation("Checking if the Az Database should be pruned....");
         try
         {
-            var lastPruneDate = ShouldPruneDataBase(false);
+            bool validLastPruneDateTime = FetchLastPruneDate(out AppVarEntry? lastPruneEntry);
+            if (lastPruneEntry == null)
+            {
+                if (await _azDBManager.Prune())
+                {
+                    // Create new DB prune date entry and add to App Vars
+                }
+                else
+                {
+                    _logger.LogWarning("No LastDBPruneDate entry found, but database prune failed.");
+                }
+            }
+            else if (!validLastPruneDateTime)
+            {
+
+            }
+
+
+
             if (lastPruneDate != null)
             {
                 _logger.LogInformation("Pruning incomplete Game database entries.... Next prune will occur after {duration}.", _pruneAfterDuration);
@@ -108,108 +126,42 @@ public class StorageManager : IHostedService
         }
     }
 
-    // Determine if the database should be pruned of old entries
-    // If return is null, prune should be skipped. Otherwise, return object's "Value" property should be updated to current time once pruning is successful.
-    public AppVarEntry? ShouldPruneDataBase(bool forcedPrune)
+    // Fetch the last prune date from app variables
+    // If return is true, App variables contained a valid last prune date, and will be set to out param;
+    // If false, any out param will either be null (no previous prune date) or invalid (previous prune date invalid).
+    public bool FetchLastPruneDate(out AppVarEntry? pruneDateEntry)
     {
         try
         {
             var lastDBPruneDateEntry = _appVars.FirstOrDefault(entry => entry.RowKey == "LastDBPruneDate");
             var now = DateTime.UtcNow;
 
-            // No previous prune date found; need to prune and set the date
+            // No previous prune date found
             if (lastDBPruneDateEntry == null)
             {
                 _logger.LogWarning("No LastDBPruneDate app variable found.");
-
-                return new AppVarEntry()
-                {
-                    PartitionKey = _appVarsPartitionKey,
-                    RowKey = "LastDBPruneDate",
-                    TypeName = "DateTime",
-                    Description = "The last date the database was pruned of old entries.",
-                    Timestamp = DateTime.UtcNow,
-                    Value = now.ToString("o")
-                };
+                pruneDateEntry = null;
+                return false;
             }
 
-            // Previous prune date found; check if it's valid
+            // Previous prune date found; check if it's valid and return false if not.
             if (!DateTime.TryParse(lastDBPruneDateEntry.Value, out DateTime lastPruneDate))
             {
-                _logger.LogWarning("Previous LastDBPruneDate app variable value invalid; pruning and setting new prune date.");
+                _logger.LogWarning("Previous LastDBPruneDate app variable value invalid.");
 
-                lastDBPruneDateEntry.Value = DateTime.UtcNow.ToString("o");
-
-                return lastDBPruneDateEntry;
+                pruneDateEntry = lastDBPruneDateEntry;
+                return false;
             }
 
-            if (forcedPrune == true)
-            {
-                _logger.LogInformation("Forced prune requested; pruning database.");
-                return lastDBPruneDateEntry;
-            }
 
-            // Check if enough time has passed since the last prune
-            if (DateTime.UtcNow - lastPruneDate >= _pruneAfterDuration)
-                return lastDBPruneDateEntry;
-            else
-                return null;
+
+            pruneDateEntry = lastDBPruneDateEntry;
+            return true;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred when checking if database prune is needed: {message}", ex.Message);
             throw;
         }
-    }
-
-    // Prune old/incomplete game session entries from the database
-    // If pruning is successful, returns the DateTime the prune was run. Otherwise, returns null.
-    public async Task<DateTime?> PruneDataBase(bool pruneDemos, bool forcedPrune)
-    {
-        var now = DateTime.UtcNow;
-        try
-        {
-            using var scope = _serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<GameStatsDbContext>();
-
-
-            var cutoffDate = forcedPrune ? now : now - _pruneIncompleteGamesAfterDuration;
-            _logger.LogInformation("Pruning incomplete games older than {duration}...", cutoffDate);
-
-            List<GameSessionEntity>? staleGames;
-            if (!pruneDemos)
-            {
-                staleGames = [.. dbContext.Set<GameSessionEntity>()
-                    .Where(entry => !entry.EndTime.HasValue
-                        && entry.StartTime < cutoffDate
-                        && !entry.IsDemo)];
-            }
-            else
-            {
-                staleGames = [.. dbContext.Set<GameSessionEntity>()
-                    .Where(entry => !entry.EndTime.HasValue
-                        && entry.StartTime < cutoffDate)];
-            }
-
-            _logger.LogInformation("Pruning {count} incomplete games...", staleGames.Count);
-            
-            foreach (var game in staleGames)
-            {
-                _logger.LogInformation("Pruning incomplete game (Demo = {demo}) with ID {gameId} from install {installID}, started on {startTime}.",
-                    game.IsDemo,
-                    game.GameId,  
-                    game.InstallId, 
-                    game.StartTime);
-            }
-
-            dbContext.RemoveRange(staleGames);
-            await dbContext.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred when pruning the database: {message}", ex.Message);
-            return null;
-        }
-        return now;
     }
 }

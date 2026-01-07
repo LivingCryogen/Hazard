@@ -21,7 +21,6 @@ public class AzTableManager
     private readonly TimeSpan _pruneIncompleteGamesAfterDuration;
     private readonly ConcurrentDictionary<string, ETag> _tagCache = new(); // needed for easy updates
     private readonly SemaphoreSlim _tableSemaphore = new(1, 1);
-    private readonly List<AppVarEntry> _appVars = [];
 
     public AzTableManager(IConfiguration config, ILogger<AzTableManager> logger)
     {
