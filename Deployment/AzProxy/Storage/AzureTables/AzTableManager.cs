@@ -17,8 +17,7 @@ public class AzTableManager
     private readonly string _appVarsPartitionKey;
     private readonly string _defaultAppVarsJson;
     private readonly TimeSpan _entryDuration;
-    private readonly TimeSpan _pruneAfterDuration;
-    private readonly TimeSpan _pruneIncompleteGamesAfterDuration;
+
     private readonly ConcurrentDictionary<string, ETag> _tagCache = new(); // needed for easy updates
     private readonly SemaphoreSlim _tableSemaphore = new(1, 1);
 
@@ -64,20 +63,8 @@ public class AzTableManager
         _banListPartitionKey = config["BanlistPartitionKey"] ?? string.Empty;
         _appVarsPartitionKey = config["AppVarsPartitionKey"] ?? string.Empty;
         _defaultAppVarsJson = config["AppVarsJSONDefinitions"] ?? string.Empty;
-        if (!double.TryParse(config["PruneDBAfterDays"], out double pruneDays))
-        {
-            _logger.LogWarning("PruneDBAfterDays configuration invalid or missing; defaulting to 7 days.");
-            pruneDays = 7;
-        }
-        else
-            _pruneAfterDuration = TimeSpan.FromDays(pruneDays);
-        if (!double.TryParse(config["PruneIncompleteGamesAfterDays"], out double incGamePruneDays))
-        {
-            _logger.LogWarning("PruneIncompleteGamesAfterDays configuration invalid or missing; defaulting to 90 days.");
-            incGamePruneDays = 90;
-        }
-        else
-            _pruneIncompleteGamesAfterDuration = TimeSpan.FromDays(incGamePruneDays);
+        
+
 
         if (_banListPartitionKey == string.Empty)
             logger.LogWarning("Banlist partition key empty.");
@@ -158,7 +145,7 @@ public class AzTableManager
     }
 
     // Add a new App Variable entry to Azure Table storage
-    private async Task AddAppVarTableEntry(AppVarEntry entry)
+    public async Task AddAppVarTableEntry(AppVarEntry entry)
     {
         try
         {
@@ -357,6 +344,19 @@ public class AzTableManager
         }
 
         return true;
+    }
+
+    public async Task<AppVarEntry> GetNewPruneDateEntry()
+    {
+        return new AppVarEntry()
+        {
+            PartitionKey = _appVarsPartitionKey,
+            RowKey = "LastDBPruneDate",
+            TypeName = "DateTime",
+            Description = "The last date the database was pruned of old entries.",
+            Timestamp = DateTime.UtcNow,
+            Value = DateTime.UtcNow.ToString("o")
+        };
     }
 
     // Determine if a banlist entry should be pruned based on its age and ban status

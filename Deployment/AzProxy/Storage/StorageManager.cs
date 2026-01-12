@@ -5,6 +5,7 @@ using AzProxy.Storage.AzureTables;
 using AzProxy.Storage.AzureTables.BanList;
 using Azure;
 using Azure.Data.Tables;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage.Json;
@@ -23,6 +24,7 @@ public class StorageManager : IHostedService
     private readonly AzTableManager _azTableManager;
     private readonly AzDBManager _azDBManager;
     private List<AppVarEntry> _appVars;
+    private record LastPruneDateResult(bool isValid, AppVarEntry? entry);
 
     public StorageManager(IConfiguration config, 
         IHostApplicationLifetime appLife, 
@@ -69,7 +71,120 @@ public class StorageManager : IHostedService
     // and prune database if needed
     private async Task OnAppStopping()
     {
-        _logger.LogInformation("Beginning Table Update....");
+        await UpdateBanlist();
+        // fetch laste prune date from App Vars; if no valid one is found, prune DB and set PruneDate App Var
+        _logger.LogInformation("Checking if the Az Database should be pruned....");
+        var lastPruneResult = FetchLastPruneDate();
+        await TryDBPrune(lastPruneResult);
+    }
+
+    // Fetch the last prune date from app variables and a boolean indicating if it's valid
+    private LastPruneDateResult FetchLastPruneDate()
+    {
+        try
+        {
+            var entry = _appVars.FirstOrDefault(e => e.RowKey == "LastDBPruneDate");
+
+            // No previous prune date found
+            if (entry is null)
+            {
+                _logger.LogWarning("No LastDBPruneDate app variable found.");
+                return new LastPruneDateResult(isValid: false, entry: null);
+            }
+
+            // Previous prune date found; check if it's valid and return false if not.
+            if (!DateTime.TryParse(entry.Value, out _))
+            {
+                _logger.LogWarning("Previous LastDBPruneDate app variable value invalid.");
+
+                return new LastPruneDateResult(isValid: false, entry);
+            }
+
+            return new LastPruneDateResult(isValid: true, entry);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred when checking if database prune is needed: {message}", ex.Message);
+            throw;
+        }
+    }
+    private async Task TryDBPrune(LastPruneDateResult pruneResult)
+    {
+        // Last prune date had a valid Entry but invalid DateTime value
+        if (!pruneResult.isValid && pruneResult.entry != null)
+        {
+            if (await _azDBManager.Prune())
+            {
+                _logger.LogInformation("Database pruned successfully after invalid LastPruneDate value found; updating App Var entry.");
+                pruneResult.entry.Value = DateTime.UtcNow.ToString("o");
+
+                await _azTableManager.UpdateAppVarTableEntry(pruneResult.entry);
+            }
+            else
+            {
+                _logger.LogWarning("Database prune failed after invalid LastPruneDate value found.");
+            }
+        }
+        else if (!pruneResult.isValid && pruneResult.entry == null) // No valid prune date Table Entry found
+        {
+            if (await _azDBManager.Prune())
+            {
+                _logger.LogInformation("Database pruned successfully after invalid LastPruneDate value found; updating App Var entry.");
+                var newLastPruneDate = await _azTableManager.GetNewPruneDateEntry();
+
+                await _azTableManager.AddAppVarTableEntry(newLastPruneDate);
+            }
+            else
+            {
+                _logger.LogWarning("Database prune failed after invalid LastPruneDate value found.");
+            }
+        }
+        else if (pruneResult.isValid && pruneResult.entry == null) // Unexpected behavior - any valid Entry should have a valid DateTime value
+        {
+            _logger.LogWarning("FetchLastPruneDate returned true, but without an out param App Var; this is unexpected behavior. Attempting prune....");
+            if (await _azDBManager.Prune())
+            {
+                _logger.LogInformation("Database pruned successfully after invalid LastPruneDate value found; updating App Var entry.");
+                var newLastPruneDate = await _azTableManager.GetNewPruneDateEntry();
+
+                await _azTableManager.AddAppVarTableEntry(newLastPruneDate);
+            }
+            else
+            {
+                _logger.LogWarning("Database prune failed after invalid LastPruneDate value found.");
+            }
+        }
+        else if (pruneResult.isValid && pruneResult.entry != null)
+        {
+            // Both return value and out param are valid; check if prune is needed based on date
+            if (!DateTime.TryParse(pruneResult.entry.Value, out DateTime lastPruned))
+            {
+                _logger.LogWarning("FetchLastPruneDate returned true, but the DateTime parse failed; this is unexpected behavior. Attempting prune....");
+                if (await _azDBManager.Prune())
+                {
+                    _logger.LogInformation("Database pruned successfully after invalid LastPruneDate value found; updating App Var entry.");
+                    pruneResult.entry.Value = DateTime.UtcNow.ToString("o");
+                    await _azTableManager.UpdateAppVarTableEntry(pruneResult.entry);
+                }
+                else
+                {
+                    _logger.LogWarning("Database prune failed after invalid LastPruneDate value found.");
+                }
+                return;
+            }
+            if (_azDBManager.DBPruningDue(lastPruned))
+            {
+                
+            }
+        }
+    }
+
+
+
+    // Update the banlist in Azure Table storage with any updated bans from the in-memory cache
+    private async Task UpdateBanlist()
+    {
+        _logger.LogInformation("Beginning Table Banlist Update....");
 
         try
         {
@@ -88,80 +203,20 @@ public class StorageManager : IHostedService
         {
             _logger.LogError(ex, "Table Update failed: {message}", ex.Message);
         }
-
-        _logger.LogInformation("Checking if the Az Database should be pruned....");
-        try
-        {
-            bool validLastPruneDateTime = FetchLastPruneDate(out AppVarEntry? lastPruneEntry);
-            if (lastPruneEntry == null)
-            {
-                if (await _azDBManager.Prune())
-                {
-                    // Create new DB prune date entry and add to App Vars
-                }
-                else
-                {
-                    _logger.LogWarning("No LastDBPruneDate entry found, but database prune failed.");
-                }
-            }
-            else if (!validLastPruneDateTime)
-            {
-
-            }
-
-
-
-            if (lastPruneDate != null)
-            {
-                _logger.LogInformation("Pruning incomplete Game database entries.... Next prune will occur after {duration}.", _pruneAfterDuration);
-                var prunedTime = await PruneDataBase(false, false);
-                if (prunedTime != null)
-                    lastPruneDate.Value = ((DateTime)prunedTime).ToString("o");
-                await UpdateAppVarTableEntry(lastPruneDate);
-            }    
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Database prune check or prune failed unexpectedly: {message}", ex.Message);
-        }
     }
 
-    // Fetch the last prune date from app variables
-    // If return is true, App variables contained a valid last prune date, and will be set to out param;
-    // If false, any out param will either be null (no previous prune date) or invalid (previous prune date invalid).
-    public bool FetchLastPruneDate(out AppVarEntry? pruneDateEntry)
+    private async Task PruneAndUpdatePruneDate(LastPruneDateResult? pruneResult)
     {
-        try
+        if (await _azDBManager.Prune())
         {
-            var lastDBPruneDateEntry = _appVars.FirstOrDefault(entry => entry.RowKey == "LastDBPruneDate");
-            var now = DateTime.UtcNow;
-
-            // No previous prune date found
-            if (lastDBPruneDateEntry == null)
-            {
-                _logger.LogWarning("No LastDBPruneDate app variable found.");
-                pruneDateEntry = null;
-                return false;
-            }
-
-            // Previous prune date found; check if it's valid and return false if not.
-            if (!DateTime.TryParse(lastDBPruneDateEntry.Value, out DateTime lastPruneDate))
-            {
-                _logger.LogWarning("Previous LastDBPruneDate app variable value invalid.");
-
-                pruneDateEntry = lastDBPruneDateEntry;
-                return false;
-            }
-
-
-
-            pruneDateEntry = lastDBPruneDateEntry;
-            return true;
+            _logger.LogInformation("Database pruned successfully; updating LastPruneDate App Var entry.");
+            if (pruneResult)
+            pruneResult.entry.Value = DateTime.UtcNow.ToString("o");
+            await _azTableManager.UpdateAppVarTableEntry(pruneResult.entry);
         }
-        catch (Exception ex)
+        else
         {
-            _logger.LogError(ex, "An error occurred when checking if database prune is needed: {message}", ex.Message);
-            throw;
+            _logger.LogWarning("Database prune failed.");
         }
     }
 }

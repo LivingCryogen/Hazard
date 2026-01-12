@@ -4,18 +4,48 @@ using AzProxy.Storage.AzureTables;
 
 namespace AzProxy.Storage.AzureDB;
 
-public class AzDBManager(ILogger<AzDBManager> logger)
+public class AzDBManager
 {
+    private readonly ILogger<AzDBManager> _logger;
+    private readonly TimeSpan _pruneAfterDuration;
+    private readonly TimeSpan _pruneIncompleteGamesAfterDuration;
+
+    public AzDBManager(IConfiguration config, ILogger<AzDBManager> logger)
+    {
+        _logger = logger;
+
+        if (!double.TryParse(config["PruneDBAfterDays"], out double pruneDays))
+        {
+            _logger.LogWarning("PruneDBAfterDays configuration invalid or missing; defaulting to 7 days.");
+            pruneDays = 7;
+        }
+        else
+            _pruneAfterDuration = TimeSpan.FromDays(pruneDays);
+
+        if (!double.TryParse(config["PruneIncompleteGamesAfterDays"], out double incGamePruneDays))
+        {
+            _logger.LogWarning("PruneIncompleteGamesAfterDays configuration invalid or missing; defaulting to 90 days.");
+            incGamePruneDays = 90;
+        }
+        else
+            _pruneIncompleteGamesAfterDuration = TimeSpan.FromDays(incGamePruneDays);
+    }
+
+    /// Check if enough time has passed since the last prune to demand pruning the database
+    public bool DBPruningDue(DateTime lastPruneDate)
+    {
+        if (DateTime.UtcNow - lastPruneDate >= _pruneAfterDuration)
+            return true;
+        else
+            return false;
+    }
+
     // Determine if the database should be pruned of old entries
     // If return is null, prune should be skipped. Otherwise, return object's "Value" property should be updated to current time once pruning is successful.
     public bool ShouldPrune()
     {
 
-        //// Check if enough time has passed since the last prune
-        //if (DateTime.UtcNow - lastPruneDate >= _pruneAfterDuration)
-        //    return lastDBPruneDateEntry;
-        //else
-        //    return null;
+
         try
         {
             var lastDBPruneDateEntry = _appVars.FirstOrDefault(entry => entry.RowKey == "LastDBPruneDate");
