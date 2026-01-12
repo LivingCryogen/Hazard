@@ -19,7 +19,7 @@ public class AzDBPruner
 
 
     [Authorize(Policy = "AdminOnly")]
-    public static async Task<IResult> PruneAsync(IQueryCollection requestQueries,
+    public static async Task<IResult> ManualPruneAsync(IQueryCollection requestQueries,
         StorageManager storageManager)
     {
         // Get pruneDemos flag from query

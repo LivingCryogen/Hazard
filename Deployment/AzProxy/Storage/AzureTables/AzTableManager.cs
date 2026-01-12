@@ -77,7 +77,7 @@ public class AzTableManager
     }
 
     // Load App Variables from Azure Table storage, or set to defaults from configuration if none exist
-    public async Task<List<AppVarEntry>> GetOrSetDefaultVars()
+    public async Task<HashSet<AppVarEntry>> GetOrSetDefaultVars()
     {
         var queryResults = new List<AppVarEntry>();
         await foreach (AppVarEntry varEntity in
@@ -86,20 +86,21 @@ public class AzTableManager
             queryResults.Add(varEntity);
         if (queryResults.Count > 0)
         {
+            HashSet<AppVarEntry> varEntries = [];
             foreach (var varEntry in queryResults)
                 if (ValidateAppVarEntry(varEntry))
-                    _appVars.Add(varEntry);
+                    varEntries.Add(varEntry);
                 else
                     _logger.LogWarning("Failed to validate an app variable entry with rowkey {name}, value {val}.", varEntry.RowKey, varEntry.Value);
 
             _logger.LogInformation("Loaded {count} App Variables from Azure Table entries.", _appVars.Count);
-            return _appVars;
+            return varEntries;
         }
 
         if (string.IsNullOrEmpty(_defaultAppVarsJson))
         {
             _logger.LogWarning("No App variables were found in either Azure Table or Azure Configuration variable. Using hard-coded defaults when possible.");
-            return _appVars;
+            return [];
         }
 
         // SET TO DEFAULT FROM CONFIG
@@ -115,23 +116,20 @@ public class AzTableManager
         catch (Exception ex)
         {
             _logger.LogWarning("Unexpected error when deserializing default JSON App Variable definitions: {message}. Using hard-coded defaults when possible.", ex.Message);
-            return _appVars;
+            return [];
         }
 
+        HashSet<AppVarEntry> defaultEntries = [];
         foreach (var kvp in variableCollection)
         {
-            if (_appVars.Any(entry => entry.RowKey == kvp.Key))
-            {
-                _logger.LogWarning("A variable with duplicate rowkey/name {name} was found; ignoring...", kvp.Key);
-                continue;
-            }
-
             var newDefaultVarEntry = GetAppVarEntryFromJsonElement(kvp.Key, kvp.Value);
 
             if (ValidateAppVarEntry(newDefaultVarEntry))
             {
-                _appVars.Add(newDefaultVarEntry);
+                defaultEntries.Add(newDefaultVarEntry);
 
+                _logger.LogInformation("Adding default app variable entry {name} with value {val} to Azure Table storage.",
+                    newDefaultVarEntry.RowKey, newDefaultVarEntry.Value);
                 await AddAppVarTableEntry(newDefaultVarEntry);
             }
             else
@@ -140,8 +138,8 @@ public class AzTableManager
             }
         }
 
-        _logger.LogInformation("Loaded {count} App Variables from Configuration defaults.", _appVars.Count);
-        return _appVars;
+        _logger.LogInformation("Loaded {count} App Variables from Configuration defaults.", defaultEntries.Count);
+        return defaultEntries;
     }
 
     // Add a new App Variable entry to Azure Table storage

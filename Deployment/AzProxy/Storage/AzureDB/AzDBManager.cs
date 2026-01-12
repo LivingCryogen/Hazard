@@ -1,18 +1,23 @@
 ﻿using AzProxy.Storage.AzureDB.Context;
 using AzProxy.Storage.AzureDB.Entities;
 using AzProxy.Storage.AzureTables;
+using Microsoft.EntityFrameworkCore;
 
 namespace AzProxy.Storage.AzureDB;
 
 public class AzDBManager
 {
+
     private readonly ILogger<AzDBManager> _logger;
+    private readonly GameStatsDbContext _dbContext;
     private readonly TimeSpan _pruneAfterDuration;
     private readonly TimeSpan _pruneIncompleteGamesAfterDuration;
+    private DateTime? _lastPruneDate;
 
-    public AzDBManager(IConfiguration config, ILogger<AzDBManager> logger)
+    public AzDBManager(IConfiguration config, ILogger<AzDBManager> logger, GameStatsDbContext dbContext)
     {
         _logger = logger;
+        _dbContext = dbContext;
 
         if (!double.TryParse(config["PruneDBAfterDays"], out double pruneDays))
         {
@@ -31,70 +36,25 @@ public class AzDBManager
             _pruneIncompleteGamesAfterDuration = TimeSpan.FromDays(incGamePruneDays);
     }
 
-    /// Check if enough time has passed since the last prune to demand pruning the database
-    public bool DBPruningDue(DateTime lastPruneDate)
+    public void SetLastPruneDateFromString(string pruneDate)
     {
-        if (DateTime.UtcNow - lastPruneDate >= _pruneAfterDuration)
-            return true;
-        else
-            return false;
+        _lastPruneDate = DateTime.TryParse(pruneDate, out DateTime parsedDate) ? parsedDate : null;
     }
 
     // Determine if the database should be pruned of old entries
-    // If return is null, prune should be skipped. Otherwise, return object's "Value" property should be updated to current time once pruning is successful.
     public bool ShouldPrune()
     {
-
-
-        try
+        if (_lastPruneDate == null)
         {
-            var lastDBPruneDateEntry = _appVars.FirstOrDefault(entry => entry.RowKey == "LastDBPruneDate");
-            var now = DateTime.UtcNow;
-
-            // No previous prune date found; need to prune and set the date
-            if (lastDBPruneDateEntry == null)
-            {
-                logger.LogWarning("No LastDBPruneDate app variable found.");
-
-                return new AppVarEntry()
-                {
-                    PartitionKey = _appVarsPartitionKey,
-                    RowKey = "LastDBPruneDate",
-                    TypeName = "DateTime",
-                    Description = "The last date the database was pruned of old entries.",
-                    Timestamp = DateTime.UtcNow,
-                    Value = now.ToString("o")
-                };
-            }
-
-            // Previous prune date found; check if it's valid
-            if (!DateTime.TryParse(lastDBPruneDateEntry.Value, out DateTime lastPruneDate))
-            {
-                _logger.LogWarning("Previous LastDBPruneDate app variable value invalid; pruning and setting new prune date.");
-
-                lastDBPruneDateEntry.Value = DateTime.UtcNow.ToString("o");
-
-                return lastDBPruneDateEntry;
-            }
-
-            if (forcedPrune == true)
-            {
-                _logger.LogInformation("Forced prune requested; pruning database.");
-                return lastDBPruneDateEntry;
-            }
-
-            // Check if enough time has passed since the last prune
-            if (DateTime.UtcNow - lastPruneDate >= _pruneAfterDuration)
-                return lastDBPruneDateEntry;
-            else
-                return null;
+            _logger.LogInformation("No previous prune date found for azDBManager's pruning conditional (defaults to false).");
+            return false;
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred when checking if database prune is needed: {message}", ex.Message);
-            throw;
-        }
+
+        return DBPruningDue();
     }
+
+    /// Check if enough time has passed since the last prune to demand pruning the database
+    public bool DBPruningDue() => DateTime.UtcNow - _lastPruneDate >= _pruneAfterDuration;
 
     // Prune old/incomplete game session entries from the database
     // If pruning is successful, returns the DateTime the prune was run. Otherwise, returns null.
