@@ -1,5 +1,6 @@
 ﻿using AzProxy.Storage.AzureDB.Context;
 using AzProxy.Storage.AzureDB.Entities;
+using AzProxy.Storage.AzureDB.Services;
 using AzProxy.Storage.AzureTables;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,100 +11,40 @@ public class AzDBManager
 
     private readonly ILogger<AzDBManager> _logger;
     private readonly GameStatsDbContext _dbContext;
-    private readonly TimeSpan _pruneAfterDuration;
-    private readonly TimeSpan _pruneIncompleteGamesAfterDuration;
-    private DateTime? _lastPruneDate;
+    private readonly AzDBPruner _dbPruner;
 
-    public AzDBManager(IConfiguration config, ILogger<AzDBManager> logger, GameStatsDbContext dbContext)
+
+    public AzDBManager(IConfiguration config, ILogger<AzDBManager> logger, GameStatsDbContext dbContext, AzDBPruner dbPruner)
     {
         _logger = logger;
         _dbContext = dbContext;
-
-        if (!double.TryParse(config["PruneDBAfterDays"], out double pruneDays))
-        {
-            _logger.LogWarning("PruneDBAfterDays configuration invalid or missing; defaulting to 7 days.");
-            pruneDays = 7;
-        }
-        else
-            _pruneAfterDuration = TimeSpan.FromDays(pruneDays);
-
-        if (!double.TryParse(config["PruneIncompleteGamesAfterDays"], out double incGamePruneDays))
-        {
-            _logger.LogWarning("PruneIncompleteGamesAfterDays configuration invalid or missing; defaulting to 90 days.");
-            incGamePruneDays = 90;
-        }
-        else
-            _pruneIncompleteGamesAfterDuration = TimeSpan.FromDays(incGamePruneDays);
-    }
-
-    public void SetLastPruneDateFromString(string pruneDate)
-    {
-        _lastPruneDate = DateTime.TryParse(pruneDate, out DateTime parsedDate) ? parsedDate : null;
+        _dbPruner = dbPruner;
     }
 
     // Determine if the database should be pruned of old entries
     public bool ShouldPrune()
     {
-        if (_lastPruneDate == null)
+        if (_dbPruner.PruningDue == null)
         {
-            _logger.LogInformation("No previous prune date found for azDBManager's pruning conditional (defaults to false).");
-            return false;
+            _logger.LogInformation("No previous prune date found (defaults to pruning).");
+            return true;
         }
-
-        return DBPruningDue();
+        else
+            return (bool)_dbPruner.PruningDue;
     }
 
-    /// Check if enough time has passed since the last prune to demand pruning the database
-    public bool DBPruningDue() => DateTime.UtcNow - _lastPruneDate >= _pruneAfterDuration;
-
-    // Prune old/incomplete game session entries from the database
-    // If pruning is successful, returns the DateTime the prune was run. Otherwise, returns null.
-    public async Task<DateTime?> Prune(bool pruneDemos, bool forcedPrune)
+    public async Task<bool> Prune(bool includeDemos)
     {
-        var now = DateTime.UtcNow;
-        try
+        var pruneResult = await _dbPruner.Prune(includeDemos, false);
+        if (pruneResult != null)
         {
-            using var scope = _serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<GameStatsDbContext>();
-
-
-            var cutoffDate = forcedPrune ? now : now - _pruneIncompleteGamesAfterDuration;
-            _logger.LogInformation("Pruning incomplete games older than {duration}...", cutoffDate);
-
-            List<GameSessionEntity>? staleGames;
-            if (!pruneDemos)
-            {
-                staleGames = [.. dbContext.Set<GameSessionEntity>()
-                    .Where(entry => !entry.EndTime.HasValue
-                        && entry.StartTime < cutoffDate
-                        && !entry.IsDemo)];
-            }
-            else
-            {
-                staleGames = [.. dbContext.Set<GameSessionEntity>()
-                    .Where(entry => !entry.EndTime.HasValue
-                        && entry.StartTime < cutoffDate)];
-            }
-
-            _logger.LogInformation("Pruning {count} incomplete games...", staleGames.Count);
-
-            foreach (var game in staleGames)
-            {
-                _logger.LogInformation("Pruning incomplete game (Demo = {demo}) with ID {gameId} from install {installID}, started on {startTime}.",
-                    game.IsDemo,
-                    game.GameId,
-                    game.InstallId,
-                    game.StartTime);
-            }
-
-            dbContext.RemoveRange(staleGames);
-            await dbContext.SaveChangesAsync();
+            _logger.LogInformation("Database prune completed successfully at {pruneTime}.", pruneResult);
+            return true;
         }
-        catch (Exception ex)
+        else
         {
-            _logger.LogError(ex, "An error occurred when pruning the database: {message}", ex.Message);
-            return null;
+            _logger.LogWarning("Database prune did not complete successfully.");
+            return false;
         }
-        return now;
     }
 }

@@ -120,23 +120,25 @@ public class StorageManager : IHostedService
 
     // Attempt to prune the database if needed based on the LastPruneDate App Var Result and AzDBManager's pruning conditions
     // If the Prune was completed successfully, returns true; otherwise, false.
-    private async Task<bool> TryDBPrune()
+    public async Task<bool> TryDBPrune(bool forced, bool includeDemos)
     {
-        bool mustPrune = false;
+        bool missingLastPrune = _dBLastPrunedResult?.entry == null;
+        bool invalidLastPrune = _dBLastPrunedResult?.isValid == false;
+        bool scheduledPrune = _azDBManager.ShouldPrune();
 
-        if (_azDBManager.ShouldPrune())
-            mustPrune = true;
-
-        if (_dBLastPrunedResult == null)
-            mustPrune = true;
-        else if (_dBLastPrunedResult.isValid == false || _dBLastPrunedResult.entry == null)
-            mustPrune = true;
+        bool mustPrune =
+            forced ||
+            missingLastPrune ||
+            invalidLastPrune ||
+            scheduledPrune;
 
         if (mustPrune)
-           return await _azDBManager.Prune();
+           return await _azDBManager.Prune(includeDemos);
 
         return false;
     }
+
+    public async Task<bool> DBPrune(bool includeDemos) => await _azDBManager.Prune(includeDemos); // THIS FORCES PRUNE
 
     // Update the banlist in Azure Table storage with any updated bans from the in-memory cache
     private async Task UpdateBanlist()

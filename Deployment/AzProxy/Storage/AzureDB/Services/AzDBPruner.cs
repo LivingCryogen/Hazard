@@ -1,4 +1,6 @@
 ﻿using AzProxy.Storage;
+using AzProxy.Storage.AzureDB.Context;
+using AzProxy.Storage.AzureDB.Entities;
 using AzProxy.Storage.AzureTables;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,66 +12,88 @@ namespace AzProxy.Storage.AzureDB.Services;
 public class AzDBPruner
 {
     private readonly ILogger<AzDBPruner> _logger;
+    private readonly TimeSpan _pruneAfterDuration;
+    private readonly TimeSpan _pruneIncompleteGamesAfterDuration;
+    private DateTime? _lastPruneDate;
+
+    public bool? PruningDue => _lastPruneDate == null ? null : DateTime.UtcNow - _lastPruneDate >= _pruneAfterDuration;
 
     public AzDBPruner(ILogger<AzDBPruner> logger, IConfiguration config, StorageManager storageManager)
     {
         _logger = logger;
+        if (!double.TryParse(config["PruneDBAfterDays"], out double pruneDays))
+        {
+            _logger.LogWarning("PruneDBAfterDays configuration invalid or missing; defaulting to 7 days.");
+            pruneDays = 7;
+        }
+        else
+            _pruneAfterDuration = TimeSpan.FromDays(pruneDays);
 
+        if (!double.TryParse(config["PruneIncompleteGamesAfterDays"], out double incGamePruneDays))
+        {
+            _logger.LogWarning("PruneIncompleteGamesAfterDays configuration invalid or missing; defaulting to 90 days.");
+            incGamePruneDays = 90;
+        }
+        else
+            _pruneIncompleteGamesAfterDuration = TimeSpan.FromDays(incGamePruneDays);
     }
 
 
-    [Authorize(Policy = "AdminOnly")]
-    public static async Task<IResult> ManualPruneAsync(IQueryCollection requestQueries,
-        StorageManager storageManager)
+
+
+    // Prune old/incomplete game session entries from the database
+    // If pruning is successful, returns the DateTime the prune was run. Otherwise, returns null.
+    public async Task<DateTime?> Prune(bool pruneDemos)
     {
-        // Get pruneDemos flag from query
-        bool pruneDemos = false;
-        if (requestQueries.TryGetValue("pruneDemos", out var demoValue))
-        {
-            if (bool.TryParse(demoValue, out bool parsedDemosFlag))
-                pruneDemos = parsedDemosFlag;
-        }
-
-        // Get forcePrune flag from query
-        bool forcedPrune = false;
-        if (requestQueries.TryGetValue("force", out var force))
-        {
-            if (bool.TryParse(force, out bool forced))
-                forcedPrune = forced;
-        }
-
+        var now = DateTime.UtcNow;
         try
         {
-            AppVarEntry appVarLastPrune = storageManager.ShouldPruneDataBase(forcedPrune)
-                ?? throw new InvalidOperationException("ShouldPrune method returned null even during manual prune flow!");
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<GameStatsDbContext>();
 
-            if (appVarLastPrune == null)
+
+            var cutoffDate = forcedPrune ? now : now - _pruneIncompleteGamesAfterDuration;
+            _logger.LogInformation("Pruning incomplete games older than {duration}...", cutoffDate);
+
+            List<GameSessionEntity>? staleGames;
+            if (!pruneDemos)
             {
-                logger.LogInformation("Prune skipped; Demos : {demoflag}. Forced : {forcedPrune}.", pruneDemos, forcedPrune);
-                return Results.Accepted("Prune skipped.");
-            }
-
-            var prunedTime = await storageManager.PruneDataBase(pruneDemos, forcedPrune);
-
-            if (prunedTime != null)
-            {
-                appVarLastPrune.Value = ((DateTime)prunedTime).ToString("o");
-                await storageManager.UpdateAppVarTableEntry(appVarLastPrune);
-
-                logger.LogInformation("Prune successful; Demos : {demoflag}. Forced : {forcedPrune}.", pruneDemos, forcedPrune);
-                return Results.Ok("Prune completed.");
+                staleGames = [.. dbContext.Set<GameSessionEntity>()
+                    .Where(entry => !entry.EndTime.HasValue
+                        && entry.StartTime < cutoffDate
+                        && !entry.IsDemo)];
             }
             else
             {
-                logger.LogInformation("Prune skipped or failed; Demos : {demoflag}. Forced : {forcedPrune}.", pruneDemos, forcedPrune);
-                return Results.Problem("Prune skipped or failed.", statusCode: StatusCodes.Status202Accepted);
+                staleGames = [.. dbContext.Set<GameSessionEntity>()
+                    .Where(entry => !entry.EndTime.HasValue
+                        && entry.StartTime < cutoffDate)];
             }
+
+            _logger.LogInformation("Pruning {count} incomplete games...", staleGames.Count);
+
+            foreach (var game in staleGames)
+            {
+                _logger.LogInformation("Pruning incomplete game (Demo = {demo}) with ID {gameId} from install {installID}, started on {startTime}.",
+                    game.IsDemo,
+                    game.GameId,
+                    game.InstallId,
+                    game.StartTime);
+            }
+
+            dbContext.RemoveRange(staleGames);
+            await dbContext.SaveChangesAsync();
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An error occurred during the prune operation: {Message}", ex.Message);
-            return Results.Problem("An error occurred during the prune operation.", statusCode: StatusCodes.Status500InternalServerError);
-
+            _logger.LogError(ex, "An error occurred when pruning the database: {message}", ex.Message);
+            return null;
         }
+        return now;
+    }
+
+    public void SetLastPruneDateFromString(string pruneDate)
+    {
+        _lastPruneDate = DateTime.TryParse(pruneDate, out DateTime parsedDate) ? parsedDate : null;
     }
 }

@@ -2,6 +2,7 @@ using AzProxy.Middleware;
 using AzProxy.Requests;
 using AzProxy.Services;
 using AzProxy.Storage;
+using AzProxy.Storage.AzureDB;
 using AzProxy.Storage.AzureDB.Context;
 using AzProxy.Storage.AzureDB.DataTransform;
 using AzProxy.Storage.AzureDB.Services;
@@ -31,7 +32,7 @@ namespace AzProxy
             Converters = { new JsonStringEnumConverter() }
         };
 
-
+        private record PruneRequest(bool PruneDemos, bool ForcePrune);
 
         public static void Main(string[] args)
         {
@@ -48,7 +49,7 @@ namespace AzProxy
 
             app.MapGet("/", () => "Proxy is up.");
             app.MapGet("/secure-link", GenSasRequest);
-            app.MapGet("/prune",
+
 
             app.MapGet("/leaderboard",
                 async (
@@ -157,6 +158,7 @@ namespace AzProxy
                     }
 
                 });
+            app.MapPost("/prune", ManualPruneAzDB).RequireAuthorization("AdminOnly");
             app.Run();
         }
 
@@ -187,8 +189,10 @@ namespace AzProxy
                 });
             builder.Services.AddHttpClient();
             builder.Services.AddSingleton<IBanCache, BanListCache>();
+            builder.Services.AddScoped<AzDBPruner>();
+            builder.Services.AddSingleton<AzDBManager>();
+            builder.Services.AddSingleton<AzTableManager>();
             builder.Services.AddHostedService<StorageManager>();
-            builder.Services.AddSingleton<StorageManager>();
             builder.Services.AddScoped<SASGenerator>();
             builder.Services.AddSingleton<BanService>();
             builder.Services.AddSingleton<RequestHandler>();
@@ -236,9 +240,57 @@ namespace AzProxy
             return await sasGenerator.GenerateAsync(context.Request);
         }
 
-        private static async Task<IResult> PruneAzDB(HttpContext context)
+        [Authorize(Policy = "AdminOnly")]
+        private static async Task<IResult> ManualPruneAzDB([AsParameters] PruneRequest pruneRequest, StorageManager storeManager)
         {
-            return await AzDBPruner.PruneAsync(context.Request.Query);
+            bool pruned = pruneRequest.ForcePrune
+                ? await storeManager.DBPrune(pruneRequest.PruneDemos)
+                : await storeManager.TryDBPrune(pruneRequest.ForcePrune, pruneRequest.PruneDemos);
+
+            if (pruned)
+                return Results.Ok($"Manual prune completed, {(pruneRequest.PruneDemos ? "" : "NOT ")} including demo entities.");
+            else
+                return Results.Problem("Manual prune failed or skipped.", statusCode: StatusCodes.Status500InternalServerError);
+        }
+
+        public static async Task<IResult> ManualPruneAsync(IQueryCollection requestQueries,
+            StorageManager storageManager)
+        {
+
+
+            try
+            {
+                AppVarEntry appVarLastPrune = storageManager.ShouldPruneDataBase(forcedPrune)
+                    ?? throw new InvalidOperationException("ShouldPrune method returned null even during manual prune flow!");
+
+                if (appVarLastPrune == null)
+                {
+                    logger.LogInformation("Prune skipped; Demos : {demoflag}. Forced : {forcedPrune}.", pruneDemos, forcedPrune);
+                    return Results.Accepted("Prune skipped.");
+                }
+
+                var prunedTime = await storageManager.PruneDataBase(pruneDemos, forcedPrune);
+
+                if (prunedTime != null)
+                {
+                    appVarLastPrune.Value = ((DateTime)prunedTime).ToString("o");
+                    await storageManager.UpdateAppVarTableEntry(appVarLastPrune);
+
+                    logger.LogInformation("Prune successful; Demos : {demoflag}. Forced : {forcedPrune}.", pruneDemos, forcedPrune);
+                    return Results.Ok("Prune completed.");
+                }
+                else
+                {
+                    logger.LogInformation("Prune skipped or failed; Demos : {demoflag}. Forced : {forcedPrune}.", pruneDemos, forcedPrune);
+                    return Results.Problem("Prune skipped or failed.", statusCode: StatusCodes.Status202Accepted);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred during the prune operation: {Message}", ex.Message);
+                return Results.Problem("An error occurred during the prune operation.", statusCode: StatusCodes.Status500InternalServerError);
+
+            }
         }
     }
 }
