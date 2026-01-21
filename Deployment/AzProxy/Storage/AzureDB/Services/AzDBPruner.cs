@@ -1,4 +1,5 @@
-﻿using AzProxy.Storage;
+﻿using AzProxy.Requests;
+using AzProxy.Storage;
 using AzProxy.Storage.AzureDB.Context;
 using AzProxy.Storage.AzureDB.Entities;
 using AzProxy.Storage.AzureTables;
@@ -12,13 +13,17 @@ namespace AzProxy.Storage.AzureDB.Services;
 public class AzDBPruner
 {
     private readonly ILogger<AzDBPruner> _logger;
+    private readonly IServiceProvider _serviceProvider;
     private readonly TimeSpan _pruneAfterDuration;
     private readonly TimeSpan _pruneIncompleteGamesAfterDuration;
     private DateTime? _lastPruneDate;
 
     public bool? PruningDue => _lastPruneDate == null ? null : DateTime.UtcNow - _lastPruneDate >= _pruneAfterDuration;
 
-    public AzDBPruner(ILogger<AzDBPruner> logger, IConfiguration config, StorageManager storageManager)
+    public AzDBPruner(ILogger<AzDBPruner> logger,
+        IConfiguration config,
+        IServiceProvider serviceProvider,
+        StorageManager storageManager)
     {
         _logger = logger;
         if (!double.TryParse(config["PruneDBAfterDays"], out double pruneDays))
@@ -38,21 +43,23 @@ public class AzDBPruner
             _pruneIncompleteGamesAfterDuration = TimeSpan.FromDays(incGamePruneDays);
     }
 
-
-
-
     // Prune old/incomplete game session entries from the database
-    // If pruning is successful, returns the DateTime the prune was run. Otherwise, returns null.
-    public async Task<DateTime?> Prune(bool pruneDemos)
+    // If pruning changes are made and saved successfully, returns true; otherwise, false.
+    public async Task<bool> PruneAsync(PruneRequest pruneRequest)
     {
         var now = DateTime.UtcNow;
+        bool forced = pruneRequest.ForcePrune;
+        bool pruneDemos = pruneRequest.PruneDemos;
+        // Set pruning cutoff; if auto prune, use config value. If manual, use parameter if provided.
+        DateTime cutoffDate = pruneRequest.DaysOffset.HasValue && forced 
+            ? now.AddDays(-pruneRequest.DaysOffset.Value) 
+            : now - _pruneAfterDuration;
+        
         try
         {
             using var scope = _serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<GameStatsDbContext>();
 
-
-            var cutoffDate = forcedPrune ? now : now - _pruneIncompleteGamesAfterDuration;
             _logger.LogInformation("Pruning incomplete games older than {duration}...", cutoffDate);
 
             List<GameSessionEntity>? staleGames;
@@ -83,13 +90,13 @@ public class AzDBPruner
 
             dbContext.RemoveRange(staleGames);
             await dbContext.SaveChangesAsync();
+            return true;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred when pruning the database: {message}", ex.Message);
-            return null;
+            return false;
         }
-        return now;
     }
 
     public void SetLastPruneDateFromString(string pruneDate)

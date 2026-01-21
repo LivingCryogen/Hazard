@@ -1,4 +1,5 @@
-﻿using AzProxy.Storage.AzureDB.Context;
+﻿using AzProxy.Requests;
+using AzProxy.Storage.AzureDB.Context;
 using AzProxy.Storage.AzureDB.Entities;
 using AzProxy.Storage.AzureDB.Services;
 using AzProxy.Storage.AzureTables;
@@ -33,12 +34,11 @@ public class AzDBManager
             return (bool)_dbPruner.PruningDue;
     }
 
-    public async Task<bool> Prune(bool includeDemos)
+    public async Task<bool> PruneAsync(PruneRequest pruneRequest)
     {
-        var pruneResult = await _dbPruner.Prune(includeDemos, false);
-        if (pruneResult != null)
+        if (await _dbPruner.PruneAsync(pruneRequest))
         {
-            _logger.LogInformation("Database prune completed successfully at {pruneTime}.", pruneResult);
+            _logger.LogInformation("Database prune completed successfully at {pruneTime}.", DateTime.UtcNow);
             return true;
         }
         else

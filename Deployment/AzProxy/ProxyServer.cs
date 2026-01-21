@@ -32,8 +32,6 @@ namespace AzProxy
             Converters = { new JsonStringEnumConverter() }
         };
 
-        private record PruneRequest(bool PruneDemos, bool ForcePrune);
-
         public static void Main(string[] args)
         {
             var app = GetBuiltApp(args);
@@ -243,11 +241,7 @@ namespace AzProxy
         [Authorize(Policy = "AdminOnly")]
         private static async Task<IResult> ManualPruneAzDB([AsParameters] PruneRequest pruneRequest, StorageManager storeManager)
         {
-            bool pruned = pruneRequest.ForcePrune
-                ? await storeManager.DBPrune(pruneRequest.PruneDemos)
-                : await storeManager.TryDBPrune(pruneRequest.ForcePrune, pruneRequest.PruneDemos);
-
-            if (pruned)
+            if (await storeManager.TryDBPruneAsync(pruneRequest))
                 return Results.Ok($"Manual prune completed, {(pruneRequest.PruneDemos ? "" : "NOT ")} including demo entities.");
             else
                 return Results.Problem("Manual prune failed or skipped.", statusCode: StatusCodes.Status500InternalServerError);
