@@ -22,6 +22,7 @@ public class AzDBManager
     }
 
     public DateTime? LastPruned => _dbPruner.LastPruneDate;
+    public bool Pruned => _dbPruner.Pruned;
     public int? PruneAfterDays => _dbPruner.PruneAfterDays;
 
     // Determine if the database should be pruned of old entries

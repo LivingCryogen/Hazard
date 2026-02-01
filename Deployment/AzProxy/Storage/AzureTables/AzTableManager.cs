@@ -11,6 +11,7 @@ public class AzTableManager
 {
     private readonly ILogger<AzTableManager> _logger;
     private readonly DateTimeOffset _bootTime = DateTimeOffset.UtcNow;
+    private readonly TableClient _tableClient;
     private readonly TableClient _banTableClient;
     private readonly TableClient _appVarsTableClient;
     private readonly string _banListPartitionKey;
@@ -20,6 +21,23 @@ public class AzTableManager
 
     private readonly ConcurrentDictionary<string, ETag> _tagCache = new(); // needed for easy updates
     private readonly SemaphoreSlim _tableSemaphore = new(1, 1);
+
+    public AzTableManager(ILogger <AzTableManager> logger, string storageConnnectionString, string tableName)
+    {
+        _logger = logger;
+        try
+        {
+            TableServiceClient serviceClient = new(storageConnnectionString);
+            _tableClient = serviceClient.GetTableClient(tableName);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to construct TableClient for Table {name} due to an error: {message}", tableName, ex.Message);
+            throw new NullReferenceException("Failed to construct TableClient.");
+        }
+
+
+    }
 
     public AzTableManager(IConfiguration config, ILogger<AzTableManager> logger)
     {
@@ -42,9 +60,7 @@ public class AzTableManager
                 throw new ArgumentException("BanTableName was null or empty. Check configuration (App settings).");
             _banTableClient = serviceClient.GetTableClient(banTableName);
 
-            string? varsTableName = config["VariablesTableName"];
-            if (string.IsNullOrEmpty(varsTableName))
-                throw new ArgumentException("VarsTableName was null or empty. Check configuration (App settings).");
+  
             _appVarsTableClient = serviceClient.GetTableClient(varsTableName);
         }
         catch (Exception ex)
@@ -76,7 +92,7 @@ public class AzTableManager
         _entryDuration = int.TryParse(config["EntryDurationDays"], out int result) ? TimeSpan.FromDays(result) : TimeSpan.FromDays(365);
     }
 
-    // Load App Variables from Azure Table storage, or set to defaults from configuration if none exist
+
     public async Task<HashSet<AppVarEntry>> GetOrSetDefaultVars()
     {
         var queryResults = new List<AppVarEntry>();

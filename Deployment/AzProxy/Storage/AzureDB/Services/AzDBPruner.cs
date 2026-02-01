@@ -18,6 +18,7 @@ public class AzDBPruner
     private readonly TimeSpan _pruneIncompleteGamesAfterDuration;
 
     public DateTime? LastPruneDate { get; private set; }
+    public bool Pruned { get; private set; } = false;
     public int? PruneAfterDays => _pruneAfterDuration?.Days;
     public bool? PruningDue => LastPruneDate == null ? null : DateTime.UtcNow - LastPruneDate >= _pruneAfterDuration;
 
@@ -96,6 +97,7 @@ public class AzDBPruner
             await dbContext.SaveChangesAsync();
 
             LastPruneDate = DateTime.UtcNow;
+            Pruned = true;
 
             _logger.LogInformation("Pruning complete at {prunedate}", LastPruneDate);
 

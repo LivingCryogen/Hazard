@@ -30,9 +30,8 @@ public class StorageManager : IHostedService
     private readonly AzDBManager _azDBManager;
     private HashSet<AppVarEntry> _appVars;
     private PruneRequest? _defaultPruneRequest;
-    private LastPruneDateResult _dBLastPrunedResult = new(false, null);
+    private LastPruneDateResult _dBLastPrunedFetchResult = new(false, null);
     
-
     public StorageManager(IConfiguration config, 
         IHostApplicationLifetime appLife, 
         ILogger<StorageManager> logger, 
@@ -52,31 +51,31 @@ public class StorageManager : IHostedService
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         await PopulateCache(_azTableManager);
-        _appVars = await _azTableManager.GetOrSetDefaultVars();
+        _appVars = await GetOrSetDefaultVars();
 
         // Fetch the LastDBPruneDate App Var entry and validate, storing result for use on shutdown
         // Then, set the AzDBManager's last prune date from the entry value if valid
 
-        var prunedEntry = _appVars.FirstOrDefault(entry => entry.RowKey == "LastDBPruneDate");
+        _lastPruneDateVar = _appVars.FirstOrDefault(entry => entry.RowKey == "LastDBPruneDate");
 
-        if (prunedEntry == null)
+        if (_lastPruneDateVar == null)
         {
             _logger.LogWarning("No valid LastDBPruneDate app variable Entry found on startup.");
-            _dBLastPrunedResult = new LastPruneDateResult(false, null);
+            _dBLastPrunedFetchResult = new LastPruneDateResult(false, null);
             return;
         }
 
-        bool validPruneDate = ValidatePruneDateEntry(prunedEntry);
+        bool validPruneDate = ValidatePruneDateEntry(_lastPruneDateVar);
 
         if (!validPruneDate)
         {
             _logger.LogWarning("Invalid LastDBPruneDate app variable Entry value found on startup.");
-            _dBLastPrunedResult = new LastPruneDateResult(false, prunedEntry);
+            _dBLastPrunedFetchResult = new LastPruneDateResult(false, _lastPruneDateVar);
             return;
         }
 
-        _dBLastPrunedResult = new LastPruneDateResult(validPruneDate, prunedEntry);
-        _azDBManager.InitializeLastPruneDate(prunedEntry.Value);
+        _dBLastPrunedFetchResult = new LastPruneDateResult(validPruneDate, _lastPruneDateVar);
+        _azDBManager.InitializeLastPruneDate(_lastPruneDateVar.Value);
 
         // Create default prune request for use on shutdown
         if (_azDBManager.PruneAfterDays == null)
@@ -120,19 +119,10 @@ public class StorageManager : IHostedService
             return;
         }
 
-        bool pruned = await TryDBPruneAsync(_defaultPruneRequest);
-
-        if (pruned && _dBLastPrunedResult.Entry != null)
-        {
-            await UpdateLastPruneDateEntry();
-            _dBLastPrunedResult.Entry.Value = DateTime.UtcNow.ToString("o");
-            await _azTableManager.UpdateAppVarTableEntry(_dBLastPrunedResult.entry);
-        }
-        else if (pruned && _dBLastPrunedResult.entry == null)
-        {
-            var newLastPruneDateEntry = await _azTableManager.GetNewPruneDateEntry();
-            await _azTableManager.AddAppVarTableEntry(newLastPruneDateEntry);
-        }
+        // Run default prune attempt (configuration-based/scheduled)
+        await TryDBPruneAsync(_defaultPruneRequest);
+        // We check to Update LastPruneDate Table variable regardless, since manual prune could have occurred during runtime.
+        await UpdateLastPruneDateEntry();
     }
 
     // Validate the LastPruneDate App Var entry value (has a valid DateTime and is in the past)
@@ -143,8 +133,8 @@ public class StorageManager : IHostedService
     // If the Prune was completed successfully, returns true; otherwise, false.
     public async Task<bool> TryDBPruneAsync(PruneRequest pruneRequest)
     {
-        bool missingLastPrune = _dBLastPrunedResult.Entry == null;
-        bool invalidLastPrune = _dBLastPrunedResult.IsValid == false;
+        bool missingLastPrune = _dBLastPrunedFetchResult.Entry == null;
+        bool invalidLastPrune = _dBLastPrunedFetchResult.IsValid == false;
         bool scheduledPrune = _azDBManager.ShouldPrune();
         bool forcedPrune = pruneRequest.ForcePrune;
 
@@ -158,7 +148,7 @@ public class StorageManager : IHostedService
         {
             bool pruneSuccess = await _azDBManager.PruneAsync(pruneRequest);
             if (pruneSuccess)
-            {
+            {                
                 if (!await UpdateLastPruneDateEntry())
                     _logger.LogWarning("Prune was successful, but the LastDBPruneDate App Variable Entry was not updated to reflect this.");
                 else
@@ -197,45 +187,62 @@ public class StorageManager : IHostedService
         }
     }
 
+    // Updates DBLastPruneDate AppVar in AzTable storage; should be called only after a successful DB prune.
+    // If update is successful, returns true; otherwise, false.
+    // Leverages AppVar fetch result from startup to decide whether to add new entry or update existing one.
     private async Task<bool> UpdateLastPruneDateEntry()
     {
-        if (_azDBManager.LastPruned == null)
+        AppVarEntry updatedEntry;
+        bool fetchedEntry = _dBLastPrunedFetchResult.Entry != null;
+        bool hasPruneDate = _azDBManager.LastPruned != null;
+        bool wasPruned = _azDBManager.Pruned;
+
+        if (wasPruned && !hasPruneDate)
         {
-            _logger.LogWarning("Cannot update LastDBPruneDate entry: AzDBManager's LastPruned date is null.");
+            _logger.LogError("Unexpected mismatch between Pruned flag and PruneDate value. Canceling variable update.");
             return false;
         }
 
+        if (!wasPruned)
+        {
+            _logger.LogInformation("No database prune has occurred since last fetch; skipping LastDBPruneDate entry update.");
+            return false;
+        }
 
-
-        //if (_dBLastPrunedResult.Entry == null)
-        //{
-        //    try
-        //    {
-        //        var newnewLastDBPruneDateEntry = _azTableManager.GetNewAppVarEntry();
-        //        MakeLastPruneDateEntry(newnewLastDBPruneDateEntry, (DateTime)_azDBManager.LastPruned);
-        //        await _azTableManager.AddAppVarTableEntry(newnewLastDBPruneDateEntry);
-        //        return true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogWarning("An exception occurred when attempting to update LastDBPruneDate entry: {msg}", ex.Message);
-        //        _logger.LogTrace("Error stack trace: {trace}", ex.StackTrace);
-        //        return false;
-        //    }
-        //}
-        //else
-        //{
-            try
+        if (fetchedEntry)
+            updatedEntry = _dBLastPrunedFetchResult.Entry!;
+        else
+        {
+            if (!hasPruneDate)
             {
-                await _azTableManager.UpdateAppVarTableEntry(updatedEntry);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning("An exception occurred when attempting to add new LastDBPruneDate entry: {msg}", ex.Message);
-                _logger.LogTrace("Error stack trace: {trace}", ex.StackTrace);
+                _logger.LogError("AzDBManager's LastPruned date is null; cannot create new LastDBPruneDate entry.");
                 return false;
             }
+
+            updatedEntry = _azTableManager.GetNewAppVarEntry();
+        }
+
+        MakeLastPruneDateEntry(updatedEntry, (DateTime)_azDBManager.LastPruned!);
+
+        try
+        {
+            if (fetchedEntry)
+            {
+                _logger.LogInformation("Updating existing LastDBPruneDate entry in Azure Table storage, DateTime value: {val}.", updatedEntry.Value);
+                await _azTableManager.UpdateAppVarTableEntry(updatedEntry);
+            }
+            else
+            {
+                _logger.LogInformation("Adding new LastDBPruneDate entry in Azure Table storage, DateTime value: {val}.", updatedEntry.Value);
+                await _azTableManager.AddAppVarTableEntry(updatedEntry);
+            }
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning("An exception occurred when attempting to add or update LastDBPruneDate entry: {msg}", ex.Message);
+            _logger.LogTrace("Error stack trace: {trace}", ex.StackTrace);
+            return false;
         }
     }
 
@@ -245,5 +252,11 @@ public class StorageManager : IHostedService
         varEntry.TypeName = "DateTime";
         varEntry.Description = "The last date the database was pruned of old entries.";
         varEntry.Value = dateTime.ToString("o");
+    }
+
+    // Load App Variables from Azure Table storage, or set to defaults from configuration if none exist
+    private async Task<HashSet<AppVarEntry>> GetOrSetDefaultVars()
+    {
+
     }
 }
