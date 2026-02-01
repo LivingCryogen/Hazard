@@ -14,11 +14,13 @@ public class AzDBPruner
 {
     private readonly ILogger<AzDBPruner> _logger;
     private readonly IServiceProvider _serviceProvider;
-    private readonly TimeSpan _pruneAfterDuration;
+    private readonly TimeSpan? _pruneAfterDuration  = null;
     private readonly TimeSpan _pruneIncompleteGamesAfterDuration;
-    private DateTime? _lastPruneDate;
 
-    public bool? PruningDue => _lastPruneDate == null ? null : DateTime.UtcNow - _lastPruneDate >= _pruneAfterDuration;
+    public DateTime? LastPruneDate { get; private set; }
+    public int? PruneAfterDays => _pruneAfterDuration?.Days;
+    public bool? PruningDue => LastPruneDate == null ? null : DateTime.UtcNow - LastPruneDate >= _pruneAfterDuration;
+
 
     public AzDBPruner(ILogger<AzDBPruner> logger,
         IConfiguration config,
@@ -50,11 +52,13 @@ public class AzDBPruner
         var now = DateTime.UtcNow;
         bool forced = pruneRequest.ForcePrune;
         bool pruneDemos = pruneRequest.PruneDemos;
-        // Set pruning cutoff; if auto prune, use config value. If manual, use parameter if provided.
-        DateTime cutoffDate = pruneRequest.DaysOffset.HasValue && forced 
-            ? now.AddDays(-pruneRequest.DaysOffset.Value) 
-            : now - _pruneAfterDuration;
-        
+
+        if (!ChooseCutoffDate(pruneRequest.DaysOffset, pruneRequest.ForcePrune, out DateTime cutoffDate))
+        {
+            _logger.LogWarning("Prune request rejected: no valid cutoff date could be determined.");
+            return false;
+        }
+
         try
         {
             using var scope = _serviceProvider.CreateScope();
@@ -90,6 +94,11 @@ public class AzDBPruner
 
             dbContext.RemoveRange(staleGames);
             await dbContext.SaveChangesAsync();
+
+            LastPruneDate = DateTime.UtcNow;
+
+            _logger.LogInformation("Pruning complete at {prunedate}", LastPruneDate);
+
             return true;
         }
         catch (Exception ex)
@@ -99,8 +108,47 @@ public class AzDBPruner
         }
     }
 
-    public void SetLastPruneDateFromString(string pruneDate)
+    public bool InitializeLastPruneDate(string pruneDate)
     {
-        _lastPruneDate = DateTime.TryParse(pruneDate, out DateTime parsedDate) ? parsedDate : null;
+        bool parsed = DateTime.TryParse(pruneDate, out DateTime parsedDate);
+        if (!parsed)
+        {
+            _logger.LogWarning("Failed to parse last prune date from string: {pruneDate}", pruneDate);
+            return false;
+        }
+        LastPruneDate = parsedDate;
+        return true;
+    }
+
+    // Set pruning cutoff; if auto prune, use config value. If manual, use parameter if provided.
+    // If both provided, manual parameter takes precedence. If neither value is available, reject the request.
+    public bool ChooseCutoffDate(int? daysOffset, bool forced, out DateTime cutoffDate)
+    {
+        DateTime now = DateTime.UtcNow;
+        bool hasConfig = _pruneAfterDuration != null;
+        bool hasParam = daysOffset != null && daysOffset >= 0;
+
+        if (!hasParam && !hasConfig)
+        {
+            if (forced)
+            {
+                _logger.LogInformation("Prune request is forced; using default cutoff date of NOW.");
+                cutoffDate = now;
+                return true;
+            }
+
+            _logger.LogWarning("No valid prune duration available from either configuration or request; prune rejected.");
+            cutoffDate = default;
+            return false;
+        }
+
+        TimeSpan pruneBefore;
+        if (hasParam)
+            pruneBefore = TimeSpan.FromDays((double)daysOffset!);
+        else
+            pruneBefore = (TimeSpan)_pruneAfterDuration!;
+
+        cutoffDate = now - pruneBefore;
+        return true;
     }
 }

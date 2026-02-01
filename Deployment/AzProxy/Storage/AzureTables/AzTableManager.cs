@@ -344,16 +344,13 @@ public class AzTableManager
         return true;
     }
 
-    public async Task<AppVarEntry> GetNewPruneDateEntry()
+    // Create a new AppVarEntry with only default properties
+    public AppVarEntry GetNewAppVarEntry()
     {
         return new AppVarEntry()
         {
             PartitionKey = _appVarsPartitionKey,
-            RowKey = "LastDBPruneDate",
-            TypeName = "DateTime",
-            Description = "The last date the database was pruned of old entries.",
-            Timestamp = DateTime.UtcNow,
-            Value = DateTime.UtcNow.ToString("o")
+            Timestamp = DateTime.UtcNow
         };
     }
 

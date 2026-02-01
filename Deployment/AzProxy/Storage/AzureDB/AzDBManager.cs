@@ -14,13 +14,15 @@ public class AzDBManager
     private readonly GameStatsDbContext _dbContext;
     private readonly AzDBPruner _dbPruner;
 
-
     public AzDBManager(IConfiguration config, ILogger<AzDBManager> logger, GameStatsDbContext dbContext, AzDBPruner dbPruner)
     {
         _logger = logger;
         _dbContext = dbContext;
         _dbPruner = dbPruner;
     }
+
+    public DateTime? LastPruned => _dbPruner.LastPruneDate;
+    public int? PruneAfterDays => _dbPruner.PruneAfterDays;
 
     // Determine if the database should be pruned of old entries
     public bool ShouldPrune()
@@ -47,4 +49,6 @@ public class AzDBManager
             return false;
         }
     }
+
+    public bool InitializeLastPruneDate(string lastPruneDate) => _dbPruner.InitializeLastPruneDate(lastPruneDate);
 }

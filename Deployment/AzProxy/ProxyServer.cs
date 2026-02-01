@@ -246,45 +246,5 @@ namespace AzProxy
             else
                 return Results.Problem("Manual prune failed or skipped.", statusCode: StatusCodes.Status500InternalServerError);
         }
-
-        public static async Task<IResult> ManualPruneAsync(IQueryCollection requestQueries,
-            StorageManager storageManager)
-        {
-
-
-            try
-            {
-                AppVarEntry appVarLastPrune = storageManager.ShouldPruneDataBase(forcedPrune)
-                    ?? throw new InvalidOperationException("ShouldPrune method returned null even during manual prune flow!");
-
-                if (appVarLastPrune == null)
-                {
-                    logger.LogInformation("Prune skipped; Demos : {demoflag}. Forced : {forcedPrune}.", pruneDemos, forcedPrune);
-                    return Results.Accepted("Prune skipped.");
-                }
-
-                var prunedTime = await storageManager.PruneDataBase(pruneDemos, forcedPrune);
-
-                if (prunedTime != null)
-                {
-                    appVarLastPrune.Value = ((DateTime)prunedTime).ToString("o");
-                    await storageManager.UpdateAppVarTableEntry(appVarLastPrune);
-
-                    logger.LogInformation("Prune successful; Demos : {demoflag}. Forced : {forcedPrune}.", pruneDemos, forcedPrune);
-                    return Results.Ok("Prune completed.");
-                }
-                else
-                {
-                    logger.LogInformation("Prune skipped or failed; Demos : {demoflag}. Forced : {forcedPrune}.", pruneDemos, forcedPrune);
-                    return Results.Problem("Prune skipped or failed.", statusCode: StatusCodes.Status202Accepted);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An error occurred during the prune operation: {Message}", ex.Message);
-                return Results.Problem("An error occurred during the prune operation.", statusCode: StatusCodes.Status500InternalServerError);
-
-            }
-        }
     }
 }
