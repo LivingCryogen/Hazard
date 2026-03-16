@@ -3,6 +3,7 @@ using AzProxy.Storage.AzureDB;
 using AzProxy.Storage.AzureDB.Context;
 using AzProxy.Storage.AzureDB.Entities;
 using AzProxy.Storage.AzureTables;
+using AzProxy.Storage.AzureTables.AppVariables;
 using AzProxy.Storage.AzureTables.BanList;
 using Azure;
 using Azure.Data.Tables;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Storage.Json;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using System.Collections.Concurrent;
 using System.Text.Json;
@@ -26,56 +28,99 @@ public class StorageManager : IHostedService
     private readonly IHostApplicationLifetime _appLife;
     private readonly ILogger _logger;
     private readonly IBanCache _cache;
-    private readonly AzTableManager _azTableManager;
+    private readonly BanListTableManager _banListManager;
+    private readonly AppVarTableManager _appVarManager;
     private readonly AzDBManager _azDBManager;
+
+
     private HashSet<AppVarEntry> _appVars;
     private PruneRequest? _defaultPruneRequest;
     private LastPruneDateResult _dBLastPrunedFetchResult = new(false, null);
     
     public StorageManager(IConfiguration config, 
         IHostApplicationLifetime appLife, 
-        ILogger<StorageManager> logger, 
+        ILoggerFactory loggerFactory, 
         IBanCache cache, 
         IServiceProvider serviceProvider, 
-        AzTableManager azTableManager,
         AzDBManager azDBManager)
     {
         _appLife = appLife;
-        _logger = logger;
+        _logger = loggerFactory.CreateLogger<StorageManager>();
         _cache = cache;
         _serviceProvider = serviceProvider;
-        _azTableManager = azTableManager;
         _azDBManager = azDBManager;
+
+        string? storageConnection = config["StorageConnectionString"];
+
+        if (string.IsNullOrEmpty(storageConnection))
+        {
+            _logger.LogError("Azure Table access configuration incorrect.");
+            throw new NullReferenceException();
+        }
+
+        string banTableName = config["BanTableName"] ?? string.Empty;
+        string varsTableName = config["VariablesTableName"] ?? string.Empty;
+        string banListPartitionKey = config["BanlistPartitionKey"] ?? string.Empty;
+        string appVarsPartitionKey = config["AppVarsPartitionKey"] ?? string.Empty;
+        string defaultAppVarsJson = config["AppVarsJSONDefinitions"] ?? string.Empty;
+        string banListDuration = config["EntryDurationDays"] ?? string.Empty;
+        TimeSpan banListEntryDuration;
+
+        if (banTableName == string.Empty)
+            _logger.LogWarning("Ban table name empty.");
+        if (banListPartitionKey == string.Empty)
+            _logger.LogWarning("Banlist partition key empty.");
+        if (appVarsPartitionKey == string.Empty)
+            _logger.LogWarning("AppVars partition key empty.");
+        if (defaultAppVarsJson == string.Empty)
+            _logger.LogWarning("Default App Variable definitions empty.");
+        if (int.TryParse(banListDuration, out int result))
+            banListEntryDuration = TimeSpan.FromDays(result);
+        else
+        {
+            _logger.LogWarning("Banlist entry duration configuration invalid or missing; defaulting to 365 days.");
+            banListEntryDuration = TimeSpan.FromDays(365);
+        }
+        
+        _banListManager = new(loggerFactory.CreateLogger<BanListTableManager>(), storageConnection, banTableName, banListEntryDuration);
+
+        _appVarManager = new(loggerFactory.CreateLogger<AppVarTableManager>(), storageConnection, varsTableName, null, defaultAppVarsJson);
+
+        if (_appVarManager == null)
+            _logger.LogError("AppVariableManager failed to initialize.");
+        if (_banListManager == null)
+            _logger.LogError("BanListTableManager failed to initialize.");
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        await PopulateCache(_azTableManager);
+        await PopulateCache(_banListManager);
         _appVars = await GetOrSetDefaultVars();
 
         // Fetch the LastDBPruneDate App Var entry and validate, storing result for use on shutdown
         // Then, set the AzDBManager's last prune date from the entry value if valid
 
-        _lastPruneDateVar = _appVars.FirstOrDefault(entry => entry.RowKey == "LastDBPruneDate");
 
-        if (_lastPruneDateVar == null)
+        var lastPruneDateVar = _appVars.FirstOrDefault(entry => entry.RowKey == "LastDBPruneDate");
+
+        if (lastPruneDateVar == null)
         {
             _logger.LogWarning("No valid LastDBPruneDate app variable Entry found on startup.");
             _dBLastPrunedFetchResult = new LastPruneDateResult(false, null);
             return;
         }
 
-        bool validPruneDate = ValidatePruneDateEntry(_lastPruneDateVar);
+        bool validPruneDate = ValidatePruneDateEntry(lastPruneDateVar);
 
         if (!validPruneDate)
         {
             _logger.LogWarning("Invalid LastDBPruneDate app variable Entry value found on startup.");
-            _dBLastPrunedFetchResult = new LastPruneDateResult(false, _lastPruneDateVar);
+            _dBLastPrunedFetchResult = new LastPruneDateResult(false, lastPruneDateVar);
             return;
         }
 
-        _dBLastPrunedFetchResult = new LastPruneDateResult(validPruneDate, _lastPruneDateVar);
-        _azDBManager.InitializeLastPruneDate(_lastPruneDateVar.Value);
+        _dBLastPrunedFetchResult = new LastPruneDateResult(validPruneDate, lastPruneDateVar);
+        _azDBManager.InitializeLastPruneDate(lastPruneDateVar.Value);
 
         // Create default prune request for use on shutdown
         if (_azDBManager.PruneAfterDays == null)
@@ -92,11 +137,11 @@ public class StorageManager : IHostedService
     public async Task StopAsync(CancellationToken cancellationToken) => await OnAppStopping();
 
     // Initialize the in-memory cache from the Azure Table storage
-    private async Task PopulateCache(AzTableManager azTableManager)
+    private async Task PopulateCache(BanListTableManager banListManager)
     {
         try
         {
-            var recordedBans = await azTableManager.GetRecordsAsync((entry) => entry.NowBanned);
+            var recordedBans = await banListManager.GetRecordsAsync((entry) => entry.NowBanned);
             _cache.Initialize(recordedBans);
         }
         catch (Exception ex)

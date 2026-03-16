@@ -1,190 +1,137 @@
-﻿using AzProxy.Storage.AzureTables.BanList;
+﻿using AzProxy.Storage.AzureTables.AppVariables;
+using AzProxy.Storage.AzureTables.BanList;
 using Azure;
 using Azure.Data.Tables;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
+using System.Linq.Expressions;
+using System.Net;
 using System.Text.Json;
 
 namespace AzProxy.Storage.AzureTables;
 
-public class AzTableManager
+internal abstract class AzTableManagerBase
 {
-    private readonly ILogger<AzTableManager> _logger;
-    private readonly DateTimeOffset _bootTime = DateTimeOffset.UtcNow;
     private readonly TableClient _tableClient;
-    private readonly TableClient _banTableClient;
-    private readonly TableClient _appVarsTableClient;
-    private readonly string _banListPartitionKey;
-    private readonly string _appVarsPartitionKey;
-    private readonly string _defaultAppVarsJson;
-    private readonly TimeSpan _entryDuration;
-
-    private readonly ConcurrentDictionary<string, ETag> _tagCache = new(); // needed for easy updates
     private readonly SemaphoreSlim _tableSemaphore = new(1, 1);
 
-    public AzTableManager(ILogger <AzTableManager> logger, string storageConnnectionString, string tableName)
+    protected ILogger Logger { get; }
+    protected string PartitionKey { get; }
+    protected TimeSpan? EntryDuration { get; }
+
+    public AzTableManagerBase(TableClient tableClient, ILogger logger, string partitionKey, TimeSpan? entryDuration)
     {
-        _logger = logger;
+        _tableClient = tableClient;
+        Logger = logger;
+        PartitionKey = partitionKey;
+        EntryDuration = entryDuration;
+    }
+
+    protected async Task<bool> AddAsync<T>(T entity) where T : class, ITableEntity
+    {
         try
         {
-            TableServiceClient serviceClient = new(storageConnnectionString);
-            _tableClient = serviceClient.GetTableClient(tableName);
+            await _tableSemaphore.WaitAsync();
+            try
+            {
+                var tableResponse = await _tableClient.AddEntityAsync(entity).ConfigureAwait(false);
+
+                int statusCode = tableResponse.Status;
+
+                if (statusCode >= 200 && statusCode < 300)
+                {
+                    Logger.LogInformation("Successfully added entry.");
+                    return true;
+                }
+
+                Logger.LogWarning("Unexpected status {status} when adding entry.", tableResponse.Status);
+                return false;
+            }
+            finally
+            {
+                _tableSemaphore.Release();
+            }
+        }
+        catch (RequestFailedException rfEx)
+        {
+            Logger.LogError(rfEx, "Azure Request Failed when attempting to add entry (Status: {status}): {message}", rfEx.Status, rfEx.Message);
+            return false;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to construct TableClient for Table {name} due to an error: {message}", tableName, ex.Message);
-            throw new NullReferenceException("Failed to construct TableClient.");
+            Logger.LogError(ex, "Unexpected error when persisting entry to Azure Table: {message}", ex.Message);
+            return false;
         }
-
-
     }
 
-    public AzTableManager(IConfiguration config, ILogger<AzTableManager> logger)
-    {
-        _logger = logger;
-
-        string? storageConnection = config["StorageConnectionString"];
-
-        if (string.IsNullOrEmpty(storageConnection))
-        {
-            _logger.LogError("Azure Table access configuration incorrect.");
-            throw new NullReferenceException();
-        }
-
-        try
-        {
-            TableServiceClient serviceClient = new(storageConnection);
-
-            string? banTableName = config["BanTableName"];
-            if (string.IsNullOrEmpty(banTableName))
-                throw new ArgumentException("BanTableName was null or empty. Check configuration (App settings).");
-            _banTableClient = serviceClient.GetTableClient(banTableName);
-
-  
-            _appVarsTableClient = serviceClient.GetTableClient(varsTableName);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to construct TableClients due to an error: {message}", ex.Message);
-        }
-        if (_banTableClient == null)
-        {
-            throw new NullReferenceException("Failed to construct TableClient.");
-        }
-        if (_appVarsTableClient == null)
-        {
-            throw new NullReferenceException("Failed to construct AppVars TableClient.");
-        }
-
-        _banListPartitionKey = config["BanlistPartitionKey"] ?? string.Empty;
-        _appVarsPartitionKey = config["AppVarsPartitionKey"] ?? string.Empty;
-        _defaultAppVarsJson = config["AppVarsJSONDefinitions"] ?? string.Empty;
-        
-
-
-        if (_banListPartitionKey == string.Empty)
-            logger.LogWarning("Banlist partition key empty.");
-        if (_appVarsPartitionKey == string.Empty)
-            logger.LogWarning("AppVars partition key empty.");
-        if (_defaultAppVarsJson == string.Empty)
-            logger.LogWarning("Default App Variable definitions empty.");
-
-        _entryDuration = int.TryParse(config["EntryDurationDays"], out int result) ? TimeSpan.FromDays(result) : TimeSpan.FromDays(365);
-    }
-
-
-    public async Task<HashSet<AppVarEntry>> GetOrSetDefaultVars()
-    {
-        var queryResults = new List<AppVarEntry>();
-        await foreach (AppVarEntry varEntity in
-            _appVarsTableClient
-                .QueryAsync<AppVarEntry>(e => e.PartitionKey == _appVarsPartitionKey))
-            queryResults.Add(varEntity);
-        if (queryResults.Count > 0)
-        {
-            HashSet<AppVarEntry> varEntries = [];
-            foreach (var varEntry in queryResults)
-                if (ValidateAppVarEntry(varEntry))
-                    varEntries.Add(varEntry);
-                else
-                    _logger.LogWarning("Failed to validate an app variable entry with rowkey {name}, value {val}.", varEntry.RowKey, varEntry.Value);
-
-            _logger.LogInformation("Loaded {count} App Variables from Azure Table entries.", _appVars.Count);
-            return varEntries;
-        }
-
-        if (string.IsNullOrEmpty(_defaultAppVarsJson))
-        {
-            _logger.LogWarning("No App variables were found in either Azure Table or Azure Configuration variable. Using hard-coded defaults when possible.");
-            return [];
-        }
-
-        // SET TO DEFAULT FROM CONFIG
-        Dictionary<string, JsonElement>? variableCollection;
-        try
-        {
-            variableCollection = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(_defaultAppVarsJson);
-            if (variableCollection == null)
-            {
-                throw new InvalidDataException($"Json deserialized variable collection was null. Json : {_defaultAppVarsJson}.");
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning("Unexpected error when deserializing default JSON App Variable definitions: {message}. Using hard-coded defaults when possible.", ex.Message);
-            return [];
-        }
-
-        HashSet<AppVarEntry> defaultEntries = [];
-        foreach (var kvp in variableCollection)
-        {
-            var newDefaultVarEntry = GetAppVarEntryFromJsonElement(kvp.Key, kvp.Value);
-
-            if (ValidateAppVarEntry(newDefaultVarEntry))
-            {
-                defaultEntries.Add(newDefaultVarEntry);
-
-                _logger.LogInformation("Adding default app variable entry {name} with value {val} to Azure Table storage.",
-                    newDefaultVarEntry.RowKey, newDefaultVarEntry.Value);
-                await AddAppVarTableEntry(newDefaultVarEntry);
-            }
-            else
-            {
-                _logger.LogWarning("Failed to validate an app variable entry with rowkey {name}, value {val}.", newDefaultVarEntry.RowKey, newDefaultVarEntry.Value);
-            }
-        }
-
-        _logger.LogInformation("Loaded {count} App Variables from Configuration defaults.", defaultEntries.Count);
-        return defaultEntries;
-    }
-
-    public async Task<bool> AddTableEntity(ITableEntity entry)
+    protected async Task<bool> UpdateAsync<T>(T entity) where T : class, ITableEntity
     {
         try
         {
-            var tableResponse = await _tableClient.AddEntityAsync(entry);
+            var tableResponse = await _tableClient.UpdateEntityAsync(entity,
+                entity.ETag != default
+                    ? entity.ETag
+                    : ETag.All,
+                TableUpdateMode.Replace);
             int statusCode = tableResponse.Status;
 
             if (statusCode >= 200 && statusCode < 300)
             {
-                _logger.LogInformation("Successfully added entry."); 
-                return true; 
+                Logger.LogInformation("Successfully updated entry.");
+                return true;
             }
-
-            _logger.LogWarning("Unexpected status {status} when adding entry.", tableResponse.Status); 
+            Logger.LogWarning("Unexpected status {status} when updating entry.", tableResponse.Status);
             return false;
         }
         catch (RequestFailedException rfEx)
         {
-            _logger.LogError(rfEx, "Azure Request Failed when attempting to add entry (Status: {status}): {message}", rfEx.Status, rfEx.Message);
+            Logger.LogError(rfEx, "Azure Request Failed when attempting to update entry (Status: {status}): {message}", rfEx.Status, rfEx.Message);
             return false;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unexpected error when persisting entry to Azure Table: {message}", ex.Message);
+            Logger.LogError(ex, "Unexpected error when updating entry in Azure Table: {message}", ex.Message);
             return false;
         }
     }
+
+    protected async Task<bool> DeleteByRowKeyAsync<T>(string rowKey) where T : class, ITableEntity
+    {
+        try
+        {
+            await _tableSemaphore.WaitAsync();
+            try
+            {
+                var response = await _tableClient.DeleteEntityAsync(PartitionKey, rowKey).ConfigureAwait(false);
+
+                if (response.Status >= 200 && response.Status < 300)
+                {
+                    Logger.LogInformation("Successfully deleted entry with id: {id}.", rowKey);
+                    return true;
+                }
+
+                Logger.LogWarning("Unexpected status {status} when deleting entry {id}.", response.Status, rowKey);
+                return false;
+            }
+            finally
+            {
+                _tableSemaphore.Release();
+            }
+        }
+        catch (RequestFailedException rfEx)
+        {
+            Logger.LogError(rfEx, "Azure Request Failed when attempting to delete entry {id} (Status: {status}): {message}", rowKey, rfEx.Status, rfEx.Message);
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error when attempting to a remove an entry via table client: {message}", ex.Message);
+            return false;
+        }
+    }
+
+    protected IAsyncEnumerable<T> QueryByPartitionAsync<T>(Expression<Func<T, bool>> filter) where T : class, ITableEntity
+        => _tableClient.QueryAsync<T>(filter);
 
     // Add a new App Variable entry to Azure Table storage
     public async Task AddAppVarTableEntry(AppVarEntry entry)
@@ -200,37 +147,6 @@ public class AzTableManager
         catch (Exception ex)
         {
             _logger.LogError("Failed to persist App Variable entry {name} to Azure Table: {message}", entry.RowKey, ex.Message);
-        }
-    }
-
-    public async Task<bool> UpdateTableEntity(ITableEntity entry)
-    {
-        try
-        {
-            var tableResponse = await _tableClient.UpdateEntityAsync(entry,
-                entry.ETag != default
-                    ? entry.ETag
-                    : ETag.All,
-                TableUpdateMode.Replace);
-            int statusCode = tableResponse.Status;
-
-            if (statusCode >= 200 && statusCode < 300)
-            {
-                _logger.LogInformation("Successfully updated entry.");
-                return true;
-            }
-            _logger.LogWarning("Unexpected status {status} when updating entry.", tableResponse.Status);
-            return false;
-        }
-        catch (RequestFailedException rfEx)
-        {
-            _logger.LogError(rfEx, "Azure Request Failed when attempting to update entry (Status: {status}): {message}", rfEx.Status, rfEx.Message);
-            return false;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected error when updating entry in Azure Table: {message}", ex.Message);
-            return false;
         }
     }
 
@@ -298,127 +214,6 @@ public class AzTableManager
         }
     }
 
-    // Fetch banlist records from Azure Table storage, applying an optional filter
-    public async Task<HashSet<BanListEntry>> GetRecordsAsync(Func<BanListEntry, bool>? filter)
-    {
-        filter ??= _ => true;
-
-        if (string.IsNullOrEmpty(_banListPartitionKey))
-        {
-            _logger.LogWarning("The partition key for querying the banlist table was invalid. Cache was not populated.");
-            return [];
-        }
-        try
-        {
-            List<BanListEntry> recordList = [];
-            var tableEntities = _banTableClient.QueryAsync<BanListEntry>(e => e.PartitionKey == _banListPartitionKey);
-            await foreach (var tableEntity in tableEntities)
-                recordList.Add(tableEntity);
-
-            var pruneList = recordList.Where(e => ShouldPrune(e));
-
-            var filteredList = recordList
-                .Except(pruneList)
-                .Where(filter);
-
-            _ = Task.Run(() => Prune([.. pruneList]));
-
-            return [.. filteredList];
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "There was an error while fetching banlist records: {message}.", ex.Message);
-            return [];
-        }
-    }
-    // Add a new banlist entry to Azure Table storage
-    private async Task<bool> NewEntry(string ipAddress, BanListEntry entry)
-    {
-        try
-        {
-            entry.PartitionKey ??= _banListPartitionKey;
-            entry.RowKey ??= ipAddress;
-            await _tableSemaphore.WaitAsync();
-            try
-            {
-                var response = await _banTableClient.AddEntityAsync(entry).ConfigureAwait(false);
-            }
-            finally
-            {
-                _tableSemaphore.Release();
-            }
-
-            _tagCache.TryAdd(entry.RowKey, entry.ETag);
-            return true;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error when attempting to a add via table client: {message}", ex.Message);
-            return false;
-        }
-    }
-
-    // Update an existing banlist entry in Azure Table storage
-    private async Task<bool> UpdateEntry(string ipAddress, BanListEntry updatedEntry)
-    {
-        try
-        {
-            updatedEntry.PartitionKey ??= _banListPartitionKey;
-            updatedEntry.RowKey ??= ipAddress;
-            bool tagCached = _tagCache.TryGetValue(ipAddress, out ETag entryTag);
-
-            await _tableSemaphore.WaitAsync();
-            try
-            {
-                var response = await _banTableClient.UpdateEntityAsync(
-                    updatedEntry,
-                    tagCached ? entryTag :
-                        updatedEntry.ETag != default ? updatedEntry.ETag : default,
-                    TableUpdateMode.Merge).ConfigureAwait(false);
-            }
-            finally
-            {
-                _tableSemaphore.Release();
-            }
-
-            if (!tagCached && updatedEntry.ETag == default)
-            {
-                _logger.LogWarning("An entry update was attempted for IP {ip} without a proper ETag.", ipAddress);
-                return false;
-            }
-            return true;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error when attempting to a update via table client: {message}", ex.Message);
-            return false;
-        }
-    }
-
-    // Remove a banlist entry from Azure Table storage
-    private async Task<bool> RemoveEntry(string ipAddress)
-    {
-        try
-        {
-            await _tableSemaphore.WaitAsync();
-            try
-            {
-                var response = await _banTableClient.DeleteEntityAsync(_banListPartitionKey, ipAddress).ConfigureAwait(false);
-            }
-            finally
-            {
-                _tableSemaphore.Release();
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error when attempting to a remove an entry via table client: {message}", ex.Message);
-            return false;
-        }
-
-        return true;
-    }
-
     // Create a new AppVarEntry with only default properties
     public AppVarEntry GetNewAppVarEntry()
     {
@@ -427,44 +222,5 @@ public class AzTableManager
             PartitionKey = _appVarsPartitionKey,
             Timestamp = DateTime.UtcNow
         };
-    }
-
-    // Determine if a banlist entry should be pruned based on its age and ban status
-    private bool ShouldPrune(BanListEntry entry)
-    {
-        return entry switch
-        {
-            { IsLifetime: true } => false,
-            { NowBanned: true } when DateTime.UtcNow - entry.Timestamp < _entryDuration => false,
-            { NowBanned: true } when DateTime.UtcNow - entry.Timestamp > _entryDuration => true,
-            { NowBanned: false } when DateTime.UtcNow - entry.Timestamp > _entryDuration => true,
-            _ => false
-        };
-    }
-
-    // Prune a collection of banlist entries from Azure Table storage
-    private async Task Prune(BanListEntry[] entries)
-    {
-        foreach (var entry in entries)
-            await RemoveEntry(entry.RowKey);
-    }
-
-    public async Task PersistBan(string address, Ban sessionBan)
-    {
-        BanListEntry updatedEntry = new()
-        {
-            PartitionKey = _banListPartitionKey,
-            RowKey = address,
-            Timestamp = DateTime.UtcNow,
-            NowBanned = sessionBan.Type != Ban.BanType.Unbanned,
-            UnbannedOn = sessionBan.Expiration,
-            IsLifetime = sessionBan.Type == Ban.BanType.Life,
-            NumTempBans = sessionBan.BanCount
-        };
-
-        if (sessionBan.TimeStamp > _bootTime && sessionBan.BanCount == 1)
-            _ = await NewEntry(address, updatedEntry);
-        else
-            _ = await UpdateEntry(address, updatedEntry);
     }
 }
