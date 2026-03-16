@@ -1,4 +1,5 @@
 ﻿using AzProxy.Storage.AzureTables;
+using Azure.Data.Tables;
 using Microsoft.Extensions.Logging;
 
 namespace AzProxy.Storage;
@@ -50,5 +51,24 @@ public class AppVariableManager
     private Dictionary<string, (string Name, string Value)> InitializeVariablesDictionary()
     {
 
+    }
+
+    // Add a new App Variable entry to Azure Table storage
+    public async Task AddAppVarTableEntry(AppVarEntry entry)
+    {
+        try
+        {
+            TableClient client = _variableTable.GetTableClient();
+            client.AddEntityAsync
+            var response = await _variableTable.AddEntityAsync(entry);
+            if (response.Status == 204)
+                _logger.LogInformation("Successfully added App Variable entry {name}.", entry.RowKey);
+            else
+                _logger.LogWarning("Unexpected status {status} when adding App Variable entry {name}.", response.Status, entry.RowKey);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to persist App Variable entry {name} to Azure Table: {message}", entry.RowKey, ex.Message);
+        }
     }
 }

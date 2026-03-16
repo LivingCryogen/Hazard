@@ -158,6 +158,34 @@ public class AzTableManager
         return defaultEntries;
     }
 
+    public async Task<bool> AddTableEntity(ITableEntity entry)
+    {
+        try
+        {
+            var tableResponse = await _tableClient.AddEntityAsync(entry);
+            int statusCode = tableResponse.Status;
+
+            if (statusCode >= 200 && statusCode < 300)
+            {
+                _logger.LogInformation("Successfully added entry."); 
+                return true; 
+            }
+
+            _logger.LogWarning("Unexpected status {status} when adding entry.", tableResponse.Status); 
+            return false;
+        }
+        catch (RequestFailedException rfEx)
+        {
+            _logger.LogError(rfEx, "Azure Request Failed when attempting to add entry (Status: {status}): {message}", rfEx.Status, rfEx.Message);
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error when persisting entry to Azure Table: {message}", ex.Message);
+            return false;
+        }
+    }
+
     // Add a new App Variable entry to Azure Table storage
     public async Task AddAppVarTableEntry(AppVarEntry entry)
     {
@@ -172,6 +200,37 @@ public class AzTableManager
         catch (Exception ex)
         {
             _logger.LogError("Failed to persist App Variable entry {name} to Azure Table: {message}", entry.RowKey, ex.Message);
+        }
+    }
+
+    public async Task<bool> UpdateTableEntity(ITableEntity entry)
+    {
+        try
+        {
+            var tableResponse = await _tableClient.UpdateEntityAsync(entry,
+                entry.ETag != default
+                    ? entry.ETag
+                    : ETag.All,
+                TableUpdateMode.Replace);
+            int statusCode = tableResponse.Status;
+
+            if (statusCode >= 200 && statusCode < 300)
+            {
+                _logger.LogInformation("Successfully updated entry.");
+                return true;
+            }
+            _logger.LogWarning("Unexpected status {status} when updating entry.", tableResponse.Status);
+            return false;
+        }
+        catch (RequestFailedException rfEx)
+        {
+            _logger.LogError(rfEx, "Azure Request Failed when attempting to update entry (Status: {status}): {message}", rfEx.Status, rfEx.Message);
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error when updating entry in Azure Table: {message}", ex.Message);
+            return false;
         }
     }
 
