@@ -51,5 +51,5 @@ public class AzDBManager
         }
     }
 
-    public bool InitializeLastPruneDate(string lastPruneDate) => _dbPruner.InitializeLastPruneDate(lastPruneDate);
+    public bool InitializeLastPruneDate(DateTime lastPruneDate) => _dbPruner.InitializeLastPruneDate(lastPruneDate);
 }

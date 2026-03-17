@@ -189,7 +189,6 @@ namespace AzProxy
             builder.Services.AddSingleton<IBanCache, BanListCache>();
             builder.Services.AddScoped<AzDBPruner>();
             builder.Services.AddSingleton<AzDBManager>();
-            builder.Services.AddSingleton<AzTableManager>();
             builder.Services.AddHostedService<StorageManager>();
             builder.Services.AddScoped<SASGenerator>();
             builder.Services.AddSingleton<BanService>();

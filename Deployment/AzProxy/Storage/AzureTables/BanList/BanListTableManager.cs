@@ -3,22 +3,16 @@ using Azure.Data.Tables;
 
 namespace AzProxy.Storage.AzureTables.BanList
 {
-    internal class BanListTableManager : AzTableManagerBase
+    internal class BanListTableManager(ILogger<BanListTableManager> logger,
+        string connectionString,
+        string tableName,
+        TimeSpan entryDuration) 
+            : AzTableManagerBase(new TableClient(connectionString, tableName),
+                logger,
+                tableName,
+                entryDuration)
     {
         private readonly DateTimeOffset _bootTime = DateTimeOffset.UtcNow;
-
-        public BanListTableManager(ILogger<BanListTableManager> logger, string connectionString, string tableName, TimeSpan entryDuration) 
-            : base(new TableClient(connectionString, tableName), logger, tableName, entryDuration) // Note PartitionKey = TableName
-        {}
-
-        public ITableEntity GetBanListEntity()
-        {
-            return new AppVarEntry()
-            {
-                PartitionKey = PartitionKey,
-                Timestamp = DateTime.UtcNow
-            };
-        }
 
         // Fetch banlist records from Azure Table storage, applying an optional filter
         public async Task<HashSet<BanListEntry>> GetRecordsAsync(Func<BanListEntry, bool>? filter)
@@ -49,6 +43,7 @@ namespace AzProxy.Storage.AzureTables.BanList
             }
         }
 
+        // Persist a banlist entry to Azure Table storage, adding or updating as necessary
         public async Task PersistBan(string address, Ban sessionBan)
         {
             BanListEntry updatedEntry = new()

@@ -110,15 +110,9 @@ public class AzDBPruner
         }
     }
 
-    public bool InitializeLastPruneDate(string pruneDate)
+    public bool InitializeLastPruneDate(DateTime pruneDate)
     {
-        bool parsed = DateTime.TryParse(pruneDate, out DateTime parsedDate);
-        if (!parsed)
-        {
-            _logger.LogWarning("Failed to parse last prune date from string: {pruneDate}", pruneDate);
-            return false;
-        }
-        LastPruneDate = parsedDate;
+        LastPruneDate = pruneDate;
         return true;
     }
 
