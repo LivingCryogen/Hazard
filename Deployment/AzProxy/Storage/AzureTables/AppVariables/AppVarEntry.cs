@@ -1,6 +1,6 @@
 ﻿using Azure.Data.Tables;
 
-namespace AzProxy.Storage.AzureTables.AppVariables;
+namespace HazardBackend.Storage.AzureTables.AppVariables;
 
 public class AppVarEntry : ITableEntity
 {

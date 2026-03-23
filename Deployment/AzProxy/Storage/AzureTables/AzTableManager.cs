@@ -1,5 +1,5 @@
-﻿using AzProxy.Storage.AzureTables.AppVariables;
-using AzProxy.Storage.AzureTables.BanList;
+﻿using HazardBackend.Storage.AzureTables.AppVariables;
+using HazardBackend.Storage.AzureTables.BanList;
 using Azure;
 using Azure.Data.Tables;
 using Microsoft.Extensions.Logging;
@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Text.Json;
 
-namespace AzProxy.Storage.AzureTables;
+namespace HazardBackend.Storage.AzureTables;
 
 internal abstract class AzTableManagerBase
 {

@@ -1,7 +1,7 @@
-﻿using AzProxy.Requests;
+﻿using HazardBackend.Requests;
 using Microsoft.Extensions.Logging;
 
-namespace AzProxy.Middleware;
+namespace HazardBackend.Middleware;
 
 public class RequestValidator
 {
@@ -38,6 +38,10 @@ public class RequestValidator
 
         // get Request Type
         var requestType = ParseRequestType(context.Request.Path);
+
+        // Normalize IP (eg Ipv4-mapped IPv6 addresses) to ensure consistent handling!
+        if (clientIP.StartsWith("::ffff:"))
+            clientIP = clientIP[7..];
 
         // reject if banned
         if (!await _requestHandler.ValidateRequest(clientIP, requestType))

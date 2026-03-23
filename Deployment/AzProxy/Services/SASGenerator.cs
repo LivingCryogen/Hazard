@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System.Net.Http;
 
-namespace AzProxy.Services;
+namespace HazardBackend.Services;
 
 public class SASGenerator(ILogger<SASGenerator> logger,
     IHttpClientFactory httpClientFactory, 

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 
-namespace AzProxy.Middleware;
+namespace HazardBackend.Middleware;
 
 // Custom Authenticator for API Key authentication - used for lone developer admic access
 // If project scope grows, move to JWT or Oauth

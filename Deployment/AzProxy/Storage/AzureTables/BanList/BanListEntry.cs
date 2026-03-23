@@ -1,7 +1,7 @@
 ﻿using Azure;
 using Azure.Data.Tables;
 
-namespace AzProxy.Storage.AzureTables.BanList;
+namespace HazardBackend.Storage.AzureTables.BanList;
 
 public class BanListEntry : ITableEntity
 {

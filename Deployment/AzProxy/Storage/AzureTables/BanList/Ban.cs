@@ -1,4 +1,4 @@
-﻿namespace AzProxy.Storage.AzureTables.BanList;
+﻿namespace HazardBackend.Storage.AzureTables.BanList;
 
 public record Ban
 {

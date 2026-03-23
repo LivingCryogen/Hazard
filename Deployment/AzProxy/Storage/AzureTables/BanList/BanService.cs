@@ -1,8 +1,8 @@
-﻿using AzProxy.Requests;
+﻿using HazardBackend.Requests;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace AzProxy.Storage.AzureTables.BanList;
+namespace HazardBackend.Storage.AzureTables.BanList;
 
 public class BanService(ILogger<BanService> logger, IConfiguration config, IBanCache cache)
 {

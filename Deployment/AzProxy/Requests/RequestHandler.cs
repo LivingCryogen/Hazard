@@ -1,7 +1,7 @@
-﻿using AzProxy.Storage.AzureTables.BanList;
+﻿using HazardBackend.Storage.AzureTables.BanList;
 using System.Collections.Concurrent;
 
-namespace AzProxy.Requests;
+namespace HazardBackend.Requests;
 
 public class RequestHandler(ILogger<RequestHandler> logger, IConfiguration config, BanService banService)
 {

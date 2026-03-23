@@ -1,4 +1,4 @@
-﻿namespace AzProxy.Storage.AzureDB.DataTransform
+﻿namespace HazardBackend.Storage.AzureDB.DataTransform
 {
     public class PartialFailureException(string message, IEnumerable<string> failures) : Exception (message)
     {

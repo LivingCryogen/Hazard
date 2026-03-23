@@ -1,10 +1,10 @@
-﻿using AzProxy.Storage.AzureTables;
+﻿using HazardBackend.Storage.AzureTables;
 using Azure;
 using Azure.Data.Tables;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
-namespace AzProxy.Storage.AzureTables.AppVariables;
+namespace HazardBackend.Storage.AzureTables.AppVariables;
 
 internal class AppVarTableManager : AzTableManagerBase
 {

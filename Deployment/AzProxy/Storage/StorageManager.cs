@@ -1,10 +1,10 @@
-﻿using AzProxy.Requests;
-using AzProxy.Storage.AzureDB;
-using AzProxy.Storage.AzureDB.Context;
-using AzProxy.Storage.AzureDB.Entities;
-using AzProxy.Storage.AzureTables;
-using AzProxy.Storage.AzureTables.AppVariables;
-using AzProxy.Storage.AzureTables.BanList;
+﻿using HazardBackend.Requests;
+using HazardBackend.Storage.AzureDB;
+using HazardBackend.Storage.AzureDB.Context;
+using HazardBackend.Storage.AzureDB.Entities;
+using HazardBackend.Storage.AzureTables;
+using HazardBackend.Storage.AzureTables.AppVariables;
+using HazardBackend.Storage.AzureTables.BanList;
 using Azure;
 using Azure.Data.Tables;
 using Microsoft.AspNetCore.Rewrite;
@@ -19,7 +19,7 @@ using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Text.Json;
 
-namespace AzProxy.Storage;
+namespace HazardBackend.Storage;
 
 public class StorageManager : IHostedService
 {
@@ -28,7 +28,7 @@ public class StorageManager : IHostedService
     private readonly IServiceProvider _serviceProvider;
     private readonly IHostApplicationLifetime _appLife;
     private readonly ILogger _logger;
-    private readonly IBanCache _cache;
+    private readonly IBanCache _banListCache;
     private readonly BanListTableManager _banListManager;
     private readonly AppVarTableManager _appVarManager;
     private readonly AzDBManager _azDBManager;
@@ -42,13 +42,13 @@ public class StorageManager : IHostedService
     public StorageManager(IConfiguration config, 
         IHostApplicationLifetime appLife, 
         ILoggerFactory loggerFactory, 
-        IBanCache cache, 
+        IBanCache banListCache, 
         IServiceProvider serviceProvider, 
         AzDBManager azDBManager)
     {
         _appLife = appLife;
         _logger = loggerFactory.CreateLogger<StorageManager>();
-        _cache = cache;
+        _banListCache = banListCache;
         _serviceProvider = serviceProvider;
         _azDBManager = azDBManager;
 
@@ -141,7 +141,7 @@ public class StorageManager : IHostedService
         try
         {
             var recordedBans = await banListManager.GetRecordsAsync((entry) => entry.NowBanned);
-            _cache.Initialize(recordedBans);
+            _banListCache.Initialize(recordedBans);
         }
         catch (Exception ex)
         {
@@ -210,9 +210,9 @@ public class StorageManager : IHostedService
 
         try
         {
-            foreach (string address in _cache.GetUpdatedAddresses())
+            foreach (string address in _banListCache.GetUpdatedAddresses())
             {
-                if (!_cache.TryGetBan(address, out Ban? ban) || ban == null)
+                if (!_banListCache.TryGetBan(address, out Ban? ban) || ban == null)
                 {
                     _logger.LogWarning("Table Manager failed to get updated ban from the cache for address {address}.", address);
                     continue;
@@ -234,7 +234,7 @@ public class StorageManager : IHostedService
     {
         AppVarEntry updatedEntry;
         bool fetchedEntry = _dBLastPrunedFetchResult.Entry != null;
-        bool hasPruneDate = _azDBManager.LastPruned != null;
+        bool hasPruneDate = _azDBManager.LastPruneDate != null;
         bool wasPruned = _azDBManager.Pruned;
 
         if (wasPruned && !hasPruneDate)
@@ -262,7 +262,7 @@ public class StorageManager : IHostedService
             updatedEntry = _appVarManager.MakeNewAppVarEntry();
         }
 
-        MakeLastPruneDateEntry(updatedEntry, (DateTime)_azDBManager.LastPruned!);
+        MakeLastPruneDateEntry(updatedEntry, (DateTime)_azDBManager.LastPruneDate!);
 
         try
         {

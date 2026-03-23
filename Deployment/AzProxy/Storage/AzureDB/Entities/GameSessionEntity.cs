@@ -1,4 +1,4 @@
-﻿namespace AzProxy.Storage.AzureDB.Entities;
+﻿namespace HazardBackend.Storage.AzureDB.Entities;
 
 public class GameSessionEntity
 {

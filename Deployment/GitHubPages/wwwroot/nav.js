@@ -184,10 +184,11 @@ function initializeStatisticsView() {
     });
 
     // Load default leaderboard on page-load (helps with cold-start of WebApp proxy)
-    loadLeaderboard('top-players');
+    loadLeaderboard('wins');
 }
 
-function loadLeaderboard(leaderboardName) {
+function loadLeaderboard(sortBy) {
+    const leaderBoardData = apiRequest('/leaderboard?sortBy=' + sortBy);
 
 }
 

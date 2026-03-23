@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace AzProxy.Migrations
+namespace HazardBackend.Migrations
 {
     /// <inheritdoc />
     public partial class AddPlayerNamesToGameSession : Migration

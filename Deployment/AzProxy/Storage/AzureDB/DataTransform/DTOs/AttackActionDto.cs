@@ -1,6 +1,6 @@
-﻿namespace AzProxy.Storage.AzureDB.DataTransform;
+﻿namespace HazardBackend.Storage.AzureDB.DataTransform.DTOs;
 
-public class AttackActionDto
+public record AttackActionDto
 {
     public int ActionId { get; set; }
     public int Player { get; set; }

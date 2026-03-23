@@ -1,13 +1,14 @@
-using AzProxy.Middleware;
-using AzProxy.Requests;
-using AzProxy.Services;
-using AzProxy.Storage;
-using AzProxy.Storage.AzureDB;
-using AzProxy.Storage.AzureDB.Context;
-using AzProxy.Storage.AzureDB.DataTransform;
-using AzProxy.Storage.AzureDB.Services;
-using AzProxy.Storage.AzureTables;
-using AzProxy.Storage.AzureTables.BanList;
+using HazardBackend.Middleware;
+using HazardBackend.Requests;
+using HazardBackend.Services;
+using HazardBackend.Storage;
+using HazardBackend.Storage.AzureDB;
+using HazardBackend.Storage.AzureDB.Context;
+using HazardBackend.Storage.AzureDB.DataTransform;
+using HazardBackend.Storage.AzureDB.DataTransform.DTOs;
+using HazardBackend.Storage.AzureDB.Services;
+using HazardBackend.Storage.AzureTables;
+using HazardBackend.Storage.AzureTables.BanList;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,13 +17,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Configuration;
 using Newtonsoft.Json;
+using System.Collections.Concurrent;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace AzProxy
+namespace HazardBackend
 {
-    public class ProxyServer
+    public class HazardBackend
     {
         private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
         {
@@ -31,6 +33,11 @@ namespace AzProxy
             PropertyNameCaseInsensitive = true,
             Converters = { new JsonStringEnumConverter() }
         };
+        private static readonly ForwardedHeadersOptions _forwardedHeadersOptions = new() // This is needed to correctly capture client IPs when behind a reverse proxy or load balancer
+        {
+            ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+        };
+
 
         public static void Main(string[] args)
         {
@@ -39,34 +46,19 @@ namespace AzProxy
             // Apply any pending database migrations
             GetAndApplyMigrations(app);
 
+            app.UseForwardedHeaders(_forwardedHeadersOptions);
             app.UseHttpsRedirection();
             app.UseCors("FromGitHubPages");
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<RequestValidator>();
 
+
             app.MapGet("/", () => "Proxy is up.");
             app.MapGet("/secure-link", GenSasRequest);
 
 
-            app.MapGet("/leaderboard",
-                async (
-                    HttpContext context,
-                    [FromServices] RequestHandler requestHandler,
-                    [FromServices] StorageManager storageManager,
-                    [FromServices] IHttpClientFactory httpClientFactory,
-                    [FromServices] IConfiguration config,
-                    [FromServices] ILogger<ProxyServer> logger) =>
-                {
-                    try
-                    {
-
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                });
+            app.MapGet("/leaderboard", GetLeaderboard);
 
             app.MapPost("/sync-stats",
                 async (HttpContext context,
@@ -74,7 +66,7 @@ namespace AzProxy
                     [FromServices] DbTransformer transformer,
                     [FromServices] IHttpClientFactory httpClientFactory,
                     [FromServices] IConfiguration config,
-                    [FromServices] ILogger<ProxyServer> logger) =>
+                    [FromServices] ILogger<HazardBackend> logger) =>
                 {
                     var requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
 
@@ -187,7 +179,7 @@ namespace AzProxy
                 });
             builder.Services.AddHttpClient();
             builder.Services.AddSingleton<IBanCache, BanListCache>();
-            builder.Services.AddScoped<AzDBPruner>();
+            builder.Services.AddScoped<Pruner>();
             builder.Services.AddSingleton<AzDBManager>();
             builder.Services.AddHostedService<StorageManager>();
             builder.Services.AddScoped<SASGenerator>();
@@ -204,7 +196,7 @@ namespace AzProxy
         {
             using (var scope = app.Services.CreateScope())
             {
-                var logger = scope.ServiceProvider.GetRequiredService<ILogger<ProxyServer>>();
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger<HazardBackend>>();
                 var dbContext = scope.ServiceProvider.GetRequiredService<GameStatsDbContext>();
 
                 try
@@ -232,9 +224,29 @@ namespace AzProxy
             }
         }
 
-        private static async Task<IResult> GenSasRequest(HttpContext context, SASGenerator sasGenerator)
+        private static async Task<IResult> GenSasRequest(HttpContext context,
+            [FromServices] ILogger<HazardBackend> logger,
+            [FromServices] RequestHandler requestHandler,
+            [FromServices] SASGenerator sasGenerator)
         {
             return await sasGenerator.GenerateAsync(context.Request);
+        }
+
+        private static async Task<IResult> GetLeaderboard(string? sortBy,
+            [FromServices] AzDBManager dBManager)
+        {
+            if (string.IsNullOrEmpty(sortBy))
+                sortBy = "wins"; // Default leaderboard type
+            await dBManager.HandleClientQuery("leaderboard", sortBy);
+            
+            // parse response and return appropriate result
+            
+            //var topPlayers = await dbContext.PlayerStats
+            //    .OrderByDescending(ps => ps.TotalScore)
+            //    .Take(10)
+            //    .Select(ps => new { ps.PlayerName, ps.TotalScore })
+            //    .ToListAsync();
+            //return Results.Ok(topPlayers);
         }
 
         [Authorize(Policy = "AdminOnly")]

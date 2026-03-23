@@ -1,6 +1,6 @@
-﻿namespace AzProxy.Storage.AzureDB.DataTransform;
+﻿namespace HazardBackend.Storage.AzureDB.DataTransform.DTOs;
 
-public class GameSessionDto
+public record GameSessionDto
 {
     public int Version { get; set; }
     public Guid Id { get; set; }

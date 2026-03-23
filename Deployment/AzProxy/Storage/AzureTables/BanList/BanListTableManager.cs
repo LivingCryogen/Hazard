@@ -1,7 +1,7 @@
-﻿using AzProxy.Storage.AzureTables.AppVariables;
+﻿using HazardBackend.Storage.AzureTables.AppVariables;
 using Azure.Data.Tables;
 
-namespace AzProxy.Storage.AzureTables.BanList
+namespace HazardBackend.Storage.AzureTables.BanList
 {
     internal class BanListTableManager(ILogger<BanListTableManager> logger,
         string connectionString,

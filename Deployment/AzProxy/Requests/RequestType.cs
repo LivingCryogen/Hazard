@@ -1,4 +1,4 @@
-﻿namespace AzProxy.Requests;
+﻿namespace HazardBackend.Requests;
 
 public enum RequestType : int
 {
