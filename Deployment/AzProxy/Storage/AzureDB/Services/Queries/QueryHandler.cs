@@ -1,12 +1,13 @@
 ﻿using HazardBackend.Storage.AzureDB.Context;
 using HazardBackend.Storage.AzureDB.Entities;
+using HazardBackend.Storage.AzureDB.Services.Queries.Result;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Nodes;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace HazardBackend.Storage.AzureDB.Services.Queries;
 
-public class QueryHandler(GameStatsDbContext dbContext)
+public class QueryHandler(GameStatsDbContext dbContext, ILogger<QueryHandler> logger)
 {
     private readonly HashSet<string> _leaderBoardPropertyNames = 
         [ 
@@ -47,17 +48,15 @@ public class QueryHandler(GameStatsDbContext dbContext)
 
     private async Task<QueryResult> GetLeaderboard(string[] queryParams)
     {
-        if (queryParams.Length == 0)
-            return new QueryResult("Empty leaderboard query parameter; no data fetched.", null);
-
-        if (string.IsNullOrEmpty(queryParams[0]))
-            return new QueryResult("Empty leaderboard sort parameter; no data fetched.", null);
-
-        if (!_leaderBoardPropertyNames.Contains(queryParams[0]))
-            return new QueryResult($"Invalid leaderboard sort parameter '{queryParams[0]}'; no data fetched.", null);
+        ValidateQueryParams(queryParams);
 
 
-        string sortPropertyName = queryParams[0];
+        
+        
+    }
+
+    private bool ValidateQueryParams(string[] queryParams, out string? error)
+    {
         
     }
 }
