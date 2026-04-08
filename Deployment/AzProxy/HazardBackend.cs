@@ -58,7 +58,7 @@ namespace HazardBackend
             app.MapGet("/secure-link", GenSasRequest);
 
 
-            app.MapGet("/leaderboard", GetLeaderboard);
+            app.MapGet("/db", DatabaseRequest);
 
             app.MapPost("/sync-stats",
                 async (HttpContext context,
@@ -180,7 +180,7 @@ namespace HazardBackend
             builder.Services.AddHttpClient();
             builder.Services.AddSingleton<IBanCache, BanListCache>();
             builder.Services.AddScoped<Pruner>();
-            builder.Services.AddSingleton<AzDBManager>();
+            builder.Services.AddSingleton<IDatabaseManager, AzDBManager>();
             builder.Services.AddHostedService<StorageManager>();
             builder.Services.AddScoped<SASGenerator>();
             builder.Services.AddSingleton<BanService>();
@@ -232,8 +232,7 @@ namespace HazardBackend
             return await sasGenerator.GenerateAsync(context.Request);
         }
 
-        private static async Task<IResult> GetLeaderboard(string? sortBy,
-            [FromServices] AzDBManager dBManager)
+        private static async Task<IResult> DatabaseRequest([FromServices] IDatabaseManager dBManager)
         {
             if (string.IsNullOrEmpty(sortBy))
                 sortBy = "wins"; // Default leaderboard type

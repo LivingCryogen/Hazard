@@ -6,7 +6,5 @@ public enum RequestType : int
     Verify = 1,
     GenSAS = 2,
     Sync = 3,
-    Leaderboard = 4,
-    Search = 5,
-    Prune = 6
+    Database = 4
 }

@@ -1,4 +1,5 @@
 ﻿using HazardBackend.Requests;
+using HazardBackend.Services;
 using HazardBackend.Storage.AzureDB.Context;
 using HazardBackend.Storage.AzureDB.Entities;
 using HazardBackend.Storage.AzureDB.Services;
@@ -10,7 +11,7 @@ using System.Text;
 
 namespace HazardBackend.Storage.AzureDB;
 
-public class AzDBManager
+public class AzDBManager : IDatabaseManager
 {
 
     private readonly ILogger<AzDBManager> _logger;
