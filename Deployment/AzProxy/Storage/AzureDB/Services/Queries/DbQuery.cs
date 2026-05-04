@@ -14,22 +14,22 @@ public enum DbQueryType : int
 
 public class DbQuery
 {
-    public QueryType Type { get; init; }
+    public DbQueryType Type { get; init; }
     public string SortPropertyName { get; private set; }
     public string SortDirection { get; private set; } 
     public int ResponseLength { get; private set; } 
     
-    private Query(string queryTypeName, string propertyName, string sortDirection, int responseLength)
+    private DbQuery(string queryTypeName, string propertyName, string sortDirection, int responseLength)
     {
-        Type = Enum.Parse<QueryType>(queryTypeName);
+        Type = Enum.Parse<DbQueryType>(queryTypeName);
         SortPropertyName = propertyName;
         SortDirection = sortDirection;
         ResponseLength = responseLength;
     }
 
-    public static ParseResult<Query> TryCreate(string[] queryParams, ILogger logger)
+    public static ParseResult<DbQuery> TryCreate(string[] queryParams, ILogger logger)
     {
-        var (Success, Error) = QueryValidator.Validate(queryParams, logger);
+        var (Success, Error) = DbQueryValidator.Validate(queryParams, logger);
 
         if (!Success)
             return new ParseResult<Query> (false, null, Error);

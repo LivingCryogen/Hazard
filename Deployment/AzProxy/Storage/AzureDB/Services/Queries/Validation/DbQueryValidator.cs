@@ -4,7 +4,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HazardBackend.Storage.AzureDB.Services.Queries.Validation;
 
-public static class QueryValidator
+public static class DbQueryValidator
 {
     /* Validates the query parameters for a query. Query params should have the form:
      *      [query type, sorting property name, sort direction, response length]
@@ -23,7 +23,7 @@ public static class QueryValidator
             return (false, "Empty query parameter; no data fetched.");
         if (string.IsNullOrEmpty(queryParams[0]))
             return (false, "Empty query type parameter; no data fetched.");
-        if (Enum.TryParse(typeof(QueryType), (queryParams[0]), ignoreCase: true, out _))
+        if (Enum.TryParse(typeof(DbQueryType), (queryParams[0]), ignoreCase: true, out _))
             return (false, $"Invalid query:'{queryParams[0]}' is not a valid query type; no data fetched.");
 
         string queryTypeName = queryParams[0];

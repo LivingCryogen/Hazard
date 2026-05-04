@@ -1,5 +1,4 @@
-﻿using HazardBackend.Requests;
-using HazardBackend.Storage.AzureDB;
+﻿using HazardBackend.Storage.AzureDB;
 using HazardBackend.Storage.AzureDB.Context;
 using HazardBackend.Storage.AzureDB.Entities;
 using HazardBackend.Storage.AzureTables;
@@ -18,6 +17,8 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Text.Json;
+using HazardBackend.Storage.AzureDB.Services.Pruner;
+using HazardBackend.Storage.AzureDB.Services.Queries.Result;
 
 namespace HazardBackend.Storage;
 
@@ -31,7 +32,7 @@ public class StorageManager : IHostedService
     private readonly IBanCache _banListCache;
     private readonly BanListTableManager _banListManager;
     private readonly AppVarTableManager _appVarManager;
-    private readonly AzDBManager _azDBManager;
+    private readonly IDatabaseManager _azDBManager;
 
 
     private HashSet<AppVarEntry> _appVarSet;
@@ -44,7 +45,7 @@ public class StorageManager : IHostedService
         ILoggerFactory loggerFactory, 
         IBanCache banListCache, 
         IServiceProvider serviceProvider, 
-        AzDBManager azDBManager)
+        IDatabaseManager azDBManager)
     {
         _appLife = appLife;
         _logger = loggerFactory.CreateLogger<StorageManager>();
@@ -169,10 +170,28 @@ public class StorageManager : IHostedService
         await UpdateLastPruneDateEntry();
     }
 
+    public async Task<IResult> HandleDatabaseQuery(string query)
+    {
+        try
+        {
+            await _azDBManager.HandleClientQuery(query);
+
+            return 
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while handling a database query: {message}", ex.Message);
+            return Results.Problem("An error occurred while processing the query.");
+        }
+    }
+
     // Attempt to prune the database if needed based on the LastPruneDate App Var Result and AzDBManager's pruning conditions
     // If the Prune was completed successfully, returns true; otherwise, false.
-    public async Task<bool> TryDBPruneAsync(PruneRequest pruneRequest)
+    public async Task<IResult> TryDBPruneAsync(string? queryString)
     {
+        var pruneRequest = PruneRequest.ParseFromQueryString(queryString);
+
+
         bool missingLastPrune = _dBLastPrunedFetchResult.Entry == null;
         bool invalidLastPrune = _dBLastPrunedFetchResult.IsValid == false;
         bool scheduledPrune = _azDBManager.ShouldPrune();
@@ -193,12 +212,14 @@ public class StorageManager : IHostedService
                     _logger.LogWarning("Prune was successful, but the LastDBPruneDate App Variable Entry was not updated to reflect this.");
                 else
                     _logger.LogInformation("LastDBPruneDate AzTable Entry successfully updated.");
+
+                return Results.Ok("Database prune completed.");
             }
 
-            return pruneSuccess;
+            return Results.Problem("Database prune failed.");
         }
 
-        return false;
+        return Results.Ok("Database prune skipped because 'mustPrune' conditions were not met.");
     }
 
     public async Task<bool> DBPrune(PruneRequest pruneRequest) => await _azDBManager.PruneAsync(pruneRequest); // THIS FORCES PRUNE
@@ -286,7 +307,7 @@ public class StorageManager : IHostedService
         }
     }
 
-    private void MakeLastPruneDateEntry(AppVarEntry varEntry, DateTime dateTime)
+    private static void MakeLastPruneDateEntry(AppVarEntry varEntry, DateTime dateTime)
     {
         varEntry.RowKey = "LastDBPruneDate";
         varEntry.TypeName = "DateTime";

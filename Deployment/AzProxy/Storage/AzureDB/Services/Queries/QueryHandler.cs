@@ -36,7 +36,7 @@ public class QueryHandler(GameStatsDbContext dbContext, ILogger<QueryHandler> lo
 
 
 
-    public async Task<QueryResult> HandleQueryAsync(QueryType queryType, string[] queryParams)
+    public async Task<DbQueryResult> HandleQueryAsync(QueryType queryType, string[] queryParams)
     {
         switch (queryType)
         {
@@ -46,7 +46,7 @@ public class QueryHandler(GameStatsDbContext dbContext, ILogger<QueryHandler> lo
         }
     }
 
-    private async Task<QueryResult> GetLeaderboard(string[] queryParams)
+    private async Task<DbQueryResult> GetLeaderboard(string[] queryParams)
     {
         ValidateQueryParams(queryParams);
 

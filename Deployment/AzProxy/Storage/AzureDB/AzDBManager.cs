@@ -1,8 +1,6 @@
-﻿using HazardBackend.Requests;
-using HazardBackend.Services;
-using HazardBackend.Storage.AzureDB.Context;
+﻿using HazardBackend.Storage.AzureDB.Context;
 using HazardBackend.Storage.AzureDB.Entities;
-using HazardBackend.Storage.AzureDB.Services;
+using HazardBackend.Storage.AzureDB.Services.Pruner;
 using HazardBackend.Storage.AzureDB.Services.Queries;
 using HazardBackend.Storage.AzureDB.Services.Queries.Result;
 using HazardBackend.Storage.AzureTables;
@@ -20,9 +18,9 @@ public class AzDBManager : IDatabaseManager
     private readonly TimeSpan _pruneIncompleteGamesAfterDuration;
     private readonly TimeSpan? _pruneAfterDuration = null;
 
-    internal DateTime? LastPruneDate { get; private set; }
-    internal bool Pruned { get; private set; } = false;
-    internal int? PruneAfterDays => _pruneAfterDuration?.Days;
+    public DateTime? LastPruneDate { get; private set; }
+    public bool Pruned { get; private set; } = false;
+    public int? PruneAfterDays => _pruneAfterDuration?.Days;
 
 
     public AzDBManager(IConfiguration config, ILogger<AzDBManager> logger, IServiceProvider serviceProvider) 
@@ -53,7 +51,7 @@ public class AzDBManager : IDatabaseManager
         LastPruneDate = lastPruneDate;
     }
 
-    public async Task<QueryResult> HandleClientQuery(string query)
+    public async Task<DbQueryResult> HandleClientQuery(string query)
     {
         using var scope = _serviceProvider.CreateScope();
         var handler = scope.ServiceProvider.GetRequiredService<QueryHandler>();
@@ -63,7 +61,7 @@ public class AzDBManager : IDatabaseManager
         }
         catch (Exception ex)
         {
-            return new QueryResult($"An error occurred while processing the query: {ex.Message}.", null);
+            return new DbQueryResult($"An error occurred while processing the query: {ex.Message}.", null);
         }
     }
 

@@ -1,6 +1,4 @@
-﻿using HazardBackend.Requests;
-using HazardBackend.Storage;
-using HazardBackend.Storage.AzureDB.Context;
+﻿using HazardBackend.Storage.AzureDB.Context;
 using HazardBackend.Storage.AzureDB.Entities;
 using HazardBackend.Storage.AzureTables;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace HazardBackend.Storage.AzureDB.Services;
+namespace HazardBackend.Storage.AzureDB.Services.Pruner;
 
 public class Pruner(ILogger<Pruner> logger,
     IServiceProvider serviceProvider,

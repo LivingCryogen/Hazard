@@ -6,7 +6,7 @@ using HazardBackend.Storage.AzureDB;
 using HazardBackend.Storage.AzureDB.Context;
 using HazardBackend.Storage.AzureDB.DataTransform;
 using HazardBackend.Storage.AzureDB.DataTransform.DTOs;
-using HazardBackend.Storage.AzureDB.Services;
+using HazardBackend.Storage.AzureDB.Services.Pruner;
 using HazardBackend.Storage.AzureTables;
 using HazardBackend.Storage.AzureTables.BanList;
 using Microsoft.AspNetCore.Authentication;
@@ -56,8 +56,6 @@ namespace HazardBackend
 
             app.MapGet("/", () => "Proxy is up.");
             app.MapGet("/secure-link", GenSasRequest);
-
-
             app.MapGet("/db", DatabaseRequest);
 
             app.MapPost("/sync-stats",
@@ -148,7 +146,10 @@ namespace HazardBackend
                     }
 
                 });
-            app.MapPost("/prune", ManualPruneAzDB).RequireAuthorization("AdminOnly");
+
+            var admin = app.MapGroup("/admin").RequireAuthorization("AdminOnly");
+            admin.MapPost("/db/prune", ManualPruneAzDB);
+
             app.Run();
         }
 
@@ -225,18 +226,14 @@ namespace HazardBackend
         }
 
         private static async Task<IResult> GenSasRequest(HttpContext context,
-            [FromServices] ILogger<HazardBackend> logger,
-            [FromServices] RequestHandler requestHandler,
             [FromServices] SASGenerator sasGenerator)
         {
             return await sasGenerator.GenerateAsync(context.Request);
         }
 
-        private static async Task<IResult> DatabaseRequest([FromServices] IDatabaseManager dBManager)
+        private static async Task<IResult> DatabaseRequest([FromServices] StorageManager storageManager)
         {
-            if (string.IsNullOrEmpty(sortBy))
-                sortBy = "wins"; // Default leaderboard type
-            await dBManager.HandleClientQuery("leaderboard", sortBy);
+            await storageManager.HandleClientQuery("leaderboard", sortBy);
             
             // parse response and return appropriate result
             
@@ -249,12 +246,10 @@ namespace HazardBackend
         }
 
         [Authorize(Policy = "AdminOnly")]
-        private static async Task<IResult> ManualPruneAzDB([AsParameters] PruneRequest pruneRequest, StorageManager storeManager)
+        private static async Task<IResult> ManualPruneAzDB(HttpRequest request, StorageManager storeManager)
         {
-            if (await storeManager.TryDBPruneAsync(pruneRequest))
-                return Results.Ok($"Manual prune completed, {(pruneRequest.PruneDemos ? "" : "NOT ")} including demo entities.");
-            else
-                return Results.Problem("Manual prune failed or skipped.", statusCode: StatusCodes.Status500InternalServerError);
+            var queryString = request.QueryString.Value;
+            return await storeManager.TryDBPruneAsync(queryString);
         }
     }
 }

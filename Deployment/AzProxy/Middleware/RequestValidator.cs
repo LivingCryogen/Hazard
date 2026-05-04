@@ -3,18 +3,11 @@ using Microsoft.Extensions.Logging;
 
 namespace HazardBackend.Middleware;
 
-public class RequestValidator
+public class RequestValidator(RequestDelegate next, RequestHandler requestHandler, ILogger<RequestValidator> logger)
 {
-    private readonly RequestDelegate _next;
-    private readonly RequestHandler _requestHandler;
-    private readonly ILogger<RequestValidator> _logger;
-
-    public RequestValidator(RequestDelegate next, RequestHandler requestHandler, ILogger<RequestValidator> logger)
-    {
-        _next = next;
-        _requestHandler = requestHandler;
-        _logger = logger;
-    }
+    private readonly RequestDelegate _next = next;
+    private readonly RequestHandler _requestHandler = requestHandler;
+    private readonly ILogger<RequestValidator> _logger = logger;
 
     public async Task InvokeAsync(HttpContext context)
     {
