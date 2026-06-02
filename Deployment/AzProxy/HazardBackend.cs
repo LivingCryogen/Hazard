@@ -1,3 +1,4 @@
+using HazardBackend.DTOs;
 using HazardBackend.Middleware;
 using HazardBackend.Requests;
 using HazardBackend.Services;
@@ -5,12 +6,12 @@ using HazardBackend.Storage;
 using HazardBackend.Storage.AzureDB;
 using HazardBackend.Storage.AzureDB.Context;
 using HazardBackend.Storage.AzureDB.DataTransform;
-using HazardBackend.Storage.AzureDB.DataTransform.DTOs;
 using HazardBackend.Storage.AzureDB.Services.Pruner;
 using HazardBackend.Storage.AzureTables;
 using HazardBackend.Storage.AzureTables.BanList;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -231,9 +232,11 @@ namespace HazardBackend
             return await sasGenerator.GenerateAsync(context.Request);
         }
 
-        private static async Task<IResult> DatabaseRequest([FromServices] StorageManager storageManager)
+        private static async Task<Results<Ok<List<BaseDto>>, ProblemHttpResult>> DatabaseRequest(
+            HttpRequest request,
+            [FromServices] StorageManager storageManager)
         {
-            await storageManager.HandleClientQuery("leaderboard", sortBy);
+            return await storageManager.HandleDatabaseQuery(request.QueryString.Value);
             
             // parse response and return appropriate result
             
@@ -246,7 +249,9 @@ namespace HazardBackend
         }
 
         [Authorize(Policy = "AdminOnly")]
-        private static async Task<IResult> ManualPruneAzDB(HttpRequest request, StorageManager storeManager)
+        private static async Task<Results<Ok, ProblemHttpResult>> ManualPruneAzDB(
+            HttpRequest request,
+            [FromServices] StorageManager storeManager)
         {
             var queryString = request.QueryString.Value;
             return await storeManager.TryDBPruneAsync(queryString);

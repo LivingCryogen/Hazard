@@ -1,4 +1,4 @@
-﻿namespace HazardBackend.Storage.AzureDB.DataTransform.DTOs;
+﻿namespace HazardBackend.DTOs;
 
 public record PlayerStatsDto(
     Guid InstallId,
@@ -24,4 +24,4 @@ public record PlayerStatsDto(
     int MaxAdvances,
     int TradeIns,
     int TotalOccupationBonus
-);
+) : BaseDto;

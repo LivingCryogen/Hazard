@@ -34,8 +34,6 @@ public class QueryHandler(GameStatsDbContext dbContext, ILogger<QueryHandler> lo
             "TotalOccupationBonus"
         ];
 
-
-
     public async Task<DbQueryResult> HandleQueryAsync(QueryType queryType, string[] queryParams)
     {
         switch (queryType)

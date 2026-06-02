@@ -1,5 +1,5 @@
-﻿using HazardBackend.Storage.AzureDB.Context;
-using HazardBackend.Storage.AzureDB.DataTransform.DTOs;
+﻿using HazardBackend.DTOs;
+using HazardBackend.Storage.AzureDB.Context;
 using HazardBackend.Storage.AzureDB.Entities;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;

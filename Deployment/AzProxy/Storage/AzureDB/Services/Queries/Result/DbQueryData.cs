@@ -1,4 +1,4 @@
-﻿using HazardBackend.Storage.AzureDB.DataTransform.DTOs;
+﻿using HazardBackend.DTOs;
 
 namespace HazardBackend.Storage.AzureDB.Services.Queries.Result;
 

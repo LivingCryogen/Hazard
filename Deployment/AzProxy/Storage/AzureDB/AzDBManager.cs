@@ -51,18 +51,12 @@ public class AzDBManager : IDatabaseManager
         LastPruneDate = lastPruneDate;
     }
 
-    public async Task<DbQueryResult> HandleClientQuery(string query)
+    public async Task<DbQueryResult> HandleDatabaseQuery(string query)
     {
         using var scope = _serviceProvider.CreateScope();
         var handler = scope.ServiceProvider.GetRequiredService<QueryHandler>();
-        try
-        {
-            return await handler.HandleQueryAsync(query);
-        }
-        catch (Exception ex)
-        {
-            return new DbQueryResult($"An error occurred while processing the query: {ex.Message}.", null);
-        }
+
+        return await handler.HandleQueryAsync(query);
     }
 
     // Determine if the database should be pruned of old entries

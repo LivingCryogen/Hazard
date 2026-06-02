@@ -174,8 +174,9 @@ public class StorageManager : IHostedService
     {
         try
         {
-            await _azDBManager.HandleClientQuery(query);
+            var dbQueryResult = await _azDBManager.HandleClientQuery(query);
 
+            if (dbQueryResult.Error)
             return 
         }
         catch (Exception ex)

@@ -1,3 +1,3 @@
 ﻿namespace HazardBackend.Storage.AzureDB.Services.Queries.Result;
 
-public record DbQueryResult(string? Error, DbQueryData? Data);
+public record DbQueryResult(DBQueryErrorType Error, string? Message, DbQueryData? Data);
