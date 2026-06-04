@@ -1,4 +1,4 @@
-﻿namespace HazardBackend.Storage.AzureDB.Services.Queries.Result;
+﻿namespace HazardBackend.DbQueries.Result;
 
 public enum DBQueryErrorType
 {

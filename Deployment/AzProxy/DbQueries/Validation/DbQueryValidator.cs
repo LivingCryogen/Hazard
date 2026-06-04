@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.Routing;
+﻿using HazardBackend.DbQueries;
+using Microsoft.AspNetCore.Mvc.Routing;
 using System.Reflection.Metadata;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace HazardBackend.Storage.AzureDB.Services.Queries.Validation;
+namespace HazardBackend.DbQueries.Validation;
 
 public static class DbQueryValidator
 {
@@ -23,7 +24,7 @@ public static class DbQueryValidator
             return (false, "Empty query parameter; no data fetched.");
         if (string.IsNullOrEmpty(queryParams[0]))
             return (false, "Empty query type parameter; no data fetched.");
-        if (Enum.TryParse(typeof(DbQueryType), (queryParams[0]), ignoreCase: true, out _))
+        if (Enum.TryParse(typeof(DbQueryType), queryParams[0], ignoreCase: true, out _))
             return (false, $"Invalid query:'{queryParams[0]}' is not a valid query type; no data fetched.");
 
         string queryTypeName = queryParams[0];
@@ -40,8 +41,8 @@ public static class DbQueryValidator
         if (paramsLength < 3)
         { 
             logger.LogWarning("Empty sort direction and response length parameters; defaulting to 'ascending' and '10'.");
-            queryParams.Concat("ascending");
-            queryParams = [queryParams, "ascending", "10"];
+            queryParams.Add("ascending");
+            queryParams.Add("10");
             return (true, null);
         }
 

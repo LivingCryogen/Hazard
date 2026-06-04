@@ -1,5 +1,4 @@
 ﻿using HazardBackend.Storage.AzureDB.Services.Pruner;
-using HazardBackend.Storage.AzureDB.Services.Queries.Result;
 
 namespace HazardBackend.Storage.AzureDB;
 

@@ -9,15 +9,23 @@ public class GameStatsDbContext(DbContextOptions<GameStatsDbContext> options) : 
     public DbSet<AttackActionEntity> AttackActions { get; set; }
     public DbSet<MoveActionEntity> MoveActions { get; set; }
     public DbSet<TradeActionEntity> TradeActions { get; set; }
-    
     public DbSet<PlayerStatsEntity> PlayerStats { get; set; }
+    public DbSet<PlayerIdentityEntity> PlayerIdentities { get; set; }
+    public DbSet<GameSessionPlayerEntity> GameSessionPlayers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
+        // Primary Keys
         modelBuilder.Entity<GameSessionEntity>()
             .HasKey(entity => entity.GameId);
+            
+        modelBuilder.Entity<PlayerIdentityEntity>()
+            .HasKey(entity => new { entity.Name, entity.InstallId });
+
+        modelBuilder.Entity<GameSessionPlayerEntity>()
+            .HasKey(entity => new { entity.GameId, entity.PlayerName, entity.InstallId });
 
         modelBuilder.Entity<PlayerStatsEntity>()
             .HasKey(entity => new { entity.Name, entity.InstallId });
@@ -31,42 +39,68 @@ public class GameStatsDbContext(DbContextOptions<GameStatsDbContext> options) : 
         modelBuilder.Entity<TradeActionEntity>()
             .HasKey(entity => new { entity.GameId, entity.ActionId });
 
+        // Foreign Keys and Relationships
+
+        modelBuilder.Entity<PlayerStatsEntity>()
+            .HasOne<PlayerIdentityEntity>()
+            .WithOne(pi => pi.PlayerStats)
+            .HasForeignKey<PlayerStatsEntity>(e => new { e.Name, e.InstallId })
+            .HasPrincipalKey<PlayerIdentityEntity>(e => new { e.Name, e.InstallId });
+
+        // GameSessionPlayerEntity Junction table relationships
+        modelBuilder.Entity<GameSessionPlayerEntity>() 
+            .HasOne<GameSessionEntity>()
+            .WithMany(game => game.GameSessionPlayers)
+            .HasForeignKey(gsp => gsp.GameId)
+            .OnDelete(DeleteBehavior.Cascade); // Cascade delete GameSessionPlayerEntities when a GameSession is deleted
+       
+        modelBuilder.Entity<GameSessionPlayerEntity>()
+            .HasOne<PlayerIdentityEntity>()
+            .WithMany()
+            .HasForeignKey(plyr => new { plyr.PlayerName, plyr.InstallId })
+            .HasPrincipalKey(pi => new { pi.Name, pi.InstallId })
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // Action relationships
         modelBuilder.Entity<AttackActionEntity>()
             .HasOne(attack => attack.GameSession)
-            .WithMany(game => game.AttackActions);
+            .WithMany(game => game.AttackActions)
+            .OnDelete(DeleteBehavior.Cascade); // Cascade delete actions when a GameSession is deleted
 
         modelBuilder.Entity<AttackActionEntity>()
-            .HasOne<PlayerStatsEntity>()
-            .WithMany() // No navigation property in PlayerStatsEntity, doesn't track back to actions
+            .HasOne<PlayerIdentityEntity>()
+            .WithMany() // No navigation property in PlayerIdentityEntity, doesn't track back to actions
             .HasForeignKey(a => new { a.PlayerName, a.InstallID })
             .HasPrincipalKey(p => new { p.Name, p.InstallId })
             .OnDelete(DeleteBehavior.Restrict); // Prevent cascading deletes
 
         modelBuilder.Entity<AttackActionEntity>()
-            .HasOne<PlayerStatsEntity>()
-            .WithMany() // No navigation property in PlayerStatsEntity, doesn't track back to actions
+            .HasOne<PlayerIdentityEntity>()
+            .WithMany() // No navigation property in PlayerIdentityEntity, doesn't track back to actions
             .HasForeignKey(a => new { a.DefenderName, a.InstallID })
             .HasPrincipalKey(p => new { p.Name, p.InstallId })
             .OnDelete(DeleteBehavior.Restrict); // Prevent cascading deletes
 
         modelBuilder.Entity<MoveActionEntity>()
             .HasOne(move => move.GameSession)
-            .WithMany(game => game.MoveActions);
+            .WithMany(game => game.MoveActions)
+            .OnDelete(DeleteBehavior.Cascade); // Cascade delete actions when a GameSession is deleted
 
         modelBuilder.Entity<MoveActionEntity>()
-            .HasOne<PlayerStatsEntity>()
-            .WithMany() // No navigation property in PlayerStatsEntity, doesn't track back to actions
+            .HasOne<PlayerIdentityEntity>()
+            .WithMany() // No navigation property in PlayerIdentityEntity, doesn't track back to actions
             .HasForeignKey(m => new { m.PlayerName, m.InstallID })
             .HasPrincipalKey(m => new { m.Name, m.InstallId })
             .OnDelete(DeleteBehavior.Restrict); // Prevent cascading deletes
 
         modelBuilder.Entity<TradeActionEntity>()
             .HasOne(trade => trade.GameSession)
-            .WithMany(game => game.TradeActions);
+            .WithMany(game => game.TradeActions)
+            .OnDelete(DeleteBehavior.Cascade); // Cascade delete actions when a GameSession is deleted
 
         modelBuilder.Entity<TradeActionEntity>()
-            .HasOne<PlayerStatsEntity>()
-            .WithMany() // No navigation property in PlayerStatsEntity, doesn't track back to actions
+            .HasOne<PlayerIdentityEntity>()
+            .WithMany() // No navigation property in PlayerIdentityEntity, doesn't track back to actions
             .HasForeignKey(t => new { t.PlayerName, t.InstallID })
             .HasPrincipalKey(t => new { t.Name, t.InstallId })
             .OnDelete(DeleteBehavior.Restrict); // Prevent cascading deletes

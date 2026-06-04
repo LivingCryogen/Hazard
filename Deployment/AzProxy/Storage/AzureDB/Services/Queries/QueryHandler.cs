@@ -1,6 +1,5 @@
 ﻿using HazardBackend.Storage.AzureDB.Context;
 using HazardBackend.Storage.AzureDB.Entities;
-using HazardBackend.Storage.AzureDB.Services.Queries.Result;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Nodes;
 using static System.Formats.Asn1.AsnWriter;

@@ -25,6 +25,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         int prevLastAction = 0; // Used to determine the last action recorded for a player, to avoid double-counting
         Guid installId = sessionData.InstallId;
         int actionCount = sessionData.Attacks.Count + sessionData.Moves.Count + sessionData.Trades.Count;
+        bool updating = false; // Used to check if transform is on an update path or a create path
 
         // Validate count integrity
         if (sessionData.NumActions != actionCount)
@@ -116,6 +117,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             }
 
             _logger.LogInformation("GSE for game {gameID} on install {installID} successfully updated.", previousSession.GameId, previousSession.InstallId);
+            updating = true;
 
             // More memory-efficient: avoids allocating a combined sequence via SelectMany.
             // Slightly more CPU work (3 Max calls), but better for large datasets or tight memory constraints.
@@ -129,22 +131,72 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             prevLastAction = lastActionIds.Max();
         }
 
-        // Create or Update PlayerStats for each Player in this new or updated Session
-        foreach(var playerData in playerNumToNameMap)
+        // Create or Update Player Tables (Identity!!! and Stats) for each Player in this new or updated Session ~~~!!
+        foreach (var playerData in playerNumToNameMap) // playerData.Key = player number, playerData.Value = player name
         {
-            if (await GetPlayerStats(installId, playerData.Value, errorList) is PlayerStatsEntity prevPlayerStats)
+            var prevIdentity = await GetPlayerIdentity(installId, playerData.Value, errorList);
+            var prevGSPE = await GetGameSessionPlayerEntity(sessionData.Id, installId, playerData.Value);
+            var prevPlayerStats = await GetPlayerStats(installId, playerData.Value, errorList);
+
+            if (updating)
             {
-                if (!UpdatePlayerStats(prevPlayerStats, sessionData, playerData.Key, playerData.Value, newGame, prevLastAction, errorList))
+                if (prevIdentity == null)
                 {
-                    errorList.Add($"Failed to Update stats for {prevPlayerStats.Name} with install ID {prevPlayerStats.InstallId}.");
-                    _logger.LogWarning("Update failed for Player {plyrName} on install {installID}", prevPlayerStats.Name, prevPlayerStats.InstallId);
-                    continue;
+                    _logger.LogWarning("No existing Player Identity found for player {num} on session {session} with name '{name}' on install {install} when attempting to update;" +
+                        "creating new Player Identity and associated Game Session Player junction record.",
+                        playerData.Key, sessionData.Id, playerData.Value, installId);
+                    await _context.PlayerIdentities.AddAsync(CreateNewPlayerIdentity(installId, playerData.Value));
                 }
 
-                _logger.LogInformation("PSE for player {name} succesfully updated.", prevPlayerStats.Name);
+                if (prevGSPE == null)
+                {
+                    _logger.LogWarning("No existing Game Session Player Entity junction record found for player {num} on session {session} with name '{name}' on install {install} when attempting to update;" +
+                        "creating new Game Session Player junction record.",
+                        playerData.Key, sessionData.Id, playerData.Value, installId);
+                    await _context.GameSessionPlayers.AddAsync(CreateNewGameSessionPlayerEntity(sessionData.Id, installId, playerData.Value));
+                }
+
+                if (prevPlayerStats == null)
+                {
+                    _logger.LogWarning("No existing Player Stats Entity found for player {num} on session {session} with name '{name}' on install {install} when attempting to update;" +
+                        "creating new Player Stats Entity.",
+                        playerData.Key, sessionData.Id, playerData.Value, installId);
+                    await _context.PlayerStats.AddAsync(CreateNewPlayerStats(installId, sessionData, playerData.Key, playerData.Value));
+                }
+                else
+                {
+                    UpdatePlayerStats(prevPlayerStats, sessionData, playerData.Key, playerData.Value, newGame, prevLastAction, errorList);
+                }
             }
             else
-                await _context.PlayerStats.AddAsync(CreateNewPlayerStats(installId, sessionData, playerData.Key, playerData.Value));
+            {
+                if (prevIdentity == null)
+                {
+                    await _context.PlayerIdentities.AddAsync(CreateNewPlayerIdentity(installId, playerData.Value));
+                }
+                else
+                {
+                    _logger.LogDebug("Existing Player Identity found for player {num} on session {session}, skipping new Player Identity creation.", playerData.Key, sessionData.Id);
+                }
+                if (prevGSPE == null)
+                {
+                    await _context.GameSessionPlayers.AddAsync(CreateNewGameSessionPlayerEntity(sessionData.Id, installId, playerData.Value));
+                }
+                else
+                {
+                    _logger.LogWarning("Existing Game Session Player Entity junction record found for player {num} on session {session} with name '{name}' on install {install}" +
+                        " when attempting to create new session; skipping creation.",
+                        playerData.Key, sessionData.Id, playerData.Value, installId);
+                }
+                if (prevPlayerStats == null)
+                {
+                    await _context.PlayerStats.AddAsync(CreateNewPlayerStats(installId, sessionData, playerData.Key, playerData.Value));
+                }
+                else
+                {
+                    UpdatePlayerStats(prevPlayerStats, sessionData, playerData.Key, playerData.Value, newGame, prevLastAction, errorList);
+                }
+            }
         }
 
         if (errorList.Count != 0)
@@ -175,7 +227,6 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             Version = sessionDto.Version,
             StartTime = sessionDto.StartTime,
             EndTime = sessionDto.EndTime,
-            PlayerNames = string.Join(",", sessionDto.PlayerNumsAndNames.Values),
             Winner = sessionDto.Winner,
         };
     }
@@ -362,6 +413,30 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             throw;
         }
     }
+    private async Task<PlayerIdentityEntity?> GetPlayerIdentity(Guid installId, string name, List<string> errors)
+    {
+        try
+        {
+            return await _context.PlayerIdentities.Where(p => p.InstallId == installId && p.Name == name).FirstOrDefaultAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("There was an unexpected error while fetching PlayerIdentityEntity associated with install ID {id}: {Message}", installId, ex.Message);
+            errors.Add($"Fetch Error on PIE with playher name '{name}' and install '{installId}': " + ex.Message);
+            throw;
+        }
+    }
+
+    private static PlayerIdentityEntity CreateNewPlayerIdentity(Guid installId, string playerName)
+    {
+        return new PlayerIdentityEntity()
+        {
+            InstallId = installId,
+            Name = playerName,
+            IsDemo = false
+        };
+    }
+
     private static PlayerStatsEntity CreateNewPlayerStats(Guid installId, GameSessionDto sessionDto, int playerNumber, string playerName)
     {
         return new PlayerStatsEntity()
@@ -496,5 +571,30 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             errors.Add($"Update Error on PSE with name {playerStats.Name} and install {playerStats.InstallId}: " + ex.Message);
             return false;
         }
+    }
+    
+    private async Task<GameSessionPlayerEntity?> GetGameSessionPlayerEntity(Guid gameId, Guid installId, string playerName)
+    {
+        try
+        {
+            return await _context.GameSessionPlayers.Where(p => p.GameId == gameId && p.InstallId == installId && p.PlayerName == playerName).FirstOrDefaultAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("There was an unexpected error while fetching GameSessionPlayer junction record associated with game {gameId} on install ID {id} for player {plyrName}: {Message}",
+                gameId, installId, playerName, ex.Message);
+            throw;
+        }
+    }
+
+    private static GameSessionPlayerEntity CreateNewGameSessionPlayerEntity(Guid gameId, Guid installId, string playerName)
+    {
+        return new GameSessionPlayerEntity()
+        {
+            GameId = gameId,
+            InstallId = installId,
+            PlayerName = playerName,
+            IsDemo = false
+        };
     }
 }

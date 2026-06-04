@@ -18,7 +18,10 @@ using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Text.Json;
 using HazardBackend.Storage.AzureDB.Services.Pruner;
-using HazardBackend.Storage.AzureDB.Services.Queries.Result;
+using HazardBackend.DTOs;
+using Microsoft.AspNetCore.Http.HttpResults;
+using HazardBackend.DbQueries;
+using HazardBackend.DbQueries.Result;
 
 namespace HazardBackend.Storage;
 
@@ -33,7 +36,6 @@ public class StorageManager : IHostedService
     private readonly BanListTableManager _banListManager;
     private readonly AppVarTableManager _appVarManager;
     private readonly IDatabaseManager _azDBManager;
-
 
     private HashSet<AppVarEntry> _appVarSet;
 
@@ -184,6 +186,20 @@ public class StorageManager : IHostedService
             _logger.LogError(ex, "An error occurred while handling a database query: {message}", ex.Message);
             return Results.Problem("An error occurred while processing the query.");
         }
+    }
+
+    private Results<Ok<List<BaseDto>>, ProblemHttpResult> HandleDbQueryResult(DbQueryResult dbQueryResult)
+    {
+
+        if (dbQueryResult.Error == DBQueryErrorType.None && dbQueryResult.Data != null)
+        {
+            return TypedResults.Ok(dbQueryResult.Data);
+        }
+    }
+
+    private DbQuery ParseQueryString(string? queryString)
+    {
+    
     }
 
     // Attempt to prune the database if needed based on the LastPruneDate App Var Result and AzDBManager's pruning conditions

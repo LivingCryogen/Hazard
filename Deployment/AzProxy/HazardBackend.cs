@@ -1,3 +1,4 @@
+using HazardBackend.DbQueries;
 using HazardBackend.DTOs;
 using HazardBackend.Middleware;
 using HazardBackend.Requests;
@@ -20,6 +21,7 @@ using Microsoft.Extensions.Logging.Configuration;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -233,9 +235,22 @@ namespace HazardBackend
         }
 
         private static async Task<Results<Ok<List<BaseDto>>, ProblemHttpResult>> DatabaseRequest(
-            HttpRequest request,
-            [FromServices] StorageManager storageManager)
+            string requestType,
+            string? sortBy,
+            bool? descending,
+            int? maxLength,
+            [FromServices] StorageManager storageManager,
+            [FromServices] ILoggerFactory loggerFactory)
         {
+            if (string.IsNullOrEmpty(requestType))
+                return TypedResults.Problem("Request type is required.", statusCode: StatusCodes.Status400BadRequest);
+
+            if (!Enum.TryParse<DbQueryType>(requestType, true, out var queryType) || queryType == DbQueryType.None)
+                return TypedResults.Problem("Invalid request type.", statusCode: StatusCodes.Status400BadRequest);
+
+            if (DbQuery.TryCreate(queryType, sortBy, descending, maxLength, loggerFactory.CreateLogger<DbQuery>()) is ParseResult<DbQuery> dbQuery && dbQuery.Type != DbQueryType.None))
+                return TypedResults.Problem("Invalid query parameters.", statusCode: StatusCodes.Status400BadRequest);
+
             return await storageManager.HandleDatabaseQuery(request.QueryString.Value);
             
             // parse response and return appropriate result

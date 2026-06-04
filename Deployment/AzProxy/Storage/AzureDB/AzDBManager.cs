@@ -2,7 +2,6 @@
 using HazardBackend.Storage.AzureDB.Entities;
 using HazardBackend.Storage.AzureDB.Services.Pruner;
 using HazardBackend.Storage.AzureDB.Services.Queries;
-using HazardBackend.Storage.AzureDB.Services.Queries.Result;
 using HazardBackend.Storage.AzureTables;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
