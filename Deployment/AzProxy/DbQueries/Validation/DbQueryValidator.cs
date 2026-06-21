@@ -7,76 +7,61 @@ namespace HazardBackend.DbQueries.Validation;
 
 public static class DbQueryValidator
 {
-    /* Validates the query parameters for a query. Query params should have the form:
-     *      [query type, sorting property name, sort direction, response length]
-     *     Example:
-     *      ["leaderboard", "GamesWon", "descending", "25"]
-     *      
-     *      Returns a flag indicating whether validation was successful or not, with possible error message.
-     *      
-     *      NOTE!! : Sort direction or response length set to default ("ascending" and/or "10") if invalid or missing!  */
-    public static (bool Success, string? error) Validate(List<string> queryParams, HashSet<string> propertyNames, ILogger logger)
+    /* Validates the query parameters for a query.
+     * Parsing is handled by the DbQuery.TryCreate method, so this method only needs to check for logical consistency of the parameters 
+     * (e.g. that the filter property is valid for the query type, that the sort direction is valid for the sort property, etc.).
+     */
+    public static (bool Success, string[] Errors) Validate(DbQuery query, ILogger logger)
     {
-        if (queryParams == null)
-            return (false, "Query parameters cannot be null.");
-        int paramsLength = queryParams.Count;
-        if (paramsLength == 0)
-            return (false, "Empty query parameter; no data fetched.");
-        if (string.IsNullOrEmpty(queryParams[0]))
-            return (false, "Empty query type parameter; no data fetched.");
-        if (Enum.TryParse(typeof(DbQueryType), queryParams[0], ignoreCase: true, out _))
-            return (false, $"Invalid query:'{queryParams[0]}' is not a valid query type; no data fetched.");
-
-        string queryTypeName = queryParams[0];
-
-        if (paramsLength < 2 || string.IsNullOrEmpty(queryParams[1]))
-            return (false, "Empty query property name; no data fetched.");
-        if (!propertyNames.Contains(queryParams[1]))
-            return (false, $"Invalid query property name; '{queryParams[1]}' is not a valid property for type {queryParams[0]}; no data fetched.");)
-
-        string sortPropertyName = queryParams[1];
-
-        string sortDirection = "ascending";
-        int responseLength = 10;
-        if (paramsLength < 3)
-        { 
-            logger.LogWarning("Empty sort direction and response length parameters; defaulting to 'ascending' and '10'.");
-            queryParams.Add("ascending");
-            queryParams.Add("10");
-            return (true, null);
+        return query.Type switch 
+        {
+            DbQueryType.Leaderboard => ValidateLeaderboardQuery(query, logger),
+            DbQueryType.PlayerStats => ValidatePlayerStatsQuery(query, logger),
+            // ...
         }
 
-        if (paramsLength > 3 && string.IsNullOrEmpty(queryParams[1]))
-            logger.LogWarning("Empty sort direction parameter; defaulting to 'ascending.'");
+    }
+
+    private static (bool Success, string[] Errors) ValidateLeaderboardQuery(DbQuery query, ILogger logger)
+    {
+        List<string> errors = [];
         
+        // For a leaderboard query, the filter property must be "None", "IsDemo", or "InstallId" (for local machine leaderboard)
+        if (query.FilterProperty != QueryProperty.None
+            && query.FilterProperty != QueryProperty.IsDemo
+            && query.FilterProperty != QueryProperty.InstallId)
+            errors.Add($"Invalid FilterProperty for Leaderboard query: '{query.FilterProperty}'. If not 'None', it must be 'IsDemo' or 'InstallId'.");
 
-        if (paramsLength > 3 &&
-            queryParams[2] != "ascending"
-            && queryParams[2] != "descending")
+        // For a leaderboard query, the sort property must NOT be "None"
+        if (query.SortProperty == QueryProperty.None)
+            errors.Add($"Invalid SortProperty for Leaderboard query: '{query.SortProperty}'. Must not be 'None'.");
+
+        // For a leaderboard query, the sort property must NOT be one of the GameSession properties (StartTime, EndTime, Winner, GameId).
+        if (query.SortProperty == QueryProperty.StartTime
+            || query.SortProperty == QueryProperty.EndTime
+            || query.SortProperty == QueryProperty.Winner
+            || query.SortProperty == QueryProperty.GameId)
+            errors.Add($"Invalid SortProperty for Leaderboard query: '{query.SortProperty}'. Should not be a GameSession property (StartTime, EndTime, Winner, GameId).");
+
+        if (errors.Count > 0)
         {
-            logger.LogWarning("Invalid sort direction parameter '{directionParam}'; defaulting to 'ascending.'", queryParams[1]);
-            queryParams[1] = "ascending";
+            logger.LogWarning("Validation failed for query {Query}. Errors: {Errors}", query, errors);
+            return (false, [.. errors]);
         }
 
-        if (paramsLength > 2)
-        {
-            if (string.IsNullOrEmpty(queryParams[2]))
-            {
-                logger.LogWarning("Empty response length parameter; defaulting to 10.");
-                queryParams[2] = "10";
-            }
-            else if (!int.TryParse(queryParams[2], out int _))
-            {
-                logger.LogWarning("Invalid response length parameter '{queryParams[2]}'; defaulting to 10.", queryParams[2]);
-                queryParams[2] = "10";
-            }
-        }
+        return (true, [.. errors]);
+    }
 
-        if (paramsLength > 3)
+    private static (bool Success, string[] Errors) ValidatePlayerStatsQuery(DbQuery query, ILogger logger)
+    {
+        List<string> errors = [];
+        
+        // For a player stats query, the filter property must be "IsDemo," "PlayerName", or "InstallId"
+        if (errors.Count > 0)
         {
-            logger.LogWarning($"Too many parameters for leaderboard query; only the first three will be used.");
+            logger.LogWarning("Validation failed for query {Query}. Errors: {Errors}", query, errors);
+            return (false, [.. errors]);
         }
-
-        return (true, null);
+        return (true, [.. errors]);
     }
 }

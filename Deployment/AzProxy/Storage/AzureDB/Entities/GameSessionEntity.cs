@@ -12,7 +12,7 @@ public class GameSessionEntity
     public int Version { get; set; }
     public DateTime StartTime { get; set; }
     public DateTime? EndTime { get; set; }  // Nullable for ongoing games
-    public int? Winner { get; set; }        // Nullable for ongoing games
+    public string? WinnerName { get; set; }  // Nullable for ongoing games
 
     // Navigation properties
     public ICollection<AttackActionEntity> AttackActions { get; set; } = [];

@@ -1,4 +1,5 @@
 ﻿using HazardBackend.DbQueries.Validation;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace HazardBackend.DbQueries;
@@ -6,9 +7,9 @@ namespace HazardBackend.DbQueries;
 public enum DbQueryType : int
 {
     None = 0,
-    Leaderboard = 1, // sorted PlayerStats by some property
-    GameSession = 2, // specific game session, or game sessions filtered by some property (e.g. all games started after a certain date)
-    PlayerStats = 3 // specific aggregate player stats, or player stats filtered by some property (e.g. all players with more than 100 games won)
+    Leaderboard = 1, // sorted and/or filtered PlayerStats by properties
+    GameSession = 2, // specific game session, or game sessions sorted or filtered by some property (e.g. all games started after a certain date)
+    PlayerStats = 3 // specific aggregate player stats, or player stats sorted or filtered by some property (e.g. all players with more than 100 games won)
 }
 
 public enum SortDirection
@@ -17,39 +18,169 @@ public enum SortDirection
     Descending
 }
 
+public enum QueryProperty
+{
+    None = 0,
+
+    // Universal properties
+    IsDemo,
+    InstallId,
+    PlayerName,
+
+    // PlayerStats properties
+    GamesStarted,
+    GamesCompleted,
+    GamesWon,
+    FirstGameStarted,
+    FirstGameCompleted,
+    LastGameStarted,
+    LastGameCompleted,
+    TotalGamesDuration,
+    AttacksWon,
+    AttacksLost,
+    AttacksTied,
+    Conquests,
+    Retreats,
+    ForcedRetreats,
+    AttackDiceRolled,
+    DefenseDiceRolled,
+    Moves,
+    MaxAdvances,
+    TradeIns,
+    TotalOccupationBonus,
+
+    // GameSession properties
+    StartTime,
+    EndTime,
+    Winner,
+    GameId
+}
+
+
 public class DbQuery
 {
     public DbQueryType Type { get; init; }
-    public string SortPropertyName { get; private set; }
-    public SortDirection SortDirection { get; private set; } = SortDirection.Descending; // Default to descending
-    public int ResponseLength { get; private set; } 
-    
-    private DbQuery(string queryTypeName, string propertyName, string sortDirection, int responseLength)
+    public QueryProperty FilterProperty { get; private set; }
+    public object FilterValue { get; private set; }
+    public QueryProperty SortProperty { get; private set; }
+    public SortDirection SortDirection { get; private set; }
+    public int MaxLength { get; private set; }
+
+    private DbQuery(DbQueryType queryType,
+        QueryProperty filterProperty,
+        object filterValue,
+        QueryProperty sortProperty,
+        SortDirection sortDirection,
+        int maxLength)
     {
-        Type = Enum.Parse<DbQueryType>(queryTypeName);
-        SortPropertyName = propertyName;
+        Type = queryType;
+        FilterProperty = filterProperty;
+        FilterValue = filterValue;
+        SortProperty = sortProperty;
         SortDirection = sortDirection;
-        ResponseLength = responseLength;
+        MaxLength = maxLength;
     }
 
-    public static ParseResult<DbQuery> TryCreate(DbQueryType type, string? sortBy, bool? descending, int? maxLength, ILogger logger)
+    public static ParseResult<DbQuery> TryCreate(
+        string dbQueryType,
+        string filterProperty,
+        string filterValue,
+        string sortProperty,
+        string sortDirection,
+        string maxLength,
+        ILogger logger)
     {
-        var (Success, Error) = DbQueryValidator.Validate(queryParams, logger);
+        List<string> errors = [];
+
+        if (!Enum.TryParse<DbQueryType>(dbQueryType, true, out var queryTypeResult) || queryTypeResult == DbQueryType.None)
+            errors.Add($"Invalid DbQueryType: '{dbQueryType}'.");
+
+        if (!Enum.TryParse<QueryProperty>(filterProperty, true, out var filterPropertyResult) || filterPropertyResult == QueryProperty.None)
+            errors.Add($"Invalid FilterProperty: '{filterProperty}'.");
+
+        if (!Enum.TryParse<QueryProperty>(sortProperty, true, out var sortPropertyResult) || sortPropertyResult == QueryProperty.None)
+            errors.Add($"Invalid SortProperty: '{sortProperty}'.");
+
+        if (!(Enum.TryParse<SortDirection>(sortDirection, true, out var sortDirectionResult)))
+            errors.Add($"Invalid SortDirection: '{sortDirection}'. Must be 'Ascending' or 'Descending'.");
+
+        if (!int.TryParse(maxLength, out var maxLengthResult) || maxLengthResult <= 0)
+            errors.Add($"Invalid MaxLength: '{maxLength}'. Must be a positive integer.");
+
+        if (errors.Count > 0)
+        {
+            logger.LogError("Failed to parse query parameters: {Errors}", string.Join("; ", errors));
+            return new ParseResult<DbQuery>(false, null, [.. errors]);
+        }
+
+        var valueErrors = ValidateFilterValue(filterPropertyResult, filterValue, logger);
+
+        DbQuery dbQuery = new(
+            queryTypeResult,
+            filterPropertyResult,
+            sortPropertyResult,
+            sortDirectionResult,
+            maxLengthResult);
+
+        var (Success, Errors) = DbQueryValidator.Validate(dbQuery, logger);
 
         if (!Success)
-            return new ParseResult<DbQuery> (false, null, Error);
+            return new ParseResult<DbQuery>(false, null, Errors);
 
-        DbQuery query;
-        try
+        if (Errors.Length > 0)
         {
-            query = new DbQuery(queryParams[0], queryParams[1], queryParams[2], int.Parse(queryParams[2]));
-
-            return new ParseResult<DbQuery>(true, query, null);
+            logger.LogError("DbQuery Validation returned success despite errors: {Errors}", string.Join("; ", Errors));
+            return new ParseResult<DbQuery>(false, null, Errors);
         }
-        catch (Exception ex)
+
+        return new ParseResult<DbQuery>(true, dbQuery, Errors);
+    }
+
+    private static (bool Success, string? Error) ValidateFilterValue(QueryProperty filterProperty, string filterValue, ILogger logger)
+    {
+        List<string> errors = [];
+
+        switch (filterProperty)
         {
-            logger.LogError(ex, "Failed to create Query object from query parameters.");
-            return new ParseResult<DbQuery>(false, null, "Query construction failed with error:" + ex.Message);
+            case QueryProperty.IsDemo:
+                if (filterValue.Equals("true", StringComparison.OrdinalIgnoreCase) || filterValue.Equals("false", StringComparison.OrdinalIgnoreCase))
+                    return (true, null);
+                else
+                    return (false, $"Filter value for {filterProperty} must be 'true' or 'false'.");
+                
+            case QueryProperty.InstallId:
+                if (Guid.TryParse(filterValue, out _))
+                    return (true, null);
+                else
+                    return (false, $"Filter value for {filterProperty} must be a valid GUID.");
+
+            case QueryProperty.PlayerName:
+                if (!string.IsNullOrWhiteSpace(filterValue))
+                    return (true, null);
+                else
+                    return (false, $"Filter value for {filterProperty} cannot be empty.");
+
+            case QueryProperty.TotalGamesDuration:
+                    if (TimeSpan.TryParse(filterValue, out _))
+                        return (true, null);
+                    else
+                        return (false, $"Filter value for {filterProperty} must be a valid TimeSpan.");
+
+            case QueryProperty.StartTime:
+                if (DateTime.TryParse(filterValue, out _))
+                    return (true, null);
+                else
+                    return (false, $"Filter value for {filterProperty} must be a valid DateTime.");
+
+            case QueryProperty.EndTime:
+                if (DateTime.TryParse(filterValue, out _))
+                    return (true, null);
+                else
+                    return (false, $"Filter value for {filterProperty} must be a valid DateTime.");
+
+            default:
+                logger.LogWarning("No specific validation implemented for filter property {FilterProperty}. Skipping filter value validation.", filterProperty);
+                break;
         }
     }
 }

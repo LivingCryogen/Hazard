@@ -67,7 +67,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             is not GameSessionEntity previousSession)
         {
             newGame = true;
-            var newSession = CreateNewGameSession(installId, sessionData);
+            var newSession = CreateNewGameSession(installId, sessionData, sessionData.Winner.HasValue ? playerNumToNameMap[(int)sessionData.Winner] : null);
 
             // Create AttackActions
             List<AttackActionEntity> newAttackActions = [];
@@ -217,7 +217,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         }
     }
 
-    private static GameSessionEntity CreateNewGameSession(Guid installId, GameSessionDto sessionDto)
+    private static GameSessionEntity CreateNewGameSession(Guid installId, GameSessionDto sessionDto, string? winnerName)
     {
         return new GameSessionEntity()
         {
@@ -227,7 +227,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             Version = sessionDto.Version,
             StartTime = sessionDto.StartTime,
             EndTime = sessionDto.EndTime,
-            Winner = sessionDto.Winner,
+            WinnerName = winnerName,
         };
     }
     private bool UpdateGameSession(GameSessionEntity oldSession, GameSessionDto sessionDto, Dictionary<int, string> playerNumToNameMap, List<string> errors)
@@ -256,14 +256,16 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             return false;
         }
 
+        string? newWinnerName = sessionDto.Winner.HasValue ? playerNumToNameMap[(int)sessionDto.Winner] : null;
+
         try
         {
-            LogDataChanges(oldSession, sessionDto);
+            LogDataChanges(oldSession, sessionDto, newWinnerName);
 
             oldSession.Version = sessionDto.Version;
             oldSession.StartTime = sessionDto.StartTime;
             oldSession.EndTime = sessionDto.EndTime;
-            oldSession.Winner = sessionDto.Winner;
+            oldSession.WinnerName = newWinnerName;
 
             // Updating by clearing / repopulating is cleaner than attempting granular updates (no need to worry about colleciton order, etc)
             // And we do this on dbContext level to avoid any change tracking confusions
@@ -305,7 +307,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             return false;
         }
     }
-    private void LogDataChanges(GameSessionEntity oldSession, GameSessionDto sessionDto)
+    private void LogDataChanges(GameSessionEntity oldSession, GameSessionDto sessionDto, string? newWinnerName)
     {
         // Log warnings for unexpected data changes; log information for typical/expected data updates
         if (sessionDto.Version != oldSession.Version)
@@ -329,12 +331,12 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
                 _logger.LogInformation("Game {gameId} End Time updated from {oldTime} to {newTime}.",
                     sessionDto.Id, oldSession.EndTime, sessionDto.EndTime);
         }
-        if (sessionDto.Winner != oldSession.Winner)
+        if (newWinnerName != oldSession.WinnerName)
         {
-            if (oldSession.Winner != null)
+            if (oldSession.WinnerName != null)
             {
                 _logger.LogWarning("Game {gameId} Winner unexpectedly changed from {oldWinner} to {newWinner}.",
-                    sessionDto.Id, oldSession.Winner, sessionDto.Winner);
+                    sessionDto.Id, oldSession.WinnerName, sessionDto.Winner);
             }
             else
                 _logger.LogInformation("Game {gameId} Winner updated to {newWinner}.",
