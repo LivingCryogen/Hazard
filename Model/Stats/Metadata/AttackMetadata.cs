@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Stats.ActionMetadata;
+namespace Model.Stats.Metadata;
 
 /// <inheritdoc cref="IAttackData"/>
 public class AttackMetadata : IAttackData
@@ -65,4 +65,8 @@ public class AttackMetadata : IAttackData
     /// Gets or sets a value indicating whether the attacker conquered the target (defender lost all armies).
     /// </summary>
     public bool Conquered { get; set; } = false;
+    /// <summary>
+    /// Gets or sets the continent that was captured, if any. If no continent was captured, this property will be set to ContID.Null.
+    /// </summary>
+    public ContID CapturedContinent { get; set; } = ContID.Null;
 }

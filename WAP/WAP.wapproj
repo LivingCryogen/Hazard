@@ -68,6 +68,9 @@
     <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
     <!-- Compatibality warnings with dependencies like VCRTForwarders.140 that can be ignored safely here -->
     <NoWarn>$(NoWarn);NU1701</NoWarn>
+	<!-- NU1702 is safe to ignore: Desktop Bridge (WAP) projects report a legacy TFM,
+    causing spurious compatibility warnings when referencing .NET 8 apps. -->
+	  <NoWarn>$(NoWarn);NU1702</NoWarn>
     <EntryPointProjectUniqueName>..\Bootstrap\Bootstrap.csproj</EntryPointProjectUniqueName>
   </PropertyGroup>
   <ItemGroup>

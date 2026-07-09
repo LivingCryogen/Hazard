@@ -40,11 +40,11 @@ public interface IAttackData : IActionData
     /// <summary>
     /// Gets or sets the number of dice rolled by the attacker.
     /// </summary>
-    public int AttackerDice { get; set; }
+    int AttackerDice { get; set; }
     /// <summary>
     /// Gets or sets the number of dice rolled by the defender.
     /// </summary>
-    public int DefenderDice { get; set; }
+    int DefenderDice { get; set; }
     /// <summary>
     /// Gets the number of units lost by the attacker.
     /// </summary>
@@ -61,4 +61,8 @@ public interface IAttackData : IActionData
     /// Gets a flag indicating whether the attacker conquered the target (defender lost all armies).
     /// </summary>
     bool Conquered { get; }
+    /// <summary>
+    /// Gets or sets the continent captured by the attack. If none, it will be set to ContID.Null.
+    /// </summary>
+    ContID CapturedContinent { get; set; }
 }

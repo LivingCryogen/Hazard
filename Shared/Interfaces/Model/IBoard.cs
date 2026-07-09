@@ -73,12 +73,14 @@ public interface IBoard : IBinarySerializable
     /// <param name="source">The territory from which the attack originated.</param>
     /// <param name="target">The territory that was attacked and is being conquered.</param>
     /// <param name="newOwner">The <see cref="IPlayer.Number"/> of the owner after the attack is completed.</param>
-    void Conquer(TerrID source, TerrID target, int newOwner);
+    /// <returns>The continent that changed ownership after conquest; if none, <see cref="ContID.Null"/>.</returns>
+    ContID Conquer(TerrID source, TerrID target, int newOwner);
     /// <summary>
     /// Determines whether a continent has changed ownership after a change in territory ownership.
     /// </summary>
     /// <remarks>The new owner is not needed here so long as <see cref="TerritoryOwner"/> is changed properly before this method is called.</remarks>
     /// <param name="changed">The territory that changed hands.</param>
     /// <param name="previousOwner">The <see cref="IPlayer.Number"/> of the territory's owner before the change.</param>
-    void CheckContinentFlip(TerrID changed, int previousOwner);
+    /// <returns>The continent that changed ownership; if none, <see cref="ContID.Null"/>.</returns>
+    ContID CheckContinentFlip(TerrID changed, int previousOwner);
 }

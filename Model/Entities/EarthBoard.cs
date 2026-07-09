@@ -114,7 +114,7 @@ public class EarthBoard : IBoard, IBinarySerializable
         TerritoryChanged?.Invoke(this, new TerritoryChangedEventArgs(territory));
     }
     /// <inheritdoc cref="IBoard.Conquer(TerrID, TerrID, int)"/>
-    public void Conquer(TerrID source, TerrID target, int newOwner)
+    public ContID Conquer(TerrID source, TerrID target, int newOwner)
     {
         int previousOwner = TerritoryOwner[target];
         TerritoryOwner[target] = newOwner;
@@ -122,30 +122,35 @@ public class EarthBoard : IBoard, IBinarySerializable
         TerritoryChanged?.Invoke(this, new TerritoryChangedEventArgs(target, newOwner));
     }
     /// <inheritdoc cref="IBoard.CheckContinentFlip(TerrID, int)"/>
-    public void CheckContinentFlip(TerrID changed, int previousOwner)
+    public ContID CheckContinentFlip(TerrID changed, int previousOwner)
     {
         if (changed == TerrID.Null)
             throw new ArgumentException("Non-null TerrID required.", nameof(changed));
 
         int newOwner = TerritoryOwner[changed];
-        var changedHomeContinent = BoardGeography.TerritoryToContinent(changed);
-        var continentTerritories = BoardGeography.GetContinentMembers(changedHomeContinent);
-        if (continentTerritories == null || continentTerritories.Count <= 0)
-            return;
+        var terrHomeContinent = BoardGeography.TerritoryToContinent(changed);
+        var continentTerritories = BoardGeography.GetContinentMembers(terrHomeContinent);
+        if (continentTerritories == null || continentTerritories.Count <= 0 || previousOwner == newOwner)
+            return ContID.Null;
 
-        if (ContinentOwner[changedHomeContinent] == previousOwner && previousOwner > -1)
-        {
-            ContinentOwner[changedHomeContinent] = -1;
-            if (continentTerritories.All(item => TerritoryOwner[item] == newOwner))
-                ContinentOwner[changedHomeContinent] = newOwner;
+        bool contPrevOwnedByPlayer = ContinentOwner[terrHomeContinent] == previousOwner && previousOwner > -1;
 
-            ContinentOwnerChanged?.Invoke(this, new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
-        }
-        else if (continentTerritories.All(item => TerritoryOwner[item] == newOwner))
+        bool newPlayerOwnsAllTerritories = continentTerritories.All(item => TerritoryOwner[item] == newOwner);
+
+        if (newPlayerOwnsAllTerritories)
         {
-            ContinentOwner[changedHomeContinent] = newOwner;
-            ContinentOwnerChanged?.Invoke(this, new ContinentOwnerChangedEventArgs(changedHomeContinent, previousOwner));
+            ContinentOwner[terrHomeContinent] = newOwner;
+            ContinentOwnerChanged?.Invoke(this, new ContinentOwnerChangedEventArgs(terrHomeContinent, previousOwner));
+            return terrHomeContinent;
         }
+
+        if (contPrevOwnedByPlayer)
+        {
+            ContinentOwner[terrHomeContinent] = -1;
+            ContinentOwnerChanged?.Invoke(this, new ContinentOwnerChangedEventArgs(terrHomeContinent, previousOwner));     
+        }
+
+        return ContID.Null;
     }
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
     public async Task<SerializedData[]> GetBinarySerials()

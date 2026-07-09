@@ -7,9 +7,9 @@ namespace HazardBackend.DbQueries;
 public enum DbQueryType : int
 {
     None = 0,
-    Leaderboard = 1, // sorted and/or filtered PlayerStats by properties
-    GameSession = 2, // specific game session, or game sessions sorted or filtered by some property (e.g. all games started after a certain date)
-    PlayerStats = 3 // specific aggregate player stats, or player stats sorted or filtered by some property (e.g. all players with more than 100 games won)
+    Browse = 1,     // sorted and/or filtered GameSessions and/or PlayerStats by properties
+    Lookup = 2     // specific GameSession or PlayerStats by unique identifier
+    // Analytics = 3  // aggregate data for analytics purposes (e.g., average games won per player); Not yet implemented
 }
 
 public enum SortDirection

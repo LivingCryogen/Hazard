@@ -1,4 +1,5 @@
-﻿using Shared.Geography.Enums;
+﻿using Model.Stats.Metadata;
+using Shared.Geography.Enums;
 
 namespace Shared.Interfaces.Model;
 
@@ -25,6 +26,13 @@ public interface IStatTracker : IBinarySerializable
     /// Gets a value indicating whether the tracked game has been completed.
     /// </summary>
     public bool Completed { get; }
+
+    /// <summary>
+    /// Record relevants statistics for a territory claim.
+    /// </summary>
+    /// <param name="claimData"></param>
+    public void RecordClaimAction(IClaimData claimData);
+
     /// <summary>
     /// Record relevant statistics for an attack.
     /// </summary>
@@ -42,6 +50,12 @@ public interface IStatTracker : IBinarySerializable
     /// </summary>
     /// <param name="tradeData">Trade metadata to be recorded.</param>
     public void RecordTradeAction(ITradeData tradeData);
+
+    /// <summary>
+    /// Record relevant statistics for a continent acquisition event.
+    /// </summary>
+    /// <param name="eventData">Acquired Continent Event data to be recorded.</param>
+    public void RecordAcquiredContinentEvent(AcquiredContMetadata eventData);
 
     /// <summary>
     /// Marks the game as complete, finalizing its state.

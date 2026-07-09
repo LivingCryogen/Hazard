@@ -66,9 +66,24 @@ public class StatTracker : IStatTracker
         if (!PopulatePlayerNumsAndNames([..game.Players]))
             _logger.LogWarning("Failed to populate player numbers and names for game {gameId} during StatTracker initialization.", GameID);
     }
-
+    /// <inheritdoc cref="IStatTracker.RecordClaimAction(IClaimData)" />
+    public void RecordClaimAction(IClaimData claimData)
+    {
+        if (_currentSession == null)
+        {
+            _logger.LogError("Attempted to record a claim action for game {gameId}, but no current session exists.", GameID);
+            throw new InvalidOperationException("No current game session exists to record claim action.");
+        }
+        var claimStats = new GameSession.ClaimAction(_loggerFactory.CreateLogger<GameSession.ClaimAction>())
+        {
+            ActionId = _nextActionId++,
+            Player = claimData.Player,
+            ClaimedTerritory = claimData.TerrClaimed
+        };
+        _currentSession.Claims.Add(claimStats);
+    }
     /// <inheritdoc cref="IStatTracker.RecordAttackAction(IAttackData)" />  
-    public void RecordAttackAction(IAttackData attackData)  // TODO : ADD NEW DATA FIELDS HERE (EG DICE NUMBER)
+    public void RecordAttackAction(IAttackData attackData)
     {
         if (_currentSession == null)
         {
@@ -90,7 +105,8 @@ public class StatTracker : IStatTracker
             AttackerLoss = attackData.AttackerLoss,
             DefenderLoss = attackData.DefenderLoss,
             Retreated = attackData.Retreated,
-            Conquered = attackData.Conquered
+            Conquered = attackData.Conquered,
+            CapturedContinent = attackData.CapturedContinent
         };
 
         _currentSession.Attacks.Add(attackStats);
@@ -132,6 +148,23 @@ public class StatTracker : IStatTracker
             OccupiedBonus = tradeData.OccupiedBonus
         };
         _currentSession.TradeIns.Add(tradeStats);
+    }
+    /// <inheritdoc cref="IStatTracker.RecordAcquiredContinentEvent(Metadata.AcquiredContMetadata)" />/>
+    public void RecordAcquiredContinentEvent(Metadata.AcquiredContMetadata eventData)
+    {
+        if (_currentSession == null)
+        {
+            _logger.LogError("Attempted to record an acquired continent event for game {gameId}, but no current session exists.", GameID);
+            throw new InvalidOperationException("No current game session exists to record acquired continent event.");
+        }
+        var continentEventStats = new GameSession.AcquiredContinentEvent(_loggerFactory.CreateLogger<GameSession.AcquiredContinentEvent>())
+        {
+            FromActionId = eventData.FromActionID,
+            Continent = eventData.Continent,
+            PrevOwner = eventData.PrevOwner,
+            NewOwner = eventData.NewOwner
+        };
+        _currentSession.AcquiredContinentEvents.Add(continentEventStats);
     }
     /// <inheritdoc cref="IStatTracker.CompleteGame(int)"/>
     public void CompleteGame(int winningPlayerNumber)

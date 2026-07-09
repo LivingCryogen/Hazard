@@ -14,11 +14,59 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
 {
     private readonly ILoggerFactory _loggerFactory = loggerFactory;
     private readonly ILogger _logger = logger;
-
+    /// <summary>
+    /// A model for Claim action data.
+    /// </summary>
+    /// <param name="logger">The logger used for recording errors during the loading process.</param>
+    public class ClaimAction(ILogger<ClaimAction> logger) : IBinarySerializable
+    {
+        private readonly ILogger _logger = logger;
+        /// <summary>
+        /// Gets or sets the id for this action (should be sequential/incremental).
+        /// </summary>
+        public int ActionId { get; set; }
+        /// <summary>
+        /// Gets or sets the ID of the territory that was claimed.
+        /// </summary>
+        public TerrID ClaimedTerritory { get; set; }
+        /// <summary>
+        /// Gets or sets the player number of the player who claimed the territory.
+        /// </summary>
+        public int Player { get; set; }
+        /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
+        public async Task<SerializedData[]> GetBinarySerials()
+        {
+            return await Task.Run(() =>
+            {
+                List<SerializedData> saveData = [];
+                saveData.Add(new(typeof(int), ActionId));
+                saveData.Add(new(typeof(TerrID), ClaimedTerritory));
+                saveData.Add(new(typeof(int), Player));
+                return saveData.ToArray();
+            });
+        }
+        /// <inheritdoc cref="IBinarySerializable.LoadFromBinary"/>
+        public bool LoadFromBinary(BinaryReader reader)
+        {
+            bool loadComplete = true;
+            try
+            {
+                ActionId = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+                ClaimedTerritory = (TerrID)BinarySerializer.ReadConvertible(reader, typeof(TerrID));
+                Player = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("An exception was thrown while loading {ClaimAction}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+                loadComplete = false;
+            }
+            return loadComplete;
+        }
+    }
     /// <summary>
     /// A model for Attack action data.
     /// </summary>
-    /// <param name="logger">The logger provided by DI or a factory.</param>
+    /// <param name="logger">The logger used for recording errors during the loading process.</param>
     public class AttackAction(ILogger<AttackAction> logger) : IBinarySerializable
     {
         private readonly ILogger _logger = logger;
@@ -76,6 +124,10 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
         /// Gets or sets a value indicating whether the target territory was conquered with this attack.
         /// </summary>
         public bool Conquered { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether the attack resulted in the capture of a continent.
+        /// </summary>
+        public ContID CapturedContinent { get; set; }
 
         /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
         public async Task<SerializedData[]> GetBinarySerials()
@@ -127,11 +179,10 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
             return loadComplete;
         }
     }
-
     /// <summary>
     /// A model for Move action data.
     /// </summary>
-    /// <param name="logger">The logger provided by DI or a factory.</param>
+    /// <param name="logger">The logger used for recording errors during the loading process.</param>
     public class MoveAction(ILogger<MoveAction> logger) : IBinarySerializable
     {
         private readonly ILogger _logger = logger;
@@ -193,7 +244,7 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
     /// <summary>
     /// A model for Trade action data.
     /// </summary>
-    /// <param name="logger">The logger provided by DI or a factory.</param>
+    /// <param name="logger">The logger used for recording errors during the loading process.</param>
     public class TradeAction(ILogger<TradeAction> logger) : IBinarySerializable
     {
         private readonly ILogger _logger = logger;
@@ -259,6 +310,45 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
         }
     }
     /// <summary>
+    /// A model for a continent acquisition event, which occurs when a player acquires control of an entire continent.
+    /// </summary>
+    /// <param name="logger">The logger used for recording errors during the loading process.</param>
+    public class AcquiredContinentEvent(ILogger<AcquiredContinentEvent> logger) : IBinarySerializable
+    {
+        private readonly ILogger _logger = logger;
+        public ContID Continent { get; set; }
+        public int FromActionId { get; set; } // The ActionId of the action that resulted in the continent being acquired. *This Event is not itself an Action!*
+        public int PrevOwner { get; set; } // -1 if the continent was never previously owned by a human player
+        public int NewOwner { get; set; }
+        public async Task<SerializedData[]> GetBinarySerials()
+        {
+            return await Task.Run(() =>
+            {
+                List<SerializedData> saveData = [];
+                saveData.Add(new(typeof(int), FromActionId));
+                saveData.Add(new(typeof(int), PrevOwner));
+                saveData.Add(new(typeof(ContID), Continent));
+                return saveData.ToArray();
+            });
+        }
+        public bool LoadFromBinary(BinaryReader reader)
+        {
+            bool loadComplete = true;
+            try
+            {
+                FromActionId = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+                PrevOwner = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+                Continent = (ContID)BinarySerializer.ReadConvertible(reader, typeof(ContID));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("An exception was thrown while loading {AcquireContinentEvent}. Message: {Message} InnerException: {Exception}", this, ex.Message, ex.InnerException);
+                loadComplete = false;
+            }
+            return loadComplete;
+        }
+    }
+    /// <summary>
     /// Gets or sets the unique identifier of the game session.
     /// </summary>
     public Guid Id { get; set; }
@@ -272,7 +362,7 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
     /// <remarks>
     /// Allows <see cref="StatRepo"/> to easily determine which is the most up-to-date game file for a given game ID.
     /// </remarks>
-    public int NumActions { get => Attacks.Count + Moves.Count + TradeIns.Count; }
+    public int NumActions { get => Claims.Count + Attacks.Count + Moves.Count + TradeIns.Count; }
     /// <summary>
     /// Gets or sets the start time of the game session.
     /// </summary>
@@ -292,6 +382,10 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
     /// </value>
     public int? Winner { get; set; }
     /// <summary>
+    /// Gets or sets the list of claim actions recorded during the game session.
+    /// </summary>
+    public List<ClaimAction> Claims { get; private set; } = [];
+    /// <summary>
     /// Gets or sets the list of attack actions recorded during the game session.
     /// </summary>
     public List<AttackAction> Attacks { get; private set; } = [];
@@ -303,6 +397,10 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
     /// Gets or sets the list of trade-in actions recorded during the game session.
     /// </summary>
     public List<TradeAction> TradeIns { get; private set; } = [];
+    /// <summary>
+    /// Gets or sets the list of continent acquisition events recorded during the game session.
+    /// </summary>
+    public List<AcquiredContinentEvent> AcquiredContinentEvents { get; private set; } = [];
     /// <summary>
     /// Gets or sets a map of player numbers to their names in this game.
     /// </summary>
@@ -329,6 +427,14 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
             if (hasWinner)
                 Winner = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
 
+            int numClaims = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            for (int i = 0; i < numClaims; i++)
+            {
+                var readClaim = new ClaimAction(_loggerFactory.CreateLogger<ClaimAction>());
+                readClaim.LoadFromBinary(reader);
+                Claims.Add(readClaim);
+            }
+
             int numAttacks = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             for (int i = 0; i < numAttacks; i++)
             {
@@ -351,6 +457,14 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
                 var readTrade = new TradeAction(_loggerFactory.CreateLogger<TradeAction>());
                 readTrade.LoadFromBinary(reader);
                 TradeIns.Add(readTrade);
+            }
+
+            int numAcquiredContinentEvents = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
+            for (int i = 0; i < numAcquiredContinentEvents; i++)
+            {
+                var readEvent = new AcquiredContinentEvent(_loggerFactory.CreateLogger<AcquiredContinentEvent>());
+                readEvent.LoadFromBinary(reader);
+                AcquiredContinentEvents.Add(readEvent);
             }
 
             List<(int, string)> ReadPlayerNumsNames = [];
@@ -397,18 +511,26 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
             else
                 saveData.Add(new(typeof(int), 0));
 
+            var claimSaveTasks = Claims.Select(c => c.GetBinarySerials());  
             var attackSaveTasks = Attacks.Select(a => a.GetBinarySerials());
             var moveSaveTasks = Moves.Select(m => m.GetBinarySerials());
             var tradeSaveTasks = TradeIns.Select(t => t.GetBinarySerials());
+            var acquiredContinentSaveTasks = AcquiredContinentEvents.Select(a => a.GetBinarySerials());
 
             var saveTasks = new[]
             {
+                Task.WhenAll(claimSaveTasks),
                 Task.WhenAll(attackSaveTasks),
                 Task.WhenAll(moveSaveTasks),
                 Task.WhenAll(tradeSaveTasks),
+                Task.WhenAll(acquiredContinentSaveTasks)
             };
 
             var innerSaveData = await Task.WhenAll(saveTasks);
+
+            int numClaims = Claims.Count;
+            saveData.Add(new(typeof(int), numClaims));
+            saveData.AddRange(innerSaveData[0].SelectMany(c => c));
 
             int numAttacks = Attacks.Count;
             saveData.Add(new(typeof(int), numAttacks));
@@ -421,6 +543,10 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
             int numTrades = TradeIns.Count;
             saveData.Add(new(typeof(int), numTrades));
             saveData.AddRange(innerSaveData[2].SelectMany(t => t));
+
+            int numAcquiredContinentEvents = AcquiredContinentEvents.Count;
+            saveData.Add(new(typeof(int), numAcquiredContinentEvents));
+            saveData.AddRange(innerSaveData[3].SelectMany(e => e));
 
             int numMappedPlayers = PlayerNumsAndNames.Count;
             saveData.Add(new(typeof(int), numMappedPlayers));

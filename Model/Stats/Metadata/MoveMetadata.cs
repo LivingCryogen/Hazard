@@ -6,13 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Stats.ActionMetadata;
-/// <summary>
-/// Represents metadata for a move, including source and target territories, player information, and advanced move
-/// status.
-/// </summary>
-/// <remarks>This class provides details about a move in the game, such as the originating and destination
-/// territories,  the player making the move, and whether the move is marked as maximally advanced. </remarks>
+namespace Model.Stats.Metadata;
+
+/// <inheritdoc cref="IMoveData"/>
 public class MoveMetadata : IMoveData
 {
     /// <summary>

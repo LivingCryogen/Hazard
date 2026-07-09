@@ -13,9 +13,6 @@ namespace HazardBackend.Storage.AzureDB.DataTransform;
 
 public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> logger)
 {
-    private readonly GameStatsDbContext _context = context;
-    private readonly ILogger<DbTransformer> _logger = logger;
-
     public async Task TransformFromSessionDto(GameSessionDto sessionData)
     {
         // Errors collection, allowing logs and responses to accumulate and report all back when errors aren't fatal
@@ -30,7 +27,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         // Validate count integrity
         if (sessionData.NumActions != actionCount)
         {
-            _logger.LogError("Action count mismatch for game {gameId}: expected {expected}, found {actual}",
+            logger.LogError("Action count mismatch for game {gameId}: expected {expected}, found {actual}",
                 sessionData.Id, sessionData.NumActions, actionCount);
             throw new InvalidDataException($"Action count mismatch: expected {sessionData.NumActions}, found {actionCount}");
         }
@@ -43,7 +40,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to parse player numbers from session data: {Message}", ex.Message);
+            logger.LogError("Failed to parse player numbers from session data: {Message}", ex.Message);
             errorList.Add("GSE creation failed when player number to name mapping failed.");
             throw new InvalidOperationException("Player numbers list was invalid.", ex);
         }
@@ -61,7 +58,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         * (real SessionDto actions) is greater than the current Sessions action count, Update. Otherwise, don't. */
 
         // no previous Session found with this ID, create one
-        if (await _context.GameSessions
+        if (await context.GameSessions
             .Where(gs => gs.GameId == sessionData.Id && gs.InstallId == installId)
             .FirstOrDefaultAsync()
             is not GameSessionEntity previousSession)
@@ -96,17 +93,17 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
                 newTradeActions.Add(newTradeAction);
             }
 
-            _context.GameSessions.Add(newSession);
-            _context.AttackActions.AddRange(newAttackActions);
-            _context.MoveActions.AddRange(newMoveActions);
-            _context.TradeActions.AddRange(newTradeActions);
+            context.GameSessions.Add(newSession);
+            context.AttackActions.AddRange(newAttackActions);
+            context.MoveActions.AddRange(newMoveActions);
+            context.TradeActions.AddRange(newTradeActions);
         }
         else // previous session found; if sync data is more up-to-date, update session
         {
             int previousSessionActions = previousSession.AttackActions.Count + previousSession.MoveActions.Count + previousSession.TradeActions.Count;
             if (previousSessionActions >= actionCount)
             {
-                _logger.LogInformation("Game Session {gameID} on install {installID} already has {prevActions}, while sync has {syncActions} actions. Skipping.",
+                logger.LogInformation("Game Session {gameID} on install {installID} already has {prevActions}, while sync has {syncActions} actions. Skipping.",
                     sessionData.Id, installId, previousSessionActions, actionCount);
                 return;
             }
@@ -116,7 +113,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
                 throw new InvalidOperationException($"Game Session {previousSession.GameId} with install {previousSession.InstallId} failed to update! Aborting...");
             }
 
-            _logger.LogInformation("GSE for game {gameID} on install {installID} successfully updated.", previousSession.GameId, previousSession.InstallId);
+            logger.LogInformation("GSE for game {gameID} on install {installID} successfully updated.", previousSession.GameId, previousSession.InstallId);
             updating = true;
 
             // More memory-efficient: avoids allocating a combined sequence via SelectMany.
@@ -142,26 +139,26 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             {
                 if (prevIdentity == null)
                 {
-                    _logger.LogWarning("No existing Player Identity found for player {num} on session {session} with name '{name}' on install {install} when attempting to update;" +
+                    logger.LogWarning("No existing Player Identity found for player {num} on session {session} with name '{name}' on install {install} when attempting to update;" +
                         "creating new Player Identity and associated Game Session Player junction record.",
                         playerData.Key, sessionData.Id, playerData.Value, installId);
-                    await _context.PlayerIdentities.AddAsync(CreateNewPlayerIdentity(installId, playerData.Value));
+                    await context.PlayerIdentities.AddAsync(CreateNewPlayerIdentity(installId, playerData.Value));
                 }
 
                 if (prevGSPE == null)
                 {
-                    _logger.LogWarning("No existing Game Session Player Entity junction record found for player {num} on session {session} with name '{name}' on install {install} when attempting to update;" +
+                    logger.LogWarning("No existing Game Session Player Entity junction record found for player {num} on session {session} with name '{name}' on install {install} when attempting to update;" +
                         "creating new Game Session Player junction record.",
                         playerData.Key, sessionData.Id, playerData.Value, installId);
-                    await _context.GameSessionPlayers.AddAsync(CreateNewGameSessionPlayerEntity(sessionData.Id, installId, playerData.Value));
+                    await context.GameSessionPlayers.AddAsync(CreateNewGameSessionPlayerEntity(sessionData.Id, installId, playerData.Value));
                 }
 
                 if (prevPlayerStats == null)
                 {
-                    _logger.LogWarning("No existing Player Stats Entity found for player {num} on session {session} with name '{name}' on install {install} when attempting to update;" +
+                    logger.LogWarning("No existing Player Stats Entity found for player {num} on session {session} with name '{name}' on install {install} when attempting to update;" +
                         "creating new Player Stats Entity.",
                         playerData.Key, sessionData.Id, playerData.Value, installId);
-                    await _context.PlayerStats.AddAsync(CreateNewPlayerStats(installId, sessionData, playerData.Key, playerData.Value));
+                    await context.PlayerStats.AddAsync(CreateNewPlayerStats(installId, sessionData, playerData.Key, playerData.Value));
                 }
                 else
                 {
@@ -172,25 +169,25 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             {
                 if (prevIdentity == null)
                 {
-                    await _context.PlayerIdentities.AddAsync(CreateNewPlayerIdentity(installId, playerData.Value));
+                    await context.PlayerIdentities.AddAsync(CreateNewPlayerIdentity(installId, playerData.Value));
                 }
                 else
                 {
-                    _logger.LogDebug("Existing Player Identity found for player {num} on session {session}, skipping new Player Identity creation.", playerData.Key, sessionData.Id);
+                    logger.LogDebug("Existing Player Identity found for player {num} on session {session}, skipping new Player Identity creation.", playerData.Key, sessionData.Id);
                 }
                 if (prevGSPE == null)
                 {
-                    await _context.GameSessionPlayers.AddAsync(CreateNewGameSessionPlayerEntity(sessionData.Id, installId, playerData.Value));
+                    await context.GameSessionPlayers.AddAsync(CreateNewGameSessionPlayerEntity(sessionData.Id, installId, playerData.Value));
                 }
                 else
                 {
-                    _logger.LogWarning("Existing Game Session Player Entity junction record found for player {num} on session {session} with name '{name}' on install {install}" +
+                    logger.LogWarning("Existing Game Session Player Entity junction record found for player {num} on session {session} with name '{name}' on install {install}" +
                         " when attempting to create new session; skipping creation.",
                         playerData.Key, sessionData.Id, playerData.Value, installId);
                 }
                 if (prevPlayerStats == null)
                 {
-                    await _context.PlayerStats.AddAsync(CreateNewPlayerStats(installId, sessionData, playerData.Key, playerData.Value));
+                    await context.PlayerStats.AddAsync(CreateNewPlayerStats(installId, sessionData, playerData.Key, playerData.Value));
                 }
                 else
                 {
@@ -205,13 +202,13 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         
         try
         {
-            await _context.SaveChangesAsync();
-            _logger.LogInformation("Successfully synced game session {gameId} for install {installId}",
+            await context.SaveChangesAsync();
+            logger.LogInformation("Successfully synced game session {gameId} for install {installId}",
                 sessionData.Id, installId);
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to save changes for game session {gameId}: {Message}",
+            logger.LogError("Failed to save changes for game session {gameId}: {Message}",
                 sessionData.Id, ex.Message);
             throw; // Re-throw so the caller knows the operation failed
         }
@@ -234,7 +231,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
     {
         if (oldSession.GameId != sessionDto.Id)
         {
-            _logger.LogError("Game Session Update failed. Provided Game ID {dtoID} did not match existing Entity Game ID {entityID}.",
+            logger.LogError("Game Session Update failed. Provided Game ID {dtoID} did not match existing Entity Game ID {entityID}.",
                 oldSession.GameId, sessionDto.Id);
             return false;
         }
@@ -244,14 +241,14 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
 
         if (oldSession.InstallId != installId)
         {
-            _logger.LogError("Game Session Update failed. Provided Game ID {dtoID} did not match existing Entity Game ID {entityID}.",
+            logger.LogError("Game Session Update failed. Provided Game ID {dtoID} did not match existing Entity Game ID {entityID}.",
                 oldSession.InstallId, sessionDto.InstallId);
             return false;
         }
 
         if (oldSession.IsDemo)
         {
-            _logger.LogWarning("Game Session Update was called on a demo Entity: {gameID} on install {install}", oldSession.GameId, oldSession.InstallId);
+            logger.LogWarning("Game Session Update was called on a demo Entity: {gameID} on install {install}", oldSession.GameId, oldSession.InstallId);
             errors.Add($"GSE Update was called on a Demo Entity with game ID {oldSession.GameId} and install ID '{oldSession.InstallId}'.");
             return false;
         }
@@ -270,16 +267,16 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             // Updating by clearing / repopulating is cleaner than attempting granular updates (no need to worry about colleciton order, etc)
             // And we do this on dbContext level to avoid any change tracking confusions
 
-            _context.RemoveRange(oldSession.AttackActions);
-            _context.RemoveRange(oldSession.MoveActions);
-            _context.RemoveRange(oldSession.TradeActions);
+            context.RemoveRange(oldSession.AttackActions);
+            context.RemoveRange(oldSession.MoveActions);
+            context.RemoveRange(oldSession.TradeActions);
 
             // Create AttackActions
             foreach (var attackAction in sessionDto.Attacks)
             {
                 var newAttackAction = CreateAttackAction(sessionDto.Id, installId, attackAction, playerNumToNameMap);
                 newAttackAction.GameSession = oldSession;
-                _context.AttackActions.Add(newAttackAction);
+                context.AttackActions.Add(newAttackAction);
             }
 
             // Create MoveActions
@@ -287,7 +284,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             {
                 var newMoveAction = CreateMoveAction(sessionDto.Id, installId, moveAction, playerNumToNameMap);
                 newMoveAction.GameSession = oldSession;
-                _context.MoveActions.Add(newMoveAction);
+                context.MoveActions.Add(newMoveAction);
             }
 
             // Create TradeActions
@@ -295,14 +292,14 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             {
                 var newTradeAction = CreateTradeAction(sessionDto.Id, installId, tradeAction, playerNumToNameMap);
                 newTradeAction.GameSession = oldSession;
-                _context.TradeActions.Add(newTradeAction);
+                context.TradeActions.Add(newTradeAction);
             }
 
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError("An unexpected error occurred while attempting to update Game Session Entity with Game ID '{gameID}': {Message}", oldSession.GameId, ex.Message);
+            logger.LogError("An unexpected error occurred while attempting to update Game Session Entity with Game ID '{gameID}': {Message}", oldSession.GameId, ex.Message);
             errors.Add($"Update Error on GSE with Game ID '{oldSession.GameId}': " + ex.Message);           
             return false;
         }
@@ -312,34 +309,34 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         // Log warnings for unexpected data changes; log information for typical/expected data updates
         if (sessionDto.Version != oldSession.Version)
         {
-            _logger.LogWarning("Game {gameId} version changed from {oldVer} to {newVer}.",
+            logger.LogWarning("Game {gameId} version changed from {oldVer} to {newVer}.",
                 sessionDto.Id, oldSession.Version, sessionDto.Version);
         }
         if (sessionDto.StartTime != oldSession.StartTime)
         {
-            _logger.LogWarning("Game {gameId} Start Time changed from {oldTime} to {newTime}.",
+            logger.LogWarning("Game {gameId} Start Time changed from {oldTime} to {newTime}.",
                 sessionDto.Id, oldSession.StartTime, sessionDto.StartTime);
         }
         if (sessionDto.EndTime != oldSession.EndTime)
         {
             if (oldSession.EndTime != null)
             {
-                _logger.LogWarning("Game {gameId} End Time unexpectedly changed from {oldTime} to {newTime}.",
+                logger.LogWarning("Game {gameId} End Time unexpectedly changed from {oldTime} to {newTime}.",
                     sessionDto.Id, oldSession.EndTime, sessionDto.EndTime);
             }
             else
-                _logger.LogInformation("Game {gameId} End Time updated from {oldTime} to {newTime}.",
+                logger.LogInformation("Game {gameId} End Time updated from {oldTime} to {newTime}.",
                     sessionDto.Id, oldSession.EndTime, sessionDto.EndTime);
         }
         if (newWinnerName != oldSession.WinnerName)
         {
             if (oldSession.WinnerName != null)
             {
-                _logger.LogWarning("Game {gameId} Winner unexpectedly changed from {oldWinner} to {newWinner}.",
+                logger.LogWarning("Game {gameId} Winner unexpectedly changed from {oldWinner} to {newWinner}.",
                     sessionDto.Id, oldSession.WinnerName, sessionDto.Winner);
             }
             else
-                _logger.LogInformation("Game {gameId} Winner updated to {newWinner}.",
+                logger.LogInformation("Game {gameId} Winner updated to {newWinner}.",
                     sessionDto.Id, sessionDto.Winner);
         }
     }
@@ -406,11 +403,11 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
     {
         try
         {
-            return await _context.PlayerStats.Where(p => p.InstallId == installId && p.Name == name).FirstOrDefaultAsync();
+            return await context.PlayerStats.Where(p => p.InstallId == installId && p.Name == name).FirstOrDefaultAsync();
         }
         catch (Exception ex)
         {
-            _logger.LogError("There was an unexpected error while fetching PlayerStatsEntity associated with install ID {id}: {Message}", installId, ex.Message);
+            logger.LogError("There was an unexpected error while fetching PlayerStatsEntity associated with install ID {id}: {Message}", installId, ex.Message);
             errors.Add($"Fetch Error on PSE with install '{installId}': " + ex.Message);
             throw;
         }
@@ -419,11 +416,11 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
     {
         try
         {
-            return await _context.PlayerIdentities.Where(p => p.InstallId == installId && p.Name == name).FirstOrDefaultAsync();
+            return await context.PlayerIdentities.Where(p => p.InstallId == installId && p.Name == name).FirstOrDefaultAsync();
         }
         catch (Exception ex)
         {
-            _logger.LogError("There was an unexpected error while fetching PlayerIdentityEntity associated with install ID {id}: {Message}", installId, ex.Message);
+            logger.LogError("There was an unexpected error while fetching PlayerIdentityEntity associated with install ID {id}: {Message}", installId, ex.Message);
             errors.Add($"Fetch Error on PIE with playher name '{name}' and install '{installId}': " + ex.Message);
             throw;
         }
@@ -474,7 +471,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
     {
         if (playerStats.Name != playerName)
         {
-            _logger.LogError("Player Stats Update failed. Provided Player Name ID {name} did not match existing Player Stats name {pseName}.",
+            logger.LogError("Player Stats Update failed. Provided Player Name ID {name} did not match existing Player Stats name {pseName}.",
                 playerName, playerStats.Name);
             errors.Add($"Fetch Error for PSE. PSE with name {playerStats.Name} and install ID '{playerStats.InstallId}' was not found.");
             return false;
@@ -482,7 +479,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
 
         if (playerStats.IsDemo)
         {
-            _logger.LogWarning("Player Stats Update was called on a demo Entity: {name} on install {install}", playerStats.Name, playerStats.InstallId);
+            logger.LogWarning("Player Stats Update was called on a demo Entity: {name} on install {install}", playerStats.Name, playerStats.InstallId);
             errors.Add($"PSE Updated a Demo Entity with name {playerStats.Name} and install ID '{playerStats.InstallId}'.");
         }
 
@@ -569,7 +566,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         }
         catch (Exception ex)
         {
-            _logger.LogError("An unexpected error occurred while attempting to update Player Stats Entity with install ID '{install}' player name '{name}': {Message}", playerStats.InstallId, playerStats.Name, ex.Message);
+            logger.LogError("An unexpected error occurred while attempting to update Player Stats Entity with install ID '{install}' player name '{name}': {Message}", playerStats.InstallId, playerStats.Name, ex.Message);
             errors.Add($"Update Error on PSE with name {playerStats.Name} and install {playerStats.InstallId}: " + ex.Message);
             return false;
         }
@@ -579,11 +576,11 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
     {
         try
         {
-            return await _context.GameSessionPlayers.Where(p => p.GameId == gameId && p.InstallId == installId && p.PlayerName == playerName).FirstOrDefaultAsync();
+            return await context.GameSessionPlayers.Where(p => p.GameId == gameId && p.InstallId == installId && p.PlayerName == playerName).FirstOrDefaultAsync();
         }
         catch (Exception ex)
         {
-            _logger.LogError("There was an unexpected error while fetching GameSessionPlayer junction record associated with game {gameId} on install ID {id} for player {plyrName}: {Message}",
+            logger.LogError("There was an unexpected error while fetching GameSessionPlayer junction record associated with game {gameId} on install ID {id} for player {plyrName}: {Message}",
                 gameId, installId, playerName, ex.Message);
             throw;
         }

@@ -32,7 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D1F919C3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packaging", "Packaging", "{E695D843-AFC4-4652-B79B-368A051E79BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HazardBackend", "Deployment\AzProxy\HazardBackend.csproj", "{C9BE722C-EE67-44E9-9D09-68D72A2D1DB5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HazardBackend", "Deployment\HazardBackend\HazardBackend.csproj", "{C9BE722C-EE67-44E9-9D09-68D72A2D1DB5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sasgen", "Deployment\secureURL\Sasgen.csproj", "{C15DDBC3-B9D5-5228-E198-56682574594E}"
 EndProject

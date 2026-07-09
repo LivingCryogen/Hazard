@@ -12,7 +12,7 @@ namespace Shared.Interfaces.Model;
 public interface IActionData
 {
     /// <summary>
-    /// Gets the player number of the player performing the action.
+    /// Gets the player number of the player performing the action. -1 represnts an AI player, -2 unitialized
     /// </summary>
     int Player { get; }
 }

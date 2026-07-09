@@ -6,11 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Stats.ActionMetadata;
+namespace Model.Stats.Metadata;
 
-/// <summary>
-/// 
-/// </summary>
+/// <inheritdoc cref="ITradeData"/>
 public class TradeMetadata : ITradeData
 {
     /// <summary>

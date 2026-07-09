@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Model.EventArgs;
 using Model.Stats;
-using Model.Stats.ActionMetadata;
+using Model.Stats.Metadata;
 using Shared.Enums;
 using Shared.Geography;
 using Shared.Geography.Enums;
@@ -276,6 +276,10 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
                 {
                     _currentGame.Board.Claims(PlayerTurn, territory);
                     _currentGame.Players[PlayerTurn].AddTerritory(territory);
+
+
+
+                    _statTracker.RecordClaimAction(new ClaimMetadata() { Player = PlayerTurn, TerrClaimed = territory} );
                 }
                 else
                     _currentGame.Board.Reinforce(territory);
