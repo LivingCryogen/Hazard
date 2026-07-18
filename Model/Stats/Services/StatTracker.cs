@@ -106,7 +106,6 @@ public class StatTracker : IStatTracker
             DefenderLoss = attackData.DefenderLoss,
             Retreated = attackData.Retreated,
             Conquered = attackData.Conquered,
-            CapturedContinent = attackData.CapturedContinent
         };
 
         _currentSession.Attacks.Add(attackStats);

@@ -1,6 +1,6 @@
 ﻿using HazardBackend.DTOs;
 
-namespace HazardBackend.DbQueries.Result;
+namespace HazardBackend.Storage.AzureDB.Services.Queries.DbQueries.Result;
 
 public sealed class DbQueryResult<T> where T : class
 {

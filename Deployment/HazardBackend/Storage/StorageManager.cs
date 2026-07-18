@@ -167,71 +167,71 @@ public class StorageManager : IHostedService
         }
 
         // Run default prune attempt (configuration-based/scheduled)
-        await TryDBPruneAsync(_defaultPruneRequest);
+        // await TryDBPruneAsync(_defaultPruneRequest);
         // We check to Update LastPruneDate Table variable regardless, since manual prune could have occurred during runtime.
         await UpdateLastPruneDateEntry();
     }
 
-    public async Task<IResult> HandleDatabaseQuery(string query)
-    {
-        try
-        {
-            var dbQueryResult = await _azDBManager.HandleClientQuery(query);
+    //public async Task<IResult> HandleDatabaseQuery(string query)
+    //{
+    //    try
+    //    {
+    //        var dbQueryResult = await _azDBManager.HandleClientQuery(query);
 
-            if (dbQueryResult.Error)
-            return 
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred while handling a database query: {message}", ex.Message);
-            return Results.Problem("An error occurred while processing the query.");
-        }
-    }
+    //        if (dbQueryResult.Error)
+    //        return 
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError(ex, "An error occurred while handling a database query: {message}", ex.Message);
+    //        return Results.Problem("An error occurred while processing the query.");
+    //    }
+    //}
 
-    private Results<Ok<List<BaseDto>>, ProblemHttpResult> HandleDbQueryResult(DbQueryResult dbQueryResult)
-    {
+    //private Results<Ok<List<BaseDto>>, ProblemHttpResult> HandleDbQueryResult(DbQueryResult dbQueryResult)
+    //{
 
-        if (dbQueryResult.Error == DBQueryErrorType.None && dbQueryResult.Data != null)
-        {
-            return TypedResults.Ok(dbQueryResult.Data);
-        }
-    }
+    //    if (dbQueryResult.Error == DBQueryErrorType.None && dbQueryResult.Data != null)
+    //    {
+    //        return TypedResults.Ok(dbQueryResult.Data);
+    //    }
+    //}
 
-    private DbQuery ParseQueryString(string? queryString)
-    {
+    //private DbQuery ParseQueryString(string? queryString)
+    //{
     
-    }
+    //}
 
     // Attempt to prune the database if needed based on the LastPruneDate App Var Result and AzDBManager's pruning conditions
     // If the Prune was completed successfully, returns true; otherwise, false.
     public async Task<IResult> TryDBPruneAsync(string? queryString)
     {
-        var pruneRequest = PruneRequest.ParseFromQueryString(queryString);
+        // var pruneRequest = PruneRequest.ParseFromQueryString(queryString);
 
 
         bool missingLastPrune = _dBLastPrunedFetchResult.Entry == null;
         bool invalidLastPrune = _dBLastPrunedFetchResult.IsValid == false;
         bool scheduledPrune = _azDBManager.ShouldPrune();
-        bool forcedPrune = pruneRequest.ForcePrune;
+        // bool forcedPrune = pruneRequest.ForcePrune;
 
         bool mustPrune =
-            forcedPrune ||
+            // forcedPrune ||
             missingLastPrune ||
             invalidLastPrune ||
             scheduledPrune;
 
         if (mustPrune)
         {
-            bool pruneSuccess = await _azDBManager.PruneAsync(pruneRequest);
-            if (pruneSuccess)
-            {                
-                if (!await UpdateLastPruneDateEntry())
-                    _logger.LogWarning("Prune was successful, but the LastDBPruneDate App Variable Entry was not updated to reflect this.");
-                else
-                    _logger.LogInformation("LastDBPruneDate AzTable Entry successfully updated.");
+            //bool pruneSuccess = await _azDBManager.PruneAsync(pruneRequest);
+            //if (pruneSuccess)
+            //{                
+                //if (!await UpdateLastPruneDateEntry())
+                //    _logger.LogWarning("Prune was successful, but the LastDBPruneDate App Variable Entry was not updated to reflect this.");
+                //else
+                //    _logger.LogInformation("LastDBPruneDate AzTable Entry successfully updated.");
 
-                return Results.Ok("Database prune completed.");
-            }
+                //return Results.Ok("Database prune completed.");
+            // }
 
             return Results.Problem("Database prune failed.");
         }

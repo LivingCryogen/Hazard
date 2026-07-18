@@ -124,10 +124,6 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
         /// Gets or sets a value indicating whether the target territory was conquered with this attack.
         /// </summary>
         public bool Conquered { get; set; }
-        /// <summary>
-        /// Gets or sets a value indicating whether the attack resulted in the capture of a continent.
-        /// </summary>
-        public ContID CapturedContinent { get; set; }
 
         /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
         public async Task<SerializedData[]> GetBinarySerials()
@@ -316,10 +312,23 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
     public class AcquiredContinentEvent(ILogger<AcquiredContinentEvent> logger) : IBinarySerializable
     {
         private readonly ILogger _logger = logger;
+        /// <summary>
+        /// Gets or sets the Id of the continent that was acquired.
+        /// </summary>
         public ContID Continent { get; set; }
+        /// <summary>
+        /// Gets or sets the ActionId of the action that resulted in the continent being acquired.
+        /// </summary>
         public int FromActionId { get; set; } // The ActionId of the action that resulted in the continent being acquired. *This Event is not itself an Action!*
+        /// <summary>
+        /// Gets or sets the player number of the previous owner of the continent.
+        /// </summary>
         public int PrevOwner { get; set; } // -1 if the continent was never previously owned by a human player
+        /// <summary>
+        /// Gets or sets the player number of the new owner of the continent.
+        /// </summary>
         public int NewOwner { get; set; }
+        /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
         public async Task<SerializedData[]> GetBinarySerials()
         {
             return await Task.Run(() =>
@@ -328,9 +337,11 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
                 saveData.Add(new(typeof(int), FromActionId));
                 saveData.Add(new(typeof(int), PrevOwner));
                 saveData.Add(new(typeof(ContID), Continent));
+                saveData.Add(new(typeof(int), NewOwner));
                 return saveData.ToArray();
             });
         }
+        /// <inheritdoc cref="IBinarySerializable.LoadFromBinary"/>/>
         public bool LoadFromBinary(BinaryReader reader)
         {
             bool loadComplete = true;
@@ -339,6 +350,7 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
                 FromActionId = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
                 PrevOwner = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
                 Continent = (ContID)BinarySerializer.ReadConvertible(reader, typeof(ContID));
+                NewOwner = (int)BinarySerializer.ReadConvertible(reader, typeof(int));
             }
             catch (Exception ex)
             {
@@ -534,19 +546,19 @@ public class GameSession(ILogger<GameSession> logger, ILoggerFactory loggerFacto
 
             int numAttacks = Attacks.Count;
             saveData.Add(new(typeof(int), numAttacks));
-            saveData.AddRange(innerSaveData[0].SelectMany(a => a));
+            saveData.AddRange(innerSaveData[1].SelectMany(a => a));
 
             int numMoves = Moves.Count;
             saveData.Add(new(typeof(int), numMoves));
-            saveData.AddRange(innerSaveData[1].SelectMany(m => m));
+            saveData.AddRange(innerSaveData[2].SelectMany(m => m));
 
             int numTrades = TradeIns.Count;
             saveData.Add(new(typeof(int), numTrades));
-            saveData.AddRange(innerSaveData[2].SelectMany(t => t));
+            saveData.AddRange(innerSaveData[3].SelectMany(t => t));
 
             int numAcquiredContinentEvents = AcquiredContinentEvents.Count;
             saveData.Add(new(typeof(int), numAcquiredContinentEvents));
-            saveData.AddRange(innerSaveData[3].SelectMany(e => e));
+            saveData.AddRange(innerSaveData[4].SelectMany(e => e));
 
             int numMappedPlayers = PlayerNumsAndNames.Count;
             saveData.Add(new(typeof(int), numMappedPlayers));

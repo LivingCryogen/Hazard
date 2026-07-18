@@ -1,6 +1,6 @@
 ﻿namespace HazardBackend.Storage.AzureDB.Entities;
 
-public class MoveActionEntity
+public class ClaimActionEntity
 {
     // Key
     public Guid GameId { get; set; }
@@ -12,9 +12,7 @@ public class MoveActionEntity
 
     // Data
     public bool IsDemo { get; set; } = false;
-    public string SourceTerritory { get; set; } = string.Empty;
-    public string TargetTerritory { get; set; } = string.Empty;
-    public bool MaxAdvanced { get; set; } = false;
+    public string ClaimedTerritory { get; set; } = string.Empty;
 
     public GameSessionEntity GameSession { get; set; } = null!; // Navigation property for EF
 }

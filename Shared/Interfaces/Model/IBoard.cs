@@ -70,17 +70,16 @@ public interface IBoard : IBinarySerializable
     /// <summary>
     /// Changes ownership of a territory after a successful attack.
     /// </summary>
-    /// <param name="source">The territory from which the attack originated.</param>
     /// <param name="target">The territory that was attacked and is being conquered.</param>
     /// <param name="newOwner">The <see cref="IPlayer.Number"/> of the owner after the attack is completed.</param>
-    /// <returns>The continent that changed ownership after conquest; if none, <see cref="ContID.Null"/>.</returns>
-    ContID Conquer(TerrID source, TerrID target, int newOwner);
+    void Conquer(TerrID target, int newOwner);
     /// <summary>
     /// Determines whether a continent has changed ownership after a change in territory ownership.
     /// </summary>
     /// <remarks>The new owner is not needed here so long as <see cref="TerritoryOwner"/> is changed properly before this method is called.</remarks>
     /// <param name="changed">The territory that changed hands.</param>
     /// <param name="previousOwner">The <see cref="IPlayer.Number"/> of the territory's owner before the change.</param>
-    /// <returns>The continent that changed ownership; if none, <see cref="ContID.Null"/>.</returns>
-    ContID CheckContinentFlip(TerrID changed, int previousOwner);
+    /// <param name="flippedCont">The continent that changed ownership; if none, <see cref="ContID.Null"/>.</param>
+    /// <returns><see langword="true"/> if a continent's ownership changed; otherwise, <see langword="false"/>.</returns>
+    bool CheckContinentFlip(TerrID changed, int previousOwner, out ContID flippedCont);
 }

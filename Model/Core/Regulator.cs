@@ -274,12 +274,21 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
 
                 if (!IsInSecondStage())
                 {
+                    int prevOwner = _currentGame.Board.TerritoryOwner[territory];
                     _currentGame.Board.Claims(PlayerTurn, territory);
+                    // order matters here: record the claim action before acquired continent event, because the event needs to know the action ID of the claim that caused the continent flip
+                    _statTracker.RecordClaimAction(new ClaimMetadata() { Player = PlayerTurn, TerrClaimed = territory });
+                    if (_currentGame.Board.CheckContinentFlip(territory, prevOwner, out ContID flippedCont) && flippedCont != ContID.Null)
+                    {
+                        _statTracker.RecordAcquiredContinentEvent(new AcquiredContMetadata() 
+                        {
+                            FromActionID = _statTracker.TrackedActions,
+                            Continent = flippedCont,
+                            PrevOwner = prevOwner,
+                            NewOwner = PlayerTurn
+                        });
+                    }
                     _currentGame.Players[PlayerTurn].AddTerritory(territory);
-
-
-
-                    _statTracker.RecordClaimAction(new ClaimMetadata() { Player = PlayerTurn, TerrClaimed = territory} );
                 }
                 else
                     _currentGame.Board.Reinforce(territory);
@@ -369,9 +378,10 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
 
             if (targetOwner > -1)
                 _currentGame.Players[targetOwner].RemoveTerritory(target);
+
             _currentGame.Players[sourceOwner].AddTerritory(target);
 
-            _currentGame.Board.Conquer(source, target, _currentGame.Board.TerritoryOwner[source]);
+            _currentGame.Board.Conquer(target, _currentGame.Board.TerritoryOwner[source]);
 
             if (_cards.SetReward())
                 RewardPending = true;
@@ -400,6 +410,20 @@ public class Regulator(ILogger<Regulator> logger, IGame currentGame) : IRegulato
             Retreated = retreated
         };
         _statTracker.RecordAttackAction(attackData);
+
+        if (conquered)
+        {
+            if (_currentGame.Board.CheckContinentFlip(target, targetOwner, out ContID flippedCont) && flippedCont != ContID.Null)
+            {
+                _statTracker.RecordAcquiredContinentEvent(new AcquiredContMetadata()
+                {
+                    FromActionID = _statTracker.TrackedActions,
+                    Continent = flippedCont,
+                    PrevOwner = targetOwner,
+                    NewOwner = sourceOwner
+                });
+            }
+        }
     }
     /// <inheritdoc cref="IRegulator.CanTradeInCards(int, int[])"/>
     public bool CanTradeInCards(int playerNum, int[] handIndices)

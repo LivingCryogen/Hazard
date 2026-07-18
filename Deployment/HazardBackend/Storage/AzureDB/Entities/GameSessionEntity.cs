@@ -15,8 +15,10 @@ public class GameSessionEntity
     public string? WinnerName { get; set; }  // Nullable for ongoing games
 
     // Navigation properties
+    public ICollection<ClaimActionEntity> ClaimActions { get; set; } = [];
     public ICollection<AttackActionEntity> AttackActions { get; set; } = [];
     public ICollection<MoveActionEntity> MoveActions { get; set; } = [];
     public ICollection<TradeActionEntity> TradeActions { get; set; } = [];
+    public ICollection<AcquiredContinentEventEntity> AcquiredContinents { get; set; } = [];
     public ICollection<GameSessionPlayerEntity> GameSessionPlayers { get; set; } = [];
 }

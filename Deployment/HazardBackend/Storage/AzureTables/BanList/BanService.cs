@@ -47,8 +47,8 @@ public class BanService(ILogger<BanService> logger, IConfiguration config, IBanC
         {
             RequestType.Verify => _maxVerifyRequests,
             RequestType.GenSAS => _maxGenSASRequests,
-            RequestType.Leaderboard => _maxLeaderboardRequests,
-            RequestType.Search => _maxSearchRequests,
+            //RequestType.Leaderboard => _maxLeaderboardRequests,
+            //RequestType.Search => _maxSearchRequests,
             RequestType.Sync => _maxSyncRequests,
             RequestType.None => _maxUnknownRequests,
             _ => 10

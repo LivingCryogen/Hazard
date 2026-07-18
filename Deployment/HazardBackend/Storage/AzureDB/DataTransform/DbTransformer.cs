@@ -66,6 +66,15 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             newGame = true;
             var newSession = CreateNewGameSession(installId, sessionData, sessionData.Winner.HasValue ? playerNumToNameMap[(int)sessionData.Winner] : null);
 
+            // Create ClaimActions
+            List<ClaimActionEntity> newClaimActions = [];
+            foreach (var claimAction in sessionData.Claims)
+            {
+                var newClaimAction = CreateClaimAction(sessionData.Id, installId, claimAction, playerNumToNameMap);
+                newClaimAction.GameSession = newSession;
+                newClaimActions.Add(newClaimAction);
+            }
+
             // Create AttackActions
             List<AttackActionEntity> newAttackActions = [];
             foreach (var attackAction in sessionData.Attacks)
@@ -93,14 +102,26 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
                 newTradeActions.Add(newTradeAction);
             }
 
+            // Create AcquiredContinentEvents
+            List<AcquiredContinentEventEntity> newAcquiredContinentEvents = [];
+            foreach (var acquiredContinentEvent in sessionData.AcquiredContinents)
+            {
+                bool fromClaim = sessionData.Claims.Any(c => c.ActionId == acquiredContinentEvent.FromActionId);
+                var newAcquiredContinentEvent = CreateAcquiredContinentEventEntity(sessionData.Id, installId, acquiredContinentEvent, playerNumToNameMap, fromClaim);
+                newAcquiredContinentEvent.GameSession = newSession;
+                newAcquiredContinentEvents.Add(newAcquiredContinentEvent);
+            }
+
             context.GameSessions.Add(newSession);
+            context.ClaimActions.AddRange(newClaimActions);
             context.AttackActions.AddRange(newAttackActions);
             context.MoveActions.AddRange(newMoveActions);
             context.TradeActions.AddRange(newTradeActions);
+            context.AcquiredContinents.AddRange(newAcquiredContinentEvents);
         }
         else // previous session found; if sync data is more up-to-date, update session
         {
-            int previousSessionActions = previousSession.AttackActions.Count + previousSession.MoveActions.Count + previousSession.TradeActions.Count;
+            int previousSessionActions = previousSession.ClaimActions.Count + previousSession.AttackActions.Count + previousSession.MoveActions.Count + previousSession.TradeActions.Count;
             if (previousSessionActions >= actionCount)
             {
                 logger.LogInformation("Game Session {gameID} on install {installID} already has {prevActions}, while sync has {syncActions} actions. Skipping.",
@@ -118,8 +139,9 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
 
             // More memory-efficient: avoids allocating a combined sequence via SelectMany.
             // Slightly more CPU work (3 Max calls), but better for large datasets or tight memory constraints.
-            var lastActionIds = new int[3]
+            var lastActionIds = new int[4]
             {
+                sessionData.Claims.Select(t => t.ActionId).DefaultIfEmpty().Max(),
                 sessionData.Attacks.Select(t => t.ActionId).DefaultIfEmpty().Max(),
                 sessionData.Trades.Select(t => t.ActionId).DefaultIfEmpty().Max(),
                 sessionData.Moves.Select(t => t.ActionId).DefaultIfEmpty().Max()
@@ -128,7 +150,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             prevLastAction = lastActionIds.Max();
         }
 
-        // Create or Update Player Tables (Identity!!! and Stats) for each Player in this new or updated Session ~~~!!
+        // Create PlayerIdentities, GameSessionPlayer junction records, and PlayerStats for each player in the session
         foreach (var playerData in playerNumToNameMap) // playerData.Key = player number, playerData.Value = player name
         {
             var prevIdentity = await GetPlayerIdentity(installId, playerData.Value, errorList);
@@ -266,10 +288,16 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
 
             // Updating by clearing / repopulating is cleaner than attempting granular updates (no need to worry about colleciton order, etc)
             // And we do this on dbContext level to avoid any change tracking confusions
-
+            context.RemoveRange(oldSession.ClaimActions);
             context.RemoveRange(oldSession.AttackActions);
             context.RemoveRange(oldSession.MoveActions);
             context.RemoveRange(oldSession.TradeActions);
+
+            // Create ClaimActions
+            foreach (var claimAction in sessionDto.Claims)
+            {
+
+            }
 
             // Create AttackActions
             foreach (var attackAction in sessionDto.Attacks)
@@ -340,7 +368,21 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
                     sessionDto.Id, sessionDto.Winner);
         }
     }
-
+    
+    private static ClaimActionEntity CreateClaimAction(Guid gameID, Guid installID, ClaimActionDto dto, Dictionary<int, string> playerNumToNameMap)
+    {
+        return new ClaimActionEntity()
+        {
+            GameId = gameID,
+            InstallID = installID,
+            ActionId = dto.ActionId,
+            IsDemo = false,
+            PlayerName = playerNumToNameMap.TryGetValue(dto.Player, out string? claimer) && !string.IsNullOrEmpty(claimer)
+                ? claimer
+                : throw new InvalidDataException($"Player {dto.Player} not found in number to name map."),
+            ClaimedTerritory = dto.ClaimedTerritory
+        };
+    }
     private static AttackActionEntity CreateAttackAction(Guid gameID, Guid installID, AttackActionDto dto, Dictionary<int, string> playerNumToNameMap)
     {
         return new AttackActionEntity()
@@ -348,7 +390,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             GameId = gameID,
             InstallID = installID,
             ActionId = dto.ActionId,
-            IsDemo = false,
+            IsDemo = false
             PlayerName = playerNumToNameMap.TryGetValue(dto.Player, out string? attacker) && !string.IsNullOrEmpty(attacker)
                 ? attacker
                 : throw new InvalidDataException($"Player {dto.Player} not found in number to name map."),
@@ -399,6 +441,28 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             OccupiedBonus = dto.OccupiedBonus,
         };
     }
+
+    private static AcquiredContinentEventEntity CreateAcquiredContinentEventEntity(Guid gameID, Guid installID, AcquiredContinentEventDto dto, Dictionary<int, string> playerNumToNameMap, bool fromClaim)
+    {
+        return new AcquiredContinentEventEntity()
+        {
+            GameId = gameID,
+            InstallId = installID,
+            FromActionId = dto.FromActionId,
+            IsDemo = false,
+            Continent = dto.Continent,
+            FromClaim = fromClaim,
+            PrevOwner = dto.PrevOwner == -1 
+                ? null 
+                : (playerNumToNameMap.TryGetValue(dto.PrevOwner, out string? prevOwner) && !string.IsNullOrEmpty(prevOwner)
+                    ? prevOwner
+                    : throw new InvalidDataException($"Player {dto.PrevOwner} not found in number to name map.")),
+            NewOwner = playerNumToNameMap.TryGetValue(dto.NewOwner, out string? newOwner) && !string.IsNullOrEmpty(newOwner)
+                ? newOwner
+                : throw new InvalidDataException($"Player {dto.NewOwner} not found in number to name map.")
+        };
+    }
+
     private async Task<PlayerStatsEntity?> GetPlayerStats(Guid installId, string name, List<string> errors)
     {
         try
@@ -449,16 +513,44 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             LastGameStarted = sessionDto.StartTime,
             TotalGamesDuration = sessionDto.EndTime.HasValue
                         ? sessionDto.EndTime.Value - sessionDto.StartTime : TimeSpan.Zero,
-            Name = sessionDto.PlayerNumsAndNames.ContainsValue(playerName) ? playerName : throw new InvalidDataException($"PSE creation attempted with {playerName}, which was not found in player nums and names of Game {sessionDto.Id} "),
+            Name = sessionDto.PlayerNumsAndNames.ContainsValue(playerName) 
+                ? playerName 
+                : throw new InvalidDataException($"PSE creation attempted with {playerName}, which was not found in player nums and names of Game {sessionDto.Id} "),
             GamesStarted = 1,
             GamesCompleted = sessionDto.EndTime == null ? 0 : 1,
             GamesWon = sessionDto.Winner == playerNumber ? 1 : 0,
-            AttacksWon = sessionDto.Attacks.Count(attack => attack.Player == playerNumber && attack.AttackerLoss < attack.DefenderLoss),
-            AttacksLost = sessionDto.Attacks.Count(attack => attack.Player == playerNumber && attack.AttackerLoss > attack.DefenderLoss),
-            AttacksTied = sessionDto.Attacks.Count(attack => attack.Player == playerNumber && attack.AttackerLoss == attack.DefenderLoss),
-            Conquests = sessionDto.Attacks.Count(attack => attack.Player == playerNumber && attack.Conquered),
-            Retreats = sessionDto.Attacks.Count(attack => attack.Player == playerNumber && attack.Retreated),
-            ForcedRetreats = sessionDto.Attacks.Count(attack => attack.Defender == playerNumber && attack.Retreated),
+            AttacksWon = sessionDto.Attacks.Count(
+                attack => attack.Player == playerNumber && 
+                attack.AttackerLoss < attack.DefenderLoss),
+            AttacksLost = sessionDto.Attacks.Count(
+                attack => attack.Player == playerNumber &&
+                attack.AttackerLoss > attack.DefenderLoss),
+            AttacksTied = sessionDto.Attacks.Count(
+                attack => attack.Player == playerNumber && 
+                attack.AttackerLoss == attack.DefenderLoss),
+            Conquests = sessionDto.Attacks.Count(
+                attack => attack.Player == playerNumber && 
+                attack.Conquered),
+            TerritoriesLost = sessionDto.Attacks.Count(
+                attack => attack.Defender == playerNumber && 
+                attack.Conquered),
+            Retreats = sessionDto.Attacks.Count(
+                attack => attack.Player == playerNumber && 
+                attack.Retreated),
+            ForcedRetreats = sessionDto.Attacks.Count(
+                attack => attack.Defender == playerNumber && 
+                attack.Retreated),
+            ContinentsClaimed = sessionDto.AcquiredContinents.Count(
+                acq => acq.NewOwner == playerNumber && 
+                sessionDto.Claims.Any(c => c.ActionId == acq.FromActionId)),
+            ContinentsConquered = sessionDto.AcquiredContinents.Count(
+                acq => acq.NewOwner == playerNumber && 
+                !sessionDto.Claims.Any(c => c.ActionId == acq.FromActionId) && 
+                !ContPreviouslyOwnedByPlayer(acq, sessionDto, playerNumber)),
+            ContinentsLost = sessionDto.AcquiredContinents.Count(acq => acq.PrevOwner == playerNumber),
+            ContinentsReacquired = sessionDto.AcquiredContinents.Count(
+                acq => acq.NewOwner == playerNumber && 
+                ContPreviouslyOwnedByPlayer(acq, sessionDto, playerNumber)),
             AttackDiceRolled = sessionDto.Attacks.Where(attack => attack.Player == playerNumber).Sum(a => a.AttackerDice),
             DefenseDiceRolled = sessionDto.Attacks.Where(attack => attack.Defender == playerNumber).Sum(a => a.DefenderDice),
             Moves = sessionDto.Moves.Count(move => move.Player == playerNumber),
@@ -512,7 +604,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             }
 
             // Stat increases must be calculated using unique Action IDs, since we allow partial updates
-            
+
             // Attack Stat Deltas
             var newAttacks = sessionDto.Attacks.Where(a => a.ActionId > prevLastAction);
 
@@ -536,9 +628,12 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
                     playerStats.DefenseDiceRolled += attack.DefenderDice;
                 }
 
-                if (attack.Defender == playerNumber && attack.Retreated)
+                if (attack.Defender == playerNumber)
                 {
-                    playerStats.ForcedRetreats++;
+                    if (attack.Retreated)
+                        playerStats.ForcedRetreats++;
+                    if (attack.Conquered)
+                        playerStats.TerritoriesLost++;
                 }
             }
 
@@ -561,6 +656,23 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
                     playerStats.MaxAdvances++;
             }
 
+            // Acquired Continent Event Stat Deltas
+            var newAcquiredContinents = sessionDto.AcquiredContinents.Where(acq => acq.FromActionId > prevLastAction);
+
+            foreach(var acq in newAcquiredContinents)
+            {
+                if (acq.NewOwner == playerNumber)
+                {
+                    if (sessionDto.Claims.Any(c => c.ActionId == acq.FromActionId))
+                        playerStats.ContinentsClaimed++;
+                    else if (!ContPreviouslyOwnedByPlayer(acq, sessionDto, playerNumber))
+                        playerStats.ContinentsConquered++;
+                    else
+                        playerStats.ContinentsReacquired++;
+                }
+                if (acq.PrevOwner == playerNumber)
+                    playerStats.ContinentsLost++;
+            }
 
             return true;
         }
@@ -596,4 +708,10 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             IsDemo = false
         };
     }
+
+    private static bool ContPreviouslyOwnedByPlayer(AcquiredContinentEventDto acq, GameSessionDto sessionDto, int playerNumber) =>
+        sessionDto.AcquiredContinents.Any(prev =>
+        prev.Continent == acq.Continent &&
+        prev.NewOwner == playerNumber &&
+        prev.FromActionId < acq.FromActionId);
 }

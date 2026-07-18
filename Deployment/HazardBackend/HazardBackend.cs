@@ -59,7 +59,7 @@ namespace HazardBackend
 
             app.MapGet("/", () => "Proxy is up.");
             app.MapGet("/secure-link", GenSasRequest);
-            app.MapGet("/db", DatabaseRequest);
+            // app.MapGet("/db", DatabaseRequest);
 
             app.MapPost("/sync-stats",
                 async (HttpContext context,
@@ -151,7 +151,7 @@ namespace HazardBackend
                 });
 
             var admin = app.MapGroup("/admin").RequireAuthorization("AdminOnly");
-            admin.MapPost("/db/prune", ManualPruneAzDB);
+            // admin.MapPost("/db/prune", ManualPruneAzDB);
 
             app.Run();
         }
@@ -234,24 +234,25 @@ namespace HazardBackend
             return await sasGenerator.GenerateAsync(context.Request);
         }
 
-        private static async Task<Results<Ok<List<BaseDto>>, ProblemHttpResult>> DatabaseRequest(
-            string requestType,
-            string? sortBy,
-            bool? descending,
-            int? maxLength,
-            [FromServices] StorageManager storageManager,
-            [FromServices] ILoggerFactory loggerFactory)
-        {
-            if (string.IsNullOrEmpty(requestType))
-                return TypedResults.Problem("Request type is required.", statusCode: StatusCodes.Status400BadRequest);
+        //private static async Task<Results<Ok<List<BaseDto>>, ProblemHttpResult>> DatabaseRequest(
+        //    string requestType,
+        //    string? sortBy,
+        //    bool? descending,
+        //    int? maxLength,
+        //    [FromServices] StorageManager storageManager,
+        //    [FromServices] ILoggerFactory loggerFactory)
+        //{
+        //    if (string.IsNullOrEmpty(requestType))
+        //        return TypedResults.Problem("Request type is required.", statusCode: StatusCodes.Status400BadRequest);
 
-            if (!Enum.TryParse<DbQueryType>(requestType, true, out var queryType) || queryType == DbQueryType.None)
-                return TypedResults.Problem("Invalid request type.", statusCode: StatusCodes.Status400BadRequest);
+        //    if (!Enum.TryParse<DbQueryType>(requestType, true, out var queryType) || queryType == DbQueryType.None)
+        //        return TypedResults.Problem("Invalid request type.", statusCode: StatusCodes.Status400BadRequest);
+             
 
-            if (DbQuery.TryCreate(queryType, sortBy, descending, maxLength, loggerFactory.CreateLogger<DbQuery>()) is ParseResult<DbQuery> dbQuery && dbQuery.Type != DbQueryType.None))
-                return TypedResults.Problem("Invalid query parameters.", statusCode: StatusCodes.Status400BadRequest);
+            //if (DbQuery.TryCreate(queryType, sortBy, descending, maxLength, loggerFactory.CreateLogger<DbQuery>()) is ParseResult<DbQuery> dbQuery && dbQuery.Type != DbQueryType.None))
+            //    return TypedResults.Problem("Invalid query parameters.", statusCode: StatusCodes.Status400BadRequest);
 
-            return await storageManager.HandleDatabaseQuery(request.QueryString.Value);
+            //return await storageManager.HandleDatabaseQuery(request.QueryString.Value);
             
             // parse response and return appropriate result
             
@@ -263,13 +264,12 @@ namespace HazardBackend
             //return Results.Ok(topPlayers);
         }
 
-        [Authorize(Policy = "AdminOnly")]
-        private static async Task<Results<Ok, ProblemHttpResult>> ManualPruneAzDB(
-            HttpRequest request,
-            [FromServices] StorageManager storeManager)
-        {
-            var queryString = request.QueryString.Value;
-            return await storeManager.TryDBPruneAsync(queryString);
-        }
-    }
+        // [Authorize(Policy = "AdminOnly")]
+        //private static async Task<Results<Ok, ProblemHttpResult>> ManualPruneAzDB(
+        //    HttpRequest request,
+        //    [FromServices] StorageManager storeManager)
+        //{
+        //    var queryString = request.QueryString.Value;
+        //    //return await storeManager.TryDBPruneAsync(queryString);
+        //}
 }

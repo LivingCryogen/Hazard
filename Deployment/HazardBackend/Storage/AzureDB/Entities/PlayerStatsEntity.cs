@@ -23,8 +23,13 @@ public class PlayerStatsEntity
     public int AttacksLost { get; set; } = 0;
     public int AttacksTied { get; set; } = 0;
     public int Conquests { get; set; } = 0;
+    public int TerritoriesLost { get; set; } = 0;
     public int Retreats { get; set; } = 0;
     public int ForcedRetreats { get; set; } = 0;
+    public int ContinentsClaimed { get; set; } = 0;
+    public int ContinentsConquered { get; set; } = 0;
+    public int ContinentsLost { get; set; } = 0;
+    public int ContinentsReacquired { get; set; } = 0;
     public int AttackDiceRolled { get; set; } = 0;
     public int DefenseDiceRolled { get; set; } = 0;
     public int Moves { get; set; } = 0;

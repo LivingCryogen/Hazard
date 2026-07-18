@@ -83,7 +83,7 @@ internal class MockBoard : IBoard
         }
         return loadComplete;
     }
-    public void CheckContinentFlip(TerrID changed, int previousOwner)
+    public bool CheckContinentFlip(TerrID changed, int previousOwner, out ContID flippedCont)
     {
         throw new NotImplementedException();
     }
@@ -98,7 +98,7 @@ internal class MockBoard : IBoard
         throw new NotImplementedException();
     }
 
-    public void Conquer(TerrID source, TerrID target, int newOwner)
+    public void Conquer(TerrID target, int newOwner)
     {
         throw new NotImplementedException();
     }

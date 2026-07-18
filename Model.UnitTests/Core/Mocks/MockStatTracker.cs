@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Model.Stats.Metadata;
 using Model.Stats.StatModels;
 using Model.Tests.Fixtures.Stubs;
 using Shared.Geography.Enums;
@@ -42,7 +43,7 @@ public class MockStatTracker : IStatTracker
             return;
         }
 
-        _currentSession = new GameSession(LoggerFactoryStub.CreateLogger<GameSession>(), _loggerFactory) 
+        _currentSession = new GameSession(LoggerFactoryStub.CreateLogger<GameSession>(), _loggerFactory)
         {
             Id = mockGame.ID,
             InstallId = installID,
@@ -52,9 +53,23 @@ public class MockStatTracker : IStatTracker
             Winner = 0,
         };
 
+        _currentSession.Claims.Add(new GameSession.ClaimAction(LoggerFactoryStub.CreateLogger<GameSession.ClaimAction>())
+        {
+            ActionId = 1,
+            Player = 0,
+            ClaimedTerritory = TerrID.Alaska,
+        });
+
+        _currentSession.Claims.Add(new GameSession.ClaimAction(LoggerFactoryStub.CreateLogger<GameSession.ClaimAction>())
+        {
+            ActionId = 2,
+            Player = 1,
+            ClaimedTerritory = TerrID.NorthwestTerritory,
+        });
+
         _currentSession.Attacks.Add(new GameSession.AttackAction(LoggerFactoryStub.CreateLogger<GameSession.AttackAction>())
         {
-            ActionId = 0,
+            ActionId = 3,
             Attacker = 0,
             Defender = 1,
             SourceTerritory = TerrID.Alaska,
@@ -71,7 +86,7 @@ public class MockStatTracker : IStatTracker
 
         _currentSession.Attacks.Add(new GameSession.AttackAction(LoggerFactoryStub.CreateLogger<GameSession.AttackAction>())
         {
-            ActionId = 1,
+            ActionId = 4,
             Attacker = 0,
             Defender = 1,
             SourceTerritory = TerrID.Alaska,
@@ -88,7 +103,7 @@ public class MockStatTracker : IStatTracker
 
         _currentSession.Moves.Add(new GameSession.MoveAction(LoggerFactoryStub.CreateLogger<GameSession.MoveAction>())
         {
-            ActionId = 2,
+            ActionId = 5,
             Player = 0,
             SourceTerritory = TerrID.Alaska,
             TargetTerritory = TerrID.NorthwestTerritory,
@@ -98,13 +113,21 @@ public class MockStatTracker : IStatTracker
         _currentSession.TradeIns.Add(new GameSession.TradeAction(LoggerFactoryStub.CreateLogger<GameSession.TradeAction>())
         {
             Player = 1,
-            ActionId = 3,
+            ActionId = 6,
             CardTargetTerritories = [TerrID.Brazil, TerrID.Egypt, TerrID.Ukraine],
             OccupiedBonus = 0,
             TradeValue = 4,
         });
 
-        _actionId = 3;
+        _currentSession.AcquiredContinentEvents.Add(new GameSession.AcquiredContinentEvent(LoggerFactoryStub.CreateLogger<GameSession.AcquiredContinentEvent>())
+        {
+            FromActionId = 4,
+            NewOwner = 0,
+            PrevOwner = -1,
+            Continent = ContID.NorthAmerica,
+        });
+
+        _actionId = 7;
     }
 
     public int TrackedActions => _currentSession?.NumActions ?? 0;
@@ -182,6 +205,16 @@ public class MockStatTracker : IStatTracker
     }
 
     public bool UpdatePlayerData(IPlayer[] players)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void RecordClaimAction(IClaimData claimData)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void RecordAcquiredContinentEvent(AcquiredContMetadata eventData)
     {
         throw new NotImplementedException();
     }

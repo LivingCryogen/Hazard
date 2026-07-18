@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Model.Assets;
 using Model.Entities;
+using Model.Stats.Metadata;
 using Model.Stats.Services;
 using Shared.Geography;
 using Shared.Geography.Enums;
@@ -131,6 +132,9 @@ public class Game : IGame
     /// <summary>
     /// Sets up a two-player game. Rules dictate that two-player setup includes a third, neutral, dummy "player", and that the initial selection of territories is random.
     /// </summary>
+    /// <remarks>
+    /// This is too complex but will remain for now; it is a "learning bitwise manipulation" exercise.
+    /// </remarks>
     public void TwoPlayerAutoSetup()
     {
         if (Board == null) return;
@@ -179,7 +183,20 @@ public class Game : IGame
 
             if (player < 2 && player > -1)
             {
+                int prevOwner = Board.TerritoryOwner[(TerrID)i];
                 Board.Claims(player, (TerrID)i, 1);
+                // order matters here: record the claim action before acquired continent event, because the event needs to know the action ID of the claim that caused the continent flip
+                StatTracker.RecordClaimAction(new ClaimMetadata() { Player = player, TerrClaimed = (TerrID)i }); 
+                if (Board.CheckContinentFlip((TerrID)i, prevOwner, out ContID flippedCont) && flippedCont != ContID.Null)
+                {
+                    StatTracker.RecordAcquiredContinentEvent(new AcquiredContMetadata()
+                    {
+                        FromActionID = StatTracker.TrackedActions,
+                        Continent = flippedCont,
+                        PrevOwner = prevOwner,
+                        NewOwner = player
+                    });
+                }
                 Players[player].AddTerritory((TerrID)i);
                 playerPool[player]--;
                 if (playerPool[player] <= 0)
@@ -187,6 +204,7 @@ public class Game : IGame
             }
             else if (player == 2)
             {
+                // Since the dummy player is not a real player, we don't need to add it to the player's territory list or record the claim action
                 Board.Claims(-1, (TerrID)i, 1);
                 playerPool[player]--;
                 if (playerPool[player] <= 0)

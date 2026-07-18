@@ -33,27 +33,27 @@ public class QueryHandler(GameStatsDbContext dbContext, ILogger<QueryHandler> lo
             "TotalOccupationBonus"
         ];
 
-    public async Task<DbQueryResult> HandleQueryAsync(QueryType queryType, string[] queryParams)
-    {
-        switch (queryType)
-        {
-            case QueryType.Leaderboard: return await GetLeaderboard(dbContext, queryParams); 
-            case QueryType.PlayerStats: return await GetPlayerStats(queryParams);
+    //public async Task<DbQueryResult> HandleQueryAsync(QueryType queryType, string[] queryParams)
+    //{
+    //    switch (queryType)
+    //    {
+    //        case QueryType.Leaderboard: return await GetLeaderboard(dbContext, queryParams); 
+    //        case QueryType.PlayerStats: return await GetPlayerStats(queryParams);
 
-        }
-    }
+    //    }
+    //}
 
-    private async Task<DbQueryResult> GetLeaderboard(string[] queryParams)
-    {
-        ValidateQueryParams(queryParams);
+    //private async Task<DbQueryResult> GetLeaderboard(string[] queryParams)
+    //{
+    //    ValidateQueryParams(queryParams);
 
 
         
         
-    }
+    //}
 
-    private bool ValidateQueryParams(string[] queryParams, out string? error)
-    {
+    //private bool ValidateQueryParams(string[] queryParams, out string? error)
+    //{
         
-    }
+    //}
 }

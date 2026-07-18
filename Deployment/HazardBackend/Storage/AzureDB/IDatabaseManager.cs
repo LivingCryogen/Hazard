@@ -9,7 +9,7 @@ public interface IDatabaseManager
     public int? PruneAfterDays { get; }
 
     public void InitializeLastPruneDate(DateTime lastPruneDate);
-    public Task<DbQueryResult> HandleDatabaseQuery(string query);
+    // public Task<DbQueryResult> HandleDatabaseQuery(string query);
     public bool ShouldPrune();
     public Task<bool> PruneAsync(PruneRequest pruneRequest);
 }

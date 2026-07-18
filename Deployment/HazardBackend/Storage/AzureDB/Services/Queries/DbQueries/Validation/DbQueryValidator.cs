@@ -1,9 +1,9 @@
-﻿using HazardBackend.DbQueries;
+﻿using HazardBackend.Storage.AzureDB.Services.Queries.DbQueries;
 using Microsoft.AspNetCore.Mvc.Routing;
 using System.Reflection.Metadata;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace HazardBackend.DbQueries.Validation;
+namespace HazardBackend.Storage.AzureDB.Services.Queries.DbQueries.Validation;
 
 public static class DbQueryValidator
 {
@@ -13,13 +13,13 @@ public static class DbQueryValidator
      */
     public static (bool Success, string[] Errors) Validate(DbQuery query, ILogger logger)
     {
-        return query.Type switch 
+        return query.Type switch
         {
-            DbQueryType.Leaderboard => ValidateLeaderboardQuery(query, logger),
-            DbQueryType.PlayerStats => ValidatePlayerStatsQuery(query, logger),
+            //DbQueryType.Leaderboard => ValidateLeaderboardQuery(query, logger),
+            //DbQueryType.PlayerStats => ValidatePlayerStatsQuery(query, logger),
             // ...
-        }
-
+            _ => (false, ["Unknown DbQuery type."]), // Default case: doesn't match any known query type, return false
+        };
     }
 
     private static (bool Success, string[] Errors) ValidateLeaderboardQuery(DbQuery query, ILogger logger)

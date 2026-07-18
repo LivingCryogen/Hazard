@@ -6,7 +6,7 @@ public class AttackActionEntity
     public Guid GameId { get; set; }
     public int ActionId { get; set; }
 
-    // Foreign composite key to PlayerStatsEntity
+    // Foreign composite key to PlayerIdentityEntity
     public string PlayerName { get; set; } = string.Empty;
     public Guid InstallID { get; set; }
     

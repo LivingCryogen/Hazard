@@ -10,7 +10,8 @@ namespace Shared.Interfaces.Model;
 /// </summary>
 public interface IClaimData : IActionData
 {
-    /// Gets or inits the identifier of the territory being claimed.
+    /// <summary>
+    /// Gets or sets the identifier of the claimed territory.
     /// </summary>
     public TerrID TerrClaimed { get; init; }
 }

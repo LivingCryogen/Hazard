@@ -86,20 +86,16 @@ public class EarthBoard : IBoard, IBinarySerializable
     /// <inheritdoc cref="IBoard.Claims(int, TerrID)"/>
     public void Claims(int newPlayer, TerrID territory)
     {
-        int previousOwner = TerritoryOwner[territory];
         Armies[territory] = 1;
         TerritoryOwner[territory] = newPlayer;
         TerritoryChanged?.Invoke(this, new TerritoryChangedEventArgs(territory, newPlayer));
-        CheckContinentFlip(territory, previousOwner);
     }
     /// <inheritdoc cref="IBoard.Claims(int, TerrID, int)"/>
     public void Claims(int newPlayer, TerrID territory, int armies)
     {
-        int previousOwner = TerritoryOwner[territory];
         TerritoryOwner[territory] = newPlayer;
         Armies[territory] = armies;
         TerritoryChanged?.Invoke(this, new TerritoryChangedEventArgs(territory, newPlayer));
-        CheckContinentFlip(territory, previousOwner);
     }
     /// <inheritdoc cref="IBoard.Reinforce(TerrID)"/>
     public void Reinforce(TerrID territory)
@@ -113,16 +109,14 @@ public class EarthBoard : IBoard, IBinarySerializable
         Armies[territory] = Armies[territory] + armies;
         TerritoryChanged?.Invoke(this, new TerritoryChangedEventArgs(territory));
     }
-    /// <inheritdoc cref="IBoard.Conquer(TerrID, TerrID, int)"/>
-    public ContID Conquer(TerrID source, TerrID target, int newOwner)
+    /// <inheritdoc cref="IBoard.Conquer(TerrID, int)"/>
+    public void Conquer(TerrID target, int newOwner)
     {
-        int previousOwner = TerritoryOwner[target];
         TerritoryOwner[target] = newOwner;
-        CheckContinentFlip(target, previousOwner);
         TerritoryChanged?.Invoke(this, new TerritoryChangedEventArgs(target, newOwner));
     }
-    /// <inheritdoc cref="IBoard.CheckContinentFlip(TerrID, int)"/>
-    public ContID CheckContinentFlip(TerrID changed, int previousOwner)
+    /// <inheritdoc cref="IBoard.CheckContinentFlip(TerrID, int, out ContID)"/>
+    public bool CheckContinentFlip(TerrID changed, int previousOwner, out ContID flippedCont)
     {
         if (changed == TerrID.Null)
             throw new ArgumentException("Non-null TerrID required.", nameof(changed));
@@ -131,7 +125,10 @@ public class EarthBoard : IBoard, IBinarySerializable
         var terrHomeContinent = BoardGeography.TerritoryToContinent(changed);
         var continentTerritories = BoardGeography.GetContinentMembers(terrHomeContinent);
         if (continentTerritories == null || continentTerritories.Count <= 0 || previousOwner == newOwner)
-            return ContID.Null;
+        {
+            flippedCont = ContID.Null;
+            return false;
+        }
 
         bool contPrevOwnedByPlayer = ContinentOwner[terrHomeContinent] == previousOwner && previousOwner > -1;
 
@@ -141,7 +138,8 @@ public class EarthBoard : IBoard, IBinarySerializable
         {
             ContinentOwner[terrHomeContinent] = newOwner;
             ContinentOwnerChanged?.Invoke(this, new ContinentOwnerChangedEventArgs(terrHomeContinent, previousOwner));
-            return terrHomeContinent;
+            flippedCont = terrHomeContinent;
+            return true;
         }
 
         if (contPrevOwnedByPlayer)
@@ -150,7 +148,8 @@ public class EarthBoard : IBoard, IBinarySerializable
             ContinentOwnerChanged?.Invoke(this, new ContinentOwnerChangedEventArgs(terrHomeContinent, previousOwner));     
         }
 
-        return ContID.Null;
+        flippedCont = ContID.Null;
+        return false;
     }
     /// <inheritdoc cref="IBinarySerializable.GetBinarySerials"/>
     public async Task<SerializedData[]> GetBinarySerials()

@@ -299,6 +299,17 @@ public class BinarySerializerTests
             Assert.IsNotNull(((MockStatTracker)_toSerialGame.StatTracker).CurrentSession);
             GameSession originalSession = ((MockStatTracker)_toSerialGame.StatTracker).CurrentSession!;
 
+            int numClaims = loadedSession.Claims.Count;
+            Assert.AreEqual(numClaims, originalSession.Claims.Count);
+            for (int i = 0; i < numClaims; i++)
+            {
+                var loadedClaim = loadedSession.Claims[i];
+                var originalClaim = originalSession.Claims[i];
+                Assert.AreEqual(loadedClaim.ActionId, originalClaim.ActionId);
+                Assert.AreEqual(loadedClaim.ClaimedTerritory, originalClaim.ClaimedTerritory);
+                Assert.AreEqual(loadedClaim.Player, originalClaim.Player);
+            }
+
             int numAttacks = loadedSession.Attacks.Count;
             Assert.AreEqual(numAttacks, originalSession.Attacks.Count);
             for (int i = 0; i < numAttacks; i++)
@@ -347,6 +358,18 @@ public class BinarySerializerTests
                 {
                     Assert.AreEqual(loadedTrade.CardTargetTerritories[j], originalTrade.CardTargetTerritories[j]);
                 }
+            }
+
+            int numAcquiredContinentEvents = loadedSession.AcquiredContinentEvents.Count;
+            Assert.AreEqual(numAcquiredContinentEvents, originalSession.AcquiredContinentEvents.Count);
+            for (int i = 0; i < numAcquiredContinentEvents; i++)
+            {                 
+                var loadedEvent = loadedSession.AcquiredContinentEvents[i];
+                var originalEvent = originalSession.AcquiredContinentEvents[i];
+                Assert.AreEqual(loadedEvent.Continent, originalEvent.Continent);
+                Assert.AreEqual(loadedEvent.NewOwner, originalEvent.NewOwner);
+                Assert.AreEqual(loadedEvent.PrevOwner, originalEvent.PrevOwner);
+                Assert.AreEqual(loadedEvent.FromActionId, originalEvent.FromActionId);
             }
         }
         else Assert.Fail();
@@ -519,6 +542,17 @@ public class BinarySerializerTests
             Assert.IsNotNull(((MockStatTracker)_toSerialGame.StatTracker).CurrentSession);
             GameSession originalSession = ((MockStatTracker)_toSerialGame.StatTracker).CurrentSession!;
 
+            int numClaims = loadedSession.Claims.Count;
+            Assert.AreEqual(numClaims, originalSession.Claims.Count);
+            for (int i = 0; i < numClaims; i++)
+            {
+                var loadedClaim = loadedSession.Claims[i];
+                var originalClaim = originalSession.Claims[i];
+                Assert.AreEqual(loadedClaim.ActionId, originalClaim.ActionId);
+                Assert.AreEqual(loadedClaim.ClaimedTerritory, originalClaim.ClaimedTerritory);
+                Assert.AreEqual(loadedClaim.Player, originalClaim.Player);
+            }
+
             int numAttacks = loadedSession.Attacks.Count;
             Assert.AreEqual(numAttacks, originalSession.Attacks.Count);
             for (int i = 0; i < numAttacks; i++)
@@ -567,6 +601,18 @@ public class BinarySerializerTests
                 {
                     Assert.AreEqual(loadedTrade.CardTargetTerritories[j], originalTrade.CardTargetTerritories[j]);
                 }
+            }
+
+            int numAcquiredContinentEvents = loadedSession.AcquiredContinentEvents.Count;
+            Assert.AreEqual(numAcquiredContinentEvents, originalSession.AcquiredContinentEvents.Count);
+            for (int i = 0; i < numAcquiredContinentEvents; i++)
+            {
+                var loadedEvent = loadedSession.AcquiredContinentEvents[i];
+                var originalEvent = originalSession.AcquiredContinentEvents[i];
+                Assert.AreEqual(loadedEvent.Continent, originalEvent.Continent);
+                Assert.AreEqual(loadedEvent.NewOwner, originalEvent.NewOwner);
+                Assert.AreEqual(loadedEvent.PrevOwner, originalEvent.PrevOwner);
+                Assert.AreEqual(loadedEvent.FromActionId, originalEvent.FromActionId);
             }
         }
         else Assert.Fail();

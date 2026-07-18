@@ -6,9 +6,11 @@ namespace HazardBackend.Storage.AzureDB.Context;
 public class GameStatsDbContext(DbContextOptions<GameStatsDbContext> options) : DbContext(options)
 {
     public DbSet<GameSessionEntity> GameSessions { get; set; }
+    public DbSet<ClaimActionEntity> ClaimActions { get; set; }
     public DbSet<AttackActionEntity> AttackActions { get; set; }
     public DbSet<MoveActionEntity> MoveActions { get; set; }
     public DbSet<TradeActionEntity> TradeActions { get; set; }
+    public DbSet<AcquiredContinentEventEntity> AcquiredContinents { get; set; }
     public DbSet<PlayerStatsEntity> PlayerStats { get; set; }
     public DbSet<PlayerIdentityEntity> PlayerIdentities { get; set; }
     public DbSet<GameSessionPlayerEntity> GameSessionPlayers { get; set; }
@@ -30,6 +32,9 @@ public class GameStatsDbContext(DbContextOptions<GameStatsDbContext> options) : 
         modelBuilder.Entity<PlayerStatsEntity>()
             .HasKey(entity => new { entity.Name, entity.InstallId });
 
+        modelBuilder.Entity<ClaimActionEntity>()
+            .HasKey(entity => new { entity.GameId, entity.ActionId });
+
         modelBuilder.Entity<AttackActionEntity>()
             .HasKey(entity => new { entity.GameId, entity.ActionId });
 
@@ -38,6 +43,9 @@ public class GameStatsDbContext(DbContextOptions<GameStatsDbContext> options) : 
 
         modelBuilder.Entity<TradeActionEntity>()
             .HasKey(entity => new { entity.GameId, entity.ActionId });
+
+        modelBuilder.Entity<AcquiredContinentEventEntity>()
+            .HasKey(entity => new { entity.GameId, entity.FromActionId });
 
         // Foreign Keys and Relationships
 
@@ -62,6 +70,18 @@ public class GameStatsDbContext(DbContextOptions<GameStatsDbContext> options) : 
             .OnDelete(DeleteBehavior.Restrict);
 
         // Action relationships
+        modelBuilder.Entity<ClaimActionEntity>()
+            .HasOne(claim => claim.GameSession)
+            .WithMany(game => game.ClaimActions)
+            .OnDelete(DeleteBehavior.Cascade); // Cascade delete actions when a GameSession is deleted
+
+        modelBuilder.Entity<ClaimActionEntity>()
+            .HasOne<PlayerIdentityEntity>()
+            .WithMany() // No navigation property in PlayerIdentityEntity, doesn't track back to actions
+            .HasForeignKey(c => new { c.PlayerName, c.InstallID })
+            .HasPrincipalKey(p => new { p.Name, p.InstallId })
+            .OnDelete(DeleteBehavior.Restrict); // Prevent cascading deletes
+
         modelBuilder.Entity<AttackActionEntity>()
             .HasOne(attack => attack.GameSession)
             .WithMany(game => game.AttackActions)
@@ -103,6 +123,26 @@ public class GameStatsDbContext(DbContextOptions<GameStatsDbContext> options) : 
             .WithMany() // No navigation property in PlayerIdentityEntity, doesn't track back to actions
             .HasForeignKey(t => new { t.PlayerName, t.InstallID })
             .HasPrincipalKey(t => new { t.Name, t.InstallId })
+            .OnDelete(DeleteBehavior.Restrict); // Prevent cascading deletes
+
+        // Event relationships
+        modelBuilder.Entity<AcquiredContinentEventEntity>()
+            .HasOne(acquired => acquired.GameSession)
+            .WithMany(game => game.AcquiredContinents)
+            .OnDelete(DeleteBehavior.Cascade); // Cascade delete events when a GameSession is deleted
+
+        modelBuilder.Entity<AcquiredContinentEventEntity>()
+            .HasOne<PlayerIdentityEntity>()
+            .WithMany() // No navigation property in PlayerIdentityEntity, doesn't track back
+            .HasForeignKey(a => new { a.NewOwner, a.InstallId })
+            .HasPrincipalKey(p => new { p.Name, p.InstallId })
+            .OnDelete(DeleteBehavior.Restrict); // Prevent cascading deletes
+
+        modelBuilder.Entity<AcquiredContinentEventEntity>()
+            .HasOne<PlayerIdentityEntity>()
+            .WithMany() // No navigation property in PlayerIdentityEntity, doesn't track back
+            .HasForeignKey(a => new { a.PrevOwner, a.InstallId })
+            .HasPrincipalKey(p => new { p.Name, p.InstallId })
             .OnDelete(DeleteBehavior.Restrict); // Prevent cascading deletes
     }
 }
