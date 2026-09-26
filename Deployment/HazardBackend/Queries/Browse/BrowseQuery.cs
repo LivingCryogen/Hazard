@@ -8,25 +8,25 @@ using static HazardBackend.Queries.Browse.BrowseQuery;
 
 namespace HazardBackend.Queries.Browse;
 
-public abstract class BrowseQuery : DbQuery
+internal abstract class BrowseQuery(QueryEntityType entityType) : DbQuery(DbQueryType.Browse, entityType)
 {
-    protected class BrowseQueryData(
+    internal class BrowseQueryData(
         SortDirection? sortDirection, 
         string? sortProperty,
         List<(string FilterProperty, FilterOperator Operator, string RawValue)> filters)
     {
-        public SortDirection? SortDirection { get; set; } = sortDirection;
-        public string? SortProperty { get; set; } = sortProperty;
-        public List<(string FilterProperty, FilterOperator Operator, string RawValue)> Filters { get; set; } = filters;
+        internal SortDirection? SortDirection { get; set; } = sortDirection;
+        internal string? SortProperty { get; set; } = sortProperty;
+        internal List<(string FilterProperty, FilterOperator Operator, string RawValue)> Filters { get; set; } = filters;
     }
 
-    public enum SortDirection
+    internal enum SortDirection
     {
         Ascending,
         Descending
     }
 
-    public enum FilterOperator
+    internal enum FilterOperator
     {
         Equals,
         NotEquals,
@@ -37,25 +37,15 @@ public abstract class BrowseQuery : DbQuery
         Contains
     }
 
-    public sealed class Filter<T> where T : struct, Enum
-    {
-        public required T Property { get; set; }
-        public required FilterOperator Operator { get; set; }
-        public required string RawValue { get; set; }
-    }
+    internal sealed record Filter<T> (T Property, FilterOperator Operator, object Value) where T : struct, Enum;
+    internal sealed record Sort<T> (T Property, SortDirection Direction) where T : struct, Enum;
 
-    public sealed class Sort<T> where T : struct, Enum
-    {
-        public required T Property { get; set; }
-        public required SortDirection Direction { get; set; }
-    }
-
-    public static ParseResult<DbQuery> Parse(Dictionary<string, StringValues> queryDictionary, BaseDbQueryData baseData, ParseResult<DbQuery> parseResult, ILogger logger)
+    internal static ParseResult<DbQuery> Parse(IQueryCollection queryCollection, BaseDbQueryData baseData, ParseResult<DbQuery> parseResult, ILogger logger)
     {
         SortDirection? sortDirection = null;
 
         // Sort Direction
-        if (!queryDictionary.TryGetValue("sortdirection", out StringValues directionParams))
+        if (!queryCollection.TryGetValue("sortdirection", out StringValues directionParams))
         {
             logger.LogWarning("Missing sort direction parameter for Browse Query; defaulting to no sort.");
             parseResult.Errors.Add("Missing sort direction parameter for Browse Query; defaulting to no sort.");
@@ -83,21 +73,21 @@ public abstract class BrowseQuery : DbQuery
         }
 
         // Filters (including basic prop data)
-        if (!queryDictionary.TryGetValue("filter", out StringValues filterProperties) ||  filterProperties.IsNullOrEmpty())
+        if (!queryCollection.TryGetValue("filter", out StringValues filterProperties) ||  filterProperties.IsNullOrEmpty())
         {
             logger.LogError("No filter properties parameters found for Browse Query!");
             parseResult.Errors.Add("No filter properties parameters found for Browse Query!");
             return parseResult;
         }
 
-        if (!queryDictionary.TryGetValue("op", out StringValues filterOperators) || filterOperators.IsNullOrEmpty())
+        if (!queryCollection.TryGetValue("op", out StringValues filterOperators) || filterOperators.IsNullOrEmpty())
         {
             logger.LogError($"No filter operator parameters found for filters {filterProperties}!");
             parseResult.Errors.Add($"No filter operator parameters found for filters {filterProperties}!");
             return parseResult;
         }
 
-        if (!queryDictionary.TryGetValue("val", out StringValues filterValues) || filterValues.IsNullOrEmpty())
+        if (!queryCollection.TryGetValue("val", out StringValues filterValues) || filterValues.IsNullOrEmpty())
         {
             logger.LogError("No filter values found for filters!");
             parseResult.Errors.Add($"No filter values found for filters {filterProperties}!");
@@ -110,7 +100,7 @@ public abstract class BrowseQuery : DbQuery
         logger.LogInformation("{num} filters normalized with parsed operators.", filtersWithParsedOps.Count);
 
         // Basic Direction Property Data (not yet Enum parsing - that's for the subclass)
-        if (!queryDictionary.TryGetValue("sort", out StringValues sortParams) || sortParams.IsNullOrEmpty())
+        if (!queryCollection.TryGetValue("sort", out StringValues sortParams) || sortParams.IsNullOrEmpty())
         {
             logger.LogWarning("Missing sort property for Browse Query; defaulting to no sort.");
             parseResult.Errors.Add("Missing sort property for Browse Query; defaulting to no sort.");

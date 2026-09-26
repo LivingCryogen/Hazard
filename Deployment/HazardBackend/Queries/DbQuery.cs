@@ -10,34 +10,33 @@ namespace HazardBackend.Queries;
 
 public abstract class DbQuery
 {
-    protected class BaseDbQueryData(DbQueryType type, QueryEntityType EntityType)
+    internal class BaseDbQueryData(DbQueryType type, QueryEntityType EntityType)
     {
-        public DbQueryType Type { get; set; } = type;
-        public QueryEntityType EntityType { get; set; } = EntityType;
+        internal DbQueryType Type { get; set; } = type;
+        internal QueryEntityType EntityType { get; set; } = EntityType;
     }
 
-    protected DbQuery(DbQueryType type, QueryEntityType entityType)
+    private protected DbQuery(DbQueryType type, QueryEntityType entityType)
     {
         Type = type;
         EntityType = entityType;
     }
 
-    public DbQueryType Type { get; init; }
-    public QueryEntityType EntityType { get; init; }
+    internal DbQueryType Type { get; }
+    internal QueryEntityType EntityType { get; }
 
-    public static ParseResult<DbQuery> Parse(string queryString, ILogger logger)
+    public static ParseResult<DbQuery> Parse(IQueryCollection queryCollection, ILogger logger)
     {
         ParseResult<DbQuery> parseResult = new(false, null, []);
-        var queryDictionary = QueryHelpers.ParseQuery(queryString);
-
-        if (queryDictionary == null || queryDictionary.Count == 0)
+       
+        if (queryCollection.Count == 0)
         {
             logger.LogError("Query parameters missing.");
             parseResult.Errors.Add("Query parameters missing.");
             return parseResult;
         }
 
-        if (!queryDictionary.TryGetValue("querytype", out var typeString))
+        if (!queryCollection.TryGetValue("querytype", out var typeString))
         {
             logger.LogError("Missing querytype parameter.");
             parseResult.Errors.Add("Missing querytype parameter.");
@@ -51,7 +50,7 @@ public abstract class DbQuery
             return parseResult;
         }
 
-        if (!queryDictionary.TryGetValue("entity", out var entityTypeString))
+        if (!queryCollection.TryGetValue("entity", out var entityTypeString))
         {
             logger.LogError("Missing entitytype parameter.");
             parseResult.Errors.Add("Missing entitytype parameter.");
@@ -71,9 +70,9 @@ public abstract class DbQuery
         switch (type)
         {
             case (DbQueryType.Browse):
-                return BrowseQuery.Parse(queryDictionary, baseParsedData, parseResult, logger);
+                return BrowseQuery.Parse(queryCollection, baseParsedData, parseResult, logger);
             case (DbQueryType.Lookup):
-                return LookupQuery.Parse(queryDictionary, baseParsedData, parseResult, logger);
+                return LookupQuery.Parse(queryCollection, baseParsedData, parseResult, logger);
             default:
                 return new (false, null, ["Query parameters missing."]);
         }

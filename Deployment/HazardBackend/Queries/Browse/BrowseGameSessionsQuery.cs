@@ -5,9 +5,9 @@ using static HazardBackend.Queries.Browse.BrowseQuery;
 
 namespace HazardBackend.Queries.Browse;
 
-public sealed class BrowseGameSessionsQuery : BrowseQuery
+internal sealed class BrowseGameSessionsQuery : BrowseQuery
 {
-    public enum FilterProperty
+    internal enum FilterProperty
     {
         IsDemo,
         InstallId,
@@ -17,7 +17,7 @@ public sealed class BrowseGameSessionsQuery : BrowseQuery
         Winner,
         GameId
     }
-    public enum SortProperty
+    internal enum SortProperty
     {
         IsDemo,
         InstallId,
@@ -33,10 +33,19 @@ public sealed class BrowseGameSessionsQuery : BrowseQuery
         NumTrades,
         NumAcquiredContinents
     }
-    public Sort<SortProperty>? SortDescriptor { get; init; }
-    public List<Filter<FilterProperty>> Filters { get; init; } = [];
+    internal Sort<SortProperty>? SortDescriptor { get; }
+    internal IReadOnlyList<Filter<FilterProperty>> Filters { get; } = [];
 
-    public static ParseResult<DbQuery> Parse(
+    private BrowseGameSessionsQuery(
+        Sort<SortProperty>? sortDescriptor,
+        IReadOnlyList<Filter<FilterProperty>> filters)
+        : base(QueryEntityType.GameSession) 
+    {
+        SortDescriptor = sortDescriptor;
+        Filters = filters;
+    }
+
+    internal static ParseResult<DbQuery> Parse(
         BaseDbQueryData baseData, 
         BrowseQueryData browseData,
         ParseResult<DbQuery> parseResult,
@@ -51,7 +60,7 @@ public sealed class BrowseGameSessionsQuery : BrowseQuery
             if (!Enum.TryParse<SortProperty>(browseData.SortProperty, out SortProperty parsedSortProperty))
             {
                 logger.LogWarning("Sort property {property} was invalid for Browse Query; defaulting to no sort.", browseData.SortProperty);
-                parseResult.Errors.Add($"Invalid sort property {browseData.SortProperty} for Browse Query; defaulting to no sort.");
+                parseResult.Warnings.Add($"Invalid sort property {browseData.SortProperty} for Browse Query; defaulting to no sort.");
             }
             else
             {
@@ -66,7 +75,7 @@ public sealed class BrowseGameSessionsQuery : BrowseQuery
             if (!Enum.TryParse<FilterProperty>(filter.FilterProperty, out FilterProperty parsedFilterProperty))
             {
                 logger.LogWarning("Invalid filter property: {property}. Skipping filter!", filter.FilterProperty);
-                parseResult.Errors.Add($"Invalid filter property: {filter.FilterProperty}. Skipping filter!");
+                parseResult.Warnings.Add($"Invalid filter property: {filter.FilterProperty}. Skipping filter!");
                 browseData.Filters.Remove(filter);
                 continue;
             }
@@ -75,6 +84,19 @@ public sealed class BrowseGameSessionsQuery : BrowseQuery
                 filterProperties.Add(parsedFilterProperty);
                 logger.LogInformation("Parsed filter property: {filterProperty}.", parsedFilterProperty);
             }
+        }
+
+        if (filterProperties.Count == 0 && browseData.Filters.Count > 0)
+        {
+            logger.LogWarning("No valid filter properties were parsed from the provided filters. Defaulting to unfiltered results!");
+            parseResult.Warnings.Add("No valid filter properties were parsed from the provided filters. Defaulting to unfiltered results!");
+            browseData.Filters.Clear();
+        }
+
+        if (browseData.Filters.Count <= 0)
+        {
+            logger.LogWarning("No filters were provided for the Browse Query. Ensure Pagination limits are applied!");
+            parseResult.Warnings.Add("No filters were provided for the Browse Query. Ensure Pagination limits are applied!");
         }
 
 
@@ -89,12 +111,8 @@ public sealed class BrowseGameSessionsQuery : BrowseQuery
         }
 
         // Build Instance, return wrapped in ParseResult
-        new BrowseGameSessionsQuery()
-        {
-            SortDescriptor = (sortProperty == null || sortDirection == null) ?
-                null :
-                new Sort<SortProperty>() { Property = (SortProperty)sortProperty, Direction = (SortDirection)sortDirection }
-        };
+        new BrowseGameSessionsQuery(
+            
         };
     }
 
