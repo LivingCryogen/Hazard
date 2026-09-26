@@ -8,7 +8,7 @@ using static HazardBackend.Queries.Browse.BrowseQuery;
 
 namespace HazardBackend.Queries.Browse;
 
-internal abstract class BrowseQuery(QueryEntityType entityType, int page, int pageSize) : DbQuery(DbQueryType.Browse, entityType)
+internal abstract class BrowseQuery(QueryEntityType entityType, int resultsLimit) : DbQuery(DbQueryType.Browse, entityType)
 {
     internal class BrowseQueryData(
         SortDirection? sortDirection, 
@@ -40,8 +40,7 @@ internal abstract class BrowseQuery(QueryEntityType entityType, int page, int pa
     internal sealed record Filter<T> (T Property, FilterOperator Operator, object Value) where T : struct, Enum;
     internal sealed record Sort<T> (T Property, SortDirection Direction) where T : struct, Enum;
 
-    internal int Page { get; } = page;
-    internal int PageSize { get; } = pageSize;
+    internal int Limit { get; } = resultsLimit;
 
     internal static ParseResult<DbQuery> Parse(IQueryCollection queryCollection, BaseDbQueryData baseData, ParseResult<DbQuery> parseResult, ILogger logger)
     {
