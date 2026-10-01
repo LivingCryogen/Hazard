@@ -2,10 +2,11 @@
 
 public class GameSessionEntity
 {
-    // Composite Key
-    public Guid InstallId { get; set; }
+    // Primary Key
     public Guid GameId { get; set; }
 
+    // Data
+    public Guid InstallId { get; set; }
     public bool IsDemo { get; set; } = false;
 
     // Properties from GameSession model

@@ -18,7 +18,7 @@ public class PlayerStatsEntity
     public DateTime? FirstGameCompleted { get; set; }
     public DateTime LastGameStarted { get; set; } = DateTime.MinValue;
     public DateTime? LastGameCompleted { get; set; }
-    public TimeSpan TotalGamesDuration { get; set; } = TimeSpan.MinValue;
+    public TimeSpan TotalGamesDuration { get; set; } = TimeSpan.Zero;
     public int AttacksWon { get; set; } = 0;
     public int AttacksLost { get; set; } = 0;
     public int AttacksTied { get; set; } = 0;

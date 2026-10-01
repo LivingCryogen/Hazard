@@ -1,3 +1,4 @@
+using Azure.Core;
 using HazardBackend.DbQueries;
 using HazardBackend.DTOs;
 using HazardBackend.Middleware;
@@ -61,94 +62,7 @@ namespace HazardBackend
             app.MapGet("/secure-link", GenSasRequest);
             // app.MapGet("/db", DatabaseRequest);
 
-            app.MapPost("/sync-stats",
-                async (HttpContext context,
-                    [FromServices] RequestHandler requestHandler,
-                    [FromServices] DbTransformer transformer,
-                    [FromServices] IHttpClientFactory httpClientFactory,
-                    [FromServices] IConfiguration config,
-                    [FromServices] ILogger<HazardBackend> logger) =>
-                {
-                    var requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
-
-                    if (string.IsNullOrEmpty(requestBody))
-                    {
-                        logger.LogWarning("Sync request received without body.");
-                        context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                        await context.Response.WriteAsync("Invalid request.");
-                        return;
-                    }
-
-                    // Deserialize payload early. This lets us have data (like InstallID etc) for logging
-                    GameSessionDto sessionData;
-                    try
-                    {
-                        if (string.IsNullOrEmpty(requestBody))
-                            throw new ArgumentException("Invalid RequestBody.");
-
-                        sessionData = System.Text.Json.JsonSerializer.Deserialize<GameSessionDto>(requestBody, _jsonSerializerOptions) ?? throw new InvalidDataException("Failed to deserialize GameSession from json.");
-                    }
-                    catch (System.Text.Json.JsonException jsonEx)
-                    {
-                        logger.LogWarning("JSON deserialization error: {Message}", jsonEx.Message);
-                        context.Response.StatusCode = StatusCodes.Status422UnprocessableEntity;
-                        await context.Response.WriteAsync("Unable to process the provided data.");
-                        return;
-                    }
-                    catch (ArgumentException argEx)
-                    {
-                        logger.LogWarning("Bad request for sync: {Message}", argEx.Message);
-                        context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                        await context.Response.WriteAsync("Invalid request data.");
-                        return;
-                    }
-
-                    Guid installID = sessionData.InstallId;
-                    try
-                    {
-                        int actualActionCount = sessionData.Attacks.Count + sessionData.Moves.Count + sessionData.Trades.Count;
-
-                        await transformer.TransformFromSessionDto(sessionData);
-
-                        context.Response.StatusCode = StatusCodes.Status200OK;
-                        await context.Response.WriteAsync("Sync completed successfully!");
-                    }
-                    catch (ArgumentException argEx)
-                    {
-                        // Client sent bad data
-                        logger.LogWarning("Bad request for sync from {installId}: {Message}", installID, argEx.Message);
-                        context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                        await context.Response.WriteAsync("Invalid request data.");
-                    }
-                    catch (InvalidDataException dataEx)
-                    {
-                        // JSON deserialization failed or data integrity issues
-                        logger.LogWarning("Invalid data in sync request from {installId}: {Message}", installID, dataEx.Message);
-                        context.Response.StatusCode = StatusCodes.Status422UnprocessableEntity;
-                        await context.Response.WriteAsync("Unable to process the provided data.");
-                    }
-                    catch (DbUpdateException dbEx)
-                    {
-                        // Database constraint violations, connection issues
-                        logger.LogError("Database error during sync for {installId}: {Message}", installID, dbEx.Message);
-                        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                        await context.Response.WriteAsync("Database error occurred.");
-                    }
-                    catch (PartialFailureException partialEx)
-                    {
-                        logger.LogWarning("Partial sync failure for {installID}: {failures}", installID, partialEx.Message);
-                        context.Response.StatusCode = StatusCodes.Status207MultiStatus;
-                        await context.Response.WriteAsync("Sync completed with warnings.");
-                    }
-                    catch (Exception ex)
-                    {
-                        // Unexpected errors
-                        logger.LogError("Unexpected error during sync for {installId}: {Message}", installID, ex.Message);
-                        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                        await context.Response.WriteAsync("An unexpected error occurred.");
-                    }
-
-                });
+            app.MapPost("/sync-stats", SyncAndSnapshot);
 
             var admin = app.MapGroup("/admin").RequireAuthorization("AdminOnly");
             // admin.MapPost("/db/prune", ManualPruneAzDB);
@@ -234,6 +148,91 @@ namespace HazardBackend
             return await sasGenerator.GenerateAsync(context.Request);
         }
 
+        private static async Task<IResult> SyncAndSnapshot(
+            HttpContext context,
+            [FromServices] RequestHandler requestHandler,
+            [FromServices] DbTransformer transformer,
+            [FromServices] IHttpClientFactory httpClientFactory,
+            [FromServices] IConfiguration config,
+            [FromServices] ILogger<HazardBackend> logger)
+        {
+            var requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
+
+            if (string.IsNullOrEmpty(requestBody))
+            {
+                logger.LogWarning("Sync request received without a body.");
+                return TypedResults.Problem("Invalid request.", statusCode: StatusCodes.Status400BadRequest);
+            }
+
+            // Deserialize payload early. This lets us have data (like InstallID etc) for logging
+            GameSessionDto sessionData;
+            try
+            {
+                if (string.IsNullOrEmpty(requestBody))
+                    throw new ArgumentException("Invalid RequestBody.");
+
+                sessionData = System.Text.Json.JsonSerializer.Deserialize<GameSessionDto>(requestBody, _jsonSerializerOptions) ?? throw new InvalidDataException("Failed to deserialize GameSession from json.");
+            }
+            catch (System.Text.Json.JsonException jsonEx)
+            {
+                logger.LogWarning("Unable to process the provided data: {message}", jsonEx.Message);
+                return TypedResults.Problem(
+                    $"JSON deserialization error: {jsonEx.Message}", statusCode: StatusCodes.Status422UnprocessableEntity);
+            }
+            catch (ArgumentException argEx)
+            {
+                logger.LogWarning("Bad request for sync: {Message}", argEx.Message);
+                return TypedResults.Problem(
+                    $"Bad request for sync: {argEx.Message}",
+                    statusCode: StatusCodes.Status422UnprocessableEntity);
+            }
+
+            Guid installID = sessionData.InstallId;
+            try
+            {
+                await transformer.TransformFromSessionDto(sessionData);
+
+                await dbProjector.TakeSnapshotsAsync();
+
+                context.Response.StatusCode = StatusCodes.Status200OK;
+                await context.Response.WriteAsync("Sync completed successfully!");
+            }
+            catch (ArgumentException argEx)
+            {
+                // Client sent bad data
+                logger.LogWarning("Bad request for sync from {installId}: {Message}", installID, argEx.Message);
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                await context.Response.WriteAsync("Invalid request data.");
+            }
+            catch (InvalidDataException dataEx)
+            {
+                // JSON deserialization failed or data integrity issues
+                logger.LogWarning("Invalid data in sync request from {installId}: {Message}", installID, dataEx.Message);
+                context.Response.StatusCode = StatusCodes.Status422UnprocessableEntity;
+                await context.Response.WriteAsync("Unable to process the provided data.");
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Database constraint violations, connection issues
+                logger.LogError("Database error during sync for {installId}: {Message}", installID, dbEx.Message);
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                await context.Response.WriteAsync("Database error occurred.");
+            }
+            catch (PartialFailureException partialEx)
+            {
+                logger.LogWarning("Partial sync failure for {installID}: {failures}", installID, partialEx.Message);
+                context.Response.StatusCode = StatusCodes.Status207MultiStatus;
+                await context.Response.WriteAsync("Sync completed with warnings.");
+            }
+            catch (Exception ex)
+            {
+                // Unexpected errors
+                logger.LogError("Unexpected error during sync for {installId}: {Message}", installID, ex.Message);
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                await context.Response.WriteAsync("An unexpected error occurred.");
+            }
+        }
+
         //private static async Task<Results<Ok<List<BaseDto>>, ProblemHttpResult>> DatabaseRequest(
         //    string requestType,
         //    string? sortBy,
@@ -247,21 +246,21 @@ namespace HazardBackend
 
         //    if (!Enum.TryParse<DbQueryType>(requestType, true, out var queryType) || queryType == DbQueryType.None)
         //        return TypedResults.Problem("Invalid request type.", statusCode: StatusCodes.Status400BadRequest);
-             
 
-            //if (DbQuery.TryCreate(queryType, sortBy, descending, maxLength, loggerFactory.CreateLogger<DbQuery>()) is ParseResult<DbQuery> dbQuery && dbQuery.Type != DbQueryType.None))
-            //    return TypedResults.Problem("Invalid query parameters.", statusCode: StatusCodes.Status400BadRequest);
 
-            //return await storageManager.HandleDatabaseQuery(request.QueryString.Value);
-            
-            // parse response and return appropriate result
-            
-            //var topPlayers = await dbContext.PlayerStats
-            //    .OrderByDescending(ps => ps.TotalScore)
-            //    .Take(10)
-            //    .Select(ps => new { ps.PlayerName, ps.TotalScore })
-            //    .ToListAsync();
-            //return Results.Ok(topPlayers);
+        //if (DbQuery.TryCreate(queryType, sortBy, descending, maxLength, loggerFactory.CreateLogger<DbQuery>()) is ParseResult<DbQuery> dbQuery && dbQuery.Type != DbQueryType.None))
+        //    return TypedResults.Problem("Invalid query parameters.", statusCode: StatusCodes.Status400BadRequest);
+
+        //return await storageManager.HandleDatabaseQuery(request.QueryString.Value);
+
+        // parse response and return appropriate result
+
+        //var topPlayers = await dbContext.PlayerStats
+        //    .OrderByDescending(ps => ps.TotalScore)
+        //    .Take(10)
+        //    .Select(ps => new { ps.PlayerName, ps.TotalScore })
+        //    .ToListAsync();
+        //return Results.Ok(topPlayers);
         }
 
         // [Authorize(Policy = "AdminOnly")]
