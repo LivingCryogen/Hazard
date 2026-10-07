@@ -342,6 +342,12 @@ public class StatRepo(WebConnectionHandler connectionHandler,
                 sessionJSON = await CurrentTracker.JSONFromGameSession();
             }
 
+            if (CurrentTracker != null && CurrentTracker.TrackedActions <= 0)
+            {
+                _logger.LogWarning("A sync was skipped for game {gameId} because it records no player actions.", gameID);
+                return false;
+            }
+
             bool synced = await _connectionHandler.PostGameSession(sessionJSON);
             if (synced)
             {

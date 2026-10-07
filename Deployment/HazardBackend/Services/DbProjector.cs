@@ -5,6 +5,7 @@ namespace HazardBackend.Services;
 
 internal class DbProjector(IDbContextFactory<GameStatsDbContext> dbcFactory)
 {
+
     private readonly IDbContextFactory<GameStatsDbContext> _dbcFactory = dbcFactory;
 
     internal async Task<IResult> TakeSnapshotsAsync(Guid updatedSessionID)
@@ -13,6 +14,7 @@ internal class DbProjector(IDbContextFactory<GameStatsDbContext> dbcFactory)
             await _dbcFactory.CreateDbContextAsync();
 
         // Session File Snapshot
+
 
         // Install Summary Snapshot
 

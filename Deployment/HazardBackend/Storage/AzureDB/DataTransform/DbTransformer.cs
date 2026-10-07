@@ -3,6 +3,7 @@ using HazardBackend.Storage.AzureDB.Context;
 using HazardBackend.Storage.AzureDB.Entities;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -19,18 +20,14 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         List<string> errorList = [];
         Dictionary<int, string> playerNumToNameMap;
         bool newGame = false; // Used to determine if PlayerStats should increment games started
-        int prevLastAction = 0; // Used to determine the last action recorded for a player, to avoid double-counting
         Guid installId = sessionData.InstallId;
-        int actionCount = sessionData.Attacks.Count + sessionData.Moves.Count + sessionData.Trades.Count;
+
+        int previousSessionActions = 0; // Used to determine the last action recorded for a player, to avoid double - counting
         bool updating = false; // Used to check if transform is on an update path or a create path
 
-        // Validate count integrity
-        if (sessionData.NumActions != actionCount)
-        {
-            logger.LogError("Action count mismatch for game {gameId}: expected {expected}, found {actual}",
-                sessionData.Id, sessionData.NumActions, actionCount);
-            throw new InvalidDataException($"Action count mismatch: expected {sessionData.NumActions}, found {actionCount}");
-        }
+        // Validate Dto Actions and count integrity and use define number of actions in the DTO
+        if (!ValidateDtoActions(sessionData, out int dtoActionCount))
+            throw new InvalidDataException($"Game session {sessionData.Id} action sync data was invalid.");
 
         try
         {
@@ -57,11 +54,33 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         /* Before updating, check if there is already a GameSessionEntity for this session. If the incoming number of actions 
         * (real SessionDto actions) is greater than the current Sessions action count, Update. Otherwise, don't. */
 
+        var previousSession = await context.GameSessions
+            .Include(gs => gs.ClaimActions)
+            .Include(gs => gs.AttackActions)
+            .Include(gs => gs.MoveActions)
+            .Include(gs => gs.TradeActions)
+            .Include(gs => gs.AcquiredContinents)
+            .AsSplitQuery()
+            .FirstOrDefaultAsync(gs => gs.GameId == sessionData.Id);
+
+        if (previousSession != null && previousSession.InstallId != sessionData.InstallId)
+        {
+            logger.LogError("Game {gameId} was first synced from install {originalInstall} but a sync arrived from install {incomingInstall}. " +
+                "Game sessions may only be synced from the install on which they were first run.",
+                sessionData.Id, previousSession.InstallId, sessionData.InstallId);
+            throw new InvalidOperationException($"Session {sessionData.Id} cannot be updated with install ID {sessionData.InstallId}.");
+        }
+
+        var previousLastActionId = previousSession?.ClaimActions.Select(c => c.ActionId)
+            .Concat(previousSession.AttackActions.Select(a => a.ActionId))
+            .Concat(previousSession.TradeActions.Select(t => t.ActionId))
+            .Concat(previousSession.MoveActions.Select(m => m.ActionId))
+            .DefaultIfEmpty(0)
+            .Max() 
+            ?? 0;
+
         // no previous Session found with this ID, create one
-        if (await context.GameSessions
-            .Where(gs => gs.GameId == sessionData.Id && gs.InstallId == installId)
-            .FirstOrDefaultAsync()
-            is not GameSessionEntity previousSession)
+        if (previousSession == null)
         {
             newGame = true;
             var newSession = CreateNewGameSession(installId, sessionData, sessionData.Winner.HasValue ? playerNumToNameMap[(int)sessionData.Winner] : null);
@@ -121,12 +140,22 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
         }
         else // previous session found; if sync data is more up-to-date, update session
         {
-            int previousSessionActions = previousSession.ClaimActions.Count + previousSession.AttackActions.Count + previousSession.MoveActions.Count + previousSession.TradeActions.Count;
-            if (previousSessionActions >= actionCount)
+            previousSessionActions = previousSession.ClaimActions.Count + previousSession.AttackActions.Count + previousSession.MoveActions.Count + previousSession.TradeActions.Count;
+            if (previousSessionActions >= dtoActionCount)
             {
                 logger.LogInformation("Game Session {gameID} on install {installID} already has {prevActions}, while sync has {syncActions} actions. Skipping.",
-                    sessionData.Id, installId, previousSessionActions, actionCount);
+                    sessionData.Id, installId, previousSessionActions, dtoActionCount);
                 return;
+            }
+
+            if (previousSessionActions != previousLastActionId)
+            {
+                logger.LogWarning("Warning! The last actionId for stored session {session} did not match the count of that session's actions.", previousSession.GameId);
+            }
+
+            if (previousSessionActions == 0)
+            {
+                logger.LogWarning("Warning! Stored session {session} had empty action collections!", previousSession.GameId);
             }
 
             if (!UpdateGameSession(previousSession, sessionData, playerNumToNameMap, errorList))
@@ -136,18 +165,6 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
 
             logger.LogInformation("GSE for game {gameID} on install {installID} successfully updated.", previousSession.GameId, previousSession.InstallId);
             updating = true;
-
-            // More memory-efficient: avoids allocating a combined sequence via SelectMany.
-            // Slightly more CPU work (3 Max calls), but better for large datasets or tight memory constraints.
-            var lastActionIds = new int[4]
-            {
-                sessionData.Claims.Select(t => t.ActionId).DefaultIfEmpty().Max(),
-                sessionData.Attacks.Select(t => t.ActionId).DefaultIfEmpty().Max(),
-                sessionData.Trades.Select(t => t.ActionId).DefaultIfEmpty().Max(),
-                sessionData.Moves.Select(t => t.ActionId).DefaultIfEmpty().Max()
-            };
-
-            prevLastAction = lastActionIds.Max();
         }
 
         // Create PlayerIdentities, GameSessionPlayer junction records, and PlayerStats for each player in the session
@@ -184,7 +201,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
                 }
                 else
                 {
-                    UpdatePlayerStats(prevPlayerStats, sessionData, playerData.Key, playerData.Value, newGame, prevLastAction, errorList);
+                    UpdatePlayerStats(prevPlayerStats, sessionData, playerData.Key, playerData.Value, newGame, previousLastActionId, errorList);
                 }
             }
             else
@@ -213,7 +230,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
                 }
                 else
                 {
-                    UpdatePlayerStats(prevPlayerStats, sessionData, playerData.Key, playerData.Value, newGame, prevLastAction, errorList);
+                    UpdatePlayerStats(prevPlayerStats, sessionData, playerData.Key, playerData.Value, newGame, previousLastActionId, errorList);
                 }
             }
         }
@@ -234,6 +251,59 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
                 sessionData.Id, ex.Message);
             throw; // Re-throw so the caller knows the operation failed
         }
+    }
+
+    private bool ValidateDtoActions(GameSessionDto sessionData, out int numActions)
+    {
+        int actionCount = sessionData.Claims.Count + sessionData.Attacks.Count + sessionData.Moves.Count + sessionData.Trades.Count;
+        numActions = actionCount;
+
+        if (actionCount <= 0)
+        {
+            logger.LogError("Game session {session} contains no actions. Stat sync requires at least 1 game action", sessionData.Id);
+            return false;
+        }
+
+        if (sessionData.NumActions != actionCount)
+        {
+            logger.LogError("Dto action count mismatch for game session {gameId}: dto reported expectation: {expected}, found: {actual}",
+                sessionData.Id, sessionData.NumActions, actionCount);
+            return false;
+        }
+
+        // Verify Action Ids are unique and that max Id matches action count (since they increment by 1, starting at 1, and should have no gaps)
+        // Total list of all dto actions
+        var sessionActionIds = sessionData.Claims.Select(c => c.ActionId)
+            .Concat(sessionData.Attacks.Select(a => a.ActionId))
+            .Concat(sessionData.Trades.Select(t => t.ActionId))
+            .Concat(sessionData.Moves.Select(m => m.ActionId))
+            .ToList();
+
+        int distinctActionIds = sessionActionIds.Distinct().Count();
+        int maxActionId = sessionActionIds.Max();
+
+        bool actionIdsUnique = distinctActionIds == sessionActionIds.Count;
+        bool actionMaxEqualsCount = actionCount == maxActionId;
+        int actionIdMin = sessionActionIds.Min();
+        bool actionsStartAtOne = actionIdMin == 1;
+
+        if (!actionMaxEqualsCount)
+        {
+            logger.LogError("Dto max action id mismatch for game session {gameId}: dto reported expectation: {expected}, found: {actual}",
+                sessionData.Id, sessionData.NumActions, actionCount);
+        }
+
+        if (!actionIdsUnique)
+        {
+            logger.LogError("Dto action ids for game session {gameId} are not all distinct.", sessionData.Id);
+        }
+
+        if (!actionsStartAtOne)
+        {
+            logger.LogError("Dto action ids are not guaranteed to be continuous: Minimum action id expected is 1, but actual was {actionMin}.", actionIdMin);
+        }
+
+        return actionIdsUnique && actionMaxEqualsCount && actionsStartAtOne;
     }
 
     private static GameSessionEntity CreateNewGameSession(Guid installId, GameSessionDto sessionDto, string? winnerName)
@@ -292,11 +362,14 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             context.RemoveRange(oldSession.AttackActions);
             context.RemoveRange(oldSession.MoveActions);
             context.RemoveRange(oldSession.TradeActions);
+            context.RemoveRange(oldSession.AcquiredContinents);
 
             // Create ClaimActions
             foreach (var claimAction in sessionDto.Claims)
             {
-
+                var newClaimAction = CreateClaimAction(sessionDto.Id, installId, claimAction, playerNumToNameMap);
+                newClaimAction.GameSession = oldSession;
+                context.ClaimActions.Add(newClaimAction);
             }
 
             // Create AttackActions
@@ -323,6 +396,19 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
                 context.TradeActions.Add(newTradeAction);
             }
 
+            // Create AcquiredContinents Events
+            foreach (var AcquiredContinentEvent in sessionDto.AcquiredContinents)
+            {
+                bool fromClaim = sessionDto.Claims.Any(c => c.ActionId == AcquiredContinentEvent.FromActionId);
+                var newACEvent = CreateAcquiredContinentEventEntity(
+                    sessionDto.Id,
+                    installId,
+                    AcquiredContinentEvent,
+                    playerNumToNameMap,
+                    fromClaim);
+                newACEvent.GameSession = oldSession;
+                context.AcquiredContinents.Add(newACEvent);
+            }
             return true;
         }
         catch (Exception ex)
@@ -390,7 +476,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
             GameId = gameID,
             InstallID = installID,
             ActionId = dto.ActionId,
-            IsDemo = false
+            IsDemo = false,
             PlayerName = playerNumToNameMap.TryGetValue(dto.Player, out string? attacker) && !string.IsNullOrEmpty(attacker)
                 ? attacker
                 : throw new InvalidDataException($"Player {dto.Player} not found in number to name map."),
@@ -594,7 +680,7 @@ public class DbTransformer(GameStatsDbContext context, ILogger<DbTransformer> lo
                 if (playerStats.FirstGameCompleted == null || sessionDto.EndTime < playerStats.FirstGameCompleted)
                     playerStats.FirstGameCompleted = sessionDto.EndTime;
 
-                if (playerStats.FirstGameStarted < sessionDto.StartTime)
+                if (playerStats.FirstGameStarted > sessionDto.StartTime)
                     playerStats.FirstGameStarted = sessionDto.StartTime;
 
                 playerStats.TotalGamesDuration += sessionDto.EndTime.Value - sessionDto.StartTime;

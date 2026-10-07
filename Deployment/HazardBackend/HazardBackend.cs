@@ -105,6 +105,7 @@ namespace HazardBackend
             builder.Services.AddSingleton<RequestHandler>();
             builder.Services.AddDbContext<GameStatsDbContext>(options => options.UseAzureSql(builder.Configuration.GetConnectionString("AzDbConnectionString")));
             builder.Services.AddScoped<DbTransformer>();
+            builder.Services.AddScoped<DbProjector>();
             builder.Services.AddLogging();
             return builder.Build();
         }
@@ -152,6 +153,7 @@ namespace HazardBackend
             HttpContext context,
             [FromServices] RequestHandler requestHandler,
             [FromServices] DbTransformer transformer,
+            [FromServices] DbProjector snapshotProjector,
             [FromServices] IHttpClientFactory httpClientFactory,
             [FromServices] IConfiguration config,
             [FromServices] ILogger<HazardBackend> logger)
@@ -192,7 +194,7 @@ namespace HazardBackend
             {
                 await transformer.TransformFromSessionDto(sessionData);
 
-                await dbProjector.TakeSnapshotsAsync();
+                await snapshotProjector.TakeSnapshotsAsync(sessionData.Id);
 
                 context.Response.StatusCode = StatusCodes.Status200OK;
                 await context.Response.WriteAsync("Sync completed successfully!");
