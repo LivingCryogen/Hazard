@@ -126,7 +126,8 @@ namespace Sasgen
                         BlobContainerName = containerName,
                         BlobName = blobName,
                         Resource = "b", // b means blob (here, an individual file)
-                        ExpiresOn = DateTimeOffset.UtcNow.AddSeconds(300) // Token valid for 5 minutes
+                        ExpiresOn = DateTimeOffset.UtcNow.AddSeconds(300), // Token valid for 5 minutes
+                        Protocol = SasProtocol.Https,
                     };
                     sasBuilder.SetPermissions(BlobSasPermissions.Read);
                 }
