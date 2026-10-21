@@ -1,0 +1,21 @@
+.stats-card {
+    border: groove;
+    border-color: #E5E5CC;
+    border-width: 5px;
+}
+
+    .stats-card .card-header {
+        display: grid;
+        grid-template-columns: repeat(autofit, minmax(14rem, 1fr));
+        gap: .25rem 1.5rem;
+        border-bottom: ridge;
+        border-width: 2px;
+        border-color: black;
+    }
+
+    .stats-card .card-header .card-stat-grid {
+
+    }
+
+.col-1 {
+}

@@ -8,38 +8,38 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\Images\Events.txt" />
+    <Content Remove="wwwroot\Github\Images\Events.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\About.html">
+    <Content Update="wwwroot\Github\About.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\appsettings.json">
+    <Content Update="wwwroot\Github\appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\Background.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\cavalryEllipse.png">
+    <Content Update="wwwroot\Github\cavalryEllipse.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\Copyright.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\Download.html">
+    <Content Update="wwwroot\Github\Download.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\Features.html">
+    <Content Update="wwwroot\Github\Features.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\index.html">
+    <Content Update="wwwroot\Github\index.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\nav.js">
+    <Content Update="wwwroot\Github\nav.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\stylesheet.css">
+    <Content Update="wwwroot\Github\stylesheet.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\Tour.html">
