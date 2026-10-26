@@ -2,10 +2,28 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <!-- Eager fetching for global .json-->
+    <link rel="preload" as="fetch" crossorigin href="snapshots/globalsummary.json">
+
+    <!-- Eager fetching for local install .json, if available-->
+    <script>
+        try {
+            const localinstallid = localStorage.getItem("StatisticsView.localinstallId");
+            if (localinstallid
+                && /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(localinstallid)) {
+                window.localInstallSummary = {
+                    id: localinstallid.toLowerCase(),
+                    promise: fetch(`snapshots/installsummaries/${localinstallid.toLowerCase()}.json`),
+                };
+            }
+        } catch { }
+    </script>
+
+
     <script src="statviewinit.js"></script>
     <title>Statistics Browser</title>
     <link rel="stylesheet" href="stats.css">
-    <script src="statviewdefer.js" type="module"></script>
+    <script src="statview.js" type="module"></script>
 </head>
 <body class="dynamic-content-body">
     <h2>Game and Player Statistics</h2>
@@ -13,8 +31,17 @@
         Browse game and player statistics from all synced games.
     </p>
 
-    <div class="installid-pane">
-
+    <div class="installid-panel">
+        <form id="installid-form">
+            <label for="install-id">Install ID</label>
+            <!--pattern = Regex for GUID validation-->
+            <input id="install-id" name="installID"
+                   required autocomplete="off" spellcheck="false"
+                   pattern="[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}"
+                   aria-describedby="install-help">
+            <button type="submit">Save</button>
+            <button type="button" id="installid-forget" hidden>Forget Id</button>
+        </form>
     </div>
 
     
