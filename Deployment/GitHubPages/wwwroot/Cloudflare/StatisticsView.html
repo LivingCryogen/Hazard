@@ -8,6 +8,8 @@
     <!-- Eager fetching for local install .json, if available-->
     <script>
         try {
+            // Check if the local install ID is stored in localStorage so users only need to input it once / on cache clear
+            // Key must match LOCALSTORAGE_INSTALLID_KEY in statview.js
             const localinstallid = localStorage.getItem("StatisticsView.localinstallId");
             if (localinstallid
                 && /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(localinstallid)) {
@@ -25,9 +27,9 @@
     <link rel="stylesheet" href="stats.css">
     <script src="statview.js" type="module"></script>
 </head>
-<body class="dynamic-content-body">
+<body>
     <h2>Game and Player Statistics</h2>
-    <p class="indented-p">
+    <p>
         Browse game and player statistics from all synced games.
     </p>
 
@@ -35,11 +37,11 @@
         <form id="installid-form">
             <label for="install-id">Install ID</label>
             <!--pattern = Regex for GUID validation-->
-            <input id="install-id" name="installID"
+            <input id="install-id" name="installid-input"
                    required autocomplete="off" spellcheck="false"
                    pattern="[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}"
                    aria-describedby="install-help">
-            <button type="submit">Save</button>
+            <button type="submit" id="installid-submit">Save</button>
             <button type="button" id="installid-forget" hidden>Forget Id</button>
         </form>
     </div>
