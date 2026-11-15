@@ -5,23 +5,6 @@
     <!-- Eager fetching for global .json-->
     <link rel="preload" as="fetch" crossorigin href="snapshots/globalsummary.json">
 
-    <!-- Eager fetching for local install .json, if available-->
-    <script>
-        try {
-            // Check if the local install ID is stored in localStorage so users only need to input it once / on cache clear
-            // Key must match LOCALSTORAGE_INSTALLID_KEY in statview.js
-            const localinstallid = localStorage.getItem("StatisticsView.localinstallId");
-            if (localinstallid
-                && /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(localinstallid)) {
-                window.localInstallSummary = {
-                    id: localinstallid.toLowerCase(),
-                    promise: fetch(`snapshots/installsummaries/${localinstallid.toLowerCase()}.json`),
-                };
-            }
-        } catch { }
-    </script>
-
-
     <script src="statviewinit.js"></script>
     <title>Statistics Browser</title>
     <link rel="stylesheet" href="stats.css">
