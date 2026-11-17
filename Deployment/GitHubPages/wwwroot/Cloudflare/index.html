@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <!-- Eager fetching for global summary .json-->
+    <link rel="preload" as="fetch" crossorigin href="snapshots/globalsummary.json">
+
+    <script src="statviewinit.js"></script>
+    <title>Statistics Browser</title>
+    <link rel="stylesheet" href="stats.css">
+    <script src="statview.js" type="module"></script>
+</head>
+<body>
+    <h2>Game and Player Statistics</h2>
+    <p>
+        Browse game and player statistics from all synced games.
+    </p>
+
+    <div class="installid-panel">
+        <form id="installid-form">
+            <label for="install-id">Install ID</label>
+            <!--pattern = Regex for GUID validation-->
+            <input id="install-id" name="installid-input"
+                   required autocomplete="off" spellcheck="false"
+                   pattern="[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}"
+                   aria-describedby="install-help">
+            <button type="submit" id="installid-submit">Save</button>
+            <button type="button" id="installid-forget" hidden>Forget Id</button>
+        </form>
+    </div>
+
+    <!-- TEMPLATES -->
+
+    <template id="session-detail">
+        <article class="session-detail">
+            <header>
+                <h1 class="session-title" tabindex="-1">
+                    <span data-field="status"></span> Game
+                    <span data-field="dateLabel"></span>
+                    <time data-field="date"></time>,
+                    with <span data-field="players"></span>
+                </h1>
+            </header>
+
+            <section>
+                <h2>
+                    Game Session Details
+                </h2>
+
+                <dl data-field="sessionDetails"></dl>
+
+                <details class="session-actions">
+                    <summary><span data-field="actionCount"></span> Actions</summary>
+                    <div data-field="actionList"></div>
+                </details>
+            </section>
+        </article>
+    </template>
+    <template id="session-list">
+        <section class="session-list">
+            <h1 tabindex="-1">Game Sessions</h1>
+            <table>
+                <thead data-field="sessionsTableHead"></thead>
+                <tbody data-field="sessionsTableRows"></tbody>
+            </table>
+        </section>
+    </template>
+    <template id="session-row">
+        <tr class="session-row">
+        </tr>
+    </template>
+    <template id="player-detail">
+        <article class="player-detail">
+            <header class="player-title">
+                <h1 tabindex="-1"></h1>
+            </header>
+        </article>
+    </template>
+    <template id="player-list">
+        <section class="player-list">
+            <h1 tabindex="-1">Players</h1>
+            <table>
+                <thead data-field="playersTableHead"></thead>
+                <tbody data-field="playersTableRows"></tbody>
+            </table>
+        </section>
+    </template>
+    <template id="player-row">
+        <tr class="player-row">
+        </tr>
+    </template>
+    <template id="action-row">
+        <tr class="action-row">
+        </tr>
+    </template>
+
+</body>
+</html>
